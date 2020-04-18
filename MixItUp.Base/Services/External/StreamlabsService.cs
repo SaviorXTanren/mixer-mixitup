@@ -85,7 +85,6 @@ namespace MixItUp.Base.Services.External
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private DateTimeOffset startTime;
         private Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
@@ -194,15 +193,18 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override Task<Result> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
-            this.startTime = DateTimeOffset.Now;
+            foreach (StreamlabsDonation slDonation in await this.GetDonations())
+            {
+                donationsReceived[slDonation.ID] = slDonation;
+            }
 
             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
-            return Task.FromResult(new Result());
+            return new Result();
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)
@@ -212,11 +214,7 @@ namespace MixItUp.Base.Services.External
                 if (!donationsReceived.ContainsKey(slDonation.ID))
                 {
                     donationsReceived[slDonation.ID] = slDonation;
-                    UserDonationModel donation = slDonation.ToGenericDonation();
-                    if (donation.DateTime > this.startTime)
-                    {
-                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, donation);
-                    }
+                    await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
                 }
             }
         }
