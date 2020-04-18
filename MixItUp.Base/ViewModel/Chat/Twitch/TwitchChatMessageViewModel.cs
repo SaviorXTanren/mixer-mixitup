@@ -6,7 +6,7 @@ using Twitch.Base.Models.Clients.PubSub.Messages;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
-    public class TwitchChatMessageViewModel : ChatMessageViewModel
+    public class TwitchChatMessageViewModel : UserChatMessageViewModel
     {
         public static TwitchChatMessageViewModel CreateWhisper(UserViewModel user, string message)
         {
