@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.Model.Chat;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Chat.Mixer
 {
@@ -17,6 +18,13 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
             : base(chatMessageEvent)
         {
             this.Skill = new MixerSkillModel(chatMessageEvent.skill);
+        }
+
+        public Dictionary<string, string> GetSpecialIdentifiers()
+        {
+            Dictionary<string, string> results = this.Skill.GetSpecialIdentifiers();
+            results["skillmessage"] = this.PlainTextMessage;
+            return results;
         }
     }
 }

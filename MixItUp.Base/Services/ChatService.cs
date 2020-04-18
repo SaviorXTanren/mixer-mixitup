@@ -470,7 +470,11 @@ namespace MixItUp.Base.Services
             {
                 if (message.IsWhisper)
                 {
-                    await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
+                    // Don't send this if it's in response to another "You are whisperer #" message
+                    if (ChannelSession.Settings.TrackWhispererNumber && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
+                    }
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
@@ -730,7 +734,7 @@ namespace MixItUp.Base.Services
             {
                 foreach (ChatMessageViewModel message in this.Messages.ToList())
                 {
-                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.Item1))
                     {
                         await message.Delete(moderator: e.Item2, reason: "Purged");
                     }

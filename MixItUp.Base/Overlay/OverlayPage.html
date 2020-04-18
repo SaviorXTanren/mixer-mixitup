@@ -568,15 +568,24 @@
                     }
                     else if (item.Add) {
                         if (item.Position > 0) {
+
+                            var existingIndex = -1;
                             for (j = 0; j < widget.Items.length; j++) {
-                                if (widget.Items[j].id === item.ID) {
-                                    removeListItem(data, j, function () {
-                                        addListItem(data, item);
-                                    });
-                                    return;
+                                if (widget.Items[j].item.ID === item.ID) {
+                                    existingIndex = j;
+                                    break;
                                 }
                             }
-                            addListItem(data, item);
+
+                            if (existingIndex >= 0) {
+                                if (widget.Items[existingIndex].item.Hash !== item.Hash) {
+                                    removeListItem(data, existingIndex, function () { });
+                                    addListItem(data, item);
+                                }
+                            }
+                            else {
+                                addListItem(data, item);
+                            }
                         }
                         else {
                             addListItem(data, item);
@@ -645,17 +654,20 @@
 
             function tickerTapeShowPacket(data) {
                 var widget = getCreatePersistentElement(data);
-                widget.Items = [];
-                widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
-                widget.MainDiv.style.removeProperty('left');
-                widget.MainDiv.style.removeProperty('transform');
-                widget.Marquee = document.createElement('marquee');
-                widget.Marquee.setAttribute("behavior", "scroll");
-                widget.Marquee.setAttribute("direction", "left");
-                widget.MainDiv.appendChild(widget.Marquee);
+                if (!widget.Items) {
+                    widget.Items = [];
+                    widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
+                    widget.MainDiv.style.removeProperty('left');
+                    widget.MainDiv.style.removeProperty('transform');
+                    widget.Marquee = document.createElement('marquee');
+                    widget.Marquee.setAttribute("behavior", "scroll");
+                    widget.Marquee.setAttribute("direction", "left");
+                    widget.MainDiv.appendChild(widget.Marquee);
+                }
             }
 
             function tickerTapeUpdatePacket(data) {
+                tickerTapeShowPacket(data);
                 var widget = getCreatePersistentElement(data);
 
                 for (i = 0; i < data.Items.length; i++) {
