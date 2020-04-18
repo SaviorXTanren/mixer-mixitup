@@ -655,7 +655,7 @@ namespace MixItUp.Base.Services
             {
                 foreach (ChatMessageViewModel message in this.Messages.ToList())
                 {
-                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.Item1))
                     {
                         await message.Delete(moderator: e.Item2, reason: "Purged");
                     }
