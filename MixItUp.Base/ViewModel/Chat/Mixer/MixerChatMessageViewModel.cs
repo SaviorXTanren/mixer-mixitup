@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Chat.Mixer
 {
-    public class MixerChatMessageViewModel : ChatMessageViewModel
+    public class MixerChatMessageViewModel : UserChatMessageViewModel
     {
         private ChatMessageDataModel[] messageData;
 
