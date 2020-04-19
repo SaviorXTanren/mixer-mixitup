@@ -30,7 +30,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 40;
+        public const int LatestVersion = 41;
 
         public const string SettingsDirectoryName = "Settings";
 
@@ -534,43 +534,6 @@ namespace MixItUp.Base.Model.Settings
                 });
                 this.UserData.ClearTracking();
 
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM CurrencyAmounts", (Dictionary<string, object> data) =>
-                {
-                    Guid currencyID = Guid.Parse((string)data["CurrencyID"]);
-                    Guid userID = Guid.Parse((string)data["UserID"]);
-                    int amount = Convert.ToInt32(data["Amount"]);
-
-                    if (this.Currencies.ContainsKey(currencyID))
-                    {
-                        this.Currencies[currencyID].UserAmounts[userID] = amount;
-                    }
-                });
-                foreach (var kvp in this.Currencies)
-                {
-                    kvp.Value.UserAmounts.ClearTracking();
-                }
-
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM InventoryAmounts", (Dictionary<string, object> data) =>
-                {
-                    Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
-                    Guid userID = Guid.Parse((string)data["UserID"]);
-                    Guid itemID = Guid.Parse((string)data["ItemID"]);
-                    int amount = Convert.ToInt32(data["Amount"]);
-
-                    if (this.Inventories.ContainsKey(inventoryID))
-                    {
-                        if (!this.Inventories[inventoryID].UserAmounts.ContainsKey(userID))
-                        {
-                            this.Inventories[inventoryID].UserAmounts[userID] = new Dictionary<Guid, int>();
-                        }
-                        this.Inventories[inventoryID].UserAmounts[userID][itemID] = amount;
-                    }
-                });
-                foreach (var kvp in this.Inventories)
-                {
-                    kvp.Value.UserAmounts.ClearTracking();
-                }
-
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
                     this.Quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
@@ -746,35 +709,6 @@ namespace MixItUp.Base.Model.Settings
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
                     changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
-
-                foreach (var kvp in this.Currencies)
-                {
-                    IEnumerable<Guid> changedKeys = kvp.Value.UserAmounts.GetChangedKeys();
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO CurrencyAmounts(CurrencyID, UserID, Amount) VALUES(@CurrencyID, @UserID, @Amount)",
-                        changedKeys.Select(u => new Dictionary<string, object>() { { "@CurrencyID", kvp.Value.ID.ToString() }, { "@UserID", u.ToString() }, { "@Amount", kvp.Value.GetAmount(u) } }));
-                }
-
-                foreach (var kvp in this.Inventories)
-                {
-                    List<Dictionary<string, object>> changedData = new List<Dictionary<string, object>>();
-
-                    IEnumerable<Guid> changedKeys = kvp.Value.UserAmounts.GetChangedKeys();
-                    foreach (Guid changedKey in changedKeys)
-                    {
-                        foreach (var item in kvp.Value.GetAmounts(changedKey))
-                        {
-                            changedData.Add(new Dictionary<string, object>()
-                            {
-                                { "@InventoryID", kvp.Value.ID.ToString() },
-                                { "@UserID", changedKey.ToString() },
-                                { "@ItemID", item.Key.ToString() },
-                                { "@Amount", item.Value }
-                            });
-                        }
-                    }
-
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemID, Amount) VALUES(@InventoryID, @UserID, @ItemID, @Amount)", changedData);
-                }
 
                 List<CommandBase> removedCommands = new List<CommandBase>();
                 removedCommands.AddRange(this.ChatCommands.GetRemovedValues());

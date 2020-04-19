@@ -349,6 +349,10 @@ namespace MixItUp.Base.Services
             else if (currentVersion < SettingsV2Model.LatestVersion)
             {
                 // Perform upgrade of settings
+                if (currentVersion < 41)
+                {
+                    await SettingsV2Upgrader.Version41Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -364,6 +368,59 @@ namespace MixItUp.Base.Services
             }
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
+        }
+
+        public static async Task Version41Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+
+            // Check if the old CurrencyAmounts and InventoryAmounts tables exist
+            bool tablesExist = false;
+            await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM CurrencyAmounts LIMIT 1", (Dictionary<string, object> data) =>
+            {
+                if (data.Count > 0)
+                {
+                    tablesExist = true;
+                }
+            });
+
+            if (tablesExist)
+            {
+                await settings.Initialize();
+
+                await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM CurrencyAmounts", (Dictionary<string, object> data) =>
+                {
+                    Guid currencyID = Guid.Parse((string)data["CurrencyID"]);
+                    Guid userID = Guid.Parse((string)data["UserID"]);
+                    int amount = Convert.ToInt32(data["Amount"]);
+
+                    if (amount > 0 && settings.UserData.ContainsKey(userID))
+                    {
+                        settings.UserData[userID].CurrencyAmounts[currencyID] = amount;
+                        settings.UserData.ManualValueChanged(userID);
+                    }
+                });
+
+                await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM InventoryAmounts", (Dictionary<string, object> data) =>
+                {
+                    Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
+                    Guid userID = Guid.Parse((string)data["UserID"]);
+                    Guid itemID = Guid.Parse((string)data["ItemID"]);
+                    int amount = Convert.ToInt32(data["Amount"]);
+
+                    if (amount > 0 && settings.UserData.ContainsKey(userID))
+                    {
+                        if (!settings.UserData[userID].InventoryAmounts.ContainsKey(inventoryID))
+                        {
+                            settings.UserData[userID].InventoryAmounts[inventoryID] = new Dictionary<Guid, int>();
+                        }
+                        settings.UserData[userID].InventoryAmounts[inventoryID][itemID] = amount;
+                        settings.UserData.ManualValueChanged(userID);
+                    }
+                });
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
         }
     }
 

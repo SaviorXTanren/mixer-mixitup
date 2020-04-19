@@ -501,7 +501,11 @@ namespace MixItUp.WPF.Windows.Currency
 
                                 foreach (var kvp in this.userImportData)
                                 {
-                                    this.currency.SetAmount(kvp.Key, kvp.Value);
+                                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
+                                    {
+                                        UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
+                                        this.currency.SetAmount(userData, kvp.Value);
+                                    }
                                 }
 
                                 this.ImportFromFileButton.Content = "Import From File";

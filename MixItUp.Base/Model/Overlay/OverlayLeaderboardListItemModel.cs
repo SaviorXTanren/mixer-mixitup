@@ -180,16 +180,13 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
                     UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                    Dictionary<Guid, int> currencyAmounts = currency.UserAmounts.ToDictionary();
-
-                    var orderedUsers = currencyAmounts.OrderByDescending(kvp => kvp.Value);
-                    for (int i = 0; i < orderedUsers.Count() && items.Count < this.TotalToShow; i++)
+                    IEnumerable<UserDataModel> userDataList = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
+                    for (int i = 0; i < userDataList.Count() && items.Count < this.TotalToShow; i++)
                     {
-                        var kvp = orderedUsers.ElementAt(i);
-                        UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                        UserDataModel userData = userDataList.ElementAt(i);
                         if (!userData.IsCurrencyRankExempt)
                         {
-                            items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.ToString()));
+                            items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), currency.GetAmount(userData).ToString()));
                         }
                     }
                 }
