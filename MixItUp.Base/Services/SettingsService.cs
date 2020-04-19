@@ -432,18 +432,20 @@ namespace MixItUp.Base.Services
         internal static async Task<SettingsV1Model> UpgradeSettingsToLatest(string filePath)
         {
             await SettingsV1Upgrader.Version39Upgrade(filePath);
-
             SettingsV1Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
-            settings.Version = SettingsV1Model.LatestVersion;
-            await FileSerializerHelper.SerializeToFile<SettingsV1Model>(filePath, settings);
-
             return settings;
         }
 
         public static async Task Version39Upgrade(string filePath)
         {
+            Logger.Log(LogLevel.Debug, "Upgrading the following settings to V2: " + filePath);
+
+            Logger.Log(LogLevel.Debug, "Loading in V1 data");
+
             SettingsV1Model oldSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
             await oldSettings.LoadUserData();
+
+            Logger.Log(LogLevel.Debug, "Migrating V1 data to V2");
 
             SettingsV2Model newSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             if (newSettings == null)
@@ -600,11 +602,6 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ChannelSession.Services.Settings.Save(newSettings);
-
-            newSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(newSettings.SettingsFilePath, ignoreErrors: true);
-            await ChannelSession.Services.Settings.Initialize(newSettings);
-
             foreach (CommandBase command in GetAllCommands(newSettings))
             {
                 foreach (ActionBase action in command.Actions)
@@ -631,6 +628,10 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
+
+            Logger.Log(LogLevel.Debug, "Saving data to V2, total user records: " + newSettings.UserData.Count);
+
+            await ChannelSession.Services.Settings.Save(newSettings);
         }
 
         private static UserRoleEnum ConvertLegacyRoles(UserRoleEnum legacyRole)
