@@ -64,7 +64,7 @@ namespace MixItUp.Base.Services.External
         public bool IsApproved { get { return string.Equals(this.approved, "allowed"); } }
 
         [JsonIgnore]
-        public DateTimeOffset CreatedDate { get { return new DateTimeOffset(DateTime.Parse(this.createdAt), new TimeSpan()); } }
+        public DateTimeOffset CreatedDate { get; set; } = DateTimeOffset.Now;
 
         public UserDonationModel ToGenericDonation()
         {
