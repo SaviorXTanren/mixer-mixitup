@@ -165,9 +165,6 @@ namespace MixItUp.Base.Model.User
         public CustomCommand ItemsTradedCommand { get; set; }
 
         [JsonIgnore]
-        public DatabaseDictionary<Guid, Dictionary<Guid, int>> UserAmounts { get; set; } = new DatabaseDictionary<Guid, Dictionary<Guid, int>>();
-
-        [JsonIgnore]
         private UserInventoryTradeModel tradeSender = null;
         [JsonIgnore]
         private UserInventoryTradeModel tradeReceiver = null;
@@ -200,9 +197,9 @@ namespace MixItUp.Base.Model.User
 
         public int GetAmount(UserDataModel user, UserInventoryItemModel item)
         {
-            if (this.UserAmounts.ContainsKey(user.ID) && this.UserAmounts[user.ID].ContainsKey(item.ID))
+            if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
             {
-                return this.UserAmounts[user.ID][item.ID];
+                return user.InventoryAmounts[this.ID][item.ID];
             }
             return 0;
         }
@@ -217,18 +214,12 @@ namespace MixItUp.Base.Model.User
             return 0;
         }
 
-        public Dictionary<Guid, int> GetAmounts(UserDataModel user) { return this.GetAmounts(user.ID); }
-
-        public Dictionary<Guid, int> GetAmounts(Guid userID)
+        public Dictionary<Guid, int> GetAmounts(UserDataModel user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (UserInventoryItemModel item in this.Items.Values)
             {
-                amounts[item.ID] = 0;
-                if (this.UserAmounts.ContainsKey(userID) && this.UserAmounts[userID].ContainsKey(item.ID))
-                {
-                    amounts[item.ID] = this.UserAmounts[userID][item.ID];
-                }
+                amounts[item.ID] = this.GetAmount(user, item);
             }
             return amounts;
         }
@@ -243,11 +234,11 @@ namespace MixItUp.Base.Model.User
             if (this.Items.ContainsKey(itemName))
             {
                 UserInventoryItemModel item = this.Items[itemName];
-                if (!this.UserAmounts.ContainsKey(user.ID))
+                if (!user.InventoryAmounts.ContainsKey(this.ID))
                 {
-                    this.UserAmounts[user.ID] = new Dictionary<Guid, int>();
+                    user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
                 }
-                this.UserAmounts[user.ID][item.ID] = Math.Min(Math.Max(amount, 0), item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
+                user.InventoryAmounts[this.ID][item.ID] = Math.Min(Math.Max(amount, 0), item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
 
                 if (ChannelSession.Settings != null)
                 {
@@ -274,16 +265,19 @@ namespace MixItUp.Base.Model.User
 
         public void ResetAmount(UserDataModel user)
         {
-            this.UserAmounts[user.ID] = new Dictionary<Guid, int>();
+            user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
             ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
         }
 
         public async Task Reset()
         {
-            foreach (Guid key in this.UserAmounts.Keys)
+            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
             {
-                this.UserAmounts[key] = new Dictionary<Guid, int>();
-                this.UserAmounts.ManualValueChanged(key);
+                if (user.InventoryAmounts.ContainsKey(this.ID))
+                {
+                    user.InventoryAmounts[this.ID] = new Dictionary<Guid, int>();
+                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                }
             }
             await ChannelSession.SaveSettings();
         }

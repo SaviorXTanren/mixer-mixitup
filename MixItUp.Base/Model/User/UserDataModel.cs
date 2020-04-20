@@ -60,6 +60,12 @@ namespace MixItUp.Base.Model.User
         #endregion Mixer
 
         [DataMember]
+        public Dictionary<Guid, int> CurrencyAmounts { get; set; } = new Dictionary<Guid, int>();
+
+        [DataMember]
+        public Dictionary<Guid, Dictionary<Guid, int>> InventoryAmounts { get; set; } = new Dictionary<Guid, Dictionary<Guid, int>>();
+
+        [DataMember]
         public string CustomTitle { get; set; }
 
         [DataMember]

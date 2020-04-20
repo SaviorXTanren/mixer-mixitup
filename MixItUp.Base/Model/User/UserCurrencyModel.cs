@@ -83,9 +83,6 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public bool IsPrimary { get; set; }
 
-        [JsonIgnore]
-        public DatabaseDictionary<Guid, int> UserAmounts { get; set; } = new DatabaseDictionary<Guid, int>();
-
         public UserCurrencyModel()
         {
             this.ID = Guid.NewGuid();
@@ -148,13 +145,11 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
-        public int GetAmount(UserDataModel user) { return this.GetAmount(user.ID); }
-
-        public int GetAmount(Guid userID)
+        public int GetAmount(UserDataModel user)
         {
-            if (this.UserAmounts.ContainsKey(userID))
+            if (user.CurrencyAmounts.ContainsKey(this.ID))
             {
-                return this.UserAmounts[userID];
+                return user.CurrencyAmounts[this.ID];
             }
             return 0;
         }
@@ -164,14 +159,12 @@ namespace MixItUp.Base.Model.User
             return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserDataModel user, int amount) { this.SetAmount(user.ID, amount); }
-
-        public void SetAmount(Guid id, int amount)
+        public void SetAmount(UserDataModel user, int amount)
         {
-            this.UserAmounts[id] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
+            user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             if (ChannelSession.Settings != null)
             {
-                ChannelSession.Settings.UserData.ManualValueChanged(id);
+                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
             }
         }
 
@@ -306,9 +299,13 @@ namespace MixItUp.Base.Model.User
 
         public async Task Reset()
         {
-            foreach (Guid key in this.UserAmounts.Keys)
+            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
             {
-                this.SetAmount(key, 0);
+                if (this.GetAmount(user) > 0)
+                {
+                    this.SetAmount(user, 0);
+                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                }
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
             await ChannelSession.SaveSettings();

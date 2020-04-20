@@ -241,6 +241,19 @@ namespace MixItUp.Base.Util
             return user;
         }
 
+        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(UserCurrencyModel currency)
+        {
+            IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+            return applicableUsers.OrderByDescending(u => currency.GetAmount(u));
+        }
+
+        public static IEnumerable<UserDataModel> GetAllNonExemptUsers()
+        {
+            List<UserDataModel> exemptUsers = new List<UserDataModel>(ChannelSession.Settings.UserData.Values.Where(u => !u.IsCurrencyRankExempt));
+            exemptUsers.Remove(ChannelSession.GetCurrentUser().Data);
+            return exemptUsers;
+        }
+
         private string text;
         private StreamingPlatformTypeEnum platform;
         private bool encode;
@@ -298,18 +311,10 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
                     {
-                        Dictionary<Guid, UserDataModel> applicableUsers = ChannelSession.Settings.UserData.ToDictionary();
-                        foreach (UserDataModel u in this.GetAllExemptUsers())
-                        {
-                            if (u != null)
-                            {
-                                applicableUsers.Remove(u.ID);
-                            }
-                        }
-
+                        IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
-                        foreach (UserDataModel timeUser in applicableUsers.Values.OrderByDescending(u => u.ViewingMinutes).Take(total))
+                        foreach (UserDataModel timeUser in applicableUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
                         {
                             timeUserList.Add($"#{userPosition}) {timeUser.Username} - {timeUser.ViewingTimeShortString}");
                             userPosition++;
@@ -332,9 +337,8 @@ namespace MixItUp.Base.Util
                         {
                             List<string> currencyUserList = new List<string>();
                             int userPosition = 1;
-                            foreach (Guid userID in this.GetOrderedCurrencyList(currency).Take(total))
+                            foreach (UserDataModel userData in SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).Take(total))
                             {
-                                UserDataModel userData = ChannelSession.Settings.GetUserData(userID);
                                 currencyUserList.Add($"#{userPosition}) {userData.Username} - {currency.GetAmount(userData)}");
                                 userPosition++;
                             }
@@ -785,8 +789,8 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                     {
-                        List<Guid> sortedUsers = this.GetOrderedCurrencyList(currency);
-                        int index = sortedUsers.FindIndex(id => id == user.ID);
+                        List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
+                        int index = sortedUsers.IndexOf(userData);
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                     }
 
@@ -980,27 +984,6 @@ namespace MixItUp.Base.Util
                     }
                 }
             }
-        }
-
-        private List<Guid> GetOrderedCurrencyList(UserCurrencyModel currency)
-        {
-            Dictionary<Guid, int> applicableUsers = currency.UserAmounts.ToDictionary();
-            foreach (UserDataModel exemptUser in this.GetAllExemptUsers())
-            {
-                if (exemptUser != null)
-                {
-                    applicableUsers.Remove(exemptUser.ID);
-                }
-            }
-            return new List<Guid>(applicableUsers.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key));
-        }
-
-        private IEnumerable<UserDataModel> GetAllExemptUsers()
-        {
-            List<UserDataModel> exemptUsers = new List<UserDataModel>();
-            exemptUsers.Add(ChannelSession.GetCurrentUser().Data);
-            exemptUsers.AddRange(ChannelSession.Settings.UserData.Values.Where(u => u.IsCurrencyRankExempt));
-            return exemptUsers;
         }
     }
 }
