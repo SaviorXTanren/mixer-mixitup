@@ -614,10 +614,10 @@ namespace MixItUp.Base.Services.Mixer
                 }
 
                 MixerChatUserModerationType type = MixerChatUserModerationType.Purge;
+                string length = null;
                 if (e.cause != null && e.cause.ContainsKey("type") && e.cause["type"] != null)
                 {
                     string cause = e.cause["type"].ToString();
-                    string length = null;
                     if (e.cause.ContainsKey("durationString") && e.cause["durationString"] != null)
                     {
                         length = e.cause["durationString"].ToString();
@@ -639,7 +639,7 @@ namespace MixItUp.Base.Services.Mixer
                         this.OnUserBanOccurred(sender, new MixerChatUserModerationModel(user, moderator, type));
                     }
                 }
-                this.OnUserPurgeOccurred(sender, new MixerChatUserModerationModel(user, moderator, type));
+                this.OnUserPurgeOccurred(sender, new MixerChatUserModerationModel(user, moderator, type, length));
             }
         }
 

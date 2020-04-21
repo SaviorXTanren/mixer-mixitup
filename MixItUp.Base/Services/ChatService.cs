@@ -652,10 +652,10 @@ namespace MixItUp.Base.Services
 
         private async void MixerChatService_OnUserPurgeOccurred(object sender, MixerChatUserModerationModel e)
         {
-            string reason = e.Type.ToString();
+            string reason = EnumLocalizationHelper.GetLocalizedName(e.Type);
             if (!string.IsNullOrEmpty(e.Length))
             {
-                reason = $"{e.Type.ToString()} {e.Length}";
+                reason += $" {e.Length}";
             }
 
             foreach (ChatMessageViewModel message in this.Messages.ToList())
