@@ -2,11 +2,10 @@
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Client;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -30,8 +29,9 @@ namespace MixItUp.Base.Services.Mixer
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
         event EventHandler<UserViewModel> OnUserUpdateOccurred;
         event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
-        event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred;
-        event EventHandler<UserViewModel> OnUserBanOccurred;
+        event EventHandler<MixerChatUserModerationModel> OnUserPurgeOccurred;
+        event EventHandler<MixerChatUserModerationModel> OnUserTimeoutOccurred;
+        event EventHandler<MixerChatUserModerationModel> OnUserBanOccurred;
 
         event EventHandler<ChatPollEventModel> OnPollEndOccurred;
 
@@ -71,8 +71,9 @@ namespace MixItUp.Base.Services.Mixer
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
-        public event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred = delegate { };
-        public event EventHandler<UserViewModel> OnUserBanOccurred = delegate { };
+        public event EventHandler<MixerChatUserModerationModel> OnUserPurgeOccurred = delegate { };
+        public event EventHandler<MixerChatUserModerationModel> OnUserTimeoutOccurred = delegate { };
+        public event EventHandler<MixerChatUserModerationModel> OnUserBanOccurred = delegate { };
 
         public event EventHandler<ChatPollEventModel> OnPollEndOccurred = delegate { };
 
@@ -611,7 +612,34 @@ namespace MixItUp.Base.Services.Mixer
                         moderator = await ChannelSession.Services.User.AddOrUpdateUser(e.moderator.ToChatUserModel());
                     }
                 }
-                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, moderator));
+
+                MixerChatUserModerationType type = MixerChatUserModerationType.Purge;
+                if (e.cause != null && e.cause.ContainsKey("type") && e.cause["type"] != null)
+                {
+                    string cause = e.cause["type"].ToString();
+                    string length = null;
+                    if (e.cause.ContainsKey("durationString") && e.cause["durationString"] != null)
+                    {
+                        length = e.cause["durationString"].ToString();
+                    }
+
+                    if (cause.Equals("timeout"))
+                    {
+                        type = MixerChatUserModerationType.Timeout;
+                        this.OnUserTimeoutOccurred(sender, new MixerChatUserModerationModel(user, moderator, type, length));
+                    }
+                    else if (cause.Equals("globaltimeout"))
+                    {
+                        type = MixerChatUserModerationType.GlobalTimeout;
+                        this.OnUserTimeoutOccurred(sender, new MixerChatUserModerationModel(user, moderator, type, length));
+                    }
+                    else if (cause.Equals("ban"))
+                    {
+                        type = MixerChatUserModerationType.Ban;
+                        this.OnUserBanOccurred(sender, new MixerChatUserModerationModel(user, moderator, type));
+                    }
+                }
+                this.OnUserPurgeOccurred(sender, new MixerChatUserModerationModel(user, moderator, type));
             }
         }
 
@@ -657,10 +685,6 @@ namespace MixItUp.Base.Services.Mixer
                 catch (Exception ex) { Logger.Log(ex); }
 
                 this.OnUserUpdateOccurred(sender, user);
-                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(UserRoleEnum.Banned)))
-                {
-                    this.OnUserBanOccurred(sender, user);
-                }
             }
         }
 
