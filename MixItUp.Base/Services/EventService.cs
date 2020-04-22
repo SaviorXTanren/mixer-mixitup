@@ -52,6 +52,8 @@ namespace MixItUp.Base.Services
         ChatMessageDeleted = 56,
         [Name("Chat User Timeout")]
         ChatUserTimeout = 57,
+        [Name("Chat Whisper Received")]
+        ChatWhisperReceived = 58,
 
         // Mixer = 100
 

@@ -398,6 +398,13 @@ namespace MixItUp.Base.Services
                         await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
 
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
