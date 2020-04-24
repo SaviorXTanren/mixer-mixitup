@@ -29,10 +29,15 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.SpecialIdentifierNameTextBox.Text) && !string.IsNullOrEmpty(this.SpecialIdentifierReplacementTextBox.Text))
+            string si = this.SpecialIdentifierNameTextBox.Text;
+            if (!string.IsNullOrEmpty(si))
             {
-                return new SpecialIdentifierAction(this.SpecialIdentifierNameTextBox.Text, this.SpecialIdentifierReplacementTextBox.Text,
-                    this.MakeGloballyUsableCheckBox.IsChecked.GetValueOrDefault(), this.SpecialIdentifierShouldProcessMathCheckBox.IsChecked.GetValueOrDefault());
+                si = si.Replace("$", "");
+                if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(si) && !string.IsNullOrEmpty(this.SpecialIdentifierReplacementTextBox.Text))
+                {
+                    return new SpecialIdentifierAction(si, this.SpecialIdentifierReplacementTextBox.Text,
+                        this.MakeGloballyUsableCheckBox.IsChecked.GetValueOrDefault(), this.SpecialIdentifierShouldProcessMathCheckBox.IsChecked.GetValueOrDefault());
+                }
             }
             return null;
         }

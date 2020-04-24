@@ -50,6 +50,10 @@ namespace MixItUp.Base.Services
         ChatUserLeft = 55,
         [Name("Chat Message Deleted")]
         ChatMessageDeleted = 56,
+        [Name("Chat User Timeout")]
+        ChatUserTimeout = 57,
+        [Name("Chat Whisper Received")]
+        ChatWhisperReceived = 58,
 
         // Mixer = 100
 
@@ -86,6 +90,8 @@ namespace MixItUp.Base.Services
         //MixerChatUserLeft = 155,
         //[Name("Mixer Chat Message Deleted")]
         //MixerChatMessageDeleted = 156,
+        //[Name("Mixer Chat User Timeout")]
+        //MixerChatUserTimeout = 156,
 
         [Name("Mixer Channel Sparks Spent")]
         MixerChannelSparksUsed = 170,

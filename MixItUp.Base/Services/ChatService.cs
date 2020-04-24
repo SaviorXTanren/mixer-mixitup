@@ -129,6 +129,7 @@ namespace MixItUp.Base.Services
             this.MixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
             this.MixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
             this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+            this.MixerChatService.OnUserTimeoutOccurred += MixerChatService_OnUserTimeoutOccurred;
             this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
 
             if (ChannelSession.Settings.ShowMixrElixrEmotes)
@@ -397,6 +398,13 @@ namespace MixItUp.Base.Services
                         await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
 
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
@@ -649,27 +657,47 @@ namespace MixItUp.Base.Services
             await this.UsersLeft(users);
         }
 
-        private async void MixerChatService_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void MixerChatService_OnUserPurgeOccurred(object sender, MixerChatUserModerationModel e)
         {
-            if (e.Item1 != null)
+            string reason = EnumLocalizationHelper.GetLocalizedName(e.Type);
+            if (!string.IsNullOrEmpty(e.Length))
             {
-                foreach (ChatMessageViewModel message in this.Messages.ToList())
-                {
-                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.Item1))
-                    {
-                        await message.Delete(moderator: e.Item2, reason: "Purged");
-                    }
-                }
-
-                EventTrigger trigger = (e.Item2 != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2) : new EventTrigger(EventTypeEnum.ChatUserPurge);
-                trigger.Arguments.Add(e.Item1.Username);
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                reason += $" {e.Length}";
             }
+
+            foreach (ChatMessageViewModel message in this.Messages.ToList())
+            {
+                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.User))
+                {
+                    await message.Delete(moderator: e.Moderator, reason: reason);
+                }
+            }
+
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserPurge);
+            trigger.Arguments.Add(e.User.Username);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
-        private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
+        private async void MixerChatService_OnUserTimeoutOccurred(object sender, MixerChatUserModerationModel e)
         {
-            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserBan, user));
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserTimeout, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserTimeout);
+            trigger.Arguments.Add(e.User.Username);
+            trigger.SpecialIdentifiers["timeoutlength"] = e.Length.ToString();
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+        }
+
+        private async void MixerChatService_OnUserBanOccurred(object sender, MixerChatUserModerationModel e)
+        {
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserBan, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserBan);
+            trigger.Arguments.Add(e.User.Username);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                    string.Format("{0} Banned By {1}", e.User.Username, (e.Moderator != null) ? e.Moderator.Username : "Unknown"),
+                    ChannelSession.Settings.ChatEventAlertsColorScheme));
+            }
         }
 
         private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)

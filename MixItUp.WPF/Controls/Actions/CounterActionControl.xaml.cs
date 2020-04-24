@@ -52,26 +52,31 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.CounterNameTextBox.Text))
+            string si = this.CounterNameTextBox.Text;
+            if (!string.IsNullOrEmpty(si))
             {
-                if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterNameTextBox.Text))
+                si = si.Replace("$", "");
+                if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(si))
                 {
-                    ChannelSession.Settings.Counters[this.CounterNameTextBox.Text] = new CounterModel(this.CounterNameTextBox.Text);
-                }
-                ChannelSession.Settings.Counters[this.CounterNameTextBox.Text].SaveToFile = this.SaveToFileToggleButton.IsChecked.GetValueOrDefault();
-                ChannelSession.Settings.Counters[this.CounterNameTextBox.Text].ResetOnLoad = this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault();
+                    if (!ChannelSession.Settings.Counters.ContainsKey(si))
+                    {
+                        ChannelSession.Settings.Counters[si] = new CounterModel(si);
+                    }
+                    ChannelSession.Settings.Counters[si].SaveToFile = this.SaveToFileToggleButton.IsChecked.GetValueOrDefault();
+                    ChannelSession.Settings.Counters[si].ResetOnLoad = this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault();
 
-                if (this.CounterActionTypeComboBox.SelectedIndex == 0)
-                {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, false);
-                }
-                else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
-                {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, true);
-                }
-                else if (this.CounterActionTypeComboBox.SelectedIndex == 2)
-                {
-                    return new CounterAction(this.CounterNameTextBox.Text);
+                    if (this.CounterActionTypeComboBox.SelectedIndex == 0)
+                    {
+                        return new CounterAction(si, this.CounterAmountTextBox.Text, false);
+                    }
+                    else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
+                    {
+                        return new CounterAction(si, this.CounterAmountTextBox.Text, true);
+                    }
+                    else if (this.CounterActionTypeComboBox.SelectedIndex == 2)
+                    {
+                        return new CounterAction(si);
+                    }
                 }
             }
             return null;

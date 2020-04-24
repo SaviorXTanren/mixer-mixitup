@@ -2638,6 +2638,18 @@
     <value>[!!! ŢřèáţŠţřèá₥ Ðôñáţïôñ !!!]</value>
   </data>
   <data name="RunAd" xml:space="preserve">
-    <value>[!!! Rúñ Âδ ℓ !!!]</value>
+    <value>[!!! Rúñ Âδ !!!]</value>
+  </data>
+  <data name="Ban" xml:space="preserve">
+    <value>[!!! ßáñ !!!]</value>
+  </data>
+  <data name="GlobalTimeout" xml:space="preserve">
+    <value>[!!! Gℓôβáℓ Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>[!!! Þúřĝè !!!]</value>
+  </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>[!!! Ţï₥èôúţ !!!]</value>
   </data>
 </root>
