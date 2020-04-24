@@ -33,6 +33,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                     user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
+                if (user == null && Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+
                 if (user != null)
                 {
                     users.Add(UserFromUserDataViewModel(user));
@@ -64,6 +69,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public User Get(string username)
         {
             UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null && Guid.TryParse(username, out Guid userId))
+            {
+                user = ChannelSession.Settings.GetUserData(userId);
+            }
+
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -100,6 +110,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public User Update(string username, [FromBody] User updatedUserData)
         {
             UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null && Guid.TryParse(username, out Guid userId))
+            {
+                user = ChannelSession.Settings.GetUserData(userId);
+            }
+
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -164,6 +179,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public User AdjustUserCurrency(string username, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null && Guid.TryParse(username, out Guid userId))
+            {
+                user = ChannelSession.Settings.GetUserData(userId);
+            }
+
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -199,6 +219,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public User AdjustUserInventory(string username, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
             UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null && Guid.TryParse(username, out Guid userId))
+            {
+                user = ChannelSession.Settings.GetUserData(userId);
+            }
+
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
