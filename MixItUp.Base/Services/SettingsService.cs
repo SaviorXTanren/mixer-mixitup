@@ -456,47 +456,16 @@ namespace MixItUp.Base.Services
             }
             await ChannelSession.Services.Settings.Initialize(newSettings);
 
-            newSettings.MixerUserOAuthToken = oldSettings.OAuthToken;
-            newSettings.MixerBotOAuthToken = oldSettings.BotOAuthToken;
-            if (oldSettings.Channel != null)
-            {
-                newSettings.Name = oldSettings.Channel.token;
-                newSettings.MixerChannelID = oldSettings.Channel.id;
-            }
-            newSettings.TelemetryUserID = oldSettings.TelemetryUserId;
-
-            newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
-            newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
-            newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
-            newSettings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(oldSettings.mixPlayUserGroupsInternal);
-            newSettings.OverlayWidgets = new List<OverlayWidgetModel>(oldSettings.overlayWidgetModelsInternal);
-            newSettings.Currencies = oldSettings.currenciesInternal;
-            newSettings.Inventories = oldSettings.inventoriesInternal;
-            newSettings.CooldownGroups = new Dictionary<string, int>(oldSettings.cooldownGroupsInternal);
-            newSettings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(oldSettings.preMadeChatCommandSettingsInternal);
-
-            newSettings.ChatCommands.AddRange(oldSettings.chatCommandsInternal);
-            newSettings.EventCommands.AddRange(oldSettings.eventCommandsInternal);
-            newSettings.MixPlayCommands.AddRange(oldSettings.mixPlayCmmandsInternal);
-            newSettings.TimerCommands.AddRange(oldSettings.timerCommandsInternal);
-            newSettings.ActionGroupCommands.AddRange(oldSettings.actionGroupCommandsInternal);
-            newSettings.GameCommands.AddRange(oldSettings.gameCommandsInternal);
-            newSettings.Quotes.AddRange(oldSettings.userQuotesInternal);
-
-            foreach (UserDataModel data in oldSettings.UserData.Values)
-            {
-                newSettings.UserData[data.ID] = data;
-            }
+            // Update old commands with new properties
 
             int quoteID = 1;
             foreach (UserQuoteViewModel quote in oldSettings.userQuotesInternal)
             {
-                newSettings.Quotes.Add(quote);
                 quote.ID = quoteID;
                 quoteID++;
             }
 
-            foreach (EventCommand command in newSettings.EventCommands)
+            foreach (EventCommand command in oldSettings.eventCommandsInternal)
             {
                 if (command.OtherEventType != OtherEventTypeEnum.None)
                 {
@@ -601,6 +570,42 @@ namespace MixItUp.Base.Services
                     }
                 }
             }
+
+            // Copy old values into new settings
+
+            newSettings.MixerUserOAuthToken = oldSettings.OAuthToken;
+            newSettings.MixerBotOAuthToken = oldSettings.BotOAuthToken;
+            if (oldSettings.Channel != null)
+            {
+                newSettings.Name = oldSettings.Channel.token;
+                newSettings.MixerChannelID = oldSettings.Channel.id;
+            }
+            newSettings.TelemetryUserID = oldSettings.TelemetryUserId;
+
+            newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
+            newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
+            newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
+            newSettings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(oldSettings.mixPlayUserGroupsInternal);
+            newSettings.OverlayWidgets = new List<OverlayWidgetModel>(oldSettings.overlayWidgetModelsInternal);
+            newSettings.Currencies = oldSettings.currenciesInternal;
+            newSettings.Inventories = oldSettings.inventoriesInternal;
+            newSettings.CooldownGroups = new Dictionary<string, int>(oldSettings.cooldownGroupsInternal);
+            newSettings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(oldSettings.preMadeChatCommandSettingsInternal);
+
+            newSettings.ChatCommands.AddRange(oldSettings.chatCommandsInternal);
+            newSettings.EventCommands.AddRange(oldSettings.eventCommandsInternal);
+            newSettings.MixPlayCommands.AddRange(oldSettings.mixPlayCmmandsInternal);
+            newSettings.TimerCommands.AddRange(oldSettings.timerCommandsInternal);
+            newSettings.ActionGroupCommands.AddRange(oldSettings.actionGroupCommandsInternal);
+            newSettings.GameCommands.AddRange(oldSettings.gameCommandsInternal);
+            newSettings.Quotes.AddRange(oldSettings.userQuotesInternal);
+
+            foreach (UserDataModel data in oldSettings.UserData.Values)
+            {
+                newSettings.UserData[data.ID] = data;
+            }
+
+            // Update actions for commands
 
             foreach (CommandBase command in GetAllCommands(newSettings))
             {
