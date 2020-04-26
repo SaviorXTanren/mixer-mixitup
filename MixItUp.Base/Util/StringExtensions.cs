@@ -77,63 +77,12 @@ namespace MixItUp.Base.Util
 
         public static bool ParseCurrency(this string str, out double result)
         {
-            List<char> characters = new List<char>();
-
-            // Remove all non-essential characters for parsing
-            foreach (char c in str)
+            // First try the current culture and then the invariant culture if that fails.
+            if (!double.TryParse(str, NumberStyles.Currency, NumberFormatInfo.CurrentInfo, out result))
             {
-                if (c == Comma)
-                {
-                    characters.Add(c);
-                }
-                else if (c == Decimal)
-                {
-                    characters.Add(c);
-                }
-                else if (char.IsDigit(c))
-                {
-                    characters.Add(c);
-                }
+                return double.TryParse(str, NumberStyles.Currency, NumberFormatInfo.InvariantInfo, out result);
             }
-
-            if (characters.Contains(Decimal) && characters.Contains(Comma))
-            {
-                // Decimal appears after comma (EX: US Dollar)
-                if (characters.IndexOf(Decimal) > characters.IndexOf(Comma))
-                {
-                    characters.RemoveAll(c => c == Comma);
-                }
-                // Decimal appears before comma (EX: Brazilian Real)
-                else
-                {
-                    characters.RemoveAll(c => c == Decimal);
-                    // Replace comma with decimal for invariant standardization
-                    characters[characters.IndexOf(Comma)] = Decimal;
-                }
-            }
-            else if (characters.Contains(Decimal) || characters.Contains(Comma))
-            {
-                int charIndex = -1;
-                if (characters.Contains(Decimal))
-                {
-                    charIndex = characters.IndexOf(Decimal);
-                }
-                else if (characters.Contains(Comma))
-                {
-                    charIndex = characters.IndexOf(Comma);
-                    // Replace comma with decimal for invariant standardization
-                    characters[charIndex] = Decimal;
-                }
-
-                // Check if there are more than 2 numbers after the special denoting character.
-                // If there are, then it's not a decimal cents character and can be removed.
-                if (characters.Count - 1 - charIndex > 2)
-                {
-                    characters.RemoveAt(charIndex);
-                }
-            }
-
-            return double.TryParse(new string(characters.ToArray()), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out result);
+            return true;
         }
     }
 }
