@@ -130,6 +130,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                     user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
+                if (user == null && Guid.TryParse(giveData.UsernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+
                 if (user != null && giveData.Amount > 0)
                 {
                     currency.AddAmount(user, giveData.Amount);

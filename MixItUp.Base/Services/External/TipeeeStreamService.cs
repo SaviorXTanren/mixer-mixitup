@@ -65,11 +65,8 @@ namespace MixItUp.Base.Services.External
         [JsonProperty("parameters")]
         public TipeeeStreamParameters Parameters { get; set; } = new TipeeeStreamParameters();
 
-        [JsonProperty("parameters.amount")]
-        public string AmountText { get; set; }
-
         [JsonProperty("formattedAmount")]
-        public string FormattedAmount { get; set; }
+        public string DisplayAmount { get; set; }
 
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
@@ -80,15 +77,28 @@ namespace MixItUp.Base.Services.External
             get
             {
                 double result = 0;
-                if (!string.IsNullOrEmpty(this.AmountText) && this.AmountText.ParseCurrency(out result))
+
+                // Check for int value first
+                if (this.Parameters.Amount != null)
                 {
-                    return result;
+                    double? doubleValue = this.Parameters.Amount.Value<double?>();
+                    if (doubleValue.HasValue)
+                    {
+                        return doubleValue.Value;
+                    }
+
+                    string stringValue = this.Parameters.Amount.Value<string>();
+                    if (!string.IsNullOrEmpty(stringValue) && stringValue.ParseCurrency(out result))
+                    {
+                        return result;
+                    }
                 }
-                else if (!string.IsNullOrEmpty(this.Parameters.Amount) && this.Parameters.Amount.ParseCurrency(out result))
+
+                if (!string.IsNullOrEmpty(this.DisplayAmount))
                 {
-                    return result;
+                    this.DisplayAmount.ParseCurrency(out result);
                 }
-                return 0;
+                return result;
             }
         }
 
@@ -122,7 +132,7 @@ namespace MixItUp.Base.Services.External
         public string Currency { get; set; }
 
         [JsonProperty("amount")]
-        public string Amount { get; set; }
+        public JToken Amount { get; set; }
 
         [JsonProperty("fees")]
         public string Fees { get; set; }
