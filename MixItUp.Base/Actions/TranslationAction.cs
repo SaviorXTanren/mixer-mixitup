@@ -99,7 +99,7 @@ namespace MixItUp.Base.Actions
 
                 if (!string.IsNullOrEmpty(translationResult))
                 {
-                    if (string.IsNullOrEmpty(await ModerationHelper.ShouldBeModerated(user, translationResult)))
+                    if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldBeModerated(user, translationResult)))
                     {
                         if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
                         {

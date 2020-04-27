@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
@@ -549,7 +550,7 @@ namespace MixItUp.Base.ViewModel.User
         public async Task AddModerationStrike(string moderationReason = null)
         {
             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-            extraSpecialIdentifiers.Add(ModerationHelper.ModerationReasonSpecialIdentifier, moderationReason);
+            extraSpecialIdentifiers.Add(ModerationService.ModerationReasonSpecialIdentifier, moderationReason);
 
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)

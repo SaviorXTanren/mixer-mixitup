@@ -1,12 +1,10 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -127,7 +125,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private string ConvertFilteredWordListToText(IEnumerable<string> words)
         {
             string text = string.Join(Environment.NewLine, words);
-            text = text.Replace(ModerationHelper.BannedWordWildcardRegexFormat, "*");
+            text = text.Replace(ModerationService.BannedWordWildcardRegexFormat, "*");
             return text;
         }
 
@@ -137,7 +135,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 text = "";
             }
-            text = text.Replace("*", ModerationHelper.BannedWordWildcardRegexFormat);
+            text = text.Replace("*", ModerationService.BannedWordWildcardRegexFormat);
 
             list.Clear();
             foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))

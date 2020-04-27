@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services
         public SecretsService Secrets { get; protected set; }
         public StatisticsService Statistics { get; protected set; }
         public IDatabaseService Database { get; protected set; }
+        public IModerationService Moderation { get; protected set; }
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
