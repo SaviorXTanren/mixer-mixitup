@@ -55,9 +55,11 @@ namespace MixItUp.Base.Actions
             {
                 try
                 {
+                    replacementText.Replace("random(", "customrandom(");
+
                     // Process Math
                     CalculationEngine engine = new CalculationEngine(new System.Globalization.CultureInfo("en-US"));
-                    engine.AddFunction("random", Random);
+                    engine.AddFunction("customrandom", Random);
                     engine.AddFunction("randomrange", RandomRange);
 
                     double result = engine.Calculate(replacementText);
