@@ -318,9 +318,9 @@ namespace MixItUp.Base.Services
 
             // Pre message processing
 
-            if (message is MixerChatMessageViewModel)
+            if (message is UserChatMessageViewModel)
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer)
+                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null)
                 {
                     UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
                     if (activeUser != null)
@@ -331,7 +331,6 @@ namespace MixItUp.Base.Services
 
                 if (message.User != null)
                 {
-                    await message.User.RefreshDetails();
                     message.User.Data.TotalChatMessageSent++;
                     message.User.UpdateLastActivity();
 
@@ -388,7 +387,15 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is MixerChatMessageViewModel)
+            if (message is AlertChatMessageViewModel)
+            {
+                if (ChannelSession.Settings.WhisperAllAlerts)
+                {
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
+                }
+                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
+            }
+            else if (message is UserChatMessageViewModel)
             {
                 if (message.IsWhisper)
                 {
@@ -412,26 +419,11 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    if (this.DisableChat && !message.ID.Equals(Guid.Empty))
+                    if (this.DisableChat)
                     {
                         Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
                         await this.DeleteMessage(message);
                         return;
-                    }
-
-                    if (await message.CheckForModeration())
-                    {
-                        await this.DeleteMessage(message);
-                        return;
-                    }
-
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
-                    {
-                        this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
-                        {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
-                        }
                     }
 
                     string primaryTaggedUsername = message.PrimaryTaggedUsername;
@@ -441,6 +433,15 @@ namespace MixItUp.Base.Services
                         if (primaryTaggedUser != null)
                         {
                             primaryTaggedUser.Data.TotalTimesTagged++;
+                        }
+                    }
+
+                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    {
+                        this.userEntranceCommands.Add(message.User.ID);
+                        if (message.User.Data.EntranceCommand != null)
+                        {
+                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
                         }
                     }
 
@@ -463,59 +464,17 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                // Chat command checks
-
-                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
+                if (message.User != null)
                 {
-                    if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
+                    if (message.User.NeedsHardRefresh)
                     {
-                        return;
+                        AsyncRunner.RunAsyncInBackground(() => this.UserMessagePostProcessing(message));
                     }
-
-                    if (ChannelSession.Settings.IgnoreBotAccountCommands && ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                    else
                     {
-                        return;
-                    }
-
-                    if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
-                    {
-                        return;
-                    }
-
-                    Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
-
-                    List<PermissionsCommandBase> commands = this.chatCommands.ToList();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
-                    {
-                        commands.Add(command);
-                    }
-
-                    foreach (PermissionsCommandBase command in commands)
-                    {
-                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
-                        {
-                            if (command.IsEnabled)
-                            {
-                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-
-                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
-                                {
-                                    await this.DeleteMessage(message);
-                                }
-                                await command.Perform(message.User, message.Platform, arguments: arguments);
-                            }
-                            break;
-                        }
+                        await this.UserMessagePostProcessing(message);
                     }
                 }
-            }
-            else if (message is AlertChatMessageViewModel)
-            {
-                if (ChannelSession.Settings.WhisperAllAlerts)
-                {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
-                }
-                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
             }
 
             TimeSpan processingTime = DateTimeOffset.Now - messageProcessingStart;
@@ -523,6 +482,61 @@ namespace MixItUp.Base.Services
             if (processingTime.TotalMilliseconds > 500)
             {
                 Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
+            }
+        }
+
+        private async Task UserMessagePostProcessing(ChatMessageViewModel message)
+        {
+            await message.User.RefreshDetails();
+
+            if (await message.CheckForModeration())
+            {
+                await this.DeleteMessage(message);
+                return;
+            }
+
+            if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
+            {
+                if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
+                {
+                    return;
+                }
+
+                if (ChannelSession.Settings.IgnoreBotAccountCommands && ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                {
+                    return;
+                }
+
+                if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
+                {
+                    return;
+                }
+
+                Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
+
+                List<PermissionsCommandBase> commands = this.chatCommands.ToList();
+                foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
+                {
+                    commands.Add(command);
+                }
+
+                foreach (PermissionsCommandBase command in commands)
+                {
+                    if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                    {
+                        if (command.IsEnabled)
+                        {
+                            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+
+                            if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                            {
+                                await this.DeleteMessage(message);
+                            }
+                            await command.Perform(message.User, message.Platform, arguments: arguments);
+                        }
+                        break;
+                    }
+                }
             }
         }
 

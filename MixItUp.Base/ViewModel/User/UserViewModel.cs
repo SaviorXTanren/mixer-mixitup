@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -74,6 +75,8 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataModel Data { get; private set; }
 
         private string unassociatedUsername;
+
+        private SemaphoreSlim refreshSemaphore = new SemaphoreSlim(1);
 
         public UserViewModel(string username)
             : this(mixerID: 0)
@@ -306,6 +309,10 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Mixer
 
+        public bool NeedsHardRefresh { get { return !this.IsAnonymous && this.LastUpdated == DateTimeOffset.MinValue; } }
+
+        public bool NeedsSoftRefresh { get { return !this.IsAnonymous && this.LastUpdated != DateTimeOffset.MinValue && !this.Data.UpdatedThisSession; } }
+
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
         public DateTimeOffset LastActivity { get { return this.Data.LastActivity; } set { this.Data.LastActivity = value; } }
@@ -503,18 +510,21 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails(bool force = false)
         {
-            if (!this.IsAnonymous && (!this.Data.UpdatedThisSession || force))
+            if (!this.IsAnonymous)
             {
-                // If we've never seen them before, they haven't been updated this session yet, or it's a force refresh, do a waited refresh of their data
-                if (this.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
+                await this.refreshSemaphore.WaitAndRelease(async () =>
                 {
-                    await this.RefreshDetailsInternal();
-                }
-                // Otherwise do a background refresh
-                else
-                {
-                    AsyncRunner.RunAsyncInBackground(this.RefreshDetailsInternal);
-                }
+                    // If we've never seen them before or it's a force refresh, do a waited refresh of their data
+                    if (this.NeedsHardRefresh || force)
+                    {
+                        await this.RefreshDetailsInternal();
+                    }
+                    // Otherwise do a background refresh
+                    else if (this.NeedsSoftRefresh)
+                    {
+                        AsyncRunner.RunAsyncInBackground(this.RefreshDetailsInternal);
+                    }
+                });
             }
         }
 
@@ -663,6 +673,7 @@ namespace MixItUp.Base.ViewModel.User
         private async Task RefreshDetailsInternal()
         {
             this.Data.UpdatedThisSession = true;
+            this.LastUpdated = DateTimeOffset.Now;
 
             List<Task> refreshTasks = new List<Task>();
 
@@ -679,8 +690,6 @@ namespace MixItUp.Base.ViewModel.User
             this.SetCommonUserRoles();
 
             await this.RefreshExternalServiceDetails();
-
-            this.LastUpdated = DateTimeOffset.Now;
         }
 
         #region Mixer Refresh
