@@ -36,12 +36,12 @@ namespace MixItUp.Base.Services
     {
         Task Initialize();
 
-        Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false);
-        Task<string> ShouldBeFilteredWordModerated(UserViewModel user, string text);
-        string ShouldBeTextModerated(UserViewModel user, string text);
-        string ShouldBeLinkModerated(UserViewModel user, string text, bool containsLink = false);
+        Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false);
+        Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text);
+        string ShouldTextBeExcessiveModerated(UserViewModel user, string text);
+        string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false);
 
-        bool MeetsChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null);
+        bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null);
         Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false);
     }
 
@@ -71,7 +71,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
+        public async Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
             string reason = null;
 
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Services
                 return reason;
             }
 
-            reason = await ShouldBeFilteredWordModerated(user, text);
+            reason = await ShouldTextBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services
                 return reason;
             }
 
-            reason = ShouldBeTextModerated(user, text);
+            reason = ShouldTextBeExcessiveModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationChatTextApplyStrikes)
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Services
                 return reason;
             }
 
-            reason = ShouldBeLinkModerated(user, text, containsLink);
+            reason = ShouldTextBeLinkModerated(user, text, containsLink);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationBlockLinksApplyStrikes)
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services
             return reason;
         }
 
-        public async Task<string> ShouldBeFilteredWordModerated(UserViewModel user, string text)
+        public async Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text)
         {
             text = PrepareTextForChecking(text);
 
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public string ShouldBeTextModerated(UserViewModel user, string text)
+        public string ShouldTextBeExcessiveModerated(UserViewModel user, string text)
         {
             text = PrepareTextForChecking(text);
 
@@ -208,7 +208,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public string ShouldBeLinkModerated(UserViewModel user, string text, bool containsLink = false)
+        public string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false)
         {
             text = PrepareTextForChecking(text);
 
@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public bool MeetsChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
+        public bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
