@@ -77,7 +77,10 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             this.shouldShowIntellisense = true;
 
-            this.AgeRatingComboBox.SelectedItem = MixerToAgeRatingMap[ChannelSession.MixerChannel.audience];
+            if (!string.IsNullOrEmpty(ChannelSession.MixerChannel.audience) && MixerToAgeRatingMap.ContainsKey(ChannelSession.MixerChannel.audience))
+            {
+                this.AgeRatingComboBox.SelectedItem = MixerToAgeRatingMap[ChannelSession.MixerChannel.audience];
+            }
 
             this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumList<RaidSearchCriteriaEnum>();
 
