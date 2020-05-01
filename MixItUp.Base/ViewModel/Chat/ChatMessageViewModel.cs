@@ -39,6 +39,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public UserViewModel User { get; set; }
 
+        public DateTimeOffset ProcessingStartTime { get; set; }
+
         public event EventHandler OnDeleted = delegate { };
 
         public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
