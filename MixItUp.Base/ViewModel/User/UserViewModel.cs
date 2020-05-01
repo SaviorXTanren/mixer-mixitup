@@ -76,8 +76,6 @@ namespace MixItUp.Base.ViewModel.User
 
         private string unassociatedUsername;
 
-        private SemaphoreSlim refreshSemaphore = new SemaphoreSlim(1);
-
         public UserViewModel(string username)
             : this(mixerID: 0)
         {
@@ -512,19 +510,10 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous)
             {
-                await this.refreshSemaphore.WaitAndRelease(async () =>
+                if (this.NeedsHardRefresh || this.NeedsSoftRefresh || force)
                 {
-                    // If we've never seen them before or it's a force refresh, do a waited refresh of their data
-                    if (this.NeedsHardRefresh || force)
-                    {
-                        await this.RefreshDetailsInternal();
-                    }
-                    // Otherwise do a background refresh
-                    else if (this.NeedsSoftRefresh)
-                    {
-                        AsyncRunner.RunAsyncInBackground(this.RefreshDetailsInternal);
-                    }
-                });
+                    await this.RefreshDetailsInternal();
+                }
             }
         }
 
