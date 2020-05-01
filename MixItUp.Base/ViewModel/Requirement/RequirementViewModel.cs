@@ -155,38 +155,38 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public bool TrySubtractCurrencyAmount(UserViewModel user)
+        public bool TrySubtractCurrencyAmount(UserViewModel user, bool requireAmount = false)
         {
             if (this.Currency != null)
             {
-                return this.Currency.TrySubtractAmount(user.Data);
+                return this.Currency.TrySubtractAmount(user.Data, requireAmount);
             }
             return true;
         }
 
-        public bool TrySubtractCurrencyAmount(UserViewModel user, int amount)
+        public bool TrySubtractCurrencyAmount(UserViewModel user, int amount, bool requireAmount = false)
         {
             if (this.Currency != null)
             {
-                return this.Currency.TrySubtractAmount(user.Data, amount);
+                return this.Currency.TrySubtractAmount(user.Data, amount, requireAmount);
             }
             return true;
         }
 
-        public bool TrySubtractInventoryAmount(UserViewModel user)
+        public bool TrySubtractInventoryAmount(UserViewModel user, bool requireAmount = false)
         {
             if (this.Inventory != null)
             {
-                return this.Inventory.TrySubtractAmount(user.Data);
+                return this.Inventory.TrySubtractAmount(user.Data, requireAmount);
             }
             return true;
         }
 
-        public bool TrySubtractInventoryAmount(UserViewModel user, int amount)
+        public bool TrySubtractInventoryAmount(UserViewModel user, int amount, bool requireAmount = false)
         {
             if (this.Inventory != null)
             {
-                return this.Inventory.TrySubtractAmount(user.Data, amount);
+                return this.Inventory.TrySubtractAmount(user.Data, amount, requireAmount);
             }
             return true;
         }
