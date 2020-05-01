@@ -107,6 +107,9 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<Guid, int> whisperMap = new Dictionary<Guid, int>();
 
+        private SemaphoreSlim messagePostProcessingLock = new SemaphoreSlim(0);
+        private LockedList<ChatMessageViewModel> messagePostProcessingList = new LockedList<ChatMessageViewModel>();
+
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private string currentChatEventLogFilePath;
@@ -177,6 +180,7 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 0, this.MessagePostProcessing);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
@@ -464,79 +468,78 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                if (message.User != null)
-                {
-                    if (message.User.NeedsHardRefresh)
-                    {
-                        AsyncRunner.RunAsyncInBackground(() => this.UserMessagePostProcessing(message));
-                    }
-                    else
-                    {
-                        await this.UserMessagePostProcessing(message);
-                    }
-                }
+                this.messagePostProcessingList.Add(message);
+                this.messagePostProcessingLock.Release();
             }
         }
 
-        private async Task UserMessagePostProcessing(ChatMessageViewModel message)
+        private async Task MessagePostProcessing(CancellationToken token)
         {
-            await message.User.RefreshDetails();
+            await this.messagePostProcessingLock.WaitAsync();
 
-            if (await message.CheckForModeration())
+            ChatMessageViewModel message = this.messagePostProcessingList.FirstOrDefault();
+            this.messagePostProcessingList.RemoveAt(0);
+
+            if (message.User != null)
             {
-                await this.DeleteMessage(message);
-                return;
-            }
+                await message.User.RefreshDetails();
 
-            if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
-            {
-                if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
+                if (await message.CheckForModeration())
                 {
+                    await this.DeleteMessage(message);
                     return;
                 }
 
-                if (ChannelSession.Settings.IgnoreBotAccountCommands && ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                 {
-                    return;
-                }
-
-                if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
-                {
-                    return;
-                }
-
-                Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
-
-                List<PermissionsCommandBase> commands = this.chatCommands.ToList();
-                foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
-                {
-                    commands.Add(command);
-                }
-
-                foreach (PermissionsCommandBase command in commands)
-                {
-                    if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                    if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                     {
-                        if (command.IsEnabled)
-                        {
-                            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+                        return;
+                    }
 
-                            if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                    if (ChannelSession.Settings.IgnoreBotAccountCommands && ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                    {
+                        return;
+                    }
+
+                    if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
+                    {
+                        return;
+                    }
+
+                    Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
+
+                    List<PermissionsCommandBase> commands = this.chatCommands.ToList();
+                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
+                    {
+                        commands.Add(command);
+                    }
+
+                    foreach (PermissionsCommandBase command in commands)
+                    {
+                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                        {
+                            if (command.IsEnabled)
                             {
-                                await this.DeleteMessage(message);
+                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+
+                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                                {
+                                    await this.DeleteMessage(message);
+                                }
+                                await command.Perform(message.User, message.Platform, arguments: arguments);
                             }
-                            await command.Perform(message.User, message.Platform, arguments: arguments);
+                            break;
                         }
-                        break;
                     }
                 }
-            }
 
-            TimeSpan processingTime = DateTimeOffset.Now - message.ProcessingStartTime;
-            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, processingTime.TotalMilliseconds));
-            if (processingTime.TotalMilliseconds > 500)
-            {
-                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
+                TimeSpan processingTime = DateTimeOffset.Now - message.ProcessingStartTime;
+                Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, processingTime.TotalMilliseconds));
+                if (processingTime.TotalMilliseconds > 500)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
+                }
             }
         }
 
