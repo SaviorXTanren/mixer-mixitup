@@ -288,7 +288,7 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else if (command.Name.Contains("Moderation Strike"))
                     {
-                        extraSpecialIdentifiers[ModerationHelper.ModerationReasonSpecialIdentifier] = "Bad Stuff";
+                        extraSpecialIdentifiers[ModerationService.ModerationReasonSpecialIdentifier] = "Bad Stuff";
                     }
                     else
                     {

@@ -23,6 +23,7 @@ namespace MixItUp.WPF.Services
             this.Settings = new SettingsService();
             this.Statistics = new StatisticsService();
             this.Database = new WindowsDatabaseService();
+            this.Moderation = new ModerationService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
             this.TimerService = new TimerService();

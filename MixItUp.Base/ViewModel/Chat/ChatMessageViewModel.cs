@@ -39,6 +39,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public UserViewModel User { get; set; }
 
+        public DateTimeOffset ProcessingStartTime { get; set; }
+
         public event EventHandler OnDeleted = delegate { };
 
         public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
@@ -81,17 +83,17 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public async Task<bool> CheckForModeration()
         {
-            if (this.User != null)
+            if (this.User != null && !this.IsWhisper)
             {
-                if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(this.User, this))
+                if (!ChannelSession.Services.Moderation.DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
                     await this.Delete(reason: "Chat/MixPlay Participation");
-                    await ModerationHelper.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
+                    await ChannelSession.Services.Moderation.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
 
-                string moderationReason = await ModerationHelper.ShouldBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
+                string moderationReason = await ChannelSession.Services.Moderation.ShouldTextBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
                 if (!string.IsNullOrEmpty(moderationReason))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));

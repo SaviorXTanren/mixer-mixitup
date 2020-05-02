@@ -377,7 +377,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.UseChatModeration && arguments.Count() > 0)
             {
-                if (!string.IsNullOrEmpty(await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0))))
+                if (!string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, arguments.ElementAt(0))))
                 {
                     return;
                 }

@@ -96,11 +96,9 @@ namespace MixItUp.Base.ViewModel.Requirement
             return null;
         }
 
-        public bool TrySubtractAmount(UserDataModel userData) { return this.TrySubtractAmount(userData, this.RequiredAmount); }
+        public bool TrySubtractAmount(UserDataModel userData, bool requireAmount = false) { return this.TrySubtractAmount(userData, this.RequiredAmount, requireAmount); }
 
-        public bool TrySubtractMultiplierAmount(UserDataModel userData, int multiplier) { return this.TrySubtractAmount(userData, multiplier * this.RequiredAmount); }
-
-        public bool TrySubtractAmount(UserDataModel userData, int amount)
+        public bool TrySubtractAmount(UserDataModel userData, int amount, bool requireAmount = false)
         {
             if (this.DoesMeetCurrencyRequirement(amount))
             {
@@ -109,6 +107,12 @@ namespace MixItUp.Base.ViewModel.Requirement
                 {
                     return false;
                 }
+
+                if (requireAmount && !currency.HasAmount(userData, amount))
+                {
+                    return false;
+                }
+
                 currency.SubtractAmount(userData, amount);
                 return true;
             }
