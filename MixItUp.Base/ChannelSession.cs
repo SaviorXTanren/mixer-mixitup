@@ -664,7 +664,7 @@ namespace MixItUp.Base
                         ChannelSession.Services.Chat.RebuildCommandTriggers();
 
                         ChannelSession.Services.TimerService.Initialize();
-                        await ModerationHelper.Initialize();
+                        await ChannelSession.Services.Moderation.Initialize();
                     }
 
                     ChannelSession.Services.Statistics.Initialize();

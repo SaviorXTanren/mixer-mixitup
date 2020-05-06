@@ -817,6 +817,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ban.
+        /// </summary>
+        public static string Ban {
+            get {
+                return ResourceManager.GetString("Ban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Banned.
         /// </summary>
         public static string Banned {
@@ -2860,6 +2869,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Global Timeout.
+        /// </summary>
+        public static string GlobalTimeout {
+            get {
+                return ResourceManager.GetString("GlobalTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &gt;.
         /// </summary>
         public static string GreaterThan {
@@ -4660,6 +4678,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This feature is currently available for Partners &amp; Verified Channels only..
+        /// </summary>
+        public static string PartnersAndVerifiedOnly {
+            get {
+                return ResourceManager.GetString("PartnersAndVerifiedOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This feature is currently available for Partners only..
         /// </summary>
         public static string PartnersOnly {
@@ -4899,6 +4926,15 @@ namespace MixItUp.Base {
         public static string Pseudo {
             get {
                 return ResourceManager.GetString("Pseudo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purge.
+        /// </summary>
+        public static string Purge {
+            get {
+                return ResourceManager.GetString("Purge", resourceCulture);
             }
         }
         
@@ -6636,6 +6672,15 @@ namespace MixItUp.Base {
         public static string TimeLeft {
             get {
                 return ResourceManager.GetString("TimeLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timeout.
+        /// </summary>
+        public static string Timeout {
+            get {
+                return ResourceManager.GetString("Timeout", resourceCulture);
             }
         }
         

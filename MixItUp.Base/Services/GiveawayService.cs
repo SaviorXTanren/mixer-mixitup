@@ -269,7 +269,7 @@ namespace MixItUp.Base.Services
                         if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
                         {
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount, requireAmount: true))
                             {
                                 await ChannelSession.Services.Chat.Whisper(message.User, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
                                 return;
@@ -279,7 +279,7 @@ namespace MixItUp.Base.Services
                         if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
                         {
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount, requireAmount: true))
                             {
                                 await ChannelSession.Services.Chat.Whisper(message.User, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
                                 return;

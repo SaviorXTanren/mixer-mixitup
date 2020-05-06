@@ -467,7 +467,9 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "agerating", details.audience);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", details.viewersCurrent.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", details.viewersTotal.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
                 }

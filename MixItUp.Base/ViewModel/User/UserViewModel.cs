@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
@@ -458,6 +460,10 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Twitch
 
+        public bool NeedsHardRefresh { get { return !this.IsAnonymous && this.LastUpdated == DateTimeOffset.MinValue; } }
+
+        public bool NeedsSoftRefresh { get { return !this.IsAnonymous && this.LastUpdated != DateTimeOffset.MinValue && !this.Data.UpdatedThisSession; } }
+
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
         public DateTimeOffset LastActivity { get { return this.Data.LastActivity; } set { this.Data.LastActivity = value; } }
@@ -655,17 +661,11 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails(bool force = false)
         {
-            if (!this.IsAnonymous && (!this.Data.UpdatedThisSession || force))
+            if (!this.IsAnonymous)
             {
-                // If we've never seen them before, they haven't been updated this session yet, or it's a force refresh, do a waited refresh of their data
-                if (this.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
+                if (this.NeedsHardRefresh || this.NeedsSoftRefresh || force)
                 {
                     await this.RefreshDetailsInternal();
-                }
-                // Otherwise do a background refresh
-                else
-                {
-                    AsyncRunner.RunAsyncInBackground(this.RefreshDetailsInternal);
                 }
             }
         }
@@ -702,7 +702,7 @@ namespace MixItUp.Base.ViewModel.User
         public async Task AddModerationStrike(string moderationReason = null)
         {
             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-            extraSpecialIdentifiers.Add(ModerationHelper.ModerationReasonSpecialIdentifier, moderationReason);
+            extraSpecialIdentifiers.Add(ModerationService.ModerationReasonSpecialIdentifier, moderationReason);
 
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)
@@ -835,6 +835,7 @@ namespace MixItUp.Base.ViewModel.User
         private async Task RefreshDetailsInternal()
         {
             this.Data.UpdatedThisSession = true;
+            this.LastUpdated = DateTimeOffset.Now;
 
             List<Task> refreshTasks = new List<Task>();
 
@@ -858,8 +859,6 @@ namespace MixItUp.Base.ViewModel.User
             this.SetCommonUserRoles();
 
             await this.RefreshExternalServiceDetails();
-
-            this.LastUpdated = DateTimeOffset.Now;
         }
 
         #region Mixer Refresh

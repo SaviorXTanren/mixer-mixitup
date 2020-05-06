@@ -2643,4 +2643,19 @@
   <data name="RunAd" xml:space="preserve">
     <value>Run Ad</value>
   </data>
+  <data name="Ban" xml:space="preserve">
+    <value>Ban</value>
+  </data>
+  <data name="GlobalTimeout" xml:space="preserve">
+    <value>Global Timeout</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
+    <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
+  </data>
 </root>

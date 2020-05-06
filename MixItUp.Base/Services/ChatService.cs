@@ -111,6 +111,9 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<Guid, int> whisperMap = new Dictionary<Guid, int>();
 
+        private SemaphoreSlim messagePostProcessingLock = new SemaphoreSlim(0);
+        private LockedList<ChatMessageViewModel> messagePostProcessingList = new LockedList<ChatMessageViewModel>();
+
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private string currentChatEventLogFilePath;
@@ -137,6 +140,7 @@ namespace MixItUp.Base.Services
                 this.MixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
                 this.MixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
                 this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+                this.MixerChatService.OnUserTimeoutOccurred += MixerChatService_OnUserTimeoutOccurred;
                 this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
 
                 if (ChannelSession.Settings.ShowMixrElixrEmotes)
@@ -156,20 +160,20 @@ namespace MixItUp.Base.Services
                     messagesToAdd.Add(new MixerChatMessageViewModel(messageEvent));
                 }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
-            {
-                await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
+    #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(async () =>
                 {
-                    List<UserViewModel> users = new List<UserViewModel>();
-                    foreach (ChatUserModel chatUser in collection)
+                    await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
                     {
-                        users.Add(await ChannelSession.Services.User.AddOrUpdateUser(chatUser));
-                    }
-                    await this.UsersJoined(users);
-                }, int.MaxValue);
-            });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        List<UserViewModel> users = new List<UserViewModel>();
+                        foreach (ChatUserModel chatUser in collection)
+                        {
+                            users.Add(await ChannelSession.Services.User.AddOrUpdateUser(chatUser));
+                        }
+                        await this.UsersJoined(users);
+                    }, int.MaxValue);
+                });
+    #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 
             if (twitchChatService != null)
@@ -201,6 +205,7 @@ namespace MixItUp.Base.Services
             });
 
             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 0, this.MessagePostProcessing);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
@@ -383,14 +388,14 @@ namespace MixItUp.Base.Services
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            DateTimeOffset messageProcessingStart = DateTimeOffset.Now;
-            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1} - {2}", message.ID.ToString(), messageProcessingStart, message));
+            message.ProcessingStartTime = DateTimeOffset.Now;
+            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1} - {2}", message.ID.ToString(), message.ProcessingStartTime, message));
 
             // Pre message processing
 
-            if (message is MixerChatMessageViewModel || message is TwitchChatMessageViewModel)
+            if (message is UserChatMessageViewModel)
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer)
+                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null)
                 {
                     UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
                     if (activeUser != null)
@@ -409,7 +414,6 @@ namespace MixItUp.Base.Services
 
                 if (message.User != null)
                 {
-                    await message.User.RefreshDetails();
                     message.User.Data.TotalChatMessageSent++;
                     message.User.UpdateLastActivity();
 
@@ -466,7 +470,15 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is MixerChatMessageViewModel || message is TwitchChatMessageViewModel)
+            if (message is AlertChatMessageViewModel)
+            {
+                if (ChannelSession.Settings.WhisperAllAlerts)
+                {
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
+                }
+                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
+            }
+            else if (message is UserChatMessageViewModel)
             {
                 if (message.IsWhisper)
                 {
@@ -476,6 +488,13 @@ namespace MixItUp.Base.Services
                         await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
 
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
@@ -483,26 +502,11 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    if (this.DisableChat && !message.ID.Equals(Guid.Empty))
+                    if (this.DisableChat)
                     {
                         Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
                         await this.DeleteMessage(message);
                         return;
-                    }
-
-                    if (await message.CheckForModeration())
-                    {
-                        await this.DeleteMessage(message);
-                        return;
-                    }
-
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
-                    {
-                        this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
-                        {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
-                        }
                     }
 
                     string primaryTaggedUsername = message.PrimaryTaggedUsername;
@@ -512,6 +516,15 @@ namespace MixItUp.Base.Services
                         if (primaryTaggedUser != null)
                         {
                             primaryTaggedUser.Data.TotalTimesTagged++;
+                        }
+                    }
+
+                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    {
+                        this.userEntranceCommands.Add(message.User.ID);
+                        if (message.User.Data.EntranceCommand != null)
+                        {
+                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
                         }
                     }
 
@@ -534,7 +547,27 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                // Chat command checks
+                this.messagePostProcessingList.Add(message);
+                this.messagePostProcessingLock.Release();
+            }
+        }
+
+        private async Task MessagePostProcessing(CancellationToken token)
+        {
+            await this.messagePostProcessingLock.WaitAsync();
+
+            ChatMessageViewModel message = this.messagePostProcessingList.FirstOrDefault();
+            this.messagePostProcessingList.RemoveAt(0);
+
+            if (message.User != null)
+            {
+                await message.User.RefreshDetails();
+
+                if (!message.IsWhisper && await message.CheckForModeration())
+                {
+                    await this.DeleteMessage(message);
+                    return;
+                }
 
                 if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                 {
@@ -579,21 +612,13 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
-            }
-            else if (message is AlertChatMessageViewModel)
-            {
-                if (ChannelSession.Settings.WhisperAllAlerts)
-                {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
-                }
-                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
-            }
 
-            TimeSpan processingTime = DateTimeOffset.Now - messageProcessingStart;
-            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, processingTime.TotalMilliseconds));
-            if (processingTime.TotalMilliseconds > 500)
-            {
-                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
+                TimeSpan processingTime = DateTimeOffset.Now - message.ProcessingStartTime;
+                Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, processingTime.TotalMilliseconds));
+                if (processingTime.TotalMilliseconds > 500)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
+                }
             }
         }
 
@@ -728,27 +753,47 @@ namespace MixItUp.Base.Services
             await this.UsersLeft(users);
         }
 
-        private async void MixerChatService_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private async void MixerChatService_OnUserPurgeOccurred(object sender, MixerChatUserModerationModel e)
         {
-            if (e.Item1 != null)
+            string reason = EnumLocalizationHelper.GetLocalizedName(e.Type);
+            if (!string.IsNullOrEmpty(e.Length))
             {
-                foreach (ChatMessageViewModel message in this.Messages.ToList())
-                {
-                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.Item1))
-                    {
-                        await message.Delete(moderator: e.Item2, reason: "Purged");
-                    }
-                }
-
-                EventTrigger trigger = (e.Item2 != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2) : new EventTrigger(EventTypeEnum.ChatUserPurge);
-                trigger.Arguments.Add(e.Item1.Username);
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                reason += $" {e.Length}";
             }
+
+            foreach (ChatMessageViewModel message in this.Messages.ToList())
+            {
+                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.User))
+                {
+                    await message.Delete(moderator: e.Moderator, reason: reason);
+                }
+            }
+
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserPurge);
+            trigger.Arguments.Add(e.User.Username);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
-        private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
+        private async void MixerChatService_OnUserTimeoutOccurred(object sender, MixerChatUserModerationModel e)
         {
-            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserBan, user));
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserTimeout, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserTimeout);
+            trigger.Arguments.Add(e.User.Username);
+            trigger.SpecialIdentifiers["timeoutlength"] = e.Length.ToString();
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+        }
+
+        private async void MixerChatService_OnUserBanOccurred(object sender, MixerChatUserModerationModel e)
+        {
+            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserBan, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserBan);
+            trigger.Arguments.Add(e.User.Username);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                    string.Format("{0} Banned By {1}", e.User.Username, (e.Moderator != null) ? e.Moderator.Username : "Unknown"),
+                    ChannelSession.Settings.ChatEventAlertsColorScheme));
+            }
         }
 
         private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)

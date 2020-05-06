@@ -1,17 +1,16 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Util
+namespace MixItUp.Base.Services
 {
     public enum ModerationChatInteractiveParticipationEnum
     {
@@ -33,7 +32,20 @@ namespace MixItUp.Base.Util
         EmberSkillsOnly = 42,
     }
 
-    public static class ModerationHelper
+    public interface IModerationService
+    {
+        Task Initialize();
+
+        Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false);
+        Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text);
+        string ShouldTextBeExcessiveModerated(UserViewModel user, string text);
+        string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false);
+
+        bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null);
+        Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false);
+    }
+
+    public class ModerationService : IModerationService
     {
         public const string ModerationReasonSpecialIdentifier = "moderationreason";
 
@@ -50,16 +62,16 @@ namespace MixItUp.Base.Util
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
         private static readonly Regex LinkRegex = new Regex(@"(?xi)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
 
-        public static async Task Initialize()
+        public async Task Initialize()
         {
-            if (ChannelSession.Services.FileService.FileExists(ModerationHelper.CommunityFilteredWordsFilePath))
+            if (ChannelSession.Services.FileService.FileExists(ModerationService.CommunityFilteredWordsFilePath))
             {
-                string text = await ChannelSession.Services.FileService.ReadFile(ModerationHelper.CommunityFilteredWordsFilePath);
-                ModerationHelper.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                string text = await ChannelSession.Services.FileService.ReadFile(ModerationService.CommunityFilteredWordsFilePath);
+                ModerationService.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
             }
         }
 
-        public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
+        public async Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
             string reason = null;
 
@@ -68,7 +80,7 @@ namespace MixItUp.Base.Util
                 return reason;
             }
 
-            reason = await ShouldBeFilteredWordModerated(user, text);
+            reason = await ShouldTextBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
@@ -78,7 +90,7 @@ namespace MixItUp.Base.Util
                 return reason;
             }
 
-            reason = ShouldBeTextModerated(user, text);
+            reason = ShouldTextBeExcessiveModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationChatTextApplyStrikes)
@@ -88,7 +100,7 @@ namespace MixItUp.Base.Util
                 return reason;
             }
 
-            reason = ShouldBeLinkModerated(user, text, containsLink);
+            reason = ShouldTextBeLinkModerated(user, text, containsLink);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationBlockLinksApplyStrikes)
@@ -101,7 +113,7 @@ namespace MixItUp.Base.Util
             return reason;
         }
 
-        public static async Task<string> ShouldBeFilteredWordModerated(UserViewModel user, string text)
+        public async Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text)
         {
             text = PrepareTextForChecking(text);
 
@@ -109,7 +121,7 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
-                    foreach (string word in ModerationHelper.CommunityFilteredWords)
+                    foreach (string word in ModerationService.CommunityFilteredWords)
                     {
                         if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                         {
@@ -139,7 +151,7 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static string ShouldBeTextModerated(UserViewModel user, string text)
+        public string ShouldTextBeExcessiveModerated(UserViewModel user, string text)
         {
             text = PrepareTextForChecking(text);
 
@@ -180,7 +192,7 @@ namespace MixItUp.Base.Util
 
                     count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
                     messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
-                    
+
                     if (ChannelSession.Settings.ModerationPunctuationBlockIsPercentage)
                     {
                         count = ConvertCountToPercentage(messageSegments.Count, count);
@@ -196,7 +208,7 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static string ShouldBeLinkModerated(UserViewModel user, string text, bool containsLink = false)
+        public string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false)
         {
             text = PrepareTextForChecking(text);
 
@@ -211,7 +223,7 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
+        public bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
@@ -311,7 +323,7 @@ namespace MixItUp.Base.Util
             return true;
         }
 
-        public static async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
+        public async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
         {
             if (user != null)
             {
@@ -340,15 +352,15 @@ namespace MixItUp.Base.Util
                 {
                     reason = "Ember Skills";
                 }
-                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
                 {
                     reason = "accounts older than 1 hour";
                 }
-                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay)
                 {
                     reason = "accounts older than 1 day";
                 }
-                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek)
                 {
                     reason = "accounts older than 1 week";
                 }
@@ -356,11 +368,11 @@ namespace MixItUp.Base.Util
                 {
                     reason = "viewers who have watched for 10 minutes";
                 }
-                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingThirtyMinutes)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingThirtyMinutes)
                 {
                     reason = "viewers who have watched for 30 minutes";
                 }
-                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingOneHour)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingOneHour)
                 {
                     reason = "viewers who have watched for 1 hour";
                 }
@@ -380,14 +392,14 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private static string PrepareTextForChecking(string text)
+        private string PrepareTextForChecking(string text)
         {
             string result = text.ToLower();
             result = ChatAction.UserNameTagRegex.Replace(result, "");
             return result;
         }
 
-        private static int ConvertCountToPercentage(int length, int count)
+        private int ConvertCountToPercentage(int length, int count)
         {
             if (length >= MinimumMessageLengthForPercentageModeration)
             {

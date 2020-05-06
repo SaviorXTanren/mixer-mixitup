@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.ClipLengthTextBox.Text = "30";
             this.ShowClipInfoInChatToggleButton.IsChecked = true;
 
-            this.OnlyAvailableForPartnersWarningTextBlock.Visibility = (ChannelSession.MixerChannel.partnered) ? Visibility.Collapsed : Visibility.Visible;
+            this.OnlyAvailableForPartnersWarningTextBlock.Visibility = (ChannelSession.MixerChannel.partnered || ChannelSession.MixerUser.verified) ? Visibility.Collapsed : Visibility.Visible;
 
             bool mmpegExists = ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath());
             if (!mmpegExists)

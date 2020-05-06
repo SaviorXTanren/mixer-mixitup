@@ -259,9 +259,9 @@ namespace MixItUp.Base.Commands
                         else if (this.command.SetupType == MixPlayJoystickSetupType.WASD)
                         {
                             keysToUse.Add(InputKeyEnum.W);
-                            keysToUse.Add(InputKeyEnum.A);
-                            keysToUse.Add(InputKeyEnum.S);
                             keysToUse.Add(InputKeyEnum.D);
+                            keysToUse.Add(InputKeyEnum.S);
+                            keysToUse.Add(InputKeyEnum.A);
                         }
                         else
                         {
@@ -377,7 +377,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.UseChatModeration && arguments.Count() > 0)
             {
-                if (!string.IsNullOrEmpty(await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0))))
+                if (!string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, arguments.ElementAt(0))))
                 {
                     return;
                 }
