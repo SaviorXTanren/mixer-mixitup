@@ -35,7 +35,7 @@
             </Hyperlink>
         </TextBlock>
 
-        <TextBlock Grid.Row="0" x:Name="OnlyAvailableForPartnersWarningTextBlock" HorizontalAlignment="Right" Foreground="Red" Text="{x:Static resx:Resources.PartnersOnly}"/>
+        <TextBlock Grid.Row="0" x:Name="OnlyAvailableForPartnersWarningTextBlock" HorizontalAlignment="Right" Foreground="Red" Text="{x:Static resx:Resources.PartnersAndVerifiedOnly}"/>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
