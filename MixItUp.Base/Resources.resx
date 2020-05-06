@@ -429,8 +429,8 @@
   <data name="Channel" xml:space="preserve">
     <value>Channel</value>
   </data>
-  <data name="ChannelBanWords" xml:space="preserve">
-    <value>Channel Ban Words (One Per Line) ( * = Wild Card)</value>
+  <data name="BannedWords" xml:space="preserve">
+    <value>Banned Words (One Per Line) ( * = Wild Card)</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
     <value>Channel Editor</value>
