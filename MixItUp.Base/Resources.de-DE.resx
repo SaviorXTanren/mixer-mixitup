@@ -506,8 +506,8 @@
     <value>Kanal</value>
     <comment>Manual</comment>
   </data>
-  <data name="ChannelBanWords" xml:space="preserve">
-    <value>Kanal Ban Wörter (Eins pro Zeile) (* = Wildcard)</value>
+  <data name="BannedWords" xml:space="preserve">
+    <value>Banned Wörter (Eins pro Zeile) (* = Wildcard)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChannelEditor" xml:space="preserve">

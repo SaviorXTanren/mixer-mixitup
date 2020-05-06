@@ -429,8 +429,8 @@
   <data name="Channel" xml:space="preserve">
     <value>[!!! Çĥáññèℓ !!!]</value>
   </data>
-  <data name="ChannelBanWords" xml:space="preserve">
-    <value>[!!! Çĥáññèℓ ßáñ Wôřδš (Óñè Þèř Ļïñè) ( * = Wïℓδ Çářδ) !!!]</value>
+  <data name="BannedWords" xml:space="preserve">
+    <value>[!!! ßáññèδ Wôřδš (Óñè Þèř Ļïñè) ( * = Wïℓδ Çářδ) !!!]</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
     <value>[!!! Çĥáññèℓ Éδïţôř !!!]</value>

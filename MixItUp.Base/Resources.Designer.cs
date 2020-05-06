@@ -826,6 +826,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Banned Words (One Per Line) ( * = Wild Card).
+        /// </summary>
+        public static string BannedWords {
+            get {
+                return ResourceManager.GetString("BannedWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic Chat Command.
         /// </summary>
         public static string BasicChatCommand {
@@ -1002,15 +1011,6 @@ namespace MixItUp.Base {
         public static string Channel {
             get {
                 return ResourceManager.GetString("Channel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Channel Ban Words (One Per Line) ( * = Wild Card).
-        /// </summary>
-        public static string ChannelBanWords {
-            get {
-                return ResourceManager.GetString("ChannelBanWords", resourceCulture);
             }
         }
         
