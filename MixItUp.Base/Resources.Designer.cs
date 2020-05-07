@@ -19,7 +19,7 @@ namespace MixItUp.Base {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -826,6 +826,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Banned Words (One Per Line) ( * = Wild Card).
+        /// </summary>
+        public static string BannedWords {
+            get {
+                return ResourceManager.GetString("BannedWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic Chat Command.
         /// </summary>
         public static string BasicChatCommand {
@@ -1002,15 +1011,6 @@ namespace MixItUp.Base {
         public static string Channel {
             get {
                 return ResourceManager.GetString("Channel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Channel Ban Words (One Per Line) ( * = Wild Card).
-        /// </summary>
-        public static string ChannelBanWords {
-            get {
-                return ResourceManager.GetString("ChannelBanWords", resourceCulture);
             }
         }
         
@@ -4665,6 +4665,15 @@ namespace MixItUp.Base {
         public static string PartneredStreamer {
             get {
                 return ResourceManager.GetString("PartneredStreamer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature is currently available for Partners &amp; Verified Channels only..
+        /// </summary>
+        public static string PartnersAndVerifiedOnly {
+            get {
+                return ResourceManager.GetString("PartnersAndVerifiedOnly", resourceCulture);
             }
         }
         

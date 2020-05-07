@@ -429,8 +429,8 @@
   <data name="Channel" xml:space="preserve">
     <value>[!!! Çĥáññèℓ !!!]</value>
   </data>
-  <data name="ChannelBanWords" xml:space="preserve">
-    <value>[!!! Çĥáññèℓ ßáñ Wôřδš (Óñè Þèř Ļïñè) ( * = Wïℓδ Çářδ) !!!]</value>
+  <data name="BannedWords" xml:space="preserve">
+    <value>[!!! ßáññèδ Wôřδš (Óñè Þèř Ļïñè) ( * = Wïℓδ Çářδ) !!!]</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
     <value>[!!! Çĥáññèℓ Éδïţôř !!!]</value>
@@ -2651,5 +2651,8 @@
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>[!!! Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
+    <value>[!!! Tλïƨ ƒèáƭúřè ïƨ çúřřèñƭℓ¥ áƲáïℓáβℓè ƒôř Þářƭñèřƨ &amp; Vèřïƒïèδ Çλáññèℓƨ ôñℓ¥. ℓôřè₥ ïƥƨú₥ δôℓôř ƨïƭ !!!]</value>
   </data>
 </root>

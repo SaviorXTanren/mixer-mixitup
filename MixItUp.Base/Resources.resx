@@ -429,8 +429,8 @@
   <data name="Channel" xml:space="preserve">
     <value>Channel</value>
   </data>
-  <data name="ChannelBanWords" xml:space="preserve">
-    <value>Channel Ban Words (One Per Line) ( * = Wild Card)</value>
+  <data name="BannedWords" xml:space="preserve">
+    <value>Banned Words (One Per Line) ( * = Wild Card)</value>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
     <value>Channel Editor</value>
@@ -2651,5 +2651,8 @@
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>Timeout</value>
+  </data>
+  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
+    <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
   </data>
 </root>
