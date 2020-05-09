@@ -67,6 +67,7 @@ namespace MixItUp.Base.Services
             if (filePaths.Any(filePath => filePath.EndsWith(SettingsV1Model.SettingsFileExtension)))
             {
                 await DialogHelper.ShowMessage("We've detected version 1 settings in your installation and will now upgrade them to version 2. This will take some time depending on how large your settings data is, particularly the number of individual users we have data for from your stream."
+                    + Environment.NewLine + Environment.NewLine + "Prior to performing the upgrade, we will automatically back up your version 1 settings to keep them intact. In the event of any issues with the upgrade, don't worry! Your old settings are save and we'll help you in our Discord server to figure out what the issue is, then you can just re-upgrade your old settings."
                     + Environment.NewLine + Environment.NewLine + "If you have a large amount of user data, we suggest going to grab a cup of coffee and come back in a few minutes after dismissing this message. :)");
 
                 foreach (string filePath in filePaths)
