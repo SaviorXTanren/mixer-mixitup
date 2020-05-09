@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>0.5.4.8</version>
-  <url>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.4/MixItUp.zip</url>
-  <changelog>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.4/Changelog.html</changelog>
+  <version>0.5.5.0</version>
+  <url>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.5/MixItUp.zip</url>
+  <changelog>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.5/Changelog.html</changelog>
   <mandatory>false</mandatory>
 </item>

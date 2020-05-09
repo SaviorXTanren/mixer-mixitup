@@ -3,7 +3,46 @@
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     </head>
     <body>
+        <p style="font-size: large; color: red"><b><u>WARNING: The 0.5.5.0 update is a very large update that will upgrade your settings to a newer format and will take some time. Due to this, we encourage users to NOT take this update prior to streaming and instead during your free time. If you encounter any issues, please visit our discord server for support.</u></b></p>
+
         <h1 style="color: #5e9ca0;">Changelog</h1>
+
+        <h2 style="color: #2e6c80;">v0.5.5.0:</h2>
+        <ul>
+            <li><b>BREAKING CHANGE:</b> Removing Song Requests feature <a href="https://mixitupapp.com/songrequests">https://mixitupapp.com/songrequests</a></li>
+            <li><b>BREAKING CHANGE:</b> Removing Twitter Retweet event command due to rate limiting issues with Twitter</li>
+            <li><b>BREAKING CHANGE:</b> The Chat User Banned event command has been updated to support tracking the user that performed the ban. $user____ now represents the user who triggered the ban, while $targetuser____ now represents the user that was banned.</li>
+            <li>Adding StreamElements service connectivity and StreamElements donation event command</li>
+            <li>Adding initial language localization support for German (de-DE)</li>
+            <li>Upgrading settings data formatting to improve reliability and integrity</li>
+            <li>Large-scale rework of services connectivity, events, and MixPlay logic to improve speed and reliability</li>
+            <li>Adding improved error messaging to connections &amp; services to assist with diagnosing issues for users</li>
+            <li>Adding MixPlay spamming input detection for visual cooldowns to prevent extra MixPlay command triggering</li>
+            <li>Adding the Mix It Up Overlay as a sound device option for the Sound action</li>
+            <li>Adding "Run Ad" option to Streaming Platform action</li>
+            <li>Adding "Replaced" comparator to Conditional Action to determine if the 1st value has been changed or replaced due to Special Identifier processing</li>
+            <li>Adding Chat User Timeout event command with $timeoutlength Special Identifier</li>
+            <li>Adding Chat Whisper Received event command</li>
+            <li>Adding $usersubstreak Special Identifier to Mixer Channel Resubscribed event</li>
+            <li>Adding $userisregular Special Identifier</li>
+            <li>Adding latest Special Identifiers to keep track of last user/usage for various features: $latestfolloweruser____, $latesthostuser____, $latesthostviewercount, $latestsubscriberuser____, $latestsubscribersubmonths, $latestsparkusageuser____, $latestsparkusageamount, $latestemberusageuser____, $latestemberusageamount, $latestdonationuser____, $latestdonationamount</li>
+            <li>Adding Special Identifier for Currency/Rank/Inventory to show display-friendly numbers: $user____display</li>
+            <li>Adding Special Identifier for Currency/Rank/Inventory to show position relative to all users: $user____position</li>
+            <li>Adding support for $skill_____ Special Identifiers in Channel Embers Spent event command</li>
+            <li>Adding $userpatreontier Special Identifier</li>
+            <li>Adding $milestoneendtime &amp; $milestonetimeremaining Special Identifiers</li>
+            <li>Adding $streamviewertotal &amp; $streamchattercount Special Identifier</li>
+            <li>Adding option to pin Dashboard window to top of screen</li>
+            <li>Revamping New User Wizard experience to better assist and onboard new users</li>
+            <li>Adding Accounts page to main menu and moving Mixer Bot Account authentication to this page</li>
+            <li>MixPlay actions with the Cooldown option now support Special Identifiers</li>
+            <li>Special Identifiers created by Web Request actions are no longer global Special Identifiers</li>
+            <li>Adding $isautohost Special Identifier to Mixer Channel Hosted event to indicate if the host occurred by Mixer's built-in auto-hosting</li>
+            <li>Updating list of supported Text to Speech voices</li>
+            <li>Improving logic with age calcuations for things like follow age, subscriber age, etc</li>
+            <li>Fixing bug with WASD buttons being reversed for MixPlay Joystick Commands</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
 
         <h2 style="color: #2e6c80;">v0.5.4.8:</h2>
         <ul>
