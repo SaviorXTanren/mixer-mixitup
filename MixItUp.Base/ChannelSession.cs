@@ -151,6 +151,11 @@ namespace MixItUp.Base
                 {
                     return new Result("Failed to get Mixer bot data");
                 }
+
+                if (ChannelSession.Services.Chat.MixerChatService != null && ChannelSession.Services.Chat.MixerChatService.IsUserConnected)
+                {
+                    return await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
+                }
             }
             return result;
         }
