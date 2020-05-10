@@ -253,7 +253,7 @@ namespace MixItUp.Base.Services.Mixer
                             }
                             GlobalEvents.FollowOccurred(user);
 
-                            await this.AddAlertChatMessage(string.Format("{0} Followed", user.Username));
+                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.Username));
                         }
                         else
                         {
@@ -263,7 +263,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             GlobalEvents.UnfollowOccurred(user);
 
-                            await this.AddAlertChatMessage(string.Format("{0} Unfollowed", user.Username));
+                            await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.Username));
                         }
                     }
                 }
@@ -300,7 +300,7 @@ namespace MixItUp.Base.Services.Mixer
                         }
                         GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
 
-                        await this.AddAlertChatMessage(string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscribedEvent.ToString()))
@@ -325,7 +325,7 @@ namespace MixItUp.Base.Services.Mixer
                         }
                         GlobalEvents.SubscribeOccurred(user);
 
-                        await this.AddAlertChatMessage(string.Format("{0} Subscribed", user.Username));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelResubscribedEvent.ToString()) || e.channel.Equals(MixerEventService.ChannelResubscribedSharedEvent.ToString()))
@@ -371,7 +371,7 @@ namespace MixItUp.Base.Services.Mixer
                         }
                         GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, totalMonths));
 
-                        await this.AddAlertChatMessage(string.Format("{0} Re-Subscribed For {1} Months", user.Username, totalMonths));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, totalMonths));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscriptionGiftedEvent.ToString()))
@@ -414,7 +414,7 @@ namespace MixItUp.Base.Services.Mixer
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
                             }
 
-                            await this.AddAlertChatMessage(string.Format("{0} Gifted A Subscription To {1}", gifterUser.Username, receiverUser.Username));
+                            await this.AddAlertChatMessage(gifterUser, string.Format("{0} Gifted A Subscription To {1}", gifterUser.Username, receiverUser.Username));
 
                             GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                         }
@@ -538,11 +538,11 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        private async Task AddAlertChatMessage(string message)
+        private async Task AddAlertChatMessage(UserViewModel user, string message)
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 

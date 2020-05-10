@@ -557,7 +557,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -596,7 +596,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                     }
                 }
             }
@@ -711,7 +711,7 @@ namespace MixItUp.Base.Services
 
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, e.User,
                     string.Format("{0} Banned By {1}", e.User.Username, (e.Moderator != null) ? e.Moderator.Username : "Unknown"),
                     ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
