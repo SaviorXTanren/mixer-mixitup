@@ -57,7 +57,15 @@ namespace MixItUp.WPF.Controls.Command
         {
             this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
-            this.SparkCostTextBox.Text = this.textBox.cost.ToString();
+            if (this.textBox.cost.HasValue)
+            {
+                this.SparkCostTextBox.Text = this.textBox.cost.ToString();
+            }
+            else
+            {
+                this.SparkCostTextBox.Text = "0";
+            }
+
             if (this.command != null)
             {
                 this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
