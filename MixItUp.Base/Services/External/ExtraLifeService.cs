@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -81,18 +82,26 @@ namespace MixItUp.Base.Services.External
         [DataMember]
         public string createdDateUTC { get; set; }
 
+        [JsonIgnore]
+        public DateTimeOffset CreatedDate
+        {
+            get
+            {
+                DateTimeOffset datetime = DateTimeOffset.Now;
+                if (!string.IsNullOrEmpty(this.createdDateUTC) && DateTimeOffset.TryParse(this.createdDateUTC, out datetime))
+                {
+                    datetime = datetime.ToLocalTime();
+                }
+                return datetime;
+            }
+        }
+
         public UserDonationModel ToGenericDonation()
         {
             double amount = 0.0;
             if (this.amount.HasValue)
             {
                 amount = this.amount.GetValueOrDefault();
-            }
-
-            DateTimeOffset datetime = DateTimeOffset.Now;
-            if (!string.IsNullOrEmpty(this.createdDateUTC) && DateTimeOffset.TryParse(this.createdDateUTC, out datetime))
-            {
-                datetime = datetime.ToLocalTime();
             }
 
             return new UserDonationModel()
@@ -105,7 +114,7 @@ namespace MixItUp.Base.Services.External
 
                 Amount = Math.Round(amount, 2),
 
-                DateTime = datetime,
+                DateTime = this.CreatedDate,
             };
         }
     }
@@ -131,6 +140,7 @@ namespace MixItUp.Base.Services.External
         private ExtraLifeTeam team;
         private ExtraLifeTeamParticipant participant;
 
+        private DateTimeOffset startTime = DateTimeOffset.Now;
         private Dictionary<string, ExtraLifeDonation> donationsReceived = new Dictionary<string, ExtraLifeDonation>();
 
         public ExtraLifeService() : base(ExtraLifeService.BaseAddress) { }
@@ -258,7 +268,7 @@ namespace MixItUp.Base.Services.External
             IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
             foreach (ExtraLifeDonation elDonation in donations)
             {
-                if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
+                if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID) && elDonation.CreatedDate > this.startTime)
                 {
                     donationsReceived[elDonation.donationID] = elDonation;
                     UserDonationModel donation = elDonation.ToGenericDonation();
