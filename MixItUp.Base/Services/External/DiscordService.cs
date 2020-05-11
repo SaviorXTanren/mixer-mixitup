@@ -827,29 +827,32 @@ namespace MixItUp.Base.Services.External
             this.botService = new DiscordBotService(this.baseAddress, this.BotToken);
 
             this.User = await this.GetCurrentUser();
-            if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
+            if (this.User != null)
             {
-                this.Server = await this.GetServer(ChannelSession.Settings.DiscordServer);
-                if (this.Server != null)
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
                 {
-                    this.Emojis = await this.GetEmojis(this.Server);
-
-                    if (!this.IsUsingCustomApplication)
+                    this.Server = await this.GetServer(ChannelSession.Settings.DiscordServer);
+                    if (this.Server != null)
                     {
-                        return new Result();
-                    }
+                        this.Emojis = await this.GetEmojis(this.Server);
 
-                    DiscordGateway gateway = await this.GetBotGateway();
-                    if (gateway != null)
-                    {
-                        DiscordWebSocket webSocket = new DiscordWebSocket();
-                        if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
+                        if (!this.IsUsingCustomApplication)
                         {
                             return new Result();
                         }
-                        return new Result("Could not connect Bot Application to web socket");
+
+                        DiscordGateway gateway = await this.GetBotGateway();
+                        if (gateway != null)
+                        {
+                            DiscordWebSocket webSocket = new DiscordWebSocket();
+                            if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
+                            {
+                                return new Result();
+                            }
+                            return new Result("Could not connect Bot Application to web socket");
+                        }
+                        return new Result("Could not get Bot Application Gateway data");
                     }
-                    return new Result("Could not get Bot Application Gateway data");
                 }
                 return new Result("Could not get Server data");
             }
