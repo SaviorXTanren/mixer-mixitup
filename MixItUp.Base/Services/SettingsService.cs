@@ -583,6 +583,7 @@ namespace MixItUp.Base.Services
             }
             newSettings.TelemetryUserID = oldSettings.TelemetryUserId;
 
+            newSettings.RemoteProfiles = new List<RemoteProfileModel>(oldSettings.remoteProfilesInternal);
             newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
             newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
             newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
