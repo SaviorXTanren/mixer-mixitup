@@ -85,10 +85,16 @@ namespace MixItUp.Base.Services.External
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
+        private ISocketIOConnection socket;
+
         private DateTimeOffset startTime = DateTimeOffset.Now;
         private Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
 
-        public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
+        public StreamlabsService(ISocketIOConnection socket)
+            : base(StreamlabsService.BaseAddress)
+        {
+            this.socket = socket;
+        }
 
         public override string Name { get { return "Streamlabs"; } }
 
@@ -198,14 +204,21 @@ namespace MixItUp.Base.Services.External
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
-            foreach (StreamlabsDonation slDonation in await this.GetDonations())
+            JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
+            if (jobj != null && jobj.ContainsKey("socket_token"))
             {
-                donationsReceived[slDonation.ID] = slDonation;
+                string socketToken = jobj["socket_token"].ToString();
+
+                await this.socket.Connect($"https://sockets.streamlabs.com?token=${socketToken}", "{transports: ['websocket']}");
+
+                this.socket.Listen("event", (data) =>
+                {
+                    JObject eventJObj = JObject.Parse(data.ToString());
+                });
+
+                return new Result();
             }
-
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
-
-            return new Result();
+            return new Result("Failed to get web socket token");
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)
