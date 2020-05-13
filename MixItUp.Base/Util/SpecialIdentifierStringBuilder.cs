@@ -225,13 +225,13 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
+        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
             string username = argument.Replace("@", "");
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if ((platform.HasFlag(StreamingPlatformTypeEnum.Mixer) || platform == StreamingPlatformTypeEnum.None) && ChannelSession.MixerUserConnection != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer) && ChannelSession.MixerUserConnection != null)
                 {
                     Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
                     if (argUserModel != null && string.Equals(argUserModel.username, username, StringComparison.InvariantCultureIgnoreCase))
@@ -239,7 +239,7 @@ namespace MixItUp.Base.Util
                         user = new UserViewModel(argUserModel);
                     }
                 }
-                else if ((platform == StreamingPlatformTypeEnum.Twitch || platform == StreamingPlatformTypeEnum.None) && ChannelSession.TwitchUserConnection != null)
+                else if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
                 {
                     Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
                     if (argUserModel != null)
@@ -453,42 +453,55 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(FeaturedChannelsSpecialIdentifer))
             {
-                IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.MixerUserConnection.GetFeaturedChannels();
-                if (featuredChannels != null)
+                if (ChannelSession.MixerUserConnection != null)
                 {
-                    this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
+                    IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.MixerUserConnection.GetFeaturedChannels();
+                    if (featuredChannels != null)
+                    {
+                        this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
+                    }
                 }
             }
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                ChannelDetailsModel details = await ChannelSession.MixerUserConnection.GetChannelDetails(ChannelSession.MixerChannel);
-                if (details != null)
+                if (ChannelSession.MixerUserConnection != null)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "agerating", details.audience);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", details.viewersCurrent.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", details.viewersTotal.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
+                    ChannelDetailsModel details = await ChannelSession.MixerUserConnection.GetChannelDetails(ChannelSession.MixerChannel);
+                    if (details != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "agerating", details.audience);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", details.viewersCurrent.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", details.viewersTotal.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
+                    }
+
+                    if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
+                    {
+                        IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.MixerUserConnection.GetHosters(ChannelSession.MixerChannel);
+                        if (hosters != null)
+                        {
+                            this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
+                        }
+                        else
+                        {
+                            this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
+                        }
+                    }
+                }
+                else if (ChannelSession.TwitchUserConnection != null && ChannelSession.TwitchStreamV5 != null)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelNewAPI.description);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", ChannelSession.TwitchChannelNewAPI.view_count.ToString());
                 }
 
-                if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
-                {
-                    IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.MixerUserConnection.GetHosters(ChannelSession.MixerChannel);
-                    if (hosters != null)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
-                    }
-                    else
-                    {
-                        this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
-                    }
-                }
+                this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
             }
 
-            if (this.ContainsSpecialIdentifier(MilestoneSpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(MilestoneSpecialIdentifierHeader) && ChannelSession.MixerUserConnection != null)
             {
                 PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                 if (patronageStatus != null)
@@ -628,6 +641,8 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
+                // TO-DO: Fix Twitch & Mixer user support for random user
+
                 IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
@@ -859,6 +874,8 @@ namespace MixItUp.Base.Util
                     }
                 }
 
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
+
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", userData.ViewingHoursString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", userData.ViewingMinutesString);
@@ -869,11 +886,13 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", user.ChannelLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.Username);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mixerid", user.MixerID.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "sparks", user.Sparks.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mixerage", user.AccountAgeString);
+
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", user.TwitchID);
+
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "age", user.AccountAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isfollower", user.IsFollower.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());

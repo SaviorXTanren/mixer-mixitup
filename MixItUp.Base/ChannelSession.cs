@@ -403,6 +403,8 @@ namespace MixItUp.Base
 
         public static UserViewModel GetCurrentUser()
         {
+            // TO-DO: Update UserViewModel so that all platform accounts are combined into the same UserViewModel
+
             UserViewModel user = null;
 
             if (ChannelSession.MixerUser != null)
