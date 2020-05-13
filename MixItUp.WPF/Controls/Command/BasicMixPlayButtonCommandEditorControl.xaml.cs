@@ -60,7 +60,15 @@ namespace MixItUp.WPF.Controls.Command
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "By Itself", "With All Buttons" };
             this.CooldownTypeComboBox.SelectedIndex = 0;
 
-            this.SparkCostTextBox.Text = this.button.cost.ToString();
+            if (this.button.cost.HasValue)
+            {
+                this.SparkCostTextBox.Text = this.button.cost.ToString();
+            }
+            else
+            {
+                this.SparkCostTextBox.Text = "0";
+            }
+
             if (this.command != null)
             {
                 if (this.command.Requirements.Cooldown != null && this.command.Requirements.Cooldown.IsGroup)

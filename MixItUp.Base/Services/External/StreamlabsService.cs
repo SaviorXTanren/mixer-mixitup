@@ -43,10 +43,10 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public StreamlabsDonation()
-        {
-            this.CreatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        }
+        [JsonIgnore]
+        public DateTimeOffset CreatedAtDateTime { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt); } }
+
+        public StreamlabsDonation() { }
 
         public UserDonationModel ToGenericDonation()
         {
@@ -60,7 +60,7 @@ namespace MixItUp.Base.Services.External
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt),
+                DateTime = this.CreatedAtDateTime,
             };
         }
     }
@@ -85,6 +85,7 @@ namespace MixItUp.Base.Services.External
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
+        private DateTimeOffset startTime = DateTimeOffset.Now;
         private Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
@@ -211,7 +212,7 @@ namespace MixItUp.Base.Services.External
         {
             foreach (StreamlabsDonation slDonation in await this.GetDonations())
             {
-                if (!donationsReceived.ContainsKey(slDonation.ID))
+                if (!donationsReceived.ContainsKey(slDonation.ID) && slDonation.CreatedAtDateTime > this.startTime)
                 {
                     donationsReceived[slDonation.ID] = slDonation;
                     await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());

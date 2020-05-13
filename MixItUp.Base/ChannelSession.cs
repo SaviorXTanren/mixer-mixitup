@@ -152,6 +152,11 @@ namespace MixItUp.Base
                 {
                     return new Result("Failed to get Mixer bot data");
                 }
+
+                if (ChannelSession.Services.Chat.MixerChatService != null && ChannelSession.Services.Chat.MixerChatService.IsUserConnected)
+                {
+                    return await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
+                }
             }
             return result;
         }
@@ -438,6 +443,12 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings == null)
                     {
+                        IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
+                        if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id))
+                        {
+                            GlobalEvents.ShowMessageBox($"There already exists settings for the account {mixerChannel.token}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                            return false;
+                        }
                         ChannelSession.Settings = await ChannelSession.Services.Settings.Create(mixerChannel, modChannelName == null);
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);

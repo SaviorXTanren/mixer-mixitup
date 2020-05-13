@@ -35,6 +35,7 @@ namespace MixItUp.Base.Services.Mixer
 
         event EventHandler<ChatPollEventModel> OnPollEndOccurred;
 
+        bool IsUserConnected { get; }
         bool IsBotConnected { get; }
 
         Task<Result> ConnectUser();
@@ -91,6 +92,7 @@ namespace MixItUp.Base.Services.Mixer
 
         #region Interface Methods
 
+        public bool IsUserConnected { get { return this.streamerClient != null && this.streamerClient.Connected; } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
         public async Task<Result> ConnectUser()

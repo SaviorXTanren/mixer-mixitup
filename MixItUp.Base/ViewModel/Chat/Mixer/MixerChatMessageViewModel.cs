@@ -83,7 +83,6 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
                             }
                             break;
                         case "tag":
-                        default:
                             this.AddStringMessagePart(message.text);
                             break;
                     }

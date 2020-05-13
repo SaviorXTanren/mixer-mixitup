@@ -45,7 +45,14 @@ namespace MixItUp.WPF.Controls.Command
             {
                 this.NameTextBox.Text = this.Control.controlID;
                 this.SparkCostTextBox.IsEnabled = true;
-                this.SparkCostTextBox.Text = this.Control.cost.ToString();
+                if (this.Control.cost.HasValue)
+                {
+                    this.SparkCostTextBox.Text = this.Control.cost.ToString();
+                }
+                else
+                {
+                    this.SparkCostTextBox.Text = "0";
+                }
             }
 
             if (this.command != null)

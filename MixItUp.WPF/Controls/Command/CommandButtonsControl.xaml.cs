@@ -177,9 +177,11 @@ namespace MixItUp.WPF.Controls.Command
                     {
                         case EventTypeEnum.MixerChannelHosted:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
+                            extraSpecialIdentifiers["isautohost"] = "False";
                             break;
                         case EventTypeEnum.MixerChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
+                            extraSpecialIdentifiers["usersubstreak"] = "3";
                             break;
                         case EventTypeEnum.MixerChannelFanProgressionLevelUp:
                             extraSpecialIdentifiers["userfanprogressionnext"] = "200";
@@ -187,6 +189,9 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
                             extraSpecialIdentifiers["userfanprogressionimage"] = "https://static.mixer.com/img/design/ui/fan-progression/v1_badges/purple/large.gif";
                             extraSpecialIdentifiers["userfanprogression"] = "100";
+                            break;
+                        case EventTypeEnum.ChatUserTimeout:
+                            extraSpecialIdentifiers["timeoutlength"] = "5m";
                             break;
                         case EventTypeEnum.StreamlabsDonation:
                         case EventTypeEnum.GawkBoxDonation:

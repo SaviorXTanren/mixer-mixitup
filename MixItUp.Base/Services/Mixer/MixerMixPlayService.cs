@@ -259,6 +259,61 @@ namespace MixItUp.Base.Services.Mixer
                                         Environment.NewLine + string.Join(", ", duplicatedControls.Select(c => c.controlID)));
                                 }
 
+                                // Update Emoji controls
+                                foreach (MixPlayConnectedSceneModel scene in this.Scenes.Values.ToList())
+                                {
+                                    MixPlaySceneModel dataScene = this.SelectedVersion.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
+                                    if (dataScene != null)
+                                    {
+                                        List<MixPlayControlModel> controlsToUpdate = new List<MixPlayControlModel>();
+                                        foreach (MixPlayConnectedButtonControlModel button in scene.buttons)
+                                        {
+                                            if ((!string.IsNullOrEmpty(button.text) && button.text.Contains('?')) || (!string.IsNullOrEmpty(button.tooltip) && button.tooltip.Contains('?')))
+                                            {
+                                                MixPlayButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
+                                                if (dataButton != null)
+                                                {
+                                                    button.text = dataButton.text;
+                                                    button.tooltip = dataButton.tooltip;
+                                                    controlsToUpdate.Add(button);
+                                                }
+                                            }
+                                        }
+
+                                        foreach (MixPlayConnectedTextBoxControlModel textbox in scene.textBoxes)
+                                        {
+                                            if ((!string.IsNullOrEmpty(textbox.placeholder) && textbox.placeholder.Contains('?')) || (!string.IsNullOrEmpty(textbox.submitText) && textbox.submitText.Contains('?')))
+                                            {
+                                                MixPlayTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textbox.controlID));
+                                                if (dataTextBox != null)
+                                                {
+                                                    textbox.placeholder = dataTextBox.placeholder;
+                                                    textbox.submitText = dataTextBox.submitText;
+                                                    controlsToUpdate.Add(textbox);
+                                                }
+                                            }
+                                        }
+
+                                        foreach (MixPlayConnectedLabelControlModel label in scene.labels)
+                                        {
+                                            if (!string.IsNullOrEmpty(label.text) && label.text.Contains('?'))
+                                            {
+                                                MixPlayLabelControlModel dataLabel = dataScene.labels.FirstOrDefault(b => b.controlID.Equals(label.controlID));
+                                                if (dataLabel != null)
+                                                {
+                                                    label.text = dataLabel.text;
+                                                    controlsToUpdate.Add(label);
+                                                }
+                                            }
+                                        }
+
+                                        if (controlsToUpdate.Count > 0)
+                                        {
+                                            await this.UpdateControls(scene, controlsToUpdate);
+                                        }
+                                    }
+                                }
+
                                 // Initialize Groups
                                 List<MixPlayGroupModel> groupsToAdd = new List<MixPlayGroupModel>();
                                 if (ChannelSession.Settings.MixPlayUserGroups.ContainsKey(this.Client.Game.id))
@@ -811,7 +866,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                         {
-                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
                                 string.Format("{0} Used The \"{1}\" Interactive Control", user.Username, control.controlID), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                         }
                     }
