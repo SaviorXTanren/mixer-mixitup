@@ -25,6 +25,20 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
 
+        [JsonIgnore]
+        public StreamingPlatformTypeEnum Platform
+        {
+            get
+            {
+                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+                if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
+                if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
+
+                return platform;
+            }
+        }
+
         #region Mixer
 
         [DataMember]
@@ -192,8 +206,8 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                if (this.MixerID > 0) { return this.MixerUsername; }
-                else if (!string.IsNullOrEmpty(this.TwitchID)) { return this.TwitchUsername; }
+                if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
+                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
                 return string.Empty;
             }
         }
