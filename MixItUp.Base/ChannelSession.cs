@@ -29,7 +29,6 @@ namespace MixItUp.Base
     {
         public static MixerConnectionService MixerUserConnection { get; private set; }
         public static MixerConnectionService MixerBotConnection { get; private set; }
-
         public static PrivatePopulatedUserModel MixerUser { get; private set; }
         public static PrivatePopulatedUserModel MixerBot { get; private set; }
         public static ExpandedChannelModel MixerChannel { get; private set; }
@@ -193,6 +192,11 @@ namespace MixItUp.Base
                 {
                     return new Result("Failed to get Twitch bot data");
                 }
+
+                if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsUserConnected)
+                {
+                    return await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                }
             }
             return result;
         }
@@ -201,6 +205,8 @@ namespace MixItUp.Base
         {
             Result userResult = null;
             ChannelSession.Settings = settings;
+
+            // Mixer connection
 
             Result<MixerConnectionService> mixerResult = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
             if (mixerResult.Success)
@@ -240,6 +246,8 @@ namespace MixItUp.Base
                     }
                 }
             }
+
+            // Twitch connection
 
             Result<TwitchConnectionService> twitchResult = await TwitchConnectionService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
             if (twitchResult.Success)
@@ -388,11 +396,26 @@ namespace MixItUp.Base
 
         public static UserViewModel GetCurrentUser()
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
-            if (user == null)
+            UserViewModel user = null;
+
+            if (ChannelSession.MixerUser != null)
             {
-                user = new UserViewModel(ChannelSession.MixerUser);
+                user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
+                if (user == null)
+                {
+                    user = new UserViewModel(ChannelSession.MixerUser);
+                }
             }
+
+            if (ChannelSession.TwitchUserNewAPI != null)
+            {
+                user = ChannelSession.Services.User.GetUserByTwitchID(ChannelSession.TwitchUserNewAPI.id);
+                if (user == null)
+                {
+                    user = new UserViewModel(ChannelSession.TwitchUserNewAPI);
+                }
+            }
+
             return user;
         }
 
@@ -444,11 +467,19 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings == null)
                     {
                         IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
+
                         if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id))
                         {
                             GlobalEvents.ShowMessageBox($"There already exists settings for the account {mixerChannel.token}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                             return false;
                         }
+
+                        if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id)))
+                        {
+                            GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.display_name}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                            return false;
+                        }
+
                         ChannelSession.Settings = await ChannelSession.Services.Settings.Create(mixerChannel, modChannelName == null);
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
@@ -462,13 +493,25 @@ namespace MixItUp.Base
                         Logger.SetLogLevel(LogLevel.Error);
                     }
 
-                    if (modChannelName == null && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
+                    if (modChannelName == null)
                     {
-                        GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
-                        ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
-                        ChannelSession.Settings.MixerUserOAuthToken.refreshToken = string.Empty;
-                        ChannelSession.Settings.MixerUserOAuthToken.expiresIn = 0;
-                        return false;
+                        if (ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
+                        {
+                            GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
+                            ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
+                            ChannelSession.Settings.MixerUserOAuthToken.refreshToken = string.Empty;
+                            ChannelSession.Settings.MixerUserOAuthToken.expiresIn = 0;
+                            return false;
+                        }
+
+                        if (!string.IsNullOrEmpty(ChannelSession.Settings.TwitchChannelID) && !string.Equals(ChannelSession.TwitchChannelNewAPI.id, ChannelSession.Settings.TwitchChannelID))
+                        {
+                            GlobalEvents.ShowMessageBox("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                            ChannelSession.Settings.TwitchUserOAuthToken.accessToken = string.Empty;
+                            ChannelSession.Settings.TwitchUserOAuthToken.refreshToken = string.Empty;
+                            ChannelSession.Settings.TwitchUserOAuthToken.expiresIn = 0;
+                            return false;
+                        }
                     }
 
                     ChannelSession.Settings.MixerChannelID = mixerChannel.id;

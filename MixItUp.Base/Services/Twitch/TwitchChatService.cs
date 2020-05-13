@@ -43,6 +43,9 @@ namespace MixItUp.Base.Services.Twitch
 
         event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred;
 
+        bool IsUserConnected { get; }
+        bool IsBotConnected { get; }
+
         Task<Result> ConnectUser();
         Task DisconnectUser();
 
@@ -104,6 +107,9 @@ namespace MixItUp.Base.Services.Twitch
         private bool streamStartDetected = false;
 
         public TwitchChatService() { }
+
+        public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
+        public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
 
         public async Task<Result> ConnectUser()
         {
