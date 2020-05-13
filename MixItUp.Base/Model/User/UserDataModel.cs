@@ -163,12 +163,6 @@ namespace MixItUp.Base.Model.User
             this.MixerUsername = username;
         }
 
-        public UserDataModel(UserModel user)
-        {
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-        }
-
         public UserDataModel(UserViewModel user)
         {
             this.ID = user.ID;
@@ -199,7 +193,8 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.MixerID > 0) { return this.MixerUsername; }
-                return this.MixerUsername;
+                else if (!string.IsNullOrEmpty(this.TwitchID)) { return this.TwitchUsername; }
+                return string.Empty;
             }
         }
 
@@ -302,17 +297,6 @@ namespace MixItUp.Base.Model.User
             {
                 return string.Format("{0} - {1}", this.PrimaryRankName, this.PrimaryRankPoints);
             }
-        }
-
-        public void UpdateData(UserViewModel user)
-        {
-            this.ID = user.ID;
-
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.MixerUsername;
-
-            this.TwitchID = user.TwitchID;
-            this.TwitchUsername = user.TwitchUsername;
         }
 
         public override bool Equals(object obj)
