@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -338,7 +337,7 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     role = UserRoleEnum.User;
                 }
-                return (999 - role) + "-" + this.Platform.ToString() + "-" + this.Username;
+                return (999 - role) + "-" + this.Username + "-" + this.Platform.ToString();
             }
         }
 
