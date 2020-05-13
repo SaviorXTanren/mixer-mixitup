@@ -37,6 +37,7 @@ namespace MixItUp.Base
         public static TwitchConnectionService TwitchBotConnection { get; private set; }
         public static TwitchV5API.Users.UserModel TwitchUserV5 { get; private set; }
         public static TwitchV5API.Channel.ChannelModel TwitchChannelV5 { get; private set; }
+        public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchChannelNewAPI { get; private set; }
@@ -381,6 +382,12 @@ namespace MixItUp.Base
                 if (twitchChannel != null)
                 {
                     ChannelSession.TwitchChannelV5 = twitchChannel;
+
+                    TwitchV5API.Streams.StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
+                    if (stream != null)
+                    {
+                        ChannelSession.TwitchStreamV5 = stream;
+                    }
                 }
             }
 
