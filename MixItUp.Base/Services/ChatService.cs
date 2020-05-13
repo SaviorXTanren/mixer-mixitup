@@ -403,7 +403,7 @@ namespace MixItUp.Base.Services
                         message.User = activeUser;
                     }
                 }
-                else if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+                else if (message.Platform == StreamingPlatformTypeEnum.Twitch && message.User != null)
                 {
                     UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
                     if (activeUser != null)
@@ -576,9 +576,16 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (ChannelSession.Settings.IgnoreBotAccountCommands && ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                    if (ChannelSession.Settings.IgnoreBotAccountCommands)
                     {
-                        return;
+                        if (ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
+                        {
+                            return;
+                        }
+                        if (ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+                        {
+                            return;
+                        }
                     }
 
                     if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
