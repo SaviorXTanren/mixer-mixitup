@@ -255,15 +255,6 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerSubscribeDate = value; }
-
-                if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
-                {
-                    this.UserRoles.Remove(UserRoleEnum.Subscriber);
-                }
-                else
-                {
-                    this.UserRoles.Add(UserRoleEnum.Subscriber);
-                }
             }
         }
 
@@ -305,10 +296,6 @@ namespace MixItUp.Base.ViewModel.User
         public bool HasMixerChannelBadgeLink { get { return !string.IsNullOrEmpty(this.MixerChannelBadgeLink); } }
 
         #endregion Mixer
-
-        public bool NeedsHardRefresh { get { return !this.IsAnonymous && this.LastUpdated == DateTimeOffset.MinValue; } }
-
-        public bool NeedsSoftRefresh { get { return !this.IsAnonymous && this.LastUpdated != DateTimeOffset.MinValue && !this.Data.UpdatedThisSession; } }
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
@@ -509,9 +496,43 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous)
             {
-                if (this.NeedsHardRefresh || this.NeedsSoftRefresh || force)
+                if (!this.Data.UpdatedThisSession || force)
                 {
-                    await this.RefreshDetailsInternal();
+                    this.Data.UpdatedThisSession = true;
+                    this.LastUpdated = DateTimeOffset.Now;
+
+                    List<Task> refreshTasks = new List<Task>();
+
+                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+                    {
+                        if (!this.AccountDate.HasValue || force)
+                        {
+                            refreshTasks.Add(this.RefreshMixerUserDetails());
+                        }
+
+                        refreshTasks.Add(this.RefreshMixerUserFanProgression());
+                        refreshTasks.Add(this.RefreshMixerUserFollowDate());
+
+                        if (!this.IsInChat)
+                        {
+                            refreshTasks.Add(this.RefreshMixerChatDetails());
+                        }
+
+                        if (this.IsPlatformSubscriber)
+                        {
+                            refreshTasks.Add(this.RefreshMixerSubscriberDetails());
+                        }
+                        else
+                        {
+                            this.SubscribeDate = null;
+                        }
+                    }
+
+                    await Task.WhenAll(refreshTasks);
+
+                    this.SetCommonUserRoles();
+
+                    await this.RefreshExternalServiceDetails();
                 }
             }
         }
@@ -658,28 +679,6 @@ namespace MixItUp.Base.ViewModel.User
 
         public override string ToString() { return this.Username; }
 
-        private async Task RefreshDetailsInternal()
-        {
-            this.Data.UpdatedThisSession = true;
-            this.LastUpdated = DateTimeOffset.Now;
-
-            List<Task> refreshTasks = new List<Task>();
-
-            if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-            {
-                refreshTasks.Add(this.RefreshMixerUserDetails());
-                refreshTasks.Add(this.RefreshMixerUserFanProgression());
-                refreshTasks.Add(this.RefreshMixerUserFollowDate());
-                refreshTasks.Add(this.RefreshMixerChatAndSubscriberDetails());
-            }
-
-            await Task.WhenAll(refreshTasks);
-
-            this.SetCommonUserRoles();
-
-            await this.RefreshExternalServiceDetails();
-        }
-
         #region Mixer Refresh
 
         private async Task RefreshMixerUserDetails()
@@ -695,32 +694,29 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshMixerUserFollowDate() { this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetMixerUserModel()); }
 
-        private async Task RefreshMixerChatAndSubscriberDetails()
+        private async Task RefreshMixerChatDetails()
         {
-            if (!this.IsInChat && !this.IsAnonymous)
+            ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
+            if (chatUser != null)
             {
-                ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
-                if (chatUser != null)
-                {
-                    this.SetMixerChatDetails(chatUser);
-                }
+                this.SetMixerChatDetails(chatUser);
             }
+        }
 
+        private async Task RefreshMixerSubscriberDetails()
+        {
             DateTimeOffset subDate = DateTimeOffset.MinValue;
-            if (this.IsPlatformSubscriber)
+            UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
+            if (userGroups != null)
             {
-                UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                if (userGroups != null)
+                subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
+                if (subDate > DateTimeOffset.MinValue)
                 {
-                    subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
-                    if (subDate > DateTimeOffset.MinValue)
+                    this.SubscribeDate = subDate;
+                    int totalMonths = this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                    if (this.Data.TotalMonthsSubbed < totalMonths)
                     {
-                        this.SubscribeDate = subDate;
-                        int totalMonths = this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
-                        if (this.Data.TotalMonthsSubbed < totalMonths)
-                        {
-                            this.Data.TotalMonthsSubbed = (uint)totalMonths;
-                        }
+                        this.Data.TotalMonthsSubbed = (uint)totalMonths;
                     }
                 }
             }
