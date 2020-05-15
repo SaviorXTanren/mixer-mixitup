@@ -772,6 +772,10 @@ namespace MixItUp.Base.Services.Mixer
                         user = new UserViewModel("Unknown User");
                         user.InteractiveIDs[e.participantID] = new MixPlayParticipantModel() { sessionID = e.participantID, anonymous = true };
                     }
+                    else
+                    {
+                        await user.RefreshDetails();
+                    }
                     user.UpdateLastActivity();
 
                     if (ChannelSession.Settings.PreventUnknownMixPlayUsers && user.IsAnonymous)
