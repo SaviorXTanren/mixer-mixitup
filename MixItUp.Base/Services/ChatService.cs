@@ -107,9 +107,6 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<Guid, int> whisperMap = new Dictionary<Guid, int>();
 
-        private SemaphoreSlim messagePostProcessingLock = new SemaphoreSlim(0);
-        private LockedList<ChatMessageViewModel> messagePostProcessingList = new LockedList<ChatMessageViewModel>();
-
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private string currentChatEventLogFilePath;
@@ -180,7 +177,6 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 0, this.MessagePostProcessing);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
@@ -335,9 +331,7 @@ namespace MixItUp.Base.Services
 
                 if (message.User != null)
                 {
-                    message.User.Data.TotalChatMessageSent++;
                     message.User.UpdateLastActivity();
-
                     if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                     {
                         await this.whisperNumberLock.WaitAndRelease(() =>
@@ -354,16 +348,6 @@ namespace MixItUp.Base.Services
             }
 
             // Add message to chat list
-
-            if (ChannelSession.Settings.SaveChatEventLogs)
-            {
-                try
-                {
-                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
-                }
-                catch (Exception) { }
-            }
-
             if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
             {
                 await DispatcherHelper.InvokeDispatcher(() =>
@@ -403,22 +387,15 @@ namespace MixItUp.Base.Services
             {
                 if (message.IsWhisper)
                 {
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
+                    {
+                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
+                    }
+
                     // Don't send this if it's in response to another "You are whisperer #" message
                     if (ChannelSession.Settings.TrackWhispererNumber && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
                     {
                         await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
-                    }
-
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
-                    {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
                     }
                 }
                 else
@@ -430,33 +407,7 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
-                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
-                    {
-                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
-                        if (primaryTaggedUser != null)
-                        {
-                            primaryTaggedUser.Data.TotalTimesTagged++;
-                        }
-                    }
-
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
-                    {
-                        this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
-                        {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsUserTagged)
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
                     }
@@ -466,34 +417,6 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                GlobalEvents.ChatMessageReceived(message);
-
-                Logger.Log(LogLevel.Debug, string.Format("Adding Message To Post Processing - {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
-                if (message.ProcessingTime > 500)
-                {
-                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
-                }
-
-                this.messagePostProcessingList.Add(message);
-                this.messagePostProcessingLock.Release();
-            }
-        }
-
-        private async Task MessagePostProcessing(CancellationToken token)
-        {
-            await this.messagePostProcessingLock.WaitAsync();
-
-            ChatMessageViewModel message = this.messagePostProcessingList.FirstOrDefault();
-            this.messagePostProcessingList.RemoveAt(0);
-
-            Logger.Log(LogLevel.Debug, string.Format("Starting Message Post Processing - {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
-            if (message.ProcessingTime > 500)
-            {
-                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
-            }
-
-            if (message.User != null)
-            {
                 await message.User.RefreshDetails();
 
                 if (!message.IsWhisper && await message.CheckForModeration())
@@ -534,23 +457,73 @@ namespace MixItUp.Base.Services
                             if (command.IsEnabled)
                             {
                                 Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-
+                                await command.Perform(message.User, message.Platform, arguments: arguments);
                                 if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
                                 {
                                     await this.DeleteMessage(message);
                                 }
-                                await command.Perform(message.User, message.Platform, arguments: arguments);
                             }
                             break;
                         }
                     }
                 }
 
-                Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
-                if (message.ProcessingTime > 500)
+                if (message.IsWhisper)
                 {
-                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
                 }
+                else
+                {
+                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    {
+                        this.userEntranceCommands.Add(message.User.ID);
+                        if (message.User.Data.EntranceCommand != null)
+                        {
+                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+
+                    message.User.Data.TotalChatMessageSent++;
+
+                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
+                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
+                    {
+                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                        if (primaryTaggedUser != null)
+                        {
+                            primaryTaggedUser.Data.TotalTimesTagged++;
+                        }
+                    }
+                }
+
+                GlobalEvents.ChatMessageReceived(message);
+            }
+
+            if (ChannelSession.Settings.SaveChatEventLogs)
+            {
+                try
+                {
+                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                }
+                catch (Exception) { }
+            }
+
+            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
+            if (message.ProcessingTime > 500)
+            {
+                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
             }
         }
 

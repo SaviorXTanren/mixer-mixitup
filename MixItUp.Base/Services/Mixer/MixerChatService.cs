@@ -129,6 +129,7 @@ namespace MixItUp.Base.Services.Mixer
                             this.streamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncInBackground(async () =>
                         {
                             await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
@@ -147,6 +148,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 300000, this.ChatterRefreshBackground);
                         });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
                     }
                     else
