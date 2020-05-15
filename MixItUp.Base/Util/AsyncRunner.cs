@@ -59,9 +59,9 @@ namespace MixItUp.Base.Util
             return default(T);
         }
 
-        public static void RunAsyncInBackground(Func<Task> task)
+        public static Task RunAsyncInBackground(Func<Task> task)
         {
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
@@ -117,10 +117,10 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
