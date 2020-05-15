@@ -306,7 +306,9 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Mixer
 
-        public bool NeedsRefresh { get { return !this.IsAnonymous && !this.Data.UpdatedThisSession; } }
+        public bool NeedsHardRefresh { get { return !this.IsAnonymous && this.LastUpdated == DateTimeOffset.MinValue; } }
+
+        public bool NeedsSoftRefresh { get { return !this.IsAnonymous && this.LastUpdated != DateTimeOffset.MinValue && !this.Data.UpdatedThisSession; } }
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
@@ -507,7 +509,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous)
             {
-                if (this.NeedsRefresh || force)
+                if (this.NeedsHardRefresh || this.NeedsSoftRefresh || force)
                 {
                     await this.RefreshDetailsInternal();
                 }

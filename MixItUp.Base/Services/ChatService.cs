@@ -482,6 +482,8 @@ namespace MixItUp.Base.Services
 
             if (message.User != null)
             {
+                await message.User.RefreshDetails();
+
                 if (!message.IsWhisper && await message.CheckForModeration())
                 {
                     await this.DeleteMessage(message);
