@@ -469,6 +469,10 @@ namespace MixItUp.Base.Services
                 GlobalEvents.ChatMessageReceived(message);
 
                 Logger.Log(LogLevel.Debug, string.Format("Adding Message To Post Processing - {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                if (message.ProcessingTime > 500)
+                {
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                }
 
                 this.messagePostProcessingList.Add(message);
                 this.messagePostProcessingLock.Release();
@@ -483,6 +487,10 @@ namespace MixItUp.Base.Services
             this.messagePostProcessingList.RemoveAt(0);
 
             Logger.Log(LogLevel.Debug, string.Format("Starting Message Post Processing - {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+            if (message.ProcessingTime > 500)
+            {
+                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+            }
 
             if (message.User != null)
             {
