@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Overlay\OverlayPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
