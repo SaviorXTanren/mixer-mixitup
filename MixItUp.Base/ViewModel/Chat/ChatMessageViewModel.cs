@@ -50,6 +50,8 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = user;
         }
 
+        public double ProcessingTime { get { return (DateTimeOffset.Now - this.ProcessingStartTime).TotalMilliseconds; } }
+
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
         public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerUser.username)); } }
