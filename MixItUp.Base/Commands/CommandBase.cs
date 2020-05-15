@@ -172,11 +172,6 @@ namespace MixItUp.Base.Commands
                     this.platform = platform;
                 }
 
-                if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
-                {
-                    return;
-                }
-
                 try
                 {
                     if (this.StoreID != Guid.Empty)
@@ -204,6 +199,11 @@ namespace MixItUp.Base.Commands
                     bool waitOccurred = false;
                     try
                     {
+                        if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
+                        {
+                            return;
+                        }
+
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();
