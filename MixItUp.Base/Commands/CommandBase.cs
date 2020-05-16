@@ -163,18 +163,13 @@ namespace MixItUp.Base.Commands
                     extraSpecialIdentifiers = new Dictionary<string, string>();
                 }
 
-                if (this.platform == StreamingPlatformTypeEnum.None)
+                if (this.platform == StreamingPlatformTypeEnum.None && user != null)
                 {
                     this.platform = user.Platform;
                 }
                 else
                 {
                     this.platform = platform;
-                }
-
-                if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
-                {
-                    return;
                 }
 
                 try
@@ -204,6 +199,11 @@ namespace MixItUp.Base.Commands
                     bool waitOccurred = false;
                     try
                     {
+                        if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
+                        {
+                            return;
+                        }
+
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();

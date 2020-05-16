@@ -81,7 +81,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 foreach (var userData in data)
                 {
-                    if (string.IsNullOrEmpty(filter) || userData.Username.ToLower().Contains(filter))
+                    if (string.IsNullOrEmpty(filter))
+                    {
+                        this.userData.Add(userData);
+                    }
+                    else if (!string.IsNullOrEmpty(userData.Username) && userData.Username.ToLower().Contains(filter))
                     {
                         this.userData.Add(userData);
                     }

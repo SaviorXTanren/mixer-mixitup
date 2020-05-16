@@ -294,6 +294,19 @@ namespace MixItUp.Base.Services.Mixer
                                             }
                                         }
 
+                                        foreach (MixPlayConnectedLabelControlModel label in scene.labels)
+                                        {
+                                            if (!string.IsNullOrEmpty(label.text) && label.text.Contains('?'))
+                                            {
+                                                MixPlayLabelControlModel dataLabel = dataScene.labels.FirstOrDefault(b => b.controlID.Equals(label.controlID));
+                                                if (dataLabel != null)
+                                                {
+                                                    label.text = dataLabel.text;
+                                                    controlsToUpdate.Add(label);
+                                                }
+                                            }
+                                        }
+
                                         if (controlsToUpdate.Count > 0)
                                         {
                                             await this.UpdateControls(scene, controlsToUpdate);

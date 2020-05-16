@@ -176,7 +176,7 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.MixerID > 0) { return this.MixerUsername; }
-                return this.MixerUsername;
+                return string.Empty;
             }
         }
 
