@@ -163,7 +163,7 @@ namespace MixItUp.Base.Commands
                     extraSpecialIdentifiers = new Dictionary<string, string>();
                 }
 
-                if (this.platform == StreamingPlatformTypeEnum.None)
+                if (this.platform == StreamingPlatformTypeEnum.None && user != null)
                 {
                     this.platform = user.Platform;
                 }
