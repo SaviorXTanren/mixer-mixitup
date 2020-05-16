@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Services
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
 
-            this.Streamlabs = new StreamlabsService();
+            this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService();
             this.StreamJar = new StreamJarService();
             this.TipeeeStream = new TipeeeStreamService(new WindowsSocketIOConnection());
