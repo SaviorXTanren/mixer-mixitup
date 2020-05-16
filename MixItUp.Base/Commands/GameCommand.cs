@@ -331,7 +331,7 @@ namespace MixItUp.Base.Commands
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "None";
                 }
 
-                if (user != null)
+                if (user == null)
                 {
                     user = ChannelSession.GetCurrentUser();
                 }
