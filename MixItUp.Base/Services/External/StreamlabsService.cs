@@ -209,7 +209,7 @@ namespace MixItUp.Base.Services.External
             {
                 string socketToken = jobj["socket_token"].ToString();
 
-                await this.socket.Connect($"https://sockets.streamlabs.com?token=${socketToken}", "{transports: ['websocket']}");
+                await this.socket.Connect($"https://sockets.streamlabs.com", $"token={socketToken}");
 
                 this.socket.Listen("event", (data) =>
                 {
