@@ -354,6 +354,10 @@ namespace MixItUp.Base.Services
                 {
                     await SettingsV2Upgrader.Version41Upgrade(filePath);
                 }
+                if (currentVersion < 42)
+                {
+                    await SettingsV2Upgrader.Version42Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -422,6 +426,29 @@ namespace MixItUp.Base.Services
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
+        }
+
+        public static async Task Version42Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            
+            if (settings.IsStreamer)
+            {
+                List<UserQuoteModel> quotes = new List<UserQuoteModel>();
+                await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+                {
+                    string json = (string)data["Data"];
+                    json = json.Replace("MixItUp.Base.ViewModel.User.UserQuoteViewModel", "MixItUp.Base.Model.User.UserQuoteModel");
+                    quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>(json));
+                });
+
+                await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
+                    quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
+            }
+
+            await settings.Initialize();
+
+            await ChannelSession.Services.Settings.Save(settings);
         }
     }
 
