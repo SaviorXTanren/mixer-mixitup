@@ -507,6 +507,7 @@ namespace MixItUp.Base.Model.User
                         };
 
                         this.tradeTimeCheckToken = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunBackgroundTask(this.tradeTimeCheckToken.Token, async (token) =>
                         {
                             await Task.Delay(60000);
@@ -518,6 +519,7 @@ namespace MixItUp.Base.Model.User
                                 await ChannelSession.Services.Chat.SendMessage("The trade could not be completed in time and was cancelled...");
                             }
                         });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
                         return;

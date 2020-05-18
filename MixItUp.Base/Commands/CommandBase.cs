@@ -147,7 +147,7 @@ namespace MixItUp.Base.Commands
             await this.Perform(ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -222,6 +222,7 @@ namespace MixItUp.Base.Commands
                     }
                 }, this.currentCancellationTokenSource.Token);
             }
+            return Task.FromResult(0);
         }
 
         public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
