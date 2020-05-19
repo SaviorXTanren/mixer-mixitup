@@ -16,6 +16,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -540,6 +541,22 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
+                if (ex is TargetInvocationException)
+                {
+                    TargetInvocationException tex = (TargetInvocationException)ex;
+                    if (tex.InnerException != null)
+                    {
+                        Logger.Log(tex.InnerException);
+                    }
+                }
+                else if (ex is AggregateException)
+                {
+                    AggregateException aex = (AggregateException)ex;
+                    if (aex.InnerException != null)
+                    {
+                        Logger.Log(aex.InnerException);
+                    }
+                }
                 await DialogHelper.ShowMessage("An error occurred while trying to initialize your session. If this continues, please visit the Mix It Up Discord for assistance." +
                     Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
 
