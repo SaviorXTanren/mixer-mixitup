@@ -1,4 +1,7 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -17,12 +20,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         {
             try
             {
-                ScorpBotData scorpBotData = new ScorpBotData();
-
+                ScorpBotData scorpBotData = null;
                 string dataPath = Path.Combine(folderPath, "Data");
                 string settingsFilePath = Path.Combine(dataPath, "settings.ini");
                 if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
                 {
+                    scorpBotData = new ScorpBotData();
+
                     IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
 
                     string currentGroup = null;
@@ -124,6 +128,233 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             this.FilteredWords = new List<string>();
             this.Quotes = new List<string>();
             this.Ranks = new List<ScorpBotRank>();
+        }
+
+        public void ImportSettings()
+        {
+            // Import Ranks
+            int rankEnabled = this.GetIntSettingsValue("currency", "enabled");
+            string rankName = this.GetSettingsValue("currency", "name", "Rank");
+            int rankInterval = this.GetIntSettingsValue("currency", "onlinepayinterval");
+            int rankAmount = this.GetIntSettingsValue("currency", "activeuserbonus");
+            int rankMaxAmount = this.GetIntSettingsValue("currency", "maxlimit");
+            if (rankMaxAmount <= 0)
+            {
+                rankMaxAmount = int.MaxValue;
+            }
+            int rankOnFollowBonus = this.GetIntSettingsValue("currency", "onfollowbonus");
+            int rankOnSubBonus = this.GetIntSettingsValue("currency", "onsubbonus");
+            int rankSubBonus = this.GetIntSettingsValue("currency", "subbonus");
+            string rankCommand = this.GetSettingsValue("currency", "command", "");
+            string rankCommandResponse = this.GetSettingsValue("currency", "response", "");
+            string rankUpCommand = this.GetSettingsValue("currency", "Currency1RankUpMsg", "");
+            int rankAccumulationType = this.GetIntSettingsValue("currency", "ranksrectype");
+
+            UserCurrencyModel rankCurrency = null;
+            UserCurrencyModel rankPointsCurrency = null;
+            if (!string.IsNullOrEmpty(rankName))
+            {
+                if (rankAccumulationType == 1)
+                {
+                    rankCurrency = new UserCurrencyModel()
+                    {
+                        Name = rankName.Equals("Points") ? "Hours" : rankName,
+                        SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rankName.Equals("Points") ? "Hours" : rankName),
+                        AcquireInterval = 60,
+                        AcquireAmount = 1,
+                        MaxAmount = rankMaxAmount,
+                    };
+
+                    if (rankInterval >= 0 && rankAmount >= 0)
+                    {
+                        rankPointsCurrency = new UserCurrencyModel()
+                        {
+                            Name = "Points",
+                            SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("points"),
+                            AcquireInterval = rankInterval,
+                            AcquireAmount = rankAmount,
+                            MaxAmount = rankMaxAmount,
+                            OnFollowBonus = rankOnFollowBonus,
+                            OnSubscribeBonus = rankOnSubBonus,
+                            SubscriberBonus = rankSubBonus,
+                            ModeratorBonus = rankSubBonus,
+                            IsPrimary = true
+                        };
+
+                        ChannelSession.Settings.Currencies[rankPointsCurrency.ID] = rankPointsCurrency;
+                    }
+                }
+                else if (rankInterval >= 0 && rankAmount >= 0)
+                {
+                    rankCurrency = new UserCurrencyModel()
+                    {
+                        Name = rankName,
+                        SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rankName),
+                        AcquireInterval = rankInterval,
+                        AcquireAmount = rankAmount,
+                        MaxAmount = rankMaxAmount,
+                        OnFollowBonus = rankOnFollowBonus,
+                        OnSubscribeBonus = rankOnSubBonus,
+                        SubscriberBonus = rankSubBonus,
+                        ModeratorBonus = rankSubBonus,
+                        IsPrimary = true
+                    };
+                }
+            }
+
+            // Import Currency
+            int currencyEnabled = this.GetIntSettingsValue("currency2", "enabled");
+            string currencyName = this.GetSettingsValue("currency2", "name", "Currency");
+            int currencyInterval = this.GetIntSettingsValue("currency2", "onlinepayinterval");
+            int currencyAmount = this.GetIntSettingsValue("currency2", "activeuserbonus");
+            int currencyMaxAmount = this.GetIntSettingsValue("currency2", "maxlimit");
+            if (currencyMaxAmount <= 0)
+            {
+                currencyMaxAmount = int.MaxValue;
+            }
+            int currencyOnFollowBonus = this.GetIntSettingsValue("currency2", "onfollowbonus");
+            int currencyOnSubBonus = this.GetIntSettingsValue("currency2", "onsubbonus");
+            int currencySubBonus = this.GetIntSettingsValue("currency2", "subbonus");
+            string currencyCommand = this.GetSettingsValue("currency2", "command", "");
+            string currencyCommandResponse = this.GetSettingsValue("currency2", "response", "");
+
+            UserCurrencyModel currency = null;
+            if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
+            {
+                currency = new UserCurrencyModel()
+                {
+                    Name = currencyName,
+                    SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName),
+                    AcquireInterval = currencyInterval,
+                    AcquireAmount = currencyAmount,
+                    MaxAmount = currencyMaxAmount,
+                    OnFollowBonus = currencyOnFollowBonus,
+                    OnSubscribeBonus = currencyOnSubBonus,
+                    IsPrimary = true
+                };
+                ChannelSession.Settings.Currencies[currency.ID] = currency;
+
+                if (!string.IsNullOrEmpty(currencyCommand) && !string.IsNullOrEmpty(currencyCommandResponse))
+                {
+                    currencyCommandResponse = currencyCommandResponse.Replace("$points2", "$" + currency.UserAmountSpecialIdentifier);
+                    currencyCommandResponse = currencyCommandResponse.Replace("$currencyname2", currency.Name);
+                    this.Commands.Add(new ScorpBotCommand(currencyCommand, currencyCommandResponse));
+                }
+            }
+
+            if (rankCurrency != null)
+            {
+                ChannelSession.Settings.Currencies[rankCurrency.ID] = rankCurrency;
+
+                foreach (ScorpBotRank rank in this.Ranks)
+                {
+                    rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                }
+
+                if (!string.IsNullOrEmpty(rankCommand) && !string.IsNullOrEmpty(rankCommandResponse))
+                {
+                    rankCommandResponse = rankCommandResponse.Replace(" / Raids: $raids", "");
+                    rankCommandResponse = rankCommandResponse.Replace("$rank", "$" + rankCurrency.UserRankNameSpecialIdentifier);
+                    rankCommandResponse = rankCommandResponse.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
+                    rankCommandResponse = rankCommandResponse.Replace("$currencyname", rankCurrency.Name);
+                    this.Commands.Add(new ScorpBotCommand(rankCommand, rankCommandResponse));
+                }
+
+                if (!string.IsNullOrEmpty(rankUpCommand))
+                {
+                    rankUpCommand = rankUpCommand.Replace("$rank", "$" + rankCurrency.UserRankNameSpecialIdentifier);
+                    rankUpCommand = rankUpCommand.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
+                    rankUpCommand = rankUpCommand.Replace("$currencyname", rankCurrency.Name);
+
+                    ScorpBotCommand scorpCommand = new ScorpBotCommand("rankup", rankUpCommand);
+                    ChatCommand chatCommand = new ChatCommand(scorpCommand);
+
+                    rankCurrency.RankChangedCommand = new CustomCommand("User Rank Changed");
+                    rankCurrency.RankChangedCommand.Actions.AddRange(chatCommand.Actions);
+                }
+            }
+
+            foreach (ScorpBotCommand command in this.Commands)
+            {
+                command.ProcessData(currency, rankCurrency);
+                ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+            }
+
+            foreach (ScorpBotTimer timer in this.Timers)
+            {
+                ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
+            }
+
+            foreach (string quote in this.Quotes)
+            {
+                ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue, null));
+            }
+
+            if (ChannelSession.Settings.Quotes.Count > 0)
+            {
+                ChannelSession.Settings.QuotesEnabled = true;
+            }
+
+            if (this.GetBoolSettingsValue("settings", "filtwordsen"))
+            {
+                foreach (string filteredWord in this.FilteredWords)
+                {
+                    ChannelSession.Settings.FilteredWords.Add(filteredWord);
+                }
+                ChannelSession.Settings.ModerationFilteredWordsExcempt = this.GetUserRoleSettingsValue("settings", "FilteredWordsPerm");
+            }
+
+            if (this.GetBoolSettingsValue("settings", "chatcapschecknowarnregs"))
+            {
+                ChannelSession.Settings.ModerationChatTextExcempt = UserRoleEnum.User;
+            }
+            else if (this.GetBoolSettingsValue("settings", "chatcapschecknowarnsubs"))
+            {
+                ChannelSession.Settings.ModerationChatTextExcempt = UserRoleEnum.Subscriber;
+            }
+            else if (this.GetBoolSettingsValue("settings", "chatcapschecknowarnmods"))
+            {
+                ChannelSession.Settings.ModerationChatTextExcempt = UserRoleEnum.Mod;
+            }
+            else
+            {
+                ChannelSession.Settings.ModerationChatTextExcempt = UserRoleEnum.Streamer;
+            }
+
+            ChannelSession.Settings.ModerationCapsBlockIsPercentage = !this.GetBoolSettingsValue("settings", "chatcapsfiltertype");
+            if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
+            {
+                ChannelSession.Settings.ModerationCapsBlockCount = this.GetIntSettingsValue("settings", "chatperccaps");
+            }
+            else
+            {
+                ChannelSession.Settings.ModerationCapsBlockCount = this.GetIntSettingsValue("settings", "chatmincaps");
+            }
+
+            ChannelSession.Settings.ModerationBlockLinks = this.GetBoolSettingsValue("settings", "chatlinkalertsdel");
+            ChannelSession.Settings.ModerationBlockLinksExcempt = this.GetUserRoleSettingsValue("settings", "chatlinkalertsdelperm");
+
+            foreach (ScorpBotViewer viewer in this.Viewers)
+            {
+                UserDataModel userData = new UserDataModel(viewer);
+                ChannelSession.Settings.UserData.Add(userData.ID, userData);
+
+                UserViewModel user = new UserViewModel(userData);
+                if (rankPointsCurrency != null)
+                {
+                    rankPointsCurrency.SetAmount(userData, (int)viewer.RankPoints);
+                }
+
+                if (rankCurrency != null)
+                {
+                    rankCurrency.SetAmount(userData, (rankPointsCurrency != null) ? (int)viewer.Hours : (int)viewer.RankPoints);
+                }
+
+                if (currency != null)
+                {
+                    currency.SetAmount(userData, (int)viewer.Currency);
+                }
+            }
         }
 
         public string GetSettingsValue(string key, string value, string defaultValue)
