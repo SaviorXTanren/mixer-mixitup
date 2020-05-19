@@ -3094,6 +3094,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Imported.
+        /// </summary>
+        public static string Imported {
+            get {
+                return ResourceManager.GetString("Imported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import From File.
+        /// </summary>
+        public static string ImportFromFile {
+            get {
+                return ResourceManager.GetString("ImportFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Include Command Assets.
         /// </summary>
         public static string IncludeCommandAssets {
@@ -5277,6 +5295,15 @@ namespace MixItUp.Base {
         public static string Reset {
             get {
                 return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Date.
+        /// </summary>
+        public static string ResetDate {
+            get {
+                return ResourceManager.GetString("ResetDate", resourceCulture);
             }
         }
         

@@ -9,16 +9,23 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
     <Grid Margin="16">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Calendar x:Name="Calendar" HorizontalAlignment="Center" Margin="-1 -4 -1 0" />
+        <TextBlock x:Name="HeaderTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" Width="250" Margin="0,0,0,10" />
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+        <Calendar x:Name="Calendar" Grid.Row="1" HorizontalAlignment="Center" Margin="-1 -4 -1 0" />
+
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />

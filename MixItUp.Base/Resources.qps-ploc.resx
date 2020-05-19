@@ -2655,4 +2655,13 @@
   <data name="PartnersAndVerifiedOnly" xml:space="preserve">
     <value>[!!! Tλïƨ ƒèáƭúřè ïƨ çúřřèñƭℓ¥ áƲáïℓáβℓè ƒôř Þářƭñèřƨ &amp; Vèřïƒïèδ Çλáññèℓƨ ôñℓ¥. ℓôřè₥ ïƥƨú₥ δôℓôř ƨïƭ !!!]</value>
   </data>
+  <data name="ImportFromFile" xml:space="preserve">
+    <value>[!!! Ì₥ƥôřƭ Fřô₥ Fïℓè ℓôřè !!!]</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>[!!! Ì₥ƥôřƭèδ ℓ !!!]</value>
+  </data>
+  <data name="ResetDate" xml:space="preserve">
+    <value>[!!! Rèƨèƭ Ðáƭè ℓô !!!]</value>
+  </data>
 </root>

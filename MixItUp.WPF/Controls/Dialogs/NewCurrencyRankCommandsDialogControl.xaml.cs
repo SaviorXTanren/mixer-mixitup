@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.Window.Currency;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -7,20 +7,6 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
-    public class NewCurrencyRankCommand
-    {
-        public bool AddCommand { get; set; }
-        public string Description { get; set; }
-        public ChatCommand Command { get; set; }
-
-        public NewCurrencyRankCommand(string description, ChatCommand command)
-        {
-            this.AddCommand = true;
-            this.Description = description;
-            this.Command = command;
-        }
-    }
-
     /// <summary>
     /// Interaction logic for NewCurrencyRankCommandsDialogControl.xaml
     /// </summary>

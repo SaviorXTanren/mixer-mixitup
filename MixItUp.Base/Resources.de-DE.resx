@@ -3166,4 +3166,13 @@
   <data name="PartnersAndVerifiedOnly" xml:space="preserve">
     <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
   </data>
+  <data name="ImportFromFile" xml:space="preserve">
+    <value>Aus Datei importieren</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Importiert</value>
+  </data>
+  <data name="ResetDate" xml:space="preserve">
+    <value>Datum zurücksetzen</value>
+  </data>
 </root>
