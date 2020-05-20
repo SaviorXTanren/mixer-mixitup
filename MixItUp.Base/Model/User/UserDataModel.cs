@@ -25,6 +25,9 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
 
+        [DataMember]
+        public string UnassociatedUsername { get; set; }
+
         #region Mixer
 
         [DataMember]
@@ -176,7 +179,7 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.MixerID > 0) { return this.MixerUsername; }
-                return string.Empty;
+                return this.UnassociatedUsername;
             }
         }
 

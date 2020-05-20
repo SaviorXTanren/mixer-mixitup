@@ -73,13 +73,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataModel Data { get; private set; }
 
-        private string unassociatedUsername;
-
         public UserViewModel(string username)
             : this(mixerID: 0)
         {
-            this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
-            this.MixerUsername = this.unassociatedUsername = username;
+            this.MixerUsername = this.UnassociatedUsername = username;
         }
 
         public UserViewModel(UserModel user)
@@ -179,7 +176,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUsername; }
-                return this.unassociatedUsername;
+                return this.UnassociatedUsername;
             }
         }
 
@@ -269,6 +266,8 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+
+        public string UnassociatedUsername { get { return this.Data.UnassociatedUsername; } private set { this.Data.UnassociatedUsername = value; } }
 
         #region Mixer
 
