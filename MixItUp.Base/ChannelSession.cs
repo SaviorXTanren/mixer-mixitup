@@ -293,6 +293,12 @@ namespace MixItUp.Base
 
                 if (mixerChannel != null)
                 {
+                    if (!string.IsNullOrEmpty(modChannelName) && mixerChannel.id == ChannelSession.MixerUser.channel.id)
+                    {
+                        GlobalEvents.ShowMessageBox($"You are trying to sign in as a moderator to your own channel. Please use the Streamer login to access your channel.");
+                        return false;
+                    }
+
                     ChannelSession.MixerChannel = mixerChannel;
 
                     if (ChannelSession.Settings == null)
