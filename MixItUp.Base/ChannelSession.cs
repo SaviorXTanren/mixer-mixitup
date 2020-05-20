@@ -281,8 +281,10 @@ namespace MixItUp.Base
         {
             try
             {
+                bool isModerator = !string.IsNullOrEmpty(modChannelName);
+
                 ExpandedChannelModel mixerChannel = null;
-                if (modChannelName == null)
+                if (!isModerator)
                 {
                     mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerUser.channel.id);
                 }
@@ -293,7 +295,7 @@ namespace MixItUp.Base
 
                 if (mixerChannel != null)
                 {
-                    if (!string.IsNullOrEmpty(modChannelName) && mixerChannel.id == ChannelSession.MixerUser.channel.id)
+                    if (isModerator && mixerChannel.id == ChannelSession.MixerUser.channel.id)
                     {
                         GlobalEvents.ShowMessageBox($"You are trying to sign in as a moderator to your own channel. Please use the Streamer login to access your channel.");
                         return false;
@@ -304,7 +306,7 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings == null)
                     {
                         IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
-                        if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id))
+                        if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id && s.IsStreamer == !isModerator))
                         {
                             GlobalEvents.ShowMessageBox($"There already exists settings for the account {mixerChannel.token}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                             return false;
