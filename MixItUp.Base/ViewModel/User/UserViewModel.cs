@@ -310,7 +310,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser { get { return this.Data.PatreonUser; } set { this.Data.PatreonUser = value; } }
 
-        public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
+        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.Max() : UserRoleEnum.User; } }
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
