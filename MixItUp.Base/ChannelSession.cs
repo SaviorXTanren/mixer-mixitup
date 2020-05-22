@@ -324,7 +324,7 @@ namespace MixItUp.Base
                         Logger.SetLogLevel(LogLevel.Error);
                     }
 
-                    if (modChannelName == null && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
+                    if (ChannelSession.Settings.MixerUserID > 0 && ChannelSession.MixerUser.id != ChannelSession.Settings.MixerUserID)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
                         ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
@@ -333,6 +333,7 @@ namespace MixItUp.Base
                         return false;
                     }
 
+                    ChannelSession.Settings.MixerUserID = ChannelSession.MixerUser.id;
                     ChannelSession.Settings.MixerChannelID = mixerChannel.id;
 
                     await ChannelSession.Services.Telemetry.Connect();

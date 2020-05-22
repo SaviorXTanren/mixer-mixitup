@@ -70,6 +70,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel MixerBotOAuthToken { get; set; }
         [DataMember]
+        public uint MixerUserID { get; set; }
+        [DataMember]
         public uint MixerChannelID { get; set; }
 
         [DataMember]
@@ -506,6 +508,7 @@ namespace MixItUp.Base.Model.Settings
             : this()
         {
             this.Name = channel.token;
+            this.MixerUserID = channel.user.id;
             this.MixerChannelID = channel.id;
             this.IsStreamer = isStreamer;
 
