@@ -29,6 +29,7 @@ namespace MixItUp.WPF.Windows.Currency
         private UserInventoryModel inventory;
 
         private ObservableCollection<UserInventoryItemModel> items = new ObservableCollection<UserInventoryItemModel>();
+        private UserInventoryItemModel selectedItem;
 
         private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
 
@@ -113,12 +114,12 @@ namespace MixItUp.WPF.Windows.Currency
         private void EditItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserInventoryItemModel item = (UserInventoryItemModel)button.DataContext;
+            this.selectedItem = (UserInventoryItemModel)button.DataContext;
 
-            this.ItemNameTextBox.Text = item.Name;
-            this.ItemMaxAmountTextBox.Text = item.HasMaxAmount ? item.MaxAmount.ToString() : string.Empty;
-            this.ItemBuyAmountTextBox.Text = item.BuyAmountString;
-            this.ItemSellAmountTextBox.Text = item.SellAmountString;
+            this.ItemNameTextBox.Text = this.selectedItem.Name;
+            this.ItemMaxAmountTextBox.Text = this.selectedItem.HasMaxAmount ? this.selectedItem.MaxAmount.ToString() : string.Empty;
+            this.ItemBuyAmountTextBox.Text = this.selectedItem.BuyAmountString;
+            this.ItemSellAmountTextBox.Text = this.selectedItem.SellAmountString;
             this.AddItemButton.Content = MixItUp.Base.Resources.Update;
         }
 
@@ -127,6 +128,7 @@ namespace MixItUp.WPF.Windows.Currency
             Button button = (Button)sender;
             UserInventoryItemModel item = (UserInventoryItemModel)button.DataContext;
             this.items.Remove(item);
+            this.selectedItem = null;
         }
 
         private async void AddItemButton_Click(object sender, RoutedEventArgs e)
@@ -167,6 +169,11 @@ namespace MixItUp.WPF.Windows.Currency
                 }
 
                 UserInventoryItemModel item = new UserInventoryItemModel(this.ItemNameTextBox.Text, maxAmount: maxAmount, buyAmount: buyAmount, sellAmount: sellAmount);
+                if (this.selectedItem != null)
+                {
+                    item.ID = this.selectedItem.ID;
+                    this.selectedItem = null;
+                }
                 this.items.Add(item);
 
                 this.ItemNameTextBox.Text = string.Empty;
