@@ -393,7 +393,7 @@ namespace MixItUp.Base.Services
                     }
 
                     // Don't send this if it's in response to another "You are whisperer #" message
-                    if (ChannelSession.Settings.TrackWhispererNumber && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
+                    if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
                     {
                         await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }

@@ -16,6 +16,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -280,8 +281,10 @@ namespace MixItUp.Base
         {
             try
             {
+                bool isModerator = !string.IsNullOrEmpty(modChannelName);
+
                 ExpandedChannelModel mixerChannel = null;
-                if (modChannelName == null)
+                if (!isModerator)
                 {
                     mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerUser.channel.id);
                 }
@@ -292,12 +295,18 @@ namespace MixItUp.Base
 
                 if (mixerChannel != null)
                 {
+                    if (isModerator && mixerChannel.id == ChannelSession.MixerUser.channel.id)
+                    {
+                        GlobalEvents.ShowMessageBox($"You are trying to sign in as a moderator to your own channel. Please use the Streamer login to access your channel.");
+                        return false;
+                    }
+
                     ChannelSession.MixerChannel = mixerChannel;
 
                     if (ChannelSession.Settings == null)
                     {
                         IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
-                        if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id))
+                        if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id && s.IsStreamer == !isModerator))
                         {
                             GlobalEvents.ShowMessageBox($"There already exists settings for the account {mixerChannel.token}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                             return false;
@@ -315,7 +324,7 @@ namespace MixItUp.Base
                         Logger.SetLogLevel(LogLevel.Error);
                     }
 
-                    if (modChannelName == null && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
+                    if (ChannelSession.Settings.MixerUserID > 0 && ChannelSession.MixerUser.id != ChannelSession.Settings.MixerUserID)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
                         ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
@@ -324,7 +333,8 @@ namespace MixItUp.Base
                         return false;
                     }
 
-                    ChannelSession.Settings.MixerChannelID = mixerChannel.id;
+                    ChannelSession.Settings.MixerUserID = ChannelSession.MixerUser.id;
+                    ChannelSession.Settings.MixerChannelID = ChannelSession.MixerChannel.id;
 
                     await ChannelSession.Services.Telemetry.Connect();
                     ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
@@ -540,6 +550,22 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
+                if (ex is TargetInvocationException)
+                {
+                    TargetInvocationException tex = (TargetInvocationException)ex;
+                    if (tex.InnerException != null)
+                    {
+                        Logger.Log(tex.InnerException);
+                    }
+                }
+                else if (ex is AggregateException)
+                {
+                    AggregateException aex = (AggregateException)ex;
+                    if (aex.InnerException != null)
+                    {
+                        Logger.Log(aex.InnerException);
+                    }
+                }
                 await DialogHelper.ShowMessage("An error occurred while trying to initialize your session. If this continues, please visit the Mix It Up Discord for assistance." +
                     Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
 
