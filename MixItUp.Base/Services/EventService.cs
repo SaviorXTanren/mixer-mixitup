@@ -267,21 +267,21 @@ namespace MixItUp.Base.Services
         {
             if (this.CanPerformEvent(trigger))
             {
+                UserViewModel user = trigger.User;
+                if (user == null)
+                {
+                    user = ChannelSession.GetCurrentUser();
+                }
+
+                if (this.userEventTracking.ContainsKey(trigger.Type))
+                {
+                    this.userEventTracking[trigger.Type].Add(user.ID);
+                }
+
                 EventCommand command = this.GetEventCommand(trigger.Type);
                 if (command != null)
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
-
-                    UserViewModel user = trigger.User;
-                    if (user == null)
-                    {
-                        user = ChannelSession.GetCurrentUser();
-                    }
-
-                    if (this.userEventTracking.ContainsKey(trigger.Type))
-                    {
-                        this.userEventTracking[trigger.Type].Add(user.ID);
-                    }
 
                     await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
                 }
