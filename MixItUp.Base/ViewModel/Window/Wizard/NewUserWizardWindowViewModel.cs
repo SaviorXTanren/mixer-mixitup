@@ -330,6 +330,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                         await this.StreamlabsChatBot.ImportSettings();
                     }
 
+                    ChannelSession.Settings.ReRunWizard = false;
                     ChannelSession.Settings.SettingsBackupLocation = this.SettingsBackupLocation;
                     ChannelSession.Settings.SettingsBackupRate = this.SelectedSettingsBackupOption;
 
