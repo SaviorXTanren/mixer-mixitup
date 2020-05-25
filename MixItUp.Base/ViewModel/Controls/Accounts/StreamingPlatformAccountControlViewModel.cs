@@ -59,6 +59,8 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
 
         public ICommand UserAccountCommand { get; set; }
         public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
+        public bool UserAccountButtonIsEnabled { get { return !this.IsUserAccountConnected; } }
+
         public bool IsUserAccountConnected
         {
             get
@@ -220,6 +222,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
             this.NotifyPropertyChanged("IsUserAccountConnected");
             this.NotifyPropertyChanged("IsUserAccountNotConnected");
             this.NotifyPropertyChanged("UserAccountButtonContent");
+            this.NotifyPropertyChanged("UserAccountButtonIsEnabled");
             this.NotifyPropertyChanged("CanConnectBotAccount");
             this.NotifyPropertyChanged("IsBotAccountConnected");
             this.NotifyPropertyChanged("IsBotAccountNotConnected");
