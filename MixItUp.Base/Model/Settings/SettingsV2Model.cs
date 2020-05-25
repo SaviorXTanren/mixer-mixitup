@@ -508,7 +508,6 @@ namespace MixItUp.Base.Model.Settings
             : this()
         {
             this.Name = channel.token;
-            this.MixerUserID = channel.user.id;
             this.MixerChannelID = channel.id;
             this.IsStreamer = isStreamer;
 
