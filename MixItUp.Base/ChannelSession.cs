@@ -326,6 +326,8 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.MixerUserID > 0 && ChannelSession.MixerUser.id != ChannelSession.Settings.MixerUserID)
                     {
+                        Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.MixerUser.username} - {ChannelSession.MixerUser.id} - {ChannelSession.Settings.MixerUserID}");
+
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
                         ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
                         ChannelSession.Settings.MixerUserOAuthToken.refreshToken = string.Empty;
