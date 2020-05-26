@@ -466,6 +466,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)
         {
+            Logger.Log($"Checking role permission for user: {this.PrimaryRole} - {checkRole}");
+
             if (checkRole == UserRoleEnum.Subscriber && this.IsEquivalentToSubscriber())
             {
                 return true;
