@@ -466,6 +466,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)
         {
+            Logger.Log($"Checking role permission for user: {this.PrimaryRole} - {checkRole}");
+
             if (checkRole == UserRoleEnum.Subscriber && this.IsEquivalentToSubscriber())
             {
                 return true;
@@ -497,6 +499,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (!this.Data.UpdatedThisSession || force)
                 {
+                    DateTimeOffset refreshStart = DateTimeOffset.Now;
+
                     this.Data.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
 
@@ -532,6 +536,13 @@ namespace MixItUp.Base.ViewModel.User
                     this.SetCommonUserRoles();
 
                     await this.RefreshExternalServiceDetails();
+
+                    double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                    Logger.Log($"User refresh time: {refreshTime} ms");
+                    if (refreshTime > 500)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long user rfresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
+                    }
                 }
             }
         }
@@ -732,6 +743,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.AccountDate = user.createdAt;
             }
+            this.MixerID = user.id;
+            this.MixerUsername = user.username;
             this.Sparks = (int)user.sparks;
             this.TwitterURL = user.social?.twitter;
             if (user is UserWithChannelModel)
@@ -744,17 +757,18 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerUserRoles(string[] userRoles)
         {
+            HashSet<string> roles = new HashSet<string>(userRoles);
             if (userRoles != null && userRoles.Length > 0)
             {
-                if (userRoles.Any(r => r.Equals("Owner"))) { this.UserRoles.Add(UserRoleEnum.Streamer); } else { this.UserRoles.Remove(UserRoleEnum.Streamer); }
-                if (userRoles.Any(r => r.Equals("Staff"))) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.UserRoles.Add(UserRoleEnum.ChannelEditor); } else { this.UserRoles.Remove(UserRoleEnum.ChannelEditor); }
-                if (userRoles.Any(r => r.Equals("Mod"))) { this.UserRoles.Add(UserRoleEnum.Mod); } else { this.UserRoles.Remove(UserRoleEnum.Mod); }
-                if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.UserRoles.Add(UserRoleEnum.Subscriber); } else { this.UserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (userRoles.Any(r => r.Equals("Partner"))) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
-                if (userRoles.Any(r => r.Equals("Pro"))) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
-                if (userRoles.Any(r => r.Equals("Banned"))) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
+                if (roles.Contains("Owner")) { this.UserRoles.Add(UserRoleEnum.Streamer); } else { this.UserRoles.Remove(UserRoleEnum.Streamer); }
+                if (roles.Contains("Staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+                if (roles.Contains("ChannelEditor")) { this.UserRoles.Add(UserRoleEnum.ChannelEditor); } else { this.UserRoles.Remove(UserRoleEnum.ChannelEditor); }
+                if (roles.Contains("Mod")) { this.UserRoles.Add(UserRoleEnum.Mod); } else { this.UserRoles.Remove(UserRoleEnum.Mod); }
+                if (roles.Contains("GlobalMod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (roles.Contains("Subscriber")) { this.UserRoles.Add(UserRoleEnum.Subscriber); } else { this.UserRoles.Remove(UserRoleEnum.Subscriber); }
+                if (roles.Contains("Partner") || roles.Contains("VerifiedPartner")) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
+                if (roles.Contains("Pro")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
+                if (roles.Contains("Banned")) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
             }
 
             if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))

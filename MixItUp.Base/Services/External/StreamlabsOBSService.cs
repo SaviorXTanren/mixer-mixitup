@@ -405,6 +405,11 @@ namespace MixItUp.Base.Services.External
                 throw exception;
             }
 
+            if (result != null)
+            {
+                Logger.Log(result.ToString());
+            }
+
             return result;
         }
 

@@ -284,13 +284,6 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void UpdateData(UserViewModel user)
-        {
-            this.ID = user.ID;
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.Username;
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is UserDataModel)
