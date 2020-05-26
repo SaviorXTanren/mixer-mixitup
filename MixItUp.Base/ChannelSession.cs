@@ -337,6 +337,7 @@ namespace MixItUp.Base
 
                     ChannelSession.Settings.MixerUserID = ChannelSession.MixerUser.id;
                     ChannelSession.Settings.MixerChannelID = ChannelSession.MixerChannel.id;
+                    ChannelSession.Settings.Name = ChannelSession.MixerChannel.token;
 
                     await ChannelSession.Services.Telemetry.Connect();
                     ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
