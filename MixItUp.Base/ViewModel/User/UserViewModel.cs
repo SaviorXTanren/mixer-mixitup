@@ -497,6 +497,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (!this.Data.UpdatedThisSession || force)
                 {
+                    DateTimeOffset refreshStart = DateTimeOffset.Now;
+
                     this.Data.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
 
@@ -532,6 +534,13 @@ namespace MixItUp.Base.ViewModel.User
                     this.SetCommonUserRoles();
 
                     await this.RefreshExternalServiceDetails();
+
+                    double refreshTime = (DateTimeOffset.Now - refreshStart).TotalMilliseconds;
+                    Logger.Log($"User refresh time: {refreshTime} ms");
+                    if (refreshTime > 500)
+                    {
+                        Logger.Log(LogLevel.Error, string.Format("Long user rfresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
+                    }
                 }
             }
         }
