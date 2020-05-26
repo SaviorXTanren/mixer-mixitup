@@ -743,6 +743,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.AccountDate = user.createdAt;
             }
+            this.MixerID = user.id;
+            this.MixerUsername = user.username;
             this.Sparks = (int)user.sparks;
             this.TwitterURL = user.social?.twitter;
             if (user is UserWithChannelModel)
