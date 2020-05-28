@@ -334,7 +334,6 @@ namespace MixItUp.Base.Model.User
                         }
                     }
                 }
-
             }
             return false;
         }

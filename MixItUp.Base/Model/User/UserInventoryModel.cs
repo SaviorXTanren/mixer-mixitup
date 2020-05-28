@@ -136,11 +136,6 @@ namespace MixItUp.Base.Model.User
         public int DefaultMaxAmount { get; set; }
 
         [DataMember]
-        public CurrencyResetRateEnum ResetInterval { get; set; }
-        [DataMember]
-        public DateTimeOffset LastReset { get; set; }
-
-        [DataMember]
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
@@ -176,8 +171,6 @@ namespace MixItUp.Base.Model.User
             this.ID = Guid.NewGuid();
             this.DefaultMaxAmount = 99;
             this.SpecialIdentifier = string.Empty;
-            this.ResetInterval = CurrencyResetRateEnum.Never;
-            this.LastReset = DateTimeOffset.MinValue;
         }
 
         [JsonIgnore]

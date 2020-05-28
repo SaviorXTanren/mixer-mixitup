@@ -8,6 +8,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
@@ -284,7 +285,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else if (command is CustomCommand)
                 {
-                    if (command.Name.Equals(InventoryWindow.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindow.ItemsSoldCommandName))
+                    if (command.Name.Equals(InventoryWindowViewModel.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindowViewModel.ItemsSoldCommandName))
                     {
                         extraSpecialIdentifiers["itemtotal"] = "5";
                         extraSpecialIdentifiers["itemname"] = "Chocolate Bars";

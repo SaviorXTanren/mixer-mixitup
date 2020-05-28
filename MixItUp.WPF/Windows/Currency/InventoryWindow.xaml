@@ -50,11 +50,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="{x:Static resx:Resources.Help}" />
+                <Button Command="{Binding HelpCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" ToolTip="{x:Static resx:Resources.Help}" />
 
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -63,9 +61,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.InventoryName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
+                    <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.InventoryName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-                    <TextBox x:Name="DefaultMaxAmountTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DefaultMaxAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="140" />
+                    <TextBox Grid.Column="2" Text="{Binding DefaultItemMaxAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DefaultMaxAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="140" />
                 </Grid>
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -76,9 +74,9 @@
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            
+
                             <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200">
-                                <DataGrid x:Name="ItemsListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                                <DataGrid ItemsSource="{Binding Items}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.ItemName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                                         <DataGridTextColumn Header="{x:Static resx:Resources.MaxAmount}" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" />
@@ -94,7 +92,7 @@
                                                             <ColumnDefinition Width="5" />
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
-                                                        
+
                                                         <Button x:Name="EditItemButton" Grid.Column="0" Click="EditItemButton_Click" Width="40" HorizontalAlignment="Center">
                                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                                         </Button>
@@ -123,105 +121,104 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="0" x:Name="ItemNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="0" Text="{Binding ItemName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="2" x:Name="ItemMaxAmountTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="2" Text="{Binding ItemMaxAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="4" x:Name="ItemBuyAmountTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BuyPrice}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="4" Text="{Binding ItemBuyAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BuyPrice}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="6" x:Name="ItemSellAmountTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SellPrice}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="6" Text="{Binding ItemSellAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SellPrice}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <Button x:Name="AddItemButton" Grid.Column="8" Click="AddItemButton_Click" Width="110" Content="{x:Static resx:Resources.AddItem}"/>
+                                <Button Grid.Column="8" Command="{Binding SaveItemCommand}" Width="110" Content="{Binding SaveItemButtonText}"/>
                             </Grid>
                         </Grid>
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Header="{x:Static resx:Resources.Shop}" Grid.Row="4" HorizontalAlignment="Center">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <ToggleButton x:Name="ShopEnableDisableToggleButton" Grid.Column="2" />
-
-                        <TextBox Grid.Column="4" x:Name="ShopCommandTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <ComboBox x:Name="ShopCurrencyComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCurrency}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
-
-                        <GroupBox Header="{x:Static resx:Resources.ItemsBought}" Grid.Column="8">
-                            <CommandControls:CommandButtonsControl x:Name="ShopItemsBoughtCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-                        </GroupBox>
-
-                        <GroupBox Header="{x:Static resx:Resources.ItemsSold}" Grid.Column="10">
-                            <CommandControls:CommandButtonsControl x:Name="ShopItemsSoldCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-                        </GroupBox>
-                    </Grid>
-                </GroupBox>
-
-                <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="{x:Static resx:Resources.Trade}" Grid.Column="0">
+                    <GroupBox Header="{x:Static resx:Resources.Shop}" Grid.Column="0">
                         <Grid Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="5" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                            <ToggleButton x:Name="TradeEnableDisableToggleButton" Grid.Column="2" />
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <ToggleButton Grid.Column="2" IsChecked="{Binding ShopEnabled}" />
 
-                            <TextBox Grid.Column="4" x:Name="TradeCommandTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TradeCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="4" Text="{Binding ShopCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <GroupBox Header="{x:Static resx:Resources.ItemsTraded}" Grid.Column="6">
-                                <CommandControls:CommandButtonsControl x:Name="TradeItemsBoughtCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-                            </GroupBox>
+                                <ComboBox Grid.Column="6" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedShopCurrency}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCurrency}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                            </Grid>
+                            
+                            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <GroupBox Header="{x:Static resx:Resources.ItemsBought}" Grid.Column="0">
+                                    <CommandControls:CommandButtonsControl x:Name="ShopBuyCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                </GroupBox>
+
+                                <GroupBox Header="{x:Static resx:Resources.ItemsSold}" Grid.Column="2">
+                                    <CommandControls:CommandButtonsControl x:Name="ShopSellCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                </GroupBox>
+                            </Grid>
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="{x:Static resx:Resources.Settings}" Grid.Column="2">
-                        <Grid Margin="10" VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                    <GroupBox Header="{x:Static resx:Resources.Trade}" Grid.Column="2">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AutomaticReset}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click" Content="{x:Static resx:Resources.ManualReset}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <ToggleButton Grid.Column="2" IsChecked="{Binding TradeEnabled}" />
+
+                                <TextBox Grid.Column="4" Text="{Binding TradeCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TradeCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            </Grid>
+                            
+                            <GroupBox Header="{x:Static resx:Resources.ItemsTraded}" Grid.Row="2" HorizontalAlignment="Center">
+                                <CommandControls:CommandButtonsControl x:Name="TradeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                            </GroupBox>
                         </Grid>
                     </GroupBox>
                 </Grid>
 
-                <Button x:Name="SaveButton" Grid.Row="8" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
+                <Button x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
                     <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
             </Grid>
