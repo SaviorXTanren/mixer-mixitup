@@ -98,7 +98,7 @@ namespace MixItUp.Base.Actions
                 UserCurrencyModel currency = null;
                 UserInventoryModel inventory = null;
                 string systemName = null;
-                string itemName = null;
+                UserInventoryItemModel item = null;
 
                 if (this.CurrencyID != Guid.Empty)
                 {
@@ -121,8 +121,9 @@ namespace MixItUp.Base.Actions
 
                     if (!string.IsNullOrEmpty(this.ItemName))
                     {
-                        itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, arguments);
-                        if (!inventory.Items.ContainsKey(itemName))
+                        string itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, arguments);
+                        item = inventory.GetItem(itemName);
+                        if (item == null)
                         {
                             return;
                         }
@@ -214,12 +215,12 @@ namespace MixItUp.Base.Actions
                         }
                         else if (inventory != null)
                         {
-                            if (!inventory.HasAmount(user.Data, itemName, amountValue))
+                            if (!inventory.HasAmount(user.Data, item, amountValue))
                             {
-                                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
+                                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", amountValue, item));
                                 return;
                             }
-                            inventory.SubtractAmount(user.Data, itemName, amountValue);
+                            inventory.SubtractAmount(user.Data, item, amountValue);
                         }
                     }
 
@@ -242,11 +243,11 @@ namespace MixItUp.Base.Actions
                             {
                                 if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                                 {
-                                    inventory.SubtractAmount(receiverUser, itemName, amountValue);
+                                    inventory.SubtractAmount(receiverUser, item, amountValue);
                                 }
                                 else
                                 {
-                                    inventory.AddAmount(receiverUser, itemName, amountValue);
+                                    inventory.AddAmount(receiverUser, item, amountValue);
                                 }
                             }
                         }

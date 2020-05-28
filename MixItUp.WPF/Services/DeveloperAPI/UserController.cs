@@ -362,7 +362,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             UserInventoryModel inventory = ChannelSession.Settings.Inventories[inventoryID];
 
-            if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.Items.ContainsKey(inventoryUpdate.Name))
+            if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.ItemExists(inventoryUpdate.Name))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -372,10 +372,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
+            UserInventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;
-                if (!inventory.HasAmount(user, inventoryUpdate.Name, quantityToRemove))
+                if (!inventory.HasAmount(user, item, quantityToRemove))
                 {
                     // If the request is to remove inventory, but user doesn't have enough, fail
                     var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
@@ -386,11 +387,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                     throw new HttpResponseException(resp);
                 }
 
-                inventory.SubtractAmount(user, inventoryUpdate.Name, quantityToRemove);
+                inventory.SubtractAmount(user, item, quantityToRemove);
             }
             else if (inventoryUpdate.Amount > 0)
             {
-                inventory.AddAmount(user, inventoryUpdate.Name, inventoryUpdate.Amount);
+                inventory.AddAmount(user, item, inventoryUpdate.Amount);
             }
 
             return UserFromUserDataViewModel(user);

@@ -1425,7 +1425,7 @@ namespace MixItUp.Base.Commands
                                             currency.AddAmount(this.currentStarterUser.Data, this.currentBetAmount);
                                             if (this.Requirements.Inventory != null)
                                             {
-                                                this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
+                                                this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemID, this.Requirements.Inventory.Amount);
                                             }
 
                                             if (this.NotAcceptedCommand != null)
@@ -1461,7 +1461,15 @@ namespace MixItUp.Base.Commands
             UserViewModel targetUser = await base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
             if (targetUser != null && this.Requirements.Inventory != null && !this.Requirements.Inventory.DoesMeetRequirement(targetUser.Data))
             {
-                await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} {2}", targetUser.Username, this.Requirements.Inventory.Amount, this.Requirements.Inventory.ItemName));
+                UserInventoryModel inventory = this.Requirements.Inventory.GetInventory();
+                if (inventory != null && inventory.ItemExists(this.Requirements.Inventory.ItemID))
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} {2}", targetUser.Username, this.Requirements.Inventory.Amount, inventory.GetItem(this.Requirements.Inventory.ItemID).Name));
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} items", targetUser.Username, this.Requirements.Inventory.Amount));
+                }
                 return null;
             }
             return targetUser;

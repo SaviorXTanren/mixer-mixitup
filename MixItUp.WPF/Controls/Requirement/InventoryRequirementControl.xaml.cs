@@ -50,9 +50,22 @@ namespace MixItUp.WPF.Controls.Requirement
 
                 this.InventoryItemComboBox.IsEnabled = true;
                 this.InventoryItemComboBox.ItemsSource = ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].Items.Values;
-                if (ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].Items.ContainsKey(inventoryRequirement.ItemName))
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (!string.IsNullOrEmpty(inventoryRequirement.ItemName))
                 {
-                    this.InventoryItemComboBox.SelectedItem = ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].Items[inventoryRequirement.ItemName];
+                    UserInventoryItemModel item = ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].GetItem(inventoryRequirement.ItemName);
+                    if (item != null)
+                    {
+                        inventoryRequirement.ItemID = item.ID;
+                    }
+                    inventoryRequirement.ItemName = null;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+                if (ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].ItemExists(inventoryRequirement.ItemID))
+                {
+                    this.InventoryItemComboBox.SelectedItem = ChannelSession.Settings.Inventories[inventoryRequirement.InventoryID].GetItem(inventoryRequirement.ItemID);
                 }
 
                 this.InventoryItemAmountTextBox.IsEnabled = true;

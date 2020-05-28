@@ -70,9 +70,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 else
                 {
                     this.ItemName = this.SelectedItem.Name;
-                    this.ItemMaxAmount = this.SelectedItem.MaxAmount;
-                    this.ItemBuyAmount = this.SelectedItem.BuyAmount;
-                    this.ItemSellAmount = this.SelectedItem.SellAmount;
+                    this.ItemMaxAmount = (this.SelectedItem.HasMaxAmount) ? this.SelectedItem.MaxAmount : 0;
+                    this.ItemBuyAmount = (this.SelectedItem.HasBuyAmount) ? this.SelectedItem.BuyAmount : 0;
+                    this.ItemSellAmount = (this.SelectedItem.HasSellAmount) ? this.SelectedItem.SellAmount : 0;
                 }
             }
         }
@@ -291,10 +291,13 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 }
                 else
                 {
-                    this.SelectedItem.Name = name;
+                    this.SelectedItem.Name = this.ItemName;
                     this.SelectedItem.MaxAmount = this.ItemMaxAmount;
                     this.SelectedItem.BuyAmount = this.ItemBuyAmount;
                     this.SelectedItem.SellAmount = this.ItemSellAmount;
+
+                    this.Items.Remove(this.SelectedItem);
+                    this.Items.Add(this.SelectedItem);
                 }
 
                 this.SelectedItem = null;
@@ -390,7 +393,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.inventory.Name = this.Name;
             this.inventory.DefaultMaxAmount = this.DefaultItemMaxAmount;
             this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
-            this.inventory.Items = new Dictionary<string, UserInventoryItemModel>(this.Items.ToDictionary(i => i.Name, i => i));
+            this.inventory.Items = new Dictionary<string, UserInventoryItemModel>(this.Items.ToDictionary(i => i.ID.ToString(), i => i));
 
             this.inventory.ShopEnabled = this.ShopEnabled;
             this.inventory.ShopCommand = this.ShopCommandText;

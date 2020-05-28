@@ -118,7 +118,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (this.GetSelectedInventory() != null)
                 {
                     this.InventoryItemNameComboBox.Visibility = Visibility.Visible;
-                    this.InventoryItemNameComboBox.ItemsSource = this.GetSelectedInventory().Items.Keys;
+                    this.InventoryItemNameComboBox.ItemsSource = this.GetSelectedInventory().Items.Values.Select(i => i.Name);
                 }
                 else
                 {

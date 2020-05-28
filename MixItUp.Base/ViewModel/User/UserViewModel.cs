@@ -913,15 +913,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Inventory = inventory;
         }
 
-        public int GetAmount(UserInventoryItemModel item) { return this.GetAmount(item.Name); }
+        public int GetAmount(UserInventoryItemModel item) { return this.Inventory.GetAmount(this.User, item); }
 
-        public int GetAmount(string itemName) { return this.Inventory.GetAmount(this.User, itemName); }
+        public int GetAmount(Guid itemID) { return this.Inventory.GetAmount(this.User, itemID); }
 
         public Dictionary<Guid, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
 
-        public void SetAmount(UserInventoryItemModel item, int amount) { this.SetAmount(item.Name, amount); }
+        public void SetAmount(UserInventoryItemModel item, int amount) { this.Inventory.SetAmount(this.User, item, amount); }
 
-        public void SetAmount(string itemName, int amount) { this.Inventory.SetAmount(this.User, itemName, amount); }
+        public void SetAmount(Guid itemID, int amount) { this.Inventory.SetAmount(this.User, itemID, amount); }
 
         public override bool Equals(object obj)
         {
