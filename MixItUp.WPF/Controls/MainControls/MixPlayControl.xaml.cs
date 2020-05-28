@@ -130,7 +130,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (window != null)
                 {
-                    window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                    window.Closed += Window_Closed;
                     window.Show();
                 }
             }
@@ -172,12 +172,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (window != null)
             {
-                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                window.Closed += Window_Closed;
                 window.Show();
             }
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase command)
+        private void Window_Closed(object sender, System.EventArgs e)
         {
             this.viewModel.RefreshControls();
         }
