@@ -585,11 +585,11 @@ namespace MixItUp.Base.Services.Mixer
             {
                 MixPlayConnectedSceneModel scene = this.Scenes[sceneID];
                 List<MixPlayConnectedButtonControlModel> controls = new List<MixPlayConnectedButtonControlModel>();
-                foreach (var kvp in controlToScene)
+                foreach (MixPlayControlModel control in scene.allControls)
                 {
-                    if (kvp.Value.Equals(scene) && this.Controls[kvp.Key] is MixPlayConnectedButtonControlModel)
+                    if (control is MixPlayConnectedButtonControlModel)
                     {
-                        controls.Add((MixPlayConnectedButtonControlModel)this.Controls[kvp.Key]);
+                        controls.Add((MixPlayConnectedButtonControlModel)control);
                     }
                 }
 
