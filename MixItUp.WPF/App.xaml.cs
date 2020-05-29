@@ -133,7 +133,7 @@ namespace MixItUp.WPF
             ChannelSession.IsElevated = id.Owner != id.User;
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
-            if (ChannelSession.IsDebug())
+            if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
             {
                 Logger.SetLogLevel(LogLevel.Debug);
             }

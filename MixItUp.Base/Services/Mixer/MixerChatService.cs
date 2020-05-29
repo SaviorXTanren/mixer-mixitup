@@ -122,7 +122,7 @@ namespace MixItUp.Base.Services.Mixer
                         this.streamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
                         this.streamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                         this.streamerClient.OnReplyOccurred += ChatClient_OnReplyOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.streamerClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.streamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Services.Mixer
                     this.streamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
                     this.streamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                     this.streamerClient.OnReplyOccurred -= ChatClient_OnReplyOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.streamerClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.streamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
@@ -216,7 +216,7 @@ namespace MixItUp.Base.Services.Mixer
                         this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
                         this.botClient.OnReplyOccurred += ChatClient_OnReplyOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -243,7 +243,7 @@ namespace MixItUp.Base.Services.Mixer
                     this.botClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
                     this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
                     this.botClient.OnReplyOccurred -= ChatClient_OnReplyOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.botClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.botClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;

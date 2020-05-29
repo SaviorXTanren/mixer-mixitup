@@ -395,6 +395,13 @@ namespace MixItUp.Base.Services
 
             await settings.Initialize();
 
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.DiagnosticLogging)
+            {
+                ChannelSession.AppSettings.DiagnosticLogging = true;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             foreach (UserInventoryModel inventory in settings.Inventories.Values)
             {
                 List<UserInventoryItemModel> items = inventory.Items.Values.ToList();

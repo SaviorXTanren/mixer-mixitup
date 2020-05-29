@@ -317,15 +317,6 @@ namespace MixItUp.Base
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                        if (ChannelSession.Settings.DiagnosticLogging)
-                        {
-                            Logger.SetLogLevel(LogLevel.Debug);
-                        }
-                        else
-                        {
-                            Logger.SetLogLevel(LogLevel.Error);
-                        }
-
                         if (ChannelSession.Settings.MixerUserID > 0 && ChannelSession.MixerUser.id != ChannelSession.Settings.MixerUserID)
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.MixerUser.username} - {ChannelSession.MixerUser.id} - {ChannelSession.Settings.MixerUserID}");

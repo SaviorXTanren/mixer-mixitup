@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services.Mixer
                     if (this.Client != null && await this.RunAsync(this.Client.Connect()))
                     {
                         this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Services.Mixer
                 if (this.Client != null)
                 {
                     this.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;

@@ -429,9 +429,11 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool ReRunWizard { get; set; }
         [DataMember]
-        public bool DiagnosticLogging { get; set; }
-        [DataMember]
         public bool UnlockAllCommands { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        public bool DiagnosticLogging { get; set; }
 
         #endregion Advanced
 
@@ -510,11 +512,6 @@ namespace MixItUp.Base.Model.Settings
             this.Name = channel.token;
             this.MixerChannelID = channel.id;
             this.IsStreamer = isStreamer;
-
-            if (ChannelSession.IsDebug())
-            {
-                this.DiagnosticLogging = true;
-            }
 
             this.InitializeMissingData();
         }
