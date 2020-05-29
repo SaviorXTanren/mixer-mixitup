@@ -31,9 +31,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account and control your channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account, send messages to channels, and control the audio from voice channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
 
-                <TextBlock Grid.Row="2" TextWrapping="Wrap">You may also use a custom Discord Application that you have created by toggling the option below and entering in the required information. This will allow you to circumvent our 30 second timeout on Discord actions.</TextBlock>
+                <TextBlock Grid.Row="2" TextWrapping="Wrap">The default Mix It Up Discord application has a 30 second cooldown between each Discord action to prevent rate limiting issues for all users. To circumvent the 30 second cooldown, you can create your own custom Discord Application: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#discord" RequestNavigate="Hyperlink_RequestNavigate">Creating Custom Discord Application</Hyperlink></TextBlock>
             </Grid>
 
             <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
