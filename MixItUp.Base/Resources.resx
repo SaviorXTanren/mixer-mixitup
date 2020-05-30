@@ -2655,4 +2655,7 @@
   <data name="PartnersAndVerifiedOnly" xml:space="preserve">
     <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
   </data>
+  <data name="Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
 </root>
