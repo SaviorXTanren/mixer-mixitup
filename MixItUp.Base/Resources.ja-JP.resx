@@ -117,16 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ChannelName" xml:space="preserve">
-    <value>Kanaal Naam</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Login" xml:space="preserve">
-    <value>Aanmelden</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Dutch" xml:space="preserve">
-    <value>Nederlands</value>
-    <comment>Manual</comment>
+    <value>ログイン</value>
+    <comment>Google</comment>
   </data>
 </root>

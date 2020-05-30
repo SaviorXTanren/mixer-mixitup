@@ -34,6 +34,10 @@ namespace MixItUp.WPF
             { LanguageOptions.Dutch, "nl-NL" },
             { LanguageOptions.English, "en-US" },
             { LanguageOptions.German, "de-DE" },
+            { LanguageOptions.Spanish, "es-ES" },
+            { LanguageOptions.Japanese, "ja-JP" },
+            { LanguageOptions.French, "fr-FR" },
+            { LanguageOptions.Portuguese, "pt-BR" },
 
             { LanguageOptions.Pseudo, "qps-ploc" },
         };
