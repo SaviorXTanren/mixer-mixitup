@@ -31,9 +31,16 @@ namespace MixItUp.Base.Util
 
         public async Task Send(WebSocketPacket packet)
         {
-            foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
+            try
             {
-                await webSocketServer.Send(packet);
+                foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
+                {
+                    await webSocketServer.Send(packet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,7 +61,9 @@ namespace MixItUp.WPF.Controls.Actions
                 ModerationActionTypeEnum moderationType = EnumHelper.GetEnumValueFromString<ModerationActionTypeEnum>((string)this.ModerationActionTypeComboBox.SelectedItem);
 
                 if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.PurgeUser ||
-                    moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.UnbanUser || moderationType == ModerationActionTypeEnum.InteractiveTimeout ||
+                    moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.UnbanUser ||
+                    moderationType == ModerationActionTypeEnum.ModUser || moderationType == ModerationActionTypeEnum.UnmodUser ||
+                    moderationType == ModerationActionTypeEnum.InteractiveTimeout ||
                     moderationType == ModerationActionTypeEnum.AddModerationStrike || moderationType == ModerationActionTypeEnum.RemoveModerationStrike)
                 {
                     this.UserNameTextBox.Visibility = Visibility.Visible;
