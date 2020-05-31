@@ -42,11 +42,11 @@
                                     <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <Button Grid.Column="2" Command="{Binding CopyCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Copy}">
+                                <Button Grid.Column="2" x:Name="CopyButton" Click="CopyButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Copy}">
                                     <MaterialDesign:PackIcon Kind="ContentCopy" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <Button Grid.Column="4" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                                <Button Grid.Column="4" x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
                                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Window.Currency;
 using System.Threading.Tasks;
 
@@ -9,20 +9,20 @@ namespace MixItUp.WPF.Windows.Currency
     /// </summary>
     public partial class StreamPassWindow : LoadingWindowBase
     {
-        private CurrencyWindowViewModel viewModel;
+        private StreamPassWindowViewModel viewModel;
 
         public StreamPassWindow()
         {
-            this.viewModel = new CurrencyWindowViewModel();
+            this.viewModel = new StreamPassWindowViewModel();
 
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
         }
 
-        public StreamPassWindow(UserCurrencyModel currency)
+        public StreamPassWindow(StreamPassModel seasonPass)
         {
-            this.viewModel = new CurrencyWindowViewModel(currency);
+            this.viewModel = new StreamPassWindowViewModel(seasonPass);
 
             InitializeComponent();
 

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
@@ -441,6 +442,9 @@ namespace MixItUp.Base.Model.Settings
         public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
         [DataMember]
         public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+
+        [DataMember]
+        public Dictionary<Guid, StreamPassModel> StreamPass { get; set; } = new Dictionary<Guid, StreamPassModel>();
 
         [DataMember]
         public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
