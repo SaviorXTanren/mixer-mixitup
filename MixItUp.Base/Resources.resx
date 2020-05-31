@@ -2664,4 +2664,76 @@
   <data name="ResetDate" xml:space="preserve">
     <value>Reset Date</value>
   </data>
+  <data name="CustomizeStreamPass" xml:space="preserve">
+    <value>Customize Stream Pass</value>
+  </data>
+  <data name="ActivityRate" xml:space="preserve">
+    <value>Activity Rate:</value>
+  </data>
+  <data name="DonationBonus" xml:space="preserve">
+    <value>Donation Bonus</value>
+  </data>
+  <data name="EmberBonus" xml:space="preserve">
+    <value>Ember Bonus</value>
+  </data>
+  <data name="FollowBonus" xml:space="preserve">
+    <value>Follow Bonus</value>
+  </data>
+  <data name="HostBonus" xml:space="preserve">
+    <value>Host Bonus (Per Viewer)</value>
+  </data>
+  <data name="PointRates" xml:space="preserve">
+    <value>Point Rates</value>
+  </data>
+  <data name="SparkBonus" xml:space="preserve">
+    <value>Spark Bonus</value>
+  </data>
+  <data name="SubMultiplier" xml:space="preserve">
+    <value>Sub Multiplier</value>
+  </data>
+  <data name="SubscribeBonus" xml:space="preserve">
+    <value>Subscribe Bonus</value>
+  </data>
+  <data name="AddCustomLevelUp" xml:space="preserve">
+    <value>Add Custom Level Up</value>
+  </data>
+  <data name="AddStreamPass" xml:space="preserve">
+    <value>Add Stream Pass</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="DateRange" xml:space="preserve">
+    <value>Date Range</value>
+  </data>
+  <data name="DefaultLevelUpCommand" xml:space="preserve">
+    <value>Default Level Up Command</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End:</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="LevelNumber" xml:space="preserve">
+    <value>Level #</value>
+  </data>
+  <data name="LevelUpCommands" xml:space="preserve">
+    <value>Level Up Commands</value>
+  </data>
+  <data name="PointsForLevelUp" xml:space="preserve">
+    <value>Points for Level Up</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start:</value>
+  </data>
+  <data name="StreamPass" xml:space="preserve">
+    <value>Stream Pass</value>
+  </data>
+  <data name="TotalLevels" xml:space="preserve">
+    <value>Total Levels</value>
+  </data>
 </root>

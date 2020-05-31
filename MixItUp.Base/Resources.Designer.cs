@@ -268,6 +268,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activity Rate:.
+        /// </summary>
+        public static string ActivityRate {
+            get {
+                return ResourceManager.GetString("ActivityRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
@@ -300,6 +309,15 @@ namespace MixItUp.Base {
         public static string AddCurrencyRank {
             get {
                 return ResourceManager.GetString("AddCurrencyRank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Custom Level Up.
+        /// </summary>
+        public static string AddCustomLevelUp {
+            get {
+                return ResourceManager.GetString("AddCustomLevelUp", resourceCulture);
             }
         }
         
@@ -399,6 +417,15 @@ namespace MixItUp.Base {
         public static string AddQuote {
             get {
                 return ResourceManager.GetString("AddQuote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Stream Pass.
+        /// </summary>
+        public static string AddStreamPass {
+            get {
+                return ResourceManager.GetString("AddStreamPass", resourceCulture);
             }
         }
         
@@ -1492,6 +1519,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cost.
         /// </summary>
         public static string Cost {
@@ -1699,6 +1735,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customize Stream Pass.
+        /// </summary>
+        public static string CustomizeStreamPass {
+            get {
+                return ResourceManager.GetString("CustomizeStreamPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom MixPlay Projects.
         /// </summary>
         public static string CustomMixPlayProjects {
@@ -1758,6 +1803,15 @@ namespace MixItUp.Base {
         public static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Range.
+        /// </summary>
+        public static string DateRange {
+            get {
+                return ResourceManager.GetString("DateRange", resourceCulture);
             }
         }
         
@@ -1830,6 +1884,15 @@ namespace MixItUp.Base {
         public static string DefaultAudioOutput {
             get {
                 return ResourceManager.GetString("DefaultAudioOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Level Up Command.
+        /// </summary>
+        public static string DefaultLevelUpCommand {
+            get {
+                return ResourceManager.GetString("DefaultLevelUpCommand", resourceCulture);
             }
         }
         
@@ -1920,6 +1983,15 @@ namespace MixItUp.Base {
         public static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
             }
         }
         
@@ -2028,6 +2100,15 @@ namespace MixItUp.Base {
         public static string DoesNotContain {
             get {
                 return ResourceManager.GetString("DoesNotContain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donation Bonus.
+        /// </summary>
+        public static string DonationBonus {
+            get {
+                return ResourceManager.GetString("DonationBonus", resourceCulture);
             }
         }
         
@@ -2154,6 +2235,15 @@ namespace MixItUp.Base {
         public static string EditCommand {
             get {
                 return ResourceManager.GetString("EditCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ember Bonus.
+        /// </summary>
+        public static string EmberBonus {
+            get {
+                return ResourceManager.GetString("EmberBonus", resourceCulture);
             }
         }
         
@@ -2370,6 +2460,15 @@ namespace MixItUp.Base {
         public static string EnableXSplit {
             get {
                 return ResourceManager.GetString("EnableXSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End:.
+        /// </summary>
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
             }
         }
         
@@ -2698,6 +2797,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow Bonus.
+        /// </summary>
+        public static string FollowBonus {
+            get {
+                return ResourceManager.GetString("FollowBonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follower.
         /// </summary>
         public static string Follower {
@@ -2991,6 +3099,15 @@ namespace MixItUp.Base {
         public static string HideViewerAndChatterNumbers {
             get {
                 return ResourceManager.GetString("HideViewerAndChatterNumbers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host Bonus (Per Viewer).
+        /// </summary>
+        public static string HostBonus {
+            get {
+                return ResourceManager.GetString("HostBonus", resourceCulture);
             }
         }
         
@@ -3495,6 +3612,33 @@ namespace MixItUp.Base {
         public static string LessThanOrEqual {
             get {
                 return ResourceManager.GetString("LessThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level.
+        /// </summary>
+        public static string Level {
+            get {
+                return ResourceManager.GetString("Level", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level #.
+        /// </summary>
+        public static string LevelNumber {
+            get {
+                return ResourceManager.GetString("LevelNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level Up Commands.
+        /// </summary>
+        public static string LevelUpCommands {
+            get {
+                return ResourceManager.GetString("LevelUpCommands", resourceCulture);
             }
         }
         
@@ -4782,6 +4926,24 @@ namespace MixItUp.Base {
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point Rates.
+        /// </summary>
+        public static string PointRates {
+            get {
+                return ResourceManager.GetString("PointRates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Points for Level Up.
+        /// </summary>
+        public static string PointsForLevelUp {
+            get {
+                return ResourceManager.GetString("PointsForLevelUp", resourceCulture);
             }
         }
         
@@ -6082,6 +6244,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spark Bonus.
+        /// </summary>
+        public static string SparkBonus {
+            get {
+                return ResourceManager.GetString("SparkBonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spark Cost.
         /// </summary>
         public static string SparkCost {
@@ -6186,6 +6357,15 @@ namespace MixItUp.Base {
         public static string Staff {
             get {
                 return ResourceManager.GetString("Staff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start:.
+        /// </summary>
+        public static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
             }
         }
         
@@ -6352,6 +6532,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stream Pass.
+        /// </summary>
+        public static string StreamPass {
+            get {
+                return ResourceManager.GetString("StreamPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streams Watched.
         /// </summary>
         public static string StreamsWatched {
@@ -6406,6 +6595,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sub Multiplier.
+        /// </summary>
+        public static string SubMultiplier {
+            get {
+                return ResourceManager.GetString("SubMultiplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subs.
         /// </summary>
         public static string Subs {
@@ -6420,6 +6618,15 @@ namespace MixItUp.Base {
         public static string SubscribeAge {
             get {
                 return ResourceManager.GetString("SubscribeAge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subscribe Bonus.
+        /// </summary>
+        public static string SubscribeBonus {
+            get {
+                return ResourceManager.GetString("SubscribeBonus", resourceCulture);
             }
         }
         
@@ -6780,6 +6987,15 @@ namespace MixItUp.Base {
         public static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Levels.
+        /// </summary>
+        public static string TotalLevels {
+            get {
+                return ResourceManager.GetString("TotalLevels", resourceCulture);
             }
         }
         
