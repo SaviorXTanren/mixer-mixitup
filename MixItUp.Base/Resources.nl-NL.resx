@@ -53,7 +53,6 @@
     value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
-
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
@@ -117,16 +116,284 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ChannelName" xml:space="preserve">
-    <value>Kanaal Naam</value>
+  <data name="1PerEmber" xml:space="preserve">
+    <value>1 Per Ember</value>
     <comment>Manual</comment>
   </data>
-  <data name="Login" xml:space="preserve">
-    <value>Aanmelden</value>
+  <data name="1PerHour" xml:space="preserve">
+    <value>1 Per Uur</value>
     <comment>Manual</comment>
   </data>
-  <data name="Dutch" xml:space="preserve">
-    <value>Nederlands</value>
+  <data name="1PerMinute" xml:space="preserve">
+    <value>1 Per Minuut</value>
     <comment>Manual</comment>
+  </data>
+  <data name="1PerSpark" xml:space="preserve">
+    <value>1 Per Spark</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Over</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Aanvaarden</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
+    <value>Toegang tot de installatie folder van Mix It Up</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccountDay" xml:space="preserve">
+    <value>Account Is 1 Dag Oud</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccountHour" xml:space="preserve">
+    <value>Account Is 1 Uur Oud</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccountMonth" xml:space="preserve">
+    <value>Account Is 1 Maand Oud</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Accounts" xml:space="preserve">
+    <value>Accounts</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>Streamer accounts zijn uw actuele accounts waarmee U streamt. Bot accounts zijn afzonderlijke, optionele accounts die U kan gebruiken om berichten naar uw chat te verzenden. Bot accounts moeten manueel door U gemaakt worden en U moet er zeker van zijn dat ze aangemeld zijn alvorens die te verbinden met Mix It Up.</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>Laat ons starten met aanmelden in de accounts die U gebruikt van elk Streaming Platform. Kies de opties hieronder voor elk account waar U wilt aanmelden. U kan deze opties later nog wijzigen in de Accounts Pagina.</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AccountWeek" xml:space="preserve">
+    <value>Account Is 1 Week Oud</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AcquireRate" xml:space="preserve">
+    <value>Acquire Rate</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Aktie</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ActionGroup" xml:space="preserve">
+    <value>Aktie Groep</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ActionGroups" xml:space="preserve">
+    <value>Aktie Groepen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Akties</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ActionToPeform" xml:space="preserve">
+    <value>Aktie Uitvoeren</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ActionToPerformWithResponse" xml:space="preserve">
+    <value>Aktie Uitvoeren met Bevestiging</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ActionToPerformWithTranslation" xml:space="preserve">
+    <value>Aktie Uitvoeren met Vertaling</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddClause" xml:space="preserve">
+    <value>Clausule Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>Opdracht Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddCurrencyRank" xml:space="preserve">
+    <value>Valuta/Rang Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
+    <value>Gebruiker is reeds in deze groep.</value>
+  </data>
+  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
+    <value>Gebruiker met die naam niet gevonden.</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
+    <value>Dit Team is reeds bij de Favorieten.</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
+    <value>Team met die naam niet gevonden.</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddInventory" xml:space="preserve">
+    <value>Inventaris Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>Item Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddNewPair" xml:space="preserve">
+    <value>Nieuw Paar Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddNewRank" xml:space="preserve">
+    <value>Nieuwe Rang Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddNewVariable" xml:space="preserve">
+    <value>Nieuwe Variabele Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddOverlayWidget" xml:space="preserve">
+    <value>Overlay Widget Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddQuote" xml:space="preserve">
+    <value>Citaat Toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddToAllChatUsers" xml:space="preserve">
+    <value>Aan alle chat gebruikers toewijzen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddToSpecificUser" xml:space="preserve">
+    <value>Aan specifieke gebruiker toewijzen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AddToUser" xml:space="preserve">
+    <value>Aan gebruiker toewijzen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Adult" xml:space="preserve">
+    <value>18+</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Uitgebreid</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AdvancedCommand" xml:space="preserve">
+    <value>Uitgebreide Aktie</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AgeRating" xml:space="preserve">
+    <value>Leeftijdsindicatie</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alarmen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
+    <value>Akties alleen in uw kanaal tijdens een Co-Stream</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AllowCommandsToBeWhispered" xml:space="preserve">
+    <value>Akties worden privé gestuurd</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AllowPastWinners" xml:space="preserve">
+    <value>Vorige Winnaars toelaten</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AllowProfanity" xml:space="preserve">
+    <value>Grove Taal Toestaan</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AlreadyInstalled" xml:space="preserve">
+    <value>Reeds geïnstalleerd</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Amber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Aantal</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AmountDonated" xml:space="preserve">
+    <value>Aantal Gedoneerd</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AmountPlusMinus" xml:space="preserve">
+    <value>Aantal (+/-)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AmountSeconds" xml:space="preserve">
+    <value>Aantal (Seconden)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Answer1" xml:space="preserve">
+    <value>Antwoord 1</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Answer2" xml:space="preserve">
+    <value>Antwoord 2</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Answer3" xml:space="preserve">
+    <value>Antwoord 3 (Optional)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Answer4" xml:space="preserve">
+    <value>Antwoord 4 (Optional)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AnyChatMessageSound" xml:space="preserve">
+    <value>Geluid voor ieder Chat Bericht</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AppendToFile" xml:space="preserve">
+    <value>Aan bestand toevoegen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ApplicationInfo" xml:space="preserve">
+    <value>Applicatie Info</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ApplyStrikes" xml:space="preserve">
+    <value>Strikes Toewijzen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ApprovedDevices" xml:space="preserve">
+    <value>Bekende Apparaten</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ArgumentsTranslatedText" xml:space="preserve">
+    <value>Argumenten ($translationresult = Vertaalde Tekst)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="ArgumentsWebRequest" xml:space="preserve">
+    <value>Argumenten ($webrequestresult = Tekst Resultaat)</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Assets" xml:space="preserve">
+    <value>Aanvullingen</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>Publiek</value>
+    <comment>Manual</comment>	
+  </data>
+  <data name="AudioOutputDevice" xml:space="preserve">
+    <value>Audio Uitgangs Apparaat</value>
+    <comment>Manual</comment>	
   </data>
 </root>
