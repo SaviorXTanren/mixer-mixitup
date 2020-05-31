@@ -504,34 +504,26 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
 
-                    List<Task> refreshTasks = new List<Task>();
-
                     if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
                     {
-                        if (!this.AccountDate.HasValue || force)
-                        {
-                            refreshTasks.Add(this.RefreshMixerUserDetails());
-                        }
-
-                        refreshTasks.Add(this.RefreshMixerUserFanProgression());
-                        refreshTasks.Add(this.RefreshMixerUserFollowDate());
+                        await this.RefreshMixerUserDetails();
+                        await this.RefreshMixerUserFanProgression();
+                        await this.RefreshMixerUserFollowDate();
 
                         if (!this.IsInChat)
                         {
-                            refreshTasks.Add(this.RefreshMixerChatDetails());
+                            await this.RefreshMixerChatDetails();
                         }
 
                         if (this.IsPlatformSubscriber)
                         {
-                            refreshTasks.Add(this.RefreshMixerSubscriberDetails());
+                            await this.RefreshMixerSubscriberDetails();
                         }
                         else
                         {
                             this.SubscribeDate = null;
                         }
                     }
-
-                    await Task.WhenAll(refreshTasks);
 
                     this.SetCommonUserRoles();
 
