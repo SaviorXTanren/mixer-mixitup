@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Accounts;
 using StreamingClient.Base.Util;
@@ -326,6 +325,17 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                         return;
                     }
 
+                    if (this.ScorpBot != null)
+                    {
+                        this.ScorpBot.ImportSettings();
+                    }
+
+                    if (this.StreamlabsChatBot != null)
+                    {
+                        await this.StreamlabsChatBot.ImportSettings();
+                    }
+
+                    ChannelSession.Settings.ReRunWizard = false;
                     ChannelSession.Settings.SettingsBackupLocation = this.SettingsBackupLocation;
                     ChannelSession.Settings.SettingsBackupRate = this.SelectedSettingsBackupOption;
 
@@ -365,6 +375,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     this.CommandActionsPageVisible = true;
                 }
 
+                this.StatusMessage = string.Empty;
                 return Task.FromResult(0);
             });
         }

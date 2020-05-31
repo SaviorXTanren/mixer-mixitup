@@ -16,35 +16,23 @@ namespace MixItUp.Base.Services.External
 {
     public class StreamlabsDonation
     {
-        [JsonProperty("donation_id")]
-        public int ID { get; set; }
+        [JsonProperty("_id")]
+        public string ID { get; set; }
 
         [JsonProperty("name")]
         public string UserName { get; set; }
+
         [JsonProperty("message")]
         public string Message { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonProperty("formatted_amount")]
         public string AmountString { get; set; }
 
-        [JsonProperty("created_at")]
-        public long CreatedAt { get; set; }
+        [JsonProperty("amount")]
+        public double Amount { get; set; }
 
         [JsonIgnore]
-        public double Amount
-        {
-            get
-            {
-                if (this.AmountString.ParseCurrency(out double result))
-                {
-                    return result;
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public DateTimeOffset CreatedAtDateTime { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt); } }
+        public DateTimeOffset CreatedAtDateTime { get { return DateTimeOffset.UtcNow; } }
 
         public StreamlabsDonation() { }
 
@@ -54,7 +42,7 @@ namespace MixItUp.Base.Services.External
             {
                 Source = UserDonationSourceEnum.Streamlabs,
 
-                ID = this.ID.ToString(),
+                ID = this.ID,
                 Username = this.UserName,
                 Message = this.Message,
 
@@ -67,8 +55,6 @@ namespace MixItUp.Base.Services.External
 
     public interface IStreamlabsService : IOAuthExternalService
     {
-        Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1);
-
         Task SpinWheel();
 
         Task EmptyJar();
@@ -83,12 +69,13 @@ namespace MixItUp.Base.Services.External
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
         private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write";
 
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private ISocketIOConnection socket;
 
-        private DateTimeOffset startTime = DateTimeOffset.Now;
-        private Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
-
-        public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
+        public StreamlabsService(ISocketIOConnection socket)
+            : base(StreamlabsService.BaseAddress)
+        {
+            this.socket = socket;
+        }
 
         public override string Name { get { return "Streamlabs"; } }
 
@@ -122,46 +109,10 @@ namespace MixItUp.Base.Services.External
             return new Result(false);
         }
 
-        public override Task Disconnect()
+        public override async Task Disconnect()
         {
-            this.cancellationTokenSource.Cancel();
+            await this.socket.Disconnect();
             this.token = null;
-            return Task.FromResult(0);
-        }
-
-        public async Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1)
-        {
-            List<StreamlabsDonation> results = new List<StreamlabsDonation>();
-            try
-            {
-                int lastID = 0;
-                while (results.Count < maxAmount)
-                {
-                    string beforeFilter = string.Empty;
-                    if (lastID > 0)
-                    {
-                        beforeFilter = "?before=" + lastID;
-                    }
-
-                    HttpResponseMessage response = await this.GetAsync("donations" + beforeFilter);
-                    JObject jobj = await response.ProcessJObjectResponse();
-                    JArray data = (JArray)jobj["data"];
-
-                    if (data.Count == 0)
-                    {
-                        break;
-                    }
-
-                    foreach (var d in data)
-                    {
-                        StreamlabsDonation donation = d.ToObject<StreamlabsDonation>();
-                        lastID = donation.ID;
-                        results.Add(donation);
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
         }
 
         public async Task SpinWheel()
@@ -196,33 +147,40 @@ namespace MixItUp.Base.Services.External
 
         protected override async Task<Result> InitializeInternal()
         {
-            this.cancellationTokenSource = new CancellationTokenSource();
-
-            foreach (StreamlabsDonation slDonation in await this.GetDonations())
+            JObject jobj = await this.GetJObjectAsync("socket/token?access_token=" + this.token.accessToken);
+            if (jobj != null && jobj.ContainsKey("socket_token"))
             {
-                donationsReceived[slDonation.ID] = slDonation;
-            }
+                string socketToken = jobj["socket_token"].ToString();
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+                await this.socket.Connect($"https://sockets.streamlabs.com", $"token={socketToken}");
 
-            return new Result();
-        }
-
-        private async Task BackgroundDonationCheck(CancellationToken token)
-        {
-            foreach (StreamlabsDonation slDonation in await this.GetDonations())
-            {
-                if (!donationsReceived.ContainsKey(slDonation.ID) && slDonation.CreatedAtDateTime > this.startTime)
+                this.socket.Listen("event", async (data) =>
                 {
-                    donationsReceived[slDonation.ID] = slDonation;
-                    await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
-                }
-            }
-        }
+                    if (data != null)
+                    {
+                        JObject eventJObj = JObject.Parse(data.ToString());
 
-        protected override void DisposeInternal()
-        {
-            this.cancellationTokenSource.Dispose();
+                        if (eventJObj.ContainsKey("type"))
+                        {
+                            if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                var messages = eventJObj["message"] as JArray;
+                                if (messages != null)
+                                {
+                                    foreach (var message in messages)
+                                    {
+                                        StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
+                                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                return new Result();
+            }
+            return new Result("Failed to get web socket token");
         }
     }
 }

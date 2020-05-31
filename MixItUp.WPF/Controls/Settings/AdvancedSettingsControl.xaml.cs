@@ -45,8 +45,8 @@ namespace MixItUp.WPF.Controls.Settings
             }
 
             this.UnlockAllCommandsToggleButton.IsChecked = ChannelSession.Settings.UnlockAllCommands;
-            this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
-            this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
+            this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.AppSettings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
+            this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.AppSettings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
 
             await base.InitializeInternal();
         }
@@ -129,7 +129,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (await DialogHelper.ShowConfirmation("This will enable diagnostic logging and restart Mix It Up. This should only be done with advised by a Mix It Up developer. Are you sure you wish to do this?"))
             {
-                ChannelSession.Settings.DiagnosticLogging = true;
+                ChannelSession.AppSettings.DiagnosticLogging = true;
                 ((MainWindow)this.Window).Restart();
             }
         }
@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (await DialogHelper.ShowConfirmation("This will disable diagnostic logging and restart Mix It Up. Are you sure you wish to do this?"))
             {
-                ChannelSession.Settings.DiagnosticLogging = false;
+                ChannelSession.AppSettings.DiagnosticLogging = false;
                 ((MainWindow)this.Window).Restart();
             }
         }

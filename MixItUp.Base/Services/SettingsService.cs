@@ -354,6 +354,10 @@ namespace MixItUp.Base.Services
                 {
                     await SettingsV2Upgrader.Version41Upgrade(filePath);
                 }
+                if (currentVersion < 42)
+                {
+                    await SettingsV2Upgrader.Version42Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -369,6 +373,85 @@ namespace MixItUp.Base.Services
             }
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
+        }
+
+        public static async Task Version42Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+
+            if (settings.IsStreamer)
+            {
+                List<UserQuoteModel> quotes = new List<UserQuoteModel>();
+                await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+                {
+                    string json = (string)data["Data"];
+                    json = json.Replace("MixItUp.Base.ViewModel.User.UserQuoteViewModel", "MixItUp.Base.Model.User.UserQuoteModel");
+                    quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>(json));
+                });
+
+                await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
+                    quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
+            }
+
+            await settings.Initialize();
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.DiagnosticLogging)
+            {
+                ChannelSession.AppSettings.DiagnosticLogging = true;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            foreach (UserInventoryModel inventory in settings.Inventories.Values)
+            {
+                List<UserInventoryItemModel> items = inventory.Items.Values.ToList();
+                inventory.Items.Clear();
+                foreach (UserInventoryItemModel item in items)
+                {
+                    inventory.Items[item.ID.ToString()] = item;
+                }
+            }
+
+            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventories.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
+            {
+                UserInventoryModel inventory = settings.Inventories[settings.GiveawayRequirements.Inventory.InventoryID];
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (inventory != null && !string.IsNullOrEmpty(settings.GiveawayRequirements.Inventory.ItemName))
+                {
+                    UserInventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
+                    if (item != null)
+                    {
+                        settings.GiveawayRequirements.Inventory.ItemID = item.ID;
+                    }
+                    settings.GiveawayRequirements.Inventory.ItemName = null;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+
+            foreach (CommandBase command in SettingsV2Upgrader.GetAllCommands(settings))
+            {
+                if (command is PermissionsCommandBase)
+                {
+                    PermissionsCommandBase pCommand = (PermissionsCommandBase)command;
+                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventories.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
+                    {
+                        UserInventoryModel inventory = settings.Inventories[pCommand.Requirements.Inventory.InventoryID];
+#pragma warning disable CS0612 // Type or member is obsolete
+                        if (inventory != null && !string.IsNullOrEmpty(pCommand.Requirements.Inventory.ItemName))
+                        {
+                            UserInventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
+                            if (item != null)
+                            {
+                                pCommand.Requirements.Inventory.ItemID = item.ID;
+                            }
+                            pCommand.Requirements.Inventory.ItemName = null;
+                        }
+#pragma warning restore CS0612 // Type or member is obsolete
+                    }
+                }
+            }
+
+            await ChannelSession.Services.Settings.Save(settings);
         }
 
         public static async Task Version41Upgrade(string filePath)
@@ -422,6 +505,85 @@ namespace MixItUp.Base.Services
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
+        }
+
+        private static IEnumerable<CommandBase> GetAllCommands(SettingsV2Model settings)
+        {
+            List<CommandBase> commands = new List<CommandBase>();
+
+            commands.AddRange(settings.ChatCommands);
+            commands.AddRange(settings.EventCommands);
+            commands.AddRange(settings.MixPlayCommands);
+            commands.AddRange(settings.TimerCommands);
+            commands.AddRange(settings.ActionGroupCommands);
+            commands.AddRange(settings.GameCommands);
+
+            foreach (UserDataModel userData in settings.UserData.Values)
+            {
+                commands.AddRange(userData.CustomCommands);
+                if (userData.EntranceCommand != null)
+                {
+                    commands.Add(userData.EntranceCommand);
+                }
+            }
+
+            foreach (GameCommandBase gameCommand in settings.GameCommands)
+            {
+                commands.AddRange(gameCommand.GetAllInnerCommands());
+            }
+
+            foreach (UserCurrencyModel currency in settings.Currencies.Values)
+            {
+                if (currency.RankChangedCommand != null)
+                {
+                    commands.Add(currency.RankChangedCommand);
+                }
+            }
+
+            foreach (UserInventoryModel inventory in settings.Inventories.Values)
+            {
+                commands.Add(inventory.ItemsBoughtCommand);
+                commands.Add(inventory.ItemsSoldCommand);
+            }
+
+            foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
+            {
+                if (widget.Item is OverlayStreamBossItemModel)
+                {
+                    OverlayStreamBossItemModel item = ((OverlayStreamBossItemModel)widget.Item);
+                    if (item.NewStreamBossCommand != null)
+                    {
+                        commands.Add(item.NewStreamBossCommand);
+                    }
+                }
+                else if (widget.Item is OverlayProgressBarItemModel)
+                {
+                    OverlayProgressBarItemModel item = ((OverlayProgressBarItemModel)widget.Item);
+                    if (item.GoalReachedCommand != null)
+                    {
+                        commands.Add(item.GoalReachedCommand);
+                    }
+                }
+                else if (widget.Item is OverlayTimerItemModel)
+                {
+                    OverlayTimerItemModel item = ((OverlayTimerItemModel)widget.Item);
+                    if (item.TimerCompleteCommand != null)
+                    {
+                        commands.Add(item.TimerCompleteCommand);
+                    }
+                }
+            }
+
+            commands.Add(settings.GameQueueUserJoinedCommand);
+            commands.Add(settings.GameQueueUserSelectedCommand);
+            commands.Add(settings.GiveawayStartedReminderCommand);
+            commands.Add(settings.GiveawayUserJoinedCommand);
+            commands.Add(settings.GiveawayWinnerSelectedCommand);
+            commands.Add(settings.ModerationStrike1Command);
+            commands.Add(settings.ModerationStrike2Command);
+            commands.Add(settings.ModerationStrike3Command);
+
+            return commands.Where(c => c != null);
         }
     }
 

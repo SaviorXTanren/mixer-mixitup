@@ -121,7 +121,8 @@ namespace MixItUp.Base.Services.Mixer
                         this.streamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
                         this.streamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
                         this.streamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        this.streamerClient.OnReplyOccurred += ChatClient_OnReplyOccurred;
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.streamerClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.streamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -129,6 +130,7 @@ namespace MixItUp.Base.Services.Mixer
                             this.streamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncInBackground(async () =>
                         {
                             await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
@@ -147,6 +149,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 300000, this.ChatterRefreshBackground);
                         });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
                     }
                     else
@@ -176,7 +179,8 @@ namespace MixItUp.Base.Services.Mixer
                     this.streamerClient.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
                     this.streamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
                     this.streamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.streamerClient.OnReplyOccurred -= ChatClient_OnReplyOccurred;
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.streamerClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.streamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
@@ -211,8 +215,8 @@ namespace MixItUp.Base.Services.Mixer
 
                         this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
-                        this.botClient.OnReplyOccurred += BotClient_OnReplyOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        this.botClient.OnReplyOccurred += ChatClient_OnReplyOccurred;
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -238,8 +242,8 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     this.botClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
                     this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
-                    this.botClient.OnReplyOccurred -= BotClient_OnReplyOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.botClient.OnReplyOccurred -= ChatClient_OnReplyOccurred;
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.botClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.botClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
@@ -711,19 +715,23 @@ namespace MixItUp.Base.Services.Mixer
             this.ProcessSkill(message);
         }
 
-        protected async void BotClient_OnReplyOccurred(object sender, ReplyPacket e)
+        protected async void ChatClient_OnReplyOccurred(object sender, ReplyPacket e)
         {
-            if (e.errorObject != null)
+            try
             {
-                if (e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message") && e.errorObject["code"].ToString().Equals("4007"))
+                if (e.errorObject != null && e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message"))
                 {
                     await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
-                        "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
+                        "Chat error: " + e.errorObject["code"] + " - " + e.errorObject["message"]));
+                }
+                else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
+                {
+                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, "Chat error: " + e.error.ToString()));
                 }
             }
-            else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
+            catch (Exception ex)
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, "Bot account error: " + e.error.ToString()));
+                Logger.Log(ex);
             }
         }
 

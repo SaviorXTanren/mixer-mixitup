@@ -330,6 +330,12 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "None";
                 }
+
+                if (user == null)
+                {
+                    user = ChannelSession.GetCurrentUser();
+                }
+
                 await command.Perform(user, this.platform, arguments, specialIdentifiers);
             }
         }
@@ -573,7 +579,7 @@ namespace MixItUp.Base.Commands
 
                             await this.GameStarted(user, arguments, betAmount);
 
-                            this.timeLimitTask = Task.Run(async () =>
+                            this.timeLimitTask = AsyncRunner.RunAsyncInBackground(async () =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
@@ -854,7 +860,7 @@ namespace MixItUp.Base.Commands
                     {
                         await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
 
-                        this.timeLimitTask = Task.Run((Func<Task>)(async () =>
+                        this.timeLimitTask = AsyncRunner.RunAsyncInBackground(async () =>
                         {
                             await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
@@ -863,7 +869,7 @@ namespace MixItUp.Base.Commands
                             await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
 
                             this.ResetData(user);
-                        }));
+                        });
                     }
                     else
                     {
@@ -1101,24 +1107,18 @@ namespace MixItUp.Base.Commands
             }
 
             this.timeLimitCancellationTokenSource = new CancellationTokenSource();
-            this.timeLimitTask = Task.Run((Func<Task>)(async () =>
+            this.timeLimitTask = AsyncRunner.RunBackgroundTask(this.timeLimitCancellationTokenSource.Token, async (token) =>
             {
-                try
+                await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
+
+                if (!token.IsCancellationRequested)
                 {
-                    CancellationToken token = this.timeLimitCancellationTokenSource.Token;
+                    await this.PerformCommand(this.BallMissedCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
+                    this.Requirements.UpdateCooldown(this.currentUser);
 
-                    await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
-
-                    if (!token.IsCancellationRequested)
-                    {
-                        await this.PerformCommand(this.BallMissedCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
-                        this.Requirements.UpdateCooldown(this.currentUser);
-
-                        this.ResetData(this.currentUser);
-                    }
+                    this.ResetData(this.currentUser);
                 }
-                catch (Exception) { }
-            }), this.timeLimitCancellationTokenSource.Token);
+            });
         }
     }
 
@@ -1412,38 +1412,32 @@ namespace MixItUp.Base.Commands
                             this.currentStarterUser = user;
 
                             this.taskCancellationSource = new CancellationTokenSource();
-                            this.timeLimitTask = Task.Run((Func<Task>)(async () =>
+                            this.timeLimitTask = AsyncRunner.RunBackgroundTask(this.taskCancellationSource.Token, async (timeLimitToken) =>
                             {
-                                try
+                                await Task.Delay(this.TimeLimit * 1000);
+
+                                if (!timeLimitToken.IsCancellationRequested)
                                 {
-                                    CancellationTokenSource currentCancellationSource = this.taskCancellationSource;
-
-                                    await Task.Delay(this.TimeLimit * 1000);
-
-                                    if (!currentCancellationSource.Token.IsCancellationRequested)
+                                    await this.targetUserSemaphore.WaitAndRelease((Func<Task>)(async () =>
                                     {
-                                        await this.targetUserSemaphore.WaitAndRelease((Func<Task>)(async () =>
+                                        if (this.currentTargetUser != null)
                                         {
-                                            if (this.currentTargetUser != null)
+                                            currency.AddAmount(this.currentStarterUser.Data, this.currentBetAmount);
+                                            if (this.Requirements.Inventory != null)
                                             {
-                                                currency.AddAmount(this.currentStarterUser.Data, this.currentBetAmount);
-                                                if (this.Requirements.Inventory != null)
-                                                {
-                                                    this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
-                                                }
-
-                                                if (this.NotAcceptedCommand != null)
-                                                {
-                                                    await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.Username });
-                                                }
-
-                                                this.ResetData(user);
+                                                this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemID, this.Requirements.Inventory.Amount);
                                             }
-                                        }));
-                                    }
+
+                                            if (this.NotAcceptedCommand != null)
+                                            {
+                                                await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.Username });
+                                            }
+
+                                            this.ResetData(user);
+                                        }
+                                    }));
                                 }
-                                catch (Exception) { }
-                            }), this.taskCancellationSource.Token);
+                            });
 
                             await this.PerformCommand(this.StartedCommand, user, new List<string>() { currentTargetUser.Username }, currentBetAmount, 0);
                         }
@@ -1467,7 +1461,15 @@ namespace MixItUp.Base.Commands
             UserViewModel targetUser = await base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
             if (targetUser != null && this.Requirements.Inventory != null && !this.Requirements.Inventory.DoesMeetRequirement(targetUser.Data))
             {
-                await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} {2}", targetUser.Username, this.Requirements.Inventory.Amount, this.Requirements.Inventory.ItemName));
+                UserInventoryModel inventory = this.Requirements.Inventory.GetInventory();
+                if (inventory != null && inventory.ItemExists(this.Requirements.Inventory.ItemID))
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} {2}", targetUser.Username, this.Requirements.Inventory.Amount, inventory.GetItem(this.Requirements.Inventory.ItemID).Name));
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("@{0} does not have {1} items", targetUser.Username, this.Requirements.Inventory.Amount));
+                }
                 return null;
             }
             return targetUser;
@@ -2911,7 +2913,7 @@ namespace MixItUp.Base.Commands
             this.totalPayout = 0;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
+            AsyncRunner.RunAsyncInBackground(async () =>
             {
                 this.collectActive = true;
 

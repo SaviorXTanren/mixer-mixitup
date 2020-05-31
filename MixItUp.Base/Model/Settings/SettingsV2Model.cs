@@ -30,7 +30,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 41;
+        public const int LatestVersion = 42;
 
         public const string SettingsDirectoryName = "Settings";
 
@@ -69,6 +69,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel MixerUserOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel MixerBotOAuthToken { get; set; }
+        [DataMember]
+        public uint MixerUserID { get; set; }
         [DataMember]
         public uint MixerChannelID { get; set; }
 
@@ -436,9 +438,11 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool ReRunWizard { get; set; }
         [DataMember]
-        public bool DiagnosticLogging { get; set; }
-        [DataMember]
         public bool UnlockAllCommands { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        public bool DiagnosticLogging { get; set; }
 
         #endregion Advanced
 
@@ -520,11 +524,6 @@ namespace MixItUp.Base.Model.Settings
             this.MixerChannelID = channel.id;
             this.IsStreamer = isStreamer;
 
-            if (ChannelSession.IsDebug())
-            {
-                this.DiagnosticLogging = true;
-            }
-
             this.InitializeMissingData();
         }
 
@@ -554,8 +553,18 @@ namespace MixItUp.Base.Model.Settings
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
-                    this.Quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
+                    string json = (string)data["Data"];
+                    if (json.Contains("MixItUp.Base.ViewModel.User.UserQuoteViewModel"))
+                    {
+                        json = json.Replace("MixItUp.Base.ViewModel.User.UserQuoteViewModel", "MixItUp.Base.Model.User.UserQuoteModel");
+                        this.Quotes.Add(new UserQuoteViewModel(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>(json)));
+                    }
+                    else
+                    {
+                        this.Quotes.Add(new UserQuoteViewModel(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>((string)data["Data"])));
+                    }
                 });
+                this.Quotes.ClearTracking();
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
                 {
@@ -761,7 +770,7 @@ namespace MixItUp.Base.Model.Settings
                     this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
 
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
-                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
+                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q.Model) } }));
             }
         }
 

@@ -199,7 +199,7 @@ namespace MixItUp.Base.Services.Mixer
                         if (await this.RunAsync(this.Client.Ready()))
                         {
                             this.Client.OnDisconnectOccurred += MixPlayClient_OnDisconnectOccurred;
-                            if (ChannelSession.Settings.DiagnosticLogging)
+                            if (ChannelSession.AppSettings.DiagnosticLogging)
                             {
                                 this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                                 this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
@@ -361,7 +361,7 @@ namespace MixItUp.Base.Services.Mixer
                 if (this.Client != null)
                 {
                     this.Client.OnDisconnectOccurred -= MixPlayClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                         this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
@@ -585,11 +585,11 @@ namespace MixItUp.Base.Services.Mixer
             {
                 MixPlayConnectedSceneModel scene = this.Scenes[sceneID];
                 List<MixPlayConnectedButtonControlModel> controls = new List<MixPlayConnectedButtonControlModel>();
-                foreach (var kvp in controlToScene)
+                foreach (MixPlayControlModel control in scene.allControls)
                 {
-                    if (kvp.Value.Equals(scene) && this.Controls[kvp.Key] is MixPlayConnectedButtonControlModel)
+                    if (control is MixPlayConnectedButtonControlModel)
                     {
-                        controls.Add((MixPlayConnectedButtonControlModel)this.Controls[kvp.Key]);
+                        controls.Add((MixPlayConnectedButtonControlModel)control);
                     }
                 }
 

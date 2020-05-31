@@ -354,7 +354,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center" Width="550" TextWrapping="Wrap" />
 
                 <Button Grid.Column="2" Command="{Binding BackCommand}" IsEnabled="{Binding CanBack}">&lt; Back</Button>
 

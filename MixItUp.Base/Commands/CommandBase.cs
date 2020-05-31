@@ -149,7 +149,7 @@ namespace MixItUp.Base.Commands
             await this.Perform(ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -165,18 +165,13 @@ namespace MixItUp.Base.Commands
                     extraSpecialIdentifiers = new Dictionary<string, string>();
                 }
 
-                if (this.platform == StreamingPlatformTypeEnum.None)
+                if (this.platform == StreamingPlatformTypeEnum.None && user != null)
                 {
                     this.platform = user.Platform;
                 }
                 else
                 {
                     this.platform = platform;
-                }
-
-                if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
-                {
-                    return;
                 }
 
                 try
@@ -206,6 +201,11 @@ namespace MixItUp.Base.Commands
                     bool waitOccurred = false;
                     try
                     {
+                        if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
+                        {
+                            return;
+                        }
+
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();
@@ -224,6 +224,7 @@ namespace MixItUp.Base.Commands
                     }
                 }, this.currentCancellationTokenSource.Token);
             }
+            return Task.FromResult(0);
         }
 
         public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)

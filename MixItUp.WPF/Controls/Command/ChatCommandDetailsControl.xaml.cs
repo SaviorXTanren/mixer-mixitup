@@ -3,7 +3,6 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +15,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ChatCommandDetailsControl : CommandDetailsControlBase
     {
-        private ChatCommand command;
+        public bool AutoAddToChatCommands { get; private set; }
 
-        private bool autoAddToChatCommands = true;
+        private ChatCommand command;
 
         public ChatCommandDetailsControl(ChatCommand command, bool autoAddToChatCommands = true)
         {
             this.command = command;
-            this.autoAddToChatCommands = autoAddToChatCommands;
+            this.AutoAddToChatCommands = autoAddToChatCommands;
 
             InitializeComponent();
         }
@@ -127,7 +126,7 @@ namespace MixItUp.WPF.Controls.Command
                 else
                 {
                     this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
-                    if (this.autoAddToChatCommands && !ChannelSession.Settings.ChatCommands.Contains(this.command))
+                    if (this.AutoAddToChatCommands && !ChannelSession.Settings.ChatCommands.Contains(this.command))
                     {
                         ChannelSession.Settings.ChatCommands.Add(this.command);
                     }

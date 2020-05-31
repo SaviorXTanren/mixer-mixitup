@@ -186,44 +186,6 @@ namespace MixItUp.Base.Services.External
             return results;
         }
 
-        public async Task<IEnumerable<Tweet>> GetRetweets(Tweet tweet)
-        {
-            List<Tweet> results = new List<Tweet>();
-            try
-            {
-                using (var twitterCtx = new TwitterContext(this.authorizer))
-                {
-                    List<Status> retweets = await (from retweet in twitterCtx.Status where retweet.Type == StatusType.Retweets && retweet.ID == tweet.ID select retweet).ToListAsync();
-
-                    if (retweets != null)
-                    {
-                        foreach (Status retweet in retweets)
-                        {
-                            ulong.TryParse(retweet.User.UserIDResponse, out ulong userID);
-
-                            Tweet t = new Tweet()
-                            {
-                                ID = retweet.StatusID,
-                                UserID = userID,
-                                UserName = retweet.User.ScreenNameResponse,
-                                Text = retweet.Text,
-                                DateTime = new DateTimeOffset(retweet.CreatedAt, DateTimeOffset.UtcNow.Offset),
-                            };
-
-                            foreach (var urlEntry in retweet.Entities.UrlEntities)
-                            {
-                                t.Links.Add((!string.IsNullOrEmpty(urlEntry.ExpandedUrl) ? urlEntry.ExpandedUrl : urlEntry.DisplayUrl));
-                            }
-
-                            results.Add(t);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return results;
-        }
-
         public async Task<bool> SendTweet(string tweet, string imagePath = null)
         {
             try
@@ -250,7 +212,11 @@ namespace MixItUp.Base.Services.External
                                 }
                             }
                         }
-                        catch (Exception ex) { Logger.Log(ex); }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                            return false;
+                        }
 
                         await twitterCtx.TweetAsync(tweet, mediaIds);
 
@@ -258,7 +224,10 @@ namespace MixItUp.Base.Services.External
                     }
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             return false;
         }
 

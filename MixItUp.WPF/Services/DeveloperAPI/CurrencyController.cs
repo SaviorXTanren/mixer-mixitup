@@ -127,7 +127,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (user == null && Guid.TryParse(giveData.UsernameOrID, out Guid userId))

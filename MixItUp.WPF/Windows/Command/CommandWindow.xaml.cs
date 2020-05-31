@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Windows.Command
         {
             if (this.commandDetailsControl is ChatCommandDetailsControl)
             {
-                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Chat));
+                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Chat, ((ChatCommandDetailsControl)this.commandDetailsControl).AutoAddToChatCommands));
             }
             else if (this.commandDetailsControl is MixPlayButtonCommandDetailsControl)
             {
@@ -134,7 +134,7 @@ namespace MixItUp.WPF.Windows.Command
         {
             if (this.commandDetailsControl is ChatCommandDetailsControl)
             {
-                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Sound));
+                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Sound, ((ChatCommandDetailsControl)this.commandDetailsControl).AutoAddToChatCommands));
             }
             if (this.commandDetailsControl is MixPlayButtonCommandDetailsControl)
             {

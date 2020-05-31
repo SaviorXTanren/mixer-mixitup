@@ -16,64 +16,71 @@ namespace MixItUp.Base.Util
 
         public static string GetAge(this DateTimeOffset start, DateTimeOffset end, bool includeTime = false)
         {
-            DateTimeOffset now = end;
+            DateTimeOffset valid = end;
+            DateTimeOffset test = valid;
 
             int years = 0;
-            now = now.AddYears(-1);
-            while (now > start)
+            int months = 0;
+            int days = 0;
+            int hours = 0;
+            int minutes = 0;
+
+            test = test.AddYears(-1);
+            while (test > start)
             {
                 years++;
-                now = now.AddYears(-1);
+                valid = valid.AddYears(-1);
+                test = test.AddYears(-1);
             }
-            now = now.AddYears(1);
+            test = valid;
 
-            int months = 0;
-            now = now.AddMonths(-1);
-            while (now > start)
+            test = test.AddMonths(-1);
+            while (test > start)
             {
                 months++;
-                now = now.AddMonths(-1);
+                valid = valid.AddMonths(-1);
+                test = test.AddMonths(-1);
             }
-            now = now.AddMonths(1);
+            test = valid;
 
-            int days = 0;
-            now = now.AddDays(-1);
-            while (now > start)
+            test = test.AddDays(-1);
+            while (test > start)
             {
                 days++;
-                now = now.AddDays(-1);
+                valid = valid.AddDays(-1);
+                test = test.AddDays(-1);
             }
-            now = now.AddDays(1);
+            test = valid;
 
             List<string> dateSegments = new List<string>();
             if (years == 0 && months == 0 && days == 0)
             {
                 if (includeTime)
                 {
-                    int hours = 0;
-                    now = now.AddHours(-1);
-                    while (now > start)
+                    test = test.AddHours(-1);
+                    while (test > start)
                     {
                         hours++;
-                        now = now.AddHours(-1);
+                        valid = valid.AddHours(-1);
+                        test = test.AddHours(-1);
                     }
-                    now = now.AddHours(1);
+                    test = valid;
+
+                    test = test.AddMinutes(-1);
+                    while (test > start)
+                    {
+                        minutes++;
+                        valid = valid.AddMinutes(-1);
+                        test = test.AddMinutes(-1);
+                    }
+                    test = valid;
 
                     if (hours > 0)
                     {
                         dateSegments.Add(hours + " Hours(s)");
                     }
-                    else
+                    if (minutes > 0)
                     {
-                        int minutes = 0;
-                        now = now.AddMinutes(-1);
-                        while (now > start)
-                        {
-                            minutes++;
-                            now = now.AddMinutes(-1);
-                        }
-                        now = now.AddMinutes(1);
-
                         dateSegments.Add(minutes + " Minute(s)");
                     }
                 }

@@ -13,6 +13,9 @@ namespace MixItUp.Base.ViewModel.Requirement
         public Guid InventoryID { get; set; }
 
         [DataMember]
+        public Guid ItemID { get; set; }
+        [DataMember]
+        [Obsolete]
         public string ItemName { get; set; }
 
         [DataMember]
@@ -23,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         public InventoryRequirementViewModel(UserInventoryModel inventory, UserInventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
-            this.ItemName = item.Name;
+            this.ItemID = item.ID;
             this.Amount = amount;
         }
 
@@ -48,12 +51,12 @@ namespace MixItUp.Base.ViewModel.Requirement
                     return false;
                 }
 
-                if (requireAmount && !inventory.HasAmount(userData, this.ItemName, amount))
+                if (requireAmount && !inventory.HasAmount(userData, this.ItemID, amount))
                 {
                     return false;
                 }
 
-                inventory.SubtractAmount(userData, this.ItemName, amount);
+                inventory.SubtractAmount(userData, this.ItemID, amount);
                 return true;
             }
             return false;
@@ -72,19 +75,34 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            if (!inventory.Items.ContainsKey(this.ItemName))
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (!string.IsNullOrEmpty(this.ItemName))
             {
-                return false;
+                UserInventoryItemModel item = inventory.GetItem(this.ItemName);
+                if (item != null)
+                {
+                    this.ItemID = item.ID;
+                }
+                this.ItemName = null;
             }
+#pragma warning restore CS0612 // Type or member is obsolete
 
-            return inventory.HasAmount(userData, this.ItemName, this.Amount);
+            return inventory.HasAmount(userData, this.ItemID, this.Amount);
         }
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
             if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
             {
-                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, this.ItemName));
+                UserInventoryModel inventory = this.GetInventory();
+                if (inventory != null && inventory.ItemExists(this.ItemID))
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} items to do this", this.Amount));
+                }
             }
         }
 

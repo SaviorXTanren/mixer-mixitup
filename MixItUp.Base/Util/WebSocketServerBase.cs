@@ -28,7 +28,7 @@ namespace MixItUp.Base.Util
                 HttpListenerWebSocketContext wsc = await this.context.AcceptWebSocketAsync(null);
                 this.SetWebSocket(wsc.WebSocket);
 
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (ChannelSession.AppSettings.DiagnosticLogging)
                 {
                     await this.Send(new WebSocketPacket() { type = "debug" });
                 }

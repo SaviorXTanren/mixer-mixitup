@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Settings
                 languageOptions.Remove(LanguageOptions.Pseudo);
             }
 
-            this.LanguageComboBox.ItemsSource = languageOptions;
+            this.LanguageComboBox.ItemsSource = languageOptions.OrderBy(l => l.ToString());
         }
 
         protected override async Task InitializeInternal()

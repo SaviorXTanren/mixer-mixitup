@@ -39,6 +39,9 @@ namespace MixItUp.Base.Model.User
             }
         }
 
+        [DataMember]
+        public string UnassociatedUsername { get; set; }
+
         #region Mixer
 
         [DataMember]

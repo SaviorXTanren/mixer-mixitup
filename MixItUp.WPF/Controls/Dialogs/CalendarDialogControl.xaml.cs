@@ -9,10 +9,14 @@ namespace MixItUp.WPF.Controls.Dialogs
     public partial class CalendarDialogControl : UserControl
     {
         private DateTimeOffset initialDate;
+        private string header;
 
-        public CalendarDialogControl(DateTimeOffset date)
+        public CalendarDialogControl(DateTimeOffset date) : this(date, null) { }
+
+        public CalendarDialogControl(DateTimeOffset date, string header)
         {
             this.initialDate = date;
+            this.header = header;
 
             InitializeComponent();
 
@@ -22,6 +26,11 @@ namespace MixItUp.WPF.Controls.Dialogs
         private void CalendarDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Calendar.SelectedDate = this.initialDate.LocalDateTime;
+            if (!string.IsNullOrEmpty(this.header))
+            {
+                this.HeaderTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.HeaderTextBlock.Text = this.header;
+            }
         }
 
         public DateTimeOffset SelectedDate
