@@ -78,6 +78,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel TwitchUserOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TwitchBotOAuthToken { get; set; }
+		[JsonProperty]
+		public string TwitchUserID { get; set; }
         [JsonProperty]
         public string TwitchChannelID { get; set; }
 

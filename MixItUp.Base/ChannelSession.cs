@@ -516,7 +516,7 @@ namespace MixItUp.Base
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.TwitchUserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.TwitchUserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.username} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.TwitchUserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.display_name} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.TwitchUserID}");
                             GlobalEvents.ShowMessageBox("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
                             ChannelSession.Settings.TwitchUserOAuthToken.accessToken = string.Empty;
                             ChannelSession.Settings.TwitchUserOAuthToken.refreshToken = string.Empty;
@@ -524,9 +524,10 @@ namespace MixItUp.Base
                             return false;
                         }
 
+                        ChannelSession.Settings.Name = ChannelSession.MixerChannel.token;
+
                         ChannelSession.Settings.MixerUserID = ChannelSession.MixerUser.id;
                         ChannelSession.Settings.MixerChannelID = ChannelSession.MixerChannel.id;
-                        ChannelSession.Settings.Name = ChannelSession.MixerChannel.token;
 
                         ChannelSession.Settings.TwitchUserID = ChannelSession.TwitchUserNewAPI.id;
                         ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchChannelNewAPI.id;
@@ -663,7 +664,7 @@ namespace MixItUp.Base
                                     {
                                         Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
 
-                                        Result result = await kvp.Key.Connect();
+                                        result = await kvp.Key.Connect();
                                         if (!result.Success)
                                         {
                                             failedServices.Add(kvp.Key);
@@ -711,7 +712,7 @@ namespace MixItUp.Base
                                 if (game != null)
                                 {
                                     await ChannelSession.Services.MixPlay.SetGame(game);
-                                    Result result = await ChannelSession.Services.MixPlay.Connect();
+                                    result = await ChannelSession.Services.MixPlay.Connect();
                                     if (!result.Success)
                                     {
                                         await ChannelSession.Services.MixPlay.Disconnect();
