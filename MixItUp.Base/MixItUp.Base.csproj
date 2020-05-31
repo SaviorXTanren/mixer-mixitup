@@ -78,7 +78,19 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
 
+    <EmbeddedResource Update="Resources.de.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
     <EmbeddedResource Update="Resources.de-DE.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.fr.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.nl.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
@@ -90,11 +102,19 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
+    <EmbeddedResource Update="Resources.ja.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
     <EmbeddedResource Update="Resources.ja-JP.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
     <EmbeddedResource Update="Resources.fr-FR.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.pt.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 

@@ -1,0 +1,2673 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="1PerEmber" xml:space="preserve">
+    <value>1 Per Ember</value>
+  </data>
+  <data name="1PerHour" xml:space="preserve">
+    <value>1 per uur</value>
+  </data>
+  <data name="1PerMinute" xml:space="preserve">
+    <value>1 per minuut</value>
+  </data>
+  <data name="1PerSpark" xml:space="preserve">
+    <value>1 per vonk</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Over</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accepteren</value>
+  </data>
+  <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
+    <value>Toegang tot de map waarin Mix It Up is geïnstalleerd</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="AccountDay" xml:space="preserve">
+    <value>Account is 1 dag oud</value>
+  </data>
+  <data name="AccountHour" xml:space="preserve">
+    <value>Account is 1 uur oud</value>
+  </data>
+  <data name="AccountMonth" xml:space="preserve">
+    <value>Account is 1 maand oud</value>
+  </data>
+  <data name="Accounts" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>Streamer-accounts zijn je werkelijke account waarvan je streamt. Bot-accounts zijn afzonderlijke, optionele accounts die je gebruiken om berichten te verzenden vanuit je kanaal. Bots-accounts moeten handmatig door u worden gemaakt en u moet ervoor zorgen dat u bij hen bent aangemeld voordat u ze probeert te verbinden in Mix It Up.</value>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>Laten we aan de slag gaan door je aan te melden bij de accounts die je op elk streamingplatform gebruikt. Selecteer de onderstaande opties voor elk account dat u wilt inloggen. U deze opties later opnieuw bekijken door naar de pagina Accounts te gaan.</value>
+  </data>
+  <data name="AccountWeek" xml:space="preserve">
+    <value>Account is 1 week oud</value>
+  </data>
+  <data name="AcquireRate" xml:space="preserve">
+    <value>Tarief verwerven</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Actie</value>
+  </data>
+  <data name="ActionGroup" xml:space="preserve">
+    <value>Actiegroep</value>
+  </data>
+  <data name="ActionGroups" xml:space="preserve">
+    <value>Actiegroepen</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acties</value>
+  </data>
+  <data name="ActionToPeform" xml:space="preserve">
+    <value>Actie aan Peform</value>
+  </data>
+  <data name="ActionToPerformWithResponse" xml:space="preserve">
+    <value>Actie om uit te voeren met respons</value>
+  </data>
+  <data name="ActionToPerformWithTranslation" xml:space="preserve">
+    <value>Actie uit te voeren met vertaling</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
+  </data>
+  <data name="AddClause" xml:space="preserve">
+    <value>Clausule toevoegen</value>
+  </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>Opdracht Toevoegen</value>
+  </data>
+  <data name="AddCurrencyRank" xml:space="preserve">
+    <value>Valuta/rang toevoegen</value>
+  </data>
+  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
+    <value>Deze gebruiker bestaat al in deze groep.</value>
+  </data>
+  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
+    <value>Kon een gebruiker niet vinden met die naam.</value>
+  </data>
+  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
+    <value>Je hebt dit team al favoriet gedaan.</value>
+  </data>
+  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
+    <value>Kon geen team met die naam vinden.</value>
+  </data>
+  <data name="AddInventory" xml:space="preserve">
+    <value>Voorraad toevoegen</value>
+  </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>Object toevoegen</value>
+  </data>
+  <data name="AddNewPair" xml:space="preserve">
+    <value>Nieuw paar toevoegen</value>
+  </data>
+  <data name="AddNewRank" xml:space="preserve">
+    <value>Nieuwe rang toevoegen</value>
+  </data>
+  <data name="AddNewVariable" xml:space="preserve">
+    <value>Nieuwe variabele toevoegen</value>
+  </data>
+  <data name="AddOverlayWidget" xml:space="preserve">
+    <value>Overlay-widget toevoegen</value>
+  </data>
+  <data name="AddQuote" xml:space="preserve">
+    <value>Offerte toevoegen</value>
+  </data>
+  <data name="AddToAllChatUsers" xml:space="preserve">
+    <value>Toevoegen aan alle chatgebruikers</value>
+  </data>
+  <data name="AddToSpecificUser" xml:space="preserve">
+    <value>Toevoegen aan specifieke gebruiker</value>
+  </data>
+  <data name="AddToUser" xml:space="preserve">
+    <value>Toevoegen aan de gebruiker</value>
+  </data>
+  <data name="Adult" xml:space="preserve">
+    <value>18+</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Geavanceerde</value>
+  </data>
+  <data name="AdvancedCommand" xml:space="preserve">
+    <value>Geavanceerd, opdracht</value>
+  </data>
+  <data name="AgeRating" xml:space="preserve">
+    <value>Leeftijdsclassificatie</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Waarschuwingen</value>
+  </data>
+  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
+    <value>Alleen opdrachten toestaan in je kanaal tijdens een costream</value>
+  </data>
+  <data name="AllowCommandsToBeWhispered" xml:space="preserve">
+    <value>Toestaan dat commando's worden gefluisterd</value>
+  </data>
+  <data name="AllowPastWinners" xml:space="preserve">
+    <value>Eerdere winnaars toestaan</value>
+  </data>
+  <data name="AllowProfanity" xml:space="preserve">
+    <value>Profaniteit toestaan</value>
+  </data>
+  <data name="AlreadyInstalled" xml:space="preserve">
+    <value>Al geïnstalleerd</value>
+  </data>
+  <data name="Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Amber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Bedrag</value>
+  </data>
+  <data name="AmountDonated" xml:space="preserve">
+    <value>Gedoneerd bedrag</value>
+  </data>
+  <data name="AmountPlusMinus" xml:space="preserve">
+    <value>Bedrag (+/-)</value>
+  </data>
+  <data name="AmountSeconds" xml:space="preserve">
+    <value>Bedrag (seconden)</value>
+  </data>
+  <data name="Answer1" xml:space="preserve">
+    <value>Antwoord 1</value>
+  </data>
+  <data name="Answer2" xml:space="preserve">
+    <value>Antwoord 2</value>
+  </data>
+  <data name="Answer3" xml:space="preserve">
+    <value>Antwoord 3 (optioneel)</value>
+  </data>
+  <data name="Answer4" xml:space="preserve">
+    <value>Antwoord 4 (optioneel)</value>
+  </data>
+  <data name="AnyChatMessageSound" xml:space="preserve">
+    <value>Elk geluid van chatberichten</value>
+  </data>
+  <data name="AppendToFile" xml:space="preserve">
+    <value>Aan-toepassing aan het bestand</value>
+  </data>
+  <data name="ApplicationInfo" xml:space="preserve">
+    <value>Toepassingsgegevens</value>
+  </data>
+  <data name="ApplyStrikes" xml:space="preserve">
+    <value>Stakingen toepassen</value>
+  </data>
+  <data name="ApprovedDevices" xml:space="preserve">
+    <value>Goedgekeurde apparaten</value>
+  </data>
+  <data name="ArgumentsTranslatedText" xml:space="preserve">
+    <value>Argumenten ($translationresult = Vertaalde tekst)</value>
+  </data>
+  <data name="ArgumentsWebRequest" xml:space="preserve">
+    <value>Argumenten ($webrequestresult = Resultaattekst)</value>
+  </data>
+  <data name="Assets" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>Publiek</value>
+  </data>
+  <data name="AudioOutputDevice" xml:space="preserve">
+    <value>Audio-uitvoerapparaat</value>
+  </data>
+  <data name="AutoHoster" xml:space="preserve">
+    <value>Auto-hoster</value>
+  </data>
+  <data name="AutoHosterDescription" xml:space="preserve">
+    <value>De Mix It Up Auto-Hoster is een zelfstandige applicatie die de hosting van andere kanalen verwerkt wanneer u niet streamt. De Auto-Hoster moet actief zijn, maar u hoeft mix it up niet te laten draaien om deze te gebruiken.</value>
+  </data>
+  <data name="AutoHosterLaunchHeader" xml:space="preserve">
+    <value>De Auto-Hoster kan worden gestart door op de onderstaande knop te klikken</value>
+  </data>
+  <data name="AutoIncludeBang" xml:space="preserve">
+    <value>Auto-include "!"</value>
+  </data>
+  <data name="AutoLogInCurrentAccount" xml:space="preserve">
+    <value>Automatisch inlog-zichtaccount</value>
+  </data>
+  <data name="AutomatedSettingsBackup" xml:space="preserve">
+    <value>Back-up van automatische instellingen</value>
+  </data>
+  <data name="AutomaticReset" xml:space="preserve">
+    <value>Automatisch opnieuw instellen</value>
+  </data>
+  <data name="Average" xml:space="preserve">
+    <value>Gemiddelde</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>Achtergrondkleur</value>
+  </data>
+  <data name="BackupRate" xml:space="preserve">
+    <value>Back-upsnelheid</value>
+  </data>
+  <data name="BackupSettings" xml:space="preserve">
+    <value>Back-upinstellingen</value>
+  </data>
+  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
+    <value>Uw instellingen back-up maken naar een zip-bestand</value>
+  </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Verboden</value>
+  </data>
+  <data name="BasicChatCommand" xml:space="preserve">
+    <value>Basischatopdracht</value>
+  </data>
+  <data name="BasicSoundCommand" xml:space="preserve">
+    <value>Basisgeluid, opdracht</value>
+  </data>
+  <data name="BasicTimerDescription" xml:space="preserve">
+    <value>Hoe moeten we dit Timer commando noemen?</value>
+  </data>
+  <data name="BasicTimerNameHint" xml:space="preserve">
+    <value>Naam (EX: "Follow Me")</value>
+  </data>
+  <data name="BaudRate" xml:space="preserve">
+    <value>Baud-tarief</value>
+  </data>
+  <data name="Between" xml:space="preserve">
+    <value>Tussen</value>
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>Zwarte</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Blauwe</value>
+  </data>
+  <data name="Blue Grey" xml:space="preserve">
+    <value>Blauw grijs</value>
+  </data>
+  <data name="Bot" xml:space="preserve">
+    <value>Bot</value>
+  </data>
+  <data name="BotAccount" xml:space="preserve">
+    <value>Bot-account</value>
+  </data>
+  <data name="Brown" xml:space="preserve">
+    <value>Brown</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Bladeren</value>
+  </data>
+  <data name="ButtonName" xml:space="preserve">
+    <value>Knopnaam</value>
+  </data>
+  <data name="ButtonTrigger" xml:space="preserve">
+    <value>Knoptrigger</value>
+  </data>
+  <data name="BuyPrice" xml:space="preserve">
+    <value>Koopprijs</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="CancelGiveaway" xml:space="preserve">
+    <value>Annuleren Giveaway</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Hoofdlettergevoelig</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>Kanaal</value>
+  </data>
+  <data name="BannedWords" xml:space="preserve">
+    <value>Verboden woorden (een per regel) ( * = Wild Card)</value>
+  </data>
+  <data name="ChannelEditor" xml:space="preserve">
+    <value>Kanaaleditor</value>
+  </data>
+  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
+    <value>Er moet een geldige leeftijdsclassificatie worden geselecteerd.</value>
+  </data>
+  <data name="ChannelErrorInvalidGame" xml:space="preserve">
+    <value>Een geldige &amp; bestaande spelnaam moet geselecteerd worden.</value>
+  </data>
+  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
+    <value>Er moet een streamtitel worden opgegeven.</value>
+  </data>
+  <data name="ChannelInfo" xml:space="preserve">
+    <value>Kanaalinformatie</value>
+  </data>
+  <data name="ChannelName" xml:space="preserve">
+    <value>Kanaalnaam</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="ChatMessage" xml:space="preserve">
+    <value>Chatbericht</value>
+  </data>
+  <data name="ChatMessages" xml:space="preserve">
+    <value>Chatberichten</value>
+  </data>
+  <data name="ChatMessagesSent" xml:space="preserve">
+    <value>Verzonden chatberichten</value>
+  </data>
+  <data name="ChatMessageTranslatedText" xml:space="preserve">
+    <value>Chatbericht ($translationresult = Vertaalde tekst)</value>
+  </data>
+  <data name="ChatMessageWebRequest" xml:space="preserve">
+    <value>Chatbericht ($webrequestresult = Resultaattekst)</value>
+  </data>
+  <data name="ChatMixPlayParticipation" xml:space="preserve">
+    <value>Chat / MixPlay Deelname</value>
+  </data>
+  <data name="ChatTaggedSound" xml:space="preserve">
+    <value>Chat-gelabeld geluid</value>
+  </data>
+  <data name="ChatTextModeration" xml:space="preserve">
+    <value>Modusratie van chattekst</value>
+  </data>
+  <data name="ChatTriggersHintAssist" xml:space="preserve">
+    <value>Chattrigger(s) (Ruimte gescheiden, puntkomma voor meerdere woorden)</value>
+  </data>
+  <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
+    <value>Chat Trigger(s) (Geen "!" nodig, ruimte gescheiden, semi-colon voor multi-woord)</value>
+  </data>
+  <data name="ChatWhisperSound" xml:space="preserve">
+    <value>Chat Whisper Geluid</value>
+  </data>
+  <data name="ClearAllUserDataHeader" xml:space="preserve">
+    <value>Alle gebruikersgegevens wissen (uren, valuta, rang, enz.)</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>Chat wissen</value>
+  </data>
+  <data name="ClearChatConfirmation" xml:space="preserve">
+    <value>Hiermee worden alle chatberichten voor de stream gewist. Weet je het zeker?</value>
+  </data>
+  <data name="ClearQueue" xml:space="preserve">
+    <value>Wachtrij wissen</value>
+  </data>
+  <data name="ClearUserData" xml:space="preserve">
+    <value>Gebruikersgegevens wissen</value>
+  </data>
+  <data name="Click" xml:space="preserve">
+    <value>Klik</value>
+  </data>
+  <data name="ClipLength" xml:space="preserve">
+    <value>Lengte (15-300 sec)</value>
+  </data>
+  <data name="ClipName" xml:space="preserve">
+    <value>Clipnaam</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="ClosingPleaseWait" xml:space="preserve">
+    <value>Wacht terwijl Mix It Up slaat uw instellingen en wordt afgesloten ...</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>Kleurenschema</value>
+  </data>
+  <data name="ColumnNumber" xml:space="preserve">
+    <value>Kolom #</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>Opdracht</value>
+  </data>
+  <data name="CommandGroup" xml:space="preserve">
+    <value>Opdrachtgroep</value>
+  </data>
+  <data name="CommandNoBang" xml:space="preserve">
+    <value>Commando (Geen '!' nodig)</value>
+  </data>
+  <data name="Commands" xml:space="preserve">
+    <value>Opdrachten</value>
+  </data>
+  <data name="CommandsRun" xml:space="preserve">
+    <value>Opdrachten uitvoeren</value>
+  </data>
+  <data name="Compare" xml:space="preserve">
+    <value>Vergelijken</value>
+  </data>
+  <data name="Conditional" xml:space="preserve">
+    <value>Voorwaardelijke</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Verbinding</value>
+  </data>
+  <data name="ConnectDevices" xml:space="preserve">
+    <value>Apparaten verbinden</value>
+  </data>
+  <data name="ContactAndResources" xml:space="preserve">
+    <value>Contact &amp; Resources</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Bevat</value>
+  </data>
+  <data name="Control" xml:space="preserve">
+    <value>Controle</value>
+  </data>
+  <data name="ControlID" xml:space="preserve">
+    <value>Controle-id</value>
+  </data>
+  <data name="ConvertToAdvanced" xml:space="preserve">
+    <value>Converteren naar geavanceerd</value>
+  </data>
+  <data name="Cooldown" xml:space="preserve">
+    <value>Cooldown</value>
+  </data>
+  <data name="CooldownSeconds" xml:space="preserve">
+    <value>Cooldown (seconden)</value>
+  </data>
+  <data name="Cost" xml:space="preserve">
+    <value>Kosten</value>
+  </data>
+  <data name="Costream" xml:space="preserve">
+    <value>Costream Costream</value>
+  </data>
+  <data name="CounterCreateAndUpdate" xml:space="preserve">
+    <value>Teller (Maken &amp; bijwerken)</value>
+  </data>
+  <data name="CounterNameWithTips" xml:space="preserve">
+    <value>Teller naam (alleen letters &amp; cijfers toegestaan, geen $)</value>
+  </data>
+  <data name="CountersFolder" xml:space="preserve">
+    <value>Map tellers</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Gemaakt door</value>
+  </data>
+  <data name="CumulativeMonthsSubbed" xml:space="preserve">
+    <value>Subbed cumulatieve maanden</value>
+  </data>
+  <data name="CurrenciesRanksInventories" xml:space="preserve">
+    <value>Valuta's/rangen/voorraden</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Valuta</value>
+  </data>
+  <data name="CurrencyCost" xml:space="preserve">
+    <value>Valutakosten</value>
+  </data>
+  <data name="CurrencyRank" xml:space="preserve">
+    <value>Valuta/rang</value>
+  </data>
+  <data name="CurrencyRankInventory" xml:space="preserve">
+    <value>Valuta/Rang/Voorraad</value>
+  </data>
+  <data name="CurrencyRankInventoryExempt" xml:space="preserve">
+    <value>Valuta/Rang/Voorraadvrij</value>
+  </data>
+  <data name="CurrencyRankName" xml:space="preserve">
+    <value>Valuta/rangnaam</value>
+  </data>
+  <data name="CurrencyRequirement" xml:space="preserve">
+    <value>Valuta-eis</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Huidige</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Aangepaste</value>
+  </data>
+  <data name="CustomCommands" xml:space="preserve">
+    <value>Aangepaste opdrachten</value>
+  </data>
+  <data name="CustomEntranceCommand" xml:space="preserve">
+    <value>Aangepaste ingangsopdracht</value>
+  </data>
+  <data name="CustomizeCommand" xml:space="preserve">
+    <value>Opdracht aanpassen</value>
+  </data>
+  <data name="CustomizeCurrencyRank" xml:space="preserve">
+    <value>Valuta/rang aanpassen</value>
+  </data>
+  <data name="CustomizeGame" xml:space="preserve">
+    <value>Game aanpassen</value>
+  </data>
+  <data name="CustomizeInventory" xml:space="preserve">
+    <value>Voorraad aanpassen</value>
+  </data>
+  <data name="CustomMixPlayProjects" xml:space="preserve">
+    <value>Aangepaste MixPlay-projecten</value>
+  </data>
+  <data name="CustomTitle" xml:space="preserve">
+    <value>Aangepaste titel</value>
+  </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>Cyaan</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Dagelijkse</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Donkere</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Datum/tijd</value>
+  </data>
+  <data name="Deafen" xml:space="preserve">
+    <value>Doofen</value>
+  </data>
+  <data name="DeafenSelf" xml:space="preserve">
+    <value>Doof/Onafen Zelf</value>
+  </data>
+  <data name="DeductFromUserRunningCommand" xml:space="preserve">
+    <value>Aftrekken van de opdracht Voor de gebruiker</value>
+  </data>
+  <data name="Deep Orange" xml:space="preserve">
+    <value>Diep Oranje</value>
+  </data>
+  <data name="Deep Purple" xml:space="preserve">
+    <value>Diep paars</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="DefaultAudioOutput" xml:space="preserve">
+    <value>Standaardaudio-uitvoer</value>
+  </data>
+  <data name="DefaultMaxAmount" xml:space="preserve">
+    <value>Standaard maximumbedrag</value>
+  </data>
+  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
+    <value>Standaard MixPlay-game om verbinding te maken</value>
+  </data>
+  <data name="DefaultOutput" xml:space="preserve">
+    <value>Standaarduitvoer</value>
+  </data>
+  <data name="DefaultStreamingSoftware" xml:space="preserve">
+    <value>Standaardstreamingsoftware</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
+    <value>Alle chatopdrachten verwijderen wanneer ze worden uitgevoerd</value>
+  </data>
+  <data name="DeleteChatWhenRun" xml:space="preserve">
+    <value>Chatopdracht verwijderen wanneer u wordt uitgevoerd</value>
+  </data>
+  <data name="DeleteCommand" xml:space="preserve">
+    <value>Verwijderen, opdracht</value>
+  </data>
+  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
+    <value>Weet u zeker dat u deze groep wilt verwijderen?</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschrijving</value>
+  </data>
+  <data name="DisableAllTimers" xml:space="preserve">
+    <value>Alle timers uitschakelen</value>
+  </data>
+  <data name="DisableChat" xml:space="preserve">
+    <value>Chat uitschakelen</value>
+  </data>
+  <data name="DisableChatConfirmation" xml:space="preserve">
+    <value>Hierdoor wordt de chat voor alle gebruikers uitgeschakeld. Weet je het zeker?</value>
+  </data>
+  <data name="DisableCommand" xml:space="preserve">
+    <value>Opdracht uitschakelen</value>
+  </data>
+  <data name="DisableCommandGroup" xml:space="preserve">
+    <value>Opdrachtgroep uitschakelen</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Handicap</value>
+  </data>
+  <data name="DisableDiagnostics" xml:space="preserve">
+    <value>Diagnostische gegevens uitschakelen</value>
+  </data>
+  <data name="DisableQueue" xml:space="preserve">
+    <value>Wachtrij uitschakelen</value>
+  </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Verbreken</value>
+  </data>
+  <data name="Discord" xml:space="preserve">
+    <value>Onenigheid</value>
+  </data>
+  <data name="DisplayImage" xml:space="preserve">
+    <value>Afbeelding weergeven (optioneel)</value>
+  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>&lt;&gt; Bevat</value>
+  </data>
+  <data name="Donators" xml:space="preserve">
+    <value>Donateurs</value>
+  </data>
+  <data name="DontDeleteChatWhenRun" xml:space="preserve">
+    <value>Chatopdracht verwijderen bij het uitvoeren</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Downloaden</value>
+  </data>
+  <data name="DownloadAndInstall" xml:space="preserve">
+    <value>Downloaden &amp; installeren</value>
+  </data>
+  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
+    <value>Download &amp; Install ffmpeg</value>
+  </data>
+  <data name="DownloadClip" xml:space="preserve">
+    <value>Clip downloaden</value>
+  </data>
+  <data name="DownloadDirectory" xml:space="preserve">
+    <value>Map downloaden</value>
+  </data>
+  <data name="DownloadFrom" xml:space="preserve">
+    <value>DownloadFrom</value>
+  </data>
+  <data name="Drop" xml:space="preserve">
+    <value>Drop</value>
+  </data>
+  <data name="DTR" xml:space="preserve">
+    <value>Dtr</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>Dubbele</value>
+  </data>
+  <data name="DurationSec" xml:space="preserve">
+    <value>Duur (sec)</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bewerken</value>
+  </data>
+  <data name="EditCommand" xml:space="preserve">
+    <value>Bewerken, opdracht</value>
+  </data>
+  <data name="Embers" xml:space="preserve">
+    <value>Sintels</value>
+  </data>
+  <data name="EmberSkillsOnly" xml:space="preserve">
+    <value>Ember Skills Only</value>
+  </data>
+  <data name="EmbersSpent" xml:space="preserve">
+    <value>Sintels uitgegeven</value>
+  </data>
+  <data name="EmotesSkillsOnly" xml:space="preserve">
+    <value>Alleen Emotes &amp; Skills</value>
+  </data>
+  <data name="EmptySoundFilePath" xml:space="preserve">
+    <value>Het geluidsbestandspad mag niet leeg zijn.</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Inschakelen</value>
+  </data>
+  <data name="EnableChat" xml:space="preserve">
+    <value>Chat inschakelen</value>
+  </data>
+  <data name="EnableCommand" xml:space="preserve">
+    <value>Inschakelen, opdracht</value>
+  </data>
+  <data name="EnableCommandGroup" xml:space="preserve">
+    <value>Opdrachtgroep inschakelen</value>
+  </data>
+  <data name="EnableDiagnostics" xml:space="preserve">
+    <value>Diagnostische gegevens inschakelen</value>
+  </data>
+  <data name="EnableDisable" xml:space="preserve">
+    <value>In- en uitschakelen</value>
+  </data>
+  <data name="EnableDisableCommand" xml:space="preserve">
+    <value>Opdracht In- en uitschakelen</value>
+  </data>
+  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
+    <value>Diagnostische logboekregistratie in-/uitschakelen voor het vinden van problemen</value>
+  </data>
+  <data name="EnableDisableQueue" xml:space="preserve">
+    <value>Wachtrij in- en uitschakelen</value>
+  </data>
+  <data name="EnableDiscord" xml:space="preserve">
+    <value>Schakel discord-verbinding in op de pagina Services!</value>
+  </data>
+  <data name="EnableIFTTT" xml:space="preserve">
+    <value>Schakel ifttt-verbinding in op de pagina Services!</value>
+  </data>
+  <data name="EnableOBS" xml:space="preserve">
+    <value>Schakel de VERBINDING met OBS Studio in op de pagina Services!</value>
+  </data>
+  <data name="EnableOverlay" xml:space="preserve">
+    <value>Schakel Mix It Up Overlay in in de servicessectie!</value>
+  </data>
+  <data name="EnableOvrStream" xml:space="preserve">
+    <value>Schakel OvrStream in op de pagina Services!</value>
+  </data>
+  <data name="EnableQueue" xml:space="preserve">
+    <value>Wachtrij inschakelen</value>
+  </data>
+  <data name="EnableReplayBuffer" xml:space="preserve">
+    <value>Replay buffer is niet ingeschakeld. Open OBS-instellingen -&gt; Uitvoer en schakel de replaybuffer in!</value>
+  </data>
+  <data name="EnableStreamlabs" xml:space="preserve">
+    <value>Schakel streamlabs-verbinding in op de pagina Services!</value>
+  </data>
+  <data name="EnableStreamlabsOBS" xml:space="preserve">
+    <value>Schakel Streamlabs OBS-verbinding in op de pagina Services!</value>
+  </data>
+  <data name="EnableXSplit" xml:space="preserve">
+    <value>Schakel de XSplit-verbinding in op de pagina Services!</value>
+  </data>
+  <data name="EndCredits" xml:space="preserve">
+    <value>Aftiteling</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Engels</value>
+  </data>
+  <data name="EnteredUsers" xml:space="preserve">
+    <value>Ingevoerde gebruikers</value>
+  </data>
+  <data name="EntranceAnimation" xml:space="preserve">
+    <value>Ingangsanimatie</value>
+  </data>
+  <data name="EqualsCompare" xml:space="preserve">
+    <value>=</value>
+  </data>
+  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
+    <value>Je moet een {0} zijn om het antwoord te kiezen.</value>
+  </data>
+  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
+    <value>Je moet een {0} zijn om dit spel te beginnen.</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Gebeurtenis</value>
+  </data>
+  <data name="EventBonuses" xml:space="preserve">
+    <value>Event Bonussen</value>
+  </data>
+  <data name="EventList" xml:space="preserve">
+    <value>Evenementenlijst</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Gebeurtenissen</value>
+  </data>
+  <data name="ExemptFromRule" xml:space="preserve">
+    <value>Vrijgesteld van regel</value>
+  </data>
+  <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
+    <value>Vrijgesteld van Regel &amp; Stakingen</value>
+  </data>
+  <data name="ExitAnimation" xml:space="preserve">
+    <value>Animatie afsluiten</value>
+  </data>
+  <data name="ExitConfirmation" xml:space="preserve">
+    <value>Weet je zeker dat je Mix It Up wilt verlaten?</value>
+  </data>
+  <data name="ExportActions" xml:space="preserve">
+    <value>Acties exporteren naar bestand</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>Gegevens exporteren</value>
+  </data>
+  <data name="ExternalProgram" xml:space="preserve">
+    <value>Extern programma</value>
+  </data>
+  <data name="Family" xml:space="preserve">
+    <value>Familie</value>
+  </data>
+  <data name="FanProgression" xml:space="preserve">
+    <value>Progressie van de ventilator</value>
+  </data>
+  <data name="FavoritedUsersTeams" xml:space="preserve">
+    <value>Favoriete gebruikers/teams</value>
+  </data>
+  <data name="FavoriteStreamers" xml:space="preserve">
+    <value>Favoriete streamers</value>
+  </data>
+  <data name="FeatureMixItUpStreamer" xml:space="preserve">
+    <value>Functie mij als een Mix It Up Streamer</value>
+  </data>
+  <data name="FFMPEGMustBeInstalled" xml:space="preserve">
+    <value>FFMPEG moet worden geïnstalleerd via de Mix It Up Instellingen om deze functie te gebruiken!</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Veldnaam</value>
+  </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>Bestandspad</value>
+  </data>
+  <data name="FileReadAndWrite" xml:space="preserve">
+    <value>Bestand (Lezen &amp; Schrijven)</value>
+  </data>
+  <data name="FilterByName" xml:space="preserve">
+    <value>Filteren op naam</value>
+  </data>
+  <data name="FilteredBannedWords" xml:space="preserve">
+    <value>Gefilterde / Verboden woorden</value>
+  </data>
+  <data name="FilteredWordsHeader" xml:space="preserve">
+    <value>Gefilterde woorden (één per regel) ( * = Wild Card)</value>
+  </data>
+  <data name="FindChannelToRaid" xml:space="preserve">
+    <value>Zoek kanaal naar Raid</value>
+  </data>
+  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
+    <value>Moet een zoekcriteria selecteren om een kanaal te vinden dat moet worden gesedraapt.</value>
+  </data>
+  <data name="FindRaidErrorNoneFound" xml:space="preserve">
+    <value>Als u geen kanaal vinden dat voldoet aan uw zoekopdracht critera, u proberen een andere optie te selecteren.</value>
+  </data>
+  <data name="FirstValue" xml:space="preserve">
+    <value>Eerste waarde</value>
+  </data>
+  <data name="FollowAge" xml:space="preserve">
+    <value>Leeftijd volgen</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Volgeling</value>
+  </data>
+  <data name="FollowerOnly" xml:space="preserve">
+    <value>Alleen volger</value>
+  </data>
+  <data name="FontSize" xml:space="preserve">
+    <value>Fontsize</value>
+  </data>
+  <data name="Four" xml:space="preserve">
+    <value>Vier</value>
+  </data>
+  <data name="FullTheme" xml:space="preserve">
+    <value>Volledig thema</value>
+  </data>
+  <data name="Game" xml:space="preserve">
+    <value>Spel</value>
+  </data>
+  <data name="GameName" xml:space="preserve">
+    <value>Spelnaam</value>
+  </data>
+  <data name="GameQueue" xml:space="preserve">
+    <value>Spelwachtrij</value>
+  </data>
+  <data name="GameQueueAction" xml:space="preserve">
+    <value>Actie in de wachtrij</value>
+  </data>
+  <data name="Games" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Algemene</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Duits</value>
+  </data>
+  <data name="GetCurrent" xml:space="preserve">
+    <value>Stroom ophalen</value>
+  </data>
+  <data name="Gifted" xml:space="preserve">
+    <value>Begaafd</value>
+  </data>
+  <data name="Giveaway" xml:space="preserve">
+    <value>Giveaway</value>
+  </data>
+  <data name="GiveawayItem" xml:space="preserve">
+    <value>Weggeefobject</value>
+  </data>
+  <data name="GlobalMod" xml:space="preserve">
+    <value>Globale mod</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>&gt;</value>
+  </data>
+  <data name="GreaterThanOrEqual" xml:space="preserve">
+    <value>&gt;=</value>
+  </data>
+  <data name="Green" xml:space="preserve">
+    <value>Groene</value>
+  </data>
+  <data name="Grey" xml:space="preserve">
+    <value>Grijs</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Groep</value>
+  </data>
+  <data name="GroupIntervalMin" xml:space="preserve">
+    <value>Groepsinterval (min)</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Groepsnaam</value>
+  </data>
+  <data name="GroupNameCaseSensitive" xml:space="preserve">
+    <value>Groepsnaam (gevalsgevoelig)</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Groepen</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="HelpfulLinks" xml:space="preserve">
+    <value>Nuttige links</value>
+  </data>
+  <data name="HideChatUserList" xml:space="preserve">
+    <value>Gebruikerslijst voor chatgebruikers verbergen</value>
+  </data>
+  <data name="HideDeletedMessages" xml:space="preserve">
+    <value>Verwijderde berichten verbergen</value>
+  </data>
+  <data name="HideViewerAndChatterNumbers" xml:space="preserve">
+    <value>Kijkers - of chatternummers verbergen</value>
+  </data>
+  <data name="HostChannel" xml:space="preserve">
+    <value>Hostkanaal</value>
+  </data>
+  <data name="HotKey" xml:space="preserve">
+    <value>Hot Key</value>
+  </data>
+  <data name="HotKeys" xml:space="preserve">
+    <value>Sneltoetsen</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Uur</value>
+  </data>
+  <data name="HowLongBeforeRun" xml:space="preserve">
+    <value>Hoe lang duurt het voordat deze opdracht weer kan worden uitgevoerd (in seconden)?</value>
+  </data>
+  <data name="HTML" xml:space="preserve">
+    <value>Html</value>
+  </data>
+  <data name="IFTTT" xml:space="preserve">
+    <value>IFTTT</value>
+  </data>
+  <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
+    <value>Uw Bot-account voor opdrachten negeren</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Afbeelding</value>
+  </data>
+  <data name="ImportActions" xml:space="preserve">
+    <value>Acties importeren in bestand</value>
+  </data>
+  <data name="ImportData" xml:space="preserve">
+    <value>Gegevens importeren</value>
+  </data>
+  <data name="IncludeCommandAssets" xml:space="preserve">
+    <value>Command Assets opnemen</value>
+  </data>
+  <data name="IncorrectBotAccount" xml:space="preserve">
+    <value>Je moet je aanmelden bij een ander account dan je Streamer-account.</value>
+  </data>
+  <data name="Indigo" xml:space="preserve">
+    <value>Indigo</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>Individuele</value>
+  </data>
+  <data name="InputKeyboardAndMouse" xml:space="preserve">
+    <value>Invoer (toetsenbord &amp; muis)</value>
+  </data>
+  <data name="InstallationFolder" xml:space="preserve">
+    <value>Installatiemap</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>Inventaris</value>
+  </data>
+  <data name="InventoryName" xml:space="preserve">
+    <value>Voorraadnaam</value>
+  </data>
+  <data name="InventoryRequirement" xml:space="preserve">
+    <value>Voorraadvereiste</value>
+  </data>
+  <data name="IsMathExpression" xml:space="preserve">
+    <value>Is wiskundige expressie</value>
+  </data>
+  <data name="IsPrimary" xml:space="preserve">
+    <value>Is primair</value>
+  </data>
+  <data name="IsRankSystem" xml:space="preserve">
+    <value>Is Rank System</value>
+  </data>
+  <data name="Item1" xml:space="preserve">
+    <value>Object 1</value>
+  </data>
+  <data name="Item2" xml:space="preserve">
+    <value>Punt 2</value>
+  </data>
+  <data name="Item3" xml:space="preserve">
+    <value>Punt 3</value>
+  </data>
+  <data name="Item4" xml:space="preserve">
+    <value>Punt 4</value>
+  </data>
+  <data name="ItemList" xml:space="preserve">
+    <value>Lijst met objecten</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>Objectnaam</value>
+  </data>
+  <data name="ItemsBought" xml:space="preserve">
+    <value>Gekochte objecten</value>
+  </data>
+  <data name="ItemsSold" xml:space="preserve">
+    <value>Verkochte objecten</value>
+  </data>
+  <data name="ItemsTraded" xml:space="preserve">
+    <value>Verhandelde objecten</value>
+  </data>
+  <data name="JoinFrontOfQueue" xml:space="preserve">
+    <value>Gebruiker join front of queue</value>
+  </data>
+  <data name="JoinQueue" xml:space="preserve">
+    <value>Wachtrij voor gebruikers lid maken</value>
+  </data>
+  <data name="JSONValueName" xml:space="preserve">
+    <value>JSON-waardenaam (Gebruik '\' voor geneste parameters)</value>
+  </data>
+  <data name="Keyboard" xml:space="preserve">
+    <value>Toetsenbord</value>
+  </data>
+  <data name="KeyboardKey" xml:space="preserve">
+    <value>Toetsenbordtoets</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Taal (moet opnieuw worden opgestart)</value>
+  </data>
+  <data name="LanguageToTranslateTo" xml:space="preserve">
+    <value>Taal om te vertalen naar</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>Grote</value>
+  </data>
+  <data name="LargeStreamer" xml:space="preserve">
+    <value>Grote streamer (&gt;25)</value>
+  </data>
+  <data name="LastQuote" xml:space="preserve">
+    <value>Laatste offerte</value>
+  </data>
+  <data name="LastUpdated" xml:space="preserve">
+    <value>Laatst bijgewerkt</value>
+  </data>
+  <data name="LatestRelease" xml:space="preserve">
+    <value>LaatsteRelease</value>
+  </data>
+  <data name="LaunchAutoHoster" xml:space="preserve">
+    <value>Autohosting starten</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>Indeling</value>
+  </data>
+  <data name="Leaderboard" xml:space="preserve">
+    <value>Leaderboard</value>
+  </data>
+  <data name="LeaveQueue" xml:space="preserve">
+    <value>Wachtrij verlaten gebruiker</value>
+  </data>
+  <data name="Left" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="LeftButton" xml:space="preserve">
+    <value>Knop Links</value>
+  </data>
+  <data name="LengthSecs" xml:space="preserve">
+    <value>Lengte (secs)</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>&lt;</value>
+  </data>
+  <data name="LessThanOrEqual" xml:space="preserve">
+    <value>&lt;=</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Licentie</value>
+  </data>
+  <data name="LicenseAgreement" xml:space="preserve">
+    <value>Gebruiksrechtovereenkomst</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+  <data name="Light Blue" xml:space="preserve">
+    <value>Lichtblauw</value>
+  </data>
+  <data name="Light Green" xml:space="preserve">
+    <value>Lichtgroen</value>
+  </data>
+  <data name="Lime" xml:space="preserve">
+    <value>Lime</value>
+  </data>
+  <data name="LineNumberToRead" xml:space="preserve">
+    <value>Regel # om te lezen</value>
+  </data>
+  <data name="LinkBlocking" xml:space="preserve">
+    <value>Linkblokkering</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Locatie</value>
+  </data>
+  <data name="LockChatScrolling" xml:space="preserve">
+    <value>Chat scrollen vergrendelen/ontgrendelen</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Aanmelden</value>
+  </data>
+  <data name="LoginErrorNoChannelName" xml:space="preserve">
+    <value>Er moet een kanaalnaam worden ingevoerd.</value>
+  </data>
+  <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
+    <value>U moet een Streamer-account selecteren om bij in te loggen.</value>
+  </data>
+  <data name="LoginErrorNotModerator" xml:space="preserve">
+    <value>Je bent geen moderator voor dit kanaal.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Uitlogen</value>
+  </data>
+  <data name="MagicEightBall" xml:space="preserve">
+    <value>Magische 8 Bal</value>
+  </data>
+  <data name="MakeGloballyUsable" xml:space="preserve">
+    <value>Maak wereldwijd bruikbaar</value>
+  </data>
+  <data name="ManualReset" xml:space="preserve">
+    <value>Handmatig opnieuw instellen</value>
+  </data>
+  <data name="Map" xml:space="preserve">
+    <value>Kaart</value>
+  </data>
+  <data name="Max" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="MaxAmount" xml:space="preserve">
+    <value>Maximumbedrag</value>
+  </data>
+  <data name="MaxCaps" xml:space="preserve">
+    <value>Max Caps</value>
+  </data>
+  <data name="MaxEntries" xml:space="preserve">
+    <value>Max.</value>
+  </data>
+  <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
+    <value>Max Punct. / Symbolen / Emotes</value>
+  </data>
+  <data name="MaxTime" xml:space="preserve">
+    <value>Maximale tijd</value>
+  </data>
+  <data name="MaxValue" xml:space="preserve">
+    <value>Maximale waarde</value>
+  </data>
+  <data name="MediumStreamer" xml:space="preserve">
+    <value>Medium Streamer (10-25)</value>
+  </data>
+  <data name="MeetTheTeam" xml:space="preserve">
+    <value>Maak kennis met het team</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Bericht</value>
+  </data>
+  <data name="MetadataName" xml:space="preserve">
+    <value>Naam metagegevens</value>
+  </data>
+  <data name="MetadataValue" xml:space="preserve">
+    <value>Metagegevenswaarde</value>
+  </data>
+  <data name="MiddleButton" xml:space="preserve">
+    <value>Middelste knop</value>
+  </data>
+  <data name="Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="MinimumChannelActivityMins" xml:space="preserve">
+    <value>Minimale kanaalactiviteit (mins)</value>
+  </data>
+  <data name="MinimumRequirement" xml:space="preserve">
+    <value>Minimumvereiste</value>
+  </data>
+  <data name="MinMessages" xml:space="preserve">
+    <value>Min Berichten</value>
+  </data>
+  <data name="MinPoints" xml:space="preserve">
+    <value>Min Punten</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuten</value>
+  </data>
+  <data name="MinValue" xml:space="preserve">
+    <value>Min Waarde</value>
+  </data>
+  <data name="MixerAge" xml:space="preserve">
+    <value>Mixerleeftijd</value>
+  </data>
+  <data name="MixerClips" xml:space="preserve">
+    <value>Mixerclips</value>
+  </data>
+  <data name="MixerData" xml:space="preserve">
+    <value>Mixergegevens</value>
+  </data>
+  <data name="MixerLabs" xml:space="preserve">
+    <value>Mixer Labs</value>
+  </data>
+  <data name="MixerStatus" xml:space="preserve">
+    <value>Mixerstatus</value>
+  </data>
+  <data name="MixerSupport" xml:space="preserve">
+    <value>Ondersteuning voor mixers</value>
+  </data>
+  <data name="MixItUpCommands" xml:space="preserve">
+    <value>Mix It Up Commando's</value>
+  </data>
+  <data name="MixItUpDashboard" xml:space="preserve">
+    <value>Mix It Up - Dashboard</value>
+  </data>
+  <data name="MixItUpOverlay" xml:space="preserve">
+    <value>Mix It Up Overlay</value>
+  </data>
+  <data name="MixItUpStore" xml:space="preserve">
+    <value>Mix It Up Store</value>
+  </data>
+  <data name="MixPlay" xml:space="preserve">
+    <value>MixPlay</value>
+  </data>
+  <data name="MixPlayCooldownHeader" xml:space="preserve">
+    <value>Hoeveel seconden moet de cooldown zijn?</value>
+  </data>
+  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
+    <value>Moet deze knop cooldown op zijn of samen met alle?</value>
+  </data>
+  <data name="MixPlaySparkCostHeader" xml:space="preserve">
+    <value>Hoeveel Sparks moet deze knop kosten?</value>
+  </data>
+  <data name="MixPlayTextboxModeration" xml:space="preserve">
+    <value>Wilt u Chat Moderatie gebruiken op alle ingevoerde tekst?</value>
+  </data>
+  <data name="Mod" xml:space="preserve">
+    <value>Mod</value>
+  </data>
+  <data name="ModBonus" xml:space="preserve">
+    <value>Mod Bonus</value>
+  </data>
+  <data name="Moderation" xml:space="preserve">
+    <value>Matiging</value>
+  </data>
+  <data name="ModerationAction" xml:space="preserve">
+    <value>Moderatieactie</value>
+  </data>
+  <data name="ModerationReasonOptional" xml:space="preserve">
+    <value>Reden voor moderatie (optioneel)</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="ModeratorOnly" xml:space="preserve">
+    <value>Alleen moderator</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Maandelijkse</value>
+  </data>
+  <data name="Months" xml:space="preserve">
+    <value>Maanden</value>
+  </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>Muis</value>
+  </data>
+  <data name="MouseButton" xml:space="preserve">
+    <value>Muisknop</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Omlaag gaan</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Omhoog gaan</value>
+  </data>
+  <data name="Must" xml:space="preserve">
+    <value>Moet</value>
+  </data>
+  <data name="Mute" xml:space="preserve">
+    <value>Mute</value>
+  </data>
+  <data name="MuteSelf" xml:space="preserve">
+    <value>Zelf dempen/dempen dempen</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
+  </data>
+  <data name="NameOfProfile" xml:space="preserve">
+    <value>Naam van profiel</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Nooit</value>
+  </data>
+  <data name="NewActionGroup" xml:space="preserve">
+    <value>Nieuwe actiegroep</value>
+  </data>
+  <data name="NewCommand" xml:space="preserve">
+    <value>Nieuwe opdracht</value>
+  </data>
+  <data name="NewProfileName" xml:space="preserve">
+    <value>Nieuwe profielnaam</value>
+  </data>
+  <data name="NewStreamer" xml:space="preserve">
+    <value>Nieuwe Streamer</value>
+  </data>
+  <data name="NewUserWizard" xml:space="preserve">
+    <value>Wizard Nieuwe gebruiker</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>№</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Geen</value>
+  </data>
+  <data name="NoResultsFound" xml:space="preserve">
+    <value>Geen resultaten gevonden</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normale</value>
+  </data>
+  <data name="NotEquals" xml:space="preserve">
+    <value>&lt;&gt;</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Meldingen</value>
+  </data>
+  <data name="NotSupportedStreamingSoftware" xml:space="preserve">
+    <value>Deze functie wordt momenteel niet ondersteund voor deze streamingsoftware.</value>
+  </data>
+  <data name="OfflineRate" xml:space="preserve">
+    <value>Offline tarief</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="One" xml:space="preserve">
+    <value>Een</value>
+  </data>
+  <data name="OneStrikeCommand" xml:space="preserve">
+    <value>1 Stakingsopdracht</value>
+  </data>
+  <data name="OnFollow" xml:space="preserve">
+    <value>Op Volgen</value>
+  </data>
+  <data name="OnHost" xml:space="preserve">
+    <value>Op host</value>
+  </data>
+  <data name="OnlineMinutes" xml:space="preserve">
+    <value>Online minuten</value>
+  </data>
+  <data name="OnlineRate" xml:space="preserve">
+    <value>Online tarief</value>
+  </data>
+  <data name="OnlyShowAlertsInDashboard" xml:space="preserve">
+    <value>Alleen waarschuwingen weergeven in dashboard</value>
+  </data>
+  <data name="OnSubscribe" xml:space="preserve">
+    <value>Op Abonneren</value>
+  </data>
+  <data name="OnUserRankChanged" xml:space="preserve">
+    <value>Op gebruikersrang gewijzigd</value>
+  </data>
+  <data name="Operator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="OptionalCommandArguments" xml:space="preserve">
+    <value>(Optioneel) Opdrachtargumenten</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Opties</value>
+  </data>
+  <data name="OptOutofDataTracking" xml:space="preserve">
+    <value>Opt-out voor het bijhouden van gegevens*</value>
+  </data>
+  <data name="Orange" xml:space="preserve">
+    <value>Oranje</value>
+  </data>
+  <data name="Overlay" xml:space="preserve">
+    <value>Overlay</value>
+  </data>
+  <data name="OverlayEndpoints" xml:space="preserve">
+    <value>Eindpunten voor overlay</value>
+  </data>
+  <data name="OverlayImagesAndVideos" xml:space="preserve">
+    <value>Overlay (Afbeeldingen &amp; Video's)</value>
+  </data>
+  <data name="Overlays" xml:space="preserve">
+    <value>Overlays</value>
+  </data>
+  <data name="OverlayToUse" xml:space="preserve">
+    <value>Overlay om te gebruiken</value>
+  </data>
+  <data name="OverlayWarning1" xml:space="preserve">
+    <value>WAARSCHUWING: Animaties werken mogelijk niet goed.</value>
+  </data>
+  <data name="OverlayWarning2" xml:space="preserve">
+    <value>Voor meer informatie:</value>
+  </data>
+  <data name="OverlayWarning3" xml:space="preserve">
+    <value>Windows-instellingen: probleem met overlay-animatie</value>
+  </data>
+  <data name="OverlayWidgetEditor" xml:space="preserve">
+    <value>Overlay Widget - Editor</value>
+  </data>
+  <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
+    <value>Selecteer het overlaytype dat u wilt maken:</value>
+  </data>
+  <data name="OverlayWidgets" xml:space="preserve">
+    <value>Overlay Widgets</value>
+  </data>
+  <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
+    <value>De overlay moet zijn ingeschakeld in het menu Services om overlaywidgets te gebruiken.</value>
+  </data>
+  <data name="OvrStream" xml:space="preserve">
+    <value>OvrStream (OvrStream)</value>
+  </data>
+  <data name="OvrStreamTitleName" xml:space="preserve">
+    <value>OvrStream-titelnaam</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="PartneredStreamer" xml:space="preserve">
+    <value>Partnered Streamer</value>
+  </data>
+  <data name="PartnersOnly" xml:space="preserve">
+    <value>Deze functie is momenteel alleen beschikbaar voor partners.</value>
+  </data>
+  <data name="PatreonBenefitRequirement" xml:space="preserve">
+    <value>Patreon Benefit Eis</value>
+  </data>
+  <data name="PatreonUser" xml:space="preserve">
+    <value>Patreon-gebruiker</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Machtigingen</value>
+  </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>Per persoon</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>Roze</value>
+  </data>
+  <data name="Pitch" xml:space="preserve">
+    <value>Pitch (0% - 200%)</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Spelen</value>
+  </data>
+  <data name="PollResultCommand" xml:space="preserve">
+    <value>Poll resultaat opdracht (optioneel)</value>
+  </data>
+  <data name="PollResultCommandType" xml:space="preserve">
+    <value>Poll resultaat command type</value>
+  </data>
+  <data name="PortName" xml:space="preserve">
+    <value>Poortnaam</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="PreMade" xml:space="preserve">
+    <value>Vooraf gemaakt</value>
+  </data>
+  <data name="PreMadeCommands" xml:space="preserve">
+    <value>Vooraf gemaakte opdrachten</value>
+  </data>
+  <data name="Press" xml:space="preserve">
+    <value>Pers</value>
+  </data>
+  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
+    <value>Voorkomen dat kleinere cooldowns overschrijven</value>
+  </data>
+  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
+    <value>Onbekende MixPlay-gebruikers voorkomen</value>
+  </data>
+  <data name="PrimaryCurrency" xml:space="preserve">
+    <value>Primaire valuta</value>
+  </data>
+  <data name="PrimaryRank" xml:space="preserve">
+    <value>Primaire rang</value>
+  </data>
+  <data name="Pro" xml:space="preserve">
+    <value>Pro</value>
+  </data>
+  <data name="Profiles" xml:space="preserve">
+    <value>Profielen</value>
+  </data>
+  <data name="ProgramArguments" xml:space="preserve">
+    <value>Programmaargumenten</value>
+  </data>
+  <data name="ProgramFilePath" xml:space="preserve">
+    <value>Bestandspad programmeren</value>
+  </data>
+  <data name="ProgressBar" xml:space="preserve">
+    <value>Doel/voortgangsbalk</value>
+  </data>
+  <data name="Pseudo" xml:space="preserve">
+    <value>Pseudo</value>
+  </data>
+  <data name="Purple" xml:space="preserve">
+    <value>Paarse</value>
+  </data>
+  <data name="Question" xml:space="preserve">
+    <value>Vraag</value>
+  </data>
+  <data name="QueuePosition" xml:space="preserve">
+    <value>Wachtrijpositie van de gebruiker</value>
+  </data>
+  <data name="QueueStatus" xml:space="preserve">
+    <value>Wachtrijstatus</value>
+  </data>
+  <data name="QuickCommands" xml:space="preserve">
+    <value>Snelle opdrachten</value>
+  </data>
+  <data name="QuickCommandSelectFail" xml:space="preserve">
+    <value>U moet eerst ten minste één opdracht maken om deze functie te kunnen gebruiken.</value>
+  </data>
+  <data name="Quote" xml:space="preserve">
+    <value>Citaat</value>
+  </data>
+  <data name="QuoteFormatting" xml:space="preserve">
+    <value>Opmaak van offertes ($quotenumber, $quotetext, $quotegame $quotedatetime)</value>
+  </data>
+  <data name="Quotes" xml:space="preserve">
+    <value>Citaten</value>
+  </data>
+  <data name="RandomStreamer" xml:space="preserve">
+    <value>Willekeurige streamer</value>
+  </data>
+  <data name="Rank" xml:space="preserve">
+    <value>Rang</value>
+  </data>
+  <data name="RankMinimum" xml:space="preserve">
+    <value>Rang minimum</value>
+  </data>
+  <data name="RankName" xml:space="preserve">
+    <value>Rangnaam</value>
+  </data>
+  <data name="RankRequirement" xml:space="preserve">
+    <value>Rangvereiste</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Percentage (0% - 150%)</value>
+  </data>
+  <data name="RateReview" xml:space="preserve">
+    <value>Tarief/beoordeling</value>
+  </data>
+  <data name="RateSecs" xml:space="preserve">
+    <value>Tarief (secs)</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="ReadFromFile" xml:space="preserve">
+    <value>Lezen uit bestand</value>
+  </data>
+  <data name="ReadRandomLineFromFile" xml:space="preserve">
+    <value>Willekeurige regel uit bestand lezen</value>
+  </data>
+  <data name="ReadSpecificLineFromFile" xml:space="preserve">
+    <value>Specifieke regel uit bestand lezen</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Rode</value>
+  </data>
+  <data name="RefreshTimeSecs" xml:space="preserve">
+    <value>Ververstijd (secs)</value>
+  </data>
+  <data name="Regular" xml:space="preserve">
+    <value>Regelmatige</value>
+  </data>
+  <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
+    <value>"Gewone" status online kijktijd</value>
+  </data>
+  <data name="Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
+  <data name="ReminderMins" xml:space="preserve">
+    <value>Herinnering (Mins)</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Externe</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="RemoveRandomLineFromFile" xml:space="preserve">
+    <value>Willekeurige regel uit bestand verwijderen</value>
+  </data>
+  <data name="RemoveSpecificLineFromFile" xml:space="preserve">
+    <value>Specifieke regel uit bestand verwijderen</value>
+  </data>
+  <data name="ReplacementText" xml:space="preserve">
+    <value>Vervangende tekst</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Verslag</value>
+  </data>
+  <data name="RequireClaim" xml:space="preserve">
+    <value>Vereisen "!claim"</value>
+  </data>
+  <data name="RequiredHours" xml:space="preserve">
+    <value>Vereiste uren</value>
+  </data>
+  <data name="RequiredUsers" xml:space="preserve">
+    <value>Vereiste gebruikers</value>
+  </data>
+  <data name="ReRunWizardHeader" xml:space="preserve">
+    <value>De wizard Nieuwe gebruiker opnieuw uitvoeren om uw gegevens opnieuw te importeren</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Opnieuw instellen</value>
+  </data>
+  <data name="ResetForAllUsers" xml:space="preserve">
+    <value>Opnieuw instellen voor alle gebruikers</value>
+  </data>
+  <data name="ResetForUser" xml:space="preserve">
+    <value>Opnieuw instellen voor gebruiker</value>
+  </data>
+  <data name="ResetOnLoad" xml:space="preserve">
+    <value>Opnieuw instellen bij laden</value>
+  </data>
+  <data name="ResetStrikesOnLaunch" xml:space="preserve">
+    <value>Strikes opnieuw instellen bij de lancering</value>
+  </data>
+  <data name="RestoreSettings" xml:space="preserve">
+    <value>Instellingen herstellen</value>
+  </data>
+  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
+    <value>Uw instellingen herstellen vanuit een zip-bestand</value>
+  </data>
+  <data name="Resubs" xml:space="preserve">
+    <value>Resubs</value>
+  </data>
+  <data name="RetroactivelyGivePoints" xml:space="preserve">
+    <value>Met terugwerkende kracht punten geven</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Beoordelingen</value>
+  </data>
+  <data name="RightButton" xml:space="preserve">
+    <value>Knop Rechts</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="RoleBonuses" xml:space="preserve">
+    <value>Rolbonussen</value>
+  </data>
+  <data name="RoleErrorInsufficientRole" xml:space="preserve">
+    <value>Je moet een {0} zijn om dit te doen.</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rollen</value>
+  </data>
+  <data name="Rotation" xml:space="preserve">
+    <value>Rotatie (graden)</value>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>Rts</value>
+  </data>
+  <data name="RunCommand" xml:space="preserve">
+    <value>Uitvoeren, opdracht</value>
+  </data>
+  <data name="RunOneRandomly" xml:space="preserve">
+    <value>Voer een willekeurig uit</value>
+  </data>
+  <data name="SameAgeRating" xml:space="preserve">
+    <value>Dezelfde leeftijdsclassificatie</value>
+  </data>
+  <data name="SameGame" xml:space="preserve">
+    <value>Hetzelfde spel</value>
+  </data>
+  <data name="SameTeam" xml:space="preserve">
+    <value>Hetzelfde team</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
+  <data name="SaveChatEventLogs" xml:space="preserve">
+    <value>Chat-/gebeurtenislogboeken opslaan</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Opslaan mislukt, nog een keer proberen ...</value>
+  </data>
+  <data name="SaveToFile" xml:space="preserve">
+    <value>Opslaan in bestand</value>
+  </data>
+  <data name="Scene" xml:space="preserve">
+    <value>Scène</value>
+  </data>
+  <data name="SceneCollectionName" xml:space="preserve">
+    <value>Naam scèneverzameling</value>
+  </data>
+  <data name="SceneName" xml:space="preserve">
+    <value>Scènenaam (gevalsgevoelig)</value>
+  </data>
+  <data name="SceneNameOptional" xml:space="preserve">
+    <value>Scènenaam (optioneel)</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Zoek</value>
+  </data>
+  <data name="SearchCriteria" xml:space="preserve">
+    <value>Zoekcriteria</value>
+  </data>
+  <data name="SearchTerms" xml:space="preserve">
+    <value>Zoektermen</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Seconden</value>
+  </data>
+  <data name="SecondsAllCaps" xml:space="preserve">
+    <value>Seconden</value>
+  </data>
+  <data name="SecondValue" xml:space="preserve">
+    <value>Tweede waarde</value>
+  </data>
+  <data name="SelectFirst" xml:space="preserve">
+    <value>Gebruiker selecteren aan de voorkant van de wachtrij</value>
+  </data>
+  <data name="SelectFirstType" xml:space="preserve">
+    <value>Eerste gebruiker van type selecteren in wachtrij</value>
+  </data>
+  <data name="SelectGameHeader" xml:space="preserve">
+    <value>Selecteer het speltype dat u wilt maken</value>
+  </data>
+  <data name="SelectRandom" xml:space="preserve">
+    <value>Willekeurige gebruiker in wachtrij selecteren</value>
+  </data>
+  <data name="SelectTypeOfCommand" xml:space="preserve">
+    <value>Selecteer het type opdracht dat u wilt maken:</value>
+  </data>
+  <data name="SellPrice" xml:space="preserve">
+    <value>Verkoopprijs</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Verzenden</value>
+  </data>
+  <data name="SendAs" xml:space="preserve">
+    <value>Verzenden als</value>
+  </data>
+  <data name="SendAsStreamer" xml:space="preserve">
+    <value>Verzenden als streamer</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Bericht verzenden</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>Seriële</value>
+  </data>
+  <data name="SerialDevice" xml:space="preserve">
+    <value>Seriële apparaat</value>
+  </data>
+  <data name="SerialDevices" xml:space="preserve">
+    <value>Seriële apparaten</value>
+  </data>
+  <data name="Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="ServiceConnectSound" xml:space="preserve">
+    <value>Service Connect Geluid</value>
+  </data>
+  <data name="ServiceDisconnectSound" xml:space="preserve">
+    <value>Geluid van service loskoppelen</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Diensten</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Instellen</value>
+  </data>
+  <data name="SetAudience" xml:space="preserve">
+    <value>Doelgroep instellen</value>
+  </data>
+  <data name="SetGame" xml:space="preserve">
+    <value>Spel instellen</value>
+  </data>
+  <data name="SetLocation" xml:space="preserve">
+    <value>Locatie instellen</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Instellingen</value>
+  </data>
+  <data name="SetTitle" xml:space="preserve">
+    <value>Titel instellen</value>
+  </data>
+  <data name="SetUserTitle" xml:space="preserve">
+    <value>Gebruikersnaam instellen</value>
+  </data>
+  <data name="ShareCode" xml:space="preserve">
+    <value>Code delen</value>
+  </data>
+  <data name="Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Winkel</value>
+  </data>
+  <data name="ShopCommand" xml:space="preserve">
+    <value>Winkelopdracht</value>
+  </data>
+  <data name="ShopCurrency" xml:space="preserve">
+    <value>Winkelvaluta</value>
+  </data>
+  <data name="ShowEventAlerts" xml:space="preserve">
+    <value>Gebeurteniswaarschuwingen weergeven</value>
+  </data>
+  <data name="ShowInfoInChat" xml:space="preserve">
+    <value>Informatie weergeven in chat</value>
+  </data>
+  <data name="ShowLatestChatMessagesAtTopInsteadOfBottom" xml:space="preserve">
+    <value>Laatste chatberichten bovenaan weergeven in plaats van onderaan</value>
+  </data>
+  <data name="ShowMessageTimestamp" xml:space="preserve">
+    <value>Tijdstempel bericht weergeven</value>
+  </data>
+  <data name="ShowMixPlayAlerts" xml:space="preserve">
+    <value>MixPlay-waarschuwingen weergeven</value>
+  </data>
+  <data name="ShowMixrElixrEmotes" xml:space="preserve">
+    <value>Toon MixrElixr Emotes (Moet opnieuw worden opgestart)</value>
+  </data>
+  <data name="ShowOnChatListContextMenu" xml:space="preserve">
+    <value>Weergeven in het contextmenu van chatlijst</value>
+  </data>
+  <data name="ShowUserJoinLeave" xml:space="preserve">
+    <value>Gebruikersverlof/verlof weergeven</value>
+  </data>
+  <data name="ShowWindow" xml:space="preserve">
+    <value>Venster weergeven</value>
+  </data>
+  <data name="SingleAction" xml:space="preserve">
+    <value>Eén actie</value>
+  </data>
+  <data name="SkillsOnly" xml:space="preserve">
+    <value>Alleen vaardigheden</value>
+  </data>
+  <data name="SkillsUsed" xml:space="preserve">
+    <value>Gebruikte vaardigheden</value>
+  </data>
+  <data name="SmallStreamer" xml:space="preserve">
+    <value>Kleine streamer (&lt;10)</value>
+  </data>
+  <data name="SongRequest" xml:space="preserve">
+    <value>Songaanvraag</value>
+  </data>
+  <data name="SongRequests" xml:space="preserve">
+    <value>Songaanvragen</value>
+  </data>
+  <data name="Sound" xml:space="preserve">
+    <value>Geluid</value>
+  </data>
+  <data name="SoundFilePath" xml:space="preserve">
+    <value>Geluidsbestandspad</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Bron</value>
+  </data>
+  <data name="SourceName" xml:space="preserve">
+    <value>Bronnaam</value>
+  </data>
+  <data name="SourceText" xml:space="preserve">
+    <value>Brontekst</value>
+  </data>
+  <data name="SparkCost" xml:space="preserve">
+    <value>Spark Kosten</value>
+  </data>
+  <data name="SparkCrystal" xml:space="preserve">
+    <value>Vonk kristal</value>
+  </data>
+  <data name="SparkExempt" xml:space="preserve">
+    <value>Vonk vrijgesteld</value>
+  </data>
+  <data name="Sparks" xml:space="preserve">
+    <value>Sparks</value>
+  </data>
+  <data name="SparksSpent" xml:space="preserve">
+    <value>Vonken besteed</value>
+  </data>
+  <data name="SpecialIdentifier" xml:space="preserve">
+    <value>Speciale identificatie</value>
+  </data>
+  <data name="SpecialIdentifierHint" xml:space="preserve">
+    <value>Speciale id naam (Letters &amp; Numbers Only, geen $)</value>
+  </data>
+  <data name="SpecialIdentifierName" xml:space="preserve">
+    <value>Speciale id-naam</value>
+  </data>
+  <data name="SpecialIdentifiers" xml:space="preserve">
+    <value>Speciale id's</value>
+  </data>
+  <data name="SpecialIdentifiersReference" xml:space="preserve">
+    <value>Speciale identificatiemiddelen referentie</value>
+  </data>
+  <data name="SpeechMessage" xml:space="preserve">
+    <value>Spraakbericht</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Personeel</value>
+  </data>
+  <data name="StartGiveaway" xml:space="preserve">
+    <value>Start Giveaway</value>
+  </data>
+  <data name="StartReminder" xml:space="preserve">
+    <value>Start/herinnering</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistieken</value>
+  </data>
+  <data name="SteamGame" xml:space="preserve">
+    <value>Steam Spel</value>
+  </data>
+  <data name="StreamBoss" xml:space="preserve">
+    <value>Stream Baas</value>
+  </data>
+  <data name="StreamClip" xml:space="preserve">
+    <value>Het afspelen van clip streamen</value>
+  </data>
+  <data name="Streamer" xml:space="preserve">
+    <value>Streamer</value>
+  </data>
+  <data name="StreamerAccount" xml:space="preserve">
+    <value>Streamer-account</value>
+  </data>
+  <data name="StreamerAge" xml:space="preserve">
+    <value>Streamer Leeftijd</value>
+  </data>
+  <data name="StreamingPlatform" xml:space="preserve">
+    <value>Streamingplatform</value>
+  </data>
+  <data name="StreamingSoftware" xml:space="preserve">
+    <value>Streaming Software</value>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>Streamlabs</value>
+  </data>
+  <data name="StreamsWatched" xml:space="preserve">
+    <value>Streams bekeken</value>
+  </data>
+  <data name="StreamTitle" xml:space="preserve">
+    <value>Streamtitel</value>
+  </data>
+  <data name="StrikeCommands" xml:space="preserve">
+    <value>Stakingsopdrachten</value>
+  </data>
+  <data name="SubAge" xml:space="preserve">
+    <value>Subleeftijd</value>
+  </data>
+  <data name="SubBonus" xml:space="preserve">
+    <value>Subbonus</value>
+  </data>
+  <data name="SubmitABug" xml:space="preserve">
+    <value>Een bug indienen</value>
+  </data>
+  <data name="Subs" xml:space="preserve">
+    <value>Subs</value>
+  </data>
+  <data name="SubscribeAge" xml:space="preserve">
+    <value>Inschrijven leeftijd</value>
+  </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>Abonnee</value>
+  </data>
+  <data name="SubscriberOnly" xml:space="preserve">
+    <value>Alleen abonnee</value>
+  </data>
+  <data name="SubsGifted" xml:space="preserve">
+    <value>Subs Begaafd</value>
+  </data>
+  <data name="SubsReceived" xml:space="preserve">
+    <value>Ontvangen subsubs</value>
+  </data>
+  <data name="SubtractFromAllChatUsers" xml:space="preserve">
+    <value>Aftrekken van alle chatgebruikers</value>
+  </data>
+  <data name="SubtractFromSpecificUser" xml:space="preserve">
+    <value>Aftrekken van specifieke gebruiker</value>
+  </data>
+  <data name="SubtractFromUser" xml:space="preserve">
+    <value>Aftrekken van gebruiker</value>
+  </data>
+  <data name="TaggedInChat" xml:space="preserve">
+    <value>Gelabeld in chat</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="TargetUser" xml:space="preserve">
+    <value>Doelgebruiker</value>
+  </data>
+  <data name="TargetUserOptional" xml:space="preserve">
+    <value>Doelgebruiker (optioneel)</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>Teal</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="TeamName" xml:space="preserve">
+    <value>Teamnaam</value>
+  </data>
+  <data name="Teen" xml:space="preserve">
+    <value>Tiener</value>
+  </data>
+  <data name="TestCommand" xml:space="preserve">
+    <value>Test, opdracht</value>
+  </data>
+  <data name="TestStreamWarning" xml:space="preserve">
+    <value>Omdat teststream-instellingen zijn ingeschakeld, kan uw botaccount niet correct verbinding maken. Je moet Test Streams uitschakelen om je botaccount te gebruiken voor dingen zoals een chatberichten &amp; whispers. Weet je zeker dat je het nog steeds wilt aansluiten?</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="TextColor" xml:space="preserve">
+    <value>Tekstkleur</value>
+  </data>
+  <data name="TextToSave" xml:space="preserve">
+    <value>Tekst om op te slaan</value>
+  </data>
+  <data name="TextToSpeech" xml:space="preserve">
+    <value>Tekst naar spraak</value>
+  </data>
+  <data name="TextToTranslate" xml:space="preserve">
+    <value>Tekst om te vertalen</value>
+  </data>
+  <data name="ThemesAndColors" xml:space="preserve">
+    <value>Thema's &amp; kleuren</value>
+  </data>
+  <data name="ThreeLeft" xml:space="preserve">
+    <value>Drie links</value>
+  </data>
+  <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
+    <value>3+ stakingen, opdracht</value>
+  </data>
+  <data name="ThreeRight" xml:space="preserve">
+    <value>Drie rechts</value>
+  </data>
+  <data name="TickerTape" xml:space="preserve">
+    <value>Ticker Tape</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Tijd</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Resterende tijd</value>
+  </data>
+  <data name="Timer" xml:space="preserve">
+    <value>Timer</value>
+  </data>
+  <data name="TimerInterval" xml:space="preserve">
+    <value>Interval (minuten)</value>
+  </data>
+  <data name="Timers" xml:space="preserve">
+    <value>Timers</value>
+  </data>
+  <data name="TimerTrain" xml:space="preserve">
+    <value>Timertrein</value>
+  </data>
+  <data name="TimeSpanSeconds" xml:space="preserve">
+    <value>Tijdspanne (seconden)</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="TitleName" xml:space="preserve">
+    <value>Titelnaam</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Totale</value>
+  </data>
+  <data name="TotalTimeMins" xml:space="preserve">
+    <value>Totale tijd (mins)</value>
+  </data>
+  <data name="TotalUsers" xml:space="preserve">
+    <value>Totaal aantal gebruikers</value>
+  </data>
+  <data name="TrackWhispererNumbers" xml:space="preserve">
+    <value>Track Whisperer Nummers</value>
+  </data>
+  <data name="Trade" xml:space="preserve">
+    <value>Handel</value>
+  </data>
+  <data name="TradeCommand" xml:space="preserve">
+    <value>Handelscommando</value>
+  </data>
+  <data name="Translation" xml:space="preserve">
+    <value>Vertaling</value>
+  </data>
+  <data name="TranslationBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TriggerHint" xml:space="preserve">
+    <value>Trigger(s) in Chat (Geen '! nodig'</value>
+  </data>
+  <data name="TweetImageURL" xml:space="preserve">
+    <value>Tweet Afbeelding URL (optioneel)</value>
+  </data>
+  <data name="TweetMessage" xml:space="preserve">
+    <value>Tweetbericht (geen @mentions toegestaan)</value>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="Two" xml:space="preserve">
+    <value>Twee</value>
+  </data>
+  <data name="TwoStrikesCommand" xml:space="preserve">
+    <value>2 Stakingen, opdracht</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="TypeToAdd" xml:space="preserve">
+    <value>Tekst om toe te voegen</value>
+  </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>Toegewezen</value>
+  </data>
+  <data name="UnbanAllUsers" xml:space="preserve">
+    <value>Alle gebruikers los te maken</value>
+  </data>
+  <data name="UnbanAllUsersHeader" xml:space="preserve">
+    <value>Alle gebruikers van je kanaal verbannen</value>
+  </data>
+  <data name="Ungrouped" xml:space="preserve">
+    <value>Gegroepeerde</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Onbekende</value>
+  </data>
+  <data name="UnlockAllCommandsHeader" xml:space="preserve">
+    <value>Alle typen opdrachten ontgrendelen</value>
+  </data>
+  <data name="UnlockCommand" xml:space="preserve">
+    <value>Opdracht Ontgrendelen</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UpdateChannel" xml:space="preserve">
+    <value>Kanaal bijwerken</value>
+  </data>
+  <data name="UpdateCommand" xml:space="preserve">
+    <value>Update, opdracht</value>
+  </data>
+  <data name="UpdatedValue" xml:space="preserve">
+    <value>Bijgewerkte waarde</value>
+  </data>
+  <data name="UpdatePreviewProgram" xml:space="preserve">
+    <value>Preview-programma bijwerken</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Uploaden</value>
+  </data>
+  <data name="UploadFilePath" xml:space="preserve">
+    <value>Bestandspad uploaden (optioneel)</value>
+  </data>
+  <data name="UploadTo" xml:space="preserve">
+    <value>Uploaden naar</value>
+  </data>
+  <data name="Uptime" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
+  <data name="UsageRequirements" xml:space="preserve">
+    <value>Gebruiksvereisten</value>
+  </data>
+  <data name="UseCommunityList" xml:space="preserve">
+    <value>Communitylijst gebruiken (ZEER STRIKT)</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Gebruiker</value>
+  </data>
+  <data name="UserDataImport" xml:space="preserve">
+    <value>Gebruikersgegevens importeren</value>
+  </data>
+  <data name="UserDataStep1" xml:space="preserve">
+    <value>Hiermee u de gebruikersgegevens van uw kanaal importeren uit een platte tekst of spreadsheetbestand. Als u een spreadsheetbestand wilt importeren, moet een bepaalde vorm van Microsoft Excel zijn geïnstalleerd. Houd er rekening mee dat dit bestaande gebruikersgegevens overschrijft in Mix It Up. Geef eerst het bestand op waaruit u de gebruikersgegevens wilt importeren:</value>
+  </data>
+  <data name="UserDataStep2" xml:space="preserve">
+    <value>Vervolgens moet u het kolomnummer opgeven voor elke waarde in uw gegevensbestand of deze leeg laten als die waarde niet aanwezig is. Houd er rekening mee dat het gegevensbestand ten minste de gebruikersnaam en/of de gebruikersnaam moet hebben:</value>
+  </data>
+  <data name="UserJoined" xml:space="preserve">
+    <value>Gebruiker lid geworden</value>
+  </data>
+  <data name="UserJoinedChat" xml:space="preserve">
+    <value>{0} lid geworden van Chat</value>
+  </data>
+  <data name="UserLeftChat" xml:space="preserve">
+    <value>{0} Links Chat</value>
+  </data>
+  <data name="UserMetrics" xml:space="preserve">
+    <value>Gebruikersstatistieken</value>
+  </data>
+  <data name="UserNameOptional" xml:space="preserve">
+    <value>Gebruikersnaam (optioneel)</value>
+  </data>
+  <data name="UserOnlyChatCommands" xml:space="preserve">
+    <value>Chatopdrachten voor alleen gebruikers</value>
+  </data>
+  <data name="UserRankChanged" xml:space="preserve">
+    <value>Gebruikersrang gewijzigd</value>
+  </data>
+  <data name="UserRanks" xml:space="preserve">
+    <value>Gebruikersrangen</value>
+  </data>
+  <data name="UserRole" xml:space="preserve">
+    <value>Gebruikersrol</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Gebruikers</value>
+  </data>
+  <data name="UsersToApplyTo" xml:space="preserve">
+    <value>Gebruikers die zich op</value>
+  </data>
+  <data name="UserThreshold" xml:space="preserve">
+    <value>Gebruikersdrempel</value>
+  </data>
+  <data name="UserTitles" xml:space="preserve">
+    <value>Gebruikerstitels</value>
+  </data>
+  <data name="UserToMove" xml:space="preserve">
+    <value>Gebruiker verplaatsen (optioneel)</value>
+  </data>
+  <data name="Value1" xml:space="preserve">
+    <value>Waarde 1 (optioneel)</value>
+  </data>
+  <data name="Value2" xml:space="preserve">
+    <value>Waarde 2 (optioneel)</value>
+  </data>
+  <data name="Value3" xml:space="preserve">
+    <value>Waarde 3 (optioneel)</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Variabele naam</value>
+  </data>
+  <data name="VariableValue" xml:space="preserve">
+    <value>Variabele waarde</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versie</value>
+  </data>
+  <data name="VersionID" xml:space="preserve">
+    <value>Versie-id</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Viewers" xml:space="preserve">
+    <value>Kijkers</value>
+  </data>
+  <data name="ViewingOneHour" xml:space="preserve">
+    <value>1 uur bekeken</value>
+  </data>
+  <data name="ViewingTenHours" xml:space="preserve">
+    <value>10 uur bekeken</value>
+  </data>
+  <data name="ViewingTenMinutes" xml:space="preserve">
+    <value>10 minuten bekeken</value>
+  </data>
+  <data name="ViewingThirtyMinutes" xml:space="preserve">
+    <value>30 minuten bekeken</value>
+  </data>
+  <data name="ViewingTwoHours" xml:space="preserve">
+    <value>2 uur lang bekeken</value>
+  </data>
+  <data name="Visible" xml:space="preserve">
+    <value>Zichtbaar</value>
+  </data>
+  <data name="VisibleAnimation" xml:space="preserve">
+    <value>Zichtbare animatie</value>
+  </data>
+  <data name="Voice" xml:space="preserve">
+    <value>Stem</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Volume0to100" xml:space="preserve">
+    <value>Volume (0% - 100%)</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Wachten</value>
+  </data>
+  <data name="WaitForFinish" xml:space="preserve">
+    <value>Wachten tot u klaar bent</value>
+  </data>
+  <data name="WatchTime" xml:space="preserve">
+    <value>Kijktijd</value>
+  </data>
+  <data name="WebHookEventName" xml:space="preserve">
+    <value>Web Hook-gebeurtenisnaam</value>
+  </data>
+  <data name="WebPage" xml:space="preserve">
+    <value>Webpagina</value>
+  </data>
+  <data name="WebPageOrLocalFile" xml:space="preserve">
+    <value>Webpagina (URL of lokaal bestand)</value>
+  </data>
+  <data name="WebRequest" xml:space="preserve">
+    <value>Webaanvraag</value>
+  </data>
+  <data name="WebRequestURL" xml:space="preserve">
+    <value>URL webaanvraag</value>
+  </data>
+  <data name="WebShow" xml:space="preserve">
+    <value>Webshow</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Wekelijkse</value>
+  </data>
+  <data name="WhatIsTrigger" xml:space="preserve">
+    <value>Welke tekst in de chat zal deze opdracht activeren (EX: "!follow")?</value>
+  </data>
+  <data name="Whisper" xml:space="preserve">
+    <value>Whisper</value>
+  </data>
+  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
+    <value>Alle waarschuwingen fluisteren naar Streamer-account</value>
+  </data>
+  <data name="WhisperUserOptional" xml:space="preserve">
+    <value>Fluistergebruiker (optioneel)</value>
+  </data>
+  <data name="White" xml:space="preserve">
+    <value>Witte</value>
+  </data>
+  <data name="WhoCanRun" xml:space="preserve">
+    <value>Wie moet dit commando mogen uitvoeren?</value>
+  </data>
+  <data name="Widget" xml:space="preserve">
+    <value>Widget</value>
+  </data>
+  <data name="Wildcards" xml:space="preserve">
+    <value>Jokertekens</value>
+  </data>
+  <data name="Winner" xml:space="preserve">
+    <value>Winnaar</value>
+  </data>
+  <data name="WinnerAllCaps" xml:space="preserve">
+    <value>Winnaar</value>
+  </data>
+  <data name="WinnerSelected" xml:space="preserve">
+    <value>Winnaar geselecteerd</value>
+  </data>
+  <data name="XboxGame" xml:space="preserve">
+    <value>Xbox-game</value>
+  </data>
+  <data name="XLarge" xml:space="preserve">
+    <value>X-Groot</value>
+  </data>
+  <data name="XPosition" xml:space="preserve">
+    <value>X-positie</value>
+  </data>
+  <data name="XScale" xml:space="preserve">
+    <value>X-schaal (decimaal)</value>
+  </data>
+  <data name="XXLarge" xml:space="preserve">
+    <value>XX-Groot</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Jaarlijkse</value>
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>Geel</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="YPosition" xml:space="preserve">
+    <value>Y-positie</value>
+  </data>
+  <data name="YScale" xml:space="preserve">
+    <value>Y-schaal (decimaal)</value>
+  </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>Vervangen</value>
+  </data>
+  <data name="ChatMessageDeleted" xml:space="preserve">
+    <value>Chatbericht verwijderd</value>
+  </data>
+  <data name="ChatMessageReceived" xml:space="preserve">
+    <value>Chatbericht ontvangen</value>
+  </data>
+  <data name="ChatUserBan" xml:space="preserve">
+    <value>Chatgebruiker verbannen</value>
+  </data>
+  <data name="ChatUserFirstJoin" xml:space="preserve">
+    <value>Chat nieuwe gebruiker toegetreden</value>
+  </data>
+  <data name="ChatUserJoined" xml:space="preserve">
+    <value>Chatgebruiker lid geworden</value>
+  </data>
+  <data name="ChatUserLeft" xml:space="preserve">
+    <value>Chatgebruiker links</value>
+  </data>
+  <data name="ChatUserPurge" xml:space="preserve">
+    <value>Chat gebruiker gezuiverd</value>
+  </data>
+  <data name="ExtraLifeDonation" xml:space="preserve">
+    <value>Extra Leven Donatie</value>
+  </data>
+  <data name="GawkBoxDonation" xml:space="preserve">
+    <value>GawkBox Donatie</value>
+  </data>
+  <data name="JustGivingDonation" xml:space="preserve">
+    <value>JustGiving Donatie</value>
+  </data>
+  <data name="MixerChannelEmbersUsed" xml:space="preserve">
+    <value>Mixer kanaal embers besteed</value>
+  </data>
+  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
+    <value>Mixer Kanaal Fan Progression Level-Up</value>
+  </data>
+  <data name="MixerChannelFollowed" xml:space="preserve">
+    <value>Mixerkanaal gevolgd</value>
+  </data>
+  <data name="MixerChannelHosted" xml:space="preserve">
+    <value>Mixerkanaal gehost</value>
+  </data>
+  <data name="MixerChannelMilestoneReached" xml:space="preserve">
+    <value>Mijlpaal mixerkanaal bereikt</value>
+  </data>
+  <data name="MixerChannelResubscribed" xml:space="preserve">
+    <value>Mixerkanaal opnieuw geaseerd</value>
+  </data>
+  <data name="MixerChannelSkillUsed" xml:space="preserve">
+    <value>Mixerkanaalvaardigheid gebruikt</value>
+  </data>
+  <data name="MixerChannelSparksUsed" xml:space="preserve">
+    <value>Mixer Kanaal Vonken besteed</value>
+  </data>
+  <data name="MixerChannelStreamStart" xml:space="preserve">
+    <value>Mixerkanaalstream starten</value>
+  </data>
+  <data name="MixerChannelStreamStop" xml:space="preserve">
+    <value>Mixerkanaalstream stoppen</value>
+  </data>
+  <data name="MixerChannelSubscribed" xml:space="preserve">
+    <value>Mixerkanaal geabonneerd</value>
+  </data>
+  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
+    <value>Mixerkanaalabonnement cadeau</value>
+  </data>
+  <data name="MixerChannelUnfollowed" xml:space="preserve">
+    <value>Mixerkanaal niet gevolgd</value>
+  </data>
+  <data name="PatreonSubscribed" xml:space="preserve">
+    <value>Patreon geabonneerd</value>
+  </data>
+  <data name="StreamElementsDonation" xml:space="preserve">
+    <value>StreamElements Donatie</value>
+  </data>
+  <data name="StreamJarDonation" xml:space="preserve">
+    <value>StreamJar Donatie</value>
+  </data>
+  <data name="StreamlabsDonation" xml:space="preserve">
+    <value>Streamlabs Donatie</value>
+  </data>
+  <data name="StreamlootsCardRedeemed" xml:space="preserve">
+    <value>Streamloots kaart ingewisseld</value>
+  </data>
+  <data name="StreamlootsPackGifted" xml:space="preserve">
+    <value>Streamloots Pack Cadeau</value>
+  </data>
+  <data name="StreamlootsPackPurchased" xml:space="preserve">
+    <value>Streamloots Pack aangeschaft</value>
+  </data>
+  <data name="TiltifyDonation" xml:space="preserve">
+    <value>Donatie kantelen</value>
+  </data>
+  <data name="TipeeeStreamDonation" xml:space="preserve">
+    <value>TipeeeStream Donatie</value>
+  </data>
+  <data name="TreatStreamDonation" xml:space="preserve">
+    <value>TreatStream Donatie</value>
+  </data>
+  <data name="RunAd" xml:space="preserve">
+    <value>Advertentie uitvoeren</value>
+  </data>
+  <data name="Ban" xml:space="preserve">
+    <value>Verbod</value>
+  </data>
+  <data name="GlobalTimeout" xml:space="preserve">
+    <value>Wereldwijde time-out</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
+    <value>Deze functie is momenteel alleen beschikbaar voor Partners &amp; Verified Channels.</value>
+  </data>
+  <data name="Dutch" xml:space="preserve">
+    <value>Nederlands</value>
+  </data>
+  <data name="French" xml:space="preserve">
+    <value>Frans</value>
+  </data>
+  <data name="Japanese" xml:space="preserve">
+    <value>Japans</value>
+  </data>
+  <data name="Portuguese" xml:space="preserve">
+    <value>Portugees</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Spaans</value>
+  </data>
+</root>
