@@ -918,6 +918,11 @@ namespace MixItUp.Base.Util
                                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
                                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
                             }
+                            else
+                            {
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", "https://gameart.mixer.com/art/548829/cover.jpg?locked");
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", "Not Specified");
+                            }
 
                             this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
                             this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
