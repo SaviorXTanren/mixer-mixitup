@@ -204,7 +204,10 @@ namespace MixItUp.Base
                     }
                 }
             }
-            ChannelSession.Settings.MixerUserOAuthToken = null;
+            else
+            {
+                ChannelSession.Settings.MixerUserOAuthToken = null;
+            }
             return userResult;
         }
 
