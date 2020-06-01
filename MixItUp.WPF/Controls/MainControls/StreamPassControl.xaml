@@ -22,19 +22,18 @@
 
         <DataGrid Grid.Row="0" ItemsSource="{Binding StreamPasses}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="200" />
-                <DataGridTextColumn Header="{x:Static resx:Resources.DateRange}" Binding="{Binding DateRangeString}" IsReadOnly="True" Width="100" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.SpecialIdentifiers}" Binding="{Binding SpecialIdentifiersReferenceDisplay}" IsReadOnly="True" Width="180" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.DateRange}" Binding="{Binding DateRangeString}" IsReadOnly="True" Width="180" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="175">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid HorizontalAlignment="Right" Margin="0,0,15,0">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="15" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
@@ -49,8 +48,6 @@
                                 <Button Grid.Column="4" x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
                                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
-
-                                <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisable}" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

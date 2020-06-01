@@ -190,7 +190,7 @@ namespace MixItUp.Base.Util
             return !string.IsNullOrEmpty(text) && text.All(c => Char.IsLetterOrDigit(c));
         }
 
-        public static string ConvertToSpecialIdentifier(string text)
+        public static string ConvertToSpecialIdentifier(string text, int maxLength = 0)
         {
             StringBuilder specialIdentifier = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
@@ -200,7 +200,14 @@ namespace MixItUp.Base.Util
                     specialIdentifier.Append(text[i]);
                 }
             }
-            return specialIdentifier.ToString().ToLower();
+            string result = specialIdentifier.ToString().ToLower();
+
+            if (maxLength > 0 && result.Length > maxLength)
+            {
+                result = result.Substring(0, maxLength);
+            }
+
+            return result;
         }
 
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)

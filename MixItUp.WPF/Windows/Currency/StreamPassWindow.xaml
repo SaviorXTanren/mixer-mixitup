@@ -68,17 +68,21 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" />
+                            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="300" />
 
-                            <ComboBox Grid.Column="2" ItemsSource="{Binding Permissions}" SelectedItem="{Binding SelectedPermission}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox Grid.Column="2" ItemsSource="{Binding Permissions}" SelectedItem="{Binding Permission}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
+
+                            <TextBox Grid.Column="4" Text="{Binding MaxLevel}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxLevel}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
                         </Grid>
 
                         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -92,11 +96,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding TotalLevels}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalLevels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                            <TextBox Grid.Column="0" Text="{Binding PointsForLevelUp}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PointsForLevelUp}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                            <TextBox Grid.Column="2" Text="{Binding PointsForLevelUp}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PointsForLevelUp}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                            <TextBox Grid.Column="2" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                            <TextBox Grid.Column="4" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                             <Button Grid.Column="6" Content="{x:Static resx:Resources.ManualReset}" Command="{Binding ManualResetCommand}" />
                         </Grid>
@@ -110,7 +114,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.DateRange}" Width="200" Height="160">
+                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.DateRange}" Width="210" Height="160">
                         <Grid VerticalAlignment="Center" Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -125,26 +129,26 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.Start}" />
-
-                            <Button Grid.Column="2" Grid.Row="0" x:Name="StartDateButton" Click="StartDateButton_Click" Width="40" HorizontalAlignment="Center">
+                            <Button Grid.Column="0" Grid.Row="0" x:Name="StartDateButton" Click="StartDateButton_Click" Width="40" HorizontalAlignment="Center">
                                 <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
+
+                            <TextBlock Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.Start}" />
 
                             <TextBlock Grid.Column="4" Grid.Row="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding StartDateString}" />
 
 
-                            <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.End}" />
-
-                            <Button Grid.Column="2" Grid.Row="2" x:Name="EndDateButton" Click="EndDateButton_Click" Width="40" HorizontalAlignment="Center">
+                            <Button Grid.Column="0" Grid.Row="2" x:Name="EndDateButton" Click="EndDateButton_Click" Width="40" HorizontalAlignment="Center">
                                 <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
+
+                            <TextBlock Grid.Column="2" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.End}" />
 
                             <TextBlock Grid.Column="4" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding EndDateString}" />
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.PointRates}" Width="500" Height="160">
+                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.PointRates}" Width="480" Height="160">
                         <Grid VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -172,13 +176,13 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.ActivityRate}" />
+                                    <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{x:Static resx:Resources.Viewing}" />
 
-                                    <TextBox Grid.Column="2" Text="{Binding ActivityRateAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                                    <TextBox Grid.Column="2" Text="{Binding ViewingRateAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="50" />
 
                                     <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
 
-                                    <TextBox Grid.Column="6" Text="{Binding ActivityRateMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                                    <TextBox Grid.Column="6" Text="{Binding ViewingRateMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="50" />
                                 </Grid>
 
                                 <TextBox Grid.Column="2" Text="{Binding FollowBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
@@ -219,7 +223,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Style="{StaticResource DefaultBorder}" BorderBrush="{StaticResource MaterialDesignBody}">
-                            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="250" Width="400">
+                            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="200" Width="400">
                                 <DataGrid ItemsSource="{Binding CustomLevelUpCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.Level}" Binding="{Binding Level}" IsReadOnly="True" Width="65" />
@@ -250,7 +254,7 @@
                         <Grid Grid.Column="2" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="60" />
+                                <RowDefinition Height="40" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
@@ -266,7 +270,7 @@
                                 <Button Grid.Column="2" x:Name="AddCustomLevelUpButtom" Content="{x:Static resx:Resources.AddCustomLevelUp}" Click="AddCustomLevelUpButtom_Click" />
                             </Grid>
 
-                            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.DefaultLevelUpCommand}" HorizontalAlignment="Center">
+                            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.DefaultLevelUpCommand}" HorizontalAlignment="Center" Width="220">
                                 <Grid>
                                     <Button x:Name="DefaultLevelUpNewCommandButton" HorizontalAlignment="Center" Click="DefaultLevelUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding DefaultLevelUpCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
 

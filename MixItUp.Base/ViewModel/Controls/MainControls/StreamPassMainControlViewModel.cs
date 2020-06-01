@@ -8,16 +8,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class StreamPassMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<StreamPassModel> SeasonPasses = new ObservableCollection<StreamPassModel>();
+        public ObservableCollection<StreamPassModel> StreamPasses { get; private set; } = new ObservableCollection<StreamPassModel>();
 
         public StreamPassMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void Refresh()
         {
-            this.SeasonPasses.Clear();
+            this.StreamPasses.Clear();
             foreach (StreamPassModel seasonPass in ChannelSession.Settings.StreamPass.Values)
             {
-                this.SeasonPasses.Add(seasonPass);
+                this.StreamPasses.Add(seasonPass);
             }
         }
 

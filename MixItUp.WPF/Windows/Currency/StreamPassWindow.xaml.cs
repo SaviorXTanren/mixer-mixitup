@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Command;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -42,21 +43,35 @@ namespace MixItUp.WPF.Windows.Currency
             await base.OnLoaded();
         }
 
-        private void StartDateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void StartDateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
+            await this.RunAsyncOperation(async () =>
+            {
+                CalendarDialogControl calendarControl = new CalendarDialogControl(this.viewModel.StartDate);
+                if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                {
+                    this.viewModel.StartDate = calendarControl.SelectedDate.Date;
+                }
+            });
         }
 
-        private void EndDateButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void EndDateButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
+            await this.RunAsyncOperation(async () =>
+            {
+                CalendarDialogControl calendarControl = new CalendarDialogControl(this.viewModel.EndDate);
+                if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                {
+                    this.viewModel.EndDate = calendarControl.SelectedDate.Date;
+                }
+            });
         }
 
         private async void AddCustomLevelUpButtom_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (await this.viewModel.ValidateAddingCustomLevelUpCommand())
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(string.Format("{0} {1}", MixItUp.Base.Resources.LevelUp, this.viewModel.CustomLevelUpNumber))));
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(string.Format("{0} - {1}", MixItUp.Base.Resources.LevelUp, this.viewModel.CustomLevelUpNumber))));
                 window.CommandSaveSuccessfully += CustomLevelUpWindow_CommandSaveSuccessfully;
                 window.Show();
             }
@@ -65,7 +80,7 @@ namespace MixItUp.WPF.Windows.Currency
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            StreamPassUniqueLevelUpCommandViewModel command = (StreamPassUniqueLevelUpCommandViewModel)button.DataContext;
+            StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
             CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command.Command));
             window.Show();
         }
@@ -73,7 +88,7 @@ namespace MixItUp.WPF.Windows.Currency
         private async void DeleteLevelButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            StreamPassUniqueLevelUpCommandViewModel command = (StreamPassUniqueLevelUpCommandViewModel)button.DataContext;
+            StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
             await this.viewModel.DeleteCustomLevelUpCommand(command);
         }
 
@@ -90,12 +105,9 @@ namespace MixItUp.WPF.Windows.Currency
             window.Show();
         }
 
-        private async void DefaultLevelUpCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
+        private void DefaultLevelUpCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteCommand))
-            {
-                this.viewModel.DefaultLevelUpCommand = null;
-            }
+            this.viewModel.DefaultLevelUpCommand = null;
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -113,6 +125,7 @@ namespace MixItUp.WPF.Windows.Currency
         private void CustomLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)
         {
             this.viewModel.AddCustomLevelUpCommand((CustomCommand)e);
+            this.viewModel.CustomLevelUpNumber = 0;
         }
 
         private void DefaultLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)

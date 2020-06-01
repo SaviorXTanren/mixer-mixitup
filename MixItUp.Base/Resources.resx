@@ -2763,4 +2763,10 @@
   <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
     <value>Are you sure you want to delete this custom level up command?</value>
   </data>
+  <data name="MaxLevel" xml:space="preserve">
+    <value>Max Level</value>
+  </data>
+  <data name="Viewing" xml:space="preserve">
+    <value>Viewing:</value>
+  </data>
 </root>

@@ -3922,6 +3922,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Level.
+        /// </summary>
+        public static string MaxLevel {
+            get {
+                return ResourceManager.GetString("MaxLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Punct. / Symbols / Emotes.
         /// </summary>
         public static string MaxPunctSymbolsEmotes {
@@ -7626,6 +7635,15 @@ namespace MixItUp.Base {
         public static string Viewers {
             get {
                 return ResourceManager.GetString("Viewers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Viewing:.
+        /// </summary>
+        public static string Viewing {
+            get {
+                return ResourceManager.GetString("Viewing", resourceCulture);
             }
         }
         
