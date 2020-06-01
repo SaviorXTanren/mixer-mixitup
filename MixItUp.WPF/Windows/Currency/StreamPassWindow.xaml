@@ -31,6 +31,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <MaterialDesign:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
         </ResourceDictionary>
     </Windows:LoadingWindowBase.Resources>
 
@@ -219,7 +220,7 @@
 
                         <Border Grid.Column="0" Style="{StaticResource DefaultBorder}" BorderBrush="{StaticResource MaterialDesignBody}">
                             <ScrollViewer VerticalScrollBarVisibility="Visible" Height="250" Width="400">
-                                <DataGrid ItemsSource="{Binding LevelUpCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                                <DataGrid ItemsSource="{Binding CustomLevelUpCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.Level}" Binding="{Binding Level}" IsReadOnly="True" Width="65" />
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="200">
@@ -262,11 +263,15 @@
 
                                 <TextBox Grid.Column="0" Text="{Binding CustomLevelUpNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LevelNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
-                                <Button Grid.Column="2" Content="{x:Static resx:Resources.AddCustomLevelUp}" Command="{Binding AddCustomLevelUpCommand}" />
+                                <Button Grid.Column="2" x:Name="AddCustomLevelUpButtom" Content="{x:Static resx:Resources.AddCustomLevelUp}" Click="AddCustomLevelUpButtom_Click" />
                             </Grid>
 
                             <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.DefaultLevelUpCommand}" HorizontalAlignment="Center">
-                                <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" RemoveDeleteButton="True" />
+                                <Grid>
+                                    <Button x:Name="DefaultLevelUpNewCommandButton" HorizontalAlignment="Center" Click="DefaultLevelUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding DefaultLevelUpCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                    <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" DeleteClicked="DefaultLevelUpCommandButtons_DeleteClicked" Visibility="{Binding DefaultLevelUpCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </Grid>
                             </GroupBox>
                         </Grid>
                     </Grid>

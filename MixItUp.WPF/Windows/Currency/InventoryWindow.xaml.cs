@@ -75,8 +75,7 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 if (await this.viewModel.Validate())
                 {
-                    this.viewModel.Save();
-                    await ChannelSession.SaveSettings();
+                    await this.viewModel.Save();
                     this.Close();
                 }
             });

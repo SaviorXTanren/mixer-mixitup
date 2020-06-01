@@ -382,7 +382,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             return true;
         }
 
-        public void Save()
+        public async Task Save()
         {
             if (this.inventory == null)
             {
@@ -407,6 +407,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.inventory.TradeEnabled = this.TradeEnabled;
             this.inventory.TradeCommand = this.TradeCommandText;
             this.inventory.ItemsTradedCommand = this.TradeCommand;
+
+            await ChannelSession.SaveSettings();
         }
     }
 }

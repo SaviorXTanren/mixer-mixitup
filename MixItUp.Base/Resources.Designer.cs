@@ -1438,6 +1438,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this command?.
+        /// </summary>
+        public static string ConfirmDeleteCommand {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this custom level up command?.
+        /// </summary>
+        public static string ConfirmDeleteCustomLevelUpCommand {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCustomLevelUpCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this Stream Pass?.
         /// </summary>
         public static string ConfirmStreamPassDeletion {
@@ -3666,6 +3684,15 @@ namespace MixItUp.Base {
         public static string LevelNumber {
             get {
                 return ResourceManager.GetString("LevelNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level Up.
+        /// </summary>
+        public static string LevelUp {
+            get {
+                return ResourceManager.GetString("LevelUp", resourceCulture);
             }
         }
         
