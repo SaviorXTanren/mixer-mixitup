@@ -204,7 +204,11 @@ namespace MixItUp.Base
                     }
                 }
             }
-            return new Result();
+            else
+            {
+                ChannelSession.Settings.MixerUserOAuthToken = null;
+            }
+            return userResult;
         }
 
         public static async Task DisconnectMixerBot()
