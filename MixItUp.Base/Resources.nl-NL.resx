@@ -120,40 +120,48 @@
     <value>1 per Spark</value>
     <comment>Manual</comment>
   </data>
+  <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
+    <value>Installatiemap van Mix It Up</value>
+    <comment>Manual</comment>
+  </data>
   <data name="AccountsDetails" xml:space="preserve">
-    <value>Streamer-accounts zijn je werkelijke accounts waarmee je streamt. Bot-accounts zijn afzonderlijke, optionele accounts die je gebruikt om berichten te verzenden vanuit je kanaal. Bots-accounts moeten handmatig door u worden gemaakt en u moet ervoor zorgen dat u bij hen bent aangemeld voordat u ze probeert te verbinden met Mix It Up.</value>
+    <value>Streamer-accounts zijn uw werkelijke accounts waarmee U streamt. Bot-accounts zijn afzonderlijke, optionele accounts die U gebruikt om berichten te verzenden vanuit uw kanaal. Bots-accounts moet uzelf handmatig maken en moet U er in aangemeld zijn voordat U ze probeert te verbinden met Mix It Up.</value>
     <comment>Manual</comment>
   </data>
   <data name="AccountsWizardInstructions" xml:space="preserve">
-    <value>Laten we aan de slag gaan door je aan te melden bij de accounts die je op elk streamingplatform gebruikt. Selecteer de onderstaande opties voor elk account dat u wilt inloggen. U kan deze opties later opnieuw bekijken door naar de pagina Accounts te gaan.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Accounts" xml:space="preserve">
-    <value>Accounts</value>
+    <value>Laten we aan de slag gaan door U aan te melden bij de accounts die U op elk streamingplatform gebruikt. Selecteer de onderstaande opties voor elk account dat U wilt aanmelden. U kan deze opties later opnieuw bekijken in de Accounts pagina.</value>
     <comment>Manual</comment>
   </data>
   <data name="ActionToPeform" xml:space="preserve">
-    <value>Uit te voeren Actie</value>
+    <value>Actie uitvoeren</value>
     <comment>Manual</comment>
   </data>
   <data name="ActionToPerformWithResponse" xml:space="preserve">
-    <value>Uit te voeren Actie met respons</value>
+    <value>Actie uitvoeren met respons</value>
     <comment>Manual</comment>
   </data>
   <data name="ActionToPerformWithTranslation" xml:space="preserve">
-    <value>Uit te voeren Actie met vertaling</value>
+    <value>Actie uitvoeren met vertaling</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>Opdracht toevoegen</value>
     <comment>Manual</comment>
   </data>
   <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>U heeft dit team al favoriet gemaakt.</value>
+    <value>U heeft dit team al favoriet gemaakt</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
+    <value>Deze streamer is reeds toegevoegd</value>
     <comment>Manual</comment>
   </data>
   <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>Kan geen gebruiker vinden met die naam.</value>
+    <value>Geen streamer gevonden met die naam</value>
     <comment>Manual</comment>
   </data>
   <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>Kan geen team vinden met die naam.</value>
+    <value>Geen team gevonden met die naam</value>
     <comment>Manual</comment>
   </data>
   <data name="AddQuote" xml:space="preserve">
@@ -181,7 +189,15 @@
     <comment>Manual</comment>
   </data>
   <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>Opdrachten alleen in uw kanaal toestaan tijdens een co-stream</value>
+    <value>Opdrachten alleen in uw kanaal tijdens costream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AllowCommandsToBeWhispered" xml:space="preserve">
+    <value>Opdrachten worden gefluisterd</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AllowPastWinners" xml:space="preserve">
+    <value>Eerdere winnaars toelaten</value>
     <comment>Manual</comment>
   </data>
   <data name="AllowProfanity" xml:space="preserve">
@@ -216,12 +232,20 @@
     <value>Strikes toepassen</value>
     <comment>Manual</comment>
   </data>
+  <data name="ApprovedDevices" xml:space="preserve">
+    <value>Bekende apparaten</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="AutoIncludeBang" xml:space="preserve">
+    <value>Auto-invoeg "!"</value>
+    <comment>Manual</comment>
+  </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
-    <value>Automatisch aanmelden in account</value>
+    <value>Account automatisch aanmelden</value>
     <comment>Manual</comment>
   </data>
   <data name="AutomatedSettingsBackup" xml:space="preserve">
-    <value>Automatische Back-up van de instellingen</value>
+    <value>Auto-Back-up van de instellingen</value>
     <comment>Manual</comment>
   </data>
   <data name="BackupRate" xml:space="preserve">
@@ -233,7 +257,7 @@
     <comment>Manual</comment>
   </data>
   <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
-    <value>Back-up Uw instellingen naar een zip-bestand</value>
+    <value>Back-up Uw instellingen naar zip-bestand</value>
     <comment>Manual</comment>
   </data>
   <data name="Banned" xml:space="preserve">
@@ -268,12 +292,16 @@
     <value>Bruin</value>
     <comment>Manual</comment>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleer</value>
+    <comment>Manual</comment>
+  </data>
   <data name="CancelGiveaway" xml:space="preserve">
     <value>Annuleer Giveaway</value>
     <comment>Manual</comment>
   </data>
   <data name="BannedWords" xml:space="preserve">
-    <value>Verboden woorden (één per regel) ( * = Wild Card)</value>
+    <value>Verboden woorden (één per regel) ( * = Joker)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChannelEditor" xml:space="preserve">
@@ -284,20 +312,24 @@
     <value>Moduratie van chattekst</value>
     <comment>Manual</comment>
   </data>
+  <data name="ChatMixPlayParticipation" xml:space="preserve">
+    <value>Chat/MixPlay Deelname</value>
+    <comment>Manual</comment>
+  </data>
   <data name="ChatTriggersHintAssist" xml:space="preserve">
-    <value>Chattrigger(s) (Spatie gescheiden, puntkomma voor meerdere woorden)</value>
+    <value>Chattrigger(s) (Spatie gescheiden, puntkomma voor multi-woorden)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
-    <value>Chat Trigger(s) (Geen "!" nodig, spatie gescheiden, semi-colon voor multi-woord)</value>
+    <value>Chattrigger(s) (Geen "!" nodig, spatie gescheiden, puntkomma voor multi-woorden)</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
-    <value>Chat Fluister Geluid</value>
+    <value>Geluid Chat Fluister</value>
     <comment>Manual</comment>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
-    <value>Wacht terwijl Mix It Up uw instellingen opslaat en wordt afgesloten ...</value>
+    <value>Wacht tot Mix It Up uw instellingen heeft opgeslagen en wordt afgesloten ...</value>
     <comment>Manual</comment>
   </data>
   <data name="CommandGroup" xml:space="preserve">
@@ -313,11 +345,11 @@
     <comment>Manual</comment>
   </data>
   <data name="Costream" xml:space="preserve">
-    <value>Co-stream</value>
+    <value>Costream</value>
     <comment>Manual</comment>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Aantal maanden Geabonneerd</value>
+    <value>Aantal maanden geabonneerd</value>
     <comment>Manual</comment>
   </data>
   <data name="Custom" xml:space="preserve">
@@ -341,7 +373,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DefaultAudioOutput" xml:space="preserve">
-    <value>Standaard-audio-uitvoer</value>
+    <value>Standaard audio uitvoer</value>
     <comment>Manual</comment>
   </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
@@ -357,11 +389,11 @@
     <comment>Manual</comment>
   </data>
   <data name="DeleteChatWhenRun" xml:space="preserve">
-    <value>Chatopdracht verwijderen wanneer wordt uitgevoerd</value>
+    <value>Chatopdracht wissen bij uitvoering</value>
     <comment>Manual</comment>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
-    <value>Opdracht verwijderen</value>
+    <value>Opdracht wissen</value>
     <comment>Manual</comment>
   </data>
   <data name="Disabled" xml:space="preserve">
@@ -373,7 +405,7 @@
     <comment>Manual</comment>
   </data>
   <data name="DontDeleteChatWhenRun" xml:space="preserve">
-    <value>Chatopdracht niet verwijderen bij het uitvoeren</value>
+    <value>Chatopdracht niet wissen bij uitvoering</value>
     <comment>Manual</comment>
   </data>
   <data name="DownloadAndInstallffmpeg" xml:space="preserve">
@@ -432,6 +464,10 @@
     <value>Font grootte</value>
     <comment>Manual</comment>
   </data>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
+    <comment>Manual</comment>
+  </data>
   <data name="GetCurrent" xml:space="preserve">
     <value>Huidig ophalen</value>
     <comment>Manual</comment>
@@ -461,11 +497,11 @@
     <comment>Manual</comment>
   </data>
   <data name="IncludeCommandAssets" xml:space="preserve">
-    <value>Opdracht Assets invoegen</value>
+    <value>Opdracht activa invoegen</value>
     <comment>Manual</comment>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
-    <value>Is Rang Systeem</value>
+    <value>Is rang systeem</value>
     <comment>Manual</comment>
   </data>
   <data name="Item2" xml:space="preserve">
@@ -485,7 +521,7 @@
     <comment>Manual</comment>
   </data>
   <data name="JoinQueue" xml:space="preserve">
-    <value>Gebruiker aan wachtrij toevoegen</value>
+    <value>Gebruiker in de wachtrij</value>
     <comment>Manual</comment>
   </data>
   <data name="Large" xml:space="preserve">
@@ -501,7 +537,7 @@
     <comment>Manual</comment>
   </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
-    <value>U moet een Streamer-account selecteren om aan te melden.</value>
+    <value>U moet een streamer-account selecteren om aan te melden.</value>
     <comment>Manual</comment>
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
@@ -553,11 +589,11 @@
     <comment>Manual</comment>
   </data>
   <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>Voorkom dat kleinere cooldowns worden overschreven</value>
+    <value>Overschrijven van korte cooldowns vermijden</value>
     <comment>Manual</comment>
   </data>
   <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>Voorkom Onbekende MixPlay-gebruikers</value>
+    <value>Voorkom onbekende MixPlay-gebruikers</value>
     <comment>Manual</comment>
   </data>
   <data name="ProgramArguments" xml:space="preserve">
@@ -565,7 +601,7 @@
     <comment>Manual</comment>
   </data>
   <data name="ProgramFilePath" xml:space="preserve">
-    <value>Bestandspad Programma</value>
+    <value>Bestandspad programma</value>
     <comment>Manual</comment>
   </data>
   <data name="Purple" xml:space="preserve">
@@ -605,7 +641,7 @@
     <comment>Manual</comment>
   </data>
   <data name="RunCommand" xml:space="preserve">
-    <value>Opdracht Uitvoeren</value>
+    <value>Opdracht uitvoeren</value>
     <comment>Manual</comment>
   </data>
   <data name="RunOneRandomly" xml:space="preserve">
@@ -621,7 +657,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SelectFirst" xml:space="preserve">
-    <value>Eerste gebruiker selecteren uit de wachtrij</value>
+    <value>Eerste gebruiker selecteren in wachtrij</value>
     <comment>Manual</comment>
   </data>
   <data name="SelectFirstType" xml:space="preserve">
@@ -637,11 +673,11 @@
     <comment>Manual</comment>
   </data>
   <data name="ServiceConnectSound" xml:space="preserve">
-    <value>Service verbindings Geluid</value>
+    <value>Geluid van Service-verbinding</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
-    <value>Gebruikers deelname/verlaten weergeven</value>
+    <value>Gebruikers deelname/verlaten tonen</value>
     <comment>Manual</comment>
   </data>
   <data name="SongRequest" xml:space="preserve">
@@ -653,7 +689,7 @@
     <comment>Manual</comment>
   </data>
   <data name="SparkCost" xml:space="preserve">
-    <value>Spark Kosten</value>
+    <value>Spark kosten</value>
     <comment>Manual</comment>
   </data>
   <data name="SparkCrystal" xml:space="preserve">
@@ -673,15 +709,15 @@
     <comment>Manual</comment>
   </data>
   <data name="SubAge" xml:space="preserve">
-    <value>Abonnements tijd</value>
+    <value>Abonnements duur</value>
     <comment>Manual</comment>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
-    <value>Abonnement tijd</value>
+    <value>Abonnement sinds</value>
     <comment>Manual</comment>
   </data>
   <data name="SubsGifted" xml:space="preserve">
-    <value>Abonnement geschenk</value>
+    <value>Kado Abonnement</value>
     <comment>Manual</comment>
   </data>
   <data name="SubsReceived" xml:space="preserve">
@@ -701,7 +737,7 @@
     <comment>Manual</comment>
   </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
-    <value>Track Fluister Nummers</value>
+    <value>Volg fluister nummers</value>
     <comment>Manual</comment>
   </data>
   <data name="TranslationBy" xml:space="preserve">
@@ -717,7 +753,7 @@
     <comment>Manual</comment>
   </data>
   <data name="Ungrouped" xml:space="preserve">
-    <value>Niet Gegroepeerd</value>
+    <value>Niet gegroepeerd</value>
     <comment>Manual</comment>
   </data>
   <data name="Unknown" xml:space="preserve">
@@ -749,7 +785,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhatIsTrigger" xml:space="preserve">
-    <value>Welke tekst in de chat zal deze opdracht activeren (EX: "!volg")?</value>
+    <value>Chattekst om deze opdracht te activeren (EX: "!volg")?</value>
     <comment>Manual</comment>
   </data>
   <data name="Whisper" xml:space="preserve">
@@ -761,7 +797,7 @@
     <comment>Manual</comment>
   </data>
   <data name="WhoCanRun" xml:space="preserve">
-    <value>Wie mag deze opdracht uitvoeren?</value>
+    <value>Wie kan deze opdracht uitvoeren?</value>
     <comment>Manual</comment>
   </data>
   <data name="Yearly" xml:space="preserve">
@@ -785,7 +821,7 @@
     <comment>Manual</comment>
   </data>
   <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Kanaal Fan Progressie Level-Up</value>
+    <value>Mixerkanaal Fan-Progressie Level-Up</value>
     <comment>Manual</comment>
   </data>
   <data name="MixerChannelResubscribed" xml:space="preserve">
@@ -793,7 +829,7 @@
     <comment>Manual</comment>
   </data>
   <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixer Kanaal Sparks besteed</value>
+    <value>Mixerkanaal Sparks besteed</value>
     <comment>Manual</comment>
   </data>
   <data name="MixerChannelStreamStart" xml:space="preserve">
