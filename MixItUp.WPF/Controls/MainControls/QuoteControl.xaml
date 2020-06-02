@@ -51,17 +51,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Quote}" IsReadOnly="True" Width="2*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Quote}" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox VerticalAlignment="Center" Text="{Binding Quote}" />
+                            <TextBox VerticalAlignment="Center" Text="{Binding Quote, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.GameName}" IsReadOnly="True" Width="*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.GameName}" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox VerticalAlignment="Center" Text="{Binding GameName}" />
+                            <TextBox VerticalAlignment="Center" Text="{Binding GameName, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
