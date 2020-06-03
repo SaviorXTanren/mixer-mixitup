@@ -783,7 +783,7 @@ namespace MixItUp.Base.Util
         {
             if (user != null && this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader))
             {
-                await user.RefreshDetails();
+                await user.RefreshDetails(force: true);
 
                 UserDataModel userData = user.Data;
 

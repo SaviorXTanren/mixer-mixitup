@@ -508,11 +508,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
                     {
-                        if (!this.AccountDate.HasValue || force)
-                        {
-                            refreshTasks.Add(this.RefreshMixerUserDetails());
-                        }
-
+                        refreshTasks.Add(this.RefreshMixerUserDetails());
                         refreshTasks.Add(this.RefreshMixerUserFanProgression());
                         refreshTasks.Add(this.RefreshMixerUserFollowDate());
 
