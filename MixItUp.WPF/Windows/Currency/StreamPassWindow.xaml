@@ -168,7 +168,7 @@
                                 <Grid Grid.Column="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="5" />
                                         <ColumnDefinition Width="Auto" />
@@ -187,7 +187,7 @@
 
                                 <TextBox Grid.Column="2" Text="{Binding FollowBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-                                <TextBox Grid.Column="4" Text="{Binding HostBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HostBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="115" />
+                                <TextBox Grid.Column="4" Text="{Binding HostBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HostBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
                             </Grid>
 
@@ -217,32 +217,26 @@
                 <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.LevelUpCommands}" Width="700" HorizontalAlignment="Center">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Style="{StaticResource DefaultBorder}" BorderBrush="{StaticResource MaterialDesignBody}">
-                            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="200" Width="400">
+                        <Border Grid.Column="0" Style="{StaticResource DefaultBorder}" BorderBrush="{StaticResource MaterialDesignBody}" HorizontalAlignment="Center">
+                            <ScrollViewer VerticalScrollBarVisibility="Visible" Height="200" Width="310">
                                 <DataGrid ItemsSource="{Binding CustomLevelUpCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.Level}" Binding="{Binding Level}" IsReadOnly="True" Width="65" />
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="200">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Level}" IsReadOnly="True" Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="10" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <CommandControls:CommandButtonsControl Grid.Column="0" x:Name="LevelCommandButtons" HorizontalAlignment="Center" EditClicked="LevelCommandButtons_EditClicked" RemoveDeleteButton="True" />
-
-                                                        <Button Grid.Column="2" x:Name="DeleteLevelButton" Click="DeleteLevelButton_Click" Width="40" HorizontalAlignment="Center">
-                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
-                                                    </Grid>
+                                                    <TextBlock Text="{Binding Level}" HorizontalAlignment="Center" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="220">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" RemoveDeleteButton="True" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>

@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +30,7 @@ namespace MixItUp.WPF.Controls.Actions
             List<object> currencyInventoryList = new List<object>();
             currencyInventoryList.AddRange(ChannelSession.Settings.Currencies.Values);
             currencyInventoryList.AddRange(ChannelSession.Settings.Inventories.Values);
+            currencyInventoryList.AddRange(ChannelSession.Settings.StreamPass.Values);
             this.CurrencyTypeComboBox.ItemsSource = currencyInventoryList;
             this.CurrencyActionTypeComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyActionTypeEnum))
                 .Cast<CurrencyActionTypeEnum>()
@@ -48,6 +49,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Inventories[this.action.InventoryID];
                 }
+                else if (this.action.StreamPassID != Guid.Empty && ChannelSession.Settings.StreamPass.ContainsKey(this.action.StreamPassID))
+                {
+                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.StreamPass[this.action.StreamPassID];
+                }
                 this.CurrencyActionTypeComboBox.SelectedItem = this.action.CurrencyActionType;
                 this.InventoryItemNameComboBox.Text = this.action.ItemName;
                 this.CurrencyAmountTextBox.Text = this.action.Amount;
@@ -64,6 +69,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 UserCurrencyModel currency = this.GetSelectedCurrency();
                 UserInventoryModel inventory = this.GetSelectedInventory();
+                StreamPassModel streamPass = this.GetSelectedStreamPass();
                 CurrencyActionTypeEnum actionType = (CurrencyActionTypeEnum)this.CurrencyActionTypeComboBox.SelectedItem;
 
                 if (actionType == CurrencyActionTypeEnum.ResetForAllUsers || actionType == CurrencyActionTypeEnum.ResetForUser || !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
@@ -102,6 +108,11 @@ namespace MixItUp.WPF.Controls.Actions
                             return new CurrencyAction(inventory, actionType, this.InventoryItemNameComboBox.Text, this.CurrencyAmountTextBox.Text,
                                 username: this.CurrencyUsernameTextBox.Text, roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
                         }
+                    }
+                    else if (streamPass != null)
+                    {
+                        return new CurrencyAction(streamPass, actionType, this.CurrencyAmountTextBox.Text, username: this.CurrencyUsernameTextBox.Text,
+                            roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
                     }
                 }
             }
@@ -165,6 +176,15 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is UserInventoryModel)
             {
                 return (UserInventoryModel)this.CurrencyTypeComboBox.SelectedItem;
+            }
+            return null;
+        }
+
+        private StreamPassModel GetSelectedStreamPass()
+        {
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is StreamPassModel)
+            {
+                return (StreamPassModel)this.CurrencyTypeComboBox.SelectedItem;
             }
             return null;
         }

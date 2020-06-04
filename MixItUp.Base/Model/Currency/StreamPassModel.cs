@@ -102,16 +102,13 @@ namespace MixItUp.Base.Model.Currency
         public string DateRangeString { get { return string.Format("{0} - {1}", this.StartDate.ToFriendlyDateString(), this.EndDate.ToFriendlyDateString()); } }
 
         [JsonIgnore]
-        public string BaseUserSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserLevelSpecialIdentifier { get { return string.Format("{0}level", this.BaseUserSpecialIdentifier); } }
+        public string UserLevelSpecialIdentifier { get { return string.Format("{0}level", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserPointsSpecialIdentifier { get { return string.Format("{0}points", this.BaseUserSpecialIdentifier); } }
-
-        [JsonIgnore]
-        public string UserPointsDisplaySpecialIdentifier { get { return string.Format("{0}display", this.UserPointsSpecialIdentifier); } }
+        public string UserPointsDisplaySpecialIdentifier { get { return string.Format("{0}display", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
         public string SpecialIdentifiersReferenceDisplay
@@ -119,8 +116,8 @@ namespace MixItUp.Base.Model.Currency
             get
             {
                 StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.UserAmountSpecialIdentifier);
                 stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.UserLevelSpecialIdentifier);
-                stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.UserPointsSpecialIdentifier);
                 return stringBuilder.ToString().Trim(new char[] { '\r', '\n' });
             }
             set { }
@@ -191,7 +188,7 @@ namespace MixItUp.Base.Model.Currency
         public void UpdateUserData()
         {
             DateTime date = DateTimeOffset.Now.Date;
-            if (this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            if (ChannelSession.MixerChannel.online && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())

@@ -859,13 +859,13 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.OrderByDescending(c => c.BaseUserSpecialIdentifier))
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.BaseUserSpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier))
                     {
                         this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(userData).ToString());
-                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsSpecialIdentifier, streamPass.GetAmount(userData).ToString());
                         this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(userData).ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier, streamPass.GetAmount(userData).ToString());
                     }
                 }
 

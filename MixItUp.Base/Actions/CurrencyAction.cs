@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -37,6 +38,8 @@ namespace MixItUp.Base.Actions
         public Guid CurrencyID { get; set; }
         [DataMember]
         public Guid InventoryID { get; set; }
+        [DataMember]
+        public Guid StreamPassID { get; set; }
 
         [DataMember]
         public CurrencyActionTypeEnum CurrencyActionType { get; set; }
@@ -91,12 +94,25 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
+        public CurrencyAction(StreamPassModel streamPass, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
+            UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
+            : this()
+        {
+            this.StreamPassID = streamPass.ID;
+            this.CurrencyActionType = currencyActionType;
+            this.Amount = amount;
+            this.Username = username;
+            this.RoleRequirement = roleRequirement;
+            this.DeductFromUser = deductFromUser;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.Chat != null)
             {
                 UserCurrencyModel currency = null;
                 UserInventoryModel inventory = null;
+                StreamPassModel streamPass = null;
                 string systemName = null;
                 UserInventoryItemModel item = null;
 
@@ -130,6 +146,16 @@ namespace MixItUp.Base.Actions
                     }
                 }
 
+                if (this.StreamPassID != Guid.Empty)
+                {
+                    if (!ChannelSession.Settings.StreamPass.ContainsKey(this.StreamPassID))
+                    {
+                        return;
+                    }
+                    streamPass = ChannelSession.Settings.StreamPass[this.StreamPassID];
+                    systemName = streamPass.Name;
+                }
+
                 if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForAllUsers)
                 {
                     if (currency != null)
@@ -139,6 +165,10 @@ namespace MixItUp.Base.Actions
                     else if (inventory != null)
                     {
                         await inventory.Reset();
+                    }
+                    else if (streamPass != null)
+                    {
+                        await streamPass.Reset();
                     }
                 }
                 else if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForUser)
@@ -150,6 +180,10 @@ namespace MixItUp.Base.Actions
                     else if (inventory != null)
                     {
                         inventory.ResetAmount(user.Data);
+                    }
+                    else if (streamPass != null)
+                    {
+                        streamPass.ResetAmount(user.Data);
                     }
                 }
                 else
@@ -222,6 +256,15 @@ namespace MixItUp.Base.Actions
                             }
                             inventory.SubtractAmount(user.Data, item, amountValue);
                         }
+                        else if (streamPass != null)
+                        {
+                            if (!streamPass.HasAmount(user.Data, amountValue))
+                            {
+                                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                                return;
+                            }
+                            streamPass.SubtractAmount(user.Data, amountValue);
+                        }
                     }
 
                     if (receiverUserData.Count > 0)
@@ -248,6 +291,17 @@ namespace MixItUp.Base.Actions
                                 else
                                 {
                                     inventory.AddAmount(receiverUser, item, amountValue);
+                                }
+                            }
+                            else if (streamPass != null)
+                            {
+                                if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                                {
+                                    streamPass.SubtractAmount(receiverUser, amountValue);
+                                }
+                                else
+                                {
+                                    streamPass.AddAmount(receiverUser, amountValue);
                                 }
                             }
                         }
