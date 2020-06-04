@@ -5,6 +5,7 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -250,6 +251,11 @@ namespace MixItUp.Base.Services.Mixer
                                 {
                                     currency.AddAmount(user.Data, currency.OnFollowBonus);
                                 }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    streamPass.AddAmount(user.Data, streamPass.FollowBonus);
+                                }
                             }
                             GlobalEvents.FollowOccurred(user);
 
@@ -294,6 +300,11 @@ namespace MixItUp.Base.Services.Mixer
                                 currency.AddAmount(user.Data, currency.OnHostBonus);
                             }
 
+                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                            }
+
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
                             trigger.SpecialIdentifiers["isautohost"] = isAutoHost.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
@@ -316,6 +327,12 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
+
+                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                            }
+
                             user.Data.TotalMonthsSubbed++;
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
@@ -355,6 +372,11 @@ namespace MixItUp.Base.Services.Mixer
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                            }
+
+                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
                             }
 
                             if (totalMonths > 0)
@@ -406,6 +428,16 @@ namespace MixItUp.Base.Services.Mixer
                                 gifterUser.Data.TotalSubsGifted++;
                                 receiverUser.Data.TotalSubsReceived++;
                                 receiverUser.Data.TotalMonthsSubbed++;
+
+                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                {
+                                    currency.AddAmount(gifterUser.Data, currency.OnSubscribeBonus);
+                                }
+
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    streamPass.AddAmount(gifterUser.Data, streamPass.SubscribeBonus);
+                                }
 
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -503,6 +535,11 @@ namespace MixItUp.Base.Services.Mixer
                 sparkCurrency.AddAmount(sparkUsage.Item1.Data, (int)sparkUsage.Item2);
             }
 
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(sparkUsage.Item1.Data, (int)(streamPass.SparkBonus * sparkUsage.Item2));
+            }
+
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
 
@@ -518,6 +555,11 @@ namespace MixItUp.Base.Services.Mixer
             foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
             {
                 emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(emberUsage.User.Data, (int)(streamPass.EmberBonus * emberUsage.Amount));
             }
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.ID;

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
@@ -222,6 +223,11 @@ namespace MixItUp.Base.Services
             }
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+            }
 
             try
             {

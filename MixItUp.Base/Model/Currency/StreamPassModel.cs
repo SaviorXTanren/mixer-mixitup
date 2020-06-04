@@ -1,17 +1,19 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Currency
 {
-    public class StreamPassModel
+    public class StreamPassModel : IEquatable<StreamPassModel>
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -40,17 +42,17 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public int MinimumActiveRate { get; set; }
         [DataMember]
-        public double FollowBonus { get; set; }
+        public int FollowBonus { get; set; }
         [DataMember]
-        public double HostBonus { get; set; }
+        public int HostBonus { get; set; }
         [DataMember]
-        public double SubscribeBonus { get; set; }
+        public int SubscribeBonus { get; set; }
         [DataMember]
-        public double DonationBonus { get; set; }
+        public int DonationBonus { get; set; }
         [DataMember]
-        public double SparkBonus { get; set; }
+        public int SparkBonus { get; set; }
         [DataMember]
-        public double EmberBonus { get; set; }
+        public int EmberBonus { get; set; }
 
         [DataMember]
         public CustomCommand DefaultLevelUpCommand { get; set; }
@@ -94,7 +96,13 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
+        public int MaxPoints { get { return this.MaxLevel * this.PointsForLevelUp; } }
+
+        [JsonIgnore]
         public string DateRangeString { get { return string.Format("{0} - {1}", this.StartDate.ToFriendlyDateString(), this.EndDate.ToFriendlyDateString()); } }
+
+        [JsonIgnore]
+        public string BaseUserSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
         public string UserLevelSpecialIdentifier { get { return string.Format("{0}level", this.BaseUserSpecialIdentifier); } }
@@ -103,7 +111,7 @@ namespace MixItUp.Base.Model.Currency
         public string UserPointsSpecialIdentifier { get { return string.Format("{0}points", this.BaseUserSpecialIdentifier); } }
 
         [JsonIgnore]
-        private string BaseUserSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserPointsDisplaySpecialIdentifier { get { return string.Format("{0}display", this.UserPointsSpecialIdentifier); } }
 
         [JsonIgnore]
         public string SpecialIdentifiersReferenceDisplay
@@ -118,9 +126,123 @@ namespace MixItUp.Base.Model.Currency
             set { }
         }
 
+        public int GetAmount(UserDataModel user)
+        {
+            if (user.StreamPassAmounts.ContainsKey(this.ID))
+            {
+                return user.StreamPassAmounts[this.ID];
+            }
+            return 0;
+        }
+
+        public int GetLevel(UserDataModel user) { return (this.GetAmount(user) / this.PointsForLevelUp); }
+
+        public bool HasAmount(UserDataModel user, int amount)
+        {
+            return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
+        }
+
+        public void SetAmount(UserDataModel user, int amount)
+        {
+            user.StreamPassAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxPoints);
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+            }
+        }
+
+        public void AddAmount(UserDataModel user, int amount)
+        {
+            if (!user.IsCurrencyRankExempt && amount > 0)
+            {
+                int currentLevel = this.GetLevel(user);
+
+                this.SetAmount(user, this.GetAmount(user) + amount);
+
+                int newLevel = this.GetLevel(user);
+
+                if (newLevel > currentLevel)
+                {
+                    for (int level = (currentLevel + 1); level <= newLevel; level++)
+                    {
+                        if (this.CustomLevelUpCommands.ContainsKey(level))
+                        {
+                            this.CustomLevelUpCommands[level].Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                        }
+                        else if (this.DefaultLevelUpCommand != null)
+                        {
+                            this.DefaultLevelUpCommand.Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void SubtractAmount(UserDataModel user, int amount)
+        {
+            if (!user.IsCurrencyRankExempt)
+            {
+                this.SetAmount(user, this.GetAmount(user) - amount);
+            }
+        }
+
+        public void ResetAmount(UserDataModel user) { this.SetAmount(user, 0); }
+
+        public void UpdateUserData()
+        {
+            DateTime date = DateTimeOffset.Now.Date;
+            if (this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            {
+                DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+                {
+                    if (!user.Data.IsCurrencyRankExempt && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
+                    {
+                        if (user.Data.ViewingMinutes % this.ViewingRateMinutes == 0)
+                        {
+                            int amount = this.ViewingRateAmount;
+                            if (this.SubMultiplier > 1.0 && user.HasPermissionsTo(UserRoleEnum.Subscriber))
+                            {
+                                amount = (int)Math.Ceiling(((double)amount) * this.SubMultiplier);
+                            }
+                            this.AddAmount(user.Data, amount);
+                            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                        }
+                    }
+                }
+            }
+        }
+
         public async Task Reset()
         {
+            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            {
+                if (this.GetAmount(user) > 0)
+                {
+                    this.SetAmount(user, 0);
+                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                }
+            }
+            await ChannelSession.SaveSettings();
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is StreamPassModel)
+            {
+                return this.Equals((StreamPassModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(StreamPassModel other)
+        {
+            return this.ID.Equals(other.ID);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ID.GetHashCode();
         }
     }
 }

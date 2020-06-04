@@ -3,6 +3,7 @@ using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -796,24 +797,27 @@ namespace MixItUp.Base.Util
 
                 foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
                     {
-                        List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
-                        int index = sortedUsers.IndexOf(userData);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                        {
+                            List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
+                            int index = sortedUsers.IndexOf(userData);
+                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                        }
+
+                        UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
+                        UserRankViewModel rank = currencyData.GetRank();
+                        UserRankViewModel nextRank = currencyData.GetNextRank();
+
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
+
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                     }
-
-                    UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
-                    UserRankViewModel rank = currencyData.GetRank();
-                    UserRankViewModel nextRank = currencyData.GetNextRank();
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
 
                 foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
@@ -852,6 +856,16 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
                             this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
                         }
+                    }
+                }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.OrderByDescending(c => c.BaseUserSpecialIdentifier))
+                {
+                    if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.BaseUserSpecialIdentifier))
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(userData).ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsSpecialIdentifier, streamPass.GetAmount(userData).ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(userData).ToString("N0"));
                     }
                 }
 

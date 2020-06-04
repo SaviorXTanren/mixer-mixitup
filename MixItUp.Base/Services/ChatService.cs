@@ -3,6 +3,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
@@ -602,6 +603,11 @@ namespace MixItUp.Base.Services
             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
                 currency.UpdateUserData();
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.UpdateUserData();
             }
 
             return Task.FromResult(0);

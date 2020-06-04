@@ -172,7 +172,7 @@ namespace MixItUp.Base.Model.User
 
         public void AddAmount(UserDataModel user, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsCurrencyRankExempt && amount > 0)
             {
                 UserRankViewModel prevRank = this.GetRankForPoints(this.GetAmount(user));
 

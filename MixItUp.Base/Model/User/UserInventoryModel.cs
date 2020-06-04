@@ -277,7 +277,7 @@ namespace MixItUp.Base.Model.User
 
         public void AddAmount(UserDataModel user, UserInventoryItemModel item, int amount)
         {
-            if (!user.IsCurrencyRankExempt)
+            if (!user.IsCurrencyRankExempt && amount > 0)
             {
                 this.SetAmount(user, item, this.GetAmount(user, item) + amount);
             }

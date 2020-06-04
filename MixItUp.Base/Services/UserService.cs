@@ -20,6 +20,8 @@ namespace MixItUp.Base.Services
 
     public interface IUserService
     {
+        UserViewModel GetUserByID(Guid id);
+
         UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
 
         UserViewModel GetUserByMixerID(uint id);
@@ -60,6 +62,15 @@ namespace MixItUp.Base.Services
         private LockedDictionary<uint, UserViewModel> usersByMixerID = new LockedDictionary<uint, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixerUsername = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
+
+        public UserViewModel GetUserByID(Guid id)
+        {
+            if (this.usersByID.ContainsKey(id))
+            {
+                return this.usersByID[id];
+            }
+            return null;
+        }
 
         public UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {

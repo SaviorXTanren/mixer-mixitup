@@ -3148,7 +3148,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Host Bonus (Per Viewer).
+        ///   Looks up a localized string similar to Host Bonus.
         /// </summary>
         public static string HostBonus {
             get {

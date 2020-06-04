@@ -2680,7 +2680,7 @@
     <value>Follow Bonus</value>
   </data>
   <data name="HostBonus" xml:space="preserve">
-    <value>Host Bonus (Per Viewer)</value>
+    <value>Host Bonus</value>
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Point Rates</value>

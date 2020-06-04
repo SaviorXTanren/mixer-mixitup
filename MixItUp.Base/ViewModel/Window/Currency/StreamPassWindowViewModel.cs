@@ -154,7 +154,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private int minimumActiveRate = 0;
-        public double FollowBonus
+        public int FollowBonus
         {
             get { return this.followBonus; }
             set
@@ -163,8 +163,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double followBonus = 1;
-        public double HostBonus
+        private int followBonus = 1;
+        public int HostBonus
         {
             get { return this.hostBonus; }
             set
@@ -173,8 +173,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double hostBonus = 1;
-        public double SubscribeBonus
+        private int hostBonus = 1;
+        public int SubscribeBonus
         {
             get { return this.subscribeBonus; }
             set
@@ -183,8 +183,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double subscribeBonus = 1;
-        public double DonationBonus
+        private int subscribeBonus = 1;
+        public int DonationBonus
         {
             get { return this.donationBonus; }
             set
@@ -193,8 +193,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double donationBonus = 1;
-        public double SparkBonus
+        private int donationBonus = 1;
+        public int SparkBonus
         {
             get { return this.sparkBonus; }
             set
@@ -203,8 +203,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double sparkBonus = 1;
-        public double EmberBonus
+        private int sparkBonus = 1;
+        public int EmberBonus
         {
             get { return this.emberBonus; }
             set
@@ -213,7 +213,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double emberBonus = 1;
+        private int emberBonus = 1;
 
         public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
