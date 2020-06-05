@@ -216,6 +216,8 @@ namespace MixItUp.Base.Actions
                 sourceName = await this.ReplaceStringWithSpecialModifiers(this.SourceName, user, arguments);
             }
 
+            Logger.Log(LogLevel.Debug, "Checking for Streaming Software connection");
+
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
@@ -241,6 +243,8 @@ namespace MixItUp.Base.Actions
                 }
                 ssService = ChannelSession.Services.StreamlabsOBS;
             }
+
+            Logger.Log(LogLevel.Debug, "Performing for Streaming Software connection");
 
             if (ssService != null)
             {

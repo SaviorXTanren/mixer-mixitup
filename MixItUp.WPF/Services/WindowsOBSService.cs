@@ -69,6 +69,8 @@ namespace MixItUp.WPF.Services
         {
             try
             {
+                Logger.Log(LogLevel.Debug, "Showing OBS Scene - " + sceneName);
+
                 this.OBSWebsocket.SetCurrentScene(sceneName);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -79,6 +81,8 @@ namespace MixItUp.WPF.Services
         {
             try
             {
+                Logger.Log(LogLevel.Debug, "Setting source visibility - " + sourceName);
+
                 this.OBSWebsocket.SetSourceRender(sourceName, visibility, sceneName);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -89,6 +93,8 @@ namespace MixItUp.WPF.Services
         {
             try
             {
+                Logger.Log(LogLevel.Debug, "Setting web browser URL - " + sourceName);
+
                 this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
                 BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName, sceneName);
@@ -104,6 +110,8 @@ namespace MixItUp.WPF.Services
         {
             try
             {
+                Logger.Log(LogLevel.Debug, "Setting source dimensions - " + sourceName);
+
                 this.OBSWebsocket.SetSceneItemPosition(sourceName, dimensions.X, dimensions.Y, sceneName);
                 this.OBSWebsocket.SetSceneItemTransform(sourceName, dimensions.Rotation, dimensions.XScale, dimensions.YScale, sceneName);
             }
