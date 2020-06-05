@@ -436,12 +436,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            if (this.CustomLevelUpCommands.Count == 0 && this.DefaultLevelUpCommand == null)
-            {
-                await DialogHelper.ShowMessage("At least 1 custom level up command or the default level up command must be set");
-                return false;
-            }
-
             if (this.CustomLevelUpCommands.GroupBy(c => c.Level).Any(c => c.Count() > 1))
             {
                 await DialogHelper.ShowMessage("There can only be 1 custom level up command per individual level");
