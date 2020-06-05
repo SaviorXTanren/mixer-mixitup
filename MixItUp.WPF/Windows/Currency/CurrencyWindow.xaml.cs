@@ -111,28 +111,20 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
+                bool isNew = this.viewModel.IsNew;
                 if (await this.viewModel.Validate())
                 {
-                    bool isNew = this.viewModel.IsNew;
-                    this.viewModel.Save();
+                    await this.viewModel.Save();
 
                     if (isNew)
                     {
-                        NewCurrencyRankCommandsDialogControl customDialogControl = new NewCurrencyRankCommandsDialogControl(this.viewModel.Currency, this.viewModel.GetNewCurrencyRankCommands());
+                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
                         if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
                         {
-                            foreach (NewCurrencyRankCommand command in customDialogControl.commands)
-                            {
-                                if (command.AddCommand)
-                                {
-                                    ChannelSession.Settings.ChatCommands.Add(command.Command);
-                                }
-                            }
-                            ChannelSession.Services.Chat.RebuildCommandTriggers();
+                            customDialogControl.AddSelectedCommands();
                         }
                     }
 
-                    await ChannelSession.SaveSettings();
                     this.Close();
                 }
             });

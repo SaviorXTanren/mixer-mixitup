@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.NewCurrencyRankCommandsDialogControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.NewAutoChatCommandsDialogControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -18,9 +18,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="NewCurrencyTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="Since this is a new currency, we can automatically create a set of commands for you to get you started with using it. Would you like us to add the following commands for you?" />
-
-        <TextBlock x:Name="NewRankTextBlock" Grid.Row="0" TextWrapping="Wrap" Text="Since this is a new rank system, we can automatically create a set of commands for you to get you started with using it. Would you like us to add the following commands for you?" />
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="The following commands can be automatically created for you to get started with using this feature. Would you like us to automatically add the following commands for you?" />
 
         <ItemsControl x:Name="NewCommandsItemsControl" Grid.Row="2" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>

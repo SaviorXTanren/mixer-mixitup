@@ -96,4 +96,18 @@ namespace MixItUp.Base.Commands
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
+
+    public class NewAutoChatCommand
+    {
+        public bool AddCommand { get; set; }
+        public string Description { get; set; }
+        public ChatCommand Command { get; set; }
+
+        public NewAutoChatCommand(string description, ChatCommand command)
+        {
+            this.AddCommand = true;
+            this.Description = description;
+            this.Command = command;
+        }
+    }
 }

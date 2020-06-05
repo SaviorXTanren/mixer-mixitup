@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -491,6 +493,28 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
 
             await ChannelSession.SaveSettings();
+        }
+
+        public IEnumerable<NewAutoChatCommand> GetNewAutoChatCommands()
+        {
+            List<NewAutoChatCommand> commandsToAdd = new List<NewAutoChatCommand>();
+            if (this.StreamPass != null)
+            {
+                ChatCommand statusCommand = new ChatCommand("User " + this.StreamPass.Name, this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
+                statusCommand.Actions.Add(new ChatAction(string.Format("@$username is level ${0} with ${1} points!", this.StreamPass.UserLevelSpecialIdentifier, this.StreamPass.UserAmountSpecialIdentifier)));
+                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
+
+                ChatCommand addCommand = new ChatCommand("Add " + this.StreamPass.Name, "add" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
+                addCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
+                addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text points for {0}!", this.StreamPass.Name)));
+                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
+
+                ChatCommand addAllCommand = new ChatCommand("Add All " + this.StreamPass.Name, "addall" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
+                addAllCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+                addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text points for {0}!", this.StreamPass.Name)));
+                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
+            }
+            return commandsToAdd;
         }
     }
 }

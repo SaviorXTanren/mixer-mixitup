@@ -544,8 +544,8 @@
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
-      <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
+    <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
+      <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
       <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
@@ -1324,7 +1324,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml">
+    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

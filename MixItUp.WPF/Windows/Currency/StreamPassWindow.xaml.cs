@@ -114,9 +114,20 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
+                bool isNew = this.viewModel.IsNew;
                 if (await this.viewModel.Validate())
                 {
                     await this.viewModel.Save();
+
+                    if (isNew)
+                    {
+                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
+                        if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
+                        {
+                            customDialogControl.AddSelectedCommands();
+                        }
+                    }
+
                     this.Close();
                 }
             });
