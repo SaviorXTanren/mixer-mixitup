@@ -296,7 +296,11 @@ namespace MixItUp.Base.Services
                         {
                             giveawayUser.Entries += entries;
 
-                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                            Dictionary<string, string> specialIdentifiers = this.GetSpecialIdentifiers();
+                            specialIdentifiers["usergiveawayentries"] = entries.ToString();
+                            specialIdentifiers["usergiveawaytotalentries"] = giveawayUser.Entries.ToString();
+
+                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
