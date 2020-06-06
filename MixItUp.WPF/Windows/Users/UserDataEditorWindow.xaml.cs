@@ -33,6 +33,8 @@ namespace MixItUp.WPF.Windows.Users
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
+
+            this.Closed += UserDataEditorWindow_Closed;
         }
 
         protected override async Task OnLoaded()
@@ -229,6 +231,11 @@ namespace MixItUp.WPF.Windows.Users
                     this.user.Data.PatreonUserID = campaignMember.UserID;
                 }
             }
+        }
+
+        private void UserDataEditorWindow_Closed(object sender, EventArgs e)
+        {
+            ChannelSession.Settings.UserData.ManualValueChanged(this.user.ID);
         }
     }
 }
