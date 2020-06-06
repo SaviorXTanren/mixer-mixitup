@@ -1,17 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
-using StreamingClient.Base.Util;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +25,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.Initialize(this.StatusBar);
         }
 
-        public InventoryWindow(UserInventoryModel inventory)
+        public InventoryWindow(InventoryModel inventory)
         {
             this.viewModel = new InventoryWindowViewModel(inventory);
 
@@ -58,13 +49,13 @@ namespace MixItUp.WPF.Windows.Currency
         private void EditItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            this.viewModel.SelectedItem = (UserInventoryItemModel)button.DataContext;
+            this.viewModel.SelectedItem = (InventoryItemModel)button.DataContext;
         }
 
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserInventoryItemModel item = (UserInventoryItemModel)button.DataContext;
+            InventoryItemModel item = (InventoryItemModel)button.DataContext;
             this.viewModel.Items.Remove(item);
             this.viewModel.SelectedItem = null;
         }

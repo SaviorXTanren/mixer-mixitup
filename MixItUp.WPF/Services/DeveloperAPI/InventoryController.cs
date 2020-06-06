@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -20,7 +21,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public IEnumerable<Inventory> Get()
         {
             List<Inventory> list = new List<Inventory>();
-            foreach (var inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (var inventory in ChannelSession.Settings.Inventory.Values)
             {
                 list.Add(InventoryFromUserInventoryViewModel(inventory));
             }
@@ -31,7 +32,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public Inventory Get(Guid inventoryID)
         {
-            if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
+            if (!ChannelSession.Settings.Inventory.ContainsKey(inventoryID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -41,20 +42,20 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventories[inventoryID]);
+            return InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventory[inventoryID]);
         }
 
-        public static InventoryAmount InventoryAmountFromUserInventoryViewModel(UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
+        public static InventoryAmount InventoryAmountFromUserInventoryViewModel(InventoryModel inventory, Dictionary<Guid, int> amounts)
         {
             return new InventoryAmount
             {
                 ID = inventory.ID,
                 Name = inventory.Name,
-                Items = inventoryData.GetAmounts().Select(kvp => new InventoryItemAmount() { Name = inventory.Items.Values.FirstOrDefault(i => i.ID.Equals(kvp.Key)).Name, Amount = kvp.Value }).ToList(),
+                Items = amounts.Select(kvp => new InventoryItemAmount() { Name = inventory.Items.Values.FirstOrDefault(i => i.ID.Equals(kvp.Key)).Name, Amount = kvp.Value }).ToList(),
             };
         }
 
-        public static Inventory InventoryFromUserInventoryViewModel(UserInventoryModel inventory)
+        public static Inventory InventoryFromUserInventoryViewModel(InventoryModel inventory)
         {
             return new Inventory
             {

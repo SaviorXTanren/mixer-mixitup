@@ -8,13 +8,10 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModels;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -827,53 +824,6 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
             return Task.FromResult(0);
-        }
-    }
-
-    [DataContract]
-    public class UserInventoryDataViewModel : ViewModelBase, IEquatable<UserInventoryDataViewModel>
-    {
-        [JsonIgnore]
-        public UserDataModel User { get; set; }
-
-        [JsonIgnore]
-        public UserInventoryModel Inventory { get; set; }
-
-        public UserInventoryDataViewModel() { }
-
-        public UserInventoryDataViewModel(UserDataModel user, UserInventoryModel inventory)
-        {
-            this.User = user;
-            this.Inventory = inventory;
-        }
-
-        public int GetAmount(UserInventoryItemModel item) { return this.Inventory.GetAmount(this.User, item); }
-
-        public int GetAmount(Guid itemID) { return this.Inventory.GetAmount(this.User, itemID); }
-
-        public Dictionary<Guid, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
-
-        public void SetAmount(UserInventoryItemModel item, int amount) { this.Inventory.SetAmount(this.User, item, amount); }
-
-        public void SetAmount(Guid itemID, int amount) { this.Inventory.SetAmount(this.User, itemID, amount); }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is UserInventoryDataViewModel)
-            {
-                return this.Equals((UserInventoryDataViewModel)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(UserInventoryDataViewModel other)
-        {
-            return this.User.Equals(other.User) && this.Inventory.Equals(other.Inventory);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Inventory.GetHashCode();
         }
     }
 }

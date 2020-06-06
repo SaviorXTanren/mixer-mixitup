@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Window;
@@ -13,11 +12,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     public class CurrencyRankInventoryContainerViewModel
     {
         public CurrencyModel Currency { get; private set; }
-        public UserInventoryModel Inventory { get; private set; }
+        public InventoryModel Inventory { get; private set; }
 
         public CurrencyRankInventoryContainerViewModel(CurrencyModel currency) { this.Currency = currency; }
 
-        public CurrencyRankInventoryContainerViewModel(UserInventoryModel inventory) { this.Inventory = inventory; }
+        public CurrencyRankInventoryContainerViewModel(InventoryModel inventory) { this.Inventory = inventory; }
 
         public string Name
         {
@@ -102,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
                 }
             }
-            foreach (var kvp in ChannelSession.Settings.Inventories)
+            foreach (var kvp in ChannelSession.Settings.Inventory)
             {
                 this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
             }
@@ -115,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (item.Inventory != null)
                 {
                     await item.Inventory.Reset();
-                    ChannelSession.Settings.Inventories.Remove(item.Inventory.ID);
+                    ChannelSession.Settings.Inventory.Remove(item.Inventory.ID);
                 }
                 else
                 {
@@ -140,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
         {
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
                 if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
                 {

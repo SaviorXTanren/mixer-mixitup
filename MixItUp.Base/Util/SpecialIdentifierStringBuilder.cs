@@ -678,7 +678,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestEmberUsageUserData, SpecialIdentifierStringBuilder.LatestEmberUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.SpecialIdentifier))
             {
                 if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
                 {
@@ -820,13 +820,13 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
+                foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
                 {
                     if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                     {
                         Dictionary<string, int> userItems = new Dictionary<string, int>();
 
-                        foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
+                        foreach (InventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                         {
                             var quantity = inventory.GetAmount(userData, item);
                             if (quantity > 0)

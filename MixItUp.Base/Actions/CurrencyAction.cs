@@ -81,7 +81,7 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyAction(UserInventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
+        public CurrencyAction(InventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
             UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
@@ -111,10 +111,13 @@ namespace MixItUp.Base.Actions
             if (ChannelSession.Services.Chat != null)
             {
                 CurrencyModel currency = null;
-                UserInventoryModel inventory = null;
+
+                InventoryModel inventory = null;
+                InventoryItemModel item = null;
+
                 StreamPassModel streamPass = null;
+
                 string systemName = null;
-                UserInventoryItemModel item = null;
 
                 if (this.CurrencyID != Guid.Empty)
                 {
@@ -128,11 +131,11 @@ namespace MixItUp.Base.Actions
 
                 if (this.InventoryID != Guid.Empty)
                 {
-                    if (!ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
+                    if (!ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
                     {
                         return;
                     }
-                    inventory = ChannelSession.Settings.Inventories[this.InventoryID];
+                    inventory = ChannelSession.Settings.Inventory[this.InventoryID];
                     systemName = inventory.Name;
 
                     if (!string.IsNullOrEmpty(this.ItemName))

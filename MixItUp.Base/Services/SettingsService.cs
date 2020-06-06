@@ -437,26 +437,45 @@ namespace MixItUp.Base.Services
                 {
                     newCurrency.Ranks.Add(new RankModel(rank.Name, rank.MinimumPoints));
                 }
+
+                settings.Currency[newCurrency.ID] = newCurrency;
             }
 
-            foreach (UserInventoryModel inventory in settings.Inventories.Values)
+            foreach (UserInventoryModel oldInventory in settings.Inventories.Values)
             {
-                List<UserInventoryItemModel> items = inventory.Items.Values.ToList();
-                inventory.Items.Clear();
-                foreach (UserInventoryItemModel item in items)
+                InventoryModel newInventory = new InventoryModel();
+
+                newInventory.ID = oldInventory.ID;
+                newInventory.Name = oldInventory.Name;
+                newInventory.DefaultMaxAmount = oldInventory.DefaultMaxAmount;
+                newInventory.SpecialIdentifier = oldInventory.SpecialIdentifier;
+                newInventory.ShopEnabled = oldInventory.ShopEnabled;
+                newInventory.ShopCommand = oldInventory.ShopCommand;
+                newInventory.ShopCurrencyID = oldInventory.ShopCurrencyID;
+                newInventory.ItemsBoughtCommand = oldInventory.ItemsBoughtCommand;
+                newInventory.ItemsSoldCommand = oldInventory.ItemsSoldCommand;
+                newInventory.TradeEnabled = oldInventory.TradeEnabled;
+                newInventory.TradeCommand = oldInventory.TradeCommand;
+                newInventory.ItemsTradedCommand = oldInventory.ItemsTradedCommand;
+
+                foreach (UserInventoryItemModel oldItem in oldInventory.Items.Values.ToList())
                 {
-                    inventory.Items[item.ID.ToString()] = item;
+                    InventoryItemModel newItem = new InventoryItemModel(oldItem.Name, oldItem.MaxAmount, oldItem.BuyAmount, oldItem.SellAmount);
+                    newItem.ID = oldItem.ID;
+                    newInventory.Items[newItem.ID] = newItem;
                 }
+
+                settings.Inventory[newInventory.ID] = newInventory;
             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventories.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
+            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventory.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
             {
-                UserInventoryModel inventory = settings.Inventories[settings.GiveawayRequirements.Inventory.InventoryID];
+                InventoryModel inventory = settings.Inventory[settings.GiveawayRequirements.Inventory.InventoryID];
 #pragma warning disable CS0612 // Type or member is obsolete
                 if (inventory != null && !string.IsNullOrEmpty(settings.GiveawayRequirements.Inventory.ItemName))
                 {
-                    UserInventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
+                    InventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
                     if (item != null)
                     {
                         settings.GiveawayRequirements.Inventory.ItemID = item.ID;
@@ -471,13 +490,13 @@ namespace MixItUp.Base.Services
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase pCommand = (PermissionsCommandBase)command;
-                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventories.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
+                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventory.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
                     {
-                        UserInventoryModel inventory = settings.Inventories[pCommand.Requirements.Inventory.InventoryID];
+                        InventoryModel inventory = settings.Inventory[pCommand.Requirements.Inventory.InventoryID];
 #pragma warning disable CS0612 // Type or member is obsolete
                         if (inventory != null && !string.IsNullOrEmpty(pCommand.Requirements.Inventory.ItemName))
                         {
-                            UserInventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
+                            InventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
                             if (item != null)
                             {
                                 pCommand.Requirements.Inventory.ItemID = item.ID;
@@ -578,7 +597,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (UserInventoryModel inventory in settings.Inventories.Values)
+            foreach (InventoryModel inventory in settings.Inventory.Values)
             {
                 commands.Add(inventory.ItemsBoughtCommand);
                 commands.Add(inventory.ItemsSoldCommand);

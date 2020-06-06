@@ -284,9 +284,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
-                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, new UserInventoryDataViewModel(userData, inventory)));
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
             }
 
             return user;
@@ -341,7 +341,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustInventory(UserDataModel user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
+            if (!ChannelSession.Settings.Inventory.ContainsKey(inventoryID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -361,7 +361,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryModel inventory = ChannelSession.Settings.Inventories[inventoryID];
+            InventoryModel inventory = ChannelSession.Settings.Inventory[inventoryID];
 
             if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.ItemExists(inventoryUpdate.Name))
             {
@@ -373,7 +373,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
+            InventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;

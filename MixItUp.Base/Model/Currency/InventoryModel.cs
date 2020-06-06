@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -12,10 +12,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Model.User
+namespace MixItUp.Base.Model.Currency
 {
     [DataContract]
-    public class UserInventoryItemModel : IEquatable<UserInventoryItemModel>
+    public class InventoryItemModel : IEquatable<InventoryItemModel>
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -31,6 +31,20 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public int SellAmount { get; set; }
+
+        public InventoryItemModel()
+        {
+            this.ID = Guid.NewGuid();
+        }
+
+        public InventoryItemModel(string name, int maxAmount = -1, int buyAmount = -1, int sellAmount = -1)
+            : this()
+        {
+            this.Name = name;
+            this.MaxAmount = maxAmount;
+            this.BuyAmount = buyAmount;
+            this.SellAmount = sellAmount;
+        }
 
         [JsonIgnore]
         public bool HasMaxAmount { get { return this.MaxAmount > 0; } }
@@ -83,49 +97,35 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string SpecialIdentifier { get { return SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name); } }
 
-        public UserInventoryItemModel()
-        {
-            this.ID = Guid.NewGuid();
-        }
-
-        public UserInventoryItemModel(string name, int maxAmount = -1, int buyAmount = -1, int sellAmount = -1)
-            : this()
-        {
-            this.Name = name;
-            this.MaxAmount = maxAmount;
-            this.BuyAmount = buyAmount;
-            this.SellAmount = sellAmount;
-        }
-
         public override bool Equals(object obj)
         {
-            if (obj is UserInventoryItemModel)
+            if (obj is InventoryItemModel)
             {
-                return this.Equals((UserInventoryItemModel)obj);
+                return this.Equals((InventoryItemModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserInventoryItemModel other)
+        public bool Equals(InventoryItemModel other)
         {
-            return this.Name.Equals(other.Name);
+            return this.ID.Equals(other.ID);
         }
 
         public override int GetHashCode()
         {
-            return this.Name.GetHashCode();
+            return this.ID.GetHashCode();
         }
     }
 
-    public class UserInventoryTradeModel
+    public class InventoryTradeModel
     {
         public UserViewModel User { get; set; }
-        public UserInventoryItemModel Item { get; set; }
+        public InventoryItemModel Item { get; set; }
         public int Amount { get; set; }
     }
 
     [DataContract]
-    public class UserInventoryModel : IEquatable<UserInventoryModel>
+    public class InventoryModel : IEquatable<InventoryModel>
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -140,7 +140,7 @@ namespace MixItUp.Base.Model.User
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
-        public Dictionary<string, UserInventoryItemModel> Items { get; set; } = new Dictionary<string, UserInventoryItemModel>();
+        public Dictionary<Guid, InventoryItemModel> Items { get; set; } = new Dictionary<Guid, InventoryItemModel>();
 
         [DataMember]
         public bool ShopEnabled { get; set; }
@@ -161,13 +161,13 @@ namespace MixItUp.Base.Model.User
         public CustomCommand ItemsTradedCommand { get; set; }
 
         [JsonIgnore]
-        private UserInventoryTradeModel tradeSender = null;
+        private InventoryTradeModel tradeSender = null;
         [JsonIgnore]
-        private UserInventoryTradeModel tradeReceiver = null;
+        private InventoryTradeModel tradeReceiver = null;
         [JsonIgnore]
         private CancellationTokenSource tradeTimeCheckToken = null;
 
-        public UserInventoryModel()
+        public InventoryModel()
         {
             this.ID = Guid.NewGuid();
             this.DefaultMaxAmount = 99;
@@ -189,22 +189,22 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
-        public bool ItemExists(Guid itemID) { return this.Items.ContainsKey(itemID.ToString()); }
+        public bool ItemExists(Guid itemID) { return this.Items.ContainsKey(itemID); }
 
         public bool ItemExists(string itemName) { return this.GetItem(itemName) != null; }
 
-        public UserInventoryItemModel GetItem(string itemName) { return this.Items.Values.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.CurrentCultureIgnoreCase)); }
+        public InventoryItemModel GetItem(string itemName) { return this.Items.Values.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.CurrentCultureIgnoreCase)); }
 
-        public UserInventoryItemModel GetItem(Guid itemID)
+        public InventoryItemModel GetItem(Guid itemID)
         {
             if (this.ItemExists(itemID))
             {
-                return this.Items[itemID.ToString()];
+                return this.Items[itemID];
             }
             return null;
         }
 
-        public int GetAmount(UserDataModel user, UserInventoryItemModel item)
+        public int GetAmount(UserDataModel user, InventoryItemModel item)
         {
             if (user.InventoryAmounts.ContainsKey(this.ID) && user.InventoryAmounts[this.ID].ContainsKey(item.ID))
             {
@@ -225,7 +225,7 @@ namespace MixItUp.Base.Model.User
         public Dictionary<Guid, int> GetAmounts(UserDataModel user)
         {
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
-            foreach (UserInventoryItemModel item in this.Items.Values)
+            foreach (InventoryItemModel item in this.Items.Values)
             {
                 amounts[item.ID] = this.GetAmount(user, item);
             }
@@ -241,7 +241,7 @@ namespace MixItUp.Base.Model.User
             return false;
         }
 
-        public bool HasAmount(UserDataModel user, UserInventoryItemModel item, int amount)
+        public bool HasAmount(UserDataModel user, InventoryItemModel item, int amount)
         {
             return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
         }
@@ -254,7 +254,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void SetAmount(UserDataModel user, UserInventoryItemModel item, int amount)
+        public void SetAmount(UserDataModel user, InventoryItemModel item, int amount)
         {
             if (!user.InventoryAmounts.ContainsKey(this.ID))
             {
@@ -276,7 +276,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void AddAmount(UserDataModel user, UserInventoryItemModel item, int amount)
+        public void AddAmount(UserDataModel user, InventoryItemModel item, int amount)
         {
             if (!user.IsCurrencyRankExempt && amount > 0)
             {
@@ -292,7 +292,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void SubtractAmount(UserDataModel user, UserInventoryItemModel item, int amount)
+        public void SubtractAmount(UserDataModel user, InventoryItemModel item, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -333,7 +333,7 @@ namespace MixItUp.Base.Model.User
                         if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
                             List<string> items = new List<string>();
-                            foreach (UserInventoryItemModel item in this.Items.Values)
+                            foreach (InventoryItemModel item in this.Items.Values)
                             {
                                 if (item.HasBuyAmount || item.HasSellAmount)
                                 {
@@ -349,7 +349,7 @@ namespace MixItUp.Base.Model.User
                             int amount = 1;
 
                             IEnumerable<string> itemArgs = arguments.Skip(1);
-                            UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
+                            InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
                             if (item == null && itemArgs.Count() > 1)
                             {
                                 itemArgs = itemArgs.Take(itemArgs.Count() - 1);
@@ -440,7 +440,7 @@ namespace MixItUp.Base.Model.User
                         }
                         else
                         {
-                            UserInventoryItemModel item = this.GetItem(string.Join(" ", arguments));
+                            InventoryItemModel item = this.GetItem(string.Join(" ", arguments));
                             if (item != null)
                             {
                                 if (item.HasBuyAmount || item.HasSellAmount)
@@ -503,7 +503,7 @@ namespace MixItUp.Base.Model.User
 
                         int amount = 1;
                         IEnumerable<string> itemArgs = arguments.Skip(1);
-                        UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
+                        InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
                         {
@@ -531,14 +531,14 @@ namespace MixItUp.Base.Model.User
                             return;
                         }
 
-                        this.tradeSender = new UserInventoryTradeModel()
+                        this.tradeSender = new InventoryTradeModel()
                         {
                             User = user,
                             Item = item,
                             Amount = amount
                         };
 
-                        this.tradeReceiver = new UserInventoryTradeModel()
+                        this.tradeReceiver = new InventoryTradeModel()
                         {
                             User = targetUser
                         };
@@ -565,7 +565,7 @@ namespace MixItUp.Base.Model.User
                     {
                         int amount = 1;
                         IEnumerable<string> itemArgs = arguments.ToList();
-                        UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
+                        InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
                         {
@@ -651,14 +651,14 @@ namespace MixItUp.Base.Model.User
 
         public override bool Equals(object obj)
         {
-            if (obj is UserInventoryModel)
+            if (obj is InventoryModel)
             {
-                return this.Equals((UserInventoryModel)obj);
+                return this.Equals((InventoryModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserInventoryModel other)
+        public bool Equals(InventoryModel other)
         {
             return this.ID.Equals(other.ID);
         }

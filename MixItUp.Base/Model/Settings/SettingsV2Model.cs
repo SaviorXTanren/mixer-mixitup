@@ -441,7 +441,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Dictionary<Guid, CurrencyModel> Currency { get; set; } = new Dictionary<Guid, CurrencyModel>();
         [DataMember]
-        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+        public Dictionary<Guid, InventoryModel> Inventory { get; set; } = new Dictionary<Guid, InventoryModel>();
         [DataMember]
         public Dictionary<Guid, StreamPassModel> StreamPass { get; set; } = new Dictionary<Guid, StreamPassModel>();
 
@@ -497,6 +497,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         [Obsolete]
         public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+        [DataMember]
+        [Obsolete]
+        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
 
         #endregion Obsolete
 

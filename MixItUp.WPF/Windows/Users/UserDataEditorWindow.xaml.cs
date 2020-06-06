@@ -59,10 +59,9 @@ namespace MixItUp.WPF.Windows.Users
             }
 
             this.InventoryStackPanel.Children.Clear();
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
             {
-                UserInventoryDataViewModel inventoryData = new UserInventoryDataViewModel(this.user.Data, inventory);
-                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(this.user.Data, inventory, inventoryData));
+                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(this.user.Data, inventory));
             }
 
             this.UserOnlyChatCommandsListView.Visibility = Visibility.Collapsed;

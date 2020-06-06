@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
@@ -23,18 +24,18 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public InventoryRequirementViewModel() { }
 
-        public InventoryRequirementViewModel(UserInventoryModel inventory, UserInventoryItemModel item, int amount)
+        public InventoryRequirementViewModel(InventoryModel inventory, InventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemID = item.ID;
             this.Amount = amount;
         }
 
-        public UserInventoryModel GetInventory()
+        public InventoryModel GetInventory()
         {
-            if (ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
+            if (ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
             {
-                return ChannelSession.Settings.Inventories[this.InventoryID];
+                return ChannelSession.Settings.Inventory[this.InventoryID];
             }
             return null;
         }
@@ -45,7 +46,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.DoesMeetRequirement(userData))
             {
-                UserInventoryModel inventory = this.GetInventory();
+                InventoryModel inventory = this.GetInventory();
                 if (inventory == null)
                 {
                     return false;
@@ -69,7 +70,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserInventoryModel inventory = this.GetInventory();
+            InventoryModel inventory = this.GetInventory();
             if (inventory == null)
             {
                 return false;
@@ -78,7 +79,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 #pragma warning disable CS0612 // Type or member is obsolete
             if (!string.IsNullOrEmpty(this.ItemName))
             {
-                UserInventoryItemModel item = inventory.GetItem(this.ItemName);
+                InventoryItemModel item = inventory.GetItem(this.ItemName);
                 if (item != null)
                 {
                     this.ItemID = item.ID;
@@ -92,9 +93,9 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
             {
-                UserInventoryModel inventory = this.GetInventory();
+                InventoryModel inventory = this.GetInventory();
                 if (inventory != null && inventory.ItemExists(this.ItemID))
                 {
                     await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));

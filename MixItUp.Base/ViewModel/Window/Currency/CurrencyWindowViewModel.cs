@@ -681,7 +681,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            MixItUp.Base.Model.User.UserInventoryModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            InventoryModel dupeInventory = ChannelSession.Settings.Inventory.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeInventory != null)
             {
                 await DialogHelper.ShowMessage("There already exists an inventory with this name");
