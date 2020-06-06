@@ -247,7 +247,7 @@ namespace MixItUp.Base.Services.Mixer
 
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
                                     currency.AddAmount(user.Data, currency.OnFollowBonus);
                                 }
@@ -295,7 +295,7 @@ namespace MixItUp.Base.Services.Mixer
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnHostBonus);
                             }
@@ -323,7 +323,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
@@ -369,7 +369,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelResubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
@@ -429,7 +429,7 @@ namespace MixItUp.Base.Services.Mixer
                                 receiverUser.Data.TotalSubsReceived++;
                                 receiverUser.Data.TotalMonthsSubbed++;
 
-                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
                                     currency.AddAmount(gifterUser.Data, currency.OnSubscribeBonus);
                                 }
@@ -475,7 +475,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             GlobalEvents.ProgressionLevelUpOccurred(user);
 
-                            foreach (UserCurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
+                            foreach (CurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression))
                             {
                                 fanProgressionCurrency.SetAmount(user.Data, (int)fanProgression.level.level);
                             }
@@ -530,7 +530,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             sparkUsage.Item1.Data.TotalSparksSpent += (uint)sparkUsage.Item2;
 
-            foreach (UserCurrencyModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
+            foreach (CurrencyModel sparkCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Sparks))
             {
                 sparkCurrency.AddAmount(sparkUsage.Item1.Data, (int)sparkUsage.Item2);
             }
@@ -552,7 +552,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             emberUsage.User.Data.TotalEmbersSpent += (uint)emberUsage.Amount;
 
-            foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
+            foreach (CurrencyModel emberCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Embers))
             {
                 emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
             }

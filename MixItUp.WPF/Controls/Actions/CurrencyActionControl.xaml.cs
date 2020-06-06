@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             List<object> currencyInventoryList = new List<object>();
-            currencyInventoryList.AddRange(ChannelSession.Settings.Currencies.Values);
+            currencyInventoryList.AddRange(ChannelSession.Settings.Currency.Values);
             currencyInventoryList.AddRange(ChannelSession.Settings.Inventories.Values);
             currencyInventoryList.AddRange(ChannelSession.Settings.StreamPass.Values);
             this.CurrencyTypeComboBox.ItemsSource = currencyInventoryList;
@@ -41,9 +41,9 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
-                if (this.action.CurrencyID != Guid.Empty && ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyID))
+                if (this.action.CurrencyID != Guid.Empty && ChannelSession.Settings.Currency.ContainsKey(this.action.CurrencyID))
                 {
-                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyID];
+                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currency[this.action.CurrencyID];
                 }
                 else if (this.action.InventoryID != Guid.Empty && ChannelSession.Settings.Inventories.ContainsKey(this.action.InventoryID))
                 {
@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyActionTypeComboBox.SelectedIndex >= 0)
             {
-                UserCurrencyModel currency = this.GetSelectedCurrency();
+                CurrencyModel currency = this.GetSelectedCurrency();
                 UserInventoryModel inventory = this.GetSelectedInventory();
                 StreamPassModel streamPass = this.GetSelectedStreamPass();
                 CurrencyActionTypeEnum actionType = (CurrencyActionTypeEnum)this.CurrencyActionTypeComboBox.SelectedItem;
@@ -162,11 +162,11 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        private UserCurrencyModel GetSelectedCurrency()
+        private CurrencyModel GetSelectedCurrency()
         {
-            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is UserCurrencyModel)
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is CurrencyModel)
             {
-                return (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem;
+                return (CurrencyModel)this.CurrencyTypeComboBox.SelectedItem;
             }
             return null;
         }

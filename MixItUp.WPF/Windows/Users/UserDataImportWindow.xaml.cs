@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -56,7 +57,7 @@ namespace MixItUp.WPF.Windows.Users
             this.dataColumns.Add(new ImportDataColumns() { DataName = "Offline Viewing Time (Hours)" });
             this.dataColumns.Add(new ImportDataColumns() { DataName = "Offline Viewing Time (Mins)" });
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 this.dataColumns.Add(new ImportDataColumns() { DataName = currency.Name });
             }
@@ -212,7 +213,7 @@ namespace MixItUp.WPF.Windows.Users
                                 columnMatched = true;
                                 break;
                             default:
-                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                                 {
                                     if (currency.Name.Equals(dataColumn.DataName))
                                     {

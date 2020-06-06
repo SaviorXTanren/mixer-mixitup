@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             this.Enabled = bool.Parse(values[8]);
         }
 
-        public void ProcessData(UserCurrencyModel currency, UserCurrencyModel rank)
+        public void ProcessData(CurrencyModel currency, CurrencyModel rank)
         {
             this.Requirements = new RequirementViewModel();
 
@@ -106,8 +106,8 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                         this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.User);
                         if (!string.IsNullOrEmpty(this.PermInfo))
                         {
-                            UserRankViewModel minRank = rank.Ranks.FirstOrDefault(r => r.Name.ToLower().Equals(this.PermInfo.ToLower()));
-                            if (rank != null)
+                            RankModel minRank = rank.Ranks.FirstOrDefault(r => r.Name.ToLower().Equals(this.PermInfo.ToLower()));
+                            if (minRank != null)
                             {
                                 this.Requirements.Rank = new CurrencyRequirementViewModel(rank, minRank);
                             }

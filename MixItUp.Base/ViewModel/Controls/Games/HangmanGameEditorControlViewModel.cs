@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private HangmanGameCommand existingCommand;
 
-        public HangmanGameEditorControlViewModel(UserCurrencyModel currency)
+        public HangmanGameEditorControlViewModel(CurrencyModel currency)
             : this()
         {
             this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent");

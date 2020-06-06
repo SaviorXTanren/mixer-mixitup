@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
@@ -402,6 +403,42 @@ namespace MixItUp.Base.Services
             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (UserCurrencyModel oldCurrency in settings.Currencies.Values)
+            {
+                CurrencyModel newCurrency = new CurrencyModel();
+
+                newCurrency.ID = oldCurrency.ID;
+                newCurrency.Name = oldCurrency.Name;
+                newCurrency.AcquireAmount = oldCurrency.AcquireAmount;
+                newCurrency.AcquireInterval = oldCurrency.AcquireInterval;
+                newCurrency.MinimumActiveRate = oldCurrency.MinimumActiveRate;
+                newCurrency.OfflineAcquireAmount = oldCurrency.OfflineAcquireAmount;
+                newCurrency.OfflineAcquireInterval = oldCurrency.OfflineAcquireInterval;
+                newCurrency.MaxAmount = oldCurrency.MaxAmount;
+                newCurrency.SpecialIdentifier = oldCurrency.SpecialIdentifier;
+                newCurrency.SubscriberBonus = oldCurrency.SubscriberBonus;
+                newCurrency.ModeratorBonus = oldCurrency.ModeratorBonus;
+                newCurrency.OnFollowBonus = oldCurrency.OnFollowBonus;
+                newCurrency.OnHostBonus = oldCurrency.OnHostBonus;
+                newCurrency.OnSubscribeBonus = oldCurrency.OnSubscribeBonus;
+                newCurrency.ResetInterval = (Model.Currency.CurrencyResetRateEnum)((int)oldCurrency.ResetInterval);
+                newCurrency.ResetStartCadence = oldCurrency.ResetStartCadence;
+                newCurrency.LastReset = oldCurrency.LastReset;
+                newCurrency.RankChangedCommand = oldCurrency.RankChangedCommand;
+                newCurrency.IsPrimary = oldCurrency.IsPrimary;
+
+                if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
+                if (oldCurrency.IsTrackingEmbers) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
+                if (oldCurrency.IsTrackingFanProgression) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+
+                foreach (UserRankViewModel rank in oldCurrency.Ranks)
+                {
+                    newCurrency.Ranks.Add(new RankModel(rank.Name, rank.MinimumPoints));
+                }
+            }
+
             foreach (UserInventoryModel inventory in settings.Inventories.Values)
             {
                 List<UserInventoryItemModel> items = inventory.Items.Values.ToList();
@@ -411,6 +448,7 @@ namespace MixItUp.Base.Services
                     inventory.Items[item.ID.ToString()] = item;
                 }
             }
+#pragma warning restore CS0612 // Type or member is obsolete
 
             if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventories.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
             {
@@ -532,7 +570,7 @@ namespace MixItUp.Base.Services
                 commands.AddRange(gameCommand.GetAllInnerCommands());
             }
 
-            foreach (UserCurrencyModel currency in settings.Currencies.Values)
+            foreach (CurrencyModel currency in settings.Currency.Values)
             {
                 if (currency.RankChangedCommand != null)
                 {

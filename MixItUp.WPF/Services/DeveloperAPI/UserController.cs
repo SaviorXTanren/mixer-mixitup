@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -147,9 +148,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             foreach (CurrencyAmount currencyData in updatedUserData.CurrencyAmounts)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
+                if (ChannelSession.Settings.Currency.ContainsKey(currencyData.ID))
                 {
-                    ChannelSession.Settings.Currencies[currencyData.ID].SetAmount(user, currencyData.Amount);
+                    ChannelSession.Settings.Currency[currencyData.ID].SetAmount(user, currencyData.Amount);
                 }
             }
 
@@ -278,7 +279,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 ViewingMinutes = userData.ViewingMinutes
             };
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
@@ -293,7 +294,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustCurrency(UserDataModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -313,7 +314,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
+            CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
             if (currencyUpdate.Amount < 0)
             {

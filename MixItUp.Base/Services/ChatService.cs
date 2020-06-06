@@ -600,7 +600,7 @@ namespace MixItUp.Base.Services
                 user.UpdateMinuteData();
             }
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 currency.UpdateUserData();
             }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
@@ -9,26 +10,30 @@ namespace MixItUp.WPF.Controls.Currency
     /// </summary>
     public partial class UserCurrencyIndividualEditorControl : UserControl
     {
-        private UserCurrencyDataViewModel currencyData;
+        private UserDataModel user;
+
+        private CurrencyModel currency;
 
         private UserInventoryItemModel inventoryItem;
         private UserInventoryDataViewModel inventoryData;
 
-        public UserCurrencyIndividualEditorControl(UserCurrencyDataViewModel currencyData)
-            : this()
+        public UserCurrencyIndividualEditorControl(UserDataModel user, CurrencyModel currency)
+            : this(user)
         {
-            this.currencyData = currencyData;
+            this.currency = currency;
         }
 
-        public UserCurrencyIndividualEditorControl(UserInventoryItemModel inventoryItem, UserInventoryDataViewModel inventoryData)
-            : this()
+        public UserCurrencyIndividualEditorControl(UserDataModel user, UserInventoryItemModel inventoryItem, UserInventoryDataViewModel inventoryData)
+            : this(user)
         {
             this.inventoryItem = inventoryItem;
             this.inventoryData = inventoryData;
         }
 
-        private UserCurrencyIndividualEditorControl()
+        private UserCurrencyIndividualEditorControl(UserDataModel user)
         {
+            this.user = user;
+
             InitializeComponent();
 
             this.Loaded += UserCurrencyIndividualEditorControl_Loaded;
@@ -36,10 +41,10 @@ namespace MixItUp.WPF.Controls.Currency
 
         private void UserCurrencyIndividualEditorControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.currencyData != null)
+            if (this.currency != null)
             {
-                this.NameTextBlock.Text = this.currencyData.Currency.Name;
-                this.AmountTextBox.Text = this.currencyData.Amount.ToString();
+                this.NameTextBlock.Text = this.currency.Name;
+                this.AmountTextBox.Text = this.currency.GetAmount(this.user).ToString();
             }
             else if (this.inventoryItem != null && this.inventoryData != null)
             {
@@ -52,9 +57,9 @@ namespace MixItUp.WPF.Controls.Currency
         {
             if (!string.IsNullOrEmpty(this.AmountTextBox.Text) && int.TryParse(this.AmountTextBox.Text, out int amount) && amount >= 0)
             {
-                if (this.currencyData != null)
+                if (this.currency != null)
                 {
-                    this.currencyData.Amount = amount;
+                    this.currency.SetAmount(this.user, amount);
                 }
                 else if (this.inventoryItem != null && this.inventoryData != null)
                 {

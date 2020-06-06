@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -43,8 +44,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private OverlayLeaderboardListItemDateRangeEnum sparksEmbersDate;
 
-        public IEnumerable<UserCurrencyModel> CurrencyRanks { get; set; } = ChannelSession.Settings.Currencies.Values.ToList();
-        public UserCurrencyModel CurrencyRank
+        public IEnumerable<CurrencyModel> CurrencyRanks { get; set; } = ChannelSession.Settings.Currency.Values.ToList();
+        public CurrencyModel CurrencyRank
         {
             get { return this.currencyRank; }
             set
@@ -53,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private UserCurrencyModel currencyRank;
+        private CurrencyModel currencyRank;
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 
@@ -83,9 +84,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.leaderboardType = item.LeaderboardType;
             if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(item.CurrencyID))
+                if (ChannelSession.Settings.Currency.ContainsKey(item.CurrencyID))
                 {
-                    this.CurrencyRank = ChannelSession.Settings.Currencies[item.CurrencyID];
+                    this.CurrencyRank = ChannelSession.Settings.Currency[item.CurrencyID];
                 }
             }
             else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)

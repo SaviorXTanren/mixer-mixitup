@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -30,7 +29,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.Initialize(this.StatusBar);
         }
 
-        public CurrencyWindow(UserCurrencyModel currency)
+        public CurrencyWindow(CurrencyModel currency)
         {
             this.viewModel = new CurrencyWindowViewModel(currency);
 
@@ -49,7 +48,7 @@ namespace MixItUp.WPF.Windows.Currency
         private void DeleteRankButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserRankViewModel rank = (UserRankViewModel)button.DataContext;
+            RankModel rank = (RankModel)button.DataContext;
             this.viewModel.Ranks.Remove(rank);
         }
 

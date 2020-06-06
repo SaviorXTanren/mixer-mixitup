@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services.External;
@@ -230,7 +231,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetAmount(this);
@@ -240,16 +241,16 @@ namespace MixItUp.Base.Model.User
         }
 
         [JsonIgnore]
-        public UserRankViewModel Rank
+        public RankModel Rank
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetRank(this);
                 }
-                return UserCurrencyModel.NoRank;
+                return CurrencyModel.NoRank;
             }
         }
 
@@ -258,7 +259,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetAmount(this);

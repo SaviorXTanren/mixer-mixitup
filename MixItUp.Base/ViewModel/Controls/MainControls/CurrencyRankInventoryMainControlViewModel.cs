@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Window;
@@ -11,10 +12,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class CurrencyRankInventoryContainerViewModel
     {
-        public UserCurrencyModel Currency { get; private set; }
+        public CurrencyModel Currency { get; private set; }
         public UserInventoryModel Inventory { get; private set; }
 
-        public CurrencyRankInventoryContainerViewModel(UserCurrencyModel currency) { this.Currency = currency; }
+        public CurrencyRankInventoryContainerViewModel(CurrencyModel currency) { this.Currency = currency; }
 
         public CurrencyRankInventoryContainerViewModel(UserInventoryModel inventory) { this.Inventory = inventory; }
 
@@ -90,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public void RefreshList()
         {
             this.Items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currencies)
+            foreach (var kvp in ChannelSession.Settings.Currency)
             {
                 if (kvp.Value.IsRank)
                 {
@@ -119,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 else
                 {
                     await item.Currency.Reset();
-                    ChannelSession.Settings.Currencies.Remove(item.Currency.ID);
+                    ChannelSession.Settings.Currency.Remove(item.Currency.ID);
                 }
                 this.RefreshList();
             }

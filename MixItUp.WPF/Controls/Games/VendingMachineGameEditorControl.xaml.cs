@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Games
         private VendingMachineGameEditorControlViewModel viewModel;
         private VendingMachineGameCommand existingCommand;
 
-        public VendingMachineGameEditorControl(UserCurrencyModel currency)
+        public VendingMachineGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 

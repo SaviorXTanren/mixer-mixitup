@@ -8,6 +8,28 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
+namespace MixItUp.Base.ViewModel.User
+{
+    [DataContract]
+    [Obsolete]
+    public class UserRankViewModel
+    {
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public int MinimumPoints { get; set; }
+
+        public UserRankViewModel() { }
+
+        public UserRankViewModel(string name, int minimumPoints)
+        {
+            this.Name = name;
+            this.MinimumPoints = minimumPoints;
+        }
+    }
+}
+
 namespace MixItUp.Base.Model.User
 {
     public enum CurrencyResetRateEnum
@@ -20,6 +42,7 @@ namespace MixItUp.Base.Model.User
     }
 
     [DataContract]
+    [Obsolete]
     public class UserCurrencyModel : IEquatable<UserCurrencyModel>
     {
         public static UserRankViewModel NoRank = new UserRankViewModel("No Rank", 0);
@@ -179,11 +202,6 @@ namespace MixItUp.Base.Model.User
                 this.SetAmount(user, this.GetAmount(user) + amount);
 
                 UserRankViewModel newRank = this.GetRankForPoints(this.GetAmount(user));
-
-                if (newRank.MinimumPoints > prevRank.MinimumPoints)
-                {
-                    GlobalEvents.RankChanged(new UserCurrencyDataViewModel(user, this));
-                }
             }
         }
 

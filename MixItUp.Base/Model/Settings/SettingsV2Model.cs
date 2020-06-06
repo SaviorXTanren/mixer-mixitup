@@ -439,10 +439,9 @@ namespace MixItUp.Base.Model.Settings
         #endregion Advanced
 
         [DataMember]
-        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+        public Dictionary<Guid, CurrencyModel> Currency { get; set; } = new Dictionary<Guid, CurrencyModel>();
         [DataMember]
         public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
-
         [DataMember]
         public Dictionary<Guid, StreamPassModel> StreamPass { get; set; } = new Dictionary<Guid, StreamPassModel>();
 
@@ -492,6 +491,14 @@ namespace MixItUp.Base.Model.Settings
         private Dictionary<uint, Guid> MixerUserIDLookups { get; set; } = new Dictionary<uint, Guid>();
 
         #endregion Database Data
+
+        #region Obsolete
+
+        [DataMember]
+        [Obsolete]
+        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+
+        #endregion Obsolete
 
         [JsonIgnore]
         public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.SettingsFileExtension); } }

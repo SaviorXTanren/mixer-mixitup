@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -322,9 +323,9 @@ namespace MixItUp.Base.Model.User
         {
             try
             {
-                if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.ShopCurrencyID))
+                if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
                 {
-                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.ShopCurrencyID];
+                    CurrencyModel currency = ChannelSession.Settings.Currency[this.ShopCurrencyID];
 
                     if (arguments != null && arguments.Count() > 0)
                     {

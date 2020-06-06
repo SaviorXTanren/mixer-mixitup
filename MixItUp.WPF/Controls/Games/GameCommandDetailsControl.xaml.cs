@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
@@ -26,7 +27,7 @@ namespace MixItUp.WPF.Controls.Games
             this.Requirements.HideCurrencyRequirement();
             this.Requirements.HideThresholdRequirement();
 
-            IEnumerable<UserCurrencyModel> currencies = ChannelSession.Settings.Currencies.Values;
+            IEnumerable<CurrencyModel> currencies = ChannelSession.Settings.Currency.Values;
             this.IsEnabled = (currencies.Count() > 0);
             this.CurrencyTypeComboBox.ItemsSource = currencies;
             this.CurrencyTypeComboBox.SelectedIndex = 0;
@@ -37,7 +38,7 @@ namespace MixItUp.WPF.Controls.Games
 
         public string GameName { get { return this.NameTextBox.Text; } }
         public IEnumerable<string> ChatTriggers { get { return this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
-        public UserCurrencyModel Currency { get { return (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem; } }
+        public CurrencyModel Currency { get { return (CurrencyModel)this.CurrencyTypeComboBox.SelectedItem; } }
         public CurrencyRequirementTypeEnum CurrencyUsage
         {
             get
@@ -74,7 +75,7 @@ namespace MixItUp.WPF.Controls.Games
         {
             RequirementViewModel requirements = this.Requirements.GetRequirements();
 
-            UserCurrencyModel currency = (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem;
+            CurrencyModel currency = (CurrencyModel)this.CurrencyTypeComboBox.SelectedItem;
             CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
             if (requirement == CurrencyRequirementTypeEnum.NoCurrencyCost)
             {

@@ -144,32 +144,32 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ExportUserDataButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            await this.Window.RunAsyncOperation((Func<Task>)(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
                     fileContents.Append("User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
-                    foreach (var kvp in ChannelSession.Settings.Currencies)
+                    foreach (var kvp in ChannelSession.Settings.Currency)
                     {
-                        fileContents.Append("\t" + kvp.Value.Name);
+                        fileContents.Append((string)("\t" + kvp.Value.Name));
                     }
                     fileContents.AppendLine();
 
                     foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.ID, userData.Username, userData.ViewingMinutes, userData.OfflineViewingMinutes));
-                        foreach (var kvp in ChannelSession.Settings.Currencies)
+                        foreach (var kvp in ChannelSession.Settings.Currency)
                         {
-                            fileContents.Append("\t" + kvp.Value.GetAmount(userData));
+                            fileContents.Append((string)("\t" + kvp.Value.GetAmount(userData)));
                         }
                         fileContents.AppendLine();
                     }
 
                     await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
                 }
-            });
+            }));
         }
     }
 }

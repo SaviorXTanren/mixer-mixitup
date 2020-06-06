@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -150,13 +151,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             string rankUpCommand = this.GetSettingsValue("currency", "Currency1RankUpMsg", "");
             int rankAccumulationType = this.GetIntSettingsValue("currency", "ranksrectype");
 
-            UserCurrencyModel rankCurrency = null;
-            UserCurrencyModel rankPointsCurrency = null;
+            CurrencyModel rankCurrency = null;
+            CurrencyModel rankPointsCurrency = null;
             if (!string.IsNullOrEmpty(rankName))
             {
                 if (rankAccumulationType == 1)
                 {
-                    rankCurrency = new UserCurrencyModel()
+                    rankCurrency = new CurrencyModel()
                     {
                         Name = rankName.Equals("Points") ? "Hours" : rankName,
                         SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rankName.Equals("Points") ? "Hours" : rankName),
@@ -167,7 +168,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
                     if (rankInterval >= 0 && rankAmount >= 0)
                     {
-                        rankPointsCurrency = new UserCurrencyModel()
+                        rankPointsCurrency = new CurrencyModel()
                         {
                             Name = "Points",
                             SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("points"),
@@ -181,12 +182,12 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                             IsPrimary = true
                         };
 
-                        ChannelSession.Settings.Currencies[rankPointsCurrency.ID] = rankPointsCurrency;
+                        ChannelSession.Settings.Currency[rankPointsCurrency.ID] = rankPointsCurrency;
                     }
                 }
                 else if (rankInterval >= 0 && rankAmount >= 0)
                 {
-                    rankCurrency = new UserCurrencyModel()
+                    rankCurrency = new CurrencyModel()
                     {
                         Name = rankName,
                         SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rankName),
@@ -218,10 +219,10 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             string currencyCommand = this.GetSettingsValue("currency2", "command", "");
             string currencyCommandResponse = this.GetSettingsValue("currency2", "response", "");
 
-            UserCurrencyModel currency = null;
+            CurrencyModel currency = null;
             if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
             {
-                currency = new UserCurrencyModel()
+                currency = new CurrencyModel()
                 {
                     Name = currencyName,
                     SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName),
@@ -232,7 +233,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     OnSubscribeBonus = currencyOnSubBonus,
                     IsPrimary = true
                 };
-                ChannelSession.Settings.Currencies[currency.ID] = currency;
+                ChannelSession.Settings.Currency[currency.ID] = currency;
 
                 if (!string.IsNullOrEmpty(currencyCommand) && !string.IsNullOrEmpty(currencyCommandResponse))
                 {
@@ -244,11 +245,11 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
             if (rankCurrency != null)
             {
-                ChannelSession.Settings.Currencies[rankCurrency.ID] = rankCurrency;
+                ChannelSession.Settings.Currency[rankCurrency.ID] = rankCurrency;
 
                 foreach (ScorpBotRank rank in this.Ranks)
                 {
-                    rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                    rankCurrency.Ranks.Add(new RankModel(rank.Name, rank.Amount));
                 }
 
                 if (!string.IsNullOrEmpty(rankCommand) && !string.IsNullOrEmpty(rankCommandResponse))

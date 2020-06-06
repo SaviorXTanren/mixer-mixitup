@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
@@ -19,7 +20,7 @@ namespace MixItUp.WPF.Controls.Requirement
             InitializeComponent();
         }
 
-        public UserCurrencyModel GetCurrencyType() { return (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem; }
+        public CurrencyModel GetCurrencyType() { return (CurrencyModel)this.CurrencyTypeComboBox.SelectedItem; }
 
         public int GetCurrencyAmount()
         {
@@ -42,12 +43,12 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void SetCurrencyRequirement(CurrencyRequirementViewModel currencyRequirement)
         {
-            if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyID))
+            if (currencyRequirement != null && ChannelSession.Settings.Currency.ContainsKey(currencyRequirement.CurrencyID))
             {
                 this.EnableDisableToggleSwitch.IsChecked = true;
 
-                this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
-                this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyID];
+                this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currency.Values;
+                this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currency[currencyRequirement.CurrencyID];
 
                 this.CurrencyCostTextBox.IsEnabled = true;
                 if (currencyRequirement.RequiredAmount >= 0)
@@ -82,7 +83,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
             if (ChannelSession.Settings != null)
             {
-                IEnumerable<UserCurrencyModel> currencies = ChannelSession.Settings.Currencies.Values;
+                IEnumerable<CurrencyModel> currencies = ChannelSession.Settings.Currency.Values;
                 this.IsEnabled = (currencies.Count() > 0);
                 this.CurrencyTypeComboBox.ItemsSource = currencies;
             }

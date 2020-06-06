@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Util;
+﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -45,24 +45,24 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyModel currency, int amount)
+        public CurrencyRequirementViewModel(CurrencyModel currency, int amount)
             : this(currency, CurrencyRequirementTypeEnum.RequiredAmount, amount)
         { }
 
-        public CurrencyRequirementViewModel(UserCurrencyModel currency, int minimumAmount, int maximumAmount)
+        public CurrencyRequirementViewModel(CurrencyModel currency, int minimumAmount, int maximumAmount)
             : this(currency, CurrencyRequirementTypeEnum.MinimumAndMaximum, minimumAmount)
         {
             this.MaximumAmount = maximumAmount;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyModel currency, CurrencyRequirementTypeEnum requirementType, int amount)
+        public CurrencyRequirementViewModel(CurrencyModel currency, CurrencyRequirementTypeEnum requirementType, int amount)
         {
             this.CurrencyID = currency.ID;
             this.RequiredAmount = amount;
             this.RequirementType = requirementType;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyModel currency, UserRankViewModel rank, bool mustEqual = false)
+        public CurrencyRequirementViewModel(CurrencyModel currency, RankModel rank, bool mustEqual = false)
         {
             this.CurrencyID = currency.ID;
             this.RankName = rank.Name;
@@ -70,28 +70,28 @@ namespace MixItUp.Base.ViewModel.Requirement
         }
 
         [JsonIgnore]
-        public UserRankViewModel RequiredRank
+        public RankModel RequiredRank
         {
             get
             {
-                UserCurrencyModel currency = this.GetCurrency();
+                CurrencyModel currency = this.GetCurrency();
                 if (currency != null)
                 {
-                    UserRankViewModel rank = currency.Ranks.FirstOrDefault(r => r.Name.Equals(this.RankName));
+                    RankModel rank = currency.Ranks.FirstOrDefault(r => r.Name.Equals(this.RankName));
                     if (rank != null)
                     {
                         return rank;
                     }
                 }
-                return UserCurrencyModel.NoRank;
+                return CurrencyModel.NoRank;
             }
         }
 
-        public UserCurrencyModel GetCurrency()
+        public CurrencyModel GetCurrency()
         {
-            if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
             {
-                return ChannelSession.Settings.Currencies[this.CurrencyID];
+                return ChannelSession.Settings.Currency[this.CurrencyID];
             }
             return null;
         }
@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.DoesMeetCurrencyRequirement(amount))
             {
-                UserCurrencyModel currency = this.GetCurrency();
+                CurrencyModel currency = this.GetCurrency();
                 if (currency == null)
                 {
                     return false;
@@ -126,14 +126,14 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserCurrencyModel currency = this.GetCurrency();
+            CurrencyModel currency = this.GetCurrency();
             if (currency == null)
             {
                 return false;
             }
 
-            UserRankViewModel rank = this.RequiredRank;
-            if (rank == null)
+            RankModel rank = this.RequiredRank;
+            if (rank == CurrencyModel.NoRank)
             {
                 return false;
             }
@@ -163,25 +163,24 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserCurrencyModel currency = this.GetCurrency();
+            CurrencyModel currency = this.GetCurrency();
             if (currency == null)
             {
                 return false;
             }
 
-            UserRankViewModel rank = this.RequiredRank;
+            RankModel rank = this.RequiredRank;
             if (rank == null)
             {
                 return false;
             }
 
-            if (!currency.HasAmount(userData, rank.MinimumPoints))
+            if (!currency.HasAmount(userData, rank.Amount))
             {
                 return false;
             }
 
-            UserCurrencyDataViewModel userCurrencyData = new UserCurrencyDataViewModel(userData, currency);
-            if (this.MustEqual && userCurrencyData.GetRank() != rank && !userData.IsCurrencyRankExempt)
+            if (this.MustEqual && currency.GetRank(userData) != rank)
             {
                 return false;
             }
@@ -191,44 +190,44 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendCurrencyNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
             {
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
                     await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0}-{1} {2} to do this",
-                        this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                        this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currency[this.CurrencyID].Name));
                 }
                 else
                 {
                     await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this",
-                        this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                        this.RequiredAmount, ChannelSession.Settings.Currency[this.CurrencyID].Name));
                 }
             }
         }
 
         public async Task SendCurrencyNotMetWhisper(UserViewModel user, int amount)
         {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
             {
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
                     await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0}-{1} {2} to do this",
-                        this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                        this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currency[this.CurrencyID].Name));
                 }
                 else
                 {
                     await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this",
-                        this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                        this.RequiredAmount, ChannelSession.Settings.Currency[this.CurrencyID].Name));
                 }
             }
         }
 
         public async Task SendRankNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
             {
                 await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required rank of {0} ({1} {2}) to do this",
-                    this.RequiredRank.Name, this.RequiredRank.MinimumPoints, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                    this.RequiredRank.Name, this.RequiredRank.Amount, ChannelSession.Settings.Currency[this.CurrencyID].Name));
             }
         }
 

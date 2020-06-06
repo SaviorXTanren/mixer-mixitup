@@ -249,7 +249,7 @@ namespace MixItUp.Base.Util
             return user;
         }
 
-        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(UserCurrencyModel currency)
+        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
             IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
             return applicableUsers.OrderByDescending(u => currency.GetAmount(u));
@@ -337,7 +337,7 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
@@ -795,7 +795,7 @@ namespace MixItUp.Base.Util
 
                 UserDataModel userData = user.Data;
 
-                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
                     if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
                     {
@@ -806,17 +806,17 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                         }
 
-                        UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
-                        UserRankViewModel rank = currencyData.GetRank();
-                        UserRankViewModel nextRank = currencyData.GetNextRank();
+                        int amount = currency.GetAmount(user.Data);
+                        RankModel rank = currency.GetRank(user.Data);
+                        RankModel nextRank = currency.GetNextRank(user.Data);
 
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
 
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
                     }
                 }
 

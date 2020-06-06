@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using System;
@@ -195,8 +196,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private CustomCommand tradeCommand;
 
-        public IEnumerable<UserCurrencyModel> Currencies { get { return ChannelSession.Settings.Currencies.Values; } }
-        public UserCurrencyModel SelectedShopCurrency
+        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values; } }
+        public CurrencyModel SelectedShopCurrency
         {
             get { return this.selectedShopCurrency; }
             set
@@ -205,7 +206,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private UserCurrencyModel selectedShopCurrency;
+        private CurrencyModel selectedShopCurrency;
 
         public ICommand HelpCommand { get; private set; }
 
@@ -336,7 +337,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            UserCurrencyModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            CurrencyModel dupeCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeCurrency != null)
             {
                 await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");

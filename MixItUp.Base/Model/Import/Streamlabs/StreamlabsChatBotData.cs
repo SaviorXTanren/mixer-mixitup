@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
@@ -115,7 +116,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
         public async Task ImportSettings()
         {
-            UserCurrencyModel rank = new UserCurrencyModel()
+            CurrencyModel rank = new CurrencyModel()
             {
                 Name = "Rank",
                 SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("rank"),
@@ -126,10 +127,10 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
             foreach (StreamlabsChatBotRank slrank in this.Ranks)
             {
-                rank.Ranks.Add(new UserRankViewModel(slrank.Name, slrank.Requirement));
+                rank.Ranks.Add(new RankModel(slrank.Name, slrank.Requirement));
             }
 
-            UserCurrencyModel currency = new UserCurrencyModel()
+            CurrencyModel currency = new CurrencyModel()
             {
                 Name = "Points",
                 SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("points"),
@@ -138,8 +139,8 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                 IsPrimary = true
             };
 
-            ChannelSession.Settings.Currencies[rank.ID] = rank;
-            ChannelSession.Settings.Currencies[currency.ID] = currency;
+            ChannelSession.Settings.Currency[rank.ID] = rank;
+            ChannelSession.Settings.Currency[currency.ID] = currency;
 
             this.AddCurrencyRankCommands(rank);
             this.AddCurrencyRankCommands(currency);
@@ -237,7 +238,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             }
         }
 
-        private void AddCurrencyRankCommands(UserCurrencyModel currency)
+        private void AddCurrencyRankCommands(CurrencyModel currency)
         {
             ChatCommand statusCommand = new ChatCommand("User " + currency.Name, currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
             string statusChatText = string.Empty;

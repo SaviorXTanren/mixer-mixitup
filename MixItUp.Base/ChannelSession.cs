@@ -4,6 +4,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -513,7 +514,7 @@ namespace MixItUp.Base
                                 }
                             }
 
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 if (currency.ShouldBeReset())
                                 {
@@ -585,8 +586,6 @@ namespace MixItUp.Base
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
 
-                        GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
-
                         AsyncRunner.RunBackgroundTask(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
                     }
                     catch (Exception ex)
@@ -642,18 +641,6 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
-                }
-            }
-        }
-
-        private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
-        {
-            if (currency.Currency.RankChangedCommand != null)
-            {
-                UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(currency.User.MixerID);
-                if (user != null)
-                {
-                    await currency.Currency.RankChangedCommand.Perform(user);
                 }
             }
         }

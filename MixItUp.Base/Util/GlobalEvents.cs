@@ -111,15 +111,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserCurrencyDataViewModel> OnRankChanged;
-        public static void RankChanged(UserCurrencyDataViewModel currency)
-        {
-            if (GlobalEvents.OnRankChanged != null)
-            {
-                GlobalEvents.OnRankChanged(null, currency);
-            }
-        }
-
         public static event EventHandler<UserQuoteViewModel> OnQuoteAdded;
         public static void QuoteAdded(UserQuoteViewModel quote)
         {

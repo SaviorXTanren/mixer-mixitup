@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Collections.Generic;
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private CoinPusherGameCommand existingCommand;
 
-        public CoinPusherGameEditorControlViewModel(UserCurrencyModel currency)
+        public CoinPusherGameEditorControlViewModel(CurrencyModel currency)
         {
             this.StatusCommand = this.CreateBasicChatCommand("After spending a few minutes, you count $gametotalamount " + currency.Name + " inside the machine.");
             this.NoPayoutCommand = this.CreateBasicChatCommand("@$username drops their coins into the machine...and nothing happens. All $gametotalamount " + currency.Name + " stares back at you.");

@@ -9,11 +9,14 @@ namespace MixItUp.WPF.Controls.Currency
     /// </summary>
     public partial class UserInventoryEditorControl : UserControl
     {
+        private UserDataModel user;
+
         private UserInventoryModel inventory;
         private UserInventoryDataViewModel inventoryData;
 
-        public UserInventoryEditorControl(UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
+        public UserInventoryEditorControl(UserDataModel user, UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
         {
+            this.user = user;
             this.inventory = inventory;
             this.inventoryData = inventoryData;
 
@@ -29,7 +32,7 @@ namespace MixItUp.WPF.Controls.Currency
             this.InventoryItemsStackPanel.Children.Clear();
             foreach (UserInventoryItemModel item in this.inventory.Items.Values)
             {
-                this.InventoryItemsStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(item, this.inventoryData));
+                this.InventoryItemsStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user, item, this.inventoryData));
             }
         }
     }

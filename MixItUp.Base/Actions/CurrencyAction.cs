@@ -69,7 +69,7 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = UserRoleEnum.User; }
 
-        public CurrencyAction(UserCurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
+        public CurrencyAction(CurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
             UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
@@ -110,7 +110,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Services.Chat != null)
             {
-                UserCurrencyModel currency = null;
+                CurrencyModel currency = null;
                 UserInventoryModel inventory = null;
                 StreamPassModel streamPass = null;
                 string systemName = null;
@@ -118,11 +118,11 @@ namespace MixItUp.Base.Actions
 
                 if (this.CurrencyID != Guid.Empty)
                 {
-                    if (!ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                    if (!ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
                     {
                         return;
                     }
-                    currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    currency = ChannelSession.Settings.Currency[this.CurrencyID];
                     systemName = currency.Name;
                 }
 

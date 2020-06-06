@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
@@ -52,17 +53,16 @@ namespace MixItUp.WPF.Windows.Users
             await this.user.RefreshDetails(force: true);
 
             this.CurrencyRankStackPanel.Children.Clear();
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.ToList())
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
             {
-                UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(this.user.Data, currency);
-                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(currencyData));
+                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(this.user.Data, currency));
             }
 
             this.InventoryStackPanel.Children.Clear();
             foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
             {
                 UserInventoryDataViewModel inventoryData = new UserInventoryDataViewModel(this.user.Data, inventory);
-                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(inventory, inventoryData));
+                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(this.user.Data, inventory, inventoryData));
             }
 
             this.UserOnlyChatCommandsListView.Visibility = Visibility.Collapsed;
@@ -206,7 +206,7 @@ namespace MixItUp.WPF.Windows.Users
         private void CurrencyRankExemptToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 currency.ResetAmount(this.user.Data);
             }
