@@ -170,7 +170,8 @@ namespace MixItUp.WPF.Controls.Actions
 
             var actionTypes = System.Enum.GetValues(typeof(ActionTypeEnum))
                     .Cast<ActionTypeEnum>()
-                    .Where(v => !EnumHelper.IsObsolete(v) && v != ActionTypeEnum.Custom);
+                    .Where(v => !EnumHelper.IsObsolete(v) && v != ActionTypeEnum.Custom)
+                    .OrderBy(v => v);
 
             this.SingleActionNameComboBox.ItemsSource = actionTypes;
 
