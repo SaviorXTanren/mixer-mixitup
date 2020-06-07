@@ -186,7 +186,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private int subscribeBonus = 1;
-        public int DonationBonus
+        public double DonationBonus
         {
             get { return this.donationBonus; }
             set
@@ -195,8 +195,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private int donationBonus = 1;
-        public int SparkBonus
+        private double donationBonus = 1.0;
+        public double SparkBonus
         {
             get { return this.sparkBonus; }
             set
@@ -205,8 +205,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private int sparkBonus = 1;
-        public int EmberBonus
+        private double sparkBonus = 0.1;
+        public double EmberBonus
         {
             get { return this.emberBonus; }
             set
@@ -215,7 +215,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private int emberBonus = 1;
+        private double emberBonus = 1.0;
 
         public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 

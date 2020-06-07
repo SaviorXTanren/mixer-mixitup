@@ -48,11 +48,11 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public int SubscribeBonus { get; set; }
         [DataMember]
-        public int DonationBonus { get; set; }
+        public double DonationBonus { get; set; }
         [DataMember]
-        public int SparkBonus { get; set; }
+        public double SparkBonus { get; set; }
         [DataMember]
-        public int EmberBonus { get; set; }
+        public double EmberBonus { get; set; }
 
         [DataMember]
         public CustomCommand DefaultLevelUpCommand { get; set; }
