@@ -192,6 +192,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
                     {
+                        user.LastSeen = DateTimeOffset.Now;
                         user.Data.TotalStreamsWatched++;
                         await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
                     }

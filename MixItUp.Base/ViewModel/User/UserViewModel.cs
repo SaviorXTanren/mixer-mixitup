@@ -264,6 +264,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public DateTimeOffset LastSeen { get { return this.Data.LastSeen; } set { this.Data.LastSeen = value; } }
+
         public string UnassociatedUsername { get { return this.Data.UnassociatedUsername; } private set { this.Data.UnassociatedUsername = value; } }
 
         #region Mixer
@@ -415,6 +417,7 @@ namespace MixItUp.Base.ViewModel.User
                 return 0;
             }
         }
+        public string LastSeenString { get { return (this.LastSeen != DateTimeOffset.MinValue) ? this.LastSeen.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }

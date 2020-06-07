@@ -2769,4 +2769,13 @@
   <data name="Viewing" xml:space="preserve">
     <value>Viewing:</value>
   </data>
+  <data name="UserData" xml:space="preserve">
+    <value>User Data</value>
+  </data>
+  <data name="AccountAge" xml:space="preserve">
+    <value>Account Age</value>
+  </data>
+  <data name="LastSeen" xml:space="preserve">
+    <value>Last Seen</value>
+  </data>
 </root>

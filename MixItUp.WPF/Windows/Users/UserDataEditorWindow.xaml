@@ -22,7 +22,10 @@
         Title="User Editing" Height="600" Width="600">
     <Windows:LoadingWindowBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -45,56 +48,123 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Header="{x:Static resx:Resources.MixerData}" Grid.Row="0">
+                <GroupBox Header="{x:Static resx:Resources.UserData}" Grid.Row="0">
                     <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="2" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Text="{Binding Username}" VerticalAlignment="Center" />
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="2" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="2" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
-                            <TextBlock Grid.Column="4" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="{Binding User.Username}" VerticalAlignment="Center" />
+
+                                <Image Grid.Column="2" Source="{Binding User.MixerFanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
+                                <TextBlock Grid.Column="4" Text="{Binding User.MixerFanProgression.level.level}" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBox Grid.Column="2" Width="50" Text="{Binding ViewingHours}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Hours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                                <TextBox Grid.Column="4" Width="50" Text="{Binding ViewingMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            </Grid>
+
+                            <TextBox Grid.Row="4" Width="200" HorizontalAlignment="Left" Text="{Binding User.Data.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                         </Grid>
 
-                        <TextBlock Grid.Row="0" Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="8" Text="{Binding RolesDisplayString}" />
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Width="50" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Hours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Width="50" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
+                                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="2" Text="{Binding User.RolesDisplayString}" />
+                            </Grid>
 
-                        <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding SubscribeAgeString}" />
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AccountAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.AccountAgeString}" />
+                            </Grid>
+
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.FollowAgeString}" />
+                            </Grid>
+
+                            <Grid Grid.Row="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.SubscribeAgeString}" />
+                            </Grid>
+
+                            <Grid Grid.Row="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.LastSeen}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.LastSeenString}" />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </GroupBox>
 
@@ -123,7 +193,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <DataGrid x:Name="UserOnlyChatCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" Margin="0,0,0,10" Visibility="Collapsed">
+                        <DataGrid Grid.Row="0" ItemsSource="{Binding UserOnlyChatCommands}" Visibility="{Binding HasUserOnlyChatCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" Margin="0,0,0,10">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                                 <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding CommandsString}" IsReadOnly="True" Width="125" />
@@ -160,9 +230,10 @@
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CustomEntranceCommand}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
 
-                            <Button x:Name="NewEntranceCommandButton" Grid.Column="2" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" />
-                            <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" Visibility="Collapsed" />
-
+                            <Button x:Name="NewEntranceCommandButton" Grid.Column="2" Visibility="{Binding DoesNotHaveEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" />
+                            <Grid Grid.Column="2"  Visibility="{Binding HasEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" DataContext="{Binding EntranceCommand}" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
+                            </Grid>
                         </Grid>
 
                         <Grid Grid.Row="2">
@@ -177,14 +248,14 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                            <ToggleButton Grid.Column="2" x:Name="CurrencyRankExemptToggleButton" Checked="CurrencyRankExemptToggleButton_Checked" Unchecked="CurrencyRankExemptToggleButton_Checked" />
+                            <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" />
 
                             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SparkExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                            <ToggleButton Grid.Column="6" x:Name="SparkExemptToggleButton" Checked="SparkExemptToggleButton_Checked" Unchecked="SparkExemptToggleButton_Checked" />
+                            <ToggleButton Grid.Column="6" IsChecked="{Binding User.Data.IsSparkExempt}" />
 
                         </Grid>
 
-                        <ComboBox x:Name="PatreonUserComboBox" Grid.Row="4" IsEnabled="False" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonUser}" SelectionChanged="PatreonUserComboBox_SelectionChanged" DisplayMemberPath="User.LookupName" Width="200" />
+                        <ComboBox Grid.Row="4" ItemsSource="{Binding PatreonUsers}" SelectedItem="{Binding PatreonUser}" IsEnabled="{Binding IsPatreonConnected}" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonUser}" DisplayMemberPath="User.LookupName" Width="200" />
 
                     </Grid>
                 </GroupBox>
@@ -197,7 +268,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <ItemsControl x:Name="UserMetricsItemsControl1" Grid.Column="0">
+                        <ItemsControl ItemsSource="{Binding Metrics1}" Grid.Column="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="5">
@@ -207,15 +278,15 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding Item1}" />
+                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
-                                        <TextBlock Grid.Column="2" Text="{Binding Item2}" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Value}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <ItemsControl x:Name="UserMetricsItemsControl2" Grid.Column="2">
+                        <ItemsControl ItemsSource="{Binding Metrics2}" Grid.Column="2">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="5">
@@ -225,9 +296,9 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding Item1}" />
+                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
-                                        <TextBlock Grid.Column="2" Text="{Binding Item2}" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Value}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

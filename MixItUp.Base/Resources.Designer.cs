@@ -133,6 +133,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account Age.
+        /// </summary>
+        public static string AccountAge {
+            get {
+                return ResourceManager.GetString("AccountAge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Is 1 Day Old.
         /// </summary>
         public static string AccountDay {
@@ -3567,6 +3576,15 @@ namespace MixItUp.Base {
         public static string LastQuote {
             get {
                 return ResourceManager.GetString("LastQuote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Seen.
+        /// </summary>
+        public static string LastSeen {
+            get {
+                return ResourceManager.GetString("LastSeen", resourceCulture);
             }
         }
         
@@ -7401,6 +7419,15 @@ namespace MixItUp.Base {
         public static string User {
             get {
                 return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Data.
+        /// </summary>
+        public static string UserData {
+            get {
+                return ResourceManager.GetString("UserData", resourceCulture);
             }
         }
         

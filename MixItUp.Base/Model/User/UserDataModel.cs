@@ -16,7 +16,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.User
 {
     [DataContract]
-    public class UserDataModel : NotifyPropertyChangedBase, IEquatable<UserDataModel>
+    public class UserDataModel : IEquatable<UserDataModel>
     {
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -117,6 +117,9 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public uint TotalMonthsSubbed { get; set; }
 
+        [DataMember]
+        public DateTimeOffset LastSeen { get; set; }
+
         [JsonIgnore]
         public DateTimeOffset LastActivity { get; set; } = DateTimeOffset.MinValue;
 
@@ -216,7 +219,6 @@ namespace MixItUp.Base.Model.User
                 int extraHours = value / 60;
                 this.ViewingHoursPart += extraHours;
                 this.ViewingMinutes = ViewingHoursPart * 60 + (value % 60);
-                this.NotifyPropertyChanged(nameof(ViewingHoursPart));
             }
         }
 
