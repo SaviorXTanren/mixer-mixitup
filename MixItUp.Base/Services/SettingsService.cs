@@ -508,6 +508,20 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            List<UserDataModel> usersToRemove = new List<UserDataModel>();
+            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            {
+                if (user.MixerID <= 0)
+                {
+                    usersToRemove.Add(user);
+                }
+            }
+
+            foreach (UserDataModel user in usersToRemove)
+            {
+                ChannelSession.Settings.UserData.Remove(user.ID);
+            }
+
             await ChannelSession.Services.Settings.Save(settings);
         }
 
