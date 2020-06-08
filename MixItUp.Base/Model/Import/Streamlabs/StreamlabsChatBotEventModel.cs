@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotEvent
+    public class StreamlabsChatBotEventModel
     {
         [DataMember]
         public uint UserID { get; set; }
@@ -19,9 +19,9 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public bool Enabled { get; set; }
 
-        public StreamlabsChatBotEvent() { }
+        public StreamlabsChatBotEventModel() { }
 
-        public StreamlabsChatBotEvent(List<string> values)
+        public StreamlabsChatBotEventModel(List<string> values)
         {
             uint.TryParse(values[0], out uint userID);
             this.UserID = userID;

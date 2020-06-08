@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.Model.Import
 {
-    public abstract class ImportDataViewModelBase
+    public abstract class ImportDataModelBase
     {
         public string GetRegexEntries(string text, string pattern, Func<string, string> replacement)
         {

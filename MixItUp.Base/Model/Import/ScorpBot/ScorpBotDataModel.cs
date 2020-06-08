@@ -15,18 +15,18 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
-    public class ScorpBotData
+    public class ScorpBotDataModel
     {
-        public static async Task<ScorpBotData> GatherScorpBotData(string folderPath)
+        public static async Task<ScorpBotDataModel> GatherScorpBotData(string folderPath)
         {
             try
             {
-                ScorpBotData scorpBotData = null;
+                ScorpBotDataModel scorpBotData = null;
                 string dataPath = Path.Combine(folderPath, "Data");
                 string settingsFilePath = Path.Combine(dataPath, "settings.ini");
                 if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
                 {
-                    scorpBotData = new ScorpBotData();
+                    scorpBotData = new ScorpBotDataModel();
 
                     IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
 
@@ -54,13 +54,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "CommandsDB.sqlite"), "SELECT * FROM RegCommand",
                         (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Commands.Add(new ScorpBotCommand(data));
+                            scorpBotData.Commands.Add(new ScorpBotCommandModel(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Timers2DB.sqlite"), "SELECT * FROM TimeCommand",
                         (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Timers.Add(new ScorpBotTimer(data));
+                            scorpBotData.Timers.Add(new ScorpBotTimerModel(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "FilteredWordsDB.sqlite"), "SELECT * FROM Word",
@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "RankDB.sqlite"), "SELECT * FROM Rank",
                         (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Ranks.Add(new ScorpBotRank(data));
+                            scorpBotData.Ranks.Add(new ScorpBotRankModel(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Viewers3DB.sqlite"), "SELECT * FROM Viewer",
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                         {
                             if (data["BeamID"] != null && int.TryParse((string)data["BeamID"], out int id))
                             {
-                                scorpBotData.Viewers.Add(new ScorpBotViewer(data));
+                                scorpBotData.Viewers.Add(new ScorpBotViewerModel(data));
                             }
                         });
                     }
@@ -102,13 +102,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         public Dictionary<string, Dictionary<string, string>> Settings { get; set; }
 
         [DataMember]
-        public List<ScorpBotViewer> Viewers { get; set; }
+        public List<ScorpBotViewerModel> Viewers { get; set; }
 
         [DataMember]
-        public List<ScorpBotCommand> Commands { get; set; }
+        public List<ScorpBotCommandModel> Commands { get; set; }
 
         [DataMember]
-        public List<ScorpBotTimer> Timers { get; set; }
+        public List<ScorpBotTimerModel> Timers { get; set; }
 
         [DataMember]
         public List<string> FilteredWords { get; set; }
@@ -117,18 +117,18 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         public List<string> Quotes { get; set; }
 
         [DataMember]
-        public List<ScorpBotRank> Ranks { get; set; }
+        public List<ScorpBotRankModel> Ranks { get; set; }
 
-        public ScorpBotData()
+        public ScorpBotDataModel()
         {
             this.Settings = new Dictionary<string, Dictionary<string, string>>();
 
-            this.Viewers = new List<ScorpBotViewer>();
-            this.Commands = new List<ScorpBotCommand>();
-            this.Timers = new List<ScorpBotTimer>();
+            this.Viewers = new List<ScorpBotViewerModel>();
+            this.Commands = new List<ScorpBotCommandModel>();
+            this.Timers = new List<ScorpBotTimerModel>();
             this.FilteredWords = new List<string>();
             this.Quotes = new List<string>();
-            this.Ranks = new List<ScorpBotRank>();
+            this.Ranks = new List<ScorpBotRankModel>();
         }
 
         public void ImportSettings()
@@ -239,7 +239,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                 {
                     currencyCommandResponse = currencyCommandResponse.Replace("$points2", "$" + currency.UserAmountSpecialIdentifier);
                     currencyCommandResponse = currencyCommandResponse.Replace("$currencyname2", currency.Name);
-                    this.Commands.Add(new ScorpBotCommand(currencyCommand, currencyCommandResponse));
+                    this.Commands.Add(new ScorpBotCommandModel(currencyCommand, currencyCommandResponse));
                 }
             }
 
@@ -247,7 +247,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             {
                 ChannelSession.Settings.Currency[rankCurrency.ID] = rankCurrency;
 
-                foreach (ScorpBotRank rank in this.Ranks)
+                foreach (ScorpBotRankModel rank in this.Ranks)
                 {
                     rankCurrency.Ranks.Add(new RankModel(rank.Name, rank.Amount));
                 }
@@ -258,7 +258,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     rankCommandResponse = rankCommandResponse.Replace("$rank", "$" + rankCurrency.UserRankNameSpecialIdentifier);
                     rankCommandResponse = rankCommandResponse.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
                     rankCommandResponse = rankCommandResponse.Replace("$currencyname", rankCurrency.Name);
-                    this.Commands.Add(new ScorpBotCommand(rankCommand, rankCommandResponse));
+                    this.Commands.Add(new ScorpBotCommandModel(rankCommand, rankCommandResponse));
                 }
 
                 if (!string.IsNullOrEmpty(rankUpCommand))
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     rankUpCommand = rankUpCommand.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
                     rankUpCommand = rankUpCommand.Replace("$currencyname", rankCurrency.Name);
 
-                    ScorpBotCommand scorpCommand = new ScorpBotCommand("rankup", rankUpCommand);
+                    ScorpBotCommandModel scorpCommand = new ScorpBotCommandModel("rankup", rankUpCommand);
                     ChatCommand chatCommand = new ChatCommand(scorpCommand);
 
                     rankCurrency.RankChangedCommand = new CustomCommand("User Rank Changed");
@@ -275,13 +275,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                 }
             }
 
-            foreach (ScorpBotCommand command in this.Commands)
+            foreach (ScorpBotCommandModel command in this.Commands)
             {
                 command.ProcessData(currency, rankCurrency);
                 ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
             }
 
-            foreach (ScorpBotTimer timer in this.Timers)
+            foreach (ScorpBotTimerModel timer in this.Timers)
             {
                 ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
             }
@@ -335,10 +335,10 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             ChannelSession.Settings.ModerationBlockLinks = this.GetBoolSettingsValue("settings", "chatlinkalertsdel");
             ChannelSession.Settings.ModerationBlockLinksExcempt = this.GetUserRoleSettingsValue("settings", "chatlinkalertsdelperm");
 
-            foreach (ScorpBotViewer viewer in this.Viewers)
+            foreach (ScorpBotViewerModel viewer in this.Viewers)
             {
                 UserDataModel userData = new UserDataModel(viewer);
-                ChannelSession.Settings.UserData.Add(userData.ID, userData);
+                ChannelSession.Settings.AddUserData(userData);
 
                 UserViewModel user = new UserViewModel(userData);
                 if (rankPointsCurrency != null)

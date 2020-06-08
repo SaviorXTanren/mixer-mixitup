@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotRank
+    public class StreamlabsChatBotRankModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -15,9 +15,9 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public string Info { get; set; }
 
-        public StreamlabsChatBotRank() { }
+        public StreamlabsChatBotRankModel() { }
 
-        public StreamlabsChatBotRank(List<string> values)
+        public StreamlabsChatBotRankModel(List<string> values)
         {
             this.Name = values[0];
 

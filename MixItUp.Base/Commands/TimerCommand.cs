@@ -15,14 +15,14 @@ namespace MixItUp.Base.Commands
             : base(name, CommandTypeEnum.Timer, name)
         { }
 
-        public TimerCommand(ScorpBotTimer timer)
+        public TimerCommand(ScorpBotTimerModel timer)
             : this(timer.Name)
         {
             this.Actions.Add(new ChatAction(timer.Text));
             this.IsEnabled = timer.Enabled;
         }
 
-        public TimerCommand(StreamlabsChatBotTimer timer)
+        public TimerCommand(StreamlabsChatBotTimerModel timer)
             : this(timer.Name)
         {
             this.Actions.AddRange(timer.Actions);

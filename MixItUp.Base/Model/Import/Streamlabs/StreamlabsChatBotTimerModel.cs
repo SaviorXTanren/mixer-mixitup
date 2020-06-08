@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotTimer
+    public class StreamlabsChatBotTimerModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -17,12 +17,12 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public List<ActionBase> Actions { get; set; }
 
-        public StreamlabsChatBotTimer()
+        public StreamlabsChatBotTimerModel()
         {
             this.Actions = new List<ActionBase>();
         }
 
-        public StreamlabsChatBotTimer(List<string> values)
+        public StreamlabsChatBotTimerModel(List<string> values)
             : this()
         {
             this.Name = values[0];

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotViewer
+    public class StreamlabsChatBotViewerModel
     {
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
@@ -19,9 +19,9 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public int Hours { get; set; }
 
-        public StreamlabsChatBotViewer() { }
+        public StreamlabsChatBotViewerModel() { }
 
-        public StreamlabsChatBotViewer(StreamingPlatformTypeEnum platform, List<string> values)
+        public StreamlabsChatBotViewerModel(StreamingPlatformTypeEnum platform, List<string> values)
         {
             this.Platform = platform;
 

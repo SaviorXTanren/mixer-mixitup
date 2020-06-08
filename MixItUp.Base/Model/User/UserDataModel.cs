@@ -161,14 +161,14 @@ namespace MixItUp.Base.Model.User
             this.MixerUsername = user.Username;
         }
 
-        public UserDataModel(ScorpBotViewer viewer)
+        public UserDataModel(ScorpBotViewerModel viewer)
         {
             this.MixerID = viewer.MixerID;
             this.MixerUsername = viewer.MixerUsername;
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataModel(StreamlabsChatBotViewer viewer)
+        public UserDataModel(StreamlabsChatBotViewerModel viewer)
         {
             if (viewer.Platform == StreamingPlatformTypeEnum.Mixer)
             {

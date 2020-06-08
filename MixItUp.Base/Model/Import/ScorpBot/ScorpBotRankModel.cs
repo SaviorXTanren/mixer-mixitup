@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
-    public class ScorpBotRank
+    public class ScorpBotRankModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -12,9 +12,9 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         [DataMember]
         public int Amount { get; set; }
 
-        public ScorpBotRank() { }
+        public ScorpBotRankModel() { }
 
-        public ScorpBotRank(Dictionary<string, object> data)
+        public ScorpBotRankModel(Dictionary<string, object> data)
         {
             this.Name = (string)data["Name"];
 

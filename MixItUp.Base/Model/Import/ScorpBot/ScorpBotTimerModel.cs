@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
-    public class ScorpBotTimer
+    public class ScorpBotTimerModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -16,9 +16,9 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         [DataMember]
         public bool Enabled { get; set; }
 
-        public ScorpBotTimer() { }
+        public ScorpBotTimerModel() { }
 
-        public ScorpBotTimer(Dictionary<string, object> data)
+        public ScorpBotTimerModel(Dictionary<string, object> data)
         {
             this.Name = (string)data["Name2"];
 

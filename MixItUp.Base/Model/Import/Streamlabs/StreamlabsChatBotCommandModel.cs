@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotCommand : ImportDataViewModelBase
+    public class StreamlabsChatBotCommandModel : ImportDataModelBase
     {
         public const string ReadAPIRegexHeaderPattern = "$readapi(";
 
@@ -46,12 +46,12 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public List<ActionBase> Actions { get; set; }
 
-        public StreamlabsChatBotCommand()
+        public StreamlabsChatBotCommandModel()
         {
             this.Actions = new List<ActionBase>();
         }
 
-        public StreamlabsChatBotCommand(List<string> values)
+        public StreamlabsChatBotCommandModel(List<string> values)
             : this()
         {
             this.Command = values[0];

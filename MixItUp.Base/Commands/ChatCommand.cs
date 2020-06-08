@@ -35,7 +35,7 @@ namespace MixItUp.Base.Commands
             this.IncludeExclamationInCommands = true;
         }
 
-        public ChatCommand(ScorpBotCommand command)
+        public ChatCommand(ScorpBotCommandModel command)
             : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.AddRange(command.Actions);
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = command.Enabled;
         }
 
-        public ChatCommand(StreamlabsChatBotCommand command)
+        public ChatCommand(StreamlabsChatBotCommandModel command)
             : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.AddRange(command.Actions);

@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
-    public class ScorpBotCommand : ImportDataViewModelBase
+    public class ScorpBotCommandModel : ImportDataModelBase
     {
         public const string SFXRegexHeaderPattern = "$sfx(";
         public const string ReadAPIRegexHeaderPattern = "$readapi(";
@@ -38,13 +38,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         [DataMember]
         public bool Enabled { get; set; }
 
-        public ScorpBotCommand()
+        public ScorpBotCommandModel()
         {
             this.Actions = new List<ActionBase>();
             this.Requirements = new RequirementViewModel();
         }
 
-        public ScorpBotCommand(string command, string text)
+        public ScorpBotCommandModel(string command, string text)
             : this()
         {
             this.Command = command;
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             this.Enabled = true;
         }
 
-        public ScorpBotCommand(Dictionary<string, object> data)
+        public ScorpBotCommandModel(Dictionary<string, object> data)
             : this((string)data["Command"], (string)data["Response"])
         {
             string permInfo = (string)data["PermInfo"];

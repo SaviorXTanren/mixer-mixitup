@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
-    public class ScorpBotViewer
+    public class ScorpBotViewerModel
     {
         [DataMember]
         public uint MixerID { get; set; }
@@ -28,9 +28,9 @@ namespace MixItUp.Base.Model.Import.ScorpBot
         [DataMember]
         public string Sub { get; set; }
 
-        public ScorpBotViewer() { }
+        public ScorpBotViewerModel() { }
 
-        public ScorpBotViewer(Dictionary<string, object> data)
+        public ScorpBotViewerModel(Dictionary<string, object> data)
         {
             this.MixerID = uint.Parse((string)data["BeamID"]);
             this.MixerUsername = (string)data["BeamName"];

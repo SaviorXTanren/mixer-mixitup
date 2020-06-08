@@ -18,11 +18,11 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
-    public class StreamlabsChatBotData
+    public class StreamlabsChatBotDataModel
     {
-        public static async Task<StreamlabsChatBotData> GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum platform, string filePath)
+        public static async Task<StreamlabsChatBotDataModel> GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum platform, string filePath)
         {
-            StreamlabsChatBotData data = new StreamlabsChatBotData(platform);
+            StreamlabsChatBotDataModel data = new StreamlabsChatBotDataModel(platform);
             await Task.Run(() =>
             {
                 try
@@ -35,31 +35,31 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
                             if (result.Tables.Contains("Commands"))
                             {
-                                data.AddCommands(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Commands"]));
+                                data.AddCommands(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Commands"]));
                             }
                             if (result.Tables.Contains("Timers"))
                             {
-                                data.AddTimers(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Timers"]));
+                                data.AddTimers(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Timers"]));
                             }
                             if (result.Tables.Contains("Quotes"))
                             {
-                                data.AddQuotes(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Quotes"]));
+                                data.AddQuotes(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Quotes"]));
                             }
                             if (result.Tables.Contains("Extra Quotes"))
                             {
-                                data.AddQuotes(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Extra Quotes"]));
+                                data.AddQuotes(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Extra Quotes"]));
                             }
                             if (result.Tables.Contains("Ranks"))
                             {
-                                data.AddRanks(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Ranks"]));
+                                data.AddRanks(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Ranks"]));
                             }
                             if (result.Tables.Contains("Currency"))
                             {
-                                data.AddViewers(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Currency"]));
+                                data.AddViewers(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Currency"]));
                             }
                             if (result.Tables.Contains("Events"))
                             {
-                                data.AddEvents(StreamlabsChatBotData.ReadRowsFromTable(result.Tables["Events"]));
+                                data.AddEvents(StreamlabsChatBotDataModel.ReadRowsFromTable(result.Tables["Events"]));
                             }
                         }
                     }
@@ -91,27 +91,27 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         StreamingPlatformTypeEnum Platform { get; set; }
         [DataMember]
-        public List<StreamlabsChatBotCommand> Commands { get; set; }
+        public List<StreamlabsChatBotCommandModel> Commands { get; set; }
         [DataMember]
-        public List<StreamlabsChatBotTimer> Timers { get; set; }
+        public List<StreamlabsChatBotTimerModel> Timers { get; set; }
         [DataMember]
         public List<string> Quotes { get; set; }
         [DataMember]
-        public List<StreamlabsChatBotRank> Ranks { get; set; }
+        public List<StreamlabsChatBotRankModel> Ranks { get; set; }
         [DataMember]
-        public List<StreamlabsChatBotViewer> Viewers { get; set; }
+        public List<StreamlabsChatBotViewerModel> Viewers { get; set; }
         [DataMember]
-        public List<StreamlabsChatBotEvent> Events { get; set; }
+        public List<StreamlabsChatBotEventModel> Events { get; set; }
 
-        public StreamlabsChatBotData(StreamingPlatformTypeEnum platform)
+        public StreamlabsChatBotDataModel(StreamingPlatformTypeEnum platform)
         {
             this.Platform = platform;
-            this.Commands = new List<StreamlabsChatBotCommand>();
-            this.Timers = new List<StreamlabsChatBotTimer>();
+            this.Commands = new List<StreamlabsChatBotCommandModel>();
+            this.Timers = new List<StreamlabsChatBotTimerModel>();
             this.Quotes = new List<string>();
-            this.Ranks = new List<StreamlabsChatBotRank>();
-            this.Viewers = new List<StreamlabsChatBotViewer>();
-            this.Events = new List<StreamlabsChatBotEvent>();
+            this.Ranks = new List<StreamlabsChatBotRankModel>();
+            this.Viewers = new List<StreamlabsChatBotViewerModel>();
+            this.Events = new List<StreamlabsChatBotEventModel>();
         }
 
         public async Task ImportSettings()
@@ -125,7 +125,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                 IsPrimary = true
             };
 
-            foreach (StreamlabsChatBotRank slrank in this.Ranks)
+            foreach (StreamlabsChatBotRankModel slrank in this.Ranks)
             {
                 rank.Ranks.Add(new RankModel(slrank.Name, slrank.Requirement));
             }
@@ -145,16 +145,15 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             this.AddCurrencyRankCommands(rank);
             this.AddCurrencyRankCommands(currency);
 
-            foreach (StreamlabsChatBotViewer viewer in this.Viewers)
+            foreach (StreamlabsChatBotViewerModel viewer in this.Viewers)
             {
                 try
                 {
                     UserModel user = await ChannelSession.MixerUserConnection.GetUser(viewer.Name);
                     if (user != null)
                     {
-                        viewer.ID = user.id;
-                        UserDataModel userData = new UserDataModel(viewer);
-                        ChannelSession.Settings.UserData[userData.ID] = userData;
+                        UserDataModel userData = new UserDataModel(user);
+                        ChannelSession.Settings.AddUserData(userData);
                         rank.SetAmount(userData, viewer.Hours);
                         currency.SetAmount(userData, viewer.Points);
                     }
@@ -162,15 +161,15 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                 catch (Exception) { }
             }
 
-            foreach (StreamlabsChatBotCommand command in this.Commands)
+            foreach (StreamlabsChatBotCommandModel command in this.Commands)
             {
                 command.ProcessData(currency, rank);
                 ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
             }
 
-            foreach (StreamlabsChatBotTimer timer in this.Timers)
+            foreach (StreamlabsChatBotTimerModel timer in this.Timers)
             {
-                StreamlabsChatBotCommand command = new StreamlabsChatBotCommand() { Command = timer.Name, Response = timer.Response, Enabled = timer.Enabled };
+                StreamlabsChatBotCommandModel command = new StreamlabsChatBotCommandModel() { Command = timer.Name, Response = timer.Response, Enabled = timer.Enabled };
                 command.ProcessData(currency, rank);
                 ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
 
@@ -194,7 +193,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Commands.Add(new StreamlabsChatBotCommand(value));
+                this.Commands.Add(new StreamlabsChatBotCommandModel(value));
             }
         }
 
@@ -202,7 +201,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Timers.Add(new StreamlabsChatBotTimer(value));
+                this.Timers.Add(new StreamlabsChatBotTimerModel(value));
             }
         }
 
@@ -218,7 +217,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Ranks.Add(new StreamlabsChatBotRank(value));
+                this.Ranks.Add(new StreamlabsChatBotRankModel(value));
             }
         }
 
@@ -226,7 +225,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Viewers.Add(new StreamlabsChatBotViewer(this.Platform, value));
+                this.Viewers.Add(new StreamlabsChatBotViewerModel(this.Platform, value));
             }
         }
 
@@ -234,7 +233,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Events.Add(new StreamlabsChatBotEvent(value));
+                this.Events.Add(new StreamlabsChatBotEventModel(value));
             }
         }
 
