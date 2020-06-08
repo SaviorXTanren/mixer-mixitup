@@ -2341,7 +2341,7 @@
     <value>This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
   </data>
   <data name="UserDataStep2" xml:space="preserve">
-    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Mixer ID:</value>
   </data>
   <data name="UserJoined" xml:space="preserve">
     <value>User Joined</value>

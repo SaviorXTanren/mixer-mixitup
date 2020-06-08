@@ -81,10 +81,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     StringBuilder fileContents = new StringBuilder();
 
-                    List<string> columns = new List<string>() { "Mix It Up ID", "Mixer ID", "Username", "Viewing Minutes", "Offline Viewing Minutes" };
+                    List<string> columns = new List<string>() { "MixItUpID", "MixerID", "Username", "ViewingMinutes", "OfflineViewingMinutes" };
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
-                        columns.Add(kvp.Value.Name);
+                        columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
                     fileContents.AppendLine(string.Join(ExportFileColumnSeparator, columns));
 

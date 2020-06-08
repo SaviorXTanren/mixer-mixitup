@@ -141,6 +141,11 @@ namespace MixItUp.Base.ViewModel.User
             if (mixerID > 0)
             {
                 this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
+                if (this.Data == null)
+                {
+                    this.Data = new UserDataModel() { MixerID = mixerID };
+                    ChannelSession.Settings.AddUserData(this.Data);
+                }
             }
             else
             {

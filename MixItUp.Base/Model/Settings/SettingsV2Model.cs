@@ -785,22 +785,18 @@ namespace MixItUp.Base.Model.Settings
                         return this.UserData[id];
                     }
                 }
-                return this.CreateUserData(mixerID);
+                return null;
             }
         }
 
-        private UserDataModel CreateUserData(uint mixerID = 0)
+        public void AddUserData(UserDataModel user)
         {
-            UserDataModel userData = new UserDataModel();
-            this.UserData[userData.ID] = userData;
-
-            userData.MixerID = mixerID;
-            if (userData.MixerID > 0)
+            this.UserData[user.ID] = user;
+            if (user.MixerID > 0)
             {
-                this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                this.MixerUserIDLookups[user.MixerID] = user.ID;
             }
-
-            return userData;
+            this.UserData.ManualValueChanged(user.ID);
         }
 
         private void InitializeMissingData()

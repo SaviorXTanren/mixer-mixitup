@@ -49,14 +49,14 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="UserDataFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <Button Grid.Column="2" Grid.Row="0" x:Name="UserDataFileBrowseButton" VerticalAlignment="Bottom" Click="UserDataFileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
+                <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding UserDataFilePath}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" Grid.Row="0" Command="{Binding UserDataFileBrowseCommand}" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Browse}"/>
             </Grid>
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.UserDataStep2}"/>
 
             <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl x:Name="DataColumnsItemsControls" HorizontalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding Columns}" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -66,16 +66,16 @@
                                     <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" x:Name="DataFieldNameTextBlock" Text="{Binding DataName}" VerticalAlignment="Bottom" Margin="0,0,0,5" />
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Bottom" Margin="0,0,0,5" />
 
-                                <TextBox Grid.Column="2" x:Name="DataColumnNumberTextBox" Text="{Binding ColumnNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ColumnNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="2" Text="{Binding ColumnNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ColumnNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
 
-            <Button x:Name="ImportDataButton" Grid.Row="8" Click="ImportDataButton_Click" Width="160" Content="{x:Static resx:Resources.ImportData}"/>
+            <Button Grid.Row="8" Width="160" Content="{Binding ImportButtonText}" Command="{Binding ImportButtonCommand}" />
 
         </Grid>
 

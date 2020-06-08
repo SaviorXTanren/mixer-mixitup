@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.Window.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Windows.Command;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

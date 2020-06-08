@@ -7603,7 +7603,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:.
+        ///   Looks up a localized string similar to Next, you&apos;ll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Mixer ID:.
         /// </summary>
         public static string UserDataStep2 {
             get {
