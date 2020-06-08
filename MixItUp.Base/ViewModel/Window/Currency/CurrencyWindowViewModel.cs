@@ -433,6 +433,11 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public CurrencyWindowViewModel()
         {
+            if (ChannelSession.Settings.Currency.All(c => !c.Value.IsPrimary))
+            {
+                this.IsPrimary = true;
+            }
+
             this.OnlineRate = CurrencyAcquireRateTypeEnum.Minutes;
             this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
 
