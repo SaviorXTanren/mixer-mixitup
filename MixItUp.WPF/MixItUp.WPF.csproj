@@ -647,6 +647,9 @@
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
+      <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
     </Compile>
@@ -1038,6 +1041,9 @@
     </Compile>
     <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\RedemptionStoreWindow.xaml.cs">
+      <DependentUpon>RedemptionStoreWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Currency\StreamPassWindow.xaml.cs">
       <DependentUpon>StreamPassWindow.xaml</DependentUpon>
@@ -1453,6 +1459,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\RedemptionStoreControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1997,6 +2007,10 @@
     <Page Include="Windows\Currency\InventoryWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Currency\RedemptionStoreWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Currency\StreamPassWindow.xaml">
       <SubType>Designer</SubType>

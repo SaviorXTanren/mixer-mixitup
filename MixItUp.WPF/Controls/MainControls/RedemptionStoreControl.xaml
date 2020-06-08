@@ -1,0 +1,63 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.RedemptionStoreControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="500">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:MainControlBase.Resources>
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Purchases}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Product}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.User}" Binding="{Binding Username}" IsReadOnly="True" Width="180" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.PurchaseTime}" Binding="{Binding PurchaseTime}" IsReadOnly="True" Width="180" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="175">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" Command="{Binding ManualRedeemCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.ManualRedeem}">
+                                    <MaterialDesign:PackIcon Kind="CheckboxMarkedCircle" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button Grid.Column="2" Command="{Binding RefundCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Refund}">
+                                    <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button Grid.Column="4" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Button Grid.Column="2" x:Name="EditProducts" Click="EditProducts_Click" Content="{x:Static resx:Resources.EditProducts}" Width="150" />
+        </Grid>
+    </Grid>
+</local:MainControlBase>

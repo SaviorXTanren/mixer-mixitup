@@ -2778,4 +2778,58 @@
   <data name="LastSeen" xml:space="preserve">
     <value>Last Seen</value>
   </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="AutoReplenish" xml:space="preserve">
+    <value>Auto-Replenish</value>
+  </data>
+  <data name="AutoRedeem" xml:space="preserve">
+    <value>Auto-Redeem</value>
+  </data>
+  <data name="CustomCommand" xml:space="preserve">
+    <value>Custom Command</value>
+  </data>
+  <data name="ModRedeemCommand" xml:space="preserve">
+    <value>Mod Redeem Command</value>
+  </data>
+  <data name="DefaultRedeem" xml:space="preserve">
+    <value>Default Redeem</value>
+  </data>
+  <data name="ManualRedeemNeeded" xml:space="preserve">
+    <value>Manual Redeem Needed</value>
+  </data>
+  <data name="SaveProduct" xml:space="preserve">
+    <value>Save Product</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Redemption" xml:space="preserve">
+    <value>Redemption</value>
+  </data>
+  <data name="ManualRedeem" xml:space="preserve">
+    <value>Manual Redeem</value>
+  </data>
+  <data name="Refund" xml:space="preserve">
+    <value>Refund</value>
+  </data>
+  <data name="EditProducts" xml:space="preserve">
+    <value>Edit Products</value>
+  </data>
+  <data name="RedemptionStore" xml:space="preserve">
+    <value>Redemption Store</value>
+  </data>
+  <data name="ChatPurchaseCommand" xml:space="preserve">
+    <value>Chat Purchase Command</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="PurchaseTime" xml:space="preserve">
+    <value>Purchase Time</value>
+  </data>
 </root>
