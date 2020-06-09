@@ -94,6 +94,8 @@ namespace MixItUp.Base.Services.External
 
         public string Name { get { return "XSplit"; } }
 
+        public bool IsEnabled { get { return ChannelSession.Settings.EnableXSplitConnection; } }
+
         public bool IsConnected { get; private set; }
 
         public Task<Result> Connect()

@@ -160,6 +160,8 @@ namespace MixItUp.Base.Services.External
 
         public string Name { get { return "Streamlabs OBS"; } }
 
+        public bool IsEnabled { get { return ChannelSession.Settings.EnableStreamlabsOBSConnection; } }
+
         public bool IsConnected { get; private set; }
 
         public async Task<Result> Connect()

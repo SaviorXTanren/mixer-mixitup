@@ -26,6 +26,8 @@ namespace MixItUp.WPF.Services
 
         public string Name { get { return "OBS Studio"; } }
 
+        public bool IsEnabled { get { return !string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP); } }
+
         public bool IsConnected { get; private set; }
 
         public async Task<Result> Connect()
