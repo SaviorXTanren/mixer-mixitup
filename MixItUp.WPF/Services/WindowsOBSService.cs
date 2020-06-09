@@ -209,11 +209,11 @@ namespace MixItUp.WPF.Services
 
         private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
-            await this.Disconnect();
-
             Result result;
             do
             {
+                await this.Disconnect();
+
                 await Task.Delay(2500);
 
                 result = await this.Connect();
