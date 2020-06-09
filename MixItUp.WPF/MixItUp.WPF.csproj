@@ -2170,9 +2170,7 @@
     <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
     <Resource Include="Assets\Images\CommandExample.png" />
     <Resource Include="Assets\Images\ExampleRecipe.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.7.0-Windows-Installer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe" />
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
