@@ -2670,4 +2670,7 @@
   <data name="Spanish" xml:space="preserve">
     <value>Spanish</value>
   </data>
+  <data name="NotReplaced" xml:space="preserve">
+    <value>Not Replaced</value>
+  </data>
 </root>
