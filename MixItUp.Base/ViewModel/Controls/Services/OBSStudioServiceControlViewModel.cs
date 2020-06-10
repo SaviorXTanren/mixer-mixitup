@@ -48,6 +48,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
 
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
+                ChannelSession.Settings.OBSStudioServerIP = null;
+                ChannelSession.Settings.OBSStudioServerPassword = null;
+
                 await ChannelSession.Services.OBSStudio.Disconnect();
                 this.IsConnected = false;
             });
