@@ -540,6 +540,7 @@ namespace MixItUp.Base.Model.Settings
                 {
                     this.Quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
                 });
+                this.Quotes.ClearTracking();
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
                 {
