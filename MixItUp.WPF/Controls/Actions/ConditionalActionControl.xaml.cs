@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        public bool IsValue2Definable { get { return this.ComparisionType != ConditionalComparisionTypeEnum.Replaced; } }
+        public bool IsValue2Definable { get { return this.ComparisionType != ConditionalComparisionTypeEnum.Replaced && this.ComparisionType != ConditionalComparisionTypeEnum.NotReplaced; } }
 
         public bool IsBetweenOperatorSelected { get { return this.ComparisionType == ConditionalComparisionTypeEnum.Between; } }
         public bool IsBetweenOperatorNotSelected { get { return !this.IsBetweenOperatorSelected; } }
@@ -104,7 +104,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public bool Validate()
         {
-            if (this.ComparisionType == ConditionalComparisionTypeEnum.Replaced)
+            if (this.ComparisionType == ConditionalComparisionTypeEnum.Replaced || this.ComparisionType == ConditionalComparisionTypeEnum.NotReplaced)
             {
                 return !string.IsNullOrEmpty(this.Value1);
             }

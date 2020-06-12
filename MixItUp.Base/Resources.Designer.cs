@@ -4705,6 +4705,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Replaced.
+        /// </summary>
+        public static string NotReplaced {
+            get {
+                return ResourceManager.GetString("NotReplaced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This feature is not currently supported for this Streaming Software..
         /// </summary>
         public static string NotSupportedStreamingSoftware {

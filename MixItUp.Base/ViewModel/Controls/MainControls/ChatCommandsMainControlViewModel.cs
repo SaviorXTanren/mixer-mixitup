@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Controls.Chat;
 using MixItUp.Base.ViewModel.Window;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

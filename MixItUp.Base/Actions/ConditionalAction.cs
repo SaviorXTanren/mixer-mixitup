@@ -23,7 +23,8 @@ namespace MixItUp.Base.Actions
         Contains,
         DoesNotContain,
         Between,
-        Replaced
+        Replaced,
+        NotReplaced
     }
 
     public enum ConditionalOperatorTypeEnum
@@ -192,6 +193,10 @@ namespace MixItUp.Base.Actions
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Replaced)
             {
                 return !clause.Value1.Equals(v1);
+            }
+            else if (clause.ComparisionType == ConditionalComparisionTypeEnum.NotReplaced)
+            {
+                return clause.Value1.Equals(v1);
             }
             else
             {

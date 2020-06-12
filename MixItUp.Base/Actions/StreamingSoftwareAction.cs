@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -216,66 +217,71 @@ namespace MixItUp.Base.Actions
                 sourceName = await this.ReplaceStringWithSpecialModifiers(this.SourceName, user, arguments);
             }
 
-            Logger.Log(LogLevel.Debug, "Checking for Streaming Software connection");
-
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
-                if (!ChannelSession.Services.OBSStudio.IsConnected)
-                {
-                    await ChannelSession.Services.OBSStudio.Connect();
-                }
                 ssService = ChannelSession.Services.OBSStudio;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
             {
-                if (!ChannelSession.Services.XSplit.IsConnected)
-                {
-                    await ChannelSession.Services.XSplit.Connect();
-                }
                 ssService = ChannelSession.Services.XSplit;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
-                if (!ChannelSession.Services.StreamlabsOBS.IsConnected)
-                {
-                    await ChannelSession.Services.StreamlabsOBS.Connect();
-                }
                 ssService = ChannelSession.Services.StreamlabsOBS;
             }
 
-            Logger.Log(LogLevel.Debug, "Performing for Streaming Software connection");
-
-            if (ssService != null)
+            if (ssService != null && ssService.IsEnabled)
             {
-                if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                Logger.Log(LogLevel.Debug, "Checking for Streaming Software connection");
+
+                if (!ssService.IsConnected)
                 {
-                    await ssService.StartStopStream();
-                }
-                else if (this.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
-                {
-                    await ssService.SaveReplayBuffer();
-                }
-                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(sceneName))
-                {
-                    await ssService.ShowScene(sceneName);
-                }
-                else if (!string.IsNullOrEmpty(sourceName))
-                {
-                    if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
+                    Result result = await ssService.Connect();
+                    if (!result.Success)
                     {
-                        await ssService.SetWebBrowserSourceURL(sceneName, sourceName, url);
+                        Logger.Log(LogLevel.Error, result.Message);
+                        return;
                     }
-                    else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
-                    {
-                        await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
-                    }
-                    await ssService.SetSourceVisibility(sceneName, sourceName, this.SourceVisible);
                 }
-                else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
+
+                Logger.Log(LogLevel.Debug, "Performing for Streaming Software connection");
+
+                if (ssService.IsConnected)
                 {
-                    await ssService.SetSceneCollection(this.SceneCollectionName);
+                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    {
+                        await ssService.StartStopStream();
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
+                    {
+                        await ssService.SaveReplayBuffer();
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(sceneName))
+                    {
+                        await ssService.ShowScene(sceneName);
+                    }
+                    else if (!string.IsNullOrEmpty(sourceName))
+                    {
+                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
+                        {
+                            await ssService.SetWebBrowserSourceURL(sceneName, sourceName, url);
+                        }
+                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
+                        {
+                            await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
+                        }
+                        await ssService.SetSourceVisibility(sceneName, sourceName, this.SourceVisible);
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
+                    {
+                        await ssService.SetSceneCollection(this.SceneCollectionName);
+                    }
                 }
+            }
+            else
+            {
+                Logger.Log(LogLevel.Error, "The Streaming Software selected is not enabled: " + this.SelectedStreamingSoftware);
             }
         }
     }

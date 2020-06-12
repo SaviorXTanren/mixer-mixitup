@@ -2832,4 +2832,7 @@
   <data name="PurchaseTime" xml:space="preserve">
     <value>Purchase Time</value>
   </data>
+  <data name="NotReplaced" xml:space="preserve">
+    <value>Not Replaced</value>
+  </data>
 </root>
