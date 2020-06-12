@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void RestoreSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await DialogHelper.ShowConfirmation("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
+            if (await DialogHelper.ShowConfirmation("This will delete the settings of the currently logged in account and restore the settings from the backup. Are you sure you wish to do this?"))
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|Mix It Up Settings V1 Backup (*.{1})|*.{1}|All files (*.*)|*.*",
                     SettingsV2Model.SettingsBackupFileExtension,

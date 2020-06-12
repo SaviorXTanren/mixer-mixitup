@@ -294,7 +294,15 @@ namespace MixItUp.Base.Services
                             Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
                     }
 
-                    return new Result<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                    SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile);
+
+                    if (ChannelSession.Settings.IsStreamer != settings.IsStreamer || ChannelSession.Settings.MixerUserID != settings.MixerUserID || ChannelSession.Settings.MixerChannelID != settings.MixerChannelID)
+                    {
+                        return new Result<SettingsV2Model>("The account information in the backup you are trying to restore does not match the currently logged in account." +
+                            Environment.NewLine + Environment.NewLine + "Please sign-in with the correct account in order to restore this backup");
+                    }
+
+                    return new Result<SettingsV2Model>(settings);
                 }
             }
             catch (Exception ex)
