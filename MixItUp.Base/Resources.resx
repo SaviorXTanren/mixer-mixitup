@@ -2782,10 +2782,10 @@
     <value>Quantity</value>
   </data>
   <data name="AutoReplenish" xml:space="preserve">
-    <value>Auto-Replenish</value>
+    <value>Auto-Replenish:</value>
   </data>
   <data name="AutoRedeem" xml:space="preserve">
-    <value>Auto-Redeem</value>
+    <value>Auto-Redeem:</value>
   </data>
   <data name="CustomCommand" xml:space="preserve">
     <value>Custom Command</value>
@@ -2793,8 +2793,8 @@
   <data name="ModRedeemCommand" xml:space="preserve">
     <value>Mod Redeem Command</value>
   </data>
-  <data name="DefaultRedeem" xml:space="preserve">
-    <value>Default Redeem</value>
+  <data name="DefaultRedemption" xml:space="preserve">
+    <value>Default Redemption</value>
   </data>
   <data name="ManualRedeemNeeded" xml:space="preserve">
     <value>Manual Redeem Needed</value>
@@ -2834,5 +2834,26 @@
   </data>
   <data name="NotReplaced" xml:space="preserve">
     <value>Not Replaced</value>
+  </data>
+  <data name="ValidProductName" xml:space="preserve">
+    <value>A valid product name must be specified</value>
+  </data>
+  <data name="ProductNameAlreadyExists" xml:space="preserve">
+    <value>The specified name already exists for another product</value>
+  </data>
+  <data name="CustomProductRedemption" xml:space="preserve">
+    <value>Custom Product Redemption</value>
+  </data>
+  <data name="ValidChatPurchaseCommand" xml:space="preserve">
+    <value>A valid chat purchase command must be specified</value>
+  </data>
+  <data name="ValidModRedeemCommand" xml:space="preserve">
+    <value>A valid mod redeem command must be specified</value>
+  </data>
+  <data name="CustomRedemption" xml:space="preserve">
+    <value>Custom Redemption</value>
+  </data>
+  <data name="ConfirmRedemptionStoreProductDeletion" xml:space="preserve">
+    <value>Are you sure you want to delete this product?</value>
   </data>
 </root>

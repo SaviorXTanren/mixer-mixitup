@@ -65,34 +65,52 @@
                             <ScrollViewer VerticalScrollBarVisibility="Visible" Height="300" Width="700">
                                 <DataGrid ItemsSource="{Binding Products}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Name}" IsReadOnly="True" Width="200">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Name}" IsReadOnly="True" Width="*">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Quantity}" Width="80">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Quantity}" HorizontalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Quantity}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.AutoRedeem}" Width="120">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding AutoRedeem}" HorizontalAlignment="Center" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.CustomCommand}" Width="*">
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.CustomRedemption}" Width="175">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Grid>
-                                                        <Button x:Name="CustomProductNewCommandButton" HorizontalAlignment="Center" Click="CustomProductNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding CustomCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                        <Button x:Name="CustomProductNewCommandButton" Click="CustomProductNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding CustomCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                                                        <CommandControls:CommandButtonsControl x:Name="CustomProductCommandButtons" HorizontalAlignment="Center" EditClicked="CustomProductCommandButtons_EditClicked" DeleteClicked="CustomProductCommandButtons_DeleteClicked" Visibility="{Binding CustomCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                        <Grid Visibility="{Binding CustomCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <CommandControls:CommandButtonsControl x:Name="CustomProductCommandButtons" EditClicked="CustomProductCommandButtons_EditClicked" DeleteClicked="CustomProductCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                                                        </Grid>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="120">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="10" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="10" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button Grid.Column="0" Command="{Binding EditProductCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
+                                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                        </Button>
+
+                                                        <Button Grid.Column="2" Command="{Binding DeleteProductCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                        </Button>
                                                     </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -109,21 +127,26 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="300" />
+                            <TextBox Grid.Column="0" Text="{Binding ProductName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="300" />
 
-                            <!-- Usage Requirements -->
+                            <TextBox Grid.Column="2" Text="{Binding ProductQuantity}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
-                            <TextBox Grid.Column="4" Text="{Binding Quantity}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                            <TextBlock Grid.Column="4" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoReplenish}" VerticalAlignment="Center" />
+                            <ToggleButton Grid.Column="6" Margin="0,5,0,0" IsChecked="{Binding ProductAutoReplenish}" />
 
-                            <TextBlock Grid.Column="6" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoReplenish}" VerticalAlignment="Center" />
-                            <ToggleButton Grid.Column="8" Margin="0,5,0,0" IsChecked="{Binding AutoReplenish}" />
+                            <TextBlock Grid.Column="8" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoRedeem}" VerticalAlignment="Center" />
+                            <ToggleButton Grid.Column="10" Margin="0,5,0,0" IsChecked="{Binding ProductAutoRedeem}" />
                         </Grid>
+
+                        <!-- Usage Requirements -->
 
                         <Button Grid.Row="4" Command="{Binding SaveProductCommand}" Content="{x:Static resx:Resources.SaveProduct}" Width="150" />
                     </Grid>
@@ -133,9 +156,9 @@
                     <Grid HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -151,12 +174,12 @@
                             <TextBox Grid.Row="2" Text="{Binding ModRedeemCommand}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModRedeemCommand}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
                         </Grid>
 
-                        <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ManualRedeemNeeded}" HorizontalAlignment="Center" Width="220">
+                        <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ManualRedeemNeeded}" HorizontalAlignment="Center" Width="180">
                             <CommandControls:CommandButtonsControl x:Name="ManualRedeemNeededCommandButtons" DataContext="{Binding ManualRedeemNeededCommand}" HorizontalAlignment="Center" EditClicked="ManualRedeemNeededCommandButtons_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                         </GroupBox>
 
-                        <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.DefaultRedeem}" HorizontalAlignment="Center" Width="220">
-                            <CommandControls:CommandButtonsControl x:Name="DefaultRedeemCommandButtons" DataContext="{Binding DefaultRedeemCommand}" HorizontalAlignment="Center" EditClicked="DefaultRedeemCommandButtons_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                        <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.DefaultRedemption}" HorizontalAlignment="Center" Width="180">
+                            <CommandControls:CommandButtonsControl x:Name="DefaultRedeemCommandButtons" DataContext="{Binding DefaultRedemptionCommand}" HorizontalAlignment="Center" EditClicked="DefaultRedeemCommandButtons_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                         </GroupBox>
                     </Grid>
                 </GroupBox>

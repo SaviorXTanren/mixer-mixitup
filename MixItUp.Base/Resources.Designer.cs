@@ -799,7 +799,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Redeem.
+        ///   Looks up a localized string similar to Auto-Redeem:.
         /// </summary>
         public static string AutoRedeem {
             get {
@@ -808,7 +808,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Replenish.
+        ///   Looks up a localized string similar to Auto-Replenish:.
         /// </summary>
         public static string AutoReplenish {
             get {
@@ -1492,6 +1492,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this product?.
+        /// </summary>
+        public static string ConfirmRedemptionStoreProductDeletion {
+            get {
+                return ResourceManager.GetString("ConfirmRedemptionStoreProductDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this Stream Pass?.
         /// </summary>
         public static string ConfirmStreamPassDeletion {
@@ -1825,6 +1834,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Product Redemption.
+        /// </summary>
+        public static string CustomProductRedemption {
+            get {
+                return ResourceManager.GetString("CustomProductRedemption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Redemption.
+        /// </summary>
+        public static string CustomRedemption {
+            get {
+                return ResourceManager.GetString("CustomRedemption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Title.
         /// </summary>
         public static string CustomTitle {
@@ -1996,11 +2023,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Default Redeem.
+        ///   Looks up a localized string similar to Default Redemption.
         /// </summary>
-        public static string DefaultRedeem {
+        public static string DefaultRedemption {
             get {
-                return ResourceManager.GetString("DefaultRedeem", resourceCulture);
+                return ResourceManager.GetString("DefaultRedemption", resourceCulture);
             }
         }
         
@@ -5254,6 +5281,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified name already exists for another product.
+        /// </summary>
+        public static string ProductNameAlreadyExists {
+            get {
+                return ResourceManager.GetString("ProductNameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Products.
         /// </summary>
         public static string Products {
@@ -7752,6 +7788,33 @@ namespace MixItUp.Base {
         public static string UserToMove {
             get {
                 return ResourceManager.GetString("UserToMove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid chat purchase command must be specified.
+        /// </summary>
+        public static string ValidChatPurchaseCommand {
+            get {
+                return ResourceManager.GetString("ValidChatPurchaseCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid mod redeem command must be specified.
+        /// </summary>
+        public static string ValidModRedeemCommand {
+            get {
+                return ResourceManager.GetString("ValidModRedeemCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid product name must be specified.
+        /// </summary>
+        public static string ValidProductName {
+            get {
+                return ResourceManager.GetString("ValidProductName", resourceCulture);
             }
         }
         

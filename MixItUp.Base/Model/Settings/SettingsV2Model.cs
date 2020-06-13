@@ -438,12 +438,31 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Advanced
 
+        #region Currency
+
         [DataMember]
         public Dictionary<Guid, CurrencyModel> Currency { get; set; } = new Dictionary<Guid, CurrencyModel>();
+
         [DataMember]
         public Dictionary<Guid, InventoryModel> Inventory { get; set; } = new Dictionary<Guid, InventoryModel>();
+
         [DataMember]
         public Dictionary<Guid, StreamPassModel> StreamPass { get; set; } = new Dictionary<Guid, StreamPassModel>();
+
+        [DataMember]
+        public bool RedemptionStoreEnabled { get; set; }
+        [DataMember]
+        public Dictionary<Guid, RedemptionStoreProductModel> RedemptionStoreProducts { get; set; } = new Dictionary<Guid, RedemptionStoreProductModel>();
+        [DataMember]
+        public string RedemptionStoreChatPurchaseCommand { get; set; } = "!purchase";
+        [DataMember]
+        public string RedemptionStoreModRedeemCommand { get; set; } = "!redeem";
+        [DataMember]
+        public CustomCommand RedemptionStoreManualRedeemNeededCommand { get; set; }
+        [DataMember]
+        public CustomCommand RedemptionStoreDefaultRedemptionCommand { get; set; }
+
+        #endregion Currency
 
         [DataMember]
         public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
@@ -820,6 +839,9 @@ namespace MixItUp.Base.Model.Settings
             {
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
+
+            this.RedemptionStoreManualRedeemNeededCommand = this.RedemptionStoreManualRedeemNeededCommand ?? CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+            this.RedemptionStoreDefaultRedemptionCommand = this.RedemptionStoreDefaultRedemptionCommand ?? CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

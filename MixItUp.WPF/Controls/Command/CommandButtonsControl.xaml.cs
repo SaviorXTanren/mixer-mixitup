@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -113,37 +114,32 @@ namespace MixItUp.WPF.Controls.Command
 
         private void RefreshUI()
         {
+            if (this.EditButton != null && this.RemoveEditingButton)
+            {
+                this.EditButton.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.DeleteButton != null && this.RemoveDeleteButton)
+            {
+                this.DeleteButton.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.EnableDisableToggleSwitch != null && this.RemoveEnableDisableToggle)
+            {
+                this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
+            }
+
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                if (this.EditButton != null)
+                if (this.EditButton != null && !command.IsEditable)
                 {
-                    if (!command.IsEditable)
-                    {
-                        this.EditButton.IsEnabled = false;
-                    }
-
-                    if (this.RemoveEditingButton)
-                    {
-                        this.EditButton.Visibility = Visibility.Collapsed;
-                    }
-                }
-
-                if (this.DeleteButton != null)
-                {
-                    if (this.RemoveDeleteButton)
-                    {
-                        this.DeleteButton.Visibility = Visibility.Collapsed;
-                    }
+                    this.EditButton.IsEnabled = false;
                 }
 
                 if (this.EnableDisableToggleSwitch != null)
                 {
                     this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
-                    if (this.RemoveEnableDisableToggle)
-                    {
-                        this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
-                    }
                 }
             }
         }
@@ -295,6 +291,10 @@ namespace MixItUp.WPF.Controls.Command
                     else if (command.Name.Contains("Moderation Strike"))
                     {
                         extraSpecialIdentifiers[ModerationService.ModerationReasonSpecialIdentifier] = "Bad Stuff";
+                    }
+                    else if (command.Name.Equals(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName) || command.Name.Equals(RedemptionStorePurchaseModel.DefaultRedemptionCommandName))
+                    {
+                        extraSpecialIdentifiers["productname"] = "Test Product";
                     }
                     else
                     {
