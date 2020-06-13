@@ -294,7 +294,7 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else if (command.Name.Equals(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName) || command.Name.Equals(RedemptionStorePurchaseModel.DefaultRedemptionCommandName))
                     {
-                        extraSpecialIdentifiers["productname"] = "Test Product";
+                        extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = "Test Product";
                     }
                     else
                     {

@@ -1492,11 +1492,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you wish to delete this purchase and not refund the user?.
+        /// </summary>
+        public static string ConfirmDeleteRedemptionStorePurchase {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteRedemptionStorePurchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this product?.
         /// </summary>
         public static string ConfirmRedemptionStoreProductDeletion {
             get {
                 return ResourceManager.GetString("ConfirmRedemptionStoreProductDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you wish to refund the user and remove this purchase?.
+        /// </summary>
+        public static string ConfirmRefundRedemptionStorePurchase {
+            get {
+                return ResourceManager.GetString("ConfirmRefundRedemptionStorePurchase", resourceCulture);
             }
         }
         
@@ -5083,6 +5101,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending.
+        /// </summary>
+        public static string Pending {
+            get {
+                return ResourceManager.GetString("Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to %.
         /// </summary>
         public static string Percent {
@@ -5565,6 +5592,15 @@ namespace MixItUp.Base {
         public static string Red {
             get {
                 return ResourceManager.GetString("Red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redeemed.
+        /// </summary>
+        public static string Redeemed {
+            get {
+                return ResourceManager.GetString("Redeemed", resourceCulture);
             }
         }
         
@@ -6690,6 +6726,15 @@ namespace MixItUp.Base {
         public static string StartReminder {
             get {
                 return ResourceManager.GetString("StartReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string State {
+            get {
+                return ResourceManager.GetString("State", resourceCulture);
             }
         }
         

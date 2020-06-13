@@ -1,4 +1,6 @@
-﻿using MixItUp.WPF.Windows.Currency;
+﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
+using MixItUp.WPF.Windows.Currency;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -8,6 +10,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class RedemptionStoreControl : MainControlBase
     {
+        private RedemptionStoreMainControlViewModel viewModel;
+
         public RedemptionStoreControl()
         {
             InitializeComponent();
@@ -15,14 +19,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
-            //this.DataContext = this.viewModel = new StreamPassMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-            //await this.viewModel.OnLoaded();
+            this.DataContext = this.viewModel = new RedemptionStoreMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
             await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
-            //await this.viewModel.OnVisible();
+            await this.viewModel.OnVisible();
         }
 
         private void EditProducts_Click(object sender, System.Windows.RoutedEventArgs e)

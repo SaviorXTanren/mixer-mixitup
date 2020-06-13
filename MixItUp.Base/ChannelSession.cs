@@ -574,6 +574,14 @@ namespace MixItUp.Base
 
                         ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
+                        foreach (RedemptionStorePurchaseModel purchase in ChannelSession.Settings.RedemptionStorePurchases.ToList())
+                        {
+                            if (purchase.State != RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
+                            {
+                                ChannelSession.Settings.RedemptionStorePurchases.Remove(purchase);
+                            }
+                        }
+
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
                         await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);

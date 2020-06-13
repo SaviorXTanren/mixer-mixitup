@@ -2856,4 +2856,19 @@
   <data name="ConfirmRedemptionStoreProductDeletion" xml:space="preserve">
     <value>Are you sure you want to delete this product?</value>
   </data>
+  <data name="ConfirmDeleteRedemptionStorePurchase" xml:space="preserve">
+    <value>Are you sure you wish to delete this purchase and not refund the user?</value>
+  </data>
+  <data name="ConfirmRefundRedemptionStorePurchase" xml:space="preserve">
+    <value>Are you sure you wish to refund the user and remove this purchase?</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Redeemed" xml:space="preserve">
+    <value>Redeemed</value>
+  </data>
 </root>

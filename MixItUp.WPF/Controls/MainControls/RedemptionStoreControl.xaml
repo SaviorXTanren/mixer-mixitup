@@ -25,7 +25,8 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static resx:Resources.Product}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.User}" Binding="{Binding Username}" IsReadOnly="True" Width="180" />
-                <DataGridTextColumn Header="{x:Static resx:Resources.PurchaseTime}" Binding="{Binding PurchaseTime}" IsReadOnly="True" Width="180" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.PurchaseTime}" Binding="{Binding PurchaseDateTimeString}" IsReadOnly="True" Width="180" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.State}" Binding="{Binding StateString}" IsReadOnly="True" Width="100" />
                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="175">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -38,7 +39,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" Command="{Binding ManualRedeemCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.ManualRedeem}">
+                                <Button Grid.Column="0" Command="{Binding ManualRedeemCommand}" IsEnabled="{Binding CanManualRedeem}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.ManualRedeem}">
                                     <MaterialDesign:PackIcon Kind="CheckboxMarkedCircle" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
@@ -46,7 +47,7 @@
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <Button Grid.Column="4" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                                <Button Grid.Column="4" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanManualRedeem}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
                                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </Grid>

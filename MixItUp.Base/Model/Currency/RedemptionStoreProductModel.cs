@@ -1,20 +1,27 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Currency
 {
     public enum RedemptionStorePurchaseRedemptionState
     {
         AutoRedeemed = 0,
+
         ManualRedeemNeeded = 1,
-        ManualRedeemPerformed = 2
+        ManualRedeemPerformed = 2,
     }
 
     [DataContract]
     public class RedemptionStoreProductModel
     {
+        public const string ProductNameSpecialIdentifier = "productname";
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -68,6 +75,70 @@ namespace MixItUp.Base.Model.Currency
         public RedemptionStorePurchaseModel()
         {
             this.ID = Guid.NewGuid();
+        }
+
+        [JsonIgnore]
+        public RedemptionStoreProductModel Product
+        {
+            get
+            {
+                if (ChannelSession.Settings.RedemptionStoreProducts.ContainsKey(this.ProductID))
+                {
+                    return ChannelSession.Settings.RedemptionStoreProducts[this.ProductID];
+                }
+                return null;
+            }
+        }
+
+        [JsonIgnore]
+        public UserViewModel User
+        {
+            get
+            {
+                UserViewModel user = ChannelSession.Services.User.GetUserByID(this.UserID);
+                if (user == null)
+                {
+                    UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);
+                    if (user != null)
+                    {
+                        user = new UserViewModel(userData);
+                    }
+                }
+                return user;
+            }
+        }
+
+        public async Task Redeem()
+        {
+            RedemptionStoreProductModel product = this.Product;
+            UserViewModel user = this.User;
+            if (product != null && user != null)
+            {
+                CustomCommand command = product.Command;
+                if (command == null)
+                {
+                    command = ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommand;
+                }
+
+                Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+
+                await command.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+
+                if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
+                {
+                    this.State = RedemptionStorePurchaseRedemptionState.ManualRedeemPerformed;
+                }
+                else
+                {
+                    this.State = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
+                }
+            }
+        }
+
+        public async Task Refund()
+        {
+
         }
     }
 }

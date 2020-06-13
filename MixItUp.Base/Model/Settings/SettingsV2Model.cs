@@ -461,6 +461,8 @@ namespace MixItUp.Base.Model.Settings
         public CustomCommand RedemptionStoreManualRedeemNeededCommand { get; set; }
         [DataMember]
         public CustomCommand RedemptionStoreDefaultRedemptionCommand { get; set; }
+        [DataMember]
+        public List<RedemptionStorePurchaseModel> RedemptionStorePurchases { get; set; } = new List<RedemptionStorePurchaseModel>();
 
         #endregion Currency
 
