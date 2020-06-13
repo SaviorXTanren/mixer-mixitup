@@ -53,6 +53,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public ICommand DeleteCommand { get; private set; }
 
+        public bool EnableRedemptionStore
+        {
+            get { return ChannelSession.Settings.RedemptionStoreEnabled; }
+            set
+            {
+                ChannelSession.Settings.RedemptionStoreEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         private RedemptionStoreMainControlViewModel viewModel;
 
         public RedemptionStorePurchaseViewModel(RedemptionStoreMainControlViewModel viewModel, RedemptionStorePurchaseModel purchase)

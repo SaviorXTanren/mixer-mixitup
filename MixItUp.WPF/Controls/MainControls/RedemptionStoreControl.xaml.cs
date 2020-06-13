@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-
+            this.viewModel.Refresh();
         }
     }
 }
