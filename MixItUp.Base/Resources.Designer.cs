@@ -7846,6 +7846,69 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid Cooldown amount must be specified.
+        /// </summary>
+        public static string ValidCooldownAmountMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ValidCooldownAmountMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Cooldown group must be specified.
+        /// </summary>
+        public static string ValidCooldownGroupMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ValidCooldownGroupMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Currency amount must be specified.
+        /// </summary>
+        public static string ValidCurrencyAmountMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ValidCurrencyAmountMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Currency must be selected.
+        /// </summary>
+        public static string ValidCurrencyMustBeSelected {
+            get {
+                return ResourceManager.GetString("ValidCurrencyMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Inventory Item amount must be specified.
+        /// </summary>
+        public static string ValidInventoryItemAmountMustSpecified {
+            get {
+                return ResourceManager.GetString("ValidInventoryItemAmountMustSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Inventory Item must be selected.
+        /// </summary>
+        public static string ValidInventoryItemMustBeSelected {
+            get {
+                return ResourceManager.GetString("ValidInventoryItemMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Inventory must be selected.
+        /// </summary>
+        public static string ValidInventoryMustBeSelected {
+            get {
+                return ResourceManager.GetString("ValidInventoryMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid mod redeem command must be specified.
         /// </summary>
         public static string ValidModRedeemCommand {
@@ -7860,6 +7923,42 @@ namespace MixItUp.Base {
         public static string ValidProductName {
             get {
                 return ResourceManager.GetString("ValidProductName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Rank must be selected.
+        /// </summary>
+        public static string ValidRankMustBeSelected {
+            get {
+                return ResourceManager.GetString("ValidRankMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Rank System must be selected.
+        /// </summary>
+        public static string ValidRankSystemMustBeSelected {
+            get {
+                return ResourceManager.GetString("ValidRankSystemMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Threshold time span must be specified.
+        /// </summary>
+        public static string ValidThresholdTimeSpanMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ValidThresholdTimeSpanMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid Threshold user amount must be specified.
+        /// </summary>
+        public static string ValidThresholdUserAmountMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ValidThresholdUserAmountMustBeSpecified", resourceCulture);
             }
         }
         

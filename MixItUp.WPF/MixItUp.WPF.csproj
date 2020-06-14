@@ -747,16 +747,16 @@
     <Compile Include="Controls\Remote\RemoteBoardSettingsControl.xaml.cs">
       <DependentUpon>RemoteBoardSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
@@ -826,22 +826,22 @@
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\InventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml.cs">
       <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RequirementControl.xaml.cs">
       <DependentUpon>RequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\SettingsRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml.cs">
       <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
@@ -1594,7 +1594,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1602,11 +1602,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1698,11 +1698,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\InventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\RankSelectorControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1710,19 +1710,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\SettingsRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2257,7 +2257,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\Requirements\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.json

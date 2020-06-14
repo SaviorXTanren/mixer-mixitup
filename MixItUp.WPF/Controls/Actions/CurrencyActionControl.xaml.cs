@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.CurrencyActionTypeComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyActionTypeEnum))
                 .Cast<CurrencyActionTypeEnum>()
                 .OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
-            this.CurrencyPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+            this.CurrencyPermissionsAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
 
             this.CurrencyPermissionsAllowedComboBox.SelectedIndex = 0;
 

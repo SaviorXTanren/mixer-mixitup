@@ -54,20 +54,6 @@ namespace MixItUp.Base.ViewModel.User
         public const string MixerUserDefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
         public const string MixerUserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
 
-        public static IEnumerable<UserRoleEnum> SelectableBasicUserRoles()
-        {
-            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
-            roles.Remove(UserRoleEnum.GlobalMod);
-            roles.Remove(UserRoleEnum.Banned);
-            roles.Remove(UserRoleEnum.Custom);
-            return roles;
-        }
-
-        public static IEnumerable<UserRoleEnum> SelectableAdvancedUserRoles()
-        {
-            return UserViewModel.SelectableBasicUserRoles();
-        }
-
         public UserDataModel Data { get; private set; }
 
         public UserViewModel(string username)

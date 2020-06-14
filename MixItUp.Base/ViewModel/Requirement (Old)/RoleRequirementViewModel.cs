@@ -1,21 +1,12 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using StreamingClient.Base.Util;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Requirement
 {
     public class RoleRequirementViewModel
     {
-        public static IEnumerable<UserRoleEnum> BasicUserRoleAllowedValues { get { return UserViewModel.SelectableBasicUserRoles(); } }
-
-        public static IEnumerable<UserRoleEnum> AdvancedUserRoleAllowedValues { get { return UserViewModel.SelectableAdvancedUserRoles(); } }
-
         [JsonProperty]
         public UserRoleEnum MixerRole { get; set; }
 

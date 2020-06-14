@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Requirement
             if (role != null)
             {
                 this.tempRole = role;
-                this.RoleComboBox.ItemsSource = RoleRequirementViewModel.AdvancedUserRoleAllowedValues;
+                this.RoleComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
                 this.RoleComboBox.SelectedItem = role.MixerRole;
             }
         }

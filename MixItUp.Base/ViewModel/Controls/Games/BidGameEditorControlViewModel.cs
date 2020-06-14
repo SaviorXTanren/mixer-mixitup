@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 {
     public class BidGameEditorControlViewModel : GameEditorControlViewModelBase
     {
-        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
+        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles(); } }
 
         private UserRoleEnum whoCanStart = UserRoleEnum.Mod;
         public UserRoleEnum WhoCanStart

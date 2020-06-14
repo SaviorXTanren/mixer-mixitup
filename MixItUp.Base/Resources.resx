@@ -2871,4 +2871,37 @@
   <data name="Redeemed" xml:space="preserve">
     <value>Redeemed</value>
   </data>
+  <data name="ValidCurrencyMustBeSelected" xml:space="preserve">
+    <value>A valid Currency must be selected</value>
+  </data>
+  <data name="ValidCurrencyAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Currency amount must be specified</value>
+  </data>
+  <data name="ValidCooldownAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Cooldown amount must be specified</value>
+  </data>
+  <data name="ValidCooldownGroupMustBeSpecified" xml:space="preserve">
+    <value>A valid Cooldown group must be specified</value>
+  </data>
+  <data name="ValidInventoryItemAmountMustSpecified" xml:space="preserve">
+    <value>A valid Inventory Item amount must be specified</value>
+  </data>
+  <data name="ValidInventoryItemMustBeSelected" xml:space="preserve">
+    <value>A valid Inventory Item must be selected</value>
+  </data>
+  <data name="ValidInventoryMustBeSelected" xml:space="preserve">
+    <value>A valid Inventory must be selected</value>
+  </data>
+  <data name="ValidRankMustBeSelected" xml:space="preserve">
+    <value>A valid Rank must be selected</value>
+  </data>
+  <data name="ValidRankSystemMustBeSelected" xml:space="preserve">
+    <value>A valid Rank System must be selected</value>
+  </data>
+  <data name="ValidThresholdTimeSpanMustBeSpecified" xml:space="preserve">
+    <value>A valid Threshold time span must be specified</value>
+  </data>
+  <data name="ValidThresholdUserAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Threshold user amount must be specified</value>
+  </data>
 </root>
