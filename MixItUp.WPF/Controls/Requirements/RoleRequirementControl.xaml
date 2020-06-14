@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Requirements.RoleRequirementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+             
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <ComboBox Grid.Row="0" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox Grid.Row="1" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
+    </Grid>
+</UserControl>

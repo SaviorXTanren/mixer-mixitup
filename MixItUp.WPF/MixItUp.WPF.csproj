@@ -844,6 +844,15 @@
     <Compile Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirements\CooldownRequirementControl.xaml.cs">
+      <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RoleRequirementControl.xaml.cs">
+      <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
+      <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
       <DependentUpon>IFITTServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1726,6 +1735,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirements\CooldownRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\IFITTServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2257,9 +2278,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\Requirements\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.json

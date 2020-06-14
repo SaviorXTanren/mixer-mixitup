@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,11 +18,14 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 this.selectedType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsGroupSelected");
 
                 this.SelectedGroupName = null;
             }
         }
         private CooldownTypeEnum selectedType = CooldownTypeEnum.Individual;
+
+        public bool IsGroupSelected { get { return this.SelectedType == CooldownTypeEnum.Group; } }
 
         public IEnumerable<string> GroupNames { get { return ChannelSession.Settings.CooldownGroups.Keys.ToList(); } }
 
