@@ -5524,6 +5524,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rank System.
+        /// </summary>
+        public static string RankSystem {
+            get {
+                return ResourceManager.GetString("RankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rate (0% - 150%).
         /// </summary>
         public static string Rate {

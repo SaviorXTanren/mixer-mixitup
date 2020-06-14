@@ -10,11 +10,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public CooldownRequirementViewModel Cooldown { get; set; } = new CooldownRequirementViewModel();
 
-        public List<CurrencyRequirementViewModel> Currency { get; set; } = new List<CurrencyRequirementViewModel>();
+        public CurrencyListRequirementViewModel Currency { get; set; } = new CurrencyListRequirementViewModel();
 
-        public List<RankRequirementViewModel> Rank { get; set; } = new List<RankRequirementViewModel>();
+        public RankListRequirementViewModel Rank { get; set; } = new RankListRequirementViewModel();
 
-        public List<InventoryRequirementViewModel> Inventory { get; set; } = new List<InventoryRequirementViewModel>();
+        public InventoryListRequirementViewModel Inventory { get; set; } = new InventoryListRequirementViewModel();
 
         public ThresholdRequirementViewModel Threshold { get; set; } = new ThresholdRequirementViewModel();
 
@@ -25,9 +25,9 @@ namespace MixItUp.Base.ViewModel.Requirements
                 List<RequirementViewModelBase> requirements = new List<RequirementViewModelBase>();
                 requirements.Add(this.Role);
                 requirements.Add(this.Cooldown);
-                requirements.AddRange(this.Currency);
-                requirements.AddRange(this.Rank);
-                requirements.AddRange(this.Inventory);
+                requirements.AddRange(this.Currency.Items);
+                requirements.AddRange(this.Rank.Items);
+                requirements.AddRange(this.Inventory.Items);
                 requirements.Add(this.Threshold);
                 return requirements;
             }
@@ -49,15 +49,15 @@ namespace MixItUp.Base.ViewModel.Requirements
                 }
                 else if (requirement is CurrencyRequirementModel)
                 {
-                    this.Currency.Add(new CurrencyRequirementViewModel((CurrencyRequirementModel)requirement));
+                    this.Currency.Add((CurrencyRequirementModel)requirement);
                 }
                 else if (requirement is RankRequirementModel)
                 {
-                    this.Rank.Add(new RankRequirementViewModel((RankRequirementModel)requirement));
+                    this.Rank.Add((RankRequirementModel)requirement);
                 }
                 else if (requirement is InventoryRequirementModel)
                 {
-                    this.Inventory.Add(new InventoryRequirementViewModel((InventoryRequirementModel)requirement));
+                    this.Inventory.Add((InventoryRequirementModel)requirement);
                 }
                 else if (requirement is ThresholdRequirementModel)
                 {

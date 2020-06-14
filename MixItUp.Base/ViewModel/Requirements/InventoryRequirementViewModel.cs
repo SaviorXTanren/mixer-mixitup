@@ -1,11 +1,39 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Requirements
 {
+    public class InventoryListRequirementViewModel : ListRequirementViewModelBase
+    {
+        public ObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ObservableCollection<InventoryRequirementViewModel>();
+
+        public ICommand AddItemCommand { get; private set; }
+
+        public InventoryListRequirementViewModel()
+        {
+            this.AddItemCommand = this.CreateCommand((parameter) =>
+            {
+                this.Items.Add(new InventoryRequirementViewModel(this));
+                return Task.FromResult(0);
+            });
+        }
+
+        public void Add(InventoryRequirementModel requirement)
+        {
+            this.Items.Add(new InventoryRequirementViewModel(this, requirement));
+        }
+
+        public void Delete(InventoryRequirementViewModel requirement)
+        {
+            this.Items.Remove(requirement);
+        }
+    }
+
     public class InventoryRequirementViewModel : RequirementViewModelBase
     {
         public IEnumerable<InventoryModel> Inventories { get { return ChannelSession.Settings.Inventory.Values; } }
@@ -64,9 +92,23 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private int amount = 0;
 
-        public InventoryRequirementViewModel() { }
+        public ICommand DeleteCommand { get; private set; }
 
-        public InventoryRequirementViewModel(InventoryRequirementModel requirement)
+        private InventoryListRequirementViewModel viewModel;
+
+        public InventoryRequirementViewModel(InventoryListRequirementViewModel viewModel)
+        {
+            this.viewModel = viewModel;
+
+            this.DeleteCommand = this.CreateCommand((parameter) =>
+            {
+                this.viewModel.Delete(this);
+                return Task.FromResult(0);
+            });
+        }
+
+        public InventoryRequirementViewModel(InventoryListRequirementViewModel viewModel, InventoryRequirementModel requirement)
+            : this(viewModel)
         {
             this.SelectedInventory = requirement.Inventory;
             this.SelectedItem = requirement.Item;

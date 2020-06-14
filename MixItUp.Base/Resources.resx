@@ -2904,4 +2904,7 @@
   <data name="ValidThresholdUserAmountMustBeSpecified" xml:space="preserve">
     <value>A valid Threshold user amount must be specified</value>
   </data>
+  <data name="RankSystem" xml:space="preserve">
+    <value>Rank System</value>
+  </data>
 </root>

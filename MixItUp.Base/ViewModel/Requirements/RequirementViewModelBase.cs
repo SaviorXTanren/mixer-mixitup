@@ -13,4 +13,6 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public abstract RequirementModelBase GetRequirement();
     }
+
+    public abstract class ListRequirementViewModelBase : UIViewModelBase { }
 }

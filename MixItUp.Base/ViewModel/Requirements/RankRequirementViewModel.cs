@@ -3,11 +3,39 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Requirements
 {
+    public class RankListRequirementViewModel : ListRequirementViewModelBase
+    {
+        public ObservableCollection<RankRequirementViewModel> Items { get; set; } = new ObservableCollection<RankRequirementViewModel>();
+
+        public ICommand AddItemCommand { get; private set; }
+
+        public RankListRequirementViewModel()
+        {
+            this.AddItemCommand = this.CreateCommand((parameter) =>
+            {
+                this.Items.Add(new RankRequirementViewModel(this));
+                return Task.FromResult(0);
+            });
+        }
+
+        public void Add(RankRequirementModel requirement)
+        {
+            this.Items.Add(new RankRequirementViewModel(this, requirement));
+        }
+
+        public void Delete(RankRequirementViewModel requirement)
+        {
+            this.Items.Remove(requirement);
+        }
+    }
+
     public class RankRequirementViewModel : RequirementViewModelBase
     {
         public IEnumerable<CurrencyModel> RankSystems { get { return ChannelSession.Settings.Currency.Values.Where(r => r.IsRank); } }
@@ -25,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private CurrencyModel selectedRankSystem;
 
-        public IEnumerable<string> MatchTypes { get { return EnumHelper.GetEnumNames<RankRequirementMatchTypeEnum>(); } }
+        public IEnumerable<RankRequirementMatchTypeEnum> MatchTypes { get { return EnumHelper.GetEnumList<RankRequirementMatchTypeEnum>(); } }
 
         public RankRequirementMatchTypeEnum SelectedMatchType
         {
@@ -62,9 +90,23 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private RankModel selectedRank;
 
-        public RankRequirementViewModel() { }
+        public ICommand DeleteCommand { get; private set; }
 
-        public RankRequirementViewModel(RankRequirementModel requirement)
+        private RankListRequirementViewModel viewModel;
+
+        public RankRequirementViewModel(RankListRequirementViewModel viewModel)
+        {
+            this.viewModel = viewModel;
+
+            this.DeleteCommand = this.CreateCommand((parameter) =>
+            {
+                this.viewModel.Delete(this);
+                return Task.FromResult(0);
+            });
+        }
+
+        public RankRequirementViewModel(RankListRequirementViewModel viewModel, RankRequirementModel requirement)
+            : this(viewModel)
         {
             this.SelectedRankSystem = requirement.RankSystem;
             this.SelectedRank = requirement.RequiredRank;
