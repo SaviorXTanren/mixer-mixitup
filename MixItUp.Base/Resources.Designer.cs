@@ -5974,6 +5974,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run For Each User.
+        /// </summary>
+        public static string RunForEachUser {
+            get {
+                return ResourceManager.GetString("RunForEachUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run One Randomly.
         /// </summary>
         public static string RunOneRandomly {

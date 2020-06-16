@@ -16,14 +16,34 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="0" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredUsers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="120" />
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="2" Text="{Binding TimeSpan}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimeSpanSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="120" />
+            <TextBox Grid.Column="0" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredUsers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="120" />
+
+            <TextBox Grid.Column="2" Text="{Binding TimeSpan}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimeSpanSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="120" />
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.RunForEachUser}" VerticalAlignment="Center" />
+
+            <ToggleButton Grid.Column="2" IsChecked="{Binding RunForEachUser}" />
+        </Grid>
     </Grid>
 </UserControl>

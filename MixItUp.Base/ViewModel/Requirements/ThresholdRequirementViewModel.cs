@@ -34,12 +34,24 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private int timeSpan = 0;
 
+        public bool RunForEachUser
+        {
+            get { return this.runForEachUser; }
+            set
+            {
+                this.runForEachUser = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool runForEachUser = false;
+
         public ThresholdRequirementViewModel() { }
 
         public ThresholdRequirementViewModel(ThresholdRequirementModel requirement)
         {
             this.Amount = requirement.Amount;
             this.TimeSpan = requirement.TimeSpan;
+            this.RunForEachUser = requirement.RunForEachUser;
         }
 
         public override async Task<bool> Validate()
@@ -61,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new ThresholdRequirementModel(this.Amount, this.TimeSpan);
+            return new ThresholdRequirementModel(this.Amount, this.TimeSpan, this.RunForEachUser);
         }
     }
 }

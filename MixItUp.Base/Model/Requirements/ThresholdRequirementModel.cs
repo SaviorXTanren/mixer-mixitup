@@ -17,15 +17,19 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public int TimeSpan { get; set; }
 
+        [DataMember]
+        public bool RunForEachUser { get; set; }
+
         [JsonIgnore]
         private Dictionary<Guid, DateTimeOffset> performs = new Dictionary<Guid, DateTimeOffset>();
 
         public ThresholdRequirementModel() { }
 
-        public ThresholdRequirementModel(int amount, int timespan)
+        public ThresholdRequirementModel(int amount, int timespan, bool runForEachUser = false)
         {
             this.Amount = amount;
             this.TimeSpan = timespan;
+            this.RunForEachUser = runForEachUser;
         }
 
         public List<UserViewModel> GetApplicableUsers()

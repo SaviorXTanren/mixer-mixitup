@@ -2907,4 +2907,7 @@
   <data name="RankSystem" xml:space="preserve">
     <value>Rank System</value>
   </data>
+  <data name="RunForEachUser" xml:space="preserve">
+    <value>Run For Each User</value>
+  </data>
 </root>
