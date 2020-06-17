@@ -53,6 +53,43 @@ namespace MixItUp.Base.Model.Currency
 
         [JsonIgnore]
         public int EditableQuantity { get { return (this.AutoReplenish) ? this.MaxAmount : this.CurrentAmount; } }
+
+        public void AutoReplenishAmount() { this.CurrentAmount = this.MaxAmount; }
+
+        public async Task Purchase(UserViewModel user)
+        {
+            if (this.MaxAmount != 0 && this.CurrentAmount == 0)
+            {
+                if (ChannelSession.Services.Chat != null)
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                }
+                return;
+            }
+
+            if (await this.Requirements.Validate(user))
+            {
+                await this.Requirements.Perform(user);
+                this.CurrentAmount--;
+
+                RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(this, user);
+                ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
+
+                if (this.AutoRedeem)
+                {
+                    await purchase.Redeem();
+                }
+                else
+                {
+                    purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
+
+                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                    extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = this.Name;
+
+                    await ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommand.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+        }
     }
 
     [DataContract]
@@ -74,11 +111,16 @@ namespace MixItUp.Base.Model.Currency
         public DateTimeOffset PurchaseDate { get; set; }
 
         [DataMember]
-        public RedemptionStorePurchaseRedemptionState State { get; set; }
+        public RedemptionStorePurchaseRedemptionState State { get; set; } = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
 
-        public RedemptionStorePurchaseModel()
+        public RedemptionStorePurchaseModel() { }
+
+        public RedemptionStorePurchaseModel(RedemptionStoreProductModel product, UserViewModel user)
         {
             this.ID = Guid.NewGuid();
+            this.ProductID = product.ID;
+            this.UserID = user.ID;
+            this.PurchaseDate = DateTimeOffset.Now;
         }
 
         [JsonIgnore]

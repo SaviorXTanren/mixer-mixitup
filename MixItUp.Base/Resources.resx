@@ -2922,4 +2922,7 @@
   <data name="NotEqualTo" xml:space="preserve">
     <value>&lt;&gt;</value>
   </data>
+  <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
+    <value>There are no more of this product</value>
+  </data>
 </root>

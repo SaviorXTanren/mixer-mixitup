@@ -4732,6 +4732,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are no more of this product.
+        /// </summary>
+        public static string NoMoreRedemptionStoreProducts {
+            get {
+                return ResourceManager.GetString("NoMoreRedemptionStoreProducts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string None {
