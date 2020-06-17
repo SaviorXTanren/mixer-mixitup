@@ -2925,4 +2925,10 @@
   <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
     <value>There are no more of this product</value>
   </data>
+  <data name="NoRedemptionStoreProductWithThatName" xml:space="preserve">
+    <value>There is no product with that name</value>
+  </data>
+  <data name="NoRedemptionStorePurchasesWithThatName" xml:space="preserve">
+    <value>There is no purchase containing a product or user with that name</value>
+  </data>
 </root>

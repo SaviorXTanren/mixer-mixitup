@@ -4750,6 +4750,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no product with that name.
+        /// </summary>
+        public static string NoRedemptionStoreProductWithThatName {
+            get {
+                return ResourceManager.GetString("NoRedemptionStoreProductWithThatName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no purchase containing a product or user with that name.
+        /// </summary>
+        public static string NoRedemptionStorePurchasesWithThatName {
+            get {
+                return ResourceManager.GetString("NoRedemptionStorePurchasesWithThatName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Results Found.
         /// </summary>
         public static string NoResultsFound {

@@ -52,6 +52,14 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
+        public async Task Refund(UserViewModel user)
+        {
+            foreach (RequirementModelBase requirement in this.Requirements)
+            {
+                await requirement.Refund(user);
+            }
+        }
+
         public void Reset()
         {
             foreach (RequirementModelBase requirement in this.Requirements)

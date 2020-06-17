@@ -81,11 +81,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public ObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ObservableCollection<CurrencyRankInventoryContainerViewModel>();
 
-        public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel)
-            : base(windowViewModel)
-        {
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
-        }
+        public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void RefreshList()
         {
@@ -135,23 +131,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.RefreshList();
             await base.OnVisibleInternal();
-        }
-
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
-        {
-            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
-            {
-                if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.ShopCommand, "");
-                    await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-                else if (inventory.TradeEnabled && message.PlainTextMessage.StartsWith(inventory.TradeCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
-                    await inventory.PerformTradeCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-            }
         }
     }
 }

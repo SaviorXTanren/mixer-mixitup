@@ -86,7 +86,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.Wildcards)
             {
-                return this.DoesTextMatchCommand(text, ChatCommand.CommandWildcardMatchingRegexFormat, out arguments);
+                return CommandBase.DoesTextMatchCommand(text, ChatCommand.CommandWildcardMatchingRegexFormat, this.CommandTriggers, out arguments);
             }
             else
             {
