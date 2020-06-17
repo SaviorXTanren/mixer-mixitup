@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Requirements
             return roles;
         }
 
-        private static PatreonBenefit NonePatreonBenefit = new PatreonBenefit() { ID = null, Title = "None" };
+        private static PatreonBenefit NonePatreonBenefit = new PatreonBenefit() { ID = string.Empty, Title = "None" };
 
         public IEnumerable<UserRoleEnum> Roles { get { return RoleRequirementViewModel.SelectableUserRoles(); } }
 

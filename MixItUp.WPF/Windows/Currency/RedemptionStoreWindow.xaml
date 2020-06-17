@@ -24,14 +24,13 @@
     <Windows:LoadingWindowBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Windows:LoadingWindowBase.Resources>
     <Grid>
@@ -166,7 +165,7 @@
                                 </Grid>
                             </Grid>
 
-                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" />
+                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" ShowThreshold="False" ShowSettings="False" />
                         </Grid>
 
                         <!-- Usage Requirements -->

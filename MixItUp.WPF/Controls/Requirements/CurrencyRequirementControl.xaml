@@ -16,7 +16,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -33,7 +33,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="150" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="150" VerticalAlignment="Bottom" />
 
                         <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         
@@ -45,6 +45,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Width="100" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="80" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

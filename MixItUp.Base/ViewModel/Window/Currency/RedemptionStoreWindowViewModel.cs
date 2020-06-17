@@ -250,6 +250,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 product.MaxAmount = product.CurrentAmount = this.ProductQuantity;
                 product.AutoReplenish = this.ProductAutoReplenish;
                 product.AutoRedeem = this.ProductAutoRedeem;
+                product.Requirements = this.ProductRequirements.GetRequirements();
 
                 if (this.SelectedProduct == null)
                 {
