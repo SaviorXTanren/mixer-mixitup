@@ -69,10 +69,10 @@ namespace MixItUp.Base.Services.External
         public string Slug { get; set; }
 
         [JsonProperty("startsAt")]
-        public long StartsAtMilliseconds { get; set; }
+        public long? StartsAtMilliseconds { get; set; }
 
         [JsonProperty("endsAt")]
-        public long EndsAtMilliseconds { get; set; }
+        public long? EndsAtMilliseconds { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
@@ -117,10 +117,10 @@ namespace MixItUp.Base.Services.External
         public string DonateURL { get { return string.Format("{0}/donate", this.CampaignURL); } }
 
         [JsonIgnore]
-        public DateTimeOffset Starts { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds); } }
+        public DateTimeOffset Starts { get { return (this.StartsAtMilliseconds.HasValue) ? StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds.GetValueOrDefault()) : DateTimeOffset.MinValue; } }
 
         [JsonIgnore]
-        public DateTimeOffset Ends { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds); } }
+        public DateTimeOffset Ends { get { return (this.EndsAtMilliseconds.HasValue) ? StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds.GetValueOrDefault()) : DateTimeOffset.MaxValue; } }
     }
 
     [DataContract]
