@@ -1026,6 +1026,7 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DeveloperAPI\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\QuotesController.cs" />
     <Compile Include="Services\DeveloperAPI\CommandController.cs" />
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
