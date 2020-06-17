@@ -14,17 +14,17 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
              
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid MinWidth="400" MinHeight="100">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}">
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
@@ -35,13 +35,13 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Inventories}" SelectedItem="{Binding SelectedInventory}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}" Width="120" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Inventories}" SelectedItem="{Binding SelectedInventory}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}" Width="120" VerticalAlignment="Bottom" />
 
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="120" />
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="120" VerticalAlignment="Bottom" />
 
                         <TextBox Grid.Column="4" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                        <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>
@@ -49,7 +49,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Width="100" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="100" Content="{x:Static resx:Resources.Add}" Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>
 

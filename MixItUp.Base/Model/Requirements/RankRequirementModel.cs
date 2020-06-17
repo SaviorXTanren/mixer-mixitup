@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using StreamingClient.Base.Util;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -11,10 +10,10 @@ namespace MixItUp.Base.Model.Requirements
 {
     public enum RankRequirementMatchTypeEnum
     {
-        [Name(">=")]
         GreaterThanOrEqualTo,
-        [Name("=")]
         EqualTo,
+        LessThanOrEqualTo,
+        NotEqualTo,
     }
 
     [DataContract]

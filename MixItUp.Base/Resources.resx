@@ -2910,4 +2910,16 @@
   <data name="RunForEachUser" xml:space="preserve">
     <value>Run For Each User</value>
   </data>
+  <data name="EqualTo" xml:space="preserve">
+    <value>=</value>
+  </data>
+  <data name="GreaterThanOrEqualTo" xml:space="preserve">
+    <value>&gt;=</value>
+  </data>
+  <data name="LessThanOrEqualTo" xml:space="preserve">
+    <value>&lt;=</value>
+  </data>
+  <data name="NotEqualTo" xml:space="preserve">
+    <value>&lt;&gt;</value>
+  </data>
 </root>

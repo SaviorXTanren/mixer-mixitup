@@ -2662,6 +2662,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to =.
+        /// </summary>
+        public static string EqualTo {
+            get {
+                return ResourceManager.GetString("EqualTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must be a {0} to pick the answer..
         /// </summary>
         public static string ErrorGamePickInsufficientRole {
@@ -3144,6 +3153,15 @@ namespace MixItUp.Base {
         public static string GreaterThanOrEqual {
             get {
                 return ResourceManager.GetString("GreaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &gt;=.
+        /// </summary>
+        public static string GreaterThanOrEqualTo {
+            get {
+                return ResourceManager.GetString("GreaterThanOrEqualTo", resourceCulture);
             }
         }
         
@@ -3783,6 +3801,15 @@ namespace MixItUp.Base {
         public static string LessThanOrEqual {
             get {
                 return ResourceManager.GetString("LessThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;=.
+        /// </summary>
+        public static string LessThanOrEqualTo {
+            get {
+                return ResourceManager.GetString("LessThanOrEqualTo", resourceCulture);
             }
         }
         
@@ -4737,6 +4764,15 @@ namespace MixItUp.Base {
         public static string NotEquals {
             get {
                 return ResourceManager.GetString("NotEquals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;&gt;.
+        /// </summary>
+        public static string NotEqualTo {
+            get {
+                return ResourceManager.GetString("NotEqualTo", resourceCulture);
             }
         }
         

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"
              
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -14,17 +15,21 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
              
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <UserControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </UserControl.Resources>
+    
+    <Grid MinWidth="400" MinHeight="100">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}">
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
@@ -37,11 +42,17 @@
 
                         <ComboBox Grid.Column="0" ItemsSource="{Binding RankSystems}" SelectedItem="{Binding SelectedRankSystem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankSystem}" Width="120" />
 
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding MatchTypes}" SelectedItem="{Binding SelectedMatchType}" Width="50" />
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding MatchTypes}" SelectedItem="{Binding SelectedMatchType}" Width="40">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         
                         <ComboBox Grid.Column="4" ItemsSource="{Binding Ranks}" SelectedItem="{Binding SelectedRank}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rank}" Width="120" />
 
-                        <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                        <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>
@@ -49,6 +60,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Width="100" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="100" Content="{x:Static resx:Resources.Add}" Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>
