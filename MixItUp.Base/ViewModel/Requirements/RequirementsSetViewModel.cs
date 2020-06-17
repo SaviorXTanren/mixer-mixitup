@@ -1,10 +1,13 @@
 ﻿using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Requirements
 {
-    public class RequirementsSetViewModel
+    public class RequirementsSetViewModel : UIViewModelBase
     {
         public RoleRequirementViewModel Role { get; set; } = new RoleRequirementViewModel();
 
@@ -33,9 +36,19 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
         }
 
-        public RequirementsSetViewModel() { }
+        public ICommand HelpCommand { get; private set; }
+
+        public RequirementsSetViewModel()
+        {
+            this.HelpCommand = this.CreateCommand((parameter) =>
+            {
+                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements");
+                return Task.FromResult(0);
+            });
+        }
 
         public RequirementsSetViewModel(RequirementsSetModel requirements)
+            : this()
         {
             foreach (RequirementModelBase requirement in requirements.Requirements)
             {

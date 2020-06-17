@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -122,6 +123,17 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private bool productAutoRedeem = true;
 
+        public RequirementsSetViewModel ProductRequirements
+        {
+            get { return this.productRequirements; }
+            set
+            {
+                this.productRequirements = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private RequirementsSetViewModel productRequirements = new RequirementsSetViewModel();
+
         public RedemptionStoreProductModel SelectedProduct
         {
             get { return this.selectedProduct; }
@@ -134,6 +146,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     this.ProductQuantity = this.SelectedProduct.EditableQuantity;
                     this.ProductAutoReplenish = this.SelectedProduct.AutoReplenish;
                     this.ProductAutoRedeem = this.SelectedProduct.AutoRedeem;
+                    this.ProductRequirements = new RequirementsSetViewModel(this.SelectedProduct.Requirements);
                 }
                 else
                 {
@@ -141,6 +154,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     this.ProductQuantity = 0;
                     this.ProductAutoReplenish = false;
                     this.ProductAutoRedeem = true;
+                    this.ProductRequirements = new RequirementsSetViewModel();
                 }
                 this.NotifyPropertyChanged();
             }
@@ -218,6 +232,11 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 if (duplicateProduct != null && duplicateProduct.Product != this.SelectedProduct)
                 {
                     await DialogHelper.ShowMessage(MixItUp.Base.Resources.ProductNameAlreadyExists);
+                    return;
+                }
+
+                if (!await this.ProductRequirements.Validate())
+                {
                     return;
                 }
 

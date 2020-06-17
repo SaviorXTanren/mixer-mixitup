@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -38,6 +39,9 @@ namespace MixItUp.Base.Model.Currency
 
         [DataMember]
         public bool AutoRedeem { get; set; }
+
+        [DataMember]
+        public RequirementsSetModel Requirements { get; set; }
 
         [DataMember]
         public CustomCommand Command { get; set; }

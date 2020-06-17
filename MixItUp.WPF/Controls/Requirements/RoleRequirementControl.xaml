@@ -27,7 +27,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <ComboBox Grid.Row="0" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <ComboBox Grid.Row="0" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Role}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

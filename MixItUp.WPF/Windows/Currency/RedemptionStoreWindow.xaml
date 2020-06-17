@@ -8,6 +8,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:RequirementsControls="clr-namespace:MixItUp.WPF.Controls.Requirements"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -120,30 +121,52 @@
                             </ScrollViewer>
                         </Border>
 
-                        <Grid Grid.Row="2" HorizontalAlignment="Center">
+                        <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="5" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding ProductName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="300" />
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                            <TextBox Grid.Column="2" Text="{Binding ProductQuantity}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="4" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoReplenish}" VerticalAlignment="Center" />
-                            <ToggleButton Grid.Column="6" Margin="0,5,0,0" IsChecked="{Binding ProductAutoReplenish}" />
+                                    <TextBox Grid.Column="0" Text="{Binding ProductName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-                            <TextBlock Grid.Column="8" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoRedeem}" VerticalAlignment="Center" />
-                            <ToggleButton Grid.Column="10" Margin="0,5,0,0" IsChecked="{Binding ProductAutoRedeem}" />
+                                    <TextBox Grid.Column="2" Text="{Binding ProductQuantity}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                                </Grid>
+
+                                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoReplenish}" VerticalAlignment="Center" />
+                                    <ToggleButton Grid.Column="2" Margin="0,5,0,0" IsChecked="{Binding ProductAutoReplenish}" />
+
+                                    <TextBlock Grid.Column="4" Margin="0,5,0,0" Text="{x:Static resx:Resources.AutoRedeem}" VerticalAlignment="Center" />
+                                    <ToggleButton Grid.Column="6" Margin="0,5,0,0" IsChecked="{Binding ProductAutoRedeem}" />
+                                </Grid>
+                            </Grid>
+
+                            <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding ProductRequirements}" />
                         </Grid>
 
                         <!-- Usage Requirements -->

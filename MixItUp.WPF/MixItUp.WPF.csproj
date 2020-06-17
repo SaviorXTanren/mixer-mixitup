@@ -856,8 +856,14 @@
     <Compile Include="Controls\Requirements\RankRequirementControl.xaml.cs">
       <DependentUpon>RankRequirementControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirements\RequirementsSetControl.xaml.cs">
+      <DependentUpon>RequirementsSetControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirements\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
@@ -1760,7 +1766,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirements\RequirementsSetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Requirements\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\SettingsRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
