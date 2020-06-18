@@ -3436,6 +3436,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Infinite.
+        /// </summary>
+        public static string Infinite {
+            get {
+                return ResourceManager.GetString("Infinite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input (Keyboard &amp; Mouse).
         /// </summary>
         public static string InputKeyboardAndMouse {
@@ -4782,6 +4791,15 @@ namespace MixItUp.Base {
         public static string Normal {
             get {
                 return ResourceManager.GetString("Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are not enough of this product for the amount of users participating.
+        /// </summary>
+        public static string NotEnoughRedemptionStoreProducts {
+            get {
+                return ResourceManager.GetString("NotEnoughRedemptionStoreProducts", resourceCulture);
             }
         }
         

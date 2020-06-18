@@ -26,7 +26,20 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public string Name { get { return this.Product.Name; } }
 
-        public int Quantity { get { return this.Product.CurrentAmount; } }
+        public string Quantity
+        {
+            get
+            {
+                if (this.Product.IsInfinite)
+                {
+                    return MixItUp.Base.Resources.Infinite;
+                }
+                else
+                {
+                    return this.Product.CurrentAmount.ToString();
+                }
+            }
+        }
 
         public CustomCommand Command
         {
@@ -88,18 +101,28 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             get { return this.productQuantity; }
             set
             {
-                if (value >= 0)
+                this.productQuantity = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ProductQuantityString");
+            }
+        }
+        private int productQuantity = -1;
+
+        public string ProductQuantityString
+        {
+            get { return (this.ProductQuantity >= 0) ? this.ProductQuantity.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int iValue) && iValue >= 0)
                 {
-                    this.productQuantity = value;
+                    this.ProductQuantity = iValue;
                 }
                 else
                 {
-                    this.productQuantity = 0;
+                    this.ProductQuantity = -1;
                 }
-                this.NotifyPropertyChanged();
             }
         }
-        private int productQuantity;
 
         public bool ProductAutoReplenish
         {
@@ -143,7 +166,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 if (this.selectedProduct != null)
                 {
                     this.ProductName = this.SelectedProduct.Name;
-                    this.ProductQuantity = this.SelectedProduct.EditableQuantity;
+                    this.ProductQuantity = this.SelectedProduct.CurrentAmount;
                     this.ProductAutoReplenish = this.SelectedProduct.AutoReplenish;
                     this.ProductAutoRedeem = this.SelectedProduct.AutoRedeem;
                     this.ProductRequirements = new RequirementsSetViewModel(this.SelectedProduct.Requirements);
@@ -151,7 +174,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 else
                 {
                     this.ProductName = null;
-                    this.ProductQuantity = 0;
+                    this.ProductQuantity = -1;
                     this.ProductAutoReplenish = false;
                     this.ProductAutoRedeem = true;
                     this.ProductRequirements = new RequirementsSetViewModel();

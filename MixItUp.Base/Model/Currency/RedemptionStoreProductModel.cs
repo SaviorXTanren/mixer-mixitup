@@ -53,9 +53,15 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
-        public int EditableQuantity { get { return (this.AutoReplenish) ? this.MaxAmount : this.CurrentAmount; } }
+        public bool IsInfinite { get { return this.MaxAmount < 0; } }
 
-        public void AutoReplenishAmount() { this.CurrentAmount = this.MaxAmount; }
+        public void ReplenishAmount()
+        {
+            if (!this.IsInfinite && this.AutoReplenish)
+            {
+                this.CurrentAmount = this.MaxAmount;
+            }
+        }
     }
 
     [DataContract]
@@ -77,35 +83,54 @@ namespace MixItUp.Base.Model.Currency
                 return;
             }
 
-            if (product.MaxAmount != 0 && product.CurrentAmount == 0)
+            if (!product.IsInfinite)
             {
-                if (ChannelSession.Services.Chat != null)
+                if (product.CurrentAmount <= 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                    if (ChannelSession.Services.Chat != null)
+                    {
+                        await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                    }
+                    return;
                 }
-                return;
+
+                ThresholdRequirementModel threshold = product.Requirements.Threshold;
+                if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
+                {
+                    if (ChannelSession.Services.Chat != null)
+                    {
+                        await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                    }
+                    return;
+                }
             }
 
             if (await product.Requirements.Validate(user))
             {
                 await product.Requirements.Perform(user);
-                product.CurrentAmount--;
-
-                RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, user);
-                ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
-
-                if (product.AutoRedeem)
+                foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user))
                 {
-                    await purchase.Redeem();
-                }
-                else
-                {
-                    purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
+                    if (!product.IsInfinite)
+                    {
+                        product.CurrentAmount--;
+                    }
 
-                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                    extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+                    RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, u);
+                    ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
 
-                    await ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommand.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    if (product.AutoRedeem)
+                    {
+                        await purchase.Redeem();
+                    }
+                    else
+                    {
+                        purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
+
+                        Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                        extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+
+                        await ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommand.Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    }
                 }
             }
         }
@@ -242,7 +267,10 @@ namespace MixItUp.Base.Model.Currency
             if (product != null && user != null)
             {
                 await product.Requirements.Refund(user);
-                product.CurrentAmount++;
+                if (!product.IsInfinite)
+                {
+                    product.CurrentAmount++;
+                }
             }
         }
     }

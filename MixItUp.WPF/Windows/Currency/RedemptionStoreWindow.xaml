@@ -143,7 +143,7 @@
 
                                     <TextBox Grid.Column="0" Text="{Binding ProductName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-                                    <TextBox Grid.Column="2" Text="{Binding ProductQuantity}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                                    <TextBox Grid.Column="2" Text="{Binding ProductQuantityString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quantity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
                                 </Grid>
 
                                 <Grid Grid.Row="2" HorizontalAlignment="Center">

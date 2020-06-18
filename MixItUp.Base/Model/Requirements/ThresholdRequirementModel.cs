@@ -23,6 +23,9 @@ namespace MixItUp.Base.Model.Requirements
         [JsonIgnore]
         private Dictionary<Guid, DateTimeOffset> performs = new Dictionary<Guid, DateTimeOffset>();
 
+        [JsonIgnore]
+        private List<Guid> lastApplicableUsers = new List<Guid>();
+
         public ThresholdRequirementModel() { }
 
         public ThresholdRequirementModel(int amount, int timespan, bool runForEachUser = false)
@@ -32,19 +35,17 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = runForEachUser;
         }
 
+        public bool IsEnabled { get { return this.Amount > 0; } }
+
         public List<UserViewModel> GetApplicableUsers()
         {
-            DateTime cutoffDateTime = DateTime.Now.Subtract(new TimeSpan(0, 0, this.TimeSpan));
             List<UserViewModel> users = new List<UserViewModel>();
-            foreach (var kvp in this.performs)
+            foreach (Guid userID in this.lastApplicableUsers)
             {
-                if (kvp.Value >= cutoffDateTime)
+                UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
+                if (user != null)
                 {
-                    UserViewModel user = ChannelSession.Services.User.GetUserByID(kvp.Key);
-                    if (user != null)
-                    {
-                        users.Add(user);
-                    }
+                    users.Add(user);
                 }
             }
             return users;
@@ -52,7 +53,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user)
         {
-            if (this.Amount > 0)
+            if (this.IsEnabled)
             {
                 this.performs[user.ID] = DateTimeOffset.Now;
 
@@ -75,6 +76,9 @@ namespace MixItUp.Base.Model.Requirements
                     await this.SendChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
                     return false;
                 }
+
+                this.lastApplicableUsers.Clear();
+                this.lastApplicableUsers.AddRange(this.performs.Keys);
             }
             return true;
         }

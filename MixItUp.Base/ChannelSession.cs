@@ -574,6 +574,11 @@ namespace MixItUp.Base
 
                         ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
+                        foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values)
+                        {
+                            product.ReplenishAmount();
+                        }
+
                         foreach (RedemptionStorePurchaseModel purchase in ChannelSession.Settings.RedemptionStorePurchases.ToList())
                         {
                             if (purchase.State != RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)

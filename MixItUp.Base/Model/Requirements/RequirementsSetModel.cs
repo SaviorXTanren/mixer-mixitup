@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model.Requirements
 
         public RequirementsSetModel() { }
 
+        public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
+
         public async Task<bool> Validate(UserViewModel user)
         {
             foreach (RequirementModelBase requirement in this.Requirements)
@@ -28,21 +30,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public async Task Perform(UserViewModel user)
         {
-            List<UserViewModel> users = new List<UserViewModel>();
-
-            ThresholdRequirementModel threshold = (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel);
-            if (threshold != null)
-            {
-                foreach (UserViewModel u in threshold.GetApplicableUsers())
-                {
-                    users.Add(u);
-                }
-            }
-            else
-            {
-                users.Add(user);
-            }
-
+            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
                 foreach (UserViewModel u in users)
@@ -54,9 +42,13 @@ namespace MixItUp.Base.Model.Requirements
 
         public async Task Refund(UserViewModel user)
         {
+            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                await requirement.Refund(user);
+                foreach (UserViewModel u in users)
+                {
+                    await requirement.Refund(u);
+                }
             }
         }
 
@@ -66,6 +58,37 @@ namespace MixItUp.Base.Model.Requirements
             {
                 requirement.Reset();
             }
+        }
+
+        public IEnumerable<UserViewModel> GetPerformingUsers(UserViewModel user)
+        {
+            ThresholdRequirementModel threshold = this.Threshold;
+            if (threshold != null && threshold.IsEnabled && threshold.RunForEachUser)
+            {
+                return this.GetRequirementUsers(user);
+            }
+            else
+            {
+                return new List<UserViewModel>() { user };
+            }
+        }
+
+        public IEnumerable<UserViewModel> GetRequirementUsers(UserViewModel user)
+        {
+            List<UserViewModel> users = new List<UserViewModel>();
+            ThresholdRequirementModel threshold = this.Threshold;
+            if (threshold != null && threshold.IsEnabled)
+            {
+                foreach (UserViewModel u in threshold.GetApplicableUsers())
+                {
+                    users.Add(u);
+                }
+            }
+            else
+            {
+                users.Add(user);
+            }
+            return users;
         }
     }
 }
