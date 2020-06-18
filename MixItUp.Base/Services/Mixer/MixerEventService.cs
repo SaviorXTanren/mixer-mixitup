@@ -63,6 +63,8 @@ namespace MixItUp.Base.Services.Mixer
         private List<PatronageMilestoneModel> remainingPatronageMilestones = new List<PatronageMilestoneModel>();
         private SemaphoreSlim patronageMilestonesSemaphore = new SemaphoreSlim(1);
 
+        public override string Name { get { return "Mixer Events"; } }
+
         public MixerEventService()
         {
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;

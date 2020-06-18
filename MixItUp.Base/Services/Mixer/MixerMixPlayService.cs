@@ -117,6 +117,8 @@ namespace MixItUp.Base.Services.Mixer
         private SemaphoreSlim controlCooldownSemaphore = new SemaphoreSlim(1);
         private CancellationTokenSource backgroundThreadCancellationTokenSource;
 
+        public override string Name { get { return "Mixer MixPlay"; } }
+
         public MixerMixPlayService() { }
 
         public bool IsConnected { get { return this.Client != null && this.Client.Connected && this.Client.Authenticated; } }

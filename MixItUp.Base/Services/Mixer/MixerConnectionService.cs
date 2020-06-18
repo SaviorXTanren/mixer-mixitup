@@ -180,6 +180,8 @@ namespace MixItUp.Base.Services.Mixer
 
         public MixerConnection Connection { get; private set; }
 
+        public override string Name { get { return "Mixer Connection"; } }
+
         public MixerConnectionService(MixerConnection connection)
         {
             this.Connection = connection;
