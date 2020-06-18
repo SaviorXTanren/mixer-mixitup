@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
@@ -44,24 +43,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string PurchaseDateTimeString { get { return this.Purchase.PurchaseDate.ToFriendlyDateTimeString(); } }
 
-        public string StateString { get { return (this.Purchase.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded) ? MixItUp.Base.Resources.Pending : MixItUp.Base.Resources.Redeemed; } }
+        public bool ManualRedeemNeeded { get { return this.Purchase.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded; } }
+
+        public string StateString { get { return (this.ManualRedeemNeeded) ? MixItUp.Base.Resources.Pending : MixItUp.Base.Resources.Redeemed; } }
 
         public ICommand ManualRedeemCommand { get; private set; }
-        public bool CanManualRedeem { get { return this.Purchase.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded; } }
+        public bool CanManualRedeem { get { return this.ManualRedeemNeeded; } }
 
         public ICommand RefundCommand { get; private set; }
 
         public ICommand DeleteCommand { get; private set; }
-
-        public bool EnableRedemptionStore
-        {
-            get { return ChannelSession.Settings.RedemptionStoreEnabled; }
-            set
-            {
-                ChannelSession.Settings.RedemptionStoreEnabled = value;
-                this.NotifyPropertyChanged();
-            }
-        }
 
         private RedemptionStoreMainControlViewModel viewModel;
 
@@ -101,14 +92,25 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public ObservableCollection<RedemptionStorePurchaseViewModel> Purchases { get; private set; } = new ObservableCollection<RedemptionStorePurchaseViewModel>();
 
+        public bool EnableRedemptionStore
+        {
+            get { return ChannelSession.Settings.RedemptionStoreEnabled; }
+            set
+            {
+                ChannelSession.Settings.RedemptionStoreEnabled = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public RedemptionStoreMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void Refresh()
         {
+            List<RedemptionStorePurchaseViewModel> purchases = new List<RedemptionStorePurchaseViewModel>(ChannelSession.Settings.RedemptionStorePurchases.ToList().Select(p => new RedemptionStorePurchaseViewModel(this, p)));
             this.Purchases.Clear();
-            foreach (RedemptionStorePurchaseModel purchase in ChannelSession.Settings.RedemptionStorePurchases.OrderBy(p => p.PurchaseDate))
+            foreach (RedemptionStorePurchaseViewModel purchase in purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate))
             {
-                this.Purchases.Add(new RedemptionStorePurchaseViewModel(this, purchase));
+                this.Purchases.Add(purchase);
             }
         }
 

@@ -52,28 +52,30 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user)
         {
-            this.performs[user.ID] = DateTimeOffset.Now;
-
-            DateTimeOffset cutoffDateTime = DateTimeOffset.MinValue;
-            if (this.TimeSpan > 0)
+            if (this.Amount > 0)
             {
-                cutoffDateTime = DateTime.Now.Subtract(new TimeSpan(0, 0, this.TimeSpan));
-            }
+                this.performs[user.ID] = DateTimeOffset.Now;
 
-            foreach (Guid key in this.performs.Keys.ToList())
-            {
-                if (this.performs[key] < cutoffDateTime)
+                DateTimeOffset cutoffDateTime = DateTimeOffset.MinValue;
+                if (this.TimeSpan > 0)
                 {
-                    this.performs.Remove(key);
+                    cutoffDateTime = DateTime.Now.Subtract(new TimeSpan(0, 0, this.TimeSpan));
+                }
+
+                foreach (Guid key in this.performs.Keys.ToList())
+                {
+                    if (this.performs[key] < cutoffDateTime)
+                    {
+                        this.performs.Remove(key);
+                    }
+                }
+
+                if (this.performs.Count < this.Amount)
+                {
+                    await this.SendChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
+                    return false;
                 }
             }
-
-            if (this.performs.Count < this.Amount)
-            {
-                await this.SendChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
-                return false;
-            }
-
             return true;
         }
 

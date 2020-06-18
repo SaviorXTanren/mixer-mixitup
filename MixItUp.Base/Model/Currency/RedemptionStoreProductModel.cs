@@ -242,6 +242,7 @@ namespace MixItUp.Base.Model.Currency
             if (product != null && user != null)
             {
                 await product.Requirements.Refund(user);
+                product.CurrentAmount++;
             }
         }
     }

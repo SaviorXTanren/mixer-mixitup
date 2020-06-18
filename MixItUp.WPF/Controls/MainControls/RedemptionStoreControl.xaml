@@ -67,7 +67,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.Enable}" VerticalAlignment="Center" />
-            <ToggleButton Grid.Column="2" IsEnabled="{Binding EnableRedemptionStore}" />
+            <ToggleButton Grid.Column="2" IsChecked="{Binding EnableRedemptionStore}" />
 
             <Button Grid.Column="4" x:Name="EditProducts" Click="EditProducts_Click" Content="{x:Static resx:Resources.EditProducts}" Width="150" />
         </Grid>
