@@ -458,9 +458,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string RedemptionStoreModRedeemCommand { get; set; } = "!redeem";
         [DataMember]
-        public CustomCommand RedemptionStoreManualRedeemNeededCommand { get; set; }
+        public Guid RedemptionStoreManualRedeemNeededCommandID { get; set; }
         [DataMember]
-        public CustomCommand RedemptionStoreDefaultRedemptionCommand { get; set; }
+        public Guid RedemptionStoreDefaultRedemptionCommandID { get; set; }
         [DataMember]
         public List<RedemptionStorePurchaseModel> RedemptionStorePurchases { get; set; } = new List<RedemptionStorePurchaseModel>();
 
@@ -502,6 +502,8 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
         [JsonIgnore]
         public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
+        [JsonIgnore]
+        public DatabaseDictionary<Guid, CustomCommand> CustomCommands { get; set; } = new DatabaseDictionary<Guid, CustomCommand>();
 
         [JsonIgnore]
         public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
@@ -610,6 +612,11 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
+                    else if (type == CommandTypeEnum.Custom)
+                    {
+                        CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
+                        this.CustomCommands[command.ID] = command;
+                    }
                 });
 
                 this.ChatCommands.ClearTracking();
@@ -618,6 +625,7 @@ namespace MixItUp.Base.Model.Settings
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
+                this.CustomCommands.ClearTracking();
 
                 foreach (CounterModel counter in this.Counters.Values.ToList())
                 {
@@ -754,15 +762,16 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
                     changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
-                List<CommandBase> removedCommands = new List<CommandBase>();
-                removedCommands.AddRange(this.ChatCommands.GetRemovedValues());
-                removedCommands.AddRange(this.EventCommands.GetRemovedValues());
-                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues());
-                removedCommands.AddRange(this.TimerCommands.GetRemovedValues());
-                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues());
-                removedCommands.AddRange(this.GameCommands.GetRemovedValues());
+                List<Guid> removedCommands = new List<Guid>();
+                removedCommands.AddRange(this.ChatCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.EventCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.TimerCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.CustomCommands.GetRemovedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
-                    removedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() } }));
+                    removedCommands.Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
 
                 List<CommandBase> addedChangedCommands = new List<CommandBase>();
                 addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
@@ -771,6 +780,7 @@ namespace MixItUp.Base.Model.Settings
                 addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.CustomCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
@@ -820,6 +830,10 @@ namespace MixItUp.Base.Model.Settings
             this.UserData.ManualValueChanged(user.ID);
         }
 
+        public CustomCommand GetCustomCommand(Guid id) { return this.CustomCommands.ContainsKey(id) ? this.CustomCommands[id] : null; }
+
+        public void SetCustomCommand(CustomCommand command) { this.CustomCommands[command.ID] = command; }
+
         private void InitializeMissingData()
         {
             this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
@@ -842,8 +856,18 @@ namespace MixItUp.Base.Model.Settings
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
 
-            this.RedemptionStoreManualRedeemNeededCommand = this.RedemptionStoreManualRedeemNeededCommand ?? CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
-            this.RedemptionStoreDefaultRedemptionCommand = this.RedemptionStoreDefaultRedemptionCommand ?? CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
+            if (this.RedemptionStoreManualRedeemNeededCommandID == Guid.Empty)
+            {
+                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
+                this.SetCustomCommand(command);
+            }
+            if (this.RedemptionStoreDefaultRedemptionCommandID == Guid.Empty)
+            {
+                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
+                this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
+                this.SetCustomCommand(command);
+            }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

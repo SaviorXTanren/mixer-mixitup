@@ -45,7 +45,7 @@ namespace MixItUp.Base.Model.Currency
         public RequirementsSetModel Requirements { get; set; }
 
         [DataMember]
-        public CustomCommand Command { get; set; }
+        public Guid CommandID { get; set; }
 
         public RedemptionStoreProductModel()
         {
@@ -54,6 +54,25 @@ namespace MixItUp.Base.Model.Currency
 
         [JsonIgnore]
         public bool IsInfinite { get { return this.MaxAmount < 0; } }
+
+        [JsonIgnore]
+        public CustomCommand Command
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.CommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.CommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.CommandID);
+                    this.CommandID = Guid.Empty;
+                }
+            }
+        }
 
         public void ReplenishAmount()
         {
@@ -129,7 +148,7 @@ namespace MixItUp.Base.Model.Currency
                         Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                         extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                        await ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommand.Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                        await ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID).Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
                     }
                 }
             }
@@ -241,7 +260,7 @@ namespace MixItUp.Base.Model.Currency
                 CustomCommand command = product.Command;
                 if (command == null)
                 {
-                    command = ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommand;
+                    command = ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
                 }
 
                 Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();

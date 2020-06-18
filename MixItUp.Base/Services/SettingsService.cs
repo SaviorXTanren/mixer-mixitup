@@ -596,6 +596,7 @@ namespace MixItUp.Base.Services
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.CustomCommands.Values);
 
             foreach (UserDataModel userData in settings.UserData.Values)
             {
