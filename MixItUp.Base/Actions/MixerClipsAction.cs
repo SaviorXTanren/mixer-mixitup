@@ -146,10 +146,11 @@ namespace MixItUp.Base.Actions
                 ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
                 if (clipLocator != null)
                 {
+                    clipName = clipName.ToFilePathString();
                     string destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
                     if (File.Exists(destinationFile))
                     {
-                        clipName += "-" + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
+                        clipName += "-" + DateTimeOffset.Now.ToFriendlyDateTimeString().ToFilePathString();
                         destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
                     }
 
