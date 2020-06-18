@@ -2937,4 +2937,7 @@
   <data name="Infinite" xml:space="preserve">
     <value>Infinite</value>
   </data>
+  <data name="ExportQuotes" xml:space="preserve">
+    <value>Export Quotes</value>
+  </data>
 </root>

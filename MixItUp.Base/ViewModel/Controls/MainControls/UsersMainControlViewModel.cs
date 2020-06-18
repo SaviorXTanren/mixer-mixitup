@@ -15,8 +15,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class UsersMainControlViewModel : WindowControlViewModelBase
     {
-        private const string ExportFileColumnSeparator = "\t";
-
         public string UsernameFilter
         {
             get { return this.usernameFilter; }
@@ -79,14 +77,14 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    StringBuilder fileContents = new StringBuilder();
+                    List<List<string>> contents = new List<List<string>>();
 
                     List<string> columns = new List<string>() { "MixItUpID", "MixerID", "Username", "ViewingMinutes", "OfflineViewingMinutes" };
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
-                    fileContents.AppendLine(string.Join(ExportFileColumnSeparator, columns));
+                    contents.Add(columns);
 
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
@@ -100,10 +98,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
                         }
-                        fileContents.AppendLine(string.Join(ExportFileColumnSeparator, data));
+                        contents.Add(data);
                     }
 
-                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+                    await SpreadsheetFileHelper.ExportToCSV(filePath, contents);
                 }
             });
         }

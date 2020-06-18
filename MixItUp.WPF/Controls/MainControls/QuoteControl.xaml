@@ -31,6 +31,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -40,6 +42,8 @@
             <TextBox Grid.Column="4" Width="350" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quote}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding AddQuoteText}" />
 
             <Button Grid.Column="6" Content="{x:Static resx:Resources.AddQuote}" Command="{Binding AddQuoteCommand}" />
+
+            <Button Grid.Column="8" Content="{x:Static resx:Resources.ExportQuotes}" Command="{Binding ExportQuotesCommand}" />
         </Grid>
 
         <DataGrid Grid.Row="2" ItemsSource="{Binding Quotes}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">

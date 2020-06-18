@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public ICommand AddQuoteCommand { get; set; }
 
+        public ICommand ExportQuotesCommand { get; set; }
+
         public QuotesMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
@@ -59,6 +62,29 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     this.AddQuoteText = string.Empty;
                 }
                 return Task.FromResult(0);
+            });
+
+            this.ExportQuotesCommand = this.CreateCommand(async (parameter) =>
+            {
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("Quotes.txt");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    List<List<string>> contents = new List<List<string>>();
+
+                    contents.Add(new List<string>() { "#", MixItUp.Base.Resources.Quote, MixItUp.Base.Resources.Game, MixItUp.Base.Resources.DateTime });
+
+                    foreach (UserQuoteViewModel quote in this.Quotes.ToList())
+                    {
+                        List<string> data = new List<string>();
+                        data.Add(quote.ID.ToString());
+                        data.Add(quote.Quote);
+                        data.Add(quote.GameName);
+                        data.Add(quote.DateTime.ToFriendlyDateTimeString());
+                        contents.Add(data);
+                    }
+
+                    await SpreadsheetFileHelper.ExportToCSV(filePath, contents);
+                }
             });
         }
 

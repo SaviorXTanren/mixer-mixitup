@@ -2779,6 +2779,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Quotes.
+        /// </summary>
+        public static string ExportQuotes {
+            get {
+                return ResourceManager.GetString("ExportQuotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to External Program.
         /// </summary>
         public static string ExternalProgram {
