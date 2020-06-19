@@ -198,6 +198,12 @@ namespace MixItUp.Base.Model.Currency
         [JsonIgnore]
         public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
+        [JsonIgnore]
+        public string TopSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string TopUserSpecialIdentifier { get { return string.Format("{0}{1}", this.TopSpecialIdentifier, SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader); } }
+
         public int GetAmount(UserDataModel user)
         {
             if (user.CurrencyAmounts.ContainsKey(this.ID))
