@@ -79,7 +79,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     List<List<string>> contents = new List<List<string>>();
 
-                    List<string> columns = new List<string>() { "MixItUpID", "MixerID", "Username", "ViewingMinutes", "OfflineViewingMinutes" };
+                    List<string> columns = new List<string>() { "MixItUpID", "MixerID", "Username", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle", "TotalStreamsWatched",
+                        "TotalAmountDonated", "TotalSparksSpent", "TotalEmbersSpent", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
+                        "TotalSkillsUsed", "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" };
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
@@ -88,12 +90,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        List<string> data = new List<string>();
-                        data.Add(user.ID.ToString());
-                        data.Add(user.MixerID.ToString());
-                        data.Add(user.Username);
-                        data.Add(user.ViewingMinutes.ToString());
-                        data.Add(user.OfflineViewingMinutes.ToString());
+                        List<string> data = new List<string>() { user.ID.ToString(), user.MixerID.ToString(), user.Username, user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(),
+                            user.CustomTitle, user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSparksSpent.ToString(), user.TotalEmbersSpent.ToString(),
+                            user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(), user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(),
+                            user.TotalSkillsUsed.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastSeen.ToFriendlyDateTimeString(), };
                         foreach (var kvp in ChannelSession.Settings.Currency)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
