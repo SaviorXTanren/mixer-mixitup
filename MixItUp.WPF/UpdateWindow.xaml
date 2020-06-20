@@ -63,7 +63,7 @@
                     <TextBlock Grid.Column="6" x:Name="CurrentVersionTextBlock" VerticalAlignment="Center" />
                 </Grid>
 
-                <Grid Grid.Row="1" x:Name="PreviewUpdateGrid" Visibility="Collapsed" Margin="10,10,10,0">
+                <Grid Grid.Row="1" x:Name="PreviewUpdateGrid" Visibility="Visible" Margin="10,10,10,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
@@ -72,7 +72,7 @@
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Foreground="Red">IMPORTANT NOTICE: Preview updates are an opportunity to help test features early and report issues. They receive some amount of testing before they are released, but not the same amount given to public updates.</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red">We encourage you backup of your settings first by clicking Skip below, then going to Settings -> Advanced. If you do not want to take this update, please click Skip below and optionally disable the Preview Program under the Settings -> General.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red">We encourage you to backup of your settings first by clicking Skip below, then going to Settings -> Advanced. If you do not want to take this update, please click Skip below and optionally disable the Preview Program under the Settings -> General.</TextBlock>
                 </Grid>
             </Grid>
 
