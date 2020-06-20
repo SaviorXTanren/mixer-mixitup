@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.NewAutoChatCommandsDialogControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dialogs"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="16" MaxWidth="300">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="The following commands can be automatically created for you to get started with using this feature. Would you like us to automatically add the following commands for you?" />
+
+        <ItemsControl x:Name="NewCommandsItemsControl" Grid.Row="2" HorizontalAlignment="Center">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Grid.Column="0" IsChecked="{Binding Path=AddCommand, Mode=TwoWay}" />
+
+                        <TextBlock Grid.Column="2" Text="{Binding Description}" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" Content="{x:Static resx:Resources.Yes}">
+                <Button.CommandParameter>
+                    <system:Boolean>True</system:Boolean>
+                </Button.CommandParameter>
+            </Button>
+
+            <Button Grid.Column="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" Content="{x:Static resx:Resources.No}">
+                <Button.CommandParameter>
+                    <system:Boolean>False</system:Boolean>
+                </Button.CommandParameter>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

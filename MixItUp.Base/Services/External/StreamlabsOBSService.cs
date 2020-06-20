@@ -138,7 +138,7 @@ namespace MixItUp.Base.Services.External
     public abstract class StreamlabsOBSPacketBase
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
 
         [JsonProperty]
         public string jsonrpc = "2.0";
@@ -159,6 +159,8 @@ namespace MixItUp.Base.Services.External
         private SemaphoreSlim idSempahoreLock = new SemaphoreSlim(1);
 
         public string Name { get { return "Streamlabs OBS"; } }
+
+        public bool IsEnabled { get { return ChannelSession.Settings.EnableStreamlabsOBSConnection; } }
 
         public bool IsConnected { get; private set; }
 
@@ -403,6 +405,11 @@ namespace MixItUp.Base.Services.External
             if (exception != null)
             {
                 throw exception;
+            }
+
+            if (result != null)
+            {
+                Logger.Log(result.ToString());
             }
 
             return result;

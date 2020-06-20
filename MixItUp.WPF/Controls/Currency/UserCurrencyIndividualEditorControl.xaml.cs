@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Currency
@@ -9,26 +9,30 @@ namespace MixItUp.WPF.Controls.Currency
     /// </summary>
     public partial class UserCurrencyIndividualEditorControl : UserControl
     {
-        private UserCurrencyDataViewModel currencyData;
+        private UserDataModel user;
 
-        private UserInventoryItemModel inventoryItem;
-        private UserInventoryDataViewModel inventoryData;
+        private CurrencyModel currency;
 
-        public UserCurrencyIndividualEditorControl(UserCurrencyDataViewModel currencyData)
-            : this()
+        private InventoryModel inventory;
+        private InventoryItemModel item;
+
+        public UserCurrencyIndividualEditorControl(UserDataModel user, CurrencyModel currency)
+            : this(user)
         {
-            this.currencyData = currencyData;
+            this.currency = currency;
         }
 
-        public UserCurrencyIndividualEditorControl(UserInventoryItemModel inventoryItem, UserInventoryDataViewModel inventoryData)
-            : this()
+        public UserCurrencyIndividualEditorControl(UserDataModel user, InventoryModel inventory, InventoryItemModel item)
+            : this(user)
         {
-            this.inventoryItem = inventoryItem;
-            this.inventoryData = inventoryData;
+            this.inventory = inventory;
+            this.item = item;
         }
 
-        private UserCurrencyIndividualEditorControl()
+        private UserCurrencyIndividualEditorControl(UserDataModel user)
         {
+            this.user = user;
+
             InitializeComponent();
 
             this.Loaded += UserCurrencyIndividualEditorControl_Loaded;
@@ -36,15 +40,15 @@ namespace MixItUp.WPF.Controls.Currency
 
         private void UserCurrencyIndividualEditorControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.currencyData != null)
+            if (this.currency != null)
             {
-                this.NameTextBlock.Text = this.currencyData.Currency.Name;
-                this.AmountTextBox.Text = this.currencyData.Amount.ToString();
+                this.NameTextBlock.Text = this.currency.Name;
+                this.AmountTextBox.Text = this.currency.GetAmount(this.user).ToString();
             }
-            else if (this.inventoryItem != null && this.inventoryData != null)
+            else if (this.inventory != null && this.item != null)
             {
-                this.NameTextBlock.Text = this.inventoryItem.Name;
-                this.AmountTextBox.Text = this.inventoryData.GetAmount(this.inventoryItem).ToString();
+                this.NameTextBlock.Text = this.item.Name;
+                this.AmountTextBox.Text = this.inventory.GetAmount(this.user, this.item).ToString();
             }
         }
 
@@ -52,13 +56,13 @@ namespace MixItUp.WPF.Controls.Currency
         {
             if (!string.IsNullOrEmpty(this.AmountTextBox.Text) && int.TryParse(this.AmountTextBox.Text, out int amount) && amount >= 0)
             {
-                if (this.currencyData != null)
+                if (this.currency != null)
                 {
-                    this.currencyData.Amount = amount;
+                    this.currency.SetAmount(this.user, amount);
                 }
-                else if (this.inventoryItem != null && this.inventoryData != null)
+                else if (this.inventory != null && this.item != null)
                 {
-                    this.inventoryData.SetAmount(this.inventoryItem, amount);
+                    this.inventory.SetAmount(this.user, this.item, amount);
                 }
             }
         }

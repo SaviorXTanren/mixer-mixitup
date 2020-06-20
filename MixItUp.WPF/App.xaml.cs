@@ -5,6 +5,7 @@ using MixItUp.WPF.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -26,6 +27,21 @@ namespace MixItUp.WPF
     {
         private bool crashObtained = false;
 
+        private static readonly Dictionary<LanguageOptions, string> LanguageMaps = new Dictionary<LanguageOptions, string>
+        {
+            { LanguageOptions.Default, "en-US" },
+
+            { LanguageOptions.Dutch, "nl-NL" },
+            { LanguageOptions.English, "en-US" },
+            { LanguageOptions.German, "de-DE" },
+            { LanguageOptions.Spanish, "es-ES" },
+            { LanguageOptions.Japanese, "ja-JP" },
+            { LanguageOptions.French, "fr-FR" },
+            { LanguageOptions.Portuguese, "pt-BR" },
+
+            { LanguageOptions.Pseudo, "qps-ploc" },
+        };
+
         public App()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -40,17 +56,9 @@ namespace MixItUp.WPF
                 selectedLanguageTask.Wait();
 
                 var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
-                switch (selectedLanguageTask.Result.LanguageOption)
+                if (LanguageMaps.TryGetValue(selectedLanguageTask.Result.LanguageOption, out string locale))
                 {
-                    case LanguageOptions.English:
-                        culture = new System.Globalization.CultureInfo("en-US");
-                        break;
-                    case LanguageOptions.German:
-                        culture = new System.Globalization.CultureInfo("de-DE");
-                        break;
-                    case LanguageOptions.Pseudo:
-                        culture = new System.Globalization.CultureInfo("qps-ploc");
-                        break;
+                    culture = new System.Globalization.CultureInfo(locale);
                 }
 
                 System.Threading.Thread.CurrentThread.CurrentCulture = culture;
@@ -133,7 +141,7 @@ namespace MixItUp.WPF
             ChannelSession.IsElevated = id.Owner != id.User;
 
             Logger.ForceLog(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
-            if (ChannelSession.IsDebug())
+            if (ChannelSession.IsDebug() || ChannelSession.AppSettings.DiagnosticLogging)
             {
                 Logger.SetLogLevel(LogLevel.Debug);
             }

@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Net;
 using System.Net.WebSockets;
@@ -66,11 +67,15 @@ namespace MixItUp.Base.Services.External
 
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {
+            Logger.Log(LogLevel.Debug, "XSplit Web Socket Packet Received - " + packetJSON);
+
             await base.ProcessReceivedPacket(packetJSON);
         }
 
         private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            Logger.Log(LogLevel.Debug, "XSplit Disconnected");
+
             this.Disconnected(sender, new EventArgs());
         }
     }
@@ -88,6 +93,8 @@ namespace MixItUp.Base.Services.External
         }
 
         public string Name { get { return "XSplit"; } }
+
+        public bool IsEnabled { get { return ChannelSession.Settings.EnableXSplitConnection; } }
 
         public bool IsConnected { get; private set; }
 

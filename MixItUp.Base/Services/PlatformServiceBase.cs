@@ -9,6 +9,8 @@ namespace MixItUp.Base.Services
 {
     public abstract class PlatformServiceBase
     {
+        public abstract string Name { get; }
+
         public async Task<Result> AttemptConnect(Func<Task<Result>> connect, int connectionAttempts = 5)
         {
             Result result = new Result();

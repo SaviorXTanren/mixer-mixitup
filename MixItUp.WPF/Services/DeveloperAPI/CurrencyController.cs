@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -20,7 +21,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public IEnumerable<Currency> Get()
         {
             List<Currency> list = new List<Currency>();
-            foreach (var currency in ChannelSession.Settings.Currencies.Values)
+            foreach (var currency in ChannelSession.Settings.Currency.Values)
             {
                 list.Add(CurrencyFromUserCurrencyViewModel(currency));
             }
@@ -32,7 +33,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public Currency Get(Guid currencyID)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -42,14 +43,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return CurrencyFromUserCurrencyViewModel(ChannelSession.Settings.Currencies[currencyID]);
+            return CurrencyFromUserCurrencyViewModel(ChannelSession.Settings.Currency[currencyID]);
         }
 
         [Route("{currencyID:guid}/top")]
         [HttpGet]
         public IEnumerable<User> Get(Guid currencyID, int count = 10)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -70,7 +71,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
+            CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
             Dictionary<Guid, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
             UserDataModel streamer = ChannelSession.Settings.GetUserDataByMixerID(ChannelSession.MixerChannel.user.id);
@@ -94,7 +95,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPost]
         public IEnumerable<User> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -114,7 +115,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
+            CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
@@ -127,7 +128,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (user == null && Guid.TryParse(giveData.UsernameOrID, out Guid userId))
@@ -145,7 +146,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return users;
         }
 
-        public static CurrencyAmount CurrencyAmountFromUserCurrencyViewModel(UserCurrencyModel currency, int amount)
+        public static CurrencyAmount CurrencyAmountFromUserCurrencyViewModel(CurrencyModel currency, int amount)
         {
             return new CurrencyAmount
             {
@@ -155,7 +156,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             };
         }
 
-        public static Currency CurrencyFromUserCurrencyViewModel(UserCurrencyModel currency)
+        public static Currency CurrencyFromUserCurrencyViewModel(CurrencyModel currency)
         {
             return new Currency
             {

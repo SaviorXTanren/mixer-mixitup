@@ -5,6 +5,7 @@ using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using System;
 using System.Collections.Generic;
@@ -107,6 +108,51 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {
                         await ChannelSession.Services.Chat.ClearMessages();
+                    }
+                    else if (ChatAction.TimeoutRegex.IsMatch(this.SendMessageText))
+                    {
+                        string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (splits.Length == 3)
+                        {
+                            string username = splits[1];
+                            username = username.Trim();
+                            username = username.Replace("@", "");
+                            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+                            if (user != null)
+                            {
+                                if (uint.TryParse(splits[2], out uint amount) && amount > 0)
+                                {
+                                    await ChannelSession.Services.Chat.TimeoutUser(user, amount);
+                                }
+                                else
+                                {
+                                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("The timeout amount specified must be greater than 0"));
+                                }
+                            }
+                            else
+                            {
+                                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                            }
+                        }
+                    }
+                    else if (ChatAction.BanRegex.IsMatch(this.SendMessageText))
+                    {
+                        string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (splits.Length == 2)
+                        {
+                            string username = splits[1];
+                            username = username.Trim();
+                            username = username.Replace("@", "");
+                            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+                            if (user != null)
+                            {
+                                await ChannelSession.Services.Chat.BanUser(user);
+                            }
+                        }
+                        else
+                        {
+                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel("No user could be found with that name"));
+                        }
                     }
                     else
                     {

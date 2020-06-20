@@ -1,152 +1,40 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Windows.Currency;
-using System;
-using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public class CurrencyRankInventoryContainer
-    {
-        public UserCurrencyModel Currency { get; private set; }
-        public UserInventoryModel Inventory { get; private set; }
-
-        public CurrencyRankInventoryContainer(UserCurrencyModel currency) { this.Currency = currency; }
-
-        public CurrencyRankInventoryContainer(UserInventoryModel inventory) { this.Inventory = inventory; }
-
-        public string Name
-        {
-            get
-            {
-                if (this.Inventory != null) { return this.Inventory.Name; }
-                else { return this.Currency.Name; }
-            }
-        }
-
-        public string Type
-        {
-            get
-            {
-                if (this.Inventory != null) { return Resources.Inventory; }
-                else if (this.Currency.IsRank) { return Resources.Rank; }
-                else { return Resources.Currency; }
-            }
-        }
-
-        public string AmountSpecialIdentifiers
-        {
-            get
-            {
-                StringBuilder stringBuilder = new StringBuilder();
-                if (this.Inventory != null)
-                {
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.Inventory.UserAmountSpecialIdentifierExample);
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + "target" + this.Inventory.UserAmountSpecialIdentifierExample);
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.Inventory.UserAllAmountSpecialIdentifier);
-                }
-                else
-                {
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.Currency.UserAmountSpecialIdentifier);
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + "target" + this.Currency.UserAmountSpecialIdentifier);
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.Currency.Top10SpecialIdentifier);
-                }
-                return stringBuilder.ToString().Trim(new char[] { '\r', '\n' });
-            }
-            set { }
-        }
-
-        public string RankSpecialIdentifiers
-        {
-            get
-            {
-                StringBuilder stringBuilder = new StringBuilder();
-                if (this.Currency != null && this.Currency.IsRank)
-                {
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + this.Currency.UserRankNameSpecialIdentifier);
-                    stringBuilder.AppendLine(SpecialIdentifierStringBuilder.SpecialIdentifierHeader + "target" + this.Currency.UserRankNameSpecialIdentifier);
-                }
-                return stringBuilder.ToString().Trim(new char[] { '\r', '\n' });
-            }
-            set { }
-        }
-    }
-
     /// <summary>
     /// Interaction logic for CurrencyRankInventoryControl.xaml
     /// </summary>
     public partial class CurrencyRankInventoryControl : MainControlBase
     {
-        private ObservableCollection<CurrencyRankInventoryContainer> items = new ObservableCollection<CurrencyRankInventoryContainer>();
+        private CurrencyRankInventoryMainControlViewModel viewModel;
 
         public CurrencyRankInventoryControl()
         {
             InitializeComponent();
-
-            this.MainDataGrid.ItemsSource = this.items;
-
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
-        }
-
-        public void RefreshList()
-        {
-            this.items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currencies)
-            {
-                if (kvp.Value.IsRank)
-                {
-                    this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
-                }
-                else
-                {
-                    this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
-                }
-            }
-            foreach (var kvp in ChannelSession.Settings.Inventories)
-            {
-                this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
-            }
-        }
-
-        public async void DeleteItem(CurrencyRankInventoryContainer item)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                if (await DialogHelper.ShowConfirmation("Are you sure you wish to delete this?"))
-                {
-                    if (item.Inventory != null)
-                    {
-                        await item.Inventory.Reset();
-                        ChannelSession.Settings.Inventories.Remove(item.Inventory.ID);
-                    }
-                    else
-                    {
-                        await item.Currency.Reset();
-                        ChannelSession.Settings.Currencies.Remove(item.Currency.ID);
-                    }
-                    this.RefreshList();
-                }
-            });
         }
 
         protected override async Task InitializeInternal()
         {
-            this.RefreshList();
+            this.DataContext = this.viewModel = new CurrencyRankInventoryMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
             await base.InitializeInternal();
+        }
+
+        protected override async Task OnVisibilityChanged()
+        {
+            await this.viewModel.OnVisible();
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            CurrencyRankInventoryContainer item = (CurrencyRankInventoryContainer)button.DataContext;
+            CurrencyRankInventoryContainerViewModel item = (CurrencyRankInventoryContainerViewModel)button.DataContext;
             if (item.Inventory != null)
             {
                 InventoryWindow window = new InventoryWindow(item.Inventory);
@@ -164,13 +52,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            CurrencyRankInventoryContainer item = (CurrencyRankInventoryContainer)button.DataContext;
-            this.DeleteItem(item);
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.RefreshList();
+            CurrencyRankInventoryContainerViewModel item = (CurrencyRankInventoryContainerViewModel)button.DataContext;
+            this.viewModel.DeleteItem(item);
         }
 
         private void AddNewCurrencyRankButton_Click(object sender, RoutedEventArgs e)
@@ -187,21 +70,9 @@ namespace MixItUp.WPF.Controls.MainControls
             window.Show();
         }
 
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
+        private void Window_Closed(object sender, System.EventArgs e)
         {
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
-            {
-                if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.ShopCommand, "");
-                    await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-                else if (inventory.TradeEnabled && message.PlainTextMessage.StartsWith(inventory.TradeCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
-                    await inventory.PerformTradeCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-            }
+            this.viewModel.RefreshList();
         }
     }
 }

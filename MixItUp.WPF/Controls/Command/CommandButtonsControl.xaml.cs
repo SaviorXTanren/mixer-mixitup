@@ -2,12 +2,14 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
@@ -112,37 +114,32 @@ namespace MixItUp.WPF.Controls.Command
 
         private void RefreshUI()
         {
+            if (this.EditButton != null && this.RemoveEditingButton)
+            {
+                this.EditButton.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.DeleteButton != null && this.RemoveDeleteButton)
+            {
+                this.DeleteButton.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.EnableDisableToggleSwitch != null && this.RemoveEnableDisableToggle)
+            {
+                this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
+            }
+
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                if (this.EditButton != null)
+                if (this.EditButton != null && !command.IsEditable)
                 {
-                    if (!command.IsEditable)
-                    {
-                        this.EditButton.IsEnabled = false;
-                    }
-
-                    if (this.RemoveEditingButton)
-                    {
-                        this.EditButton.Visibility = Visibility.Collapsed;
-                    }
-                }
-
-                if (this.DeleteButton != null)
-                {
-                    if (this.RemoveDeleteButton)
-                    {
-                        this.DeleteButton.Visibility = Visibility.Collapsed;
-                    }
+                    this.EditButton.IsEnabled = false;
                 }
 
                 if (this.EnableDisableToggleSwitch != null)
                 {
                     this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
-                    if (this.RemoveEnableDisableToggle)
-                    {
-                        this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
-                    }
                 }
             }
         }
@@ -177,9 +174,11 @@ namespace MixItUp.WPF.Controls.Command
                     {
                         case EventTypeEnum.MixerChannelHosted:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
+                            extraSpecialIdentifiers["isautohost"] = "False";
                             break;
                         case EventTypeEnum.MixerChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
+                            extraSpecialIdentifiers["usersubstreak"] = "3";
                             break;
                         case EventTypeEnum.MixerChannelFanProgressionLevelUp:
                             extraSpecialIdentifiers["userfanprogressionnext"] = "200";
@@ -187,6 +186,9 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
                             extraSpecialIdentifiers["userfanprogressionimage"] = "https://static.mixer.com/img/design/ui/fan-progression/v1_badges/purple/large.gif";
                             extraSpecialIdentifiers["userfanprogression"] = "100";
+                            break;
+                        case EventTypeEnum.ChatUserTimeout:
+                            extraSpecialIdentifiers["timeoutlength"] = "5m";
                             break;
                         case EventTypeEnum.StreamlabsDonation:
                         case EventTypeEnum.GawkBoxDonation:
@@ -279,7 +281,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else if (command is CustomCommand)
                 {
-                    if (command.Name.Equals(InventoryWindow.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindow.ItemsSoldCommandName))
+                    if (command.Name.Equals(InventoryWindowViewModel.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindowViewModel.ItemsSoldCommandName))
                     {
                         extraSpecialIdentifiers["itemtotal"] = "5";
                         extraSpecialIdentifiers["itemname"] = "Chocolate Bars";
@@ -289,6 +291,10 @@ namespace MixItUp.WPF.Controls.Command
                     else if (command.Name.Contains("Moderation Strike"))
                     {
                         extraSpecialIdentifiers[ModerationService.ModerationReasonSpecialIdentifier] = "Bad Stuff";
+                    }
+                    else if (command.Name.Equals(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName) || command.Name.Equals(RedemptionStorePurchaseModel.DefaultRedemptionCommandName))
+                    {
+                        extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = "Test Product";
                     }
                     else
                     {

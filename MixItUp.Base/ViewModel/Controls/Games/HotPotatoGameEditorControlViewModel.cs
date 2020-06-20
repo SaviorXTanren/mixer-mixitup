@@ -1,9 +1,8 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -52,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public HotPotatoGameCommand existingCommand;
 
-        public HotPotatoGameEditorControlViewModel(UserCurrencyModel currency)
+        public HotPotatoGameEditorControlViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!");
             this.TossPotatoCommand = this.CreateBasicChatCommand("@$username has tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!");

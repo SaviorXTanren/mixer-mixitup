@@ -417,6 +417,16 @@ namespace MixItUp.Base.Model.Settings
 
         public async Task LoadUserData()
         {
+            Dictionary<Guid, Dictionary<string, Guid>> inventoryItems = new Dictionary<Guid, Dictionary<string, Guid>>();
+            foreach (UserInventoryModel inventory in this.inventoriesInternal.Values)
+            {
+                inventoriesInternal[inventory.ID] = new UserInventoryModel();
+                foreach (UserInventoryItemModel item in inventory.Items.Values)
+                {
+                    inventoryItems[inventory.ID][item.Name] = item.ID;
+                }
+            }
+
             await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = new UserDataModel();
@@ -453,7 +463,10 @@ namespace MixItUp.Base.Model.Settings
                                 UserInventoryModel inventory = this.inventoriesInternal[kvp.Key];
                                 foreach (var itemKVP in kvp.Value)
                                 {
-                                    inventory.SetAmount(userData, itemKVP.Key, itemKVP.Value);
+                                    if (inventoryItems[kvp.Key].ContainsKey(itemKVP.Key))
+                                    {
+                                        inventory.SetAmount(userData, inventoryItems[kvp.Key][itemKVP.Key], itemKVP.Value);
+                                    }
                                 }
                             }
                         }

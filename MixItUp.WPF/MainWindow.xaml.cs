@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
@@ -141,6 +142,8 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Remote, new RemoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Remote");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.OverlayWidgets, new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Games, new GamesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Giveaway, new GiveawayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Giveaways");
@@ -194,19 +197,12 @@ namespace MixItUp.WPF
                 {
                     Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
 
-                    string settingsFilePath = ChannelSession.Settings.SettingsFilePath;
-                    string settingsFolder = Path.GetDirectoryName(settingsFilePath);
+                    File.Delete(ChannelSession.Settings.SettingsFilePath);
+                    File.Delete(ChannelSession.Settings.DatabaseFilePath);
+
                     using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
                     {
-                        foreach (ZipArchiveEntry entry in zipFile.Entries)
-                        {
-                            string filePath = Path.Combine(settingsFolder, entry.Name);
-                            if (File.Exists(filePath))
-                            {
-                                File.Delete(filePath);
-                            }
-                        }
-                        zipFile.ExtractToDirectory(settingsFolder);
+                        zipFile.ExtractToDirectory(SettingsV2Model.SettingsDirectoryName);
                     }
                 }
                 else

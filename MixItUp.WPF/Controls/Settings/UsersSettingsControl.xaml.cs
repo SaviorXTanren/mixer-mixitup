@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Controls.Settings
                 this.RegularUserMinimumHoursTextBox.Text = ChannelSession.Settings.RegularUserMinimumHours.ToString();
             }
 
-            this.TitleRoleComboBox.ItemsSource = EnumHelper.GetEnumNames(UserViewModel.SelectableBasicUserRoles());
+            this.TitleRoleComboBox.ItemsSource = EnumHelper.GetEnumNames(MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles());
 
             await base.InitializeInternal();
         }

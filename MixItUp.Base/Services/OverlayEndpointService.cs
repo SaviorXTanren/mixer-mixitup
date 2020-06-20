@@ -300,43 +300,42 @@ namespace MixItUp.Base.Services
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
-            string url = listenerContext.Request.Url.LocalPath;
-            url = url.Trim(new char[] { '/' });
+            try
+            {
+                string url = listenerContext.Request.Url.LocalPath;
+                url = url.Trim(new char[] { '/' });
 
-            if (url.Equals("overlay"))
-            {
-                await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
-            }
-            else if (url.StartsWith(OverlayFilesWebPath))
-            {
-                string fileID = url.Replace(OverlayFilesWebPath, "");
-                string[] splits = fileID.Split(new char[] { '/', '\\' });
-                if (splits.Length == 2)
+                if (url.Equals("overlay"))
                 {
-                    string fileType = splits[0];
-                    fileID = splits[1];
-                    if (this.localFiles.ContainsKey(fileID) && File.Exists(this.localFiles[fileID]))
+                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
+                }
+                else if (url.StartsWith(OverlayFilesWebPath))
+                {
+                    string fileID = url.Replace(OverlayFilesWebPath, "");
+                    string[] splits = fileID.Split(new char[] { '/', '\\' });
+                    if (splits.Length == 2)
                     {
-                        listenerContext.Response.Headers["Access-Control-Allow-Origin"] = "*";
-                        listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                        listenerContext.Response.StatusDescription = HttpStatusCode.OK.ToString();
-                        listenerContext.Response.ContentType = fileType + "/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
-
-                        byte[] fileData = File.ReadAllBytes(this.localFiles[fileID]);
-
-                        try
+                        string fileType = splits[0];
+                        fileID = splits[1];
+                        if (this.localFiles.ContainsKey(fileID) && File.Exists(this.localFiles[fileID]))
                         {
+                            listenerContext.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                            listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                            listenerContext.Response.StatusDescription = HttpStatusCode.OK.ToString();
+                            listenerContext.Response.ContentType = fileType + "/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
+
+                            byte[] fileData = File.ReadAllBytes(this.localFiles[fileID]);
                             await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
                         }
-                        catch (HttpListenerException ex) { Logger.Log(LogLevel.Debug, ex); }
-                        catch (Exception ex) { Logger.Log(ex); }
                     }
                 }
+                else
+                {
+                    await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "");
+                }
             }
-            else
-            {
-                await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "");
-            }
+            catch (HttpListenerException ex) { Logger.Log(LogLevel.Debug, ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 

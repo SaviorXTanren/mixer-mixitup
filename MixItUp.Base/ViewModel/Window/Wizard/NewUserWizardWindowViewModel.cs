@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Accounts;
 using StreamingClient.Base.Util;
@@ -18,9 +17,9 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
     {
         public bool WizardComplete { get; private set; }
 
-        public ScorpBotData ScorpBot { get; private set; }
+        public ScorpBotDataModel ScorpBot { get; private set; }
 
-        public StreamlabsChatBotData StreamlabsChatBot { get; private set; }
+        public StreamlabsChatBotDataModel StreamlabsChatBot { get; private set; }
 
         #region Intro Page
 
@@ -281,7 +280,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     if (!string.IsNullOrEmpty(this.ScorpBotDirectory))
                     {
                         this.StatusMessage = "Gathering ScorpBot Data...";
-                        this.ScorpBot = await ScorpBotData.GatherScorpBotData(this.ScorpBotDirectory);
+                        this.ScorpBot = await ScorpBotDataModel.GatherScorpBotData(this.ScorpBotDirectory);
                         if (this.ScorpBot == null)
                         {
                             this.StatusMessage = "Failed to import ScorpBot data, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assistance.";
@@ -297,7 +296,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     if (!string.IsNullOrEmpty(this.StreamlabsChatbotDirectory))
                     {
                         this.StatusMessage = "Gathering Streamlabs ChatBot Data...";
-                        this.StreamlabsChatBot = await StreamlabsChatBotData.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Mixer, this.StreamlabsChatbotDirectory);
+                        this.StreamlabsChatBot = await StreamlabsChatBotDataModel.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Mixer, this.StreamlabsChatbotDirectory);
                         if (this.StreamlabsChatBot == null)
                         {
                             this.StatusMessage = "Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assistance.";
@@ -321,6 +320,17 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                         return;
                     }
 
+                    if (this.ScorpBot != null)
+                    {
+                        this.ScorpBot.ImportSettings();
+                    }
+
+                    if (this.StreamlabsChatBot != null)
+                    {
+                        await this.StreamlabsChatBot.ImportSettings();
+                    }
+
+                    ChannelSession.Settings.ReRunWizard = false;
                     ChannelSession.Settings.SettingsBackupLocation = this.SettingsBackupLocation;
                     ChannelSession.Settings.SettingsBackupRate = this.SelectedSettingsBackupOption;
 
@@ -360,6 +370,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     this.CommandActionsPageVisible = true;
                 }
 
+                this.StatusMessage = string.Empty;
                 return Task.FromResult(0);
             });
         }

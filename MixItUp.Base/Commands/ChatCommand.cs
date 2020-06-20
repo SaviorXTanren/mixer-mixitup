@@ -35,7 +35,7 @@ namespace MixItUp.Base.Commands
             this.IncludeExclamationInCommands = true;
         }
 
-        public ChatCommand(ScorpBotCommand command)
+        public ChatCommand(ScorpBotCommandModel command)
             : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.AddRange(command.Actions);
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = command.Enabled;
         }
 
-        public ChatCommand(StreamlabsChatBotCommand command)
+        public ChatCommand(StreamlabsChatBotCommandModel command)
             : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.AddRange(command.Actions);
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.Wildcards)
             {
-                return this.DoesTextMatchCommand(text, ChatCommand.CommandWildcardMatchingRegexFormat, out arguments);
+                return CommandBase.DoesTextMatchCommand(text, ChatCommand.CommandWildcardMatchingRegexFormat, this.CommandTriggers, out arguments);
             }
             else
             {
@@ -95,5 +95,19 @@ namespace MixItUp.Base.Commands
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
+    }
+
+    public class NewAutoChatCommand
+    {
+        public bool AddCommand { get; set; }
+        public string Description { get; set; }
+        public ChatCommand Command { get; set; }
+
+        public NewAutoChatCommand(string description, ChatCommand command)
+        {
+            this.AddCommand = true;
+            this.Description = description;
+            this.Command = command;
+        }
     }
 }

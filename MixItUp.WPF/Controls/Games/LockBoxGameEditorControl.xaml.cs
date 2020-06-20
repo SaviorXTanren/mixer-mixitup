@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Games
         private LockBoxGameEditorControlViewModel viewModel;
         private LockBoxGameCommand existingCommand;
 
-        public LockBoxGameEditorControl(UserCurrencyModel currency)
+        public LockBoxGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 

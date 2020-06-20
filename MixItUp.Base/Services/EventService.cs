@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
@@ -223,6 +224,11 @@ namespace MixItUp.Base.Services
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+            }
+
             try
             {
                 GlobalEvents.DonationOccurred(donation);
@@ -267,21 +273,21 @@ namespace MixItUp.Base.Services
         {
             if (this.CanPerformEvent(trigger))
             {
+                UserViewModel user = trigger.User;
+                if (user == null)
+                {
+                    user = ChannelSession.GetCurrentUser();
+                }
+
+                if (this.userEventTracking.ContainsKey(trigger.Type))
+                {
+                    this.userEventTracking[trigger.Type].Add(user.ID);
+                }
+
                 EventCommand command = this.GetEventCommand(trigger.Type);
                 if (command != null)
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
-
-                    UserViewModel user = trigger.User;
-                    if (user == null)
-                    {
-                        user = ChannelSession.GetCurrentUser();
-                    }
-
-                    if (this.userEventTracking.ContainsKey(trigger.Type))
-                    {
-                        this.userEventTracking[trigger.Type].Add(user.ID);
-                    }
 
                     await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
                 }

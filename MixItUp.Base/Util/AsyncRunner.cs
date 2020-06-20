@@ -59,9 +59,9 @@ namespace MixItUp.Base.Util
             return default(T);
         }
 
-        public static void RunAsyncInBackground(Func<Task> task)
+        public static Task RunAsyncInBackground(Func<Task> task)
         {
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
@@ -74,7 +74,7 @@ namespace MixItUp.Base.Util
             });
         }
 
-        public static async Task RunSyncAsAsync(Action action)
+        public static async Task RunSyncAsAsync(Action action, CancellationToken token)
         {
             await Task.Run(() =>
             {
@@ -86,10 +86,10 @@ namespace MixItUp.Base.Util
                 {
                     Logger.Log(ex);
                 }
-            });
+            }, token);
         }
 
-        public static async Task<T> RunSyncAsAsync<T>(Func<T> function)
+        public static async Task<T> RunSyncAsAsync<T>(Func<T> function, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -102,7 +102,7 @@ namespace MixItUp.Base.Util
                     Logger.Log(ex);
                 }
                 return default(T);
-            });
+            }, token);
         }
 
         public static void RunAsyncAsSync(Task task)
@@ -117,10 +117,10 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {

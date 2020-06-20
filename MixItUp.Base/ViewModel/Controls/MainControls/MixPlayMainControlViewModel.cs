@@ -3,6 +3,7 @@ using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.MixPlay;
+using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using System;
@@ -98,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id] = new List<MixPlayUserGroupModel>();
                 }
 
-                foreach (UserRoleEnum role in UserViewModel.SelectableBasicUserRoles())
+                foreach (UserRoleEnum role in RoleRequirementViewModel.SelectableUserRoles())
                 {
                     if (!ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
                     {

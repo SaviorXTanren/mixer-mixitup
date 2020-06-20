@@ -8,7 +8,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class GamesMainControlViewModel : WindowControlViewModelBase
     {
-        public bool CurrenciesExist { get { return ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank); } }
+        public bool CurrenciesExist { get { return ChannelSession.Settings.Currency.Count() > 0; } }
         public bool NoCurrenciesMade { get { return !this.CurrenciesExist; } }
 
         public ObservableCollection<GameCommandBase> GameCommands { get; private set; } = new ObservableCollection<GameCommandBase>();

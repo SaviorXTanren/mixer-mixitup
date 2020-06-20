@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
@@ -67,6 +68,7 @@ namespace MixItUp.Base.Services
             if (filePaths.Any(filePath => filePath.EndsWith(SettingsV1Model.SettingsFileExtension)))
             {
                 await DialogHelper.ShowMessage("We've detected version 1 settings in your installation and will now upgrade them to version 2. This will take some time depending on how large your settings data is, particularly the number of individual users we have data for from your stream."
+                    + Environment.NewLine + Environment.NewLine + "Prior to performing the upgrade, we will automatically back up your version 1 settings to keep them intact. In the event of any issues with the upgrade, don't worry! Your old settings are save and we'll help you in our Discord server to figure out what the issue is, then you can just re-upgrade your old settings."
                     + Environment.NewLine + Environment.NewLine + "If you have a large amount of user data, we suggest going to grab a cup of coffee and come back in a few minutes after dismissing this message. :)");
 
                 foreach (string filePath in filePaths)
@@ -292,7 +294,15 @@ namespace MixItUp.Base.Services
                             Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
                     }
 
-                    return new Result<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                    SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile);
+
+                    if (ChannelSession.Settings.IsStreamer != settings.IsStreamer || ChannelSession.Settings.MixerUserID != settings.MixerUserID || ChannelSession.Settings.MixerChannelID != settings.MixerChannelID)
+                    {
+                        return new Result<SettingsV2Model>("The account information in the backup you are trying to restore does not match the currently logged in account." +
+                            Environment.NewLine + Environment.NewLine + "Please sign-in with the correct account in order to restore this backup");
+                    }
+
+                    return new Result<SettingsV2Model>(settings);
                 }
             }
             catch (Exception ex)
@@ -353,6 +363,10 @@ namespace MixItUp.Base.Services
                 {
                     await SettingsV2Upgrader.Version41Upgrade(filePath);
                 }
+                if (currentVersion < 42)
+                {
+                    await SettingsV2Upgrader.Version42Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -368,6 +382,164 @@ namespace MixItUp.Base.Services
             }
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
+        }
+
+        public static async Task Version42Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+
+            if (settings.IsStreamer)
+            {
+                List<UserQuoteModel> quotes = new List<UserQuoteModel>();
+                await ChannelSession.Services.Database.Read(settings.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+                {
+                    string json = (string)data["Data"];
+                    json = json.Replace("MixItUp.Base.ViewModel.User.UserQuoteViewModel", "MixItUp.Base.Model.User.UserQuoteModel");
+                    quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>(json));
+                });
+
+                await ChannelSession.Services.Database.BulkWrite(settings.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
+                    quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
+            }
+
+            await settings.Initialize();
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.DiagnosticLogging)
+            {
+                ChannelSession.AppSettings.DiagnosticLogging = true;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (UserCurrencyModel oldCurrency in settings.Currencies.Values)
+            {
+                CurrencyModel newCurrency = new CurrencyModel();
+
+                newCurrency.ID = oldCurrency.ID;
+                newCurrency.Name = oldCurrency.Name;
+                newCurrency.AcquireAmount = oldCurrency.AcquireAmount;
+                newCurrency.AcquireInterval = oldCurrency.AcquireInterval;
+                newCurrency.MinimumActiveRate = oldCurrency.MinimumActiveRate;
+                newCurrency.OfflineAcquireAmount = oldCurrency.OfflineAcquireAmount;
+                newCurrency.OfflineAcquireInterval = oldCurrency.OfflineAcquireInterval;
+                newCurrency.MaxAmount = oldCurrency.MaxAmount;
+                newCurrency.SpecialIdentifier = oldCurrency.SpecialIdentifier;
+                newCurrency.SubscriberBonus = oldCurrency.SubscriberBonus;
+                newCurrency.ModeratorBonus = oldCurrency.ModeratorBonus;
+                newCurrency.OnFollowBonus = oldCurrency.OnFollowBonus;
+                newCurrency.OnHostBonus = oldCurrency.OnHostBonus;
+                newCurrency.OnSubscribeBonus = oldCurrency.OnSubscribeBonus;
+                newCurrency.ResetInterval = (Model.Currency.CurrencyResetRateEnum)((int)oldCurrency.ResetInterval);
+                newCurrency.ResetStartCadence = oldCurrency.ResetStartCadence;
+                newCurrency.LastReset = oldCurrency.LastReset;
+                newCurrency.IsPrimary = oldCurrency.IsPrimary;
+
+                if (oldCurrency.RankChangedCommand != null)
+                {
+                    settings.SetCustomCommand(oldCurrency.RankChangedCommand);
+                    newCurrency.RankChangedCommandID = oldCurrency.RankChangedCommand.ID;
+                }
+
+                if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
+                if (oldCurrency.IsTrackingEmbers) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
+                if (oldCurrency.IsTrackingFanProgression) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+
+                foreach (UserRankViewModel rank in oldCurrency.Ranks)
+                {
+                    newCurrency.Ranks.Add(new RankModel(rank.Name, rank.MinimumPoints));
+                }
+
+                settings.Currency[newCurrency.ID] = newCurrency;
+            }
+
+            foreach (UserInventoryModel oldInventory in settings.Inventories.Values)
+            {
+                InventoryModel newInventory = new InventoryModel();
+
+                newInventory.ID = oldInventory.ID;
+                newInventory.Name = oldInventory.Name;
+                newInventory.DefaultMaxAmount = oldInventory.DefaultMaxAmount;
+                newInventory.SpecialIdentifier = oldInventory.SpecialIdentifier;
+                newInventory.ShopEnabled = oldInventory.ShopEnabled;
+                newInventory.ShopCommand = oldInventory.ShopCommand;
+                newInventory.ShopCurrencyID = oldInventory.ShopCurrencyID;
+                newInventory.TradeEnabled = oldInventory.TradeEnabled;
+                newInventory.TradeCommand = oldInventory.TradeCommand;
+
+                settings.SetCustomCommand(oldInventory.ItemsBoughtCommand);
+                newInventory.ItemsBoughtCommandID = oldInventory.ItemsBoughtCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsSoldCommand);
+                newInventory.ItemsSoldCommandID = oldInventory.ItemsSoldCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsTradedCommand);
+                newInventory.ItemsTradedCommandID = oldInventory.ItemsTradedCommand.ID;
+
+                foreach (UserInventoryItemModel oldItem in oldInventory.Items.Values.ToList())
+                {
+                    InventoryItemModel newItem = new InventoryItemModel(oldItem.Name, oldItem.MaxAmount, oldItem.BuyAmount, oldItem.SellAmount);
+                    newItem.ID = oldItem.ID;
+                    newInventory.Items[newItem.ID] = newItem;
+                }
+
+                settings.Inventory[newInventory.ID] = newInventory;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventory.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
+            {
+                InventoryModel inventory = settings.Inventory[settings.GiveawayRequirements.Inventory.InventoryID];
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (inventory != null && !string.IsNullOrEmpty(settings.GiveawayRequirements.Inventory.ItemName))
+                {
+                    InventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
+                    if (item != null)
+                    {
+                        settings.GiveawayRequirements.Inventory.ItemID = item.ID;
+                    }
+                    settings.GiveawayRequirements.Inventory.ItemName = null;
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+
+            foreach (CommandBase command in SettingsV2Upgrader.GetAllCommands(settings))
+            {
+                if (command is PermissionsCommandBase)
+                {
+                    PermissionsCommandBase pCommand = (PermissionsCommandBase)command;
+                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventory.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
+                    {
+                        InventoryModel inventory = settings.Inventory[pCommand.Requirements.Inventory.InventoryID];
+#pragma warning disable CS0612 // Type or member is obsolete
+                        if (inventory != null && !string.IsNullOrEmpty(pCommand.Requirements.Inventory.ItemName))
+                        {
+                            InventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
+                            if (item != null)
+                            {
+                                pCommand.Requirements.Inventory.ItemID = item.ID;
+                            }
+                            pCommand.Requirements.Inventory.ItemName = null;
+                        }
+#pragma warning restore CS0612 // Type or member is obsolete
+                    }
+                }
+            }
+
+            List<UserDataModel> usersToRemove = new List<UserDataModel>();
+            foreach (UserDataModel user in settings.UserData.Values.ToList())
+            {
+                if (user.MixerID <= 0)
+                {
+                    usersToRemove.Add(user);
+                }
+            }
+
+            foreach (UserDataModel user in usersToRemove)
+            {
+                settings.UserData.Remove(user.ID);
+            }
+
+            await ChannelSession.Services.Settings.Save(settings);
         }
 
         public static async Task Version41Upgrade(string filePath)
@@ -421,6 +593,72 @@ namespace MixItUp.Base.Services
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
+        }
+
+        private static IEnumerable<CommandBase> GetAllCommands(SettingsV2Model settings)
+        {
+            List<CommandBase> commands = new List<CommandBase>();
+
+            commands.AddRange(settings.ChatCommands);
+            commands.AddRange(settings.EventCommands);
+            commands.AddRange(settings.MixPlayCommands);
+            commands.AddRange(settings.TimerCommands);
+            commands.AddRange(settings.ActionGroupCommands);
+            commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.CustomCommands.Values);
+
+            foreach (UserDataModel userData in settings.UserData.Values)
+            {
+                commands.AddRange(userData.CustomCommands);
+                if (userData.EntranceCommand != null)
+                {
+                    commands.Add(userData.EntranceCommand);
+                }
+            }
+
+            foreach (GameCommandBase gameCommand in settings.GameCommands)
+            {
+                commands.AddRange(gameCommand.GetAllInnerCommands());
+            }
+
+            foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
+            {
+                if (widget.Item is OverlayStreamBossItemModel)
+                {
+                    OverlayStreamBossItemModel item = ((OverlayStreamBossItemModel)widget.Item);
+                    if (item.NewStreamBossCommand != null)
+                    {
+                        commands.Add(item.NewStreamBossCommand);
+                    }
+                }
+                else if (widget.Item is OverlayProgressBarItemModel)
+                {
+                    OverlayProgressBarItemModel item = ((OverlayProgressBarItemModel)widget.Item);
+                    if (item.GoalReachedCommand != null)
+                    {
+                        commands.Add(item.GoalReachedCommand);
+                    }
+                }
+                else if (widget.Item is OverlayTimerItemModel)
+                {
+                    OverlayTimerItemModel item = ((OverlayTimerItemModel)widget.Item);
+                    if (item.TimerCompleteCommand != null)
+                    {
+                        commands.Add(item.TimerCompleteCommand);
+                    }
+                }
+            }
+
+            commands.Add(settings.GameQueueUserJoinedCommand);
+            commands.Add(settings.GameQueueUserSelectedCommand);
+            commands.Add(settings.GiveawayStartedReminderCommand);
+            commands.Add(settings.GiveawayUserJoinedCommand);
+            commands.Add(settings.GiveawayWinnerSelectedCommand);
+            commands.Add(settings.ModerationStrike1Command);
+            commands.Add(settings.ModerationStrike2Command);
+            commands.Add(settings.ModerationStrike3Command);
+
+            return commands.Where(c => c != null);
         }
     }
 
@@ -582,6 +820,7 @@ namespace MixItUp.Base.Services
             }
             newSettings.TelemetryUserID = oldSettings.TelemetryUserId;
 
+            newSettings.RemoteProfiles = new List<RemoteProfileModel>(oldSettings.remoteProfilesInternal);
             newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
             newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
             newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);

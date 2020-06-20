@@ -2653,6 +2653,30 @@
     <value>[!!! Ţï₥èôúţ !!!]</value>
   </data>
   <data name="PartnersAndVerifiedOnly" xml:space="preserve">
-    <value>[!!! Tλïƨ ƒèáƭúřè ïƨ çúřřèñƭℓ¥ áƲáïℓáβℓè ƒôř Þářƭñèřƨ &amp; Vèřïƒïèδ Çλáññèℓƨ ôñℓ¥. ℓôřè₥ ïƥƨú₥ δôℓôř ƨïƭ !!!]</value>
+    <value>[!!! Ţĥïš ƒèáţúřè ïš çúřřèñţℓ¥ áƲáïℓáβℓè ƒôř Þářţñèřš &amp; Vèřïƒïèδ Çĥáññèℓš ôñℓ¥. !!!]</value>
+  </data>
+  <data name="Dutch" xml:space="preserve">
+    <value>[!!! Ðúţçĥ !!!]</value>
+  </data>
+  <data name="French" xml:space="preserve">
+    <value>[!!! Fřèñçĥ !!!]</value>
+  </data>
+  <data name="Japanese" xml:space="preserve">
+    <value>[!!! Jáƥáñèšè !!!]</value>
+  </data>
+  <data name="Portuguese" xml:space="preserve">
+    <value>[!!! Þôřţúĝúèšè !!!]</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>[!!! Šƥáñïšĥ !!!]</value>
+  </data>
+  <data name="ImportFromFile" xml:space="preserve">
+    <value>[!!! Ì₥ƥôřƭ Fřô₥ Fïℓè ℓôřè !!!]</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>[!!! Ì₥ƥôřƭèδ ℓ !!!]</value>
+  </data>
+  <data name="ResetDate" xml:space="preserve">
+    <value>[!!! Rèƨèƭ Ðáƭè ℓô !!!]</value>
   </data>
 </root>

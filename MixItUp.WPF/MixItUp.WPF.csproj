@@ -76,6 +76,9 @@
     <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net46\GongSolutions.WPF.DragDrop.dll</HintPath>
+    </Reference>
     <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
     </Reference>
@@ -155,8 +158,8 @@
     <Reference Include="Microsoft.Owin.Hosting, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Hosting.4.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.1\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.2\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
@@ -183,7 +186,7 @@
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
     <Reference Include="StreamingClient.Base, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.1\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.2\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -541,8 +544,8 @@
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
-      <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
+    <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
+      <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
       <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
@@ -644,8 +647,14 @@
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
+      <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
+      <DependentUpon>StreamPassControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
@@ -738,16 +747,16 @@
     <Compile Include="Controls\Remote\RemoteBoardSettingsControl.xaml.cs">
       <DependentUpon>RemoteBoardSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
@@ -817,22 +826,46 @@
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\InventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml.cs">
       <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RequirementControl.xaml.cs">
       <DependentUpon>RequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\SettingsRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml.cs">
       <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml.cs">
+      <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CooldownRequirementControl.xaml.cs">
+      <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CurrencyRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\InventoryRequirementControl.xaml.cs">
+      <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RankRequirementControl.xaml.cs">
+      <DependentUpon>RankRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RequirementsSetControl.xaml.cs">
+      <DependentUpon>RequirementsSetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RoleRequirementControl.xaml.cs">
+      <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
@@ -993,6 +1026,7 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DeveloperAPI\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\QuotesController.cs" />
     <Compile Include="Services\DeveloperAPI\CommandController.cs" />
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
@@ -1032,6 +1066,12 @@
     </Compile>
     <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\RedemptionStoreWindow.xaml.cs">
+      <DependentUpon>RedemptionStoreWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\StreamPassWindow.xaml.cs">
+      <DependentUpon>StreamPassWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Dashboard\DashboardWindow.xaml.cs">
       <DependentUpon>DashboardWindow.xaml</DependentUpon>
@@ -1315,7 +1355,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml">
+    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1447,7 +1487,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\RedemptionStoreControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\StreamPassControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1571,7 +1619,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1579,11 +1627,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1675,11 +1723,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\InventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\RankSelectorControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1687,19 +1735,51 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\SettingsRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CooldownRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CurrencyRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\InventoryRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RankRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RequirementsSetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\SettingsRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\ThresholdRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1985,6 +2065,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\Currency\RedemptionStoreWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\StreamPassWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Dashboard\DashboardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2167,9 +2255,7 @@
     <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
     <Resource Include="Assets\Images\CommandExample.png" />
     <Resource Include="Assets\Images\ExampleRecipe.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.7.0-Windows-Installer.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe" />
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Collections.Generic;
@@ -112,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private VolcanoGameCommand existingCommand;
 
-        public VolcanoGameEditorControlViewModel(UserCurrencyModel currency)
+        public VolcanoGameEditorControlViewModel(CurrencyModel currency)
         {
             this.Stage1DepositCommand = this.CreateBasicChatCommand("After a few seconds, @$username hears a faint clunk as their " + currency.Name + " hit the bottom of the volcano");
             this.Stage1StatusCommand = this.CreateBasicChatCommand("Peering in, you can hardly see anything inside. Total Amount: $gametotalamount");

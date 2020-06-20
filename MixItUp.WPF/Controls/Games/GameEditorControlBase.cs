@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
@@ -40,7 +41,7 @@ namespace MixItUp.WPF.Controls.Games
             return command;
         }
 
-        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyModel currency, int amount)
+        protected CustomCommand CreateBasicCurrencyCommand(string message, CurrencyModel currency, int amount)
         {
             CustomCommand command = this.CreateBasicChatCommand(message);
             command.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, amount.ToString()));

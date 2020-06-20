@@ -195,7 +195,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task Initialize()
         {
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters) || this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers) ||
+                this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
             {
                 GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             }

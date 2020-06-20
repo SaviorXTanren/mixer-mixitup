@@ -52,6 +52,9 @@ namespace MixItUp.Base.Model.Settings
         public bool SettingsChangeRestartRequired { get; set; }
 
         [DataMember]
+        public bool DiagnosticLogging { get; set; } = false;
+
+        [DataMember]
         public bool PreviewProgram { get; set; } = false;
 
         [DataMember]

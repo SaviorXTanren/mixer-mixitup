@@ -1,20 +1,15 @@
 ﻿using Mixer.Base.Model.Game;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    [DataContract]
-    public class UserQuoteViewModel
+    public class UserQuoteViewModel : UIViewModelBase
     {
-        public const string QuoteNumberSpecialIdentifier = "quotenumber";
-        public const string QuoteTextSpecialIdentifier = "quotetext";
-        public const string QuoteGameSpecialIdentifier = "quotegame";
-        public const string QuoteDateTimeSpecialIdentifier = "quotedatetime";
-
         public static int GetNextQuoteNumber()
         {
             if (ChannelSession.Settings.Quotes.Count > 0)
@@ -24,43 +19,61 @@ namespace MixItUp.Base.ViewModel.User
             return 1;
         }
 
-        [DataMember]
-        public int ID { get; set; }
-
-        [DataMember]
-        public string Quote { get; set; }
-
-        [DataMember]
-        public DateTimeOffset DateTime { get; set; }
-
-        [DataMember]
-        public string GameName { get; set; }
-
-        public UserQuoteViewModel()
+        public int ID
         {
-            this.DateTime = DateTimeOffset.MinValue;
-        }
-
-        public UserQuoteViewModel(string quote, DateTimeOffset dateTime, GameTypeModel game)
-        {
-            this.ID = UserQuoteViewModel.GetNextQuoteNumber();
-            this.Quote = quote;
-            this.DateTime = dateTime;
-            if (game != null)
+            get { return this.Model.ID; }
+            set
             {
-                this.GameName = game.name;
+                this.Model.ID = value;
+                this.NotifyPropertyChanged();
             }
         }
+
+        public string Quote
+        {
+            get { return this.Model.Quote; }
+            set
+            {
+                this.Model.Quote = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public DateTimeOffset DateTime
+        {
+            get { return this.Model.DateTime; }
+            set
+            {
+                this.Model.DateTime = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public string GameName
+        {
+            get { return this.Model.GameName; }
+            set
+            {
+                this.Model.GameName = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public UserQuoteModel Model { get; private set; }
+
+        public UserQuoteViewModel(UserQuoteModel model) { this.Model = model; }
+
+        public UserQuoteViewModel(string quote, DateTimeOffset dateTime, GameTypeModel game) { this.Model = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quote, dateTime, game); }
 
         public override string ToString()
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.QuotesFormat))
             {
                 SpecialIdentifierStringBuilder str = new SpecialIdentifierStringBuilder(ChannelSession.Settings.QuotesFormat);
-                str.ReplaceSpecialIdentifier(QuoteNumberSpecialIdentifier, this.ID.ToString());
-                str.ReplaceSpecialIdentifier(QuoteTextSpecialIdentifier, this.Quote);
-                str.ReplaceSpecialIdentifier(QuoteGameSpecialIdentifier, this.GameName);
-                str.ReplaceSpecialIdentifier(QuoteDateTimeSpecialIdentifier, this.DateTime.ToString("d"));
+                str.ReplaceSpecialIdentifier(UserQuoteModel.QuoteNumberSpecialIdentifier, this.ID.ToString());
+                str.ReplaceSpecialIdentifier(UserQuoteModel.QuoteTextSpecialIdentifier, this.Quote);
+                str.ReplaceSpecialIdentifier(UserQuoteModel.QuoteGameSpecialIdentifier, this.GameName);
+                str.ReplaceSpecialIdentifier(UserQuoteModel.QuoteDateTimeSpecialIdentifier, this.DateTime.ToString("d"));
                 return str.ToString();
             }
             else

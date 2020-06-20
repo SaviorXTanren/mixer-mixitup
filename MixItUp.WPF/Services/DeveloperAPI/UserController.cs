@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -30,7 +31,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (user == null && Guid.TryParse(usernameOrID, out Guid userId))
@@ -68,7 +69,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public User Get(string username)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null && Guid.TryParse(username, out Guid userId))
             {
                 user = ChannelSession.Settings.GetUserData(userId);
@@ -109,7 +110,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User Update(string username, [FromBody] User updatedUserData)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null && Guid.TryParse(username, out Guid userId))
             {
                 user = ChannelSession.Settings.GetUserData(userId);
@@ -147,9 +148,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             foreach (CurrencyAmount currencyData in updatedUserData.CurrencyAmounts)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
+                if (ChannelSession.Settings.Currency.ContainsKey(currencyData.ID))
                 {
-                    ChannelSession.Settings.Currencies[currencyData.ID].SetAmount(user, currencyData.Amount);
+                    ChannelSession.Settings.Currency[currencyData.ID].SetAmount(user, currencyData.Amount);
                 }
             }
 
@@ -178,7 +179,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserCurrency(string username, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null && Guid.TryParse(username, out Guid userId))
             {
                 user = ChannelSession.Settings.GetUserData(userId);
@@ -218,7 +219,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserInventory(string username, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null && Guid.TryParse(username, out Guid userId))
             {
                 user = ChannelSession.Settings.GetUserData(userId);
@@ -278,14 +279,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 ViewingMinutes = userData.ViewingMinutes
             };
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
-                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, new UserInventoryDataViewModel(userData, inventory)));
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
             }
 
             return user;
@@ -293,7 +294,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustCurrency(UserDataModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -313,7 +314,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
+            CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
             if (currencyUpdate.Amount < 0)
             {
@@ -340,7 +341,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustInventory(UserDataModel user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
+            if (!ChannelSession.Settings.Inventory.ContainsKey(inventoryID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -360,9 +361,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryModel inventory = ChannelSession.Settings.Inventories[inventoryID];
+            InventoryModel inventory = ChannelSession.Settings.Inventory[inventoryID];
 
-            if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.Items.ContainsKey(inventoryUpdate.Name))
+            if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.ItemExists(inventoryUpdate.Name))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -372,10 +373,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
+            InventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;
-                if (!inventory.HasAmount(user, inventoryUpdate.Name, quantityToRemove))
+                if (!inventory.HasAmount(user, item, quantityToRemove))
                 {
                     // If the request is to remove inventory, but user doesn't have enough, fail
                     var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
@@ -386,11 +388,11 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                     throw new HttpResponseException(resp);
                 }
 
-                inventory.SubtractAmount(user, inventoryUpdate.Name, quantityToRemove);
+                inventory.SubtractAmount(user, item, quantityToRemove);
             }
             else if (inventoryUpdate.Amount > 0)
             {
-                inventory.AddAmount(user, inventoryUpdate.Name, inventoryUpdate.Amount);
+                inventory.AddAmount(user, item, inventoryUpdate.Amount);
             }
 
             return UserFromUserDataViewModel(user);

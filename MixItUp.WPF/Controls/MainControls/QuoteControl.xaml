@@ -27,8 +27,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -40,6 +42,8 @@
             <TextBox Grid.Column="4" Width="350" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quote}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding AddQuoteText}" />
 
             <Button Grid.Column="6" Content="{x:Static resx:Resources.AddQuote}" Command="{Binding AddQuoteCommand}" />
+
+            <Button Grid.Column="8" Content="{x:Static resx:Resources.ExportQuotes}" Command="{Binding ExportQuotesCommand}" />
         </Grid>
 
         <DataGrid Grid.Row="2" ItemsSource="{Binding Quotes}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
@@ -51,17 +55,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Quote}" IsReadOnly="True" Width="2*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Quote}" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox VerticalAlignment="Center" Text="{Binding Quote}" />
+                            <TextBox VerticalAlignment="Center" Text="{Binding Quote, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.GameName}" IsReadOnly="True" Width="*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.GameName}" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox VerticalAlignment="Center" Text="{Binding GameName}" />
+                            <TextBox VerticalAlignment="Center" Text="{Binding GameName, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

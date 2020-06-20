@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -89,7 +90,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyModel currency, CustomCommand newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CurrencyModel currency, CustomCommand newLeaderCommand)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
             this.CurrencyID = currency.ID;
@@ -177,9 +178,9 @@ namespace MixItUp.Base.Model.Overlay
             List<OverlayLeaderboardItem> items = new List<OverlayLeaderboardItem>();
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                if (ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
                 {
-                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    CurrencyModel currency = ChannelSession.Settings.Currency[this.CurrencyID];
                     IEnumerable<UserDataModel> userDataList = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency);
                     for (int i = 0; i < userDataList.Count() && items.Count < this.TotalToShow; i++)
                     {

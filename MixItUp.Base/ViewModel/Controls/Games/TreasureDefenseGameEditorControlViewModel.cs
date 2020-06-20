@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -57,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private TreasureDefenseGameCommand existingCommand;
 
-        public TreasureDefenseGameEditorControlViewModel(UserCurrencyModel currency)
+        public TreasureDefenseGameEditorControlViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Treasure Defense with a $gamebet " + currency.Name + " entry fee! Type !treasure to join in!");
 

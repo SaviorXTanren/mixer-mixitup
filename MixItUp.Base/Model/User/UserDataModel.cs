@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services.External;
@@ -15,7 +16,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.User
 {
     [DataContract]
-    public class UserDataModel : NotifyPropertyChangedBase, IEquatable<UserDataModel>
+    public class UserDataModel : IEquatable<UserDataModel>
     {
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -24,6 +25,9 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset LastUpdated { get; set; }
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
+
+        [DataMember]
+        public string UnassociatedUsername { get; set; }
 
         #region Mixer
 
@@ -61,9 +65,10 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public Dictionary<Guid, int> CurrencyAmounts { get; set; } = new Dictionary<Guid, int>();
-
         [DataMember]
         public Dictionary<Guid, Dictionary<Guid, int>> InventoryAmounts { get; set; } = new Dictionary<Guid, Dictionary<Guid, int>>();
+        [DataMember]
+        public Dictionary<Guid, int> StreamPassAmounts { get; set; } = new Dictionary<Guid, int>();
 
         [DataMember]
         public string CustomTitle { get; set; }
@@ -112,6 +117,9 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public uint TotalMonthsSubbed { get; set; }
 
+        [DataMember]
+        public DateTimeOffset LastSeen { get; set; }
+
         [JsonIgnore]
         public DateTimeOffset LastActivity { get; set; } = DateTimeOffset.MinValue;
 
@@ -153,14 +161,14 @@ namespace MixItUp.Base.Model.User
             this.MixerUsername = user.Username;
         }
 
-        public UserDataModel(ScorpBotViewer viewer)
+        public UserDataModel(ScorpBotViewerModel viewer)
         {
             this.MixerID = viewer.MixerID;
             this.MixerUsername = viewer.MixerUsername;
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataModel(StreamlabsChatBotViewer viewer)
+        public UserDataModel(StreamlabsChatBotViewerModel viewer)
         {
             if (viewer.Platform == StreamingPlatformTypeEnum.Mixer)
             {
@@ -176,7 +184,7 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.MixerID > 0) { return this.MixerUsername; }
-                return this.MixerUsername;
+                return this.UnassociatedUsername;
             }
         }
 
@@ -211,7 +219,6 @@ namespace MixItUp.Base.Model.User
                 int extraHours = value / 60;
                 this.ViewingHoursPart += extraHours;
                 this.ViewingMinutes = ViewingHoursPart * 60 + (value % 60);
-                this.NotifyPropertyChanged(nameof(ViewingHoursPart));
             }
         }
 
@@ -226,7 +233,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetAmount(this);
@@ -236,16 +243,16 @@ namespace MixItUp.Base.Model.User
         }
 
         [JsonIgnore]
-        public UserRankViewModel Rank
+        public RankModel Rank
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetRank(this);
                 }
-                return UserCurrencyModel.NoRank;
+                return CurrencyModel.NoRank;
             }
         }
 
@@ -254,7 +261,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
+                CurrencyModel currency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
                     return currency.GetAmount(this);
@@ -279,13 +286,6 @@ namespace MixItUp.Base.Model.User
             {
                 return string.Format("{0} - {1}", this.PrimaryRankName, this.PrimaryRankPoints);
             }
-        }
-
-        public void UpdateData(UserViewModel user)
-        {
-            this.ID = user.ID;
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.Username;
         }
 
         public override bool Equals(object obj)
