@@ -72,7 +72,7 @@
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Foreground="Red">IMPORTANT NOTICE: Preview updates are an opportunity to help test features early and report issues. They receive some amount of testing before they are released, but not the same amount given to public updates.</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red">We encourage you to backup of your settings first by clicking Skip below, then going to Settings -> Advanced. If you do not want to take this update, please click Skip below and optionally disable the Preview Program under the Settings -> General.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Foreground="Red">We encourage you to backup your settings first by clicking Skip below and then going to Settings -> Advanced. If you do not want to take this update, please click Skip below and optionally disable Preview Program under Settings -> General.</TextBlock>
                 </Grid>
             </Grid>
 
