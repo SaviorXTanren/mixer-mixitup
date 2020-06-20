@@ -63,7 +63,7 @@
                     <TextBlock Grid.Column="6" x:Name="CurrentVersionTextBlock" VerticalAlignment="Center" />
                 </Grid>
 
-                <Grid Grid.Row="1" x:Name="PreviewUpdateGrid" Visibility="Visible" Margin="10,10,10,0">
+                <Grid Grid.Row="1" x:Name="PreviewUpdateGrid" Visibility="Collapsed" Margin="10,10,10,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
