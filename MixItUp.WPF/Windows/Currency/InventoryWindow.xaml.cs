@@ -38,11 +38,6 @@ namespace MixItUp.WPF.Windows.Currency
         {
             this.DataContext = this.viewModel;
             await this.viewModel.OnLoaded();
-
-            this.ShopBuyCommandButtonsControl.DataContext = this.viewModel.ShopBuyCommand;
-            this.ShopSellCommandButtonsControl.DataContext = this.viewModel.ShopSellCommand;
-            this.TradeCommandButtonsControl.DataContext = this.viewModel.TradeCommand;
-
             await base.OnLoaded();
         }
 

@@ -149,16 +149,16 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public Guid ShopCurrencyID { get; set; }
         [DataMember]
-        public CustomCommand ItemsBoughtCommand { get; set; }
+        public Guid ItemsBoughtCommandID { get; set; }
         [DataMember]
-        public CustomCommand ItemsSoldCommand { get; set; }
+        public Guid ItemsSoldCommandID { get; set; }
 
         [DataMember]
         public bool TradeEnabled { get; set; }
         [DataMember]
         public string TradeCommand { get; set; }
         [DataMember]
-        public CustomCommand ItemsTradedCommand { get; set; }
+        public Guid ItemsTradedCommandID { get; set; }
 
         [JsonIgnore]
         private InventoryTradeModel tradeSender = null;
@@ -188,6 +188,63 @@ namespace MixItUp.Base.Model.Currency
 
         [JsonIgnore]
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public CustomCommand ItemsBoughtCommand
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsBoughtCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.ItemsBoughtCommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsBoughtCommandID);
+                    this.ItemsBoughtCommandID = Guid.Empty;
+                }
+            }
+        }
+
+        [JsonIgnore]
+        public CustomCommand ItemsSoldCommand
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsSoldCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.ItemsSoldCommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsSoldCommandID);
+                    this.ItemsSoldCommandID = Guid.Empty;
+                }
+            }
+        }
+
+        [JsonIgnore]
+        public CustomCommand ItemsTradedCommand
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsTradedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.ItemsTradedCommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsTradedCommandID);
+                    this.ItemsTradedCommandID = Guid.Empty;
+                }
+            }
+        }
 
         public bool ItemExists(Guid itemID) { return this.Items.ContainsKey(itemID); }
 
