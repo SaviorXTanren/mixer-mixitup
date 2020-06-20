@@ -3,7 +3,6 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using StreamingClient.Base.Util;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +17,8 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class UpdateWindow : LoadingWindowBase
     {
+        private const string DefaultInstallerLink = "https://github.com/SaviorXTanren/mixer-mixitup/releases/download/Installer-0.3.0/MixItUp-Setup.exe";
+
         private MixItUpUpdateModel update;
 
         public UpdateWindow(MixItUpUpdateModel update)
@@ -33,6 +34,11 @@ namespace MixItUp.WPF
         {
             this.NewVersionTextBlock.Text = this.update.Version.ToString();
             this.CurrentVersionTextBlock.Text = Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            if (this.update.IsPreview)
+            {
+                this.PreviewUpdateGrid.Visibility = Visibility.Visible;
+            }
 
             try
             {
@@ -61,7 +67,8 @@ namespace MixItUp.WPF
                     downloadComplete = true;
                 };
 
-                client.DownloadFileAsync(new Uri("https://github.com/SaviorXTanren/mixer-mixitup/releases/download/Installer-0.3.0/MixItUp-Setup.exe"), setupFilePath);
+                string installerLink = (!string.IsNullOrEmpty(this.update.InstallerLink)) ? this.update.InstallerLink : DefaultInstallerLink;
+                client.DownloadFileAsync(new Uri(installerLink), setupFilePath);
 
                 while (!downloadComplete)
                 {

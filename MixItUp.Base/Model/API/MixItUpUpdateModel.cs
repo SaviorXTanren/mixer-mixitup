@@ -16,7 +16,13 @@ namespace MixItUp.Base.Model.API
         [JsonProperty]
         public string ZipArchiveLink { get; set; }
 
+        [JsonProperty]
+        public string InstallerLink { get; set; }
+
         [JsonIgnore]
         public Version SystemVersion { get { return new Version(this.Version); } }
+
+        [JsonIgnore]
+        public bool IsPreview { get { return this.SystemVersion.Revision > 1000; } }
     }
 }
