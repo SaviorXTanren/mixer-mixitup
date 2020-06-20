@@ -219,7 +219,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double donationBonus = 1.0;
+        private double donationBonus = 1.5;
         public double SparkBonus
         {
             get { return this.sparkBonus; }
@@ -239,7 +239,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private double emberBonus = 1.0;
+        private double emberBonus = 1.5;
 
         public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
