@@ -165,11 +165,15 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding SubscriberBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox Grid.Column="0" Text="{Binding RegularBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RegularBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
+                            
+                            <TextBox Grid.Column="2" Text="{Binding SubscriberBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="2" Text="{Binding ModeratorBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox Grid.Column="4" Text="{Binding ModeratorBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
                         </Grid>
                     </GroupBox>
@@ -184,11 +188,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding OnFollowBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnFollow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="0" Text="{Binding OnFollowBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnFollow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="2" Text="{Binding OnHostBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnHost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="2" Text="{Binding OnHostBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnHost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="4" Text="{Binding OnSubscribeBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnSubscribe}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="4" Text="{Binding OnSubscribeBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnSubscribe}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
                         </Grid>
                     </GroupBox>
                 </Grid>

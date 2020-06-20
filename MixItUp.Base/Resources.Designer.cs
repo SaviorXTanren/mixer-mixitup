@@ -5749,6 +5749,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Regular Bonus.
+        /// </summary>
+        public static string RegularBonus {
+            get {
+                return ResourceManager.GetString("RegularBonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Regular&quot; Status Online Viewing Time.
         /// </summary>
         public static string RegularStatusOnlineViewingTime {

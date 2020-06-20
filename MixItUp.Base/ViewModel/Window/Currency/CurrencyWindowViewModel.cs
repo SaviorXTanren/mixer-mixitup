@@ -113,6 +113,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
                     this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
 
+                    this.RegularBonus = 0;
                     this.SubscriberBonus = 0;
                     this.ModeratorBonus = 0;
                     this.OnFollowBonus = 0;
@@ -206,6 +207,16 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private int offlineRateInterval = 0;
 
+        public int RegularBonus
+        {
+            get { return this.regularBonus; }
+            set
+            {
+                this.regularBonus = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int regularBonus = 0;
         public int SubscriberBonus
         {
             get { return this.subscriberBonus; }
@@ -405,6 +416,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.OfflineRateAmount = this.Currency.OfflineAcquireAmount;
             this.OfflineRateInterval = this.Currency.OfflineAcquireInterval;
 
+            this.RegularBonus = this.Currency.RegularBonus;
             this.SubscriberBonus = this.Currency.SubscriberBonus;
             this.ModeratorBonus = this.Currency.ModeratorBonus;
 
@@ -736,6 +748,12 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
+            if (this.RegularBonus < 0)
+            {
+                await DialogHelper.ShowMessage("The Regular bonus must be 0 or greater");
+                return false;
+            }
+
             if (this.SubscriberBonus < 0)
             {
                 await DialogHelper.ShowMessage("The Subscriber bonus must be 0 or greater");
@@ -806,6 +824,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
             else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
 
+            this.Currency.RegularBonus = this.RegularBonus;
             this.Currency.SubscriberBonus = this.SubscriberBonus;
             this.Currency.ModeratorBonus = this.ModeratorBonus;
             this.Currency.OnFollowBonus = this.OnFollowBonus;

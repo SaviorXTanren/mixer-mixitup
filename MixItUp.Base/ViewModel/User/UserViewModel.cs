@@ -455,6 +455,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public bool IsSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
+
         public bool HasPermissionsTo(UserRoleEnum checkRole)
         {
             Logger.Log($"Checking role permission for user: {this.PrimaryRole} - {checkRole}");

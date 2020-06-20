@@ -108,6 +108,8 @@ namespace MixItUp.Base.Model.Currency
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
+        public int RegularBonus { get; set; }
+        [DataMember]
         public int SubscriberBonus { get; set; }
         [DataMember]
         public int ModeratorBonus { get; set; }
@@ -317,13 +319,24 @@ namespace MixItUp.Base.Model.Currency
                                     this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
-                                        if (user.HasPermissionsTo(UserRoleEnum.Mod) && this.ModeratorBonus > 0)
+                                        int bonus = 0;
+
+                                        if (this.RegularBonus > 0 && user.UserRoles.Contains(UserRoleEnum.Regular))
                                         {
-                                            this.AddAmount(user.Data, this.ModeratorBonus);
+                                            bonus = Math.Max(this.RegularBonus, bonus);
                                         }
-                                        else if (user.HasPermissionsTo(UserRoleEnum.Subscriber) && this.SubscriberBonus > 0)
+                                        if (this.SubscriberBonus > 0 && user.IsSubscriber)
                                         {
-                                            this.AddAmount(user.Data, this.SubscriberBonus);
+                                            bonus = Math.Max(this.SubscriberBonus, bonus);
+                                        }
+                                        if (this.ModeratorBonus > 0 && user.HasPermissionsTo(UserRoleEnum.Mod))
+                                        {
+                                            bonus = Math.Max(this.ModeratorBonus, bonus);
+                                        }
+
+                                        if (bonus > 0)
+                                        {
+                                            this.AddAmount(user.Data, bonus);
                                         }
                                     }
                                     ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
