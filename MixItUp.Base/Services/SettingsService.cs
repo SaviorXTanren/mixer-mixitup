@@ -438,7 +438,8 @@ namespace MixItUp.Base.Services
 
                 if (oldCurrency.RankChangedCommand != null)
                 {
-                    newCurrency.RankChangedCommand = oldCurrency.RankChangedCommand;
+                    settings.SetCustomCommand(oldCurrency.RankChangedCommand);
+                    newCurrency.RankChangedCommandID = oldCurrency.RankChangedCommand.ID;
                 }
 
                 if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
@@ -464,11 +465,15 @@ namespace MixItUp.Base.Services
                 newInventory.ShopEnabled = oldInventory.ShopEnabled;
                 newInventory.ShopCommand = oldInventory.ShopCommand;
                 newInventory.ShopCurrencyID = oldInventory.ShopCurrencyID;
-                newInventory.ItemsBoughtCommand = oldInventory.ItemsBoughtCommand;
-                newInventory.ItemsSoldCommand = oldInventory.ItemsSoldCommand;
                 newInventory.TradeEnabled = oldInventory.TradeEnabled;
                 newInventory.TradeCommand = oldInventory.TradeCommand;
-                newInventory.ItemsTradedCommand = oldInventory.ItemsTradedCommand;
+
+                settings.SetCustomCommand(oldInventory.ItemsBoughtCommand);
+                newInventory.ItemsBoughtCommandID = oldInventory.ItemsBoughtCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsSoldCommand);
+                newInventory.ItemsSoldCommandID = oldInventory.ItemsSoldCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsTradedCommand);
+                newInventory.ItemsTradedCommandID = oldInventory.ItemsTradedCommand.ID;
 
                 foreach (UserInventoryItemModel oldItem in oldInventory.Items.Values.ToList())
                 {
@@ -521,7 +526,7 @@ namespace MixItUp.Base.Services
             }
 
             List<UserDataModel> usersToRemove = new List<UserDataModel>();
-            foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
+            foreach (UserDataModel user in settings.UserData.Values.ToList())
             {
                 if (user.MixerID <= 0)
                 {
@@ -531,7 +536,7 @@ namespace MixItUp.Base.Services
 
             foreach (UserDataModel user in usersToRemove)
             {
-                ChannelSession.Settings.UserData.Remove(user.ID);
+                settings.UserData.Remove(user.ID);
             }
 
             await ChannelSession.Services.Settings.Save(settings);
@@ -614,12 +619,6 @@ namespace MixItUp.Base.Services
             foreach (GameCommandBase gameCommand in settings.GameCommands)
             {
                 commands.AddRange(gameCommand.GetAllInnerCommands());
-            }
-
-            foreach (InventoryModel inventory in settings.Inventory.Values)
-            {
-                commands.Add(inventory.ItemsBoughtCommand);
-                commands.Add(inventory.ItemsSoldCommand);
             }
 
             foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
