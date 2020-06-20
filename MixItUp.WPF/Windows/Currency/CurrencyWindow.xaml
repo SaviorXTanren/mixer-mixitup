@@ -210,7 +210,7 @@
                                 <DataGrid ItemsSource="{Binding Ranks}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="90" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding Amount}" IsReadOnly="True" Width="90" />
                                         <DataGridTemplateColumn Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>

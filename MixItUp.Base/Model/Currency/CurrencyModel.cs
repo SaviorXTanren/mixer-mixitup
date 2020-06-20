@@ -31,8 +31,10 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class RankModel : IEquatable<RankModel>, IComparable<RankModel>, IComparable, IComparer<RankModel>
     {
+        [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
         public int Amount { get; set; }
 
         public RankModel() { }
