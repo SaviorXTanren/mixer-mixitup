@@ -79,17 +79,17 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            CommandButtonsControl button = (CommandButtonsControl)sender;
             StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
             CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command.Command));
             window.Show();
         }
 
-        private async void DeleteLevelButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void LevelCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            Button button = (Button)sender;
+            CommandButtonsControl button = (CommandButtonsControl)sender;
             StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
-            await this.viewModel.DeleteCustomLevelUpCommand(command);
+            this.viewModel.DeleteCustomLevelUpCommand(command);
         }
 
         private void DefaultLevelUpNewCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)

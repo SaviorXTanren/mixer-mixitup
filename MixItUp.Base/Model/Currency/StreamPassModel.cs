@@ -55,9 +55,9 @@ namespace MixItUp.Base.Model.Currency
         public double EmberBonus { get; set; }
 
         [DataMember]
-        public CustomCommand DefaultLevelUpCommand { get; set; }
+        public Guid DefaultLevelUpCommandID { get; set; }
         [DataMember]
-        public Dictionary<int, CustomCommand> CustomLevelUpCommands { get; set; } = new Dictionary<int, CustomCommand>();
+        public Dictionary<int, Guid> CustomLevelUpCommands { get; set; } = new Dictionary<int, Guid>();
 
         public StreamPassModel()
         {
@@ -87,11 +87,11 @@ namespace MixItUp.Base.Model.Currency
             this.SparkBonus = copy.SparkBonus;
             this.EmberBonus = copy.EmberBonus;
 
-            this.DefaultLevelUpCommand = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(this.DefaultLevelUpCommand));
+            this.DefaultLevelUpCommandID = this.DuplicateCommand(copy.DefaultLevelUpCommandID);
             this.CustomLevelUpCommands.Clear();
             foreach (var kvp in copy.CustomLevelUpCommands)
             {
-                this.CustomLevelUpCommands[kvp.Key] = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(kvp.Value));
+                this.CustomLevelUpCommands[kvp.Key] = this.DuplicateCommand(kvp.Value);
             }
         }
 
@@ -121,6 +121,25 @@ namespace MixItUp.Base.Model.Currency
                 return stringBuilder.ToString().Trim(new char[] { '\r', '\n' });
             }
             set { }
+        }
+
+        [JsonIgnore]
+        public CustomCommand DefaultLevelUpCommand
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.DefaultLevelUpCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.DefaultLevelUpCommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.DefaultLevelUpCommandID);
+                    this.DefaultLevelUpCommandID = Guid.Empty;
+                }
+            }
         }
 
         public int GetAmount(UserDataModel user)
@@ -162,9 +181,9 @@ namespace MixItUp.Base.Model.Currency
                 {
                     for (int level = (currentLevel + 1); level <= newLevel; level++)
                     {
-                        if (this.CustomLevelUpCommands.ContainsKey(level))
+                        if (this.CustomLevelUpCommands.ContainsKey(level) && ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]) != null)
                         {
-                            this.CustomLevelUpCommands[level].Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                            ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]).Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
                         }
                         else if (this.DefaultLevelUpCommand != null)
                         {
@@ -240,6 +259,15 @@ namespace MixItUp.Base.Model.Currency
         public override int GetHashCode()
         {
             return this.ID.GetHashCode();
+        }
+
+        private Guid DuplicateCommand(Guid id)
+        {
+            CustomCommand command = ChannelSession.Settings.GetCustomCommand(id);
+            command = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(command));
+            command.ID = Guid.NewGuid();
+            ChannelSession.Settings.SetCustomCommand(command);
+            return command.ID;
         }
     }
 }

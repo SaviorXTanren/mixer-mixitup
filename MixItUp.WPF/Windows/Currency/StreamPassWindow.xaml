@@ -236,7 +236,7 @@
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="220">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" RemoveDeleteButton="True" />
+                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>

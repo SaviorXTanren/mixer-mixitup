@@ -18,7 +18,31 @@ namespace MixItUp.Base.ViewModel.Window.Currency
     {
         public int Level { get; set; }
 
-        public CustomCommand Command { get; set; }
+        public Guid CommandID { get; set; }
+
+        public CustomCommand Command
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.CommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.CommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.CommandID);
+                    this.CommandID = Guid.Empty;
+                }
+            }
+        }
+
+        public StreamPassCustomLevelUpCommandViewModel(int level, Guid id)
+        {
+            this.Level = level;
+            this.CommandID = id;
+        }
 
         public StreamPassCustomLevelUpCommandViewModel(int level, CustomCommand command)
         {
@@ -329,12 +353,10 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
 
-        public async Task DeleteCustomLevelUpCommand(StreamPassCustomLevelUpCommandViewModel command)
+        public void DeleteCustomLevelUpCommand(StreamPassCustomLevelUpCommandViewModel command)
         {
-            if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteCustomLevelUpCommand))
-            {
-                this.CustomLevelUpCommands.Remove(command);
-            }
+            this.CustomLevelUpCommands.Remove(command);
+            command.Command = null;
         }
 
         public async Task<bool> Validate()
@@ -483,7 +505,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.StreamPass.CustomLevelUpCommands.Clear();
             foreach (StreamPassCustomLevelUpCommandViewModel customCommand in this.CustomLevelUpCommands)
             {
-                this.StreamPass.CustomLevelUpCommands[customCommand.Level] = customCommand.Command;
+                this.StreamPass.CustomLevelUpCommands[customCommand.Level] = customCommand.CommandID;
             }
 
             await ChannelSession.SaveSettings();
