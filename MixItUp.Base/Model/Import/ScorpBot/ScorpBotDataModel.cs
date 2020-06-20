@@ -270,8 +270,9 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     ScorpBotCommandModel scorpCommand = new ScorpBotCommandModel("rankup", rankUpCommand);
                     ChatCommand chatCommand = new ChatCommand(scorpCommand);
 
-                    rankCurrency.RankChangedCommand = new CustomCommand("User Rank Changed");
-                    rankCurrency.RankChangedCommand.Actions.AddRange(chatCommand.Actions);
+                    CustomCommand miuRankUpCommand = new CustomCommand("User Rank Changed");
+                    miuRankUpCommand.Actions.AddRange(chatCommand.Actions);
+                    rankCurrency.RankChangedCommand = miuRankUpCommand;
                 }
             }
 

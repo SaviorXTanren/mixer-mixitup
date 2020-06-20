@@ -131,7 +131,7 @@ namespace MixItUp.Base.Model.Currency
         [DataMember]
         public List<RankModel> Ranks { get; set; } = new List<RankModel>();
         [DataMember]
-        public CustomCommand RankChangedCommand { get; set; }
+        public Guid RankChangedCommandID { get; set; }
 
         [DataMember]
         public bool IsPrimary { get; set; }
@@ -205,6 +205,25 @@ namespace MixItUp.Base.Model.Currency
 
         [JsonIgnore]
         public string TopUserSpecialIdentifier { get { return string.Format("{0}{1}", this.TopSpecialIdentifier, SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public CustomCommand RankChangedCommand
+        {
+            get { return ChannelSession.Settings.GetCustomCommand(this.RankChangedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.RankChangedCommandID = value.ID;
+                    ChannelSession.Settings.SetCustomCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.CustomCommands.Remove(this.RankChangedCommandID);
+                    this.RankChangedCommandID = Guid.Empty;
+                }
+            }
+        }
 
         public int GetAmount(UserDataModel user)
         {

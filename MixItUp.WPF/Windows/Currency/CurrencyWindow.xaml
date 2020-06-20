@@ -248,11 +248,13 @@
                                 <Button Grid.Row="2" Command="{Binding AddRankCommand}" Width="130" Content="{x:Static resx:Resources.AddNewRank}"/>
 
                                 <Grid Grid.Row="4" HorizontalAlignment="Center">
-                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}">
+                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}" Width="230">
                                         <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                                            <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+                                            <Button x:Name="NewCommandButton" Visibility="{Binding DoesNotHaveRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
-                                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
+                                            <Grid Visibility="{Binding HasRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding RankChangedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                            </Grid>
                                         </Grid>
                                     </GroupBox>
                                 </Grid>

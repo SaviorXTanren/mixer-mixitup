@@ -434,8 +434,12 @@ namespace MixItUp.Base.Services
                 newCurrency.ResetInterval = (Model.Currency.CurrencyResetRateEnum)((int)oldCurrency.ResetInterval);
                 newCurrency.ResetStartCadence = oldCurrency.ResetStartCadence;
                 newCurrency.LastReset = oldCurrency.LastReset;
-                newCurrency.RankChangedCommand = oldCurrency.RankChangedCommand;
                 newCurrency.IsPrimary = oldCurrency.IsPrimary;
+
+                if (oldCurrency.RankChangedCommand != null)
+                {
+                    newCurrency.RankChangedCommand = oldCurrency.RankChangedCommand;
+                }
 
                 if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
                 if (oldCurrency.IsTrackingEmbers) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
@@ -610,14 +614,6 @@ namespace MixItUp.Base.Services
             foreach (GameCommandBase gameCommand in settings.GameCommands)
             {
                 commands.AddRange(gameCommand.GetAllInnerCommands());
-            }
-
-            foreach (CurrencyModel currency in settings.Currency.Values)
-            {
-                if (currency.RankChangedCommand != null)
-                {
-                    commands.Add(currency.RankChangedCommand);
-                }
             }
 
             foreach (InventoryModel inventory in settings.Inventory.Values)

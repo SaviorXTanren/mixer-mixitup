@@ -56,7 +56,6 @@ namespace MixItUp.WPF.Windows.Currency
         {
             CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
-            window.Closed += Window_Closed;
             window.Show();
         }
 
@@ -67,7 +66,6 @@ namespace MixItUp.WPF.Windows.Currency
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Closed += Window_Closed;
                 window.Show();
             }
         }
@@ -82,7 +80,6 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     this.viewModel.RankChangedCommand = null;
                     await ChannelSession.SaveSettings();
-                    this.UpdateRankChangedCommand();
                 }
             });
         }
@@ -132,26 +129,6 @@ namespace MixItUp.WPF.Windows.Currency
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
             this.viewModel.RankChangedCommand = (CustomCommand)e;
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.UpdateRankChangedCommand();
-        }
-
-        private void UpdateRankChangedCommand()
-        {
-            if (this.viewModel.RankChangedCommand != null)
-            {
-                this.NewCommandButton.Visibility = Visibility.Collapsed;
-                this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.DataContext = this.viewModel.RankChangedCommand;
-            }
-            else
-            {
-                this.NewCommandButton.Visibility = Visibility.Visible;
-                this.CommandButtons.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

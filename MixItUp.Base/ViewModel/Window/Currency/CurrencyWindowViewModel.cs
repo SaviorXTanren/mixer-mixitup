@@ -321,7 +321,21 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public ICommand ExportToFileCommand { get; private set; }
 
-        public CustomCommand RankChangedCommand { get; set; }
+        public CustomCommand RankChangedCommand
+        {
+            get { return this.rankChangedCommand; }
+            set
+            {
+                this.rankChangedCommand = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasRankChangedCommand");
+                this.NotifyPropertyChanged("DoesNotHaveRankChangedCommand");
+            }
+        }
+        private CustomCommand rankChangedCommand;
+        public bool HasRankChangedCommand { get { return this.RankChangedCommand != null; } }
+        public bool DoesNotHaveRankChangedCommand { get { return !this.HasRankChangedCommand; } }
+
         public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
