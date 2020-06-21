@@ -17,15 +17,18 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <UsersControls:UserProfileAvatarControl x:Name="AvatarImage" Grid.Column="0" DataContext="{Binding}" Size="16" VerticalAlignment="Center" />
 
-        <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="0,0,-3,0" Grid.Column="1" VerticalAlignment="Center" />
+        <Image x:Name="PlatformImage" Source="{Binding PlatformBadgeLink}" Margin="3,0,0,0" Grid.Column="1" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="UsernameTextBlock" Grid.Column="3" Text="{Binding Username}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
+        <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="3,0,0,0" Grid.Column="2" VerticalAlignment="Center" />
+
+        <TextBlock x:Name="UsernameTextBlock" Grid.Column="4" Text="{Binding Username}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

@@ -2259,6 +2259,8 @@
     <Resource Include="Assets\Images\CommandExample.png" />
     <Resource Include="Assets\Images\ExampleRecipe.png" />
     <Resource Include="Assets\Images\Twitch.png" />
+    <Resource Include="Assets\Images\Twitch-Small.png" />
+    <Resource Include="Assets\Images\Mixer-Small.png" />
     <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

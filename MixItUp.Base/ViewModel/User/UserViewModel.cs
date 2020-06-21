@@ -373,6 +373,16 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string PlatformBadgeLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return "/Assets/Images/Mixer-Small.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
+                return null;
+            }
+        }
+
         public string SubscriberBadgeLink
         {
             get
