@@ -97,7 +97,7 @@ namespace MixItUp.WPF.Controls.Chat
                     else if (this.DataContext is TwitchV5API.EmoteModel)
                     {
                         TwitchV5API.EmoteModel emote = (TwitchV5API.EmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.url);
+                        this.Image.Source = await this.DownloadImageUrl(emote.URL);
                         this.Image.ToolTip = this.AltText.Text = emote.code;
                     }
                     else if (this.DataContext is BetterTTVEmoteModel)
