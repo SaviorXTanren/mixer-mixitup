@@ -23,8 +23,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
         public string WhisperThreadID { get; set; }
 
-        public TwitchChatMessageViewModel(ChatMessagePacketModel message)
-            : base(message.ID, StreamingPlatformTypeEnum.Twitch, new UserViewModel(message))
+        public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user = null)
+            : base(message.ID, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(message))
         {
             if (message.Message.StartsWith(SlashMeAction) && message.Message.Last() == SOHCharacter)
             {
@@ -38,8 +38,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             }
         }
 
-        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper)
-            : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, new UserViewModel(whisper))
+        public TwitchChatMessageViewModel(PubSubWhisperEventModel whisper, UserViewModel user = null)
+            : base(whisper.message_id, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(whisper))
         {
             this.WhisperThreadID = whisper.thread_id;
 

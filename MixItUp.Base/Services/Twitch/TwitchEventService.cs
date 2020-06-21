@@ -389,7 +389,8 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!string.IsNullOrEmpty(packet.body))
             {
-                await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet));
+                UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.from_id.ToString());
+                await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet, user));
             }
         }
 

@@ -573,7 +573,8 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else
                 {
-                    this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message));
+                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(message.UserID);
+                    this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
                 }
             }
         }
