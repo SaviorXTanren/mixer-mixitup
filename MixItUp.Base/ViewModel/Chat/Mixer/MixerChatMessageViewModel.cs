@@ -11,8 +11,8 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
     {
         private ChatMessageDataModel[] messageData;
 
-        public MixerChatMessageViewModel(ChatMessageEventModel chatMessageEvent)
-            : base(chatMessageEvent.id.ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(chatMessageEvent))
+        public MixerChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+            : base(chatMessageEvent.id.ToString(), StreamingPlatformTypeEnum.Mixer, (user != null) ? user : new UserViewModel(chatMessageEvent))
         {
             this.IsInUsersChannel = ChannelSession.MixerChannel.id.Equals(chatMessageEvent.channel);
 
@@ -21,8 +21,8 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
             this.ProcessMessageContents(chatMessageEvent.message);
         }
 
-        public MixerChatMessageViewModel(ChatSkillAttributionEventModel chatMessageEvent)
-            : base(chatMessageEvent.id.ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(chatMessageEvent))
+        public MixerChatMessageViewModel(ChatSkillAttributionEventModel chatMessageEvent, UserViewModel user = null)
+            : base(chatMessageEvent.id.ToString(), StreamingPlatformTypeEnum.Mixer, (user != null) ? user : new UserViewModel(chatMessageEvent))
         {
             this.ProcessMessageContents(chatMessageEvent.message);
         }

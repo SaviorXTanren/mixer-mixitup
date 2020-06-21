@@ -11,6 +11,7 @@ using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Currency;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -468,12 +469,44 @@ namespace MixItUp.Base.Services
                 newInventory.TradeEnabled = oldInventory.TradeEnabled;
                 newInventory.TradeCommand = oldInventory.TradeCommand;
 
-                settings.SetCustomCommand(oldInventory.ItemsBoughtCommand);
-                newInventory.ItemsBoughtCommandID = oldInventory.ItemsBoughtCommand.ID;
-                settings.SetCustomCommand(oldInventory.ItemsSoldCommand);
-                newInventory.ItemsSoldCommandID = oldInventory.ItemsSoldCommand.ID;
-                settings.SetCustomCommand(oldInventory.ItemsTradedCommand);
-                newInventory.ItemsTradedCommandID = oldInventory.ItemsTradedCommand.ID;
+                if (oldInventory.ItemsBoughtCommand != null)
+                {
+                    settings.SetCustomCommand(oldInventory.ItemsBoughtCommand);
+                    newInventory.ItemsBoughtCommandID = oldInventory.ItemsBoughtCommand.ID;
+                }
+                else
+                {
+                    CustomCommand buyCommand = new CustomCommand(InventoryWindowViewModel.ItemsBoughtCommandName);
+                    buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+                    settings.SetCustomCommand(buyCommand);
+                    newInventory.ItemsBoughtCommandID = buyCommand.ID;
+                }
+
+                if (oldInventory.ItemsSoldCommand != null)
+                {
+                    settings.SetCustomCommand(oldInventory.ItemsSoldCommand);
+                    newInventory.ItemsSoldCommandID = oldInventory.ItemsSoldCommand.ID;
+                }
+                else
+                {
+                    CustomCommand sellCommand = new CustomCommand(InventoryWindowViewModel.ItemsSoldCommandName);
+                    sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+                    settings.SetCustomCommand(sellCommand);
+                    newInventory.ItemsSoldCommandID = sellCommand.ID;
+                }
+
+                if (oldInventory.ItemsTradedCommand != null)
+                {
+                    settings.SetCustomCommand(oldInventory.ItemsTradedCommand);
+                    newInventory.ItemsTradedCommandID = oldInventory.ItemsTradedCommand.ID;
+                }
+                else
+                {
+                    CustomCommand tradeCommand = new CustomCommand(InventoryWindowViewModel.ItemsTradedCommandName);
+                    tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+                    settings.SetCustomCommand(tradeCommand);
+                    newInventory.ItemsTradedCommandID = tradeCommand.ID;
+                }
 
                 foreach (UserInventoryItemModel oldItem in oldInventory.Items.Values.ToList())
                 {

@@ -832,7 +832,13 @@ namespace MixItUp.Base.Model.Settings
 
         public CustomCommand GetCustomCommand(Guid id) { return this.CustomCommands.ContainsKey(id) ? this.CustomCommands[id] : null; }
 
-        public void SetCustomCommand(CustomCommand command) { this.CustomCommands[command.ID] = command; }
+        public void SetCustomCommand(CustomCommand command)
+        {
+            if (command != null)
+            {
+                this.CustomCommands[command.ID] = command;
+            }
+        }
 
         private void InitializeMissingData()
         {

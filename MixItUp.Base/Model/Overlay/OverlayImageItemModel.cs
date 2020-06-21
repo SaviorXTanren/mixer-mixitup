@@ -9,7 +9,7 @@ namespace MixItUp.Base.Model.Overlay
         public override string FileType { get { return "image"; } set { } }
 
         [DataMember]
-        public override string FullLink { get { return this.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
+        public override string FullLink { get { return OverlayItemModelBase.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
 
         public OverlayImageItemModel() : base() { }
 
