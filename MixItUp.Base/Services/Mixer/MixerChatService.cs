@@ -571,15 +571,16 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (e.message != null)
             {
+                UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(e.user_id);
                 if (e.message.ContainsSkill)
                 {
-                    MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e);
+                    MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e, user);
                     this.OnMessageOccurred(sender, message);
                     this.ProcessSkill(message);
                 }
                 else
                 {
-                    this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e));
+                    this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e, user));
                 }
             }
         }
@@ -588,7 +589,8 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (!string.IsNullOrEmpty(e.target))
             {
-                this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e));
+                UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(e.user_id);
+                this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e, user));
             }
         }
 

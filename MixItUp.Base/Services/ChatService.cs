@@ -153,7 +153,8 @@ namespace MixItUp.Base.Services
 
                 foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
                 {
-                    messagesToAdd.Add(new MixerChatMessageViewModel(messageEvent));
+                    UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(messageEvent.user_id);
+                    messagesToAdd.Add(new MixerChatMessageViewModel(messageEvent, user));
                 }
 
     #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -224,7 +225,7 @@ namespace MixItUp.Base.Services
                     ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(user.Username, message, sendAsStreamer);
                     if (messageEvent != null)
                     {
-                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent));
+                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent, ChannelSession.GetCurrentUser()));
                     }
                 }
                 else

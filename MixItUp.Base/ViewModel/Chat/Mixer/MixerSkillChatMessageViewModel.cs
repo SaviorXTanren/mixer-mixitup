@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Chat.Mixer
@@ -8,8 +9,8 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
     {
         public MixerSkillModel Skill { get; private set; }
 
-        public MixerSkillChatMessageViewModel(ChatMessageEventModel chatMessageEvent)
-            : base(chatMessageEvent)
+        public MixerSkillChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+            : base(chatMessageEvent, user)
         {
             this.Skill = new MixerSkillModel(chatMessageEvent.message.Skill);
         }

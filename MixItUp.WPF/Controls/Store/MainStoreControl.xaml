@@ -162,13 +162,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CreatedBy}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-                            <UsersControls:UserProfileAvatarControl x:Name="DetailsUserAvatar" Grid.Column="2" VerticalAlignment="Center" Width="25" Height="25"  />
-                            <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="8" HorizontalAlignment="Left">

@@ -57,36 +57,32 @@ namespace MixItUp.WPF.Controls.Users
             }
         }
 
-        public async Task SetMixerUserAvatarUrl(uint mixerUserID)
-        {
-            await this.SetUserAvatarUrl(new UserViewModel(new UserModel() { id = mixerUserID }));
-        }
-
         public async Task SetUserAvatarUrl(UserViewModel user)
         {
             try
             {
-                BitmapImage bitmap = null;
                 if (userAvatarCache.ContainsKey(user.ID))
                 {
-                    bitmap = userAvatarCache[user.ID];
+                    this.ProfileAvatarImage.ImageSource = userAvatarCache[user.ID];
                 }
                 else if (!string.IsNullOrEmpty(user.AvatarLink))
                 {
-                    using (WebClient client = new WebClient())
-                    {
-                        var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)user.AvatarLink); }));
-                        bitmap = WindowsImageService.Load(bytes);
-                    }
-                    userAvatarCache[user.ID] = bitmap;
-                }
-
-                if (bitmap != null)
-                {
-                    this.ProfileAvatarImage.ImageSource = bitmap;
+                    userAvatarCache[user.ID] = await this.SetUserAvatarUrl(user.AvatarLink);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public async Task<BitmapImage> SetUserAvatarUrl(string url)
+        {
+            BitmapImage bitmap = null;
+            using (WebClient client = new WebClient())
+            {
+                var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)url); }));
+                bitmap = WindowsImageService.Load(bytes);
+            }
+            this.ProfileAvatarImage.ImageSource = bitmap;
+            return bitmap;
         }
 
         public void SetSize(int size)

@@ -22,8 +22,6 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -35,13 +33,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" Width="20" Height="20" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"  />
-                <TextBlock Grid.Column="4" VerticalAlignment="Center" >-</TextBlock>
-                <TextBlock Grid.Column="6" Text="{Binding Rating}" VerticalAlignment="Center"  />
-                <MaterialDesign:PackIcon Grid.Column="7" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
-                <TextBlock Grid.Column="9" VerticalAlignment="Center" >-</TextBlock>
-                <TextBlock Grid.Column="11" Text="{Binding LastUpdatedDateString}" VerticalAlignment="Center"  />
+                <TextBlock Grid.Column="0" Text="{Binding Username}" VerticalAlignment="Center"  />
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" >-</TextBlock>
+                <TextBlock Grid.Column="4" Text="{Binding Rating}" VerticalAlignment="Center"  />
+                <MaterialDesign:PackIcon Grid.Column="5" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
+                <TextBlock Grid.Column="7" VerticalAlignment="Center" >-</TextBlock>
+                <TextBlock Grid.Column="9" Text="{Binding LastUpdatedDateString}" VerticalAlignment="Center"  />
             </Grid>
 
             <TextBlock Grid.Row="2" Text="{Binding Review}" TextWrapping="Wrap" />
