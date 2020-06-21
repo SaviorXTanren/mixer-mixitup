@@ -149,7 +149,8 @@ namespace MixItUp.Base.Services
             {
                 foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
                 {
-                    MixerChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
+                    UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(messageEvent.user_id);
+                    MixerChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent, user);
                     this.messagesLookup[message.ID] = message;
                     if (ChannelSession.Settings.LatestChatAtTop)
                     {
@@ -199,7 +200,7 @@ namespace MixItUp.Base.Services
                     ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(username, message, sendAsStreamer);
                     if (messageEvent != null)
                     {
-                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent));
+                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent, ChannelSession.GetCurrentUser()));
                     }
                 }
                 else
