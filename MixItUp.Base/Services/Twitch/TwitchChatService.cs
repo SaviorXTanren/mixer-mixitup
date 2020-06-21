@@ -129,14 +129,18 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
                         }
+
+                        this.initialUserLogins.Clear();
+
                         this.userClient.OnPacketReceived += Client_OnPacketReceived;
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
                         this.userClient.OnPingReceived += UserClient_OnPingReceived;
                         this.userClient.OnUserJoinReceived += UserClient_OnUserJoinReceived;
                         this.userClient.OnUserLeaveReceived += UserClient_OnUserLeaveReceived;
+                        this.userClient.OnUserStateReceived += UserClient_OnUserStateReceived;
+                        this.userClient.OnUserNoticeReceived += UserClient_OnUserNoticeReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
 
-                        this.initialUserLogins.Clear();
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
                         await this.userClient.Connect();
 
@@ -153,7 +157,6 @@ namespace MixItUp.Base.Services.Twitch
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
 
                         await Task.Delay(3000);
-                        this.userClient.OnUserListReceived -= UserClient_OnUserListReceived;
 
                         return new Result();
                     }
@@ -520,6 +523,16 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
+        private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
+        {
+            Console.WriteLine(userState.UserDisplayName);
+        }
+
+        private void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
+        {
+            Console.WriteLine(userNotice.UserDisplayName);
+        }
+
         private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
@@ -529,7 +542,7 @@ namespace MixItUp.Base.Services.Twitch
                     if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
                     {
                         string hoster = message.Message.Substring(0, message.Message.IndexOf(' '));
-                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster, StreamingPlatformTypeEnum.Twitch);
                         if (user == null)
                         {
                             UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(hoster);
@@ -568,6 +581,7 @@ namespace MixItUp.Base.Services.Twitch
         private void UserClient_OnUserListReceived(object sender, ChatUsersListPacketModel userList)
         {
             this.initialUserLogins.AddRange(userList.UserLogins);
+            this.userClient.OnUserListReceived -= UserClient_OnUserListReceived;
         }
 
         private async void Client_OnPacketReceived(object sender, ChatRawPacketModel packet)
@@ -583,7 +597,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (packet.Tags.ContainsKey("msg-id") && packet.Tags["msg-id"].Equals("raid"))
                     {
-                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(packet.Tags["login"]);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(packet.Tags["login"], StreamingPlatformTypeEnum.Twitch);
                         if (user == null)
                         {
                             user = new UserViewModel(packet);
