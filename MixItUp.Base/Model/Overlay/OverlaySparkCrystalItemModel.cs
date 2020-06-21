@@ -136,7 +136,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!string.IsNullOrEmpty(this.CustomImageFilePath))
             {
                 string customImageURL = await this.ReplaceStringWithSpecialModifiers(this.CustomImageFilePath, user, arguments, extraSpecialIdentifiers);
-                customImageURL = this.GetFileFullLink(this.ID.ToString(), "image", customImageURL);
+                customImageURL = OverlayItemModelBase.GetFileFullLink(this.ID.ToString(), "image", customImageURL);
                 replacementSets["CRYSTAL_EMPTY_IMAGE"] = customImageURL;
                 replacementSets["CRYSTAL_FULL_IMAGE"] = customImageURL;
                 replacementSets["CRYSTAL_EMPTY_OPACITY"] = "opacity: 0.2";

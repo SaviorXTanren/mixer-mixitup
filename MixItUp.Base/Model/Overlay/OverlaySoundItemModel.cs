@@ -12,7 +12,7 @@ namespace MixItUp.Base.Model.Overlay
         public override string FileType { get { return "sound"; } set { } }
 
         [DataMember]
-        public override string FullLink { get { return this.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
+        public override string FullLink { get { return OverlayItemModelBase.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
 
         [DataMember]
         public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } }
