@@ -4,13 +4,11 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
-using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -242,7 +240,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer, waitForResponse);
