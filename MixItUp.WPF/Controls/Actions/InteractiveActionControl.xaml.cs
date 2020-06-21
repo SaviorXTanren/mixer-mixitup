@@ -36,10 +36,10 @@ namespace MixItUp.WPF.Controls.Actions
         public override async Task OnLoaded()
         {
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>().OrderBy(s => s);
-            this.MoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
-            this.MoveUserToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
-            this.MoveAllUsersToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
-            this.MoveAllUsersToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+            this.MoveUserToGroupPermissionsAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
+            this.MoveUserToScenePermissionsAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
+            this.MoveAllUsersToGroupPermissionsAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
+            this.MoveAllUsersToScenePermissionsAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
             this.UpdateControlTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionUpdateControlTypeEnum>().OrderBy(s => s);
 
             this.MoveUserToGroupPermissionsAllowedComboBox.SelectedIndex = 0;

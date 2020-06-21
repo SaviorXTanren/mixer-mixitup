@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -30,7 +29,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.Initialize(this.StatusBar);
         }
 
-        public CurrencyWindow(UserCurrencyModel currency)
+        public CurrencyWindow(CurrencyModel currency)
         {
             this.viewModel = new CurrencyWindowViewModel(currency);
 
@@ -49,7 +48,7 @@ namespace MixItUp.WPF.Windows.Currency
         private void DeleteRankButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserRankViewModel rank = (UserRankViewModel)button.DataContext;
+            RankModel rank = (RankModel)button.DataContext;
             this.viewModel.Ranks.Remove(rank);
         }
 
@@ -57,7 +56,6 @@ namespace MixItUp.WPF.Windows.Currency
         {
             CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
-            window.Closed += Window_Closed;
             window.Show();
         }
 
@@ -68,7 +66,6 @@ namespace MixItUp.WPF.Windows.Currency
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Closed += Window_Closed;
                 window.Show();
             }
         }
@@ -83,7 +80,6 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     this.viewModel.RankChangedCommand = null;
                     await ChannelSession.SaveSettings();
-                    this.UpdateRankChangedCommand();
                 }
             });
         }
@@ -111,28 +107,20 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
+                bool isNew = this.viewModel.IsNew;
                 if (await this.viewModel.Validate())
                 {
-                    bool isNew = this.viewModel.IsNew;
-                    this.viewModel.Save();
+                    await this.viewModel.Save();
 
                     if (isNew)
                     {
-                        NewCurrencyRankCommandsDialogControl customDialogControl = new NewCurrencyRankCommandsDialogControl(this.viewModel.Currency, this.viewModel.GetNewCurrencyRankCommands());
+                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
                         if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
                         {
-                            foreach (NewCurrencyRankCommand command in customDialogControl.commands)
-                            {
-                                if (command.AddCommand)
-                                {
-                                    ChannelSession.Settings.ChatCommands.Add(command.Command);
-                                }
-                            }
-                            ChannelSession.Services.Chat.RebuildCommandTriggers();
+                            customDialogControl.AddSelectedCommands();
                         }
                     }
 
-                    await ChannelSession.SaveSettings();
                     this.Close();
                 }
             });
@@ -141,26 +129,6 @@ namespace MixItUp.WPF.Windows.Currency
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
             this.viewModel.RankChangedCommand = (CustomCommand)e;
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.UpdateRankChangedCommand();
-        }
-
-        private void UpdateRankChangedCommand()
-        {
-            if (this.viewModel.RankChangedCommand != null)
-            {
-                this.NewCommandButton.Visibility = Visibility.Collapsed;
-                this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.DataContext = this.viewModel.RankChangedCommand;
-            }
-            else
-            {
-                this.NewCommandButton.Visibility = Visibility.Visible;
-                this.CommandButtons.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

@@ -6,6 +6,8 @@ namespace MixItUp.Base.Services.External
 {
     public interface IStreamingSoftwareService : IExternalService
     {
+        bool IsEnabled { get; }
+
         event EventHandler Connected;
         event EventHandler Disconnected;
 

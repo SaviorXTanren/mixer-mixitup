@@ -242,13 +242,17 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
-            double percentage = (amount / goal);
-            if (!this.GoalReached && percentage >= 1.0)
+            double percentage = 0.0;
+            if (goal != 0.0)
             {
-                this.GoalReached = true;
-                if (this.GoalReachedCommand != null)
+                percentage = (amount / goal);
+                if (!this.GoalReached && percentage >= 1.0)
                 {
-                    await this.GoalReachedCommand.Perform();
+                    this.GoalReached = true;
+                    if (this.GoalReachedCommand != null)
+                    {
+                        await this.GoalReachedCommand.Perform();
+                    }
                 }
             }
 

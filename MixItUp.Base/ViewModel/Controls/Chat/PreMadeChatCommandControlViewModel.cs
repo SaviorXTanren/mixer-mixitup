@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -16,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public string CommandsString { get { return this.command.CommandsString; } }
 
-        public IEnumerable<UserRoleEnum> PermissionsValues { get { return RoleRequirementViewModel.BasicUserRoleAllowedValues; } }
+        public IEnumerable<UserRoleEnum> PermissionsValues { get { return RoleRequirementViewModel.SelectableUserRoles(); } }
         public UserRoleEnum SelectedPermission
         {
             get { return this.command.Requirements.Role.MixerRole; }

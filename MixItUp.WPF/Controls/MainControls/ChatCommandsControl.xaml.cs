@@ -80,6 +80,11 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private void CommandButtonsControl_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
+        }
+
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new ChatCommandDetailsControl());

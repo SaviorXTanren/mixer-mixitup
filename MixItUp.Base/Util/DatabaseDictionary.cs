@@ -71,6 +71,14 @@ namespace MixItUp.Base.Util
 
         public IEnumerable<V> GetChangedValues() { return this.GetKeyValues(this.changedValues).Values; }
 
+        public IEnumerable<V> GetAddedChangedValues()
+        {
+            List<V> values = new List<V>();
+            values.AddRange(this.GetAddedValues());
+            values.AddRange(this.GetChangedValues());
+            return values;
+        }
+
         public IEnumerable<K> GetRemovedValues()
         {
             lock (valuesUpdateLock)

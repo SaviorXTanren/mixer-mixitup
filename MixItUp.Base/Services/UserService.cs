@@ -21,6 +21,8 @@ namespace MixItUp.Base.Services
 
     public interface IUserService
     {
+        UserViewModel GetUserByID(Guid id);
+
         UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
 
         UserViewModel GetUserByMixerID(uint id);
@@ -70,6 +72,15 @@ namespace MixItUp.Base.Services
 
         private LockedDictionary<string, UserViewModel> usersByTwitchID = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByTwitchLogin = new LockedDictionary<string, UserViewModel>();
+
+        public UserViewModel GetUserByID(Guid id)
+        {
+            if (this.usersByID.ContainsKey(id))
+            {
+                return this.usersByID[id];
+            }
+            return null;
+        }
 
         public UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
@@ -227,6 +238,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
                     {
+                        user.LastSeen = DateTimeOffset.Now;
                         user.Data.TotalStreamsWatched++;
                         await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
                     }

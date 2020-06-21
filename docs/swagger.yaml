@@ -387,6 +387,69 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  '/quotes':
+    get:
+      tags:
+        - Quotes
+      summary: Gets a list of all quotes available.
+      operationId: getAllQuotes
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpQuotes'
+
+    put:
+      tags:
+        - Quotes
+      summary: Used to create a new quote.
+      operationId: addQuote
+      parameters:
+        - name: quoteText
+          description: 'The quote text.'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixItUpAddQuote'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpQuote'
+        '400':
+          description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
+
+  '/quotes/{quoteID}':
+    parameters:
+      - name: quoteID
+        in: path
+        description: 'The quote ID to query'
+        required: true
+        type: number
+        format: int
+    get:
+      tags:
+        - Quotes
+      summary: Gets the requested quote.
+      operationId: getQuote
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpQuote'
+        '404':
+          description: The quote could not be found.
+          schema:
+            $ref: '#/definitions/Error'
+
   '/commands':
     get:
       tags:
@@ -552,7 +615,7 @@ paths:
         This API can be used to get the MixPlay user information for a participant
       operationId: getMixPlayUserByID
       parameters:
-        - name: participantID
+        - name: participantIDOrUserNameOrUserId
           in: path
           description: 'The ID that needs to be fetched. This can be the MixPlay participant ID, the Mixer UserName, or the Mixer User ID.'
           required: true
@@ -612,6 +675,42 @@ paths:
             $ref: '#/definitions/Error'
 
 definitions:
+  MixItUpAddQuote:
+    type: object
+    required: [ GameName ]
+    properties:
+      QuoteText:
+        description: The actual quote text.
+        type: string
+        example: That was amazing! - TyrenDes
+
+  MixItUpQuote:
+    type: object
+    required: [ ID, DateTime, GameName, QuoteText ]
+    properties:
+      ID:
+        description: The Mix It Up Quote ID.
+        type: integer
+        example: 321
+      DateTime:
+        description: The date and time the quote was added.
+        type: string
+        format: date-time
+        example: 2017-07-21T17:32:28Z
+      GameName:
+        description: The name of the game when the quote was created.
+        type: string
+        example: Rocket League
+      QuoteText:
+        description: The actual quote text.
+        type: string
+        example: That was amazing! - TyrenDes
+
+  ListOfMixItUpQuotes:
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpQuote'
+
   MixPlayUser:
     type: object
     required: [ ID ]

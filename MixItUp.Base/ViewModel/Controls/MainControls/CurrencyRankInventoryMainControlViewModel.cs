@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Window;
@@ -11,12 +11,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class CurrencyRankInventoryContainerViewModel
     {
-        public UserCurrencyModel Currency { get; private set; }
-        public UserInventoryModel Inventory { get; private set; }
+        public CurrencyModel Currency { get; private set; }
+        public InventoryModel Inventory { get; private set; }
 
-        public CurrencyRankInventoryContainerViewModel(UserCurrencyModel currency) { this.Currency = currency; }
+        public CurrencyRankInventoryContainerViewModel(CurrencyModel currency) { this.Currency = currency; }
 
-        public CurrencyRankInventoryContainerViewModel(UserInventoryModel inventory) { this.Inventory = inventory; }
+        public CurrencyRankInventoryContainerViewModel(InventoryModel inventory) { this.Inventory = inventory; }
 
         public string Name
         {
@@ -81,16 +81,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public ObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ObservableCollection<CurrencyRankInventoryContainerViewModel>();
 
-        public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel)
-            : base(windowViewModel)
-        {
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
-        }
+        public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void RefreshList()
         {
             this.Items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currencies)
+            foreach (var kvp in ChannelSession.Settings.Currency)
             {
                 if (kvp.Value.IsRank)
                 {
@@ -101,7 +97,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
                 }
             }
-            foreach (var kvp in ChannelSession.Settings.Inventories)
+            foreach (var kvp in ChannelSession.Settings.Inventory)
             {
                 this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
             }
@@ -114,12 +110,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (item.Inventory != null)
                 {
                     await item.Inventory.Reset();
-                    ChannelSession.Settings.Inventories.Remove(item.Inventory.ID);
+                    ChannelSession.Settings.Inventory.Remove(item.Inventory.ID);
                 }
                 else
                 {
                     await item.Currency.Reset();
-                    ChannelSession.Settings.Currencies.Remove(item.Currency.ID);
+                    ChannelSession.Settings.Currency.Remove(item.Currency.ID);
                 }
                 this.RefreshList();
             }
@@ -135,23 +131,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.RefreshList();
             await base.OnVisibleInternal();
-        }
-
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
-        {
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
-            {
-                if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.ShopCommand, "");
-                    await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-                else if (inventory.TradeEnabled && message.PlainTextMessage.StartsWith(inventory.TradeCommand))
-                {
-                    string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
-                    await inventory.PerformTradeCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), message.Platform);
-                }
-            }
         }
     }
 }

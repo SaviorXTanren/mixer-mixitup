@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -147,9 +148,9 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             foreach (CurrencyAmount currencyData in updatedUserData.CurrencyAmounts)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
+                if (ChannelSession.Settings.Currency.ContainsKey(currencyData.ID))
                 {
-                    ChannelSession.Settings.Currencies[currencyData.ID].SetAmount(user, currencyData.Amount);
+                    ChannelSession.Settings.Currency[currencyData.ID].SetAmount(user, currencyData.Amount);
                 }
             }
 
@@ -278,14 +279,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 ViewingMinutes = userData.ViewingMinutes
             };
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
             {
-                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, new UserInventoryDataViewModel(userData, inventory)));
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, inventory.GetAmounts(userData)));
             }
 
             return user;
@@ -293,7 +294,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustCurrency(UserDataModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            if (!ChannelSession.Settings.Currency.ContainsKey(currencyID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -313,7 +314,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
+            CurrencyModel currency = ChannelSession.Settings.Currency[currencyID];
 
             if (currencyUpdate.Amount < 0)
             {
@@ -340,7 +341,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User AdjustInventory(UserDataModel user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
+            if (!ChannelSession.Settings.Inventory.ContainsKey(inventoryID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
@@ -360,7 +361,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryModel inventory = ChannelSession.Settings.Inventories[inventoryID];
+            InventoryModel inventory = ChannelSession.Settings.Inventory[inventoryID];
 
             if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.ItemExists(inventoryUpdate.Name))
             {
@@ -372,7 +373,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
+            InventoryItemModel item = inventory.GetItem(inventoryUpdate.Name);
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;

@@ -177,11 +177,11 @@
                                 </Grid.ColumnDefinitions>
                                 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsBought}" Grid.Column="0">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopBuyCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandControls:CommandButtonsControl x:Name="ShopBuyCommandButtonsControl" DataContext="{Binding ShopBuyCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                                 </GroupBox>
 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsSold}" Grid.Column="2">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopSellCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandControls:CommandButtonsControl x:Name="ShopSellCommandButtonsControl" DataContext="{Binding ShopSellCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                                 </GroupBox>
                             </Grid>
                         </Grid>
@@ -212,7 +212,7 @@
                             </Grid>
                             
                             <GroupBox Header="{x:Static resx:Resources.ItemsTraded}" Grid.Row="2" HorizontalAlignment="Center">
-                                <CommandControls:CommandButtonsControl x:Name="TradeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                <CommandControls:CommandButtonsControl x:Name="TradeCommandButtonsControl" DataContext="{Binding TradeCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                             </GroupBox>
                         </Grid>
                     </GroupBox>

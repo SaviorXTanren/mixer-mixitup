@@ -3,6 +3,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
@@ -504,6 +505,7 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
+                IEnumerable<string> arguments = null;
                 if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                 {
                     if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
@@ -538,7 +540,7 @@ namespace MixItUp.Base.Services
 
                     foreach (PermissionsCommandBase command in commands)
                     {
-                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out arguments))
                         {
                             if (command.IsEnabled)
                             {
@@ -591,6 +593,31 @@ namespace MixItUp.Base.Services
                         {
                             primaryTaggedUser.Data.TotalTimesTagged++;
                         }
+                    }
+                }
+
+                foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
+                {
+                    if (inventory.ShopEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.ShopCommand }, out arguments))
+                    {
+                        await inventory.PerformShopCommand(message.User, arguments, message.Platform);
+                    }
+                    else if (inventory.TradeEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.TradeCommand }, out arguments))
+                    {
+                        string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
+                        await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
+                    }
+                }
+
+                if (ChannelSession.Settings.RedemptionStoreEnabled)
+                {
+                    if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
+                    {
+                        await RedemptionStorePurchaseModel.Purchase(message.User, arguments);
+                    }
+                    else if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
+                    {
+                        await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
                     }
                 }
 
@@ -685,9 +712,14 @@ namespace MixItUp.Base.Services
                 user.UpdateMinuteData();
             }
 
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 currency.UpdateUserData();
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.UpdateUserData();
             }
 
             return Task.FromResult(0);

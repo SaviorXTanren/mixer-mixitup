@@ -221,6 +221,15 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public abstract class OverlayItemModelBase
     {
+        public static string GetFileFullLink(string fileID, string fileType, string filePath)
+        {
+            if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
+            {
+                return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, fileID, Guid.NewGuid());
+            }
+            return filePath;
+        }
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -294,15 +303,6 @@ namespace MixItUp.Base.Model.Overlay
             JObject jobj = JObject.FromObject(this);
             await this.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
             return jobj;
-        }
-
-        public string GetFileFullLink(string fileID, string fileType, string filePath)
-        {
-            if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
-            {
-                return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, fileID, Guid.NewGuid());
-            }
-            return filePath;
         }
 
         public virtual Task LoadCachedData() { return Task.FromResult(0); }

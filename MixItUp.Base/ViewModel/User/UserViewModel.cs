@@ -8,13 +8,10 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModels;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
@@ -85,20 +82,6 @@ namespace MixItUp.Base.ViewModel.User
     {
         public const string MixerUserDefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
         public const string MixerUserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
-
-        public static IEnumerable<UserRoleEnum> SelectableBasicUserRoles()
-        {
-            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
-            roles.Remove(UserRoleEnum.GlobalMod);
-            roles.Remove(UserRoleEnum.Banned);
-            roles.Remove(UserRoleEnum.Custom);
-            return roles;
-        }
-
-        public static IEnumerable<UserRoleEnum> SelectableAdvancedUserRoles()
-        {
-            return UserViewModel.SelectableBasicUserRoles();
-        }
 
         public UserDataModel Data { get; private set; }
 
@@ -253,10 +236,20 @@ namespace MixItUp.Base.ViewModel.User
             if (mixerID > 0)
             {
                 this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
+                if (this.Data == null)
+                {
+                    this.Data = new UserDataModel() { MixerID = mixerID };
+                    ChannelSession.Settings.AddUserData(this.Data);
+                }
             }
             else if (!string.IsNullOrEmpty(twitchID))
             {
                 this.Data = ChannelSession.Settings.GetUserDataByTwitchID(twitchID);
+                if (this.Data == null)
+                {
+                    this.Data = new UserDataModel() { TwitchID = twitchID };
+                    ChannelSession.Settings.AddUserData(this.Data);
+                }
             }
             else
             {
@@ -402,6 +395,8 @@ namespace MixItUp.Base.ViewModel.User
                 return false;
             }
         }
+
+        public DateTimeOffset LastSeen { get { return this.Data.LastSeen; } set { this.Data.LastSeen = value; } }
 
         public string UnassociatedUsername { get { return this.Data.UnassociatedUsername; } private set { this.Data.UnassociatedUsername = value; } }
 
@@ -571,6 +566,7 @@ namespace MixItUp.Base.ViewModel.User
                 return 0;
             }
         }
+        public string LastSeenString { get { return (this.LastSeen != DateTimeOffset.MinValue) ? this.LastSeen.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
@@ -616,6 +612,8 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+
+        public bool IsSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)
         {
@@ -1081,111 +1079,6 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
             return Task.FromResult(0);
-        }
-    }
-
-    [DataContract]
-    public class UserCurrencyDataViewModel : ViewModelBase, IEquatable<UserCurrencyDataViewModel>
-    {
-        [JsonIgnore]
-        public UserDataModel User { get; set; }
-
-        [JsonIgnore]
-        public UserCurrencyModel Currency { get; set; }
-
-        [DataMember]
-        public int Amount
-        {
-            get { return this.Currency.GetAmount(this.User); }
-            set
-            {
-                this.Currency.SetAmount(this.User, value);
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public UserCurrencyDataViewModel() { }
-
-        public UserCurrencyDataViewModel(UserDataModel user, UserCurrencyModel currency)
-        {
-            this.User = user;
-            this.Currency = currency;
-        }
-
-        public UserRankViewModel GetRank() { return this.Currency.GetRankForPoints(this.Amount); }
-
-        public UserRankViewModel GetNextRank() { return this.Currency.GetNextRankForPoints(this.Amount); }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is UserCurrencyDataViewModel)
-            {
-                return this.Equals((UserCurrencyDataViewModel)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(UserCurrencyDataViewModel other)
-        {
-            return this.User.Equals(other.User) && this.Currency.Equals(other.Currency);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.User.GetHashCode() + this.Currency.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            UserRankViewModel rank = this.Currency.GetRankForPoints(this.Amount);
-            return string.Format("{0} - {1}", rank.Name, this.Amount);
-        }
-    }
-
-    [DataContract]
-    public class UserInventoryDataViewModel : ViewModelBase, IEquatable<UserInventoryDataViewModel>
-    {
-        [JsonIgnore]
-        public UserDataModel User { get; set; }
-
-        [JsonIgnore]
-        public UserInventoryModel Inventory { get; set; }
-
-        public UserInventoryDataViewModel() { }
-
-        public UserInventoryDataViewModel(UserDataModel user, UserInventoryModel inventory)
-        {
-            this.User = user;
-            this.Inventory = inventory;
-        }
-
-        public int GetAmount(UserInventoryItemModel item) { return this.Inventory.GetAmount(this.User, item); }
-
-        public int GetAmount(Guid itemID) { return this.Inventory.GetAmount(this.User, itemID); }
-
-        public Dictionary<Guid, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
-
-        public void SetAmount(UserInventoryItemModel item, int amount) { this.Inventory.SetAmount(this.User, item, amount); }
-
-        public void SetAmount(Guid itemID, int amount) { this.Inventory.SetAmount(this.User, itemID, amount); }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is UserInventoryDataViewModel)
-            {
-                return this.Equals((UserInventoryDataViewModel)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(UserInventoryDataViewModel other)
-        {
-            return this.User.Equals(other.User) && this.Inventory.Equals(other.Inventory);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Inventory.GetHashCode();
         }
     }
 }

@@ -2341,7 +2341,7 @@
     <value>This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
   </data>
   <data name="UserDataStep2" xml:space="preserve">
-    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</value>
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or Mixer ID:</value>
   </data>
   <data name="UserJoined" xml:space="preserve">
     <value>User Joined</value>
@@ -2683,7 +2683,7 @@
     <value>Follow Bonus</value>
   </data>
   <data name="HostBonus" xml:space="preserve">
-    <value>Host Bonus (Per Viewer)</value>
+    <value>Host Bonus</value>
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Point Rates</value>
@@ -2753,5 +2753,197 @@
   </data>
   <data name="Spanish" xml:space="preserve">
     <value>Spanish</value>
+  </data>
+  <data name="ConfirmStreamPassDeletion" xml:space="preserve">
+    <value>Are you sure you want to delete this Stream Pass?</value>
+  </data>
+  <data name="LevelUp" xml:space="preserve">
+    <value>Level Up</value>
+  </data>
+  <data name="ConfirmDeleteCommand" xml:space="preserve">
+    <value>Are you sure you want to delete this command?</value>
+  </data>
+  <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
+    <value>Are you sure you want to delete this custom level up command?</value>
+  </data>
+  <data name="MaxLevel" xml:space="preserve">
+    <value>Max Level</value>
+  </data>
+  <data name="Viewing" xml:space="preserve">
+    <value>Viewing:</value>
+  </data>
+  <data name="UserData" xml:space="preserve">
+    <value>User Data</value>
+  </data>
+  <data name="AccountAge" xml:space="preserve">
+    <value>Account Age</value>
+  </data>
+  <data name="LastSeen" xml:space="preserve">
+    <value>Last Seen</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="AutoReplenish" xml:space="preserve">
+    <value>Auto-Replenish:</value>
+  </data>
+  <data name="AutoRedeem" xml:space="preserve">
+    <value>Auto-Redeem:</value>
+  </data>
+  <data name="CustomCommand" xml:space="preserve">
+    <value>Custom Command</value>
+  </data>
+  <data name="ModRedeemCommand" xml:space="preserve">
+    <value>Mod Redeem Command</value>
+  </data>
+  <data name="DefaultRedemption" xml:space="preserve">
+    <value>Default Redemption</value>
+  </data>
+  <data name="ManualRedeemNeeded" xml:space="preserve">
+    <value>Manual Redeem Needed</value>
+  </data>
+  <data name="SaveProduct" xml:space="preserve">
+    <value>Save Product</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Redemption" xml:space="preserve">
+    <value>Redemption</value>
+  </data>
+  <data name="ManualRedeem" xml:space="preserve">
+    <value>Manual Redeem</value>
+  </data>
+  <data name="Refund" xml:space="preserve">
+    <value>Refund</value>
+  </data>
+  <data name="EditProducts" xml:space="preserve">
+    <value>Edit Products</value>
+  </data>
+  <data name="RedemptionStore" xml:space="preserve">
+    <value>Redemption Store</value>
+  </data>
+  <data name="ChatPurchaseCommand" xml:space="preserve">
+    <value>Chat Purchase Command</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="PurchaseTime" xml:space="preserve">
+    <value>Purchase Time</value>
+  </data>
+  <data name="NotReplaced" xml:space="preserve">
+    <value>Not Replaced</value>
+  </data>
+  <data name="ValidProductName" xml:space="preserve">
+    <value>A valid product name must be specified</value>
+  </data>
+  <data name="ProductNameAlreadyExists" xml:space="preserve">
+    <value>The specified name already exists for another product</value>
+  </data>
+  <data name="CustomProductRedemption" xml:space="preserve">
+    <value>Custom Product Redemption</value>
+  </data>
+  <data name="ValidChatPurchaseCommand" xml:space="preserve">
+    <value>A valid chat purchase command must be specified</value>
+  </data>
+  <data name="ValidModRedeemCommand" xml:space="preserve">
+    <value>A valid mod redeem command must be specified</value>
+  </data>
+  <data name="CustomRedemption" xml:space="preserve">
+    <value>Custom Redemption</value>
+  </data>
+  <data name="ConfirmRedemptionStoreProductDeletion" xml:space="preserve">
+    <value>Are you sure you want to delete this product?</value>
+  </data>
+  <data name="ConfirmDeleteRedemptionStorePurchase" xml:space="preserve">
+    <value>Are you sure you wish to delete this purchase and not refund the user?</value>
+  </data>
+  <data name="ConfirmRefundRedemptionStorePurchase" xml:space="preserve">
+    <value>Are you sure you wish to refund the user and remove this purchase?</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Redeemed" xml:space="preserve">
+    <value>Redeemed</value>
+  </data>
+  <data name="ValidCurrencyMustBeSelected" xml:space="preserve">
+    <value>A valid Currency must be selected</value>
+  </data>
+  <data name="ValidCurrencyAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Currency amount must be specified</value>
+  </data>
+  <data name="ValidCooldownAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Cooldown amount must be specified</value>
+  </data>
+  <data name="ValidCooldownGroupMustBeSpecified" xml:space="preserve">
+    <value>A valid Cooldown group must be specified</value>
+  </data>
+  <data name="ValidInventoryItemAmountMustSpecified" xml:space="preserve">
+    <value>A valid Inventory Item amount must be specified</value>
+  </data>
+  <data name="ValidInventoryItemMustBeSelected" xml:space="preserve">
+    <value>A valid Inventory Item must be selected</value>
+  </data>
+  <data name="ValidInventoryMustBeSelected" xml:space="preserve">
+    <value>A valid Inventory must be selected</value>
+  </data>
+  <data name="ValidRankMustBeSelected" xml:space="preserve">
+    <value>A valid Rank must be selected</value>
+  </data>
+  <data name="ValidRankSystemMustBeSelected" xml:space="preserve">
+    <value>A valid Rank System must be selected</value>
+  </data>
+  <data name="ValidThresholdTimeSpanMustBeSpecified" xml:space="preserve">
+    <value>A valid Threshold time span must be specified</value>
+  </data>
+  <data name="ValidThresholdUserAmountMustBeSpecified" xml:space="preserve">
+    <value>A valid Threshold user amount must be specified</value>
+  </data>
+  <data name="RankSystem" xml:space="preserve">
+    <value>Rank System</value>
+  </data>
+  <data name="RunForEachUser" xml:space="preserve">
+    <value>Run For Each User</value>
+  </data>
+  <data name="EqualTo" xml:space="preserve">
+    <value>=</value>
+  </data>
+  <data name="GreaterThanOrEqualTo" xml:space="preserve">
+    <value>&gt;=</value>
+  </data>
+  <data name="LessThanOrEqualTo" xml:space="preserve">
+    <value>&lt;=</value>
+  </data>
+  <data name="NotEqualTo" xml:space="preserve">
+    <value>&lt;&gt;</value>
+  </data>
+  <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
+    <value>There are no more of this product</value>
+  </data>
+  <data name="NoRedemptionStoreProductWithThatName" xml:space="preserve">
+    <value>There is no product with that name</value>
+  </data>
+  <data name="NoRedemptionStorePurchasesWithThatName" xml:space="preserve">
+    <value>There is no purchase containing a product or user with that name</value>
+  </data>
+  <data name="NotEnoughRedemptionStoreProducts" xml:space="preserve">
+    <value>There are not enough of this product for the amount of users participating</value>
+  </data>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infinite</value>
+  </data>
+  <data name="ExportQuotes" xml:space="preserve">
+    <value>Export Quotes</value>
+  </data>
+  <data name="RegularBonus" xml:space="preserve">
+    <value>Regular Bonus</value>
   </data>
 </root>

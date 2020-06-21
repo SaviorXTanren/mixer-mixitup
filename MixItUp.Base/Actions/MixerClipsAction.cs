@@ -90,9 +90,9 @@ namespace MixItUp.Base.Actions
 
                     if (clip == null)
                     {
-                        for (int i = 0; i < 10; i++)
+                        for (int i = 0; i < 12; i++)
                         {
-                            await Task.Delay(2000);
+                            await Task.Delay(5000);
 
                             IEnumerable<ClipModel> clips = await ChannelSession.MixerUserConnection.GetChannelClips(ChannelSession.MixerChannel);
                             clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
@@ -146,10 +146,11 @@ namespace MixItUp.Base.Actions
                 ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
                 if (clipLocator != null)
                 {
+                    clipName = clipName.ToFilePathString();
                     string destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
                     if (File.Exists(destinationFile))
                     {
-                        clipName += "-" + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
+                        clipName += "-" + DateTimeOffset.Now.ToFriendlyDateTimeString().ToFilePathString();
                         destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
                     }
 

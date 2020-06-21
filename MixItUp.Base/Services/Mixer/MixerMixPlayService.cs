@@ -117,6 +117,8 @@ namespace MixItUp.Base.Services.Mixer
         private SemaphoreSlim controlCooldownSemaphore = new SemaphoreSlim(1);
         private CancellationTokenSource backgroundThreadCancellationTokenSource;
 
+        public override string Name { get { return "Mixer MixPlay"; } }
+
         public MixerMixPlayService() { }
 
         public bool IsConnected { get { return this.Client != null && this.Client.Connected && this.Client.Authenticated; } }
@@ -335,14 +337,14 @@ namespace MixItUp.Base.Services.Mixer
 
                                 return new Result();
                             }
-                            return new Result("Failed to MixPlay scene data");
+                            return new Result("Failed to get MixPlay scene data");
                         }
                         else
                         {
                             return new Result("Failed to authenticate and ready to Mixer MixPlay");
                         }
                     }
-                    return new Result("Failed to connect to Mixer MixPlay");
+                    return new Result("Failed to establish connection to Mixer MixPlay services");
                 });
 
                 if (!result.Success)

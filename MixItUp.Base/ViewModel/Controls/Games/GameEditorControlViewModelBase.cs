@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,14 +38,14 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             return command;
         }
 
-        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyModel currency, int amount, bool whisper = false)
+        protected CustomCommand CreateBasicCurrencyCommand(string message, CurrencyModel currency, int amount, bool whisper = false)
         {
             CustomCommand command = this.CreateBasicChatCommand(message, whisper);
             command.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, amount.ToString()));
             return command;
         }
 
-        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyModel currency, string amount, bool whisper = false)
+        protected CustomCommand CreateBasicCurrencyCommand(string message, CurrencyModel currency, string amount, bool whisper = false)
         {
             CustomCommand command = this.CreateBasicChatCommand(message, whisper);
             command.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, amount));

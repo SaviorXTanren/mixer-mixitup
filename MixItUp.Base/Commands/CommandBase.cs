@@ -67,6 +67,22 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
+        public static bool DoesTextMatchCommand(string text, string commandMatchingRegexFormat, IEnumerable<string> commandTriggers, out IEnumerable<string> arguments)
+        {
+            arguments = null;
+            foreach (string command in commandTriggers)
+            {
+                string regex = string.Format(commandMatchingRegexFormat, Regex.Escape(command));
+                Match match = Regex.Match(text, regex, RegexOptions.IgnoreCase);
+                if (match != null && match.Success)
+                {
+                    arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public event EventHandler OnCommandStart = delegate { };
 
         [DataMember]
@@ -259,23 +275,7 @@ namespace MixItUp.Base.Commands
 
         public virtual bool DoesTextMatchCommand(string text, out IEnumerable<string> arguments)
         {
-            return this.DoesTextMatchCommand(text, CommandBase.CommandMatchingRegexFormat, out arguments);
-        }
-
-        public bool DoesTextMatchCommand(string text, string commandMatchingRegexFormat, out IEnumerable<string> arguments)
-        {
-            arguments = null;
-            foreach (string command in this.CommandTriggers)
-            {
-                string regex = string.Format(commandMatchingRegexFormat, Regex.Escape(command));
-                Match match = Regex.Match(text, regex, RegexOptions.IgnoreCase);
-                if (match != null && match.Success)
-                {
-                    arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    return true;
-                }
-            }
-            return false;
+            return CommandBase.DoesTextMatchCommand(text, CommandBase.CommandMatchingRegexFormat, this.CommandTriggers, out arguments);
         }
 
         protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

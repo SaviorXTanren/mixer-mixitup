@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using System;
@@ -17,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         public const string ItemsSoldCommandName = "Shop Items Sold";
         public const string ItemsTradedCommandName = "Items Traded";
 
-        public UserInventoryModel Inventory
+        public InventoryModel Inventory
         {
             get { return this.inventory; }
             set
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private UserInventoryModel inventory;
+        private InventoryModel inventory;
 
         public string Name
         {
@@ -49,9 +50,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private int defaultItemMaxAmount;
 
-        public ObservableCollection<UserInventoryItemModel> Items { get; private set; } = new ObservableCollection<UserInventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>();
 
-        public UserInventoryItemModel SelectedItem
+        public InventoryItemModel SelectedItem
         {
             get { return this.selectedItem; }
             set
@@ -76,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 }
             }
         }
-        private UserInventoryItemModel selectedItem;
+        private InventoryItemModel selectedItem;
         public string ItemName
         {
             get { return this.itemName; }
@@ -195,8 +196,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private CustomCommand tradeCommand;
 
-        public IEnumerable<UserCurrencyModel> Currencies { get { return ChannelSession.Settings.Currencies.Values; } }
-        public UserCurrencyModel SelectedShopCurrency
+        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values; } }
+        public CurrencyModel SelectedShopCurrency
         {
             get { return this.selectedShopCurrency; }
             set
@@ -205,13 +206,13 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private UserCurrencyModel selectedShopCurrency;
+        private CurrencyModel selectedShopCurrency;
 
         public ICommand HelpCommand { get; private set; }
 
         private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
 
-        public InventoryWindowViewModel(UserInventoryModel inventory)
+        public InventoryWindowViewModel(InventoryModel inventory)
             : this()
         {
             this.Inventory = inventory;
@@ -219,7 +220,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.Name = this.Inventory.Name;
             this.DefaultItemMaxAmount = this.Inventory.DefaultMaxAmount;
 
-            foreach (UserInventoryItemModel item in this.Inventory.Items.Values)
+            foreach (InventoryItemModel item in this.Inventory.Items.Values)
             {
                 this.Items.Add(item);
             }
@@ -280,14 +281,14 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
                 if (this.SelectedItem == null)
                 {
-                    UserInventoryItemModel existingItem = this.Items.FirstOrDefault(i => i.Name.Equals(this.ItemName, StringComparison.CurrentCultureIgnoreCase));
+                    InventoryItemModel existingItem = this.Items.FirstOrDefault(i => i.Name.Equals(this.ItemName, StringComparison.CurrentCultureIgnoreCase));
                     if (existingItem != null)
                     {
                         await DialogHelper.ShowMessage("An item with the same name already exists");
                         return;
                     }
 
-                    this.Items.Add(new UserInventoryItemModel(this.ItemName, maxAmount: this.ItemMaxAmount, buyAmount: this.ItemBuyAmount, sellAmount: this.ItemSellAmount));
+                    this.Items.Add(new InventoryItemModel(this.ItemName, maxAmount: this.ItemMaxAmount, buyAmount: this.ItemBuyAmount, sellAmount: this.ItemSellAmount));
                 }
                 else
                 {
@@ -329,14 +330,14 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            UserInventoryModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            InventoryModel dupeInventory = ChannelSession.Settings.Inventory.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeInventory != null && (this.inventory == null || !this.inventory.ID.Equals(dupeInventory.ID)))
             {
                 await DialogHelper.ShowMessage("There already exists an inventory with this name");
                 return false;
             }
 
-            UserCurrencyModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            CurrencyModel dupeCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeCurrency != null)
             {
                 await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
@@ -382,18 +383,18 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             return true;
         }
 
-        public void Save()
+        public async Task Save()
         {
             if (this.inventory == null)
             {
-                this.inventory = new UserInventoryModel();
-                ChannelSession.Settings.Inventories[this.inventory.ID] = this.inventory;
+                this.inventory = new InventoryModel();
+                ChannelSession.Settings.Inventory[this.inventory.ID] = this.inventory;
             }
 
             this.inventory.Name = this.Name;
             this.inventory.DefaultMaxAmount = this.DefaultItemMaxAmount;
             this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
-            this.inventory.Items = new Dictionary<string, UserInventoryItemModel>(this.Items.ToDictionary(i => i.ID.ToString(), i => i));
+            this.inventory.Items = new Dictionary<Guid, InventoryItemModel>(this.Items.ToDictionary(i => i.ID, i => i));
 
             this.inventory.ShopEnabled = this.ShopEnabled;
             this.inventory.ShopCommand = this.ShopCommandText;
@@ -407,6 +408,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.inventory.TradeEnabled = this.TradeEnabled;
             this.inventory.TradeCommand = this.TradeCommandText;
             this.inventory.ItemsTradedCommand = this.TradeCommand;
+
+            await ChannelSession.SaveSettings();
         }
     }
 }

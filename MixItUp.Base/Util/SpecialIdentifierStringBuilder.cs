@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -29,9 +31,15 @@ namespace MixItUp.Base.Util
         public const string StartSpecialIdentifierHeader = "start";
 
         public const string TopSpecialIdentifierHeader = "top";
-        public const string TopTimeRegexSpecialIdentifier = "top\\d+time";
-        public const string TopSparksUsedRegexSpecialIdentifierHeader = "top\\d+sparksused";
-        public const string TopEmbersUsedRegexSpecialIdentifierHeader = "top\\d+embersused";
+
+        public const string TopTimeSpecialIdentifier = TopSpecialIdentifierHeader + "time";
+        public const string TopTimeRegexSpecialIdentifier = TopSpecialIdentifierHeader + "\\d+time";
+
+        public const string TopSparksUsedSpecialIdentifierHeader = TopSpecialIdentifierHeader + "sparksused";
+        public const string TopSparksUsedRegexSpecialIdentifierHeader = TopSpecialIdentifierHeader + "\\d+sparksused";
+
+        public const string TopEmbersUsedSpecialIdentifierHeader = TopSpecialIdentifierHeader + "embersused";
+        public const string TopEmbersUsedRegexSpecialIdentifierHeader = TopSpecialIdentifierHeader + "\\d+embersused";
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
@@ -192,7 +200,7 @@ namespace MixItUp.Base.Util
             return !string.IsNullOrEmpty(text) && text.All(c => Char.IsLetterOrDigit(c));
         }
 
-        public static string ConvertToSpecialIdentifier(string text)
+        public static string ConvertToSpecialIdentifier(string text, int maxLength = 0)
         {
             StringBuilder specialIdentifier = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
@@ -202,7 +210,14 @@ namespace MixItUp.Base.Util
                     specialIdentifier.Append(text[i]);
                 }
             }
-            return specialIdentifier.ToString().ToLower();
+            string result = specialIdentifier.ToString().ToLower();
+
+            if (maxLength > 0 && result.Length > maxLength)
+            {
+                result = result.Substring(0, maxLength);
+            }
+
+            return result;
         }
 
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
@@ -251,7 +266,7 @@ namespace MixItUp.Base.Util
             return user;
         }
 
-        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(UserCurrencyModel currency)
+        public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
             IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
             return applicableUsers.OrderByDescending(u => currency.GetAmount(u));
@@ -303,18 +318,34 @@ namespace MixItUp.Base.Util
             {
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleSparksUsed("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleSparksUsed("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleSparksUsed("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleSparksUsed("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopSparksUsedRegex("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopSparksUsedRegex("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopSparksUsedRegex("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopSparksUsedRegex("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, amount); });
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader))
+                {
+                    await this.HandleTopSparksUsed("weekly", async () => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopSparksUsed("monthly", async () => { return await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopSparksUsed("yearly", async () => { return await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopSparksUsed("alltime", async () => { return await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, 1); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleEmbersUsed("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleEmbersUsed("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleEmbersUsed("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleEmbersUsed("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopEmbersUsedRegex("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopEmbersUsedRegex("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopEmbersUsedRegex("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
+                    await this.HandleTopEmbersUsedRegex("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader))
+                {
+                    await this.HandleTopEmbersUsed("weekly", async () => { return await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopEmbersUsed("monthly", async () => { return await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopEmbersUsed("yearly", async () => { return await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
+                    await this.HandleTopEmbersUsed("alltime", async () => { return await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
@@ -339,7 +370,19 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier))
+                {
+                    IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                    UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
+                    UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                    if (topUser == null)
+                    {
+                        topUser = new UserViewModel(topUserData);
+                    }
+                    await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier);
+                }
+
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
@@ -360,6 +403,18 @@ namespace MixItUp.Base.Util
                             }
                             return Task.FromResult(result);
                         });
+                    }
+
+                    if (this.ContainsSpecialIdentifier(currency.TopUserSpecialIdentifier))
+                    {
+                        IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
+                        UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
+                        UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                        if (topUser == null)
+                        {
+                            topUser = new UserViewModel(topUserData);
+                        }
+                        await this.HandleUserSpecialIdentifiers(topUser, currency.TopSpecialIdentifier);
                     }
                 }
             }
@@ -696,7 +751,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsUsageUserData, SpecialIdentifierStringBuilder.LatestBitsUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
-            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.SpecialIdentifier))
             {
                 if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
                 {
@@ -741,7 +796,7 @@ namespace MixItUp.Base.Util
 
         public override string ToString() { return this.text; }
 
-        private async Task HandleSparksUsed(string timeFrame, Func<int, Task<IEnumerable<SparksLeaderboardModel>>> func)
+        private async Task HandleTopSparksUsedRegex(string timeFrame, Func<int, Task<IEnumerable<SparksLeaderboardModel>>> func)
         {
             if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame))
             {
@@ -773,7 +828,37 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private async Task HandleEmbersUsed(string timeFrame, Func<int, Task<IEnumerable<EmbersLeaderboardModel>>> func)
+        private async Task HandleTopSparksUsed(string timeframe, Func<Task<IEnumerable<SparksLeaderboardModel>>> func)
+        {
+            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader + timeframe))
+            {
+                IEnumerable<SparksLeaderboardModel> leaderboards = await func();
+                if (leaderboards != null && leaderboards.Count() > 0)
+                {
+                    SparksLeaderboardModel top = leaderboards.OrderByDescending(l => l.statValue).FirstOrDefault();
+                    UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(top.username);
+                    if (mixerUser != null)
+                    {
+                        UserViewModel topUser = ChannelSession.Services.User.GetUserByMixerID(mixerUser.id);
+                        if (topUser == null)
+                        {
+                            UserDataModel userData = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
+                            if (userData != null)
+                            {
+                                topUser = new UserViewModel(userData);
+                            }
+                            else
+                            {
+                                topUser = new UserViewModel(mixerUser);
+                            }
+                        }
+                        await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader + timeframe);
+                    }
+                }
+            }
+        }
+
+        private async Task HandleTopEmbersUsedRegex(string timeFrame, Func<int, Task<IEnumerable<EmbersLeaderboardModel>>> func)
         {
             if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame))
             {
@@ -805,43 +890,76 @@ namespace MixItUp.Base.Util
             }
         }
 
+        private async Task HandleTopEmbersUsed(string timeframe, Func<Task<IEnumerable<EmbersLeaderboardModel>>> func)
+        {
+            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader + timeframe))
+            {
+                IEnumerable<EmbersLeaderboardModel> leaderboards = await func();
+                if (leaderboards != null && leaderboards.Count() > 0)
+                {
+                    EmbersLeaderboardModel top = leaderboards.OrderByDescending(l => l.statValue).FirstOrDefault();
+                    UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(top.username);
+                    if (mixerUser != null)
+                    {
+                        UserViewModel topUser = ChannelSession.Services.User.GetUserByMixerID(mixerUser.id);
+                        if (topUser == null)
+                        {
+                            UserDataModel userData = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
+                            if (userData == null)
+                            {
+                                topUser = new UserViewModel(userData);
+                            }
+                            else
+                            {
+                                topUser = new UserViewModel(mixerUser);
+                            }
+                        }
+                        await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader + timeframe);
+                    }
+                }
+            }
+        }
+
         private async Task HandleUserSpecialIdentifiers(UserViewModel user, string identifierHeader)
         {
             if (user != null && this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader))
             {
-                await user.RefreshDetails();
+                await user.RefreshDetails(force: true);
 
                 UserDataModel userData = user.Data;
 
-                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
+                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier))
                     {
-                        List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
-                        int index = sortedUsers.IndexOf(userData);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                        {
+                            List<UserDataModel> sortedUsers = SpecialIdentifierStringBuilder.GetUserOrderedCurrencyList(currency).ToList();
+                            int index = sortedUsers.IndexOf(userData);
+                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                        }
+
+                        int amount = currency.GetAmount(user.Data);
+                        RankModel rank = currency.GetRank(user.Data);
+                        RankModel nextRank = currency.GetNextRank(user.Data);
+
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.Amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.Amount.ToString());
+
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, amount.ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, amount.ToString());
                     }
-
-                    UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
-                    UserRankViewModel rank = currencyData.GetRank();
-                    UserRankViewModel nextRank = currencyData.GetNextRank();
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
-                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
 
-                foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
+                foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
                 {
                     if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                     {
                         Dictionary<string, int> userItems = new Dictionary<string, int>();
 
-                        foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
+                        foreach (InventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                         {
                             var quantity = inventory.GetAmount(userData, item);
                             if (quantity > 0)
@@ -871,6 +989,16 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
                             this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
                         }
+                    }
+                }
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
+                {
+                    if (this.ContainsSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier))
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserLevelSpecialIdentifier, streamPass.GetLevel(userData).ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserPointsDisplaySpecialIdentifier, streamPass.GetAmount(userData).ToString("N0"));
+                        this.ReplaceSpecialIdentifier(identifierHeader + streamPass.UserAmountSpecialIdentifier, streamPass.GetAmount(userData).ToString());
                     }
                 }
 
@@ -947,6 +1075,11 @@ namespace MixItUp.Base.Util
                             {
                                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
                                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
+                            }
+                            else
+                            {
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", "https://gameart.mixer.com/art/548829/cover.jpg?locked");
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", "Not Specified");
                             }
 
                             this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());

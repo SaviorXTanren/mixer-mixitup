@@ -74,7 +74,7 @@ namespace MixItUp.Base.Util
             });
         }
 
-        public static async Task RunSyncAsAsync(Action action)
+        public static async Task RunSyncAsAsync(Action action, CancellationToken token)
         {
             await Task.Run(() =>
             {
@@ -86,10 +86,10 @@ namespace MixItUp.Base.Util
                 {
                     Logger.Log(ex);
                 }
-            });
+            }, token);
         }
 
-        public static async Task<T> RunSyncAsAsync<T>(Func<T> function)
+        public static async Task<T> RunSyncAsAsync<T>(Func<T> function, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -102,7 +102,7 @@ namespace MixItUp.Base.Util
                     Logger.Log(ex);
                 }
                 return default(T);
-            });
+            }, token);
         }
 
         public static void RunAsyncAsSync(Task task)

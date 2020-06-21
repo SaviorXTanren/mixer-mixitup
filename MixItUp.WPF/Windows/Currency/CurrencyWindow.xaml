@@ -165,11 +165,15 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding SubscriberBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox Grid.Column="0" Text="{Binding RegularBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RegularBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
+                            
+                            <TextBox Grid.Column="2" Text="{Binding SubscriberBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="2" Text="{Binding ModeratorBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox Grid.Column="4" Text="{Binding ModeratorBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
                         </Grid>
                     </GroupBox>
@@ -184,11 +188,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding OnFollowBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnFollow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="0" Text="{Binding OnFollowBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnFollow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="2" Text="{Binding OnHostBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnHost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="2" Text="{Binding OnHostBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnHost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
 
-                            <TextBox Grid.Column="4" Text="{Binding OnSubscribeBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnSubscribe}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox Grid.Column="4" Text="{Binding OnSubscribeBonus}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnSubscribe}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="85" />
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -206,7 +210,7 @@
                                 <DataGrid ItemsSource="{Binding Ranks}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="90" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding Amount}" IsReadOnly="True" Width="90" />
                                         <DataGridTemplateColumn Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -244,11 +248,13 @@
                                 <Button Grid.Row="2" Command="{Binding AddRankCommand}" Width="130" Content="{x:Static resx:Resources.AddNewRank}"/>
 
                                 <Grid Grid.Row="4" HorizontalAlignment="Center">
-                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}">
+                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}" Width="230">
                                         <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                                            <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+                                            <Button x:Name="NewCommandButton" Visibility="{Binding DoesNotHaveRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
-                                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
+                                            <Grid Visibility="{Binding HasRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding RankChangedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                            </Grid>
                                         </Grid>
                                     </GroupBox>
                                 </Grid>

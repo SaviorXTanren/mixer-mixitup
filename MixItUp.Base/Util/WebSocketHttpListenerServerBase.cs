@@ -35,6 +35,8 @@ namespace MixItUp.Base.Util
             {
                 foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
                 {
+                    Logger.Log(LogLevel.Debug, "Sending Web Socket Packet - " + JSONSerializerHelper.SerializeToString(packet));
+
                     await webSocketServer.Send(packet);
                 }
             }

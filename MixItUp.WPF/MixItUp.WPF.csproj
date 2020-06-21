@@ -547,8 +547,8 @@
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
-      <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
+    <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
+      <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
       <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
@@ -650,6 +650,9 @@
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
+      <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
     </Compile>
@@ -747,16 +750,16 @@
     <Compile Include="Controls\Remote\RemoteBoardSettingsControl.xaml.cs">
       <DependentUpon>RemoteBoardSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
@@ -826,22 +829,46 @@
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\InventoryRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml.cs">
       <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RequirementControl.xaml.cs">
       <DependentUpon>RequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\SettingsRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml.cs">
       <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
+    <Compile Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml.cs">
+      <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CooldownRequirementControl.xaml.cs">
+      <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\CurrencyRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\InventoryRequirementControl.xaml.cs">
+      <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RankRequirementControl.xaml.cs">
+      <DependentUpon>RankRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RequirementsSetControl.xaml.cs">
+      <DependentUpon>RequirementsSetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\RoleRequirementControl.xaml.cs">
+      <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
@@ -1002,6 +1029,7 @@
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\DeveloperAPI\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\QuotesController.cs" />
     <Compile Include="Services\DeveloperAPI\CommandController.cs" />
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
@@ -1041,6 +1069,9 @@
     </Compile>
     <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\RedemptionStoreWindow.xaml.cs">
+      <DependentUpon>RedemptionStoreWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Currency\StreamPassWindow.xaml.cs">
       <DependentUpon>StreamPassWindow.xaml</DependentUpon>
@@ -1327,7 +1358,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml">
+    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1459,6 +1490,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\RedemptionStoreControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1587,7 +1622,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1595,11 +1630,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRankInventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1691,11 +1726,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\InventoryRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\RankSelectorControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1703,19 +1738,51 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\RoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\SettingsRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\SettingsRequirementControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
+    <Page Include="Controls\Requirement %28Old%29\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CooldownRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\CurrencyRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\InventoryRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RankRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RequirementsSetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\SettingsRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\ThresholdRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2001,6 +2068,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\Currency\RedemptionStoreWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\Currency\StreamPassWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2188,7 +2259,7 @@
     <Resource Include="Assets\Images\CommandExample.png" />
     <Resource Include="Assets\Images\ExampleRecipe.png" />
     <Resource Include="Assets\Images\Twitch.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.7.0-Windows-Installer.exe">
+    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\Ariel.mp3">

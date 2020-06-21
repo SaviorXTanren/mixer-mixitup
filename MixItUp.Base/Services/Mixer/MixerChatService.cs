@@ -88,6 +88,8 @@ namespace MixItUp.Base.Services.Mixer
 
         private CancellationTokenSource cancellationTokenSource;
 
+        public override string Name { get { return "Mixer Chat"; } }
+
         public MixerChatService() { }
 
         #region Interface Methods

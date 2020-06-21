@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
@@ -448,10 +449,33 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Advanced
 
+        #region Currency
+
         [DataMember]
-        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+        public Dictionary<Guid, CurrencyModel> Currency { get; set; } = new Dictionary<Guid, CurrencyModel>();
+
         [DataMember]
-        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+        public Dictionary<Guid, InventoryModel> Inventory { get; set; } = new Dictionary<Guid, InventoryModel>();
+
+        [DataMember]
+        public Dictionary<Guid, StreamPassModel> StreamPass { get; set; } = new Dictionary<Guid, StreamPassModel>();
+
+        [DataMember]
+        public bool RedemptionStoreEnabled { get; set; }
+        [DataMember]
+        public Dictionary<Guid, RedemptionStoreProductModel> RedemptionStoreProducts { get; set; } = new Dictionary<Guid, RedemptionStoreProductModel>();
+        [DataMember]
+        public string RedemptionStoreChatPurchaseCommand { get; set; } = "!purchase";
+        [DataMember]
+        public string RedemptionStoreModRedeemCommand { get; set; } = "!redeem";
+        [DataMember]
+        public Guid RedemptionStoreManualRedeemNeededCommandID { get; set; }
+        [DataMember]
+        public Guid RedemptionStoreDefaultRedemptionCommandID { get; set; }
+        [DataMember]
+        public List<RedemptionStorePurchaseModel> RedemptionStorePurchases { get; set; } = new List<RedemptionStorePurchaseModel>();
+
+        #endregion Currency
 
         [DataMember]
         public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
@@ -489,6 +513,8 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
         [JsonIgnore]
         public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
+        [JsonIgnore]
+        public DatabaseDictionary<Guid, CustomCommand> CustomCommands { get; set; } = new DatabaseDictionary<Guid, CustomCommand>();
 
         [JsonIgnore]
         public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
@@ -501,6 +527,17 @@ namespace MixItUp.Base.Model.Settings
         private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
 
         #endregion Database Data
+
+        #region Obsolete
+
+        [DataMember]
+        [Obsolete]
+        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+        [DataMember]
+        [Obsolete]
+        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+
+        #endregion Obsolete
 
         [JsonIgnore]
         public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.SettingsFileExtension); } }
@@ -595,6 +632,11 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
+                    else if (type == CommandTypeEnum.Custom)
+                    {
+                        CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
+                        this.CustomCommands[command.ID] = command;
+                    }
                 });
 
                 this.ChatCommands.ClearTracking();
@@ -603,6 +645,7 @@ namespace MixItUp.Base.Model.Settings
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
+                this.CustomCommands.ClearTracking();
 
                 foreach (CounterModel counter in this.Counters.Values.ToList())
                 {
@@ -748,15 +791,16 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
                     changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
-                List<CommandBase> removedCommands = new List<CommandBase>();
-                removedCommands.AddRange(this.ChatCommands.GetRemovedValues());
-                removedCommands.AddRange(this.EventCommands.GetRemovedValues());
-                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues());
-                removedCommands.AddRange(this.TimerCommands.GetRemovedValues());
-                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues());
-                removedCommands.AddRange(this.GameCommands.GetRemovedValues());
+                List<Guid> removedCommands = new List<Guid>();
+                removedCommands.AddRange(this.ChatCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.EventCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.TimerCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.CustomCommands.GetRemovedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
-                    removedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() } }));
+                    removedCommands.Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
 
                 List<CommandBase> addedChangedCommands = new List<CommandBase>();
                 addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
@@ -765,6 +809,7 @@ namespace MixItUp.Base.Model.Settings
                 addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.CustomCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
@@ -800,7 +845,7 @@ namespace MixItUp.Base.Model.Settings
                         return this.UserData[id];
                     }
                 }
-                return this.CreateUserData(mixerID: mixerID);
+                return null;
             }
         }
 
@@ -816,29 +861,27 @@ namespace MixItUp.Base.Model.Settings
                         return this.UserData[id];
                     }
                 }
-                return this.CreateUserData(twitchID: twitchID);
+                return null;
             }
         }
 
-        private UserDataModel CreateUserData(uint mixerID = 0, string twitchID = null)
+        public void AddUserData(UserDataModel user)
         {
-            UserDataModel userData = new UserDataModel();
-            this.UserData[userData.ID] = userData;
-
-            userData.MixerID = mixerID;
-            if (userData.MixerID > 0)
+            this.UserData[user.ID] = user;
+            if (user.MixerID > 0)
             {
-                this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                this.MixerUserIDLookups[user.MixerID] = user.ID;
             }
-
-            userData.TwitchID = twitchID;
-            if (!string.IsNullOrEmpty(userData.TwitchID))
+            if (!string.IsNullOrEmpty(user.TwitchID))
             {
-                this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                this.TwitchUserIDLookups[user.TwitchID] = user.ID;
             }
-
-            return userData;
+            this.UserData.ManualValueChanged(user.ID);
         }
+
+        public CustomCommand GetCustomCommand(Guid id) { return this.CustomCommands.ContainsKey(id) ? this.CustomCommands[id] : null; }
+
+        public void SetCustomCommand(CustomCommand command) { this.CustomCommands[command.ID] = command; }
 
         private void InitializeMissingData()
         {
@@ -860,6 +903,19 @@ namespace MixItUp.Base.Model.Settings
             if (this.DashboardQuickCommands.Count < 5)
             {
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
+            }
+
+            if (this.RedemptionStoreManualRedeemNeededCommandID == Guid.Empty)
+            {
+                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
+                this.SetCustomCommand(command);
+            }
+            if (this.RedemptionStoreDefaultRedemptionCommandID == Guid.Empty)
+            {
+                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
+                this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
+                this.SetCustomCommand(command);
             }
         }
 

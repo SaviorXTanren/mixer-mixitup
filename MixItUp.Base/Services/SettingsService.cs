@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
@@ -293,7 +294,15 @@ namespace MixItUp.Base.Services
                             Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
                     }
 
-                    return new Result<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                    SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile);
+
+                    if (ChannelSession.Settings.IsStreamer != settings.IsStreamer || ChannelSession.Settings.MixerUserID != settings.MixerUserID || ChannelSession.Settings.MixerChannelID != settings.MixerChannelID)
+                    {
+                        return new Result<SettingsV2Model>("The account information in the backup you are trying to restore does not match the currently logged in account." +
+                            Environment.NewLine + Environment.NewLine + "Please sign-in with the correct account in order to restore this backup");
+                    }
+
+                    return new Result<SettingsV2Model>(settings);
                 }
             }
             catch (Exception ex)
@@ -402,23 +411,88 @@ namespace MixItUp.Base.Services
             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-            foreach (UserInventoryModel inventory in settings.Inventories.Values)
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (UserCurrencyModel oldCurrency in settings.Currencies.Values)
             {
-                List<UserInventoryItemModel> items = inventory.Items.Values.ToList();
-                inventory.Items.Clear();
-                foreach (UserInventoryItemModel item in items)
+                CurrencyModel newCurrency = new CurrencyModel();
+
+                newCurrency.ID = oldCurrency.ID;
+                newCurrency.Name = oldCurrency.Name;
+                newCurrency.AcquireAmount = oldCurrency.AcquireAmount;
+                newCurrency.AcquireInterval = oldCurrency.AcquireInterval;
+                newCurrency.MinimumActiveRate = oldCurrency.MinimumActiveRate;
+                newCurrency.OfflineAcquireAmount = oldCurrency.OfflineAcquireAmount;
+                newCurrency.OfflineAcquireInterval = oldCurrency.OfflineAcquireInterval;
+                newCurrency.MaxAmount = oldCurrency.MaxAmount;
+                newCurrency.SpecialIdentifier = oldCurrency.SpecialIdentifier;
+                newCurrency.SubscriberBonus = oldCurrency.SubscriberBonus;
+                newCurrency.ModeratorBonus = oldCurrency.ModeratorBonus;
+                newCurrency.OnFollowBonus = oldCurrency.OnFollowBonus;
+                newCurrency.OnHostBonus = oldCurrency.OnHostBonus;
+                newCurrency.OnSubscribeBonus = oldCurrency.OnSubscribeBonus;
+                newCurrency.ResetInterval = (Model.Currency.CurrencyResetRateEnum)((int)oldCurrency.ResetInterval);
+                newCurrency.ResetStartCadence = oldCurrency.ResetStartCadence;
+                newCurrency.LastReset = oldCurrency.LastReset;
+                newCurrency.IsPrimary = oldCurrency.IsPrimary;
+
+                if (oldCurrency.RankChangedCommand != null)
                 {
-                    inventory.Items[item.ID.ToString()] = item;
+                    settings.SetCustomCommand(oldCurrency.RankChangedCommand);
+                    newCurrency.RankChangedCommandID = oldCurrency.RankChangedCommand.ID;
                 }
+
+                if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
+                if (oldCurrency.IsTrackingEmbers) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
+                if (oldCurrency.IsTrackingFanProgression) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+
+                foreach (UserRankViewModel rank in oldCurrency.Ranks)
+                {
+                    newCurrency.Ranks.Add(new RankModel(rank.Name, rank.MinimumPoints));
+                }
+
+                settings.Currency[newCurrency.ID] = newCurrency;
             }
 
-            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventories.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
+            foreach (UserInventoryModel oldInventory in settings.Inventories.Values)
             {
-                UserInventoryModel inventory = settings.Inventories[settings.GiveawayRequirements.Inventory.InventoryID];
+                InventoryModel newInventory = new InventoryModel();
+
+                newInventory.ID = oldInventory.ID;
+                newInventory.Name = oldInventory.Name;
+                newInventory.DefaultMaxAmount = oldInventory.DefaultMaxAmount;
+                newInventory.SpecialIdentifier = oldInventory.SpecialIdentifier;
+                newInventory.ShopEnabled = oldInventory.ShopEnabled;
+                newInventory.ShopCommand = oldInventory.ShopCommand;
+                newInventory.ShopCurrencyID = oldInventory.ShopCurrencyID;
+                newInventory.TradeEnabled = oldInventory.TradeEnabled;
+                newInventory.TradeCommand = oldInventory.TradeCommand;
+
+                settings.SetCustomCommand(oldInventory.ItemsBoughtCommand);
+                newInventory.ItemsBoughtCommandID = oldInventory.ItemsBoughtCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsSoldCommand);
+                newInventory.ItemsSoldCommandID = oldInventory.ItemsSoldCommand.ID;
+                settings.SetCustomCommand(oldInventory.ItemsTradedCommand);
+                newInventory.ItemsTradedCommandID = oldInventory.ItemsTradedCommand.ID;
+
+                foreach (UserInventoryItemModel oldItem in oldInventory.Items.Values.ToList())
+                {
+                    InventoryItemModel newItem = new InventoryItemModel(oldItem.Name, oldItem.MaxAmount, oldItem.BuyAmount, oldItem.SellAmount);
+                    newItem.ID = oldItem.ID;
+                    newInventory.Items[newItem.ID] = newItem;
+                }
+
+                settings.Inventory[newInventory.ID] = newInventory;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            if (settings.GiveawayRequirements != null && settings.GiveawayRequirements.Inventory != null && settings.Inventory.ContainsKey(settings.GiveawayRequirements.Inventory.InventoryID))
+            {
+                InventoryModel inventory = settings.Inventory[settings.GiveawayRequirements.Inventory.InventoryID];
 #pragma warning disable CS0612 // Type or member is obsolete
                 if (inventory != null && !string.IsNullOrEmpty(settings.GiveawayRequirements.Inventory.ItemName))
                 {
-                    UserInventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
+                    InventoryItemModel item = inventory.GetItem(settings.GiveawayRequirements.Inventory.ItemName);
                     if (item != null)
                     {
                         settings.GiveawayRequirements.Inventory.ItemID = item.ID;
@@ -433,13 +507,13 @@ namespace MixItUp.Base.Services
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase pCommand = (PermissionsCommandBase)command;
-                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventories.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
+                    if (pCommand.Requirements != null && pCommand.Requirements.Inventory != null && settings.Inventory.ContainsKey(pCommand.Requirements.Inventory.InventoryID))
                     {
-                        UserInventoryModel inventory = settings.Inventories[pCommand.Requirements.Inventory.InventoryID];
+                        InventoryModel inventory = settings.Inventory[pCommand.Requirements.Inventory.InventoryID];
 #pragma warning disable CS0612 // Type or member is obsolete
                         if (inventory != null && !string.IsNullOrEmpty(pCommand.Requirements.Inventory.ItemName))
                         {
-                            UserInventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
+                            InventoryItemModel item = inventory.GetItem(pCommand.Requirements.Inventory.ItemName);
                             if (item != null)
                             {
                                 pCommand.Requirements.Inventory.ItemID = item.ID;
@@ -449,6 +523,20 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS0612 // Type or member is obsolete
                     }
                 }
+            }
+
+            List<UserDataModel> usersToRemove = new List<UserDataModel>();
+            foreach (UserDataModel user in settings.UserData.Values.ToList())
+            {
+                if (user.MixerID <= 0)
+                {
+                    usersToRemove.Add(user);
+                }
+            }
+
+            foreach (UserDataModel user in usersToRemove)
+            {
+                settings.UserData.Remove(user.ID);
             }
 
             await ChannelSession.Services.Settings.Save(settings);
@@ -517,6 +605,7 @@ namespace MixItUp.Base.Services
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.CustomCommands.Values);
 
             foreach (UserDataModel userData in settings.UserData.Values)
             {
@@ -530,20 +619,6 @@ namespace MixItUp.Base.Services
             foreach (GameCommandBase gameCommand in settings.GameCommands)
             {
                 commands.AddRange(gameCommand.GetAllInnerCommands());
-            }
-
-            foreach (UserCurrencyModel currency in settings.Currencies.Values)
-            {
-                if (currency.RankChangedCommand != null)
-                {
-                    commands.Add(currency.RankChangedCommand);
-                }
-            }
-
-            foreach (UserInventoryModel inventory in settings.Inventories.Values)
-            {
-                commands.Add(inventory.ItemsBoughtCommand);
-                commands.Add(inventory.ItemsSoldCommand);
             }
 
             foreach (OverlayWidgetModel widget in settings.OverlayWidgets)

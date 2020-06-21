@@ -29,7 +29,7 @@ namespace MixItUp.WPF
 
         private static readonly Dictionary<LanguageOptions, string> LanguageMaps = new Dictionary<LanguageOptions, string>
         {
-            // { LanguageOptions.Default, "DO NOT USE, MAPS TO MACHINE CULTURE" },
+            { LanguageOptions.Default, "en-US" },
 
             { LanguageOptions.Dutch, "nl-NL" },
             { LanguageOptions.English, "en-US" },

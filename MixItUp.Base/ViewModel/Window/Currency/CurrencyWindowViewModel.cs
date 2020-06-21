@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -32,23 +32,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         Disabled,
     }
 
-    public class NewCurrencyRankCommand
-    {
-        public bool AddCommand { get; set; }
-        public string Description { get; set; }
-        public ChatCommand Command { get; set; }
-
-        public NewCurrencyRankCommand(string description, ChatCommand command)
-        {
-            this.AddCommand = true;
-            this.Description = description;
-            this.Command = command;
-        }
-    }
-
     public class CurrencyWindowViewModel : WindowViewModelBase
     {
-        public UserCurrencyModel Currency { get; set; }
+        public CurrencyModel Currency { get; set; }
 
         public bool IsNew { get { return this.Currency == null; } }
         public bool IsExisting { get { return !this.IsNew; } }
@@ -127,6 +113,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
                     this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
 
+                    this.RegularBonus = 0;
                     this.SubscriberBonus = 0;
                     this.ModeratorBonus = 0;
                     this.OnFollowBonus = 0;
@@ -220,6 +207,16 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private int offlineRateInterval = 0;
 
+        public int RegularBonus
+        {
+            get { return this.regularBonus; }
+            set
+            {
+                this.regularBonus = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int regularBonus = 0;
         public int SubscriberBonus
         {
             get { return this.subscriberBonus; }
@@ -324,8 +321,22 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public ICommand ExportToFileCommand { get; private set; }
 
-        public CustomCommand RankChangedCommand { get; set; }
-        public ObservableCollection<UserRankViewModel> Ranks { get; set; } = new ObservableCollection<UserRankViewModel>();
+        public CustomCommand RankChangedCommand
+        {
+            get { return this.rankChangedCommand; }
+            set
+            {
+                this.rankChangedCommand = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasRankChangedCommand");
+                this.NotifyPropertyChanged("DoesNotHaveRankChangedCommand");
+            }
+        }
+        private CustomCommand rankChangedCommand;
+        public bool HasRankChangedCommand { get { return this.RankChangedCommand != null; } }
+        public bool DoesNotHaveRankChangedCommand { get { return !this.HasRankChangedCommand; } }
+
+        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
         {
@@ -357,7 +368,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         private Dictionary<Guid, int> userImportData = new Dictionary<Guid, int>();
 
-        public CurrencyWindowViewModel(UserCurrencyModel currency)
+        public CurrencyWindowViewModel(CurrencyModel currency)
             : this()
         {
             this.Currency = currency;
@@ -369,15 +380,15 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.MaxAmount = this.Currency.MaxAmount;
             }
 
-            if (this.Currency.IsTrackingSparks)
+            if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Sparks)
             {
                 this.OnlineRate = CurrencyAcquireRateTypeEnum.Sparks;
             }
-            else if (this.Currency.IsTrackingEmbers)
+            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Embers)
             {
                 this.OnlineRate = CurrencyAcquireRateTypeEnum.Embers;
             }
-            else if (this.Currency.IsTrackingFanProgression)
+            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression)
             {
                 this.OnlineRate = CurrencyAcquireRateTypeEnum.FanProgression;
             }
@@ -419,6 +430,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.OfflineRateAmount = this.Currency.OfflineAcquireAmount;
             this.OfflineRateInterval = this.Currency.OfflineAcquireInterval;
 
+            this.RegularBonus = this.Currency.RegularBonus;
             this.SubscriberBonus = this.Currency.SubscriberBonus;
             this.ModeratorBonus = this.Currency.ModeratorBonus;
 
@@ -438,7 +450,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             if (this.IsRank)
             {
                 this.RankChangedCommand = this.Currency.RankChangedCommand;
-                foreach (UserRankViewModel rank in this.Currency.Ranks.OrderBy(r => r.MinimumPoints))
+                foreach (RankModel rank in this.Currency.Ranks.OrderBy(r => r.Amount))
                 {
                     this.Ranks.Add(rank);
                 }
@@ -447,6 +459,11 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public CurrencyWindowViewModel()
         {
+            if (ChannelSession.Settings.Currency.All(c => !c.Value.IsPrimary))
+            {
+                this.IsPrimary = true;
+            }
+
             this.OnlineRate = CurrencyAcquireRateTypeEnum.Minutes;
             this.OfflineRate = CurrencyAcquireRateTypeEnum.Disabled;
 
@@ -466,19 +483,19 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     return;
                 }
 
-                if (this.Ranks.Any(r => r.Name.Equals(this.NewRankName) || r.MinimumPoints == this.NewRankAmount))
+                if (this.Ranks.Any(r => r.Name.Equals(this.NewRankName) || r.Amount == this.NewRankAmount))
                 {
                     await DialogHelper.ShowMessage("Every rank must have a unique name and minimum amount");
                     return;
                 }
 
-                UserRankViewModel newRank = new UserRankViewModel(this.NewRankName, this.NewRankAmount);
+                RankModel newRank = new RankModel(this.NewRankName, this.NewRankAmount);
                 this.Ranks.Add(newRank);
 
                 var tempRanks = this.Ranks.ToList();
 
                 this.Ranks.Clear();
-                foreach (UserRankViewModel rank in tempRanks.OrderBy(r => r.MinimumPoints))
+                foreach (RankModel rank in tempRanks.OrderBy(r => r.Amount))
                 {
                     this.Ranks.Add(rank);
                 }
@@ -506,7 +523,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 {
                     if (this.Currency != null && this.Currency.AcquireInterval > 0)
                     {
-                        if (this.Currency.IsTrackingSparks || this.Currency.IsTrackingEmbers || this.Currency.IsTrackingFanProgression)
+                        if (this.Currency.SpecialTracking != CurrencySpecialTrackingEnum.None)
                         {
                             await DialogHelper.ShowMessage("The rate type for this currency does not support retroactively giving points.");
                             return;
@@ -530,7 +547,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                             modIDs.Add(user.id);
                         }
 
-                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
                             this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
@@ -629,7 +646,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                                 {
                                     if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
                                     {
-                                        UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
+                                        MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
                                         this.Currency.SetAmount(userData, kvp.Value);
                                     }
                                 }
@@ -659,7 +676,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.Username, this.Currency.GetAmount(userData)));
                     }
@@ -688,14 +705,14 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            UserCurrencyModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            CurrencyModel dupeCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeCurrency != null && (this.Currency == null || !this.Currency.ID.Equals(dupeCurrency.ID)))
             {
                 await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
                 return false;
             }
 
-            UserInventoryModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
+            InventoryModel dupeInventory = ChannelSession.Settings.Inventory.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeInventory != null)
             {
                 await DialogHelper.ShowMessage("There already exists an inventory with this name");
@@ -742,6 +759,12 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             if (this.OfflineRateAmount > 0 && this.OfflineRateInterval == 0)
             {
                 await DialogHelper.ShowMessage("The offline minutes can not be 0 if the offline amount is greater than 0");
+                return false;
+            }
+
+            if (this.RegularBonus < 0)
+            {
+                await DialogHelper.ShowMessage("The Regular bonus must be 0 or greater");
                 return false;
             }
 
@@ -793,12 +816,12 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             return true;
         }
 
-        public void Save()
+        public async Task Save()
         {
             if (this.Currency == null)
             {
-                this.Currency = new UserCurrencyModel();
-                ChannelSession.Settings.Currencies[this.Currency.ID] = this.Currency;
+                this.Currency = new CurrencyModel();
+                ChannelSession.Settings.Currency[this.Currency.ID] = this.Currency;
             }
 
             this.Currency.Name = this.Name;
@@ -809,10 +832,13 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.Currency.AcquireInterval = this.OnlineRateInterval;
             this.Currency.OfflineAcquireAmount = this.OfflineRateAmount;
             this.Currency.OfflineAcquireInterval = this.OfflineRateInterval;
-            this.Currency.IsTrackingSparks = (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks);
-            this.Currency.IsTrackingEmbers = (this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers);
-            this.Currency.IsTrackingFanProgression = (this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression);
 
+            this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.None;
+            if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
+            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
+            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+
+            this.Currency.RegularBonus = this.RegularBonus;
             this.Currency.SubscriberBonus = this.SubscriberBonus;
             this.Currency.ModeratorBonus = this.ModeratorBonus;
             this.Currency.OnFollowBonus = this.OnFollowBonus;
@@ -832,14 +858,16 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
             else
             {
-                this.Currency.Ranks = new List<UserRankViewModel>();
+                this.Currency.Ranks.Clear();
                 this.Currency.RankChangedCommand = null;
             }
+
+            await ChannelSession.SaveSettings();
         }
 
-        public IEnumerable<NewCurrencyRankCommand> GetNewCurrencyRankCommands()
+        public IEnumerable<NewAutoChatCommand> GetNewAutoChatCommands()
         {
-            List<NewCurrencyRankCommand> commandsToAdd = new List<NewCurrencyRankCommand>();
+            List<NewAutoChatCommand> commandsToAdd = new List<NewAutoChatCommand>();
             if (this.Currency != null)
             {
                 ChatCommand statusCommand = new ChatCommand("User " + this.Currency.Name, this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
@@ -853,26 +881,26 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     statusChatText = string.Format("@$username has ${0} {1}!", this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
                 }
                 statusCommand.Actions.Add(new ChatAction(statusChatText));
-                commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
+                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
 
-                if (!this.Currency.IsTrackingSparks && !this.Currency.IsTrackingEmbers)
+                if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
                     ChatCommand addCommand = new ChatCommand("Add " + this.Currency.Name, "add" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
                     addCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
                     addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.Currency.Name)));
-                    commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
+                    commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
 
                     ChatCommand addAllCommand = new ChatCommand("Add All " + this.Currency.Name, "addall" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
                     addAllCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
                     addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", this.Currency.Name)));
-                    commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
+                    commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
 
                     if (!this.Currency.IsRank)
                     {
                         ChatCommand giveCommand = new ChatCommand("Give " + this.Currency.Name, "give" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
                         giveCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
                         giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", this.Currency.Name)));
-                        commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));
+                        commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));
                     }
                 }
             }

@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            this.LowestRoleAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+            this.LowestRoleAllowedComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
 
             if (this.command != null)
             {

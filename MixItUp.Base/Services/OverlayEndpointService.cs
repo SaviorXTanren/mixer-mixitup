@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -190,9 +191,8 @@ namespace MixItUp.Base.Services
                     {
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
                         {
-                            OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                            string filePath = jobj["FilePath"].ToString();
-                            this.SetLocalFile(fileItem.FileID, filePath);
+                            this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
+                            jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
                         }
                         else if (item is OverlaySparkCrystalItemModel)
                         {

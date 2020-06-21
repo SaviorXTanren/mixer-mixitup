@@ -4,6 +4,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -248,6 +249,11 @@ namespace MixItUp.Base
                     }
                 }
             }
+            else
+            {
+                ChannelSession.Settings.MixerUserOAuthToken = null;
+                return userResult;
+            }
 
             // Twitch connection
 
@@ -295,9 +301,15 @@ namespace MixItUp.Base
                     }
                 }
             }
+            else
+            {
+                ChannelSession.Settings.TwitchUserOAuthToken = null;
+                return userResult;
+            }
 
-            return new Result();
+            return userResult;
         }
+
 
         public static async Task DisconnectMixerBot()
         {
@@ -632,9 +644,9 @@ namespace MixItUp.Base
                             if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
                             if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
                             if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
-                            if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP)) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
-                            if (ChannelSession.Settings.EnableStreamlabsOBSConnection) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
-                            if (ChannelSession.Settings.EnableXSplitConnection) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
+                            if (ChannelSession.Services.OBSStudio.IsEnabled) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
+                            if (ChannelSession.Services.StreamlabsOBS.IsEnabled) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
+                            if (ChannelSession.Services.XSplit.IsEnabled) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
                             if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ChannelSession.Services.OvrStream] = null; }
                             if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ChannelSession.Services.Overlay] = null; }
                             if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ChannelSession.Services.DeveloperAPI] = null; }
@@ -724,7 +736,7 @@ namespace MixItUp.Base
                                 }
                             }
 
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 if (currency.ShouldBeReset())
                                 {
@@ -784,6 +796,19 @@ namespace MixItUp.Base
 
                         ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
+                        foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values)
+                        {
+                            product.ReplenishAmount();
+                        }
+
+                        foreach (RedemptionStorePurchaseModel purchase in ChannelSession.Settings.RedemptionStorePurchases.ToList())
+                        {
+                            if (purchase.State != RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
+                            {
+                                ChannelSession.Settings.RedemptionStorePurchases.Remove(purchase);
+                            }
+                        }
+
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
                         await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
@@ -795,8 +820,6 @@ namespace MixItUp.Base
                             Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendUserFeatureEvent(new UserFeatureEvent(ChannelSession.MixerUser.id)); });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
-
-                        GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                         AsyncRunner.RunBackgroundTask(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
                     }
@@ -859,18 +882,6 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
-                }
-            }
-        }
-
-        private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
-        {
-            if (currency.Currency.RankChangedCommand != null)
-            {
-                UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(currency.User.MixerID);
-                if (user != null)
-                {
-                    await currency.Currency.RankChangedCommand.Perform(user);
                 }
             }
         }
