@@ -57,31 +57,29 @@ namespace MixItUp.WPF.Controls.Users
             }
         }
 
-        public async Task SetMixerUserAvatarUrl(uint mixerUserID)
-        {
-            await this.SetUserAvatarUrl(new UserViewModel(new UserModel() { id = mixerUserID }));
-        }
-
         public async Task SetUserAvatarUrl(UserViewModel user)
         {
             try
             {
-                BitmapImage bitmap = new BitmapImage();
-                if (userAvatarCache.ContainsKey(user.MixerID))
+                BitmapImage bitmap = null;
+                if (userAvatarCache.ContainsKey(user.ID))
                 {
-                    bitmap = userAvatarCache[user.MixerID];
+                    bitmap = userAvatarCache[user.ID];
                 }
-                else
+                else if (!string.IsNullOrEmpty(user.AvatarLink))
                 {
                     using (WebClient client = new WebClient())
                     {
                         var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)user.AvatarLink); }));
                         bitmap = WindowsImageService.Load(bytes);
                     }
-                    userAvatarCache[user.MixerID] = bitmap;
+                    userAvatarCache[user.ID] = bitmap;
                 }
 
-                this.ProfileAvatarImage.ImageSource = bitmap;
+                if (bitmap != null)
+                {
+                    this.ProfileAvatarImage.ImageSource = bitmap;
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
