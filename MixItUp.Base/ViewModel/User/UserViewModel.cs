@@ -18,6 +18,7 @@ using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchV5API = Twitch.Base.Models.V5;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
+using Twitch.Base.Models.NewAPI.Chat;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -389,7 +390,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.IsPlatformSubscriber)
                 {
-                    if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; }
+                    if (this.Platform == StreamingPlatformTypeEnum.Mixer && ChannelSession.MixerChannel.badge != null) { return ChannelSession.MixerChannel.badge.url; }
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch && this.TwitchSubscriberBadge != null) { return this.TwitchSubscriberBadge.image_url_1x; }
                 }
                 return null;
             }
@@ -444,6 +446,26 @@ namespace MixItUp.Base.ViewModel.User
         public HashSet<UserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
 
         public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.Data.TwitchDisplayName)) ? this.Data.TwitchDisplayName : this.Data.TwitchUsername; } }
+
+        public int TwitchSubMonths
+        {
+            get
+            {
+                if (this.Data.TwitchBadgeInfo != null && this.Data.TwitchBadgeInfo.TryGetValue("subscriber", out int months))
+                {
+                    return months;
+                }
+                return 0;
+            }
+        }
+
+        public bool IsTwitchSubscriber { get { return this.HasTwitchSubscriberBadge || this.HasTwitchSubscriberFounderBadge; } }
+
+        public bool HasTwitchSubscriberBadge { get { return this.HasTwitchBadge("subscriber"); } }
+
+        public bool HasTwitchSubscriberFounderBadge { get { return this.HasTwitchBadge("founder"); } }
+
+        public ChatBadgeModel TwitchSubscriberBadge { get; private set; }
 
         #endregion Twitch
 
@@ -545,6 +567,13 @@ namespace MixItUp.Base.ViewModel.User
                         this.Data.RolesDisplayString = string.Join(", ", userRoles.OrderByDescending(r => r));
                     }
                     return this.Data.RolesDisplayString;
+                }
+            }
+            private set
+            {
+                lock (this.rolesDisplayStringLock)
+                {
+                    this.Data.RolesDisplayString = value;
                 }
             }
         }
@@ -700,6 +729,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        #region Mixer Data Setter Functions
+
         public void SetMixerChatDetails(ChatUserModel chatUser)
         {
             if (chatUser != null)
@@ -728,6 +759,81 @@ namespace MixItUp.Base.ViewModel.User
                 this.InteractiveGroupID = MixPlayUserGroupModel.DefaultName;
             }
         }
+
+        #endregion Mixer Data Setter Functions
+
+        #region Twitch Data Setter Functions
+
+        public void SetTwitchChatDetails(ChatMessagePacketModel message)
+        {
+            this.SetTwitchChatDetails(message.UserDisplayName, message.BadgeDictionary, message.BadgeInfoDictionary, message.Color);
+        }
+
+        public void SetTwitchChatDetails(ChatUserStatePacketModel userState)
+        {
+            this.SetTwitchChatDetails(userState.UserDisplayName, userState.BadgeDictionary, userState.BadgeInfoDictionary, userState.Color);
+        }
+
+        public void SetTwitchChatDetails(ChatUserNoticePacketModel userNotice)
+        {
+            this.SetTwitchChatDetails(userNotice.UserDisplayName, userNotice.BadgeDictionary, userNotice.BadgeInfoDictionary, userNotice.Color);
+        }
+
+        private void SetTwitchChatDetails(string displayName, Dictionary<string, int> badges, Dictionary<string, int> badgeInfo, string color)
+        {
+            this.TwitchDisplayName = displayName;
+            this.Data.TwitchBadges = badges;
+            this.Data.TwitchBadgeInfo = badgeInfo;
+            this.Data.TwitchColor = color;
+
+            if (this.Data.TwitchBadges != null)
+            {
+                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+                if (this.HasTwitchBadge("global_mod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
+                if (this.IsTwitchSubscriber || this.HasTwitchSubscriberFounderBadge) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
+
+                if (ChannelSession.Services.Chat.TwitchChatService != null)
+                {
+                    string name = null;
+                    if (this.HasTwitchSubscriberBadge)
+                    {
+                        name = "subscriber";
+                    }
+                    else if (this.HasTwitchSubscriberFounderBadge)
+                    {
+                        name = "founder";
+                    }
+
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        int versionID = this.GetTwitchBadgeVersion(name);
+                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(name) && ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                        {
+                            this.TwitchSubscriberBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
+                        }
+                    }
+                }
+            }
+
+            this.SetCommonUserRoles();
+
+            this.RolesDisplayString = null;
+        }
+
+        private int GetTwitchBadgeVersion(string name)
+        {
+            if (this.Data.TwitchBadges != null && this.Data.TwitchBadges.TryGetValue(name, out int version))
+            {
+                return version;
+            }
+            return -1;
+        }
+
+        private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeVersion(name) >= 0; }
+
+        #endregion Twitch Data Setter Functions
 
         public async Task AddModerationStrike(string moderationReason = null)
         {
@@ -968,11 +1074,12 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
                 if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
-
                 if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
                 if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
 
                 this.SetTwitchRoles();
+
+                this.RolesDisplayString = null;
             }
         }
 
@@ -1051,7 +1158,7 @@ namespace MixItUp.Base.ViewModel.User
             }
 
             // Force re-build of roles display string
-            this.Data.RolesDisplayString = null;
+            this.RolesDisplayString = null;
         }
 
         private Task RefreshExternalServiceDetails()

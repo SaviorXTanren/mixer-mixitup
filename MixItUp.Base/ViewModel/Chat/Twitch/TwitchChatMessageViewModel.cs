@@ -26,6 +26,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         public TwitchChatMessageViewModel(ChatMessagePacketModel message, UserViewModel user = null)
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(message))
         {
+            this.User.SetTwitchChatDetails(message);
+
             if (message.Message.StartsWith(SlashMeAction) && message.Message.Last() == SOHCharacter)
             {
                 this.IsSlashMe = true;

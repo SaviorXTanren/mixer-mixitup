@@ -90,6 +90,13 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        [DataMember]
+        public Dictionary<string, int> TwitchBadges { get; set; } = new Dictionary<string, int>();
+        [DataMember]
+        public Dictionary<string, int> TwitchBadgeInfo { get; set; } = new Dictionary<string, int>();
+
+        [DataMember]
+        public string TwitchColor { get; set; }
 
         [DataMember]
         public DateTimeOffset? TwitchAccountDate { get; set; }

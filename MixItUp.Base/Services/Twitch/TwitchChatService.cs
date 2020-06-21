@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
+using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Models.V5.Emotes;
 using Twitch.Base.Models.V5.Streams;
@@ -36,6 +37,7 @@ namespace MixItUp.Base.Services.Twitch
     public interface ITwitchChatService
     {
         IDictionary<string, EmoteModel> Emotes { get; }
+        IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
         IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
@@ -86,6 +88,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
         private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
+
+        public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
+        private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -274,9 +279,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task Initialize()
         {
-            List<Task> emoteTasks = new List<Task>();
+            List<Task> initializationTasks = new List<Task>();
 
-            emoteTasks.Add(Task.Run(async() =>
+            initializationTasks.Add(Task.Run(async() =>
             {
                 foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
                 {
@@ -284,13 +289,28 @@ namespace MixItUp.Base.Services.Twitch
                 }
             }));
 
+            Task<IEnumerable<ChatBadgeSetModel>> globalChatBadges = ChannelSession.TwitchUserConnection.GetGlobalChatBadges();
+            initializationTasks.Add(globalChatBadges);
+            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadges = ChannelSession.TwitchUserConnection.GetChannelChatBadges(ChannelSession.TwitchChannelNewAPI);
+            initializationTasks.Add(channelChatBadges);
+
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
-                emoteTasks.Add(this.DownloadBetterTTVEmotes());
-                emoteTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchChannelNewAPI.login));
+                initializationTasks.Add(this.DownloadBetterTTVEmotes());
+                initializationTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchChannelNewAPI.login));
             }
 
-            await Task.WhenAll(emoteTasks);
+            await Task.WhenAll(initializationTasks);
+
+            foreach (ChatBadgeSetModel badgeSet in globalChatBadges.Result)
+            {
+                this.chatBadges[badgeSet.id] = badgeSet;
+            }
+
+            foreach (ChatBadgeSetModel badgeSet in channelChatBadges.Result)
+            {
+                this.chatBadges[badgeSet.id] = badgeSet;
+            }
 
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
@@ -525,12 +545,20 @@ namespace MixItUp.Base.Services.Twitch
 
         private void UserClient_OnUserStateReceived(object sender, ChatUserStatePacketModel userState)
         {
-            Console.WriteLine(userState.UserDisplayName);
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userState.UserDisplayName, StreamingPlatformTypeEnum.Twitch);
+            if (user != null)
+            {
+                user.SetTwitchChatDetails(userState);
+            }
         }
 
         private void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
-            Console.WriteLine(userNotice.UserDisplayName);
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+            if (user != null)
+            {
+                user.SetTwitchChatDetails(userNotice);
+            }
         }
 
         private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
@@ -735,10 +763,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

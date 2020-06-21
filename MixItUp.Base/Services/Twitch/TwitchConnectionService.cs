@@ -158,25 +158,13 @@ namespace MixItUp.Base.Services.Twitch
             await this.RunAsync(this.Connection.V5API.Channels.UpdateChannel(channel, update));
         }
 
-        public async Task<IEnumerable<V5API.Users.UserFollowModel>> GetV5APIFollowers(V5API.Channel.ChannelModel channel, int maxResult = 1)
-        {
-            return await this.RunAsync(this.Connection.V5API.Channels.GetChannelFollowers(channel, maxResult));
-        }
+        public async Task<IEnumerable<V5API.Users.UserFollowModel>> GetV5APIFollowers(V5API.Channel.ChannelModel channel, int maxResult = 1) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelFollowers(channel, maxResult)); }
 
-        public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck)
-        {
-            return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck));
-        }
+        public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck)); }
 
-        public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user)
-        {
-            return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user));
-        }
+        public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user)); }
 
-        public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel)
-        {
-            return await this.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel));
-        }
+        public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel)); }
 
         // New API Methods
 
@@ -205,5 +193,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<NewAPI.Games.GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }
 
+        public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetChannelChatBadges(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetChannelChatBadges(channel)); }
+
+        public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetGlobalChatBadges() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalChatBadges()); }
     }
 }
