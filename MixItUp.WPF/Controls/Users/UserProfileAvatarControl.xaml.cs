@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Users
         {
             try
             {
-                BitmapImage bitmap = new BitmapImage();
+                BitmapImage bitmap = null;
                 if (userAvatarCache.ContainsKey(user.ID))
                 {
                     bitmap = userAvatarCache[user.ID];
@@ -81,7 +81,10 @@ namespace MixItUp.WPF.Controls.Users
                     userAvatarCache[user.ID] = bitmap;
                 }
 
-                this.ProfileAvatarImage.ImageSource = bitmap;
+                if (bitmap != null)
+                {
+                    this.ProfileAvatarImage.ImageSource = bitmap;
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
