@@ -156,6 +156,15 @@ namespace MixItUp.Base.Model.Currency
 
         public static async Task Redeem(UserViewModel user, IEnumerable<string> arguments)
         {
+            if (!user.HasPermissionsTo(UserRoleEnum.Mod))
+            {
+                if (ChannelSession.Services.Chat != null)
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.YouDoNotHavePermissions);
+                }
+                return;
+            }
+
             string name = string.Join(" ", arguments);
             RedemptionStorePurchaseModel purchase = null;
 

@@ -8521,6 +8521,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have permissions to do this.
+        /// </summary>
+        public static string YouDoNotHavePermissions {
+            get {
+                return ResourceManager.GetString("YouDoNotHavePermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Y Position.
         /// </summary>
         public static string YPosition {
