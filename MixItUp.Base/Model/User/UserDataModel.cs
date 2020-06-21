@@ -140,6 +140,8 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public uint TotalEmbersSpent { get; set; }
         [DataMember]
+        public uint TotalBitsSpent { get; set; }
+        [DataMember]
         public uint TotalSubsGifted { get; set; }
         [DataMember]
         public uint TotalSubsReceived { get; set; }
@@ -178,11 +180,10 @@ namespace MixItUp.Base.Model.User
 
         public UserDataModel() { }
 
-        public UserDataModel(uint id, string username)
-            : this()
+        public UserDataModel(Mixer.Base.Model.User.UserModel user)
         {
-            this.MixerID = id;
-            this.MixerUsername = username;
+            this.MixerID = user.id;
+            this.MixerUsername = user.username;
         }
 
         public UserDataModel(UserViewModel user)

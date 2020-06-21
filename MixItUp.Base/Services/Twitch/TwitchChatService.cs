@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -111,6 +111,8 @@ namespace MixItUp.Base.Services.Twitch
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
 
+        public override string Name { get { return "Twitch Chat"; } }
+
         public async Task<Result> ConnectUser()
         {
             if (ChannelSession.TwitchUserConnection != null)
@@ -123,7 +125,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.userClient = new ChatClient(ChannelSession.TwitchUserConnection.Connection);
 
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
                         }
@@ -171,7 +173,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.userClient.OnSentOccurred -= Client_OnSentOccurred;
                     }
@@ -211,7 +213,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.botClient = new ChatClient(ChannelSession.TwitchBotConnection.Connection);
 
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.botClient.OnSentOccurred += Client_OnSentOccurred;
                         }
@@ -250,7 +252,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.botClient != null)
                 {
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.botClient.OnSentOccurred -= Client_OnSentOccurred;
                     }
@@ -542,7 +544,7 @@ namespace MixItUp.Base.Services.Twitch
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
-                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                                 {
                                     currency.AddAmount(user.Data, currency.OnHostBonus);
                                 }
@@ -572,7 +574,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!TwitchChatService.ExcludedDiagnosticPacketLogging.Contains(packet.Command))
             {
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (ChannelSession.AppSettings.DiagnosticLogging)
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Twitch Client Packet Received: {0}", JSONSerializerHelper.SerializeToString(packet)));
                 }
@@ -599,7 +601,7 @@ namespace MixItUp.Base.Services.Twitch
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
                             {
                                 currency.AddAmount(user.Data, currency.OnHostBonus);
                             }

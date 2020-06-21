@@ -25,7 +25,8 @@ namespace MixItUp.Base.Model.Currency
         None = 0,
         Sparks = 1,
         Embers = 2,
-        FanProgression = 3
+        FanProgression = 3,
+        Bits = 4,
     }
 
     [DataContract]

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -41,6 +42,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private HashSet<string> follows = new HashSet<string>();
 
+        public override string Name { get { return "Twitch Events"; } }
+
         public TwitchEventService() { }
 
         public async Task<Result> Connect()
@@ -53,7 +56,7 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         this.pubSub = new PubSubClient(ChannelSession.TwitchUserConnection.Connection);
 
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.pubSub.OnSentOccurred += PubSub_OnSentOccurred;
                             this.pubSub.OnTextReceivedOccurred += PubSub_OnTextReceivedOccurred;
@@ -116,7 +119,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.pubSub != null)
                 {
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.pubSub.OnSentOccurred -= PubSub_OnSentOccurred;
                         this.pubSub.OnTextReceivedOccurred -= PubSub_OnTextReceivedOccurred;
@@ -173,7 +176,7 @@ namespace MixItUp.Base.Services.Twitch
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.Data;
 
-                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnFollowBonus);
                             }
@@ -240,7 +243,7 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
-            foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingBits))
+            foreach (CurrencyModel emberCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
             {
                 emberCurrency.AddAmount(user.Data, packet.bits_used);
             }
@@ -278,7 +281,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now;
-                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                     }
@@ -305,7 +308,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
-                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                     }
@@ -347,7 +350,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
             receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
-            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 currency.AddAmount(gifter.Data, currency.OnSubscribeBonus);
             }

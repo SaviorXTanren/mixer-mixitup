@@ -294,7 +294,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUserRoles; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUserRoles; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }
@@ -385,7 +385,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        [JsonIgnore]
         public bool IsAnonymous
         {
             get
@@ -427,20 +426,14 @@ namespace MixItUp.Base.ViewModel.User
 
         #region Twitch
 
-        [DataMember]
         public string TwitchID { get { return this.Data.TwitchID; } private set { this.Data.TwitchID = value; } }
-        [DataMember]
         public string TwitchUsername { get { return this.Data.TwitchUsername; } private set { this.Data.TwitchUsername = value; } }
-        [DataMember]
         public string TwitchDisplayName { get { return this.Data.TwitchDisplayName; } private set { this.Data.TwitchDisplayName = value; } }
-        [DataMember]
         public string TwitchAvatarLink { get { return this.Data.TwitchAvatarLink; } private set { this.Data.TwitchAvatarLink = value; } }
 
-        [DataMember]
         public HashSet<UserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
 
-        [JsonIgnore]
-        public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.TwitchDisplayName)) ? this.TwitchDisplayName : this.TwitchUsername; } }
+        public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.Data.TwitchDisplayName)) ? this.Data.TwitchDisplayName : this.Data.TwitchUsername; } }
 
         #endregion Twitch
 

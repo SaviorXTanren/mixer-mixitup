@@ -127,6 +127,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchConnection Connection { get; private set; }
 
+        public override string Name { get { return "Twitch Connection"; } }
+
         public TwitchConnectionService(TwitchConnection connection)
         {
             this.Connection = connection;

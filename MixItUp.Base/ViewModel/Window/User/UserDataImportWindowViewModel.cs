@@ -218,7 +218,11 @@ namespace MixItUp.Base.ViewModel.Window.User
                                     {
                                         if (!string.IsNullOrEmpty(mixerUsername))
                                         {
-                                            user = new UserDataModel(mixerID, mixerUsername);
+                                            user = new UserDataModel()
+                                            {
+                                                MixerID = mixerID,
+                                                MixerUsername = mixerUsername,
+                                            };
                                         }
                                         else
                                         {
