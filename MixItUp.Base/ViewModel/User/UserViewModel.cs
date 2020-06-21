@@ -467,6 +467,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchSubscriberBadge { get; private set; }
 
+        public ChatBadgeModel TwitchBitsBadge { get; private set; }
+
         #endregion Twitch
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
@@ -812,6 +814,15 @@ namespace MixItUp.Base.ViewModel.User
                         if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(name) && ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
                         {
                             this.TwitchSubscriberBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
+                        }
+                    }
+
+                    if (this.HasTwitchBadge("bits"))
+                    {
+                        int versionID = this.GetTwitchBadgeVersion("bits");
+                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey("bits") && ChannelSession.Services.Chat.TwitchChatService.ChatBadges["bits"].versions.ContainsKey(versionID.ToString()))
+                        {
+                            this.TwitchBitsBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges["bits"].versions[versionID.ToString()];
                         }
                     }
                 }
