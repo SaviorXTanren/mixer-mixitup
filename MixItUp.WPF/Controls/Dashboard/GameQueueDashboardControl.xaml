@@ -14,7 +14,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <DataGrid ItemsSource="{Binding QueueUsers}" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+        <DataGrid ItemsSource="{Binding QueueUsers}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static resx:Resources.Position}" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="70" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />

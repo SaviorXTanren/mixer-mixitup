@@ -272,5 +272,14 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnMixerClipCreated(null, clip);
             }
         }
+
+        public static event EventHandler OnRedemptionStorePurchasesUpdated;
+        public static void RedemptionStorePurchasesUpdated()
+        {
+            if (GlobalEvents.OnRedemptionStorePurchasesUpdated != null)
+            {
+                GlobalEvents.OnRedemptionStorePurchasesUpdated(null, new EventArgs());
+            }
+        }
     }
 }
