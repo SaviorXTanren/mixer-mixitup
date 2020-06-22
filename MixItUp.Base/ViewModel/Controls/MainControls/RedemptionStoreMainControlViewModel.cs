@@ -72,7 +72,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmRefundRedemptionStorePurchase))
                 {
                     await this.Purchase.Refund();
-                    ChannelSession.Settings.RedemptionStorePurchases.Remove(this.Purchase);
                     this.viewModel.Refresh();
                 }
             });
@@ -81,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteRedemptionStorePurchase))
                 {
-                    ChannelSession.Settings.RedemptionStorePurchases.Remove(this.Purchase);
+                    this.Purchase.Remove();
                     this.viewModel.Refresh();
                 }
             });
@@ -102,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        public RedemptionStoreMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
+        public RedemptionStoreMainControlViewModel(WindowViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
 
         public void Refresh()
         {
@@ -125,5 +124,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.Refresh();
             return base.OnVisibleInternal();
         }
+
+        private void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { this.Refresh(); }
     }
 }

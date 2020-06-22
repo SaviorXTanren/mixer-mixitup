@@ -10,7 +10,11 @@ namespace MixItUp.WPF.Controls.Dashboard
     {
         public LoadingWindowBase Window { get; private set; }
 
-        public DashboardControlBase() { this.IsVisibleChanged += DashboardControlBase_IsVisibleChanged; ; }
+        public DashboardControlBase()
+        {
+            this.IsVisibleChanged += DashboardControlBase_IsVisibleChanged;
+            this.GotFocus += DashboardControlBase_GotFocus;
+        }
 
         public async Task Initialize(LoadingWindowBase window)
         {
@@ -27,6 +31,22 @@ namespace MixItUp.WPF.Controls.Dashboard
         protected virtual Task OnVisibilityChanged() { return Task.FromResult(0); }
 
         private async void DashboardControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                return;
+            }
+
+            if (this.Window != null)
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await this.OnVisibilityChanged();
+                });
+            }
+        }
+
+        private async void DashboardControlBase_GotFocus(object sender, RoutedEventArgs e)
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {

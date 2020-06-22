@@ -2946,4 +2946,7 @@
   <data name="RegularBonus" xml:space="preserve">
     <value>Regular Bonus</value>
   </data>
+  <data name="YouDoNotHavePermissions" xml:space="preserve">
+    <value>You do not have permissions to do this</value>
+  </data>
 </root>

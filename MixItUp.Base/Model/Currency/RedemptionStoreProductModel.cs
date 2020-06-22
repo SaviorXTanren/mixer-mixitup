@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -149,6 +150,8 @@ namespace MixItUp.Base.Model.Currency
                         extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
                         await ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID).Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
+
+                        GlobalEvents.RedemptionStorePurchasesUpdated();
                     }
                 }
             }
@@ -156,6 +159,15 @@ namespace MixItUp.Base.Model.Currency
 
         public static async Task Redeem(UserViewModel user, IEnumerable<string> arguments)
         {
+            if (!user.HasPermissionsTo(UserRoleEnum.Mod))
+            {
+                if (ChannelSession.Services.Chat != null)
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.YouDoNotHavePermissions);
+                }
+                return;
+            }
+
             string name = string.Join(" ", arguments);
             RedemptionStorePurchaseModel purchase = null;
 
@@ -277,6 +289,7 @@ namespace MixItUp.Base.Model.Currency
                     this.State = RedemptionStorePurchaseRedemptionState.AutoRedeemed;
                 }
             }
+            GlobalEvents.RedemptionStorePurchasesUpdated();
         }
 
         public async Task Refund()
@@ -291,6 +304,13 @@ namespace MixItUp.Base.Model.Currency
                     product.CurrentAmount++;
                 }
             }
+            this.Remove();
+        }
+
+        public void Remove()
+        {
+            ChannelSession.Settings.RedemptionStorePurchases.Remove(this);
+            GlobalEvents.RedemptionStorePurchasesUpdated();
         }
     }
 }
