@@ -132,10 +132,13 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            RankModel rank = this.RequiredRank;
-            if (rank == CurrencyModel.NoRank)
+            if (currency.IsRank && !string.IsNullOrEmpty(this.RankName))
             {
-                return false;
+                RankModel rank = this.RequiredRank;
+                if (rank == CurrencyModel.NoRank)
+                {
+                    return false;
+                }
             }
 
             return this.DoesMeetCurrencyRequirement(currency.GetAmount(userData));
