@@ -883,12 +883,7 @@ namespace MixItUp.Base.Services
             {
                 foreach (ActionBase action in command.Actions)
                 {
-                    if (action is InteractiveAction)
-                    {
-                        InteractiveAction iaction = (InteractiveAction)action;
-                        iaction.CooldownAmountString = iaction.CooldownAmount.ToString();
-                    }
-                    else if (action is CounterAction)
+                    if (action is CounterAction)
                     {
                         CounterAction cAction = (CounterAction)action;
                         newSettings.Counters[cAction.CounterName] = new CounterModel(cAction.CounterName);

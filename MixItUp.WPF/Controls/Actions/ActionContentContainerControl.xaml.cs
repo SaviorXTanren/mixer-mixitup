@@ -78,9 +78,6 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.GameQueue:
                         this.actionControl = (this.action != null) ? new GameQueueActionControl((GameQueueAction)this.action) : new GameQueueActionControl();
                         break;
-                    case ActionTypeEnum.Interactive:
-                        this.actionControl = (this.action != null) ? new InteractiveActionControl((InteractiveAction)this.action) : new InteractiveActionControl();
-                        break;
                     case ActionTypeEnum.TextToSpeech:
                         this.actionControl = (this.action != null) ? new TextToSpeechActionControl((TextToSpeechAction)this.action) : new TextToSpeechActionControl();
                         break;

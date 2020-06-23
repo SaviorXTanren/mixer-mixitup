@@ -421,9 +421,6 @@
     <Compile Include="Controls\Actions\InputActionControl.xaml.cs">
       <DependentUpon>InputActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\InteractiveActionControl.xaml.cs">
-      <DependentUpon>InteractiveActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
@@ -1194,10 +1191,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\InputActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\InteractiveActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
