@@ -22,8 +22,8 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
-        public static TwitchConnectionService TwitchUserConnection { get; private set; }
-        public static TwitchConnectionService TwitchBotConnection { get; private set; }
+        public static TwitchPlatformService TwitchUserConnection { get; private set; }
+        public static TwitchPlatformService TwitchBotConnection { get; private set; }
         public static TwitchV5API.Users.UserModel TwitchUserV5 { get; private set; }
         public static TwitchV5API.Channel.ChannelModel TwitchChannelV5 { get; private set; }
         public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
@@ -117,7 +117,7 @@ namespace MixItUp.Base
 
         public static async Task<Result> ConnectTwitchUser(bool isStreamer)
         {
-            Result<TwitchConnectionService> result = await TwitchConnectionService.ConnectUser(isStreamer);
+            Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser(isStreamer);
             if (result.Success)
             {
                 ChannelSession.TwitchUserConnection = result.Value;
@@ -138,7 +138,7 @@ namespace MixItUp.Base
 
         public static async Task<Result> ConnectTwitchBot()
         {
-            Result<TwitchConnectionService> result = await TwitchConnectionService.ConnectBot();
+            Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectBot();
             if (result.Success)
             {
                 ChannelSession.TwitchBotConnection = result.Value;
@@ -163,7 +163,7 @@ namespace MixItUp.Base
 
             // Twitch connection
 
-            Result<TwitchConnectionService> twitchResult = await TwitchConnectionService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
+            Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
             if (twitchResult.Success)
             {
                 ChannelSession.TwitchUserConnection = twitchResult.Value;
@@ -190,7 +190,7 @@ namespace MixItUp.Base
 
                 if (settings.TwitchBotOAuthToken != null)
                 {
-                    twitchResult = await TwitchConnectionService.Connect(settings.TwitchBotOAuthToken);
+                    twitchResult = await TwitchPlatformService.Connect(settings.TwitchBotOAuthToken);
                     if (twitchResult.Success)
                     {
                         ChannelSession.TwitchBotConnection = twitchResult.Value;

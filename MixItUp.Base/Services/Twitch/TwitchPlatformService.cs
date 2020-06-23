@@ -19,7 +19,7 @@ namespace MixItUp.Base.Services.Twitch
 
     }
 
-    public class TwitchConnectionService : PlatformServiceBase, ITwitchConnectionService
+    public class TwitchPlatformService : StreamingPlatformServiceBase, ITwitchConnectionService
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
@@ -78,58 +78,58 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.whispers__edit,
         };
 
-        public static async Task<Result<TwitchConnectionService>> Connect(OAuthTokenModel token)
+        public static async Task<Result<TwitchPlatformService>> Connect(OAuthTokenModel token)
         {
             try
             {
                 TwitchConnection connection = await TwitchConnection.ConnectViaOAuthToken(token);
                 if (connection != null)
                 {
-                    return new Result<TwitchConnectionService>(new TwitchConnectionService(connection));
+                    return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new Result<TwitchConnectionService>(ex);
+                return new Result<TwitchPlatformService>(ex);
             }
-            return new Result<TwitchConnectionService>("Twitch OAuth token could not be used");
+            return new Result<TwitchPlatformService>("Twitch OAuth token could not be used");
         }
 
-        public static async Task<Result<TwitchConnectionService>> ConnectUser(bool isStreamer)
+        public static async Task<Result<TwitchPlatformService>> ConnectUser(bool isStreamer)
         {
-            return await TwitchConnectionService.Connect(isStreamer ? TwitchConnectionService.StreamerScopes : TwitchConnectionService.ModeratorScopes);
+            return await TwitchPlatformService.Connect(isStreamer ? TwitchPlatformService.StreamerScopes : TwitchPlatformService.ModeratorScopes);
         }
 
-        public static async Task<Result<TwitchConnectionService>> ConnectBot()
+        public static async Task<Result<TwitchPlatformService>> ConnectBot()
         {
-            return await TwitchConnectionService.Connect(TwitchConnectionService.BotScopes);
+            return await TwitchPlatformService.Connect(TwitchPlatformService.BotScopes);
         }
 
-        public static async Task<Result<TwitchConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
+        public static async Task<Result<TwitchPlatformService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
         {
             try
             {
-                TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchConnectionService.ClientID, ChannelSession.Services.Secrets.GetSecret("TwitchSecret"),
+                TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchPlatformService.ClientID, ChannelSession.Services.Secrets.GetSecret("TwitchSecret"),
                     scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
-                    return new Result<TwitchConnectionService>(new TwitchConnectionService(connection));
+                    return new Result<TwitchPlatformService>(new TwitchPlatformService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new Result<TwitchConnectionService>(ex);
+                return new Result<TwitchPlatformService>(ex);
             }
-            return new Result<TwitchConnectionService>("Failed to connect to establish connection to Twitch");
+            return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
         }
 
         public TwitchConnection Connection { get; private set; }
 
         public override string Name { get { return "Twitch Connection"; } }
 
-        public TwitchConnectionService(TwitchConnection connection)
+        public TwitchPlatformService(TwitchConnection connection)
         {
             this.Connection = connection;
         }
@@ -192,6 +192,8 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<NewAPI.Games.GameModel> GetNewAPIGameByID(string id) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 
         public async Task<IEnumerable<NewAPI.Games.GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }
+
+        public async Task<NewAPI.Ads.AdResponseModel> RunAd(NewAPI.Users.UserModel channel, int length) { return await this.RunAsync(this.Connection.NewAPI.Ads.RunAd(channel, length)); }
 
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetChannelChatBadges(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetChannelChatBadges(channel)); }
 

@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services.Twitch
         Task Disconnect();
     }
 
-    public class TwitchEventService : PlatformServiceBase, ITwitchEventService
+    public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
         private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
         {

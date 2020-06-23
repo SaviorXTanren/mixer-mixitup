@@ -77,7 +77,7 @@ namespace MixItUp.Base.Services.Twitch
         Task RunCommercial(int lengthInSeconds);
     }
 
-    public class TwitchChatService : PlatformServiceBase, ITwitchChatService
+    public class TwitchChatService : StreamingPlatformServiceBase, ITwitchChatService
     {
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 

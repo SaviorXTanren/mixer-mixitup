@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.ActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.ActionType);
                 
-                if (this.action.ActionType == StreamingPlatformActionType.Host)
+                if (this.action.ActionType == StreamingPlatformActionType.Host || this.action.ActionType == StreamingPlatformActionType.Raid)
                 {
                     this.HostChannelNameTextBox.Text = this.action.HostChannelName;
                 }
@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.ActionTypeComboBox.SelectedIndex >= 0)
             {
                 StreamingPlatformActionType actionType = EnumHelper.GetEnumValueFromString<StreamingPlatformActionType>((string)this.ActionTypeComboBox.SelectedItem);
-                if (actionType == StreamingPlatformActionType.Host)
+                if (actionType == StreamingPlatformActionType.Host || actionType == StreamingPlatformActionType.Raid)
                 {
                     if (!string.IsNullOrEmpty(this.HostChannelNameTextBox.Text))
                     {
@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.HostGrid.Visibility = Visibility.Collapsed;
                 StreamingPlatformActionType actionType = EnumHelper.GetEnumValueFromString<StreamingPlatformActionType>((string)this.ActionTypeComboBox.SelectedItem);
-                if (actionType == StreamingPlatformActionType.Host)
+                if (actionType == StreamingPlatformActionType.Host || actionType == StreamingPlatformActionType.Raid)
                 {
                     this.HostGrid.Visibility = Visibility.Visible;
                 }
