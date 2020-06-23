@@ -7,12 +7,8 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
-using MixItUp.WPF.Controls.MainControls;
-using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Currency;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -86,11 +82,6 @@ namespace MixItUp.WPF.Controls.Command
                 else if (commandButtonsControl.DataContext is EventCommandItemViewModel)
                 {
                     EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandButtonsControl.DataContext;
-                    return (T)((CommandBase)commandItem.Command);
-                }
-                else if (commandButtonsControl.DataContext is MixPlayControlViewModel)
-                {
-                    MixPlayControlViewModel commandItem = (MixPlayControlViewModel)commandButtonsControl.DataContext;
                     return (T)((CommandBase)commandItem.Command);
                 }
             }
@@ -270,14 +261,6 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
                             break;
                     }
-                }
-                else if (command is MixPlayCommand)
-                {
-                    MixPlayCommand iCommand = (MixPlayCommand)command;
-
-                    extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
-                    extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
-                    extraSpecialIdentifiers["mixplaycontroltext"] = "Button Name";
                 }
                 else if (command is CustomCommand)
                 {

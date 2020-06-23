@@ -100,7 +100,6 @@ namespace MixItUp.Base
                 List<CommandBase> commands = new List<CommandBase>();
                 commands.AddRange(ChannelSession.AllChatCommands);
                 commands.AddRange(ChannelSession.Settings.EventCommands);
-                commands.AddRange(ChannelSession.Settings.MixPlayCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
                 return commands;
@@ -715,25 +714,6 @@ namespace MixItUp.Base
                             if (ChannelSession.Settings.RemoteHostConnection != null)
                             {
                                 await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                            }
-
-                            if (ChannelSession.Settings.DefaultMixPlayGame > 0)
-                            {
-                                IEnumerable<MixPlayGameListingModel> games = await ChannelSession.MixerUserConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
-                                MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
-                                if (game != null)
-                                {
-                                    await ChannelSession.Services.MixPlay.SetGame(game);
-                                    result = await ChannelSession.Services.MixPlay.Connect();
-                                    if (!result.Success)
-                                    {
-                                        await ChannelSession.Services.MixPlay.Disconnect();
-                                    }
-                                }
-                                else
-                                {
-                                    ChannelSession.Settings.DefaultMixPlayGame = 0;
-                                }
                             }
 
                             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)

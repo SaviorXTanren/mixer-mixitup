@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -16,6 +14,7 @@ namespace MixItUp.Base.Actions
         ChatTimeout,
         [Name("Purge User")]
         PurgeUser,
+        [Obsolete]
         [Name("MixPlay Timeout")]
         InteractiveTimeout,
         [Name("Ban User")]
@@ -125,13 +124,6 @@ namespace MixItUp.Base.Actions
                             if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
                             {
                                 await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
-                            }
-                            else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
-                            {
-                                if (targetUser != null && ChannelSession.Services.MixPlay.IsConnected)
-                                {
-                                    await ChannelSession.Services.MixPlay.TimeoutUser(targetUser, (int)timeAmount);
-                                }
                             }
                         }
                     }

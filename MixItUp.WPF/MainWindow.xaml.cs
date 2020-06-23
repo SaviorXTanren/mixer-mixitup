@@ -136,7 +136,6 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.MixPlay, new MixPlayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/MixPlay");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Remote, new RemoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Remote");

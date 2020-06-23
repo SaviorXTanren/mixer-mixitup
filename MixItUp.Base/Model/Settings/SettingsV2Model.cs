@@ -3,7 +3,6 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Favorites;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -15,7 +14,6 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -201,25 +199,6 @@ namespace MixItUp.Base.Model.Settings
         public int NotificationServiceDisconnectSoundVolume { get; set; } = 100;
 
         #endregion Notifications
-
-        #region MixPlay
-
-        [DataMember]
-        public uint DefaultMixPlayGame { get; set; }
-        [DataMember]
-        public bool PreventUnknownMixPlayUsers { get; set; }
-        [DataMember]
-        public bool PreventSmallerMixPlayCooldowns { get; set; }
-        [DataMember]
-        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
-
-        [DataMember]
-        public Dictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
-
-        [DataMember]
-        public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; } = new Dictionary<uint, JObject>();
-
-        #endregion MixPlay
 
         #region Users
 
@@ -504,8 +483,6 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseList<EventCommand> EventCommands { get; set; } = new DatabaseList<EventCommand>();
         [JsonIgnore]
-        public DatabaseList<MixPlayCommand> MixPlayCommands { get; set; } = new DatabaseList<MixPlayCommand>();
-        [JsonIgnore]
         public DatabaseList<TimerCommand> TimerCommands { get; set; } = new DatabaseList<TimerCommand>();
         [JsonIgnore]
         public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
@@ -614,10 +591,6 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.EventCommands.Add(JSONSerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
                     }
-                    else if (type == CommandTypeEnum.Interactive)
-                    {
-                        this.MixPlayCommands.Add(JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
-                    }
                     else if (type == CommandTypeEnum.Timer)
                     {
                         this.TimerCommands.Add(JSONSerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
@@ -639,7 +612,6 @@ namespace MixItUp.Base.Model.Settings
 
                 this.ChatCommands.ClearTracking();
                 this.EventCommands.ClearTracking();
-                this.MixPlayCommands.ClearTracking();
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
@@ -756,8 +728,7 @@ namespace MixItUp.Base.Model.Settings
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames =
-                this.MixPlayCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
-                .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
             var allUnusedCooldownGroupNames = this.CooldownGroups.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
@@ -792,7 +763,6 @@ namespace MixItUp.Base.Model.Settings
                 List<Guid> removedCommands = new List<Guid>();
                 removedCommands.AddRange(this.ChatCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.EventCommands.GetRemovedValues().Select(c => c.ID));
-                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.TimerCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
@@ -803,7 +773,6 @@ namespace MixItUp.Base.Model.Settings
                 List<CommandBase> addedChangedCommands = new List<CommandBase>();
                 addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());

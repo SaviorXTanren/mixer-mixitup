@@ -479,12 +479,6 @@
     <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
       <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicMixPlayButtonCommandEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicMixPlayTextBoxCommandEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
     </Compile>
@@ -494,12 +488,6 @@
     </Compile>
     <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
       <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayJoystickCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayTextBoxCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
@@ -540,9 +528,6 @@
     </Compile>
     <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
       <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
-      <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
@@ -614,16 +599,6 @@
     <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
       <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
-    <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
-      <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\FlySwatterInteractiveControl.xaml.cs">
-      <DependentUpon>FlySwatterInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
-      <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
@@ -641,9 +616,6 @@
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
-    <Compile Include="Controls\MainControls\MixPlayControl.xaml.cs">
-      <DependentUpon>MixPlayControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
@@ -775,9 +747,6 @@
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
-      <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
       <DependentUpon>UserDialogControl.xaml</DependentUpon>
     </Compile>
@@ -800,9 +769,6 @@
     <Compile Include="Controls\Command\CommandDetailsControlBase.cs" />
     <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
       <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayButtonCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
@@ -953,9 +919,6 @@
     <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
       <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\InteractiveSettingsControl.xaml.cs">
-      <DependentUpon>InteractiveSettingsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
       <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
     </Compile>
@@ -1031,7 +994,6 @@
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\MixerUserController.cs" />
-    <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
@@ -1267,14 +1229,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1284,14 +1238,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Command\EmptyCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1344,10 +1290,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CommandSelectorDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1443,18 +1385,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Interactive\DropMapInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\FlySwatterInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\MixerPaintInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\LicenseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1474,10 +1404,6 @@
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\MainControls\MixPlayControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
       <SubType>Designer</SubType>
@@ -1651,10 +1577,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Dialogs\UserDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1688,10 +1610,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\EventCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1888,10 +1806,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\HotKeysSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Settings\InteractiveSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

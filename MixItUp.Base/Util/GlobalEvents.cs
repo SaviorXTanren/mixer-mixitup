@@ -1,7 +1,5 @@
 ﻿using Mixer.Base.Model.Clips;
-using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -72,33 +70,6 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnAlertMessageReceived != null)
             {
                 GlobalEvents.OnAlertMessageReceived(null, alertMessage);
-            }
-        }
-
-        public static event EventHandler<MixPlaySharedProjectModel> OnInteractiveSharedProjectAdded;
-        public static void InteractiveSharedProjectAdded(MixPlaySharedProjectModel sharedProject)
-        {
-            if (GlobalEvents.OnInteractiveSharedProjectAdded != null)
-            {
-                GlobalEvents.OnInteractiveSharedProjectAdded(null, sharedProject);
-            }
-        }
-
-        public static event EventHandler<MixPlayGameModel> OnInteractiveConnected;
-        public static void InteractiveConnected(MixPlayGameModel game)
-        {
-            if (GlobalEvents.OnInteractiveConnected != null)
-            {
-                GlobalEvents.OnInteractiveConnected(null, game);
-            }
-        }
-
-        public static event EventHandler OnInteractiveDisconnected;
-        public static void InteractiveDisconnected()
-        {
-            if (GlobalEvents.OnInteractiveDisconnected != null)
-            {
-                GlobalEvents.OnInteractiveDisconnected(null, new EventArgs());
             }
         }
 

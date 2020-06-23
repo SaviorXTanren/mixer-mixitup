@@ -3,12 +3,10 @@ using Mixer.Base.Model.Channel;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
@@ -634,7 +632,6 @@ namespace MixItUp.Base.Services
 
             commands.AddRange(settings.ChatCommands);
             commands.AddRange(settings.EventCommands);
-            commands.AddRange(settings.MixPlayCommands);
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
@@ -857,7 +854,6 @@ namespace MixItUp.Base.Services
             newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
             newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
             newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
-            newSettings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(oldSettings.mixPlayUserGroupsInternal);
             newSettings.OverlayWidgets = new List<OverlayWidgetModel>(oldSettings.overlayWidgetModelsInternal);
             newSettings.Currencies = oldSettings.currenciesInternal;
             newSettings.Inventories = oldSettings.inventoriesInternal;
@@ -866,7 +862,6 @@ namespace MixItUp.Base.Services
 
             newSettings.ChatCommands.AddRange(oldSettings.chatCommandsInternal);
             newSettings.EventCommands.AddRange(oldSettings.eventCommandsInternal);
-            newSettings.MixPlayCommands.AddRange(oldSettings.mixPlayCmmandsInternal);
             newSettings.TimerCommands.AddRange(oldSettings.timerCommandsInternal);
             newSettings.ActionGroupCommands.AddRange(oldSettings.actionGroupCommandsInternal);
             newSettings.GameCommands.AddRange(oldSettings.gameCommandsInternal);
@@ -925,7 +920,6 @@ namespace MixItUp.Base.Services
 
             commands.AddRange(settings.ChatCommands);
             commands.AddRange(settings.EventCommands);
-            commands.AddRange(settings.MixPlayCommands);
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);

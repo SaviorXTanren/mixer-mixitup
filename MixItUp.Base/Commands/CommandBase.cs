@@ -17,6 +17,7 @@ namespace MixItUp.Base.Commands
     public enum CommandTypeEnum
     {
         Chat = 0,
+        [Obsolete]
         [Name("MixPlay")]
         Interactive = 1,
         Event = 2,

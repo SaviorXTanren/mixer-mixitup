@@ -2,7 +2,6 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -132,8 +131,6 @@ namespace MixItUp.Base.Model.Settings
         public bool PreventUnknownMixPlayUsers { get; set; }
         [JsonProperty]
         public bool PreventSmallerMixPlayCooldowns { get; set; }
-        [JsonProperty]
-        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
 
         [JsonProperty]
         public int RegularUserMinimumHours { get; set; }
@@ -375,8 +372,6 @@ namespace MixItUp.Base.Model.Settings
         [JsonProperty]
         public List<EventCommand> eventCommandsInternal { get; set; } = new List<EventCommand>();
         [JsonProperty]
-        public List<MixPlayCommand> mixPlayCmmandsInternal { get; set; } = new List<MixPlayCommand>();
-        [JsonProperty]
         public List<TimerCommand> timerCommandsInternal { get; set; } = new List<TimerCommand>();
         [JsonProperty]
         public List<ActionGroupCommand> actionGroupCommandsInternal { get; set; } = new List<ActionGroupCommand>();
@@ -398,12 +393,6 @@ namespace MixItUp.Base.Model.Settings
         public List<string> filteredWordsInternal { get; set; } = new List<string>();
         [JsonProperty]
         public List<string> bannedWordsInternal { get; set; } = new List<string>();
-
-        [JsonProperty]
-        public Dictionary<uint, List<MixPlayUserGroupModel>> mixPlayUserGroupsInternal { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
-        [JsonProperty]
-        [Obsolete]
-        public Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
 
         public SettingsV1Model() { }
 

@@ -30,7 +30,6 @@ namespace MixItUp.Base.Services
         public EventStatisticDataTrackerModel GiftedSubscriptionsTracker { get; private set; }
         public StaticTextStatisticDataTrackerModel AllSubsTracker { get; private set; }
 
-        public EventStatisticDataTrackerModel MixPlayTracker { get; private set; }
         public EventStatisticDataTrackerModel SparksTracker { get; private set; }
         public EventStatisticDataTrackerModel EmbersTracker { get; private set; }
         public StaticTextStatisticDataTrackerModel MilestoneTracker { get; private set; }
@@ -50,8 +49,6 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
-
-            ChannelSession.Services.MixPlay.OnControlUsed += MixPlay_OnControlUsed;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
@@ -104,11 +101,6 @@ namespace MixItUp.Base.Services
                 staticStats.AddValue(Resources.Gifted, ChannelSession.Services.Statistics?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
 
                 return Task.FromResult(0);
-            });
-
-            this.MixPlayTracker = new EventStatisticDataTrackerModel("MixPlay", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
-            {
-                return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.AverageString);
             });
 
             this.SparksTracker = new EventStatisticDataTrackerModel("Sparks", "/Assets/Images/Sparks.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTrackerModel dataTracker) =>
@@ -180,7 +172,6 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.SubscriberTracker);
             this.Statistics.Add(this.ResubscriberTracker);
             this.Statistics.Add(this.GiftedSubscriptionsTracker);
-            this.Statistics.Add(this.MixPlayTracker);
             this.Statistics.Add(this.SparksTracker);
             this.Statistics.Add(this.EmbersTracker);
             this.Statistics.Add(this.MilestoneTracker);
@@ -215,11 +206,6 @@ namespace MixItUp.Base.Services
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
             this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
-        }
-
-        private void MixPlay_OnControlUsed(object sender, MixPlayInputEvent e)
-        {
-            this.MixPlayTracker.OnStatisticEventOccurred(e.Control.controlID, e.User.Username);
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)

@@ -3,7 +3,6 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -15,10 +14,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
-using Twitch.Base.Models.NewAPI.Users;
-using TwitchV5API = Twitch.Base.Models.V5;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using Twitch.Base.Models.NewAPI.Chat;
+using Twitch.Base.Models.NewAPI.Users;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
+using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -136,15 +135,6 @@ namespace MixItUp.Base.ViewModel.User
             this.SetMixerUserRoles(chatUser.user_roles);
 
             this.IsInChat = true;
-        }
-
-        public UserViewModel(MixPlayParticipantModel participant)
-            : this(mixerID: participant.userID)
-        {
-            this.MixerID = participant.userID;
-            this.MixerUsername = participant.username;
-
-            this.SetMixerMixPlayDetails(participant);
         }
 
         public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
@@ -745,21 +735,6 @@ namespace MixItUp.Base.ViewModel.User
         public void RemoveMixerChatDetails(ChatUserModel chatUser)
         {
             this.IsInChat = false;
-        }
-
-        public void SetMixerMixPlayDetails(MixPlayParticipantModel participant)
-        {
-            this.InteractiveIDs[participant.sessionID] = participant;
-            this.InteractiveGroupID = participant.groupID;
-        }
-
-        public void RemoveMixerMixPlayDetails(MixPlayParticipantModel participant)
-        {
-            this.InteractiveIDs.Remove(participant.sessionID);
-            if (this.InteractiveIDs.Count == 0)
-            {
-                this.InteractiveGroupID = MixPlayUserGroupModel.DefaultName;
-            }
         }
 
         #endregion Mixer Data Setter Functions

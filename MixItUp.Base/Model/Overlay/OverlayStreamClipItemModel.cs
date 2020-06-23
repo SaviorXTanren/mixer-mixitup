@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             return null;
         }

@@ -39,15 +39,11 @@ namespace MixItUp.Base.Services
 
         Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser);
 
-        Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser);
-
         Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
 
         Task<UserViewModel> RemoveUser(ChatUserEventModel chatUser);
 
         Task<UserViewModel> RemoveUser(ChatUserModel chatUser);
-
-        Task<UserViewModel> RemoveUser(MixPlayParticipantModel mixplayUser);
 
         Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin);
 
@@ -175,22 +171,6 @@ namespace MixItUp.Base.Services
             return user;
         }
 
-        public async Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser)
-        {
-            UserViewModel user = new UserViewModel(mixplayUser);
-            if (mixplayUser.userID > 0 && !string.IsNullOrEmpty(mixplayUser.sessionID))
-            {
-                if (this.usersByMixerID.ContainsKey(mixplayUser.userID))
-                {
-                    user = this.usersByMixerID[mixplayUser.userID];
-                }
-                user.SetMixerMixPlayDetails(mixplayUser);
-                this.usersByMixPlayID[mixplayUser.sessionID] = user;
-                await this.AddOrUpdateUser(user);
-            }
-            return user;
-        }
-
         public async Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser)
         {
             if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
@@ -254,21 +234,6 @@ namespace MixItUp.Base.Services
             {
                 user.RemoveMixerChatDetails(chatUser);
                 if (user.InteractiveIDs.Count == 0)
-                {
-                    await this.RemoveUser(user);
-                }
-                return user;
-            }
-            return null;
-        }
-
-        public async Task<UserViewModel> RemoveUser(MixPlayParticipantModel mixplayUser)
-        {
-            if (this.usersByMixPlayID.TryGetValue(mixplayUser.sessionID, out UserViewModel user))
-            {
-                this.usersByMixPlayID.Remove(mixplayUser.sessionID);
-                user.RemoveMixerMixPlayDetails(mixplayUser);
-                if (user.InteractiveIDs.Count == 0 && !user.IsInChat)
                 {
                     await this.RemoveUser(user);
                 }
