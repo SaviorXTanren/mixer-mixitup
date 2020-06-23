@@ -607,9 +607,6 @@
     <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
       <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
-      <DependentUpon>SongRequestControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
       <DependentUpon>StreamPassControl.xaml</DependentUpon>
     </Compile>
@@ -821,9 +818,6 @@
     </Compile>
     <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
       <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
-      <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
@@ -1345,10 +1339,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\SongRequestControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\StreamPassControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1630,10 +1620,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\JustGivingServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Services\MixerBotAccountServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
