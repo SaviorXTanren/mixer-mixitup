@@ -25,14 +25,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.AccountsDetails}"/>
 
-        <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding Mixer}" />
-
-        <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
+        <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding Twitch}" />
     </Grid>
 </local:MainControlBase>

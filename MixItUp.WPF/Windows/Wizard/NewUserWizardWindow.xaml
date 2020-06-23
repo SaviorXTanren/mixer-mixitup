@@ -116,17 +116,13 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsWizardInstructions}"/>
 
                     <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsDetails}"/>
 
-                    <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
-
-                    <AccountControls:StreamingPlatformAccountControl Grid.Row="6" DataContext="{Binding Twitch}" />
+                    <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
                 </Grid>
 
                 <Grid Visibility="{Binding ScorpBotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">

@@ -1,7 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -119,7 +117,6 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Image, "Shows an image. Refreshes based on user-defined Refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Leaderboard, "Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval"));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamClip, "Shows the video & audio footage of a Stream Clip when it is taken."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SparkCrystal, "Shows the current progress on the channel's spark crystal patronage. Progress is updated as spark patronage occurs."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamBoss, "Shows a user from your channel as a \"boss\" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Text, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.TickerTape, "Shows a scrolling list of text of the last X many users that caused a specified event to occur. Users are added to the list as the event occurs."));

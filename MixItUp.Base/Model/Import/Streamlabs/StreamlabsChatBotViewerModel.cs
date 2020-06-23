@@ -9,7 +9,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
         [DataMember]
-        public uint ID { get; set; }
+        public string ID { get; set; }
         [DataMember]
         public string Name { get; set; }
         [DataMember]

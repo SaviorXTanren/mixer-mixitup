@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.TestStreams;
 using MixItUp.Base.Model;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -28,11 +27,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                {
-                    return "/Assets/Images/Mixer.png";
-                }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     return "/Assets/Images/Twitch.png";
                 }
@@ -69,11 +64,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                {
-                    return ChannelSession.MixerUserConnection != null;
-                }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     return ChannelSession.TwitchUserConnection != null;
                 }
@@ -108,11 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                {
-                    return ChannelSession.MixerBotConnection != null;
-                }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     return ChannelSession.TwitchBotConnection != null;
                 }
@@ -126,12 +113,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
 
             if (this.IsUserAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                {
-                    this.UserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
-                    this.UserAccountUsername = ChannelSession.MixerUser.username;
-                }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
                     this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
@@ -139,12 +121,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
             }
             if (this.IsBotAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                {
-                    this.BotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
-                    this.BotAccountUsername = ChannelSession.MixerBot.username;
-                }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
                     this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
@@ -165,16 +142,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 else
                 {
                     Result result = new Result(false);
-                    if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                    {
-                        result = await ChannelSession.ConnectMixerUser(isStreamer: true);
-                        if (result.Success)
-                        {
-                            this.UserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
-                            this.UserAccountUsername = ChannelSession.MixerUser.username;
-                        }
-                    }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
                         if (result.Success)
@@ -199,11 +167,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
             {
                 if (this.IsBotAccountConnected)
                 {
-                    if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                    {
-                        await ChannelSession.DisconnectMixerBot();
-                    }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         await ChannelSession.DisconnectTwitchBot();
                     }
@@ -213,33 +177,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 else
                 {
                     Result result = new Result(false);
-                    if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                    {
-                        result = await ChannelSession.ConnectMixerBot();
-                        if (result.Success)
-                        {
-                            TestStreamSettingsModel testStreamSettings = await ChannelSession.MixerUserConnection.GetTestStreamSettings(ChannelSession.MixerChannel);
-                            if (testStreamSettings != null && testStreamSettings.isActive.GetValueOrDefault())
-                            {
-                                if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.TestStreamWarning))
-                                {
-                                    await ChannelSession.DisconnectMixerBot();
-                                    return;
-                                }
-                            }
-
-                            if (ChannelSession.MixerBot.id.Equals(ChannelSession.MixerUser.id))
-                            {
-                                await DialogHelper.ShowMessage(MixItUp.Base.Resources.IncorrectBotAccount);
-                                await ChannelSession.DisconnectMixerBot();
-                                return;
-                            }
-
-                            this.BotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
-                            this.BotAccountUsername = ChannelSession.MixerBot.username;
-                        }
-                    }
-                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         result = await ChannelSession.ConnectTwitchBot();
                         if (result.Success)
