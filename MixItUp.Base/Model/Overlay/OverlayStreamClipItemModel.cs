@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Clips;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -17,7 +16,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double Duration { get; set; }
 
-        private ClipModel lastClip = null;
         private string lastClipURL = null;
 
         public OverlayStreamClipItemModel() : base() { }
@@ -61,12 +59,6 @@ namespace MixItUp.Base.Model.Overlay
         public override Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             return null;
-        }
-
-        private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)
-        {
-            this.lastClip = clip;
-            this.SendUpdateRequired();
         }
     }
 }

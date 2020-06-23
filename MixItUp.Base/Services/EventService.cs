@@ -2,7 +2,6 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;

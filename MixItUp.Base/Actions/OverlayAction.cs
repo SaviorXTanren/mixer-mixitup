@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -21,19 +19,6 @@ namespace MixItUp.Base.Actions
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return OverlayAction.asyncSemaphore; } }
-
-        [DataMember]
-        [Obsolete]
-        public OverlayEffectBase Effect { get; set; }
-        [DataMember]
-        [Obsolete]
-        public OverlayItemBase Item { get; set; }
-        [DataMember]
-        [Obsolete]
-        public OverlayItemPosition Position { get; set; }
-        [DataMember]
-        [Obsolete]
-        public OverlayItemEffects Effects { get; set; }
 
         [DataMember]
         public string OverlayName { get; set; }

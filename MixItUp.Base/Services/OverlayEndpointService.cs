@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.Client;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;

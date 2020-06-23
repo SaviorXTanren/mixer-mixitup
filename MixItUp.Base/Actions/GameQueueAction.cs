@@ -1,8 +1,5 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;

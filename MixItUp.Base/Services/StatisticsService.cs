@@ -1,11 +1,9 @@
-﻿using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Model.Statistics;
+﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services

@@ -1,12 +1,9 @@
-﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Channel;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
@@ -59,42 +56,6 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<SettingsV2Model>> GetAllSettings()
         {
-            // Check for old V1 settings
-#pragma warning disable CS0612 // Type or member is obsolete
-            List<SettingsV1Model> oldSettings = new List<SettingsV1Model>();
-
-            string[] filePaths = Directory.GetFiles(SettingsV2Model.SettingsDirectoryName);
-            if (filePaths.Any(filePath => filePath.EndsWith(SettingsV1Model.SettingsFileExtension)))
-            {
-                await DialogHelper.ShowMessage("We've detected version 1 settings in your installation and will now upgrade them to version 2. This will take some time depending on how large your settings data is, particularly the number of individual users we have data for from your stream."
-                    + Environment.NewLine + Environment.NewLine + "Prior to performing the upgrade, we will automatically back up your version 1 settings to keep them intact. In the event of any issues with the upgrade, don't worry! Your old settings are save and we'll help you in our Discord server to figure out what the issue is, then you can just re-upgrade your old settings."
-                    + Environment.NewLine + Environment.NewLine + "If you have a large amount of user data, we suggest going to grab a cup of coffee and come back in a few minutes after dismissing this message. :)");
-
-                foreach (string filePath in filePaths)
-                {
-                    if (filePath.EndsWith(SettingsV1Model.SettingsFileExtension))
-                    {
-                        try
-                        {
-                            SettingsV1Model setting = await SettingsV1Upgrader.UpgradeSettingsToLatest(filePath);
-
-                            string oldSettingsPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old");
-                            Directory.CreateDirectory(oldSettingsPath);
-
-                            await ChannelSession.Services.FileService.CopyFile(filePath, Path.Combine(oldSettingsPath, Path.GetFileName(filePath)));
-                            await ChannelSession.Services.FileService.CopyFile(setting.DatabaseFilePath, Path.Combine(oldSettingsPath, setting.DatabaseFileName));
-
-                            await ChannelSession.Services.FileService.DeleteFile(filePath);
-                            await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath);
-                            await ChannelSession.Services.FileService.DeleteFile(filePath + ".backup");
-                            await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath + ".backup");
-                        }
-                        catch (Exception ex) { Logger.Log(ex); }
-                    }
-                }
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-
             bool backupSettingsLoaded = false;
             bool settingsLoadFailure = false;
 
@@ -236,7 +197,6 @@ namespace MixItUp.Base.Services
                 string settingsFile = null;
                 string databaseFile = null;
 
-                bool oldBackup = false;
                 try
                 {
                     using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Read))
@@ -257,51 +217,38 @@ namespace MixItUp.Base.Services
                             {
                                 databaseFile = extractedFilePath;
                             }
-#pragma warning disable CS0612 // Type or member is obsolete
-                            else if (extractedFilePath.EndsWith(SettingsV1Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
-#pragma warning restore CS0612 // Type or member is obsolete
-                            {
-                                oldBackup = true;
-                            }
                         }
                         zipFile.ExtractToDirectory(tempFolder);
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
-                if (oldBackup)
+                int currentVersion = -1;
+                if (!string.IsNullOrEmpty(settingsFile))
                 {
-                    return new Result<SettingsV2Model>("This backup is from an older version of Mix It Up and can not be imported directly. Please head to the Mix It Up Discord for assistance on how to import this backup.");
+                    currentVersion = await SettingsV2Upgrader.GetSettingsVersion(settingsFile);
                 }
-                else
+
+                if (currentVersion == -1)
                 {
-                    int currentVersion = -1;
-                    if (!string.IsNullOrEmpty(settingsFile))
-                    {
-                        currentVersion = await SettingsV2Upgrader.GetSettingsVersion(settingsFile);
-                    }
-
-                    if (currentVersion == -1)
-                    {
-                        return new Result<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
-                    }
-
-                    if (currentVersion > SettingsV2Model.LatestVersion)
-                    {
-                        return new Result<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
-                            Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
-                    }
-
-                    SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile);
-
-                    if (ChannelSession.Settings.IsStreamer != settings.IsStreamer || ChannelSession.Settings.MixerUserID != settings.MixerUserID || ChannelSession.Settings.MixerChannelID != settings.MixerChannelID)
-                    {
-                        return new Result<SettingsV2Model>("The account information in the backup you are trying to restore does not match the currently logged in account." +
-                            Environment.NewLine + Environment.NewLine + "Please sign-in with the correct account in order to restore this backup");
-                    }
-
-                    return new Result<SettingsV2Model>(settings);
+                    return new Result<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
                 }
+
+                if (currentVersion > SettingsV2Model.LatestVersion)
+                {
+                    return new Result<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                        Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
+                }
+
+                SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile);
+
+                if (ChannelSession.Settings.IsStreamer != settings.IsStreamer || ChannelSession.Settings.MixerUserID != settings.MixerUserID || ChannelSession.Settings.MixerChannelID != settings.MixerChannelID)
+                {
+                    return new Result<SettingsV2Model>("The account information in the backup you are trying to restore does not match the currently logged in account." +
+                        Environment.NewLine + Environment.NewLine + "Please sign-in with the correct account in order to restore this backup");
+                }
+
+                return new Result<SettingsV2Model>(settings);
             }
             catch (Exception ex)
             {
@@ -686,315 +633,4 @@ namespace MixItUp.Base.Services
             return commands.Where(c => c != null);
         }
     }
-
-    #region Settings V1 Upgrader
-
-#pragma warning disable CS0612 // Type or member is obsolete
-    internal static class SettingsV1Upgrader
-    {
-        internal static async Task<SettingsV1Model> UpgradeSettingsToLatest(string filePath)
-        {
-            await SettingsV1Upgrader.Version39Upgrade(filePath);
-            SettingsV1Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
-            return settings;
-        }
-
-        public static async Task Version39Upgrade(string filePath)
-        {
-            Logger.Log(LogLevel.Debug, "Upgrading the following settings to V2: " + filePath);
-
-            Logger.Log(LogLevel.Debug, "Loading in V1 data");
-
-            SettingsV1Model oldSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
-            await oldSettings.LoadUserData();
-
-            Logger.Log(LogLevel.Debug, "Migrating V1 data to V2");
-
-            SettingsV2Model newSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-            if (newSettings == null)
-            {
-                string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
-                fileContents = fileContents.Replace("MixItUp.Base.Model.Settings.SettingsV1Model, MixItUp.Base", "MixItUp.Base.Model.Settings.SettingsV2Model, MixItUp.Base");
-                newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV2Model>(fileContents, ignoreErrors: true);
-            }
-            await ChannelSession.Services.Settings.Initialize(newSettings);
-
-            // Update old commands with new properties
-
-            int quoteID = 1;
-            foreach (UserQuoteViewModel quote in oldSettings.userQuotesInternal)
-            {
-                quote.ID = quoteID;
-                quoteID++;
-            }
-
-            foreach (EventCommand command in oldSettings.eventCommandsInternal)
-            {
-                if (command.OtherEventType != OtherEventTypeEnum.None)
-                {
-                    switch (command.OtherEventType)
-                    {
-                        case OtherEventTypeEnum.MixerChannelStreamStart:
-                            command.EventCommandType = EventTypeEnum.MixerChannelStreamStart;
-                            break;
-                        case OtherEventTypeEnum.MixerChannelStreamStop:
-                            command.EventCommandType = EventTypeEnum.MixerChannelStreamStop;
-                            break;
-                        case OtherEventTypeEnum.ChatUserUnfollow:
-                            command.EventCommandType = EventTypeEnum.MixerChannelUnfollowed;
-                            break;
-                        case OtherEventTypeEnum.MixerSparksUsed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelSparksUsed;
-                            break;
-                        case OtherEventTypeEnum.MixerEmbersUsed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelEmbersUsed;
-                            break;
-                        case OtherEventTypeEnum.MixerSkillUsed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelSkillUsed;
-                            break;
-                        case OtherEventTypeEnum.ChatUserFirstJoin:
-                            command.EventCommandType = EventTypeEnum.ChatUserFirstJoin;
-                            break;
-                        case OtherEventTypeEnum.ChatUserJoined:
-                            command.EventCommandType = EventTypeEnum.ChatUserJoined;
-                            break;
-                        case OtherEventTypeEnum.ChatUserLeft:
-                            command.EventCommandType = EventTypeEnum.ChatUserLeft;
-                            break;
-                        case OtherEventTypeEnum.ChatUserPurge:
-                            command.EventCommandType = EventTypeEnum.ChatUserPurge;
-                            break;
-                        case OtherEventTypeEnum.ChatUserBan:
-                            command.EventCommandType = EventTypeEnum.ChatUserBan;
-                            break;
-                        case OtherEventTypeEnum.ChatMessageReceived:
-                            command.EventCommandType = EventTypeEnum.ChatMessageReceived;
-                            break;
-                        case OtherEventTypeEnum.ChatMessageDeleted:
-                            command.EventCommandType = EventTypeEnum.ChatMessageDeleted;
-                            break;
-                        case OtherEventTypeEnum.StreamlabsDonation:
-                            command.EventCommandType = EventTypeEnum.StreamlabsDonation;
-                            break;
-                        case OtherEventTypeEnum.TipeeeStreamDonation:
-                            command.EventCommandType = EventTypeEnum.TipeeeStreamDonation;
-                            break;
-                        case OtherEventTypeEnum.TreatStreamDonation:
-                            command.EventCommandType = EventTypeEnum.TreatStreamDonation;
-                            break;
-                        case OtherEventTypeEnum.StreamJarDonation:
-                            command.EventCommandType = EventTypeEnum.StreamJarDonation;
-                            break;
-                        case OtherEventTypeEnum.TiltifyDonation:
-                            command.EventCommandType = EventTypeEnum.TiltifyDonation;
-                            break;
-                        case OtherEventTypeEnum.ExtraLifeDonation:
-                            command.EventCommandType = EventTypeEnum.ExtraLifeDonation;
-                            break;
-                        case OtherEventTypeEnum.JustGivingDonation:
-                            command.EventCommandType = EventTypeEnum.JustGivingDonation;
-                            break;
-                        case OtherEventTypeEnum.PatreonSubscribed:
-                            command.EventCommandType = EventTypeEnum.PatreonSubscribed;
-                            break;
-                        case OtherEventTypeEnum.StreamlootsCardRedeemed:
-                            command.EventCommandType = EventTypeEnum.StreamlootsCardRedeemed;
-                            break;
-                        case OtherEventTypeEnum.StreamlootsPackPurchased:
-                            command.EventCommandType = EventTypeEnum.StreamlootsPackPurchased;
-                            break;
-                        case OtherEventTypeEnum.StreamlootsPackGifted:
-                            command.EventCommandType = EventTypeEnum.StreamlootsPackGifted;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (command.EventType)
-                    {
-                        case ConstellationEventTypeEnum.channel__id__followed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelFollowed;
-                            break;
-                        case ConstellationEventTypeEnum.channel__id__hosted:
-                            command.EventCommandType = EventTypeEnum.MixerChannelHosted;
-                            break;
-                        case ConstellationEventTypeEnum.channel__id__subscribed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelSubscribed;
-                            break;
-                        case ConstellationEventTypeEnum.channel__id__resubscribed:
-                            command.EventCommandType = EventTypeEnum.MixerChannelResubscribed;
-                            break;
-                        case ConstellationEventTypeEnum.channel__id__subscriptionGifted:
-                            command.EventCommandType = EventTypeEnum.MixerChannelSubscriptionGifted;
-                            break;
-                        case ConstellationEventTypeEnum.progression__id__levelup:
-                            command.EventCommandType = EventTypeEnum.MixerChannelFanProgressionLevelUp;
-                            break;
-                    }
-                }
-            }
-
-            // Copy old values into new settings
-
-            if (oldSettings.Channel != null)
-            {
-                newSettings.Name = oldSettings.Channel.token;
-                newSettings.MixerChannelID = oldSettings.Channel.id;
-            }
-            newSettings.TelemetryUserID = oldSettings.TelemetryUserId;
-
-            newSettings.RemoteProfiles = new List<RemoteProfileModel>(oldSettings.remoteProfilesInternal);
-            newSettings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(oldSettings.remoteProfileBoardsInternal);
-            newSettings.FilteredWords = new List<string>(oldSettings.filteredWordsInternal);
-            newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
-            newSettings.OverlayWidgets = new List<OverlayWidgetModel>(oldSettings.overlayWidgetModelsInternal);
-            newSettings.Currencies = oldSettings.currenciesInternal;
-            newSettings.Inventories = oldSettings.inventoriesInternal;
-            newSettings.CooldownGroups = new Dictionary<string, int>(oldSettings.cooldownGroupsInternal);
-            newSettings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(oldSettings.preMadeChatCommandSettingsInternal);
-
-            newSettings.ChatCommands.AddRange(oldSettings.chatCommandsInternal);
-            newSettings.EventCommands.AddRange(oldSettings.eventCommandsInternal);
-            newSettings.TimerCommands.AddRange(oldSettings.timerCommandsInternal);
-            newSettings.ActionGroupCommands.AddRange(oldSettings.actionGroupCommandsInternal);
-            newSettings.GameCommands.AddRange(oldSettings.gameCommandsInternal);
-            newSettings.Quotes.AddRange(oldSettings.userQuotesInternal);
-
-            foreach (UserDataModel data in oldSettings.UserData.Values)
-            {
-                newSettings.UserData[data.ID] = data;
-            }
-
-            // Update actions for commands
-
-            foreach (CommandBase command in GetAllCommands(newSettings))
-            {
-                foreach (ActionBase action in command.Actions)
-                {
-                    if (action is CounterAction)
-                    {
-                        CounterAction cAction = (CounterAction)action;
-                        newSettings.Counters[cAction.CounterName] = new CounterModel(cAction.CounterName);
-                        newSettings.Counters[cAction.CounterName].SaveToFile = cAction.SaveToFile;
-                        newSettings.Counters[cAction.CounterName].ResetOnLoad = cAction.ResetOnLoad;
-                        if (File.Exists(newSettings.Counters[cAction.CounterName].GetCounterFilePath()))
-                        {
-                            string data = await ChannelSession.Services.FileService.ReadFile(newSettings.Counters[cAction.CounterName].GetCounterFilePath());
-                            if (double.TryParse(data, out double amount))
-                            {
-                                newSettings.Counters[cAction.CounterName].Amount = amount;
-                            }
-                        }
-                    }
-                }
-            }
-
-            Logger.Log(LogLevel.Debug, "Saving data to V2, total user records: " + newSettings.UserData.Count);
-
-            await ChannelSession.Services.Settings.Save(newSettings);
-        }
-
-        private static UserRoleEnum ConvertLegacyRoles(UserRoleEnum legacyRole)
-        {
-            int legacyRoleID = (int)legacyRole;
-            if ((int)UserRoleEnum.Custom == legacyRoleID)
-            {
-                return UserRoleEnum.Custom;
-            }
-            else
-            {
-                return (UserRoleEnum)(legacyRoleID * 10);
-            }
-        }
-
-        private static IEnumerable<CommandBase> GetAllCommands(SettingsV2Model settings)
-        {
-            List<CommandBase> commands = new List<CommandBase>();
-
-            commands.AddRange(settings.ChatCommands);
-            commands.AddRange(settings.EventCommands);
-            commands.AddRange(settings.TimerCommands);
-            commands.AddRange(settings.ActionGroupCommands);
-            commands.AddRange(settings.GameCommands);
-
-            foreach (UserDataModel userData in settings.UserData.Values)
-            {
-                commands.AddRange(userData.CustomCommands);
-                if (userData.EntranceCommand != null)
-                {
-                    commands.Add(userData.EntranceCommand);
-                }
-            }
-
-            foreach (GameCommandBase gameCommand in settings.GameCommands)
-            {
-                commands.AddRange(gameCommand.GetAllInnerCommands());
-            }
-
-            foreach (UserCurrencyModel currency in settings.Currencies.Values)
-            {
-                if (currency.RankChangedCommand != null)
-                {
-                    commands.Add(currency.RankChangedCommand);
-                }
-            }
-
-            foreach (UserInventoryModel inventory in settings.Inventories.Values)
-            {
-                commands.Add(inventory.ItemsBoughtCommand);
-                commands.Add(inventory.ItemsSoldCommand);
-            }
-
-            foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
-            {
-                if (widget.Item is OverlayStreamBossItemModel)
-                {
-                    OverlayStreamBossItemModel item = ((OverlayStreamBossItemModel)widget.Item);
-                    if (item.NewStreamBossCommand != null)
-                    {
-                        commands.Add(item.NewStreamBossCommand);
-                    }
-                }
-                else if (widget.Item is OverlayProgressBarItemModel)
-                {
-                    OverlayProgressBarItemModel item = ((OverlayProgressBarItemModel)widget.Item);
-                    if (item.GoalReachedCommand != null)
-                    {
-                        commands.Add(item.GoalReachedCommand);
-                    }
-                }
-                else if (widget.Item is OverlayTimerItemModel)
-                {
-                    OverlayTimerItemModel item = ((OverlayTimerItemModel)widget.Item);
-                    if (item.TimerCompleteCommand != null)
-                    {
-                        commands.Add(item.TimerCompleteCommand);
-                    }
-                }
-            }
-
-            commands.Add(settings.GameQueueUserJoinedCommand);
-            commands.Add(settings.GameQueueUserSelectedCommand);
-            commands.Add(settings.GiveawayStartedReminderCommand);
-            commands.Add(settings.GiveawayUserJoinedCommand);
-            commands.Add(settings.GiveawayWinnerSelectedCommand);
-            commands.Add(settings.ModerationStrike1Command);
-            commands.Add(settings.ModerationStrike2Command);
-            commands.Add(settings.ModerationStrike3Command);
-
-            return commands.Where(c => c != null);
-        }
-
-        private static T GetOptionValue<T>(JObject jobj, string key)
-        {
-            if (jobj[key] != null)
-            {
-                return jobj[key].ToObject<T>();
-            }
-            return default(T);
-        }
-    }
-#pragma warning restore CS0612 // Type or member is obsolete
-
-    #endregion Settings V1 Upgrader
 }

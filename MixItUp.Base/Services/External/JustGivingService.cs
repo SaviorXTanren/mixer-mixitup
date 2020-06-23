@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -138,7 +137,7 @@ namespace MixItUp.Base.Services.External
                     var body = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                    new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
@@ -220,7 +219,7 @@ namespace MixItUp.Base.Services.External
                 var body = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
-                    new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                    new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,

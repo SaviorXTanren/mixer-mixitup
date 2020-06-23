@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
@@ -63,19 +61,6 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset? MixerFollowDate { get; set; }
         [DataMember]
         public DateTimeOffset? MixerSubscribeDate { get; set; }
-        [DataMember]
-        public UserFanProgressionModel MixerFanProgression { get; set; }
-
-        [JsonIgnore]
-        public int Sparks { get; set; }
-        [JsonIgnore]
-        public uint CurrentViewerCount { get; set; }
-        [JsonIgnore]
-        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get; set; } = new LockedDictionary<string, MixPlayParticipantModel>();
-        [JsonIgnore]
-        public string InteractiveGroupID { get; set; }
-        [JsonIgnore]
-        public bool IsInInteractiveTimeout { get; set; }
 
         #endregion Mixer
 
@@ -182,19 +167,6 @@ namespace MixItUp.Base.Model.User
         public PatreonCampaignMember PatreonUser { get; set; } = null;
 
         public UserDataModel() { }
-
-        public UserDataModel(Mixer.Base.Model.User.UserModel user)
-        {
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-        }
-
-        public UserDataModel(UserViewModel user)
-        {
-            this.ID = user.ID;
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.Username;
-        }
 
         public UserDataModel(ScorpBotViewerModel viewer)
         {

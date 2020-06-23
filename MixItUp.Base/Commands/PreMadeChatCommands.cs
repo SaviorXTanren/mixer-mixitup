@@ -1,8 +1,4 @@
-﻿using Mixer.Base.Model.Broadcast;
-using Mixer.Base.Model.Costream;
-using Mixer.Base.Model.Game;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -705,7 +701,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        GameTypeModel newGame = null;
+                        //GameTypeModel newGame = null;
                         //if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
                         //{
                         //    newGame = await ChannelSession.MixerUserConnection.GetGameType(gameID);
@@ -718,17 +714,17 @@ namespace MixItUp.Base.Commands
                         //    newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         //}
 
-                        if (newGame != null)
-                        {
-                            //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
-                            await ChannelSession.RefreshChannel();
+                        //if (newGame != null)
+                        //{
+                        //    await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
+                        //    await ChannelSession.RefreshChannel();
 
-                            await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + newGame.name);
-                        }
-                        else
-                        {
-                            await ChannelSession.Services.Chat.Whisper(user, "We could not find a game with that name/ID");
-                        }
+                        //    await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + newGame.name);
+                        //}
+                        //else
+                        //{
+                        //    await ChannelSession.Services.Chat.Whisper(user, "We could not find a game with that name/ID");
+                        //}
                     }
                     else
                     {

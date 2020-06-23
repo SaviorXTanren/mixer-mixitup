@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services.External;
 using System;
 using System.Windows;
 using System.Windows.Navigation;
@@ -45,7 +44,7 @@ namespace MixItUp.WPF.Windows.OAuth
             {
                 this.Browser.NavigateToString(this.redirectPageText);
 
-                string codeParameter = MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER + "=";
+                string codeParameter = OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER + "=";
                 if (e.Uri.AbsoluteUri.Contains(codeParameter))
                 {
                     int startIndex = e.Uri.AbsoluteUri.IndexOf(codeParameter);

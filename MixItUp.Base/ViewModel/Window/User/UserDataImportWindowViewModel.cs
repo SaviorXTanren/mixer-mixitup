@@ -1,5 +1,4 @@
 ﻿using ExcelDataReader;
-using Mixer.Base.Model.User;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;

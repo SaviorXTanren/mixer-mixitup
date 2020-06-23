@@ -1,8 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -40,21 +36,6 @@ namespace MixItUp.Base.ViewModel.User
         Custom = 99,
     }
 
-    public enum AgeRatingEnum
-    {
-        Family,
-        Teen,
-        Adult,
-    }
-
-    public static class UserWithGroupsModelExtensions
-    {
-        public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)
-        {
-            return userGroups.GetCreatedDateForGroupIfCurrent(UserRoleEnum.Subscriber.ToString());
-        }
-    }
-
     public static class NewAPITwitchUserModelExtensions
     {
         public static bool IsAffiliate(this TwitchNewAPI.Users.UserModel twitchUser)
@@ -80,66 +61,19 @@ namespace MixItUp.Base.ViewModel.User
 
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
-        public const string MixerUserDefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
-        public const string MixerUserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
-
         public UserDataModel Data { get; private set; }
 
         public UserViewModel(string username)
-            : this(mixerID: 0)
         {
-            this.MixerUsername = this.UnassociatedUsername = username;
-        }
+            this.SetUserData();
 
-        public UserViewModel(Mixer.Base.Model.User.UserModel user)
-            : this(mixerID: user.id)
-        {
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-            this.SetMixerUserDetails(user);
-        }
-
-        public UserViewModel(ChannelModel channel)
-            : this(mixerID: channel.userId)
-        {
-            this.MixerID = channel.userId;
-            this.MixerUsername = channel.token;
-            this.MixerChannelID = channel.id;
-        }
-
-        public UserViewModel(ChatUserModel user)
-            : this(mixerID: user.userId.GetValueOrDefault())
-        {
-            this.MixerID = user.userId.GetValueOrDefault();
-            this.MixerUsername = user.userName;
-            this.SetMixerUserRoles(user.userRoles);
-
-            this.IsInChat = true;
-        }
-
-        public UserViewModel(ChatMessageEventModel messageEvent)
-            : this(mixerID: messageEvent.user_id)
-        {
-            this.MixerID = messageEvent.user_id;
-            this.MixerUsername = messageEvent.user_name;
-            this.SetMixerUserRoles(messageEvent.user_roles);
-
-            this.IsInChat = true;
-        }
-
-        public UserViewModel(ChatMessageUserModel chatUser)
-            : this(mixerID: chatUser.user_id)
-        {
-            this.MixerID = chatUser.user_id;
-            this.MixerUsername = chatUser.user_name;
-            this.SetMixerUserRoles(chatUser.user_roles);
-
-            this.IsInChat = true;
+            this.UnassociatedUsername = username;
         }
 
         public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
-            : this(twitchID: twitchUser.id)
         {
+            this.SetUserData(twitchID: twitchUser.id);
+
             this.TwitchID = twitchUser.id;
             this.TwitchUsername = twitchUser.login;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
@@ -149,8 +83,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatMessagePacketModel twitchMessage)
-            : this(twitchID: twitchMessage.UserID)
         {
+            this.SetUserData(twitchID: twitchMessage.UserID);
+
             this.TwitchID = twitchMessage.UserID;
             this.TwitchUsername = twitchMessage.UserLogin;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : this.TwitchUsername;
@@ -159,8 +94,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubWhisperEventModel whisper)
-            : this(twitchID: whisper.from_id.ToString())
         {
+            this.SetUserData(twitchID: whisper.from_id.ToString());
+
             this.TwitchID = whisper.from_id.ToString();
             this.TwitchUsername = whisper.tags.login;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : this.TwitchUsername;
@@ -169,8 +105,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubWhisperEventRecipientModel whisperRecipient)
-            : this(twitchID: whisperRecipient.id.ToString())
         {
+            this.SetUserData(twitchID: whisperRecipient.id.ToString());
+
             this.TwitchID = whisperRecipient.id.ToString();
             this.TwitchUsername = whisperRecipient.username;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(whisperRecipient.display_name)) ? whisperRecipient.display_name : this.TwitchUsername;
@@ -180,8 +117,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatRawPacketModel packet)
-            : this(twitchID: packet.Tags["user-id"])
         {
+            this.SetUserData(twitchID: packet.Tags["user-id"]);
+
             this.TwitchID = packet.Tags["user-id"];
             this.TwitchUsername = packet.Tags["login"];
             this.TwitchDisplayName = (packet.Tags.ContainsKey("display-name") && !string.IsNullOrEmpty(packet.Tags["display-name"])) ? packet.Tags["display-name"] : this.TwitchUsername;
@@ -190,8 +128,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubBitsEventV2Model packet)
-            : this(twitchID: packet.user_id)
         {
+            this.SetUserData(twitchID: packet.user_id);
+
             this.TwitchID = packet.user_id;
             this.TwitchDisplayName = this.TwitchUsername = packet.user_name;
 
@@ -199,8 +138,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubSubscriptionsEventModel packet)
-            : this(twitchID: packet.user_id)
         {
+            this.SetUserData(twitchID: packet.user_id);
+
             this.TwitchID = packet.user_id;
             this.TwitchUsername = packet.user_name;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : this.TwitchUsername;
@@ -209,8 +149,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(UserFollowModel follow)
-            : this(twitchID: follow.from_id)
         {
+            this.SetUserData(twitchID: follow.from_id);
+
             this.TwitchID = follow.from_id;
             this.TwitchDisplayName = this.TwitchUsername = follow.from_name;
 
@@ -222,18 +163,9 @@ namespace MixItUp.Base.ViewModel.User
             this.Data = userData;
         }
 
-        private UserViewModel(uint mixerID = 0, string twitchID = null)
+        private void SetUserData(string twitchID = null)
         {
-            if (mixerID > 0)
-            {
-                this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
-                if (this.Data == null)
-                {
-                    this.Data = new UserDataModel() { MixerID = mixerID };
-                    ChannelSession.Settings.AddUserData(this.Data);
-                }
-            }
-            else if (!string.IsNullOrEmpty(twitchID))
+            if (!string.IsNullOrEmpty(twitchID))
             {
                 this.Data = ChannelSession.Settings.GetUserDataByTwitchID(twitchID);
                 if (this.Data == null)
@@ -391,23 +323,6 @@ namespace MixItUp.Base.ViewModel.User
         public uint MixerID { get { return this.Data.MixerID; } private set { if (value > 0) { this.Data.MixerID = value; } } }
         public string MixerUsername { get { return this.Data.MixerUsername; } private set { if (!string.IsNullOrEmpty(value)) { this.Data.MixerUsername = value; } } }
         public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { if (value > 0) { this.Data.MixerChannelID = value; } } }
-
-        public UserFanProgressionModel MixerFanProgression { get { return this.Data.MixerFanProgression; } set { this.Data.MixerFanProgression = value; } }
-        public int Sparks { get { return this.Data.Sparks; } set { this.Data.Sparks = value; } }
-
-        public uint CurrentViewerCount { get { return this.Data.CurrentViewerCount; } set { this.Data.CurrentViewerCount = value; } }
-
-        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get { return this.Data.InteractiveIDs; } set { this.Data.InteractiveIDs = value; } }
-
-        public string InteractiveGroupID { get { return this.Data.InteractiveGroupID; } set { this.Data.InteractiveGroupID = value; } }
-
-        public bool IsInInteractiveTimeout { get { return this.Data.IsInInteractiveTimeout; } set { this.Data.IsInInteractiveTimeout = value; } }
-
-        public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.MixerID); } }
-
-        public string MixerChannelBadgeLink { get { return this.MixerFanProgression?.level?.SmallAssetURL?.ToString(); } }
-
-        public bool HasMixerChannelBadgeLink { get { return !string.IsNullOrEmpty(this.MixerChannelBadgeLink); } }
 
         #endregion Mixer
 
@@ -608,8 +523,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public bool IsMixerMixPlayParticipant { get { return this.InteractiveIDs.Count > 0; } }
-
         public PatreonTier PatreonTier
         {
             get
@@ -685,24 +598,6 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
         }
-
-        #region Mixer Data Setter Functions
-
-        public void SetMixerChatDetails(ChatUserModel chatUser)
-        {
-            if (chatUser != null)
-            {
-                this.SetMixerUserRoles(chatUser.userRoles);
-                this.IsInChat = true;
-            }
-        }
-
-        public void RemoveMixerChatDetails(ChatUserModel chatUser)
-        {
-            this.IsInChat = false;
-        }
-
-        #endregion Mixer Data Setter Functions
 
         #region Twitch Data Setter Functions
 
@@ -846,42 +741,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public Mixer.Base.Model.User.UserModel GetMixerUserModel()
-        {
-            return new Mixer.Base.Model.User.UserModel()
-            {
-                id = this.MixerID,
-                username = this.MixerUsername,
-            };
-        }
-
-        public ChatUserModel GetMixerUserChatModel()
-        {
-            return new ChatUserModel()
-            {
-                userId = this.MixerID,
-                userName = this.MixerUsername,
-                userRoles = this.UserRoles.Select(r => r.ToString()).ToArray(),
-            };
-        }
-
-        public IEnumerable<MixPlayParticipantModel> GetMixerMixPlayParticipantModels()
-        {
-            List<MixPlayParticipantModel> participants = new List<MixPlayParticipantModel>();
-            foreach (string interactiveID in this.InteractiveIDs.Keys)
-            {
-                participants.Add(new MixPlayParticipantModel()
-                {
-                    userID = this.MixerID,
-                    username = this.MixerUsername,
-                    sessionID = interactiveID,
-                    groupID = this.InteractiveGroupID,
-                    disabled = this.IsInInteractiveTimeout,
-                });
-            }
-            return participants;
-        }
-
         public TwitchV5API.Users.UserModel GetTwitchV5APIUserModel()
         {
             return new TwitchV5API.Users.UserModel()
@@ -918,45 +777,6 @@ namespace MixItUp.Base.ViewModel.User
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
         public override string ToString() { return this.Username; }
-
-        #region Mixer Refresh
-
-        private void SetMixerUserDetails(Mixer.Base.Model.User.UserModel user)
-        {
-            if (user.createdAt.GetValueOrDefault() > DateTimeOffset.MinValue)
-            {
-                this.AccountDate = user.createdAt;
-            }
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-            this.Sparks = (int)user.sparks;
-            this.TwitterURL = user.social?.twitter;
-            if (user is UserWithChannelModel)
-            {
-                UserWithChannelModel userChannel = (UserWithChannelModel)user;
-                this.MixerChannelID = userChannel.channel.id;
-                this.CurrentViewerCount = userChannel.channel.viewersCurrent;
-            }
-        }
-
-        private void SetMixerUserRoles(string[] userRoles)
-        {
-            HashSet<string> roles = new HashSet<string>(userRoles);
-            if (userRoles != null && userRoles.Length > 0)
-            {
-                if (roles.Contains("Owner")) { this.UserRoles.Add(UserRoleEnum.Streamer); } else { this.UserRoles.Remove(UserRoleEnum.Streamer); }
-                if (roles.Contains("Staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                if (roles.Contains("ChannelEditor")) { this.UserRoles.Add(UserRoleEnum.ChannelEditor); } else { this.UserRoles.Remove(UserRoleEnum.ChannelEditor); }
-                if (roles.Contains("Mod")) { this.UserRoles.Add(UserRoleEnum.Mod); } else { this.UserRoles.Remove(UserRoleEnum.Mod); }
-                if (roles.Contains("GlobalMod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
-                if (roles.Contains("Subscriber")) { this.UserRoles.Add(UserRoleEnum.Subscriber); } else { this.UserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (roles.Contains("Partner") || roles.Contains("VerifiedPartner")) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
-                if (roles.Contains("Pro")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
-                if (roles.Contains("Banned")) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
-            }
-        }
-
-        #endregion Mixer Refresh
 
         #region Twitch Refresh
 

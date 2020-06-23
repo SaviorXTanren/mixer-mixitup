@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.TestStreams;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;

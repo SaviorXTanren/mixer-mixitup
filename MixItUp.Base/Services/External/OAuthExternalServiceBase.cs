@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
@@ -31,6 +30,10 @@ namespace MixItUp.Base.Services.External
 
     public abstract class OAuthExternalServiceBase : OAuthRestServiceBase, IOAuthExternalService, IDisposable
     {
+        public const string DEFAULT_OAUTH_LOCALHOST_URL = "http://localhost:8919/";
+
+        public const string DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER = "code";
+
         public const string LoginRedirectPageHTML = @"<!DOCTYPE html>
             <html>
             <head>
@@ -106,11 +109,11 @@ namespace MixItUp.Base.Services.External
 
         protected abstract Task<Result> InitializeInternal();
 
-        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL); }
+        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL); }
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 30)
         {
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
             oauthServer.Start();
 
             ProcessHelper.LaunchLink(oauthPageURL);

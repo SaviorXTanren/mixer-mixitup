@@ -1,10 +1,4 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.API.Models;
-using MixItUp.Base;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Web.Http;
+﻿using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -12,14 +6,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI
     public class MixerUserController : ApiController
     {
         [Route("{userID:int:min(0)}")]
-        public UserModel Get(uint userID)
+        public object Get(uint userID)
         {
             return null;
         }
 
         [Route("{username}")]
         [HttpGet]
-        public UserModel Get(string username)
+        public object Get(string username)
         {
             return null;
         }

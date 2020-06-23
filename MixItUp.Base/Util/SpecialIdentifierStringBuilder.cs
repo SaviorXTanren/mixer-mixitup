@@ -1,8 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Leaderboards;
-using Mixer.Base.Model.Patronage;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
@@ -41,18 +37,12 @@ namespace MixItUp.Base.Util
         public const string TargetSpecialIdentifierHeader = "target";
 
         public const string RandomSpecialIdentifierHeader = "random";
-        public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
-        public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
         public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
 
-        public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
-        public const string CostreamUsersSpecialIdentifier = "costreamusers";
         public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
         public const string StreamSpecialIdentifierHeader = "stream";
         public const string StreamHostCountSpecialIdentifier = StreamSpecialIdentifierHeader + "hostcount";
-
-        public const string MilestoneSpecialIdentifierHeader = "milestone";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
 
@@ -77,10 +67,6 @@ namespace MixItUp.Base.Util
         public const string LatestHostViewerCountData = "latesthostviewercount";
         public const string LatestSubscriberUserData = "latestsubscriber";
         public const string LatestSubscriberSubMonthsData = "latestsubscribersubmonths";
-        public const string LatestSparkUsageUserData = "latestsparkusage";
-        public const string LatestSparkUsageAmountData = "latestsparkusageamount";
-        public const string LatestEmberUsageUserData = "latestemberusage";
-        public const string LatestEmberUsageAmountData = "latestemberusageamount";
         public const string LatestBitsUsageUserData = "latestbitsusage";
         public const string LatestBitsUsageAmountData = "latestbitsusageamount";
         public const string LatestDonationUserData = "latestdonation";
@@ -565,8 +551,6 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestHostUserData, SpecialIdentifierStringBuilder.LatestHostViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
-            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSparkUsageUserData, SpecialIdentifierStringBuilder.LatestSparkUsageAmountData);
-            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestEmberUsageUserData, SpecialIdentifierStringBuilder.LatestEmberUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsUsageUserData, SpecialIdentifierStringBuilder.LatestBitsUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
@@ -711,8 +695,6 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.Username);
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mixerid", user.MixerID.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "sparks", user.Sparks.ToString());
-
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "twitchid", user.TwitchID);
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "age", user.AccountAgeString);
@@ -734,12 +716,6 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
 
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionnext", user.MixerFanProgression?.level?.nextLevelXp.GetValueOrDefault().ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionrank", user.MixerFanProgression?.level?.level.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressioncolor", user.MixerFanProgression?.level?.color?.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", user.MixerFanProgression?.level?.LargeGIFAssetURL?.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", user.MixerFanProgression?.level?.currentXp.GetValueOrDefault().ToString());
-
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
                     string gameQueuePosition = "Not In Queue";
@@ -752,12 +728,6 @@ namespace MixItUp.Base.Util
                         }
                     }
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition", gameQueuePosition);
-                }
-
-                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
-                    this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
-                {
-
                 }
 
                 if (ChannelSession.Services.Patreon.IsConnected)

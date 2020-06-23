@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;

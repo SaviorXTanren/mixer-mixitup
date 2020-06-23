@@ -1,10 +1,6 @@
-﻿using Mixer.Base;
-using MixItUp.Base;
-using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -320,7 +316,7 @@ namespace MixItUp.Base.Services.External
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthExternalServiceBase.LoginRedirectPageHTML) { }
+        public DiscordOAuthServer() : base(OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL, OAuthExternalServiceBase.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthExternalServiceBase.LoginRedirectPageHTML) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
@@ -699,7 +695,7 @@ namespace MixItUp.Base.Services.External
                     var body = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                        new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                        new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                         new KeyValuePair<string, string>("code", authorizationCode),
                     };
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
@@ -815,7 +811,7 @@ namespace MixItUp.Base.Services.External
                 var body = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
-                    new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                    new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);

@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services.DeveloperAPI;
 using System.Threading.Tasks;

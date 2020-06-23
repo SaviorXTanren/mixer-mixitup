@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;

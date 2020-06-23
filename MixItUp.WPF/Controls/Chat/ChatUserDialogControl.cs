@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;

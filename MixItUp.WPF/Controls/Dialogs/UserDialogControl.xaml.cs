@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 

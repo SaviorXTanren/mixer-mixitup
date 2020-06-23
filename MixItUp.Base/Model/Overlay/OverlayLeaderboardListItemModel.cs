@@ -1,7 +1,4 @@
-﻿using Mixer.Base.Model.Leaderboards;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;

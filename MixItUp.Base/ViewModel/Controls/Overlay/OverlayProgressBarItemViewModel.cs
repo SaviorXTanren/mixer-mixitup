@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;

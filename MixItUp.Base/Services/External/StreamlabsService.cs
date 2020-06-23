@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,9 +6,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -91,7 +88,7 @@ namespace MixItUp.Base.Services.External
                     payload["client_id"] = StreamlabsService.ClientID;
                     payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("StreamlabsSecret");
                     payload["code"] = authorizationCode;
-                    payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
+                    payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
@@ -139,7 +136,7 @@ namespace MixItUp.Base.Services.External
                 payload["client_id"] = StreamlabsService.ClientID;
                 payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("StreamlabsSecret");
                 payload["refresh_token"] = this.token.refreshToken;
-                payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
+                payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 
                 this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }

@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Mixer;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services

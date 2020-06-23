@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -461,9 +459,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();
-
-        [DataMember]
-        public List<FavoriteGroupModel> FavoriteGroups { get; set; } = new List<FavoriteGroupModel>();
 
         [DataMember]
         public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; } = new Dictionary<string, CommandGroupSettings>();

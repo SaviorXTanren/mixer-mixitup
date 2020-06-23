@@ -1,13 +1,9 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model.API;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
