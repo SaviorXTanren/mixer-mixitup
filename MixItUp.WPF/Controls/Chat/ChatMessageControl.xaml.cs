@@ -146,10 +146,6 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((MixerChatEmoteModel)messagePart));
                             }
-                            else if (messagePart is MixrElixrEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixrElixrEmoteModel)messagePart));
-                            }
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchV5API.EmoteModel)messagePart));

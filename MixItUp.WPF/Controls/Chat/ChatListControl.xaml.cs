@@ -188,15 +188,6 @@ namespace MixItUp.WPF.Controls.Chat
                             this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
                         }
                     }
-                    else if (ChannelSession.Settings.ShowMixrElixrEmotes)
-                    {
-                        var emotes = ChannelSession.Services.Chat.MixrElixrEmotes.Where(e => e.Key.StartsWith(tag, StringComparison.InvariantCultureIgnoreCase));
-                        if (emotes.Count() > 0)
-                        {
-                            emotes = emotes.Take(5).Reverse();
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes.Select(e => e.Value).ToList());
-                        }
-                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -394,14 +385,6 @@ namespace MixItUp.WPF.Controls.Chat
                 if (emoticon != null)
                 {
                     this.SelectIntellisenseItem(emoticon.Name);
-                }
-            }
-            else
-            {
-                MixrElixrEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as MixrElixrEmoteModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.code);
                 }
             }
             this.HideIntellisense();

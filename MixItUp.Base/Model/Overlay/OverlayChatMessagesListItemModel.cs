@@ -119,15 +119,6 @@ namespace MixItUp.Base.Model.Overlay
                                 emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-mixerEmote.Y).ToString());
                                 textParts.Add(emoticonText);
                             }
-                            else if (messagePart is MixrElixrEmoteModel)
-                            {
-                                MixrElixrEmoteModel mixrElixrEmote = (MixrElixrEmoteModel)messagePart;
-                                string emoticonText = OverlayChatMessagesListItemModel.EmoticonMessageHTMLTemplate;
-                                emoticonText = emoticonText.Replace("{EMOTICON}", mixrElixrEmote.Url);
-                                emoticonText = emoticonText.Replace("{EMOTICON_X}", "0");
-                                emoticonText = emoticonText.Replace("{EMOTICON_Y}", "0");
-                                textParts.Add(emoticonText);
-                            }
                         }
 
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));

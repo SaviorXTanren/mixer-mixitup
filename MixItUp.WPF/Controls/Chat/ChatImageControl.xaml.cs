@@ -48,8 +48,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(MixerChatEmoteModel emoticon) : this() { this.DataContext = emoticon; }
 
-        public ChatImageControl(MixrElixrEmoteModel emoticon) : this() { this.DataContext = emoticon; }
-
         public ChatImageControl(MixerSkillModel skill) : this() { this.DataContext = skill; }
 
         public ChatImageControl(TwitchV5API.EmoteModel emote) : this() { this.DataContext = emote; }
@@ -73,20 +71,6 @@ namespace MixItUp.WPF.Controls.Chat
                         CroppedBitmap croppedBitmap = new CroppedBitmap(await this.DownloadImageUrl(emote.Uri), new Int32Rect((int)emote.X, (int)emote.Y, (int)emote.Width, (int)emote.Height));
                         this.Image.Source = croppedBitmap;
                         this.Image.ToolTip = this.AltText.Text = emote.Name;
-                    }
-                    else if (this.DataContext is MixrElixrEmoteModel)
-                    {
-                        MixrElixrEmoteModel emote = (MixrElixrEmoteModel)this.DataContext;
-                        if (emote.animated)
-                        {
-                            this.GifImage.DataContext = emote.Url;
-                            this.GifImage.ToolTip = this.AltText.Text = emote.code;
-                        }
-                        else
-                        {
-                            this.Image.Source = await this.DownloadImageUrl(emote.Url);
-                            this.Image.ToolTip = this.AltText.Text = emote.code;
-                        }
                     }
                     else if (this.DataContext is MixerSkillModel)
                     {

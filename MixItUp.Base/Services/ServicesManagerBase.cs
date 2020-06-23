@@ -51,7 +51,6 @@ namespace MixItUp.Base.Services
         public IOvrStreamService OvrStream { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
         public IStreamlootsService Streamloots { get; protected set; }
-        public IMixrElixrService MixrElixr { get; protected set; }
         public IJustGivingService JustGiving { get; protected set; }
 
         public abstract void SetSecrets(SecretsService secretsService);

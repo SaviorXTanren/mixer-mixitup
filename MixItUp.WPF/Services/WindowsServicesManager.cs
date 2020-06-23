@@ -52,7 +52,6 @@ namespace MixItUp.WPF.Services
             this.Twitter = new TwitterService();
             this.OvrStream = new WindowsOvrStreamService();
             this.Overlay = new OverlayService();
-            this.MixrElixr = new MixrElixrService();
 
             this.OBSStudio = new WindowsOBSService();
             this.StreamlabsOBS = new StreamlabsOBSService();

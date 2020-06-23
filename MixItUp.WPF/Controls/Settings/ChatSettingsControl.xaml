@@ -57,8 +57,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.FontSize}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -130,24 +128,21 @@
         <TextBlock Grid.Row="22" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ShowMessageTimestamp}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="22" Grid.Column="2" x:Name="ShowMessageTimestampsToggleButton" Checked="ShowMessageTimestampsToggleButton_Checked" Unchecked="ShowMessageTimestampsToggleButton_Checked" />
 
-        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ShowMixrElixrEmotes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="ShowMixrElixrEmotesToggleButton" Checked="ShowMixrElixrEmotesToggleButton_Checked" Unchecked="ShowMixrElixrEmotesToggleButton_Checked" />
+        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show BetterTTV Emotes (Requires Restart):</TextBlock>
+        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="ShowBetterTTVEmotesToggleButton" Checked="ShowBetterTTVEmotesToggleButton_Checked" Unchecked="ShowBetterTTVEmotesToggleButton_Checked" />
 
-        <TextBlock Grid.Row="26" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show BetterTTV Emotes (Requires Restart):</TextBlock>
-        <ToggleButton Grid.Row="26" Grid.Column="2" x:Name="ShowBetterTTVEmotesToggleButton" Checked="ShowBetterTTVEmotesToggleButton_Checked" Unchecked="ShowBetterTTVEmotesToggleButton_Checked" />
-
-        <Separator Grid.Row="28" Grid.ColumnSpan="2" Margin="10" />
+        <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
         
-        <TextBlock Grid.Row="30" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AllowCommandsToBeWhispered}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="30" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
+        <TextBlock Grid.Row="28" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AllowCommandsToBeWhispered}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Row="28" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
 
-        <TextBlock Grid.Row="32" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.IgnoreYourBotAccountForCommands}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="32" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
+        <TextBlock Grid.Row="30" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.IgnoreYourBotAccountForCommands}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Row="30" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
 
-        <TextBlock Grid.Row="34" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AllowCommandsOnlyInYourChannelDuringACoStream}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="34" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
+        <TextBlock Grid.Row="32" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AllowCommandsOnlyInYourChannelDuringACoStream}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Row="32" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
 
-        <TextBlock Grid.Row="36" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.DeleteAllChatCommandsWhenTheyAreRun}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="36" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
+        <TextBlock Grid.Row="34" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.DeleteAllChatCommandsWhenTheyAreRun}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Row="34" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
     </Grid>
 </local:SettingsControlBase>
