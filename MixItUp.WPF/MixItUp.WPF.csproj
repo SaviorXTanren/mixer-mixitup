@@ -474,6 +474,9 @@
     <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
       <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
     </Compile>
@@ -609,6 +612,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
       <DependentUpon>StreamPassControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsMainControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
@@ -1167,6 +1173,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Command\UnlockedCommandControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1340,6 +1350,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\StreamPassControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

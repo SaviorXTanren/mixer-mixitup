@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
@@ -376,13 +377,24 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(redemption.user);
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user);
+            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+            specialIdentifiers["rewardname"] = redemption.reward.title;
+            specialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
+            specialIdentifiers["message"] = redemption.user_input;
 
-            trigger.SpecialIdentifiers["rewardname"] = redemption.reward.title;
-            trigger.SpecialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
-            trigger.SpecialIdentifiers["message"] = redemption.user_input;
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user);
+            foreach (var kvp in specialIdentifiers)
+            {
+                trigger.SpecialIdentifiers[kvp.Key] = kvp.Value;
+            }
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => c.Name.Equals(redemption.reward.title));
+            if (command != null)
+            {
+                await command.Perform(user, extraSpecialIdentifiers: specialIdentifiers);
+            }
         }
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)

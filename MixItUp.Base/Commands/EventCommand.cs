@@ -10,9 +10,6 @@ namespace MixItUp.Base.Commands
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
-        public uint EventID { get; set; }
-
-        [DataMember]
         public EventTypeEnum EventCommandType { get; set; }
 
         public EventCommand() { }

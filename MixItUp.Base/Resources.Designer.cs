@@ -439,6 +439,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Reward Command.
+        /// </summary>
+        public static string AddRewardCommand {
+            get {
+                return ResourceManager.GetString("AddRewardCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Stream Pass.
         /// </summary>
         public static string AddStreamPass {
@@ -1128,6 +1137,15 @@ namespace MixItUp.Base {
         public static string ChannelName {
             get {
                 return ResourceManager.GetString("ChannelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Points.
+        /// </summary>
+        public static string ChannelPoints {
+            get {
+                return ResourceManager.GetString("ChannelPoints", resourceCulture);
             }
         }
         
@@ -6001,6 +6019,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reward Name.
+        /// </summary>
+        public static string RewardName {
+            get {
+                return ResourceManager.GetString("RewardName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Right Button.
         /// </summary>
         public static string RightButton {
@@ -7572,6 +7599,15 @@ namespace MixItUp.Base {
         public static string TweetMessage {
             get {
                 return ResourceManager.GetString("TweetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Points.
+        /// </summary>
+        public static string TwitchChannelPoints {
+            get {
+                return ResourceManager.GetString("TwitchChannelPoints", resourceCulture);
             }
         }
         

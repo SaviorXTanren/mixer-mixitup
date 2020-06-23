@@ -26,6 +26,7 @@ namespace MixItUp.Base.Commands
         ActionGroup = 5,
         Game = 6,
         Remote = 7,
+        TwitchChannelPoints = 8,
     }
 
     [DataContract]

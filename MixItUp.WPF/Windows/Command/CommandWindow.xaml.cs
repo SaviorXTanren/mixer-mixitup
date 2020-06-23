@@ -60,7 +60,8 @@ namespace MixItUp.WPF.Windows.Command
                         this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                     }
                 }
-                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl)
+                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl ||
+                    this.commandDetailsControl is TwitchChannelPointsCommandDetailsControl)
                 {
                     this.BasicChatCommandButton.Visibility = Visibility.Collapsed;
                     this.BasicSoundCommandButton.Visibility = Visibility.Collapsed;

@@ -480,6 +480,8 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
         [JsonIgnore]
+        public DatabaseList<TwitchChannelPointsCommand> TwitchChannelPointsCommands { get; set; } = new DatabaseList<TwitchChannelPointsCommand>();
+        [JsonIgnore]
         public DatabaseDictionary<Guid, CustomCommand> CustomCommands { get; set; } = new DatabaseDictionary<Guid, CustomCommand>();
 
         [JsonIgnore]
@@ -593,6 +595,10 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
+                    else if (type == CommandTypeEnum.TwitchChannelPoints)
+                    {
+                        this.TwitchChannelPointsCommands.Add(JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommand>((string)data["Data"]));
+                    }
                     else if (type == CommandTypeEnum.Custom)
                     {
                         CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
@@ -605,6 +611,7 @@ namespace MixItUp.Base.Model.Settings
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
+                this.TwitchChannelPointsCommands.ClearTracking();
                 this.CustomCommands.ClearTracking();
 
                 foreach (CounterModel counter in this.Counters.Values.ToList())
@@ -747,6 +754,7 @@ namespace MixItUp.Base.Model.Settings
                 removedCommands.AddRange(this.TimerCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.TwitchChannelPointsCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.CustomCommands.GetRemovedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
                     removedCommands.Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
@@ -757,6 +765,7 @@ namespace MixItUp.Base.Model.Settings
                 addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.TwitchChannelPointsCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.CustomCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));

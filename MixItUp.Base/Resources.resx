@@ -2949,4 +2949,16 @@
   <data name="YouDoNotHavePermissions" xml:space="preserve">
     <value>You do not have permissions to do this</value>
   </data>
+  <data name="RewardName" xml:space="preserve">
+    <value>Reward Name</value>
+  </data>
+  <data name="TwitchChannelPoints" xml:space="preserve">
+    <value>Twitch Channel Points</value>
+  </data>
+  <data name="AddRewardCommand" xml:space="preserve">
+    <value>Add Reward Command</value>
+  </data>
+  <data name="ChannelPoints" xml:space="preserve">
+    <value>Channel Points</value>
+  </data>
 </root>
