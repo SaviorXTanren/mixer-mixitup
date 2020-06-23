@@ -458,15 +458,6 @@
     <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
       <DependentUpon>ChatImageControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
-      <DependentUpon>GifImageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\GifSkillHoverControl.xaml.cs">
-      <DependentUpon>GifSkillHoverControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
-      <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -655,9 +646,6 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml.cs">
-      <DependentUpon>OverlaySparkCrystalItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayStreamClipItemControl.xaml.cs">
       <DependentUpon>OverlayStreamClipItemControl.xaml</DependentUpon>
@@ -1170,18 +1158,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Chat\GifImageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\GifSkillHoverControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\GifSkillPopoutControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1423,10 +1399,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

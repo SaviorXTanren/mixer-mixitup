@@ -83,13 +83,6 @@ namespace MixItUp.Base.Services
             username = username.ToLower().Replace("@", "");
             UserViewModel user = null;
 
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer) || platform == StreamingPlatformTypeEnum.None)
-            {
-                if (this.usersByMixerUsername.TryGetValue(username, out user))
-                {
-                    return user;
-                }
-            }
             if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
             {
                 if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))

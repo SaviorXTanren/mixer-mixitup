@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.Overlay
         Hosts,
         Subscribers,
         Donations,
+        [Obsolete]
         Milestones,
         [Obsolete]
         Sparks,
@@ -77,10 +78,6 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
                 GlobalEvents.OnStreamlootsPurchaseOccurred += GlobalEvents_OnStreamlootsPurchaseOccurred;
             }
-            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Milestones))
-            {
-                GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
-            }
 
             await base.Enable();
         }
@@ -94,7 +91,6 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
-            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
             await base.Disable();
         }
@@ -147,8 +143,6 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
         private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.Username, string.Format("Purchased {0} Packs", purchase.Item2)); }
-
-        private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
 
         private async Task AddEvent(string name, string details)
         {

@@ -75,8 +75,6 @@
 
                 <Button Grid.Column="5" Command="{Binding SendMessageCommand}" MinWidth="70" Content="{x:Static resx:Resources.Send}"/>
             </Grid>
-
-            <ChatControls:GifSkillPopoutControl x:Name="GifSkillPopout" HorizontalAlignment="Right" VerticalAlignment="Top" />
         </Grid>
 
         <Canvas>

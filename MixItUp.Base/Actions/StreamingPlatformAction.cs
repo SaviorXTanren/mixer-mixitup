@@ -15,6 +15,7 @@ namespace MixItUp.Base.Actions
     public enum StreamingPlatformActionType
     {
         Host,
+        [Obsolete]
         Poll,
         [Name("Run Ad")]
         RunAd
@@ -54,16 +55,6 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingPlatformAction CreatePollAction(string question, uint length, IEnumerable<string> answers, CommandBase command)
-        {
-            StreamingPlatformAction action = new StreamingPlatformAction(StreamingPlatformActionType.Poll);
-            action.PollQuestion = question;
-            action.PollLength = length;
-            action.PollAnswers = new List<string>(answers);
-            action.CommandID = (command != null) ? command.ID : Guid.Empty;
-            return action;
-        }
-
         public static StreamingPlatformAction CreateRunAdAction()
         {
             return new StreamingPlatformAction(StreamingPlatformActionType.RunAd);
@@ -80,25 +71,7 @@ namespace MixItUp.Base.Actions
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             this.lastArguments = arguments;
-            if (this.ActionType == StreamingPlatformActionType.Poll)
-            {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    string pollQuestion = await this.ReplaceStringWithSpecialModifiers(this.PollQuestion, user, arguments);
-                    List<string> pollAnswers = new List<string>();
-                    foreach (string pollAnswer in this.PollAnswers)
-                    {
-                        pollAnswers.Add(await this.ReplaceStringWithSpecialModifiers(pollAnswer, user, arguments));
-                    }
-
-                    if (this.CommandID != Guid.Empty)
-                    {
-                        ChannelSession.Services.Chat.OnPollEndOccurred += Chat_OnPollEnd;
-                    }
-                    await ChannelSession.Services.Chat.StartPoll(pollQuestion, pollAnswers, this.PollLength);
-                }
-            }
-            else if (this.ActionType == StreamingPlatformActionType.Host)
+            if (this.ActionType == StreamingPlatformActionType.Host)
             {
                 string hostChannelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
                 ChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(hostChannelName);
@@ -115,35 +88,6 @@ namespace MixItUp.Base.Actions
                     await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "The ad could not be run, please verify your channel is approved for ads and that you have not already run an ad recently.");
                 }
             }
-        }
-
-        private void Chat_OnPollEnd(object sender, Dictionary<string, uint> results)
-        {
-            ChannelSession.Services.Chat.OnPollEndOccurred -= Chat_OnPollEnd;
-            Task.Run(async () =>
-            {
-                try
-                {
-                    if (results.Count > 0)
-                    {
-                        var winner = results.OrderByDescending(r => r.Value).First();
-                        if (winner.Value > 0)
-                        {
-                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
-                            if (command != null)
-                            {
-                                this.extraSpecialIdentifiers["pollresultanswer"] = winner.Key;
-                                this.extraSpecialIdentifiers["pollresulttotal"] = winner.Value.ToString();
-                                await command.Perform(this.platform, arguments: this.lastArguments, extraSpecialIdentifiers: this.GetExtraSpecialIdentifiers());
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            });
         }
     }
 }

@@ -240,15 +240,7 @@ namespace MixItUp.Base.Util
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer) && ChannelSession.MixerUserConnection != null)
-                {
-                    Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                    if (argUserModel != null && string.Equals(argUserModel.username, username, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        user = new UserViewModel(argUserModel);
-                    }
-                }
-                else if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
                 {
                     Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
                     if (argUserModel != null)
@@ -900,29 +892,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
-                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-                    {
-                        ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
-                        if (channel != null)
-                        {
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
 
-                            if (channel.type != null)
-                            {
-                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
-                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
-                            }
-                            else
-                            {
-                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", "https://gameart.mixer.com/art/548829/cover.jpg?locked");
-                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", "Not Specified");
-                            }
-
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
-                        }
-                    }
                 }
 
                 if (ChannelSession.Services.Patreon.IsConnected)

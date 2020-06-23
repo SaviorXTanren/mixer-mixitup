@@ -1,14 +1,9 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -24,10 +19,9 @@ namespace MixItUp.Base.Services
 {
     public interface IChatService
     {
-        IMixerChatService MixerChatService { get; }
         ITwitchChatService TwitchChatService { get; }
 
-        Task Initialize(IMixerChatService mixerChatService, ITwitchChatService twitchChatService);
+        Task Initialize(ITwitchChatService twitchChatService);
 
         bool DisableChat { get; set; }
 
@@ -49,8 +43,6 @@ namespace MixItUp.Base.Services
         Task DeleteMessage(ChatMessageViewModel message);
         Task ClearMessages();
 
-        Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
-
         Task TimeoutUser(UserViewModel user, uint durationInSeconds);
         Task PurgeUser(UserViewModel user);
 
@@ -70,7 +62,6 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
-        public IMixerChatService MixerChatService { get; private set; }
         public ITwitchChatService TwitchChatService { get; private set; }
 
         public bool DisableChat { get; set; }
@@ -112,7 +103,7 @@ namespace MixItUp.Base.Services
 
         public ChatService() { }
 
-        public async Task Initialize(IMixerChatService mixerChatService, ITwitchChatService twitchChatService)
+        public async Task Initialize(ITwitchChatService twitchChatService)
         {
             this.RebuildCommandTriggers();
 
@@ -120,42 +111,6 @@ namespace MixItUp.Base.Services
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             List<ChatMessageViewModel> messagesToAdd = new List<ChatMessageViewModel>();
-
-            if (mixerChatService != null)
-            {
-                this.MixerChatService = mixerChatService;
-
-                this.MixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
-                this.MixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
-                this.MixerChatService.OnClearMessagesOccurred += MixerChatService_OnClearMessagesOccurred;
-                this.MixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
-                this.MixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
-                this.MixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
-                this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
-                this.MixerChatService.OnUserTimeoutOccurred += MixerChatService_OnUserTimeoutOccurred;
-                this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
-
-                foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
-                {
-                    UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(messageEvent.user_id);
-                    messagesToAdd.Add(new MixerChatMessageViewModel(messageEvent, user));
-                }
-
-    #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () =>
-                {
-                    await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
-                    {
-                        List<UserViewModel> users = new List<UserViewModel>();
-                        foreach (ChatUserModel chatUser in collection)
-                        {
-                            users.Add(await ChannelSession.Services.User.AddOrUpdateUser(chatUser));
-                        }
-                        await this.UsersJoined(users);
-                    }, int.MaxValue);
-                });
-    #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
 
             if (twitchChatService != null)
             {
@@ -190,10 +145,6 @@ namespace MixItUp.Base.Services
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-            {
-                await this.MixerChatService.SendMessage(message, sendAsStreamer);
-            }
             if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
                 await this.TwitchChatService.SendMessage(message, sendAsStreamer);
@@ -202,21 +153,6 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
-            if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-            {
-                if (waitForResponse)
-                {
-                    ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(user.Username, message, sendAsStreamer);
-                    if (messageEvent != null)
-                    {
-                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent, ChannelSession.GetCurrentUser()));
-                    }
-                }
-                else
-                {
-                    await this.MixerChatService.Whisper(user.Username, message, sendAsStreamer);
-                }
-            }
             if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
                 await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
@@ -234,10 +170,6 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            if (message.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.DeleteMessage(message);
-            }
             if (message.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.DeleteMessage(message);
@@ -252,28 +184,11 @@ namespace MixItUp.Base.Services
                 this.Messages.Clear();
                 return Task.FromResult(0);
             });
-
-            await this.MixerChatService.ClearMessages();
-
             await this.TwitchChatService.ClearMessages();
-        }
-
-        public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
-        {
-            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.Mixer;
-            if (platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                this.MixerChatService.OnPollEndOccurred += MixerChatService_OnPollEndOccurred;
-                await this.MixerChatService.StartPoll(question, answers, lengthInSeconds);
-            }
         }
 
         public async Task PurgeUser(UserViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.PurgeUser(user);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.TimeoutUser(user, 1);
@@ -282,10 +197,6 @@ namespace MixItUp.Base.Services
 
         public async Task TimeoutUser(UserViewModel user, uint durationInSeconds)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.TimeoutUser(user, durationInSeconds);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.TimeoutUser(user, (int)durationInSeconds);
@@ -294,10 +205,6 @@ namespace MixItUp.Base.Services
 
         public async Task ModUser(UserViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.ModUser(user);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.ModUser(user);
@@ -306,10 +213,6 @@ namespace MixItUp.Base.Services
 
         public async Task UnmodUser(UserViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.UnmodUser(user);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.UnmodUser(user);
@@ -318,10 +221,6 @@ namespace MixItUp.Base.Services
 
         public async Task BanUser(UserViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.BanUser(user);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.BanUser(user);
@@ -330,10 +229,6 @@ namespace MixItUp.Base.Services
 
         public async Task UnbanUser(UserViewModel user)
         {
-            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                await this.MixerChatService.UnbanUser(user);
-            }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await this.TwitchChatService.UnbanUser(user);
@@ -375,25 +270,17 @@ namespace MixItUp.Base.Services
 
             if (message is UserChatMessageViewModel)
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null)
-                {
-                    UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
-                    if (activeUser != null)
-                    {
-                        message.User = activeUser;
-                    }
-                }
-                else if (message.Platform == StreamingPlatformTypeEnum.Twitch && message.User != null)
-                {
-                    UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
-                    if (activeUser != null)
-                    {
-                        message.User = activeUser;
-                    }
-                }
-
                 if (message.User != null)
                 {
+                    if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
+                        if (activeUser != null)
+                        {
+                            message.User = activeUser;
+                        }
+                    }
+
                     message.User.UpdateLastActivity();
                     if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                     {
@@ -707,119 +594,6 @@ namespace MixItUp.Base.Services
 
             return Task.FromResult(0);
         }
-
-        #region Mixer Events
-
-        private async void MixerChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
-        {
-            await this.AddMessage(message);
-        }
-
-        private async void MixerChatService_OnDeleteMessageOccurred(object sender, Tuple<Guid, UserViewModel> messageDeletion)
-        {
-            if (this.messagesLookup.TryGetValue(messageDeletion.Item1.ToString(), out ChatMessageViewModel message))
-            {
-                await message.Delete(messageDeletion.Item2);
-                GlobalEvents.ChatMessageDeleted(messageDeletion.Item1);
-
-                if (ChannelSession.Settings.HideDeletedMessages)
-                {
-                    await DispatcherHelper.InvokeDispatcher(() =>
-                    {
-                        this.messagesLookup.Remove(messageDeletion.Item1.ToString());
-                        this.Messages.Remove(message);
-                        return Task.FromResult(0);
-                    });
-                }
-            }
-        }
-
-        private async void MixerChatService_OnClearMessagesOccurred(object sender, EventArgs e)
-        {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Clear();
-                this.Messages.Clear();
-                return Task.FromResult(0);
-            });
-        }
-
-        private async void MixerChatService_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)
-        {
-            await this.UsersJoined(users);
-        }
-
-        private async void MixerChatService_OnUserUpdateOccurred(object sender, UserViewModel user)
-        {
-            await this.UsersUpdated(new List<UserViewModel>() { user });
-        }
-
-        private async void MixerChatService_OnUsersLeaveOccurred(object sender, IEnumerable<UserViewModel> users)
-        {
-            await this.UsersLeft(users);
-        }
-
-        private async void MixerChatService_OnUserPurgeOccurred(object sender, MixerChatUserModerationModel e)
-        {
-            string reason = EnumLocalizationHelper.GetLocalizedName(e.Type);
-            if (!string.IsNullOrEmpty(e.Length))
-            {
-                reason += $" {e.Length}";
-            }
-
-            foreach (ChatMessageViewModel message in this.Messages.ToList())
-            {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User != null && message.User.Equals(e.User))
-                {
-                    await message.Delete(moderator: e.Moderator, reason: reason);
-                }
-            }
-
-            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserPurge);
-            trigger.Arguments.Add(e.User.Username);
-            await ChannelSession.Services.Events.PerformEvent(trigger);
-        }
-
-        private async void MixerChatService_OnUserTimeoutOccurred(object sender, MixerChatUserModerationModel e)
-        {
-            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserTimeout, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserTimeout);
-            trigger.Arguments.Add(e.User.Username);
-            trigger.SpecialIdentifiers["timeoutlength"] = e.Length.ToString();
-            await ChannelSession.Services.Events.PerformEvent(trigger);
-        }
-
-        private async void MixerChatService_OnUserBanOccurred(object sender, MixerChatUserModerationModel e)
-        {
-            EventTrigger trigger = (e.Moderator != null) ? new EventTrigger(EventTypeEnum.ChatUserBan, e.Moderator) : new EventTrigger(EventTypeEnum.ChatUserBan);
-            trigger.Arguments.Add(e.User.Username);
-            await ChannelSession.Services.Events.PerformEvent(trigger);
-
-            if (ChannelSession.Settings.ChatShowEventAlerts)
-            {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, e.User,
-                    string.Format("{0} Banned By {1}", e.User.Username, (e.Moderator != null) ? e.Moderator.Username : "Unknown"),
-                    ChannelSession.Settings.ChatEventAlertsColorScheme));
-            }
-        }
-
-        private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)
-        {
-            this.MixerChatService.OnPollEndOccurred -= MixerChatService_OnPollEndOccurred;
-
-            Dictionary<string, uint> results = new Dictionary<string, uint>();
-            foreach (string answer in pollResults.answers)
-            {
-                results[answer] = 0;
-                if (pollResults.responses.ContainsKey(answer))
-                {
-                    results[answer] = pollResults.responses[answer].ToObject<uint>();
-                }
-            }
-
-            this.OnPollEndOccurred(this, results);
-        }
-
-        #endregion Mixer Events
 
         #region Twitch Event
 

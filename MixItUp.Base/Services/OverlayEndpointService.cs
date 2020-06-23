@@ -194,14 +194,6 @@ namespace MixItUp.Base.Services
                             this.SetLocalFile(jobj["FileID"].ToString(), jobj["FilePath"].ToString());
                             jobj["FullLink"] = OverlayItemModelBase.GetFileFullLink(jobj["FileID"].ToString(), jobj["FileType"].ToString(), jobj["FilePath"].ToString());
                         }
-                        else if (item is OverlaySparkCrystalItemModel)
-                        {
-                            OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
-                            if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
-                            {
-                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), jobj["CustomImageFilePath"].ToString());
-                            }
-                        }
                         await this.SendPacket("Show", jobj);
                     }
                 }

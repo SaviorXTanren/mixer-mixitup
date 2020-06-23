@@ -33,7 +33,9 @@ namespace MixItUp.Base.Model.User
             {
                 StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
 
+#pragma warning disable CS0612 // Type or member is obsolete
                 if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
+#pragma warning restore CS0612 // Type or member is obsolete
                 if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
 
                 return platform;
@@ -203,11 +205,6 @@ namespace MixItUp.Base.Model.User
 
         public UserDataModel(StreamlabsChatBotViewerModel viewer)
         {
-            if (viewer.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                this.MixerID = viewer.ID;
-                this.MixerUsername = viewer.Name;
-            }
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
@@ -216,7 +213,9 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
+#pragma warning disable CS0612 // Type or member is obsolete
                 if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
+#pragma warning restore CS0612 // Type or member is obsolete
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
                 return string.Empty;
             }

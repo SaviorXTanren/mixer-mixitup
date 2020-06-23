@@ -1,12 +1,8 @@
 ﻿using Mixer.Base.Model.Clips;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -54,15 +50,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Enable()
         {
-            GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
-
             await base.Enable();
         }
 
         public override async Task Disable()
         {
-            GlobalEvents.OnMixerClipCreated -= GlobalEvents_OnMixerClipCreated;
-
             await base.Disable();
         }
 

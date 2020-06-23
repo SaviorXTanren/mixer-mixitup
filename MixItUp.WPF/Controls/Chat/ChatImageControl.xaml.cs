@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
@@ -46,10 +44,6 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public ChatImageControl(MixerChatEmoteModel emoticon) : this() { this.DataContext = emoticon; }
-
-        public ChatImageControl(MixerSkillModel skill) : this() { this.DataContext = skill; }
-
         public ChatImageControl(TwitchV5API.EmoteModel emote) : this() { this.DataContext = emote; }
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
@@ -65,20 +59,7 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.DataContext != null)
                 {
-                    if (this.DataContext is MixerChatEmoteModel)
-                    {
-                        MixerChatEmoteModel emote = (MixerChatEmoteModel)this.DataContext;
-                        CroppedBitmap croppedBitmap = new CroppedBitmap(await this.DownloadImageUrl(emote.Uri), new Int32Rect((int)emote.X, (int)emote.Y, (int)emote.Width, (int)emote.Height));
-                        this.Image.Source = croppedBitmap;
-                        this.Image.ToolTip = this.AltText.Text = emote.Name;
-                    }
-                    else if (this.DataContext is MixerSkillModel)
-                    {
-                        MixerSkillModel skill = (MixerSkillModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(skill.Image);
-                        this.Image.ToolTip = this.AltText.Text = skill.Name;
-                    }
-                    else if (this.DataContext is TwitchV5API.EmoteModel)
+                    if (this.DataContext is TwitchV5API.EmoteModel)
                     {
                         TwitchV5API.EmoteModel emote = (TwitchV5API.EmoteModel)this.DataContext;
                         this.Image.Source = await this.DownloadImageUrl(emote.URL);
@@ -99,10 +80,6 @@ namespace MixItUp.WPF.Controls.Chat
                     if (this.Image.Source != null)
                     {
                         this.Image.MaxWidth = this.Image.MaxHeight = this.Image.Width = this.Image.Height = ChannelSession.Settings.ChatFontSize * 2;
-                    }
-                    else if (this.GifImage.DataContext != null)
-                    {
-                        this.GifImage.MaxWidth = this.GifImage.MaxHeight = this.GifImage.Width = this.GifImage.Height = ChannelSession.Settings.ChatFontSize * 2;
                     }
                 }
             }

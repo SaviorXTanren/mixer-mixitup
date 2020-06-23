@@ -31,6 +31,7 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         SongRequests,
         TickerTape,
+        [Obsolete]
         SparkCrystal,
         EndCredits,
         Sound

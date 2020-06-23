@@ -1,10 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -49,7 +45,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser());
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
 
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
@@ -84,46 +80,21 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (!message.IsWhisper)
             {
-                if (message is MixerChatMessageViewModel)
+                if (message is UserChatMessageViewModel)
                 {
                     OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
 
-                    string text = string.Empty;
-                    string messageTemplate = string.Empty;
-                    if (message is MixerSkillChatMessageViewModel)
+                    List<string> textParts = new List<string>();
+                    foreach (object messagePart in message.MessageParts)
                     {
-                        MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)message;
-                        item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.SkillImageMessageHTMLTemplate);
-                        if (skillMessage.Skill != null)
+                        if (messagePart is string)
                         {
-                            item.TemplateReplacements.Add("IMAGE", skillMessage.Skill.Image);
+                            textParts.Add((string)messagePart);
                         }
                     }
-                    else
-                    {
-                        item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
 
-                        List<string> textParts = new List<string>();
-                        foreach (object messagePart in message.MessageParts)
-                        {
-                            if (messagePart is string)
-                            {
-                                textParts.Add((string)messagePart);
-                            }
-                            else if (messagePart is MixerChatEmoteModel)
-                            {
-                                MixerChatEmoteModel mixerEmote = (MixerChatEmoteModel)messagePart;
-                                string emoticonText = OverlayChatMessagesListItemModel.EmoticonMessageHTMLTemplate;
-                                emoticonText = emoticonText.Replace("{EMOTICON}", mixerEmote.Uri);
-                                emoticonText = emoticonText.Replace("{EMOTICON_X}", (-mixerEmote.X).ToString());
-                                emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-mixerEmote.Y).ToString());
-                                textParts.Add(emoticonText);
-                            }
-                        }
-
-                        item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
-                    }
-
+                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
+                    item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
                     item.TemplateReplacements.Add("USERNAME", item.User.Username);
                     item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
                     item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);

@@ -1,10 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.Controls.Chat;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -45,7 +43,6 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.viewModel = new ChatListControlViewModel(this.Window.ViewModel);
 
-            this.viewModel.GifSkillOccured += ViewModel_GifSkillOccured;
             this.viewModel.MessageSentOccurred += ViewModel_MessageSentOccurred;
             this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
             this.viewModel.ContextMenuCommandsChanged += ViewModel_ContextMenuCommandsChanged;
@@ -71,23 +68,6 @@ namespace MixItUp.WPF.Controls.Chat
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             this.ChatList.Items.Refresh();
-        }
-
-        private void ViewModel_GifSkillOccured(object sender, MixerSkillChatMessageViewModel skillMessage)
-        {
-            if (!string.IsNullOrEmpty(skillMessage.Skill.Image))
-            {
-                Task.Run(() =>
-                {
-                    this.gifSkillPopoutLock.WaitAndRelease(async () =>
-                    {
-                        await this.Dispatcher.InvokeAsync(async () =>
-                        {
-                            await this.GifSkillPopout.ShowGif(skillMessage);
-                        });
-                    });
-                });
-            }
         }
 
         private async void ViewModel_MessageSentOccurred(object sender, EventArgs e)
@@ -181,12 +161,7 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (tag.StartsWith(":"))
                     {
-                        List<MixerChatEmoteModel> emotes = MixerChatEmoteModel.FindMatchingEmoticons(tag).ToList();
-                        if (emotes.Count > 0)
-                        {
-                            emotes = emotes.Take(5).Reverse().ToList();
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
-                        }
+
                     }
                 }
             }
@@ -379,14 +354,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void SelectIntellisenseEmoticon()
         {
-            if (this.EmoticonIntellisenseListBox.SelectedItem is MixerChatEmoteModel)
-            {
-                MixerChatEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
-                if (emoticon != null)
-                {
-                    this.SelectIntellisenseItem(emoticon.Name);
-                }
-            }
             this.HideIntellisense();
         }
 

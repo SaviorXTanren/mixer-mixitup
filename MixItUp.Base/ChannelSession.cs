@@ -1,9 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -18,12 +16,11 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TwitchV5API = Twitch.Base.Models.V5;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
+using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base
 {
@@ -152,11 +149,6 @@ namespace MixItUp.Base
                 if (ChannelSession.MixerBot == null)
                 {
                     return new Result("Failed to get Mixer bot data");
-                }
-
-                if (ChannelSession.Services.Chat.MixerChatService != null && ChannelSession.Services.Chat.MixerChatService.IsUserConnected)
-                {
-                    return await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
                 }
             }
             return result;
@@ -313,10 +305,6 @@ namespace MixItUp.Base
         public static async Task DisconnectMixerBot()
         {
             ChannelSession.MixerBotConnection = null;
-            if (ChannelSession.Services.Chat.MixerChatService != null)
-            {
-                await ChannelSession.Services.Chat.MixerChatService.DisconnectBot();
-            }
         }
 
         public static async Task DisconnectTwitchBot()
@@ -331,12 +319,6 @@ namespace MixItUp.Base
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
-
-            if (ChannelSession.Services.Chat.MixerChatService != null)
-            {
-                await ChannelSession.Services.Chat.MixerChatService.DisconnectUser();
-            }
-            await ChannelSession.DisconnectMixerBot();
 
             if (ChannelSession.Services.Chat.TwitchChatService != null)
             {
@@ -557,10 +539,7 @@ namespace MixItUp.Base
                         await ChannelSession.Services.Telemetry.Connect();
                         ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
 
-                        MixerChatService mixerChatService = new MixerChatService();
-
                         List<Task<Result>> mixerConnections = new List<Task<Result>>();
-                        mixerConnections.Add(mixerChatService.ConnectUser());
 
                         await Task.WhenAll(mixerConnections);
 
@@ -599,10 +578,8 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        await ChannelSession.Services.Chat.Initialize(mixerChatService, twitchChatService);
+                        await ChannelSession.Services.Chat.Initialize(twitchChatService);
                         await ChannelSession.Services.Events.Initialize(twitchEventService);
-
-                        await MixerChatEmoteModel.InitializeEmoteCache();
                     }
                     catch (Exception ex)
                     {
@@ -823,15 +800,6 @@ namespace MixItUp.Base
 
         private static async Task<Result> InitializeBotInternal()
         {
-            if (ChannelSession.MixerBotConnection != null)
-            {
-                Result result = await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
-                if (!result.Success)
-                {
-                    return result;
-                }
-            }
-
             if (ChannelSession.TwitchBotConnection != null)
             {
                 Result result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();

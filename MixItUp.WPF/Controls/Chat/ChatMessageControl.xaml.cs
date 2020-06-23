@@ -1,12 +1,8 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.Chat.Twitch;
-using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -96,9 +92,6 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
                         italics = twitchMessage.IsSlashMe;
-
-                        //this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
-                        //showMessage = false;
                     }
 
                     if (showMessage)
@@ -113,10 +106,6 @@ namespace MixItUp.WPF.Controls.Chat
                                 bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerUser.username);
 
                                 this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged), isItalicized: italics);
-                            }
-                            else if (messagePart is MixerChatEmoteModel)
-                            {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixerChatEmoteModel)messagePart));
                             }
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {

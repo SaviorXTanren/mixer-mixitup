@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using System;
@@ -25,10 +22,10 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             get
             {
                 List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
-                if (ChannelSession.Services.Chat.MixerChatService.IsBotConnected)
-                {
-                    results.Add(MixItUp.Base.Resources.Bot);
-                }
+                //if (ChannelSession.Services.Chat.MixerChatService.IsBotConnected)
+                //{
+                //    results.Add(MixItUp.Base.Resources.Bot);
+                //}
                 return results;
             }
         }
@@ -76,7 +73,6 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public IEnumerable<ChatCommand> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
 
-        public event EventHandler<MixerSkillChatMessageViewModel> GifSkillOccured = delegate { };
         public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };
         public event EventHandler ContextMenuCommandsChanged = delegate { };
@@ -176,7 +172,6 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             });
 
             ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
         public void MoveSentMessageHistoryUp()
@@ -221,18 +216,6 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
         private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)
         {
             this.ContextMenuCommandsChanged(this, new EventArgs());
-        }
-
-        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
-        {
-            if (message is MixerSkillChatMessageViewModel)
-            {
-                MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)message;
-                if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
-                {
-                    this.GifSkillOccured(this, skillMessage);
-                }
-            }
         }
     }
 }

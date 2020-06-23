@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -9,7 +8,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Currency;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
