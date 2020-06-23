@@ -126,13 +126,6 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (this.Clauses.Count == 0 && !string.IsNullOrEmpty(this.Value1))
-            {
-                StoreCommandUpgrader.UpdateConditionalAction(new List<ActionBase>() { this });
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-
             List<bool> results = new List<bool>();
             foreach (ConditionalClauseModel clause in this.Clauses)
             {

@@ -81,13 +81,6 @@ namespace MixItUp.Base.Actions
             }
             else
             {
-#pragma warning disable CS0612 // Type or member is obsolete
-                if (this.Item != null)
-                {
-                    StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this });
-                }
-#pragma warning restore CS0612 // Type or member is obsolete
-
                 string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.Overlay.DefaultOverlayName : this.OverlayName;
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
                 if (overlay != null)

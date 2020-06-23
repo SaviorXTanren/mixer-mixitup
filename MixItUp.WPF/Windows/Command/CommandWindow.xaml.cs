@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.MixPlay;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Controls.Store;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,11 +30,6 @@ namespace MixItUp.WPF.Windows.Command
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
-        }
-
-        public void DownloadCommandFromStore(Guid storeListingID, IEnumerable<ActionBase> actions)
-        {
-            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, storeListingID, actions));
         }
 
         protected override async Task OnLoaded()
@@ -138,13 +131,6 @@ namespace MixItUp.WPF.Windows.Command
             {
                 this.CommandSaveSuccessfully(this, e);
             }
-        }
-
-        private void DownloadFromStoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.CommandSelectionGrid.Visibility = Visibility.Collapsed;
-            this.MainContentControl.Visibility = Visibility.Visible;
-            this.MainContentControl.Content = new MainStoreControl(this);
         }
     }
 }

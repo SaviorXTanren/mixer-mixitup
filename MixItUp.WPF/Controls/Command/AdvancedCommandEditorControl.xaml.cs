@@ -1,12 +1,9 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
-using MixItUp.WPF.Windows.Store;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -181,19 +178,6 @@ namespace MixItUp.WPF.Controls.Command
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
-                }
-            });
-        }
-
-        private async void UploadToMixItUpStoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.window.RunAsyncOperation(async () =>
-            {
-                CommandBase command = await this.GetNewCommand();
-                if (command != null)
-                {
-                    UploadStoreListingWindow window = new UploadStoreListingWindow(command);
-                    window.Show();
                 }
             });
         }

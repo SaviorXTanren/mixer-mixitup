@@ -182,13 +182,6 @@ namespace MixItUp.WPF.Controls.Actions
             this.OperatorTypeComboBox.ItemsSource = operatorTypes;
             if (this.action != null)
             {
-#pragma warning disable CS0612 // Type or member is obsolete
-                if (this.action.Clauses.Count == 0 && !string.IsNullOrEmpty(this.action.Value1))
-                {
-                    StoreCommandUpgrader.UpdateConditionalAction(new List<ActionBase>() { this.action });
-                }
-#pragma warning restore CS0612 // Type or member is obsolete
-
                 this.CaseSensitiveToggleButton.IsChecked = !this.action.IgnoreCase;
                 this.OperatorTypeComboBox.SelectedItem = this.action.Operator;
                 foreach (ConditionalClauseModel clause in this.action.Clauses)

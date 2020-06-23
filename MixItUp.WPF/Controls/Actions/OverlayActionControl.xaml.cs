@@ -82,13 +82,6 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (this.action.Item != null)
-                    {
-                        StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this.action });
-                    }
-#pragma warning restore CS0612 // Type or member is obsolete
-
                     if (this.action.OverlayItem != null)
                     {
                         if (this.action.OverlayItem.Effects != null)
