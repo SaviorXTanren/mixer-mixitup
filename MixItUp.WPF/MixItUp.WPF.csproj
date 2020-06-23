@@ -606,9 +606,6 @@
     <Compile Include="Controls\MainControls\AccountsControl.xaml.cs">
       <DependentUpon>AccountsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
-      <DependentUpon>AutoHosterControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
@@ -1393,10 +1390,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\AutoHosterControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\ChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2100,10 +2093,6 @@
     <ProjectReference Include="..\APIs\MixItUp.API\MixItUp.API.csproj">
       <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
       <Name>MixItUp.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
-      <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
-      <Name>MixItUp.AutoHoster</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0E494ACC-C46A-4DED-922B-FF378556BE8A}</Project>
