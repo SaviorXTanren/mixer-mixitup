@@ -535,10 +535,10 @@ namespace MixItUp.Base
 
                         try
                         {
-                            if (ChannelSession.Settings.RemoteHostConnection != null)
-                            {
-                                await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                            }
+                            //if (ChannelSession.Settings.RemoteHostConnection != null)
+                            //{
+                            //    await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
+                            //}
 
                             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
