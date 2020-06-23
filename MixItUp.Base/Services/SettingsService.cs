@@ -312,6 +312,10 @@ namespace MixItUp.Base.Services
                 {
                     await SettingsV2Upgrader.Version42Upgrade(filePath);
                 }
+                if (currentVersion < 43)
+                {
+                    await SettingsV2Upgrader.Version43Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -327,6 +331,41 @@ namespace MixItUp.Base.Services
             }
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
+        }
+
+        public static async Task Version43Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            await settings.Initialize();
+
+            if (settings.IsStreamer)
+            {
+                foreach (EventCommand command in settings.EventCommands)
+                {
+                    switch (command.EventCommandType)
+                    {
+#pragma warning disable CS0612 // Type or member is obsolete
+                        case EventTypeEnum.MixerChannelEmbersUsed: command.EventCommandType = EventTypeEnum.TwitchChannelBitsCheered; break;
+                        case EventTypeEnum.MixerChannelFollowed: command.EventCommandType = EventTypeEnum.TwitchChannelFollowed; break;
+                        case EventTypeEnum.MixerChannelHosted: command.EventCommandType = EventTypeEnum.TwitchChannelRaided; break;
+                        case EventTypeEnum.MixerChannelResubscribed: command.EventCommandType = EventTypeEnum.TwitchChannelResubscribed; break;
+                        case EventTypeEnum.MixerChannelStreamStart: command.EventCommandType = EventTypeEnum.TwitchChannelStreamStart; break;
+                        case EventTypeEnum.MixerChannelStreamStop: command.EventCommandType = EventTypeEnum.TwitchChannelStreamStop; break;
+                        case EventTypeEnum.MixerChannelSubscribed: command.EventCommandType = EventTypeEnum.TwitchChannelSubscribed; break;
+                        case EventTypeEnum.MixerChannelSubscriptionGifted: command.EventCommandType = EventTypeEnum.TwitchChannelSubscriptionGifted; break;
+                        case EventTypeEnum.MixerChannelUnfollowed: command.EventCommandType = EventTypeEnum.TwitchChannelUnfollowed; break;
+#pragma warning restore CS0612 // Type or member is obsolete
+                    }
+                }
+
+                settings.StreamElementsOAuthToken = null;
+                settings.StreamJarOAuthToken = null;
+                settings.StreamlabsOAuthToken = null;
+                settings.TipeeeStreamOAuthToken = null;
+                settings.TreatStreamOAuthToken = null;
+            }
+
+            await ChannelSession.Services.Settings.Save(settings);
         }
 
         public static async Task Version42Upgrade(string filePath)
@@ -577,6 +616,7 @@ namespace MixItUp.Base.Services
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.TwitchChannelPointsCommands);
             commands.AddRange(settings.CustomCommands.Values);
 
             foreach (UserDataModel userData in settings.UserData.Values)

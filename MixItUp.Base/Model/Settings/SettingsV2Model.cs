@@ -27,7 +27,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 42;
+        public const int LatestVersion = 43;
 
         public const string SettingsDirectoryName = "Settings";
 

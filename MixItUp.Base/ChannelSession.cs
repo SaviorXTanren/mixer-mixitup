@@ -89,6 +89,7 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.Settings.EventCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+                commands.AddRange(ChannelSession.Settings.TwitchChannelPointsCommands);
                 return commands;
             }
         }
