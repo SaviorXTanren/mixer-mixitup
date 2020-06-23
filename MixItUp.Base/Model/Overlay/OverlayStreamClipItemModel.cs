@@ -49,18 +49,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            this.lastClip = new ClipModel()
-            {
-                contentLocators = new List<ClipLocatorModel>()
-                {
-                    new ClipLocatorModel()
-                    {
-                        locatorType = MixerClipsAction.VideoFileContentLocatorType,
-                        uri = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/MixerTestClip/manifest.m3u8"
-                    }
-                },
-                durationInSeconds = 10
-            };
             return Task.FromResult(0);
         }
 
@@ -80,21 +68,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            JObject jobj = null;
-            if (this.lastClip != null)
-            {
-                ClipLocatorModel clipLocator = this.lastClip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(MixerClipsAction.VideoFileContentLocatorType));
-                if (clipLocator != null)
-                {
-                    this.lastClipURL = clipLocator.uri;
-                    this.Effects.Duration = Math.Max(0, this.lastClip.durationInSeconds - 1);
-                    jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-                }
-
-                this.lastClip = null;
-                this.lastClipURL = null;
-            }
-            return jobj;
+            return null;
         }
 
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)

@@ -204,9 +204,9 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void CheckFFMPEGInstallation()
         {
-            bool mmpegExists = ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath());
-            this.DownloadAndInstallFFMPEGButton.Visibility = (mmpegExists) ? Visibility.Collapsed : Visibility.Visible;
-            this.FFMPEGInstalledTextBlock.Visibility = (mmpegExists) ? Visibility.Visible : Visibility.Collapsed;
+            //bool mmpegExists = ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath());
+            //this.DownloadAndInstallFFMPEGButton.Visibility = (mmpegExists) ? Visibility.Collapsed : Visibility.Visible;
+            //this.FFMPEGInstalledTextBlock.Visibility = (mmpegExists) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SaveChatEventLogsToggleButton_Checked(object sender, RoutedEventArgs e)

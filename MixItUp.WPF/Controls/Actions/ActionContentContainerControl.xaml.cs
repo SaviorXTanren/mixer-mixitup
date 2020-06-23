@@ -84,33 +84,12 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.WebRequest:
                         this.actionControl = (this.action != null) ? new WebRequestActionControl((WebRequestAction)this.action) : new WebRequestActionControl();
                         break;
-#pragma warning disable CS0612 // Type or member is obsolete
-                    case ActionTypeEnum.ActionGroup:
-                        if (this.action != null)
-                        {
-                            ActionGroupAction aaction = (ActionGroupAction)this.action;
-                            this.actionControl = new CommandActionControl(new CommandAction()
-                            {
-                                CommandActionType = CommandActionTypeEnum.RunCommand,
-                                CommandID = aaction.ActionGroupID
-                            });
-                        }
-#pragma warning restore CS0612 // Type or member is obsolete
-                        break;
                     case ActionTypeEnum.SpecialIdentifier:
                         this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl((SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl();
                         break;
                     case ActionTypeEnum.File:
                         this.actionControl = (this.action != null) ? new FileActionControl((FileAction)this.action) : new FileActionControl();
                         break;
-#pragma warning disable CS0612 // Type or member is obsolete
-                    case ActionTypeEnum.SongRequest:
-                        this.actionControl = null;
-                        break;
-                    case ActionTypeEnum.Spotify:
-                        this.actionControl = null;
-                        break;
-#pragma warning restore CS0612 // Type or member is obsolete
                     case ActionTypeEnum.Discord:
                         this.actionControl = (this.action != null) ? new DiscordActionControl((DiscordAction)this.action) : new DiscordActionControl();
                         break;
@@ -128,9 +107,6 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.Streamlabs:
                         this.actionControl = (this.action != null) ? new StreamlabsActionControl((StreamlabsAction)this.action) : new StreamlabsActionControl();
-                        break;
-                    case ActionTypeEnum.MixerClips:
-                        this.actionControl = (this.action != null) ? new MixerClipsActionControl((MixerClipsAction)this.action) : new MixerClipsActionControl();
                         break;
                     case ActionTypeEnum.Command:
                         this.actionControl = (this.action != null) ? new CommandActionControl((CommandAction)this.action) : new CommandActionControl();
@@ -150,6 +126,31 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.IFTTT:
                         this.actionControl = (this.action != null) ? new IFTTTActionControl((IFTTTAction)this.action) : new IFTTTActionControl();
                         break;
+#pragma warning disable CS0612 // Type or member is obsolete
+                    case ActionTypeEnum.ActionGroup:
+                        if (this.action != null)
+                        {
+                            ActionGroupAction aaction = (ActionGroupAction)this.action;
+                            this.actionControl = new CommandActionControl(new CommandAction()
+                            {
+                                CommandActionType = CommandActionTypeEnum.RunCommand,
+                                CommandID = aaction.ActionGroupID
+                            });
+                        }
+                        break;
+                    case ActionTypeEnum.SongRequest:
+                        this.actionControl = null;
+                        break;
+                    case ActionTypeEnum.Spotify:
+                        this.actionControl = null;
+                        break;
+                    case ActionTypeEnum.Interactive:
+                        this.actionControl = null;
+                        break;
+                    case ActionTypeEnum.MixerClips:
+                        this.actionControl = null;
+                        break;
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
             }
 
