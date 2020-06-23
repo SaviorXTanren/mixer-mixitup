@@ -30,12 +30,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -80,39 +74,6 @@
 
                 <TextBlock Grid.Column="0" VerticalAlignment="Center">Donations:</TextBlock>
                 <CheckBox IsChecked="{Binding ShowDonations}" Grid.Column="2" VerticalAlignment="Center" />
-            </Grid>
-
-            <Grid Grid.Column="8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Sparks:</TextBlock>
-                <CheckBox IsChecked="{Binding ShowSparks}" Grid.Column="2" VerticalAlignment="Center" />
-            </Grid>
-
-            <Grid Grid.Column="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Embers:</TextBlock>
-                <CheckBox IsChecked="{Binding ShowEmbers}" Grid.Column="2" VerticalAlignment="Center" />
-            </Grid>
-
-            <Grid Grid.Column="12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Milestones:</TextBlock>
-                <CheckBox IsChecked="{Binding ShowMilestones}" Grid.Column="2" VerticalAlignment="Center" />
             </Grid>
 
         </Grid>

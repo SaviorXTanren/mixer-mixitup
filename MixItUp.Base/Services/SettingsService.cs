@@ -441,10 +441,6 @@ namespace MixItUp.Base.Services
                     newCurrency.RankChangedCommandID = oldCurrency.RankChangedCommand.ID;
                 }
 
-                if (oldCurrency.IsTrackingSparks) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
-                if (oldCurrency.IsTrackingEmbers) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
-                if (oldCurrency.IsTrackingFanProgression) { newCurrency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
-
                 foreach (UserRankViewModel rank in oldCurrency.Ranks)
                 {
                     newCurrency.Ranks.Add(new RankModel(rank.Name, rank.MinimumPoints));

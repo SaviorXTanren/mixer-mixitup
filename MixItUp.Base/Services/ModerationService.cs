@@ -27,8 +27,11 @@ namespace MixItUp.Base.Services
         FollowerOnly = 19,
         SubscriberOnly = 20,
         ModeratorOnly = 30,
+        [Obsolete]
         EmotesSkillsOnly = 40,
+        [Obsolete]
         SkillsOnly = 41,
+        [Obsolete]
         EmberSkillsOnly = 42,
     }
 
@@ -303,22 +306,6 @@ namespace MixItUp.Base.Services
                 {
                     return false;
                 }
-
-                if (message != null)
-                {
-                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
-                    {
-                        return message.ContainsOnlyEmotes() || message is MixerSkillChatMessageViewModel;
-                    }
-                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
-                    {
-                        return message is MixerSkillChatMessageViewModel;
-                    }
-                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
-                    {
-                        return message is MixerSkillChatMessageViewModel && ((MixerSkillChatMessageViewModel)message).Skill.IsEmbersSkill;
-                    }
-                }
             }
             return true;
         }
@@ -339,18 +326,6 @@ namespace MixItUp.Base.Services
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly)
                 {
                     reason = "Moderators";
-                }
-                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
-                {
-                    reason = "Emotes & Skills";
-                }
-                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
-                {
-                    reason = "Skills";
-                }
-                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
-                {
-                    reason = "Ember Skills";
                 }
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
                 {

@@ -15,7 +15,9 @@ namespace MixItUp.Base.Model.Overlay
         Hosts,
         Subscribers,
         Donations,
+        [Obsolete]
         Sparks,
+        [Obsolete]
         Embers,
     }
 
@@ -73,14 +75,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
-            if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Sparks)
-            {
-                GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
-            }
-            if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Embers)
-            {
-                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
-            }
 
             await base.Enable();
         }
@@ -92,8 +86,6 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             await base.Disable();
         }
@@ -160,22 +152,6 @@ namespace MixItUp.Base.Model.Overlay
             if (this.MinimumAmountRequiredToShow == 0.0 || donation.Amount >= this.MinimumAmountRequiredToShow)
             {
                 await this.AddEvent(donation.Username + ": " + donation.AmountText);
-            }
-        }
-
-        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
-        {
-            if (this.MinimumAmountRequiredToShow == 0.0 || sparkUsage.Item2 >= this.MinimumAmountRequiredToShow)
-            {
-                await this.AddEvent(sparkUsage.Item1.Username + ": " + sparkUsage.Item2);
-            }
-        }
-
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
-        {
-            if (this.MinimumAmountRequiredToShow == 0.0 || emberUsage.Amount >= this.MinimumAmountRequiredToShow)
-            {
-                await this.AddEvent(emberUsage.User.Username + ": " + emberUsage.Amount);
             }
         }
 

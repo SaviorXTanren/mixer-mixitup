@@ -23,7 +23,9 @@ namespace MixItUp.Base.Model.Overlay
         Donations,
         [Name("Currency/Rank")]
         CurrencyRank,
+        [Obsolete]
         Sparks,
+        [Obsolete]
         Embers,
     }
 
@@ -117,9 +119,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                return this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank ||
-                    this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks ||
-                    this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Embers;
+                return this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank;
             }
         }
 
@@ -189,64 +189,6 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), currency.GetAmount(userData).ToString()));
                         }
-                    }
-                }
-            }
-            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks && this.lastQuery.TotalMinutesFromNow() > 1)
-            {
-                IEnumerable<SparksLeaderboardModel> sparkLeaderboard = null;
-                switch (this.LeaderboardDateRange)
-                {
-                    case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                }
-                this.lastQuery = DateTimeOffset.Now;
-
-                if (sparkLeaderboard != null)
-                {
-                    for (int i = 0; i < sparkLeaderboard.Count() && items.Count() < this.TotalToShow; i++)
-                    {
-                        var lData = sparkLeaderboard.ElementAt(i);
-                        items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
-                    }
-                }
-            }
-            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Embers && this.lastQuery.TotalMinutesFromNow() > 1)
-            {
-                IEnumerable<EmbersLeaderboardModel> emberLeaderboard = null;
-                switch (this.LeaderboardDateRange)
-                {
-                    case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                    case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
-                        break;
-                }
-                this.lastQuery = DateTimeOffset.Now;
-
-                if (emberLeaderboard != null)
-                {
-                    for (int i = 0; i < emberLeaderboard.Count() && items.Count() < this.TotalToShow; i++)
-                    {
-                        var lData = emberLeaderboard.ElementAt(i);
-                        items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
                     }
                 }
             }

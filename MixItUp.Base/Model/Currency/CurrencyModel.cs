@@ -23,8 +23,11 @@ namespace MixItUp.Base.Model.Currency
     public enum CurrencySpecialTrackingEnum
     {
         None = 0,
+        [Obsolete]
         Sparks = 1,
+        [Obsolete]
         Embers = 2,
+        [Obsolete]
         FanProgression = 3,
         Bits = 4,
     }
@@ -310,21 +313,7 @@ namespace MixItUp.Base.Model.Currency
         {
             if (this.IsActive)
             {
-                if (this.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression)
-                {
-                    foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
-                    {
-                        if (!user.Data.IsCurrencyRankExempt)
-                        {
-                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > this.GetAmount(user.Data))
-                            {
-                                this.SetAmount(user.Data, (int)user.MixerFanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
-                            }
-                        }
-                    }
-                }
-                else if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
+                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
                     int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)

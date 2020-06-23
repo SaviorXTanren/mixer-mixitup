@@ -35,12 +35,6 @@ namespace MixItUp.Base.Util
         public const string TopTimeSpecialIdentifier = TopSpecialIdentifierHeader + "time";
         public const string TopTimeRegexSpecialIdentifier = TopSpecialIdentifierHeader + "\\d+time";
 
-        public const string TopSparksUsedSpecialIdentifierHeader = TopSpecialIdentifierHeader + "sparksused";
-        public const string TopSparksUsedRegexSpecialIdentifierHeader = TopSpecialIdentifierHeader + "\\d+sparksused";
-
-        public const string TopEmbersUsedSpecialIdentifierHeader = TopSpecialIdentifierHeader + "embersused";
-        public const string TopEmbersUsedRegexSpecialIdentifierHeader = TopSpecialIdentifierHeader + "\\d+embersused";
-
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
         public const string StreamerSpecialIdentifierHeader = "streamer";
@@ -316,38 +310,6 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
-                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
-                {
-                    await this.HandleTopSparksUsedRegex("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopSparksUsedRegex("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopSparksUsedRegex("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopSparksUsedRegex("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, amount); });
-                }
-
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader))
-                {
-                    await this.HandleTopSparksUsed("weekly", async () => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopSparksUsed("monthly", async () => { return await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopSparksUsed("yearly", async () => { return await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopSparksUsed("alltime", async () => { return await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, 1); });
-                }
-
-                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
-                {
-                    await this.HandleTopEmbersUsedRegex("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopEmbersUsedRegex("monthly", async (amount) => { return await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopEmbersUsedRegex("yearly", async (amount) => { return await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                    await this.HandleTopEmbersUsedRegex("alltime", async (amount) => { return await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, amount); });
-                }
-
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader))
-                {
-                    await this.HandleTopEmbersUsed("weekly", async () => { return await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopEmbersUsed("monthly", async () => { return await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopEmbersUsed("yearly", async () => { return await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
-                    await this.HandleTopEmbersUsed("alltime", async () => { return await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, 1); });
-                }
-
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
@@ -796,130 +758,6 @@ namespace MixItUp.Base.Util
 
         public override string ToString() { return this.text; }
 
-        private async Task HandleTopSparksUsedRegex(string timeFrame, Func<int, Task<IEnumerable<SparksLeaderboardModel>>> func)
-        {
-            if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame))
-            {
-                await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
-                {
-                    IEnumerable<SparksLeaderboardModel> leaderboards = await func(total);
-                    if (leaderboards != null && leaderboards.Count() > 0)
-                    {
-                        leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                        List<string> leaderboardsList = new List<string>();
-                        int position = 1;
-                        for (int i = 0; i < total && i < leaderboards.Count(); i++)
-                        {
-                            SparksLeaderboardModel leaderboard = leaderboards.ElementAt(i);
-                            leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
-                            position++;
-                        }
-
-                        string result = "No users found.";
-                        if (leaderboardsList.Count > 0)
-                        {
-                            result = string.Join(", ", leaderboardsList);
-                        }
-                        return result;
-                    }
-                    return null;
-                });
-            }
-        }
-
-        private async Task HandleTopSparksUsed(string timeframe, Func<Task<IEnumerable<SparksLeaderboardModel>>> func)
-        {
-            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader + timeframe))
-            {
-                IEnumerable<SparksLeaderboardModel> leaderboards = await func();
-                if (leaderboards != null && leaderboards.Count() > 0)
-                {
-                    SparksLeaderboardModel top = leaderboards.OrderByDescending(l => l.statValue).FirstOrDefault();
-                    UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(top.username);
-                    if (mixerUser != null)
-                    {
-                        UserViewModel topUser = ChannelSession.Services.User.GetUserByMixerID(mixerUser.id);
-                        if (topUser == null)
-                        {
-                            UserDataModel userData = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
-                            if (userData != null)
-                            {
-                                topUser = new UserViewModel(userData);
-                            }
-                            else
-                            {
-                                topUser = new UserViewModel(mixerUser);
-                            }
-                        }
-                        await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopSparksUsedSpecialIdentifierHeader + timeframe);
-                    }
-                }
-            }
-        }
-
-        private async Task HandleTopEmbersUsedRegex(string timeFrame, Func<int, Task<IEnumerable<EmbersLeaderboardModel>>> func)
-        {
-            if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame))
-            {
-                await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
-                {
-                    IEnumerable<EmbersLeaderboardModel> leaderboards = await func(total);
-                    if (leaderboards != null && leaderboards.Count() > 0)
-                    {
-                        leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                        List<string> leaderboardsList = new List<string>();
-                        int position = 1;
-                        for (int i = 0; i < total && i < leaderboards.Count(); i++)
-                        {
-                            EmbersLeaderboardModel leaderboard = leaderboards.ElementAt(i);
-                            leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
-                            position++;
-                        }
-
-                        string result = "No users found.";
-                        if (leaderboardsList.Count > 0)
-                        {
-                            result = string.Join(", ", leaderboardsList);
-                        }
-                        return result;
-                    }
-                    return null;
-                });
-            }
-        }
-
-        private async Task HandleTopEmbersUsed(string timeframe, Func<Task<IEnumerable<EmbersLeaderboardModel>>> func)
-        {
-            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader + timeframe))
-            {
-                IEnumerable<EmbersLeaderboardModel> leaderboards = await func();
-                if (leaderboards != null && leaderboards.Count() > 0)
-                {
-                    EmbersLeaderboardModel top = leaderboards.OrderByDescending(l => l.statValue).FirstOrDefault();
-                    UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(top.username);
-                    if (mixerUser != null)
-                    {
-                        UserViewModel topUser = ChannelSession.Services.User.GetUserByMixerID(mixerUser.id);
-                        if (topUser == null)
-                        {
-                            UserDataModel userData = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
-                            if (userData == null)
-                            {
-                                topUser = new UserViewModel(userData);
-                            }
-                            else
-                            {
-                                topUser = new UserViewModel(mixerUser);
-                            }
-                        }
-                        await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopEmbersUsedSpecialIdentifierHeader + timeframe);
-                    }
-                }
-            }
-        }
-
         private async Task HandleUserSpecialIdentifiers(UserViewModel user, string identifierHeader)
         {
             if (user != null && this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader))
@@ -1030,8 +868,6 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalstreamswatched", user.Data.TotalStreamsWatched.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalamountdonated", string.Format("{0:C}", Math.Round(user.Data.TotalAmountDonated, 2)));
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsparksspent", user.Data.TotalSparksSpent.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalembersspent", user.Data.TotalEmbersSpent.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsgifted", user.Data.TotalSubsGifted.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalsubsreceived", user.Data.TotalSubsReceived.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalchatmessagessent", user.Data.TotalChatMessageSent.ToString());

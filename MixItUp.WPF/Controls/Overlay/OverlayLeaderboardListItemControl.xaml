@@ -40,8 +40,6 @@
 
             <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding SparksEmbersDateStrings}" SelectedItem="{Binding SparksEmbersDateString}" Visibility="{Binding IsSparksEmbersType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
-
             <GroupBox Header="New Leader" Grid.Column="4" Width="165">
                 <Grid>
                     <Button x:Name="CreateNewLeaderCommandButton" HorizontalAlignment="Center" Click="CreateNewLeaderCommandButton_Click" Visibility="{Binding DoesNotHaveNewLeaderCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.AddCommand}"/>

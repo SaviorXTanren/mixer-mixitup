@@ -481,13 +481,10 @@ namespace MixItUp.Base.Model.Settings
                     userData.CustomTitle = GetOptionValue<string>(optionsJObj, "CustomTitle");
                     userData.TotalStreamsWatched = GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
                     userData.TotalAmountDonated = GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
-                    userData.TotalSparksSpent = GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
-                    userData.TotalEmbersSpent = GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
                     userData.TotalSubsGifted = GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
                     userData.TotalSubsReceived = GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
                     userData.TotalChatMessageSent = GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
                     userData.TotalTimesTagged = GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
-                    userData.TotalSkillsUsed = GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
                     userData.TotalCommandsRun = GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
                     userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
                 }

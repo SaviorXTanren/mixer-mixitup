@@ -92,41 +92,13 @@ namespace MixItUp.WPF.Controls.Chat
                     this.MessageWrapPanel.Children.Add(header);
 
                     bool showMessage = true;
-                    if (this.DataContext is MixerSkillChatMessageViewModel)
-                    {
-                        MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)this.DataContext;
-                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
-                        {
-                            GifSkillHoverControl gifSkillControl = new GifSkillHoverControl();
-                            gifSkillControl.DataContext = skillMessage;
-                            this.MessageWrapPanel.Children.Add(gifSkillControl);
-                        }
-                        else
-                        {
-                            this.MessageWrapPanel.Children.Add(new ChatImageControl(skillMessage.Skill));
-                        }
-
-                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Other)
-                        {
-                            this.AddStringMessage(skillMessage.Skill.Name);
-                        }
-
-                        if (skillMessage.Skill.IsEmbersSkill)
-                        {
-                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
-                        }
-                        else
-                        {
-                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
-                            showMessage = false;
-                        }
-
-                        this.AddStringMessage(" " + skillMessage.Skill.Cost.ToString());
-                    }
-                    else if (this.DataContext is TwitchChatMessageViewModel)
+                    if (this.DataContext is TwitchChatMessageViewModel)
                     {
                         TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
                         italics = twitchMessage.IsSlashMe;
+
+                        //this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
+                        //showMessage = false;
                     }
 
                     if (showMessage)

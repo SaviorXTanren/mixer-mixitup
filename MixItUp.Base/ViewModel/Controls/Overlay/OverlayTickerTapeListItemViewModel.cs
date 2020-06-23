@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -21,10 +20,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 if (this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Donations)
                 {
                     this.minimumAmountRequiredToShow = 1.0;
-                }
-                else if (this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Sparks)
-                {
-                    this.minimumAmountRequiredToShow = 1000;
                 }
                 else
                 {
@@ -50,9 +45,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             get
             {
-                return this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Donations ||
-                    this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Sparks ||
-                    this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Embers;
+                return this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Donations;
             }
         }
 

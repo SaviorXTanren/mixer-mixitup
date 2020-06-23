@@ -143,10 +143,6 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public double TotalAmountDonated { get; set; }
         [DataMember]
-        public uint TotalSparksSpent { get; set; }
-        [DataMember]
-        public uint TotalEmbersSpent { get; set; }
-        [DataMember]
         public uint TotalBitsSpent { get; set; }
         [DataMember]
         public uint TotalSubsGifted { get; set; }
@@ -156,8 +152,6 @@ namespace MixItUp.Base.Model.User
         public uint TotalChatMessageSent { get; set; }
         [DataMember]
         public uint TotalTimesTagged { get; set; }
-        [DataMember]
-        public uint TotalSkillsUsed { get; set; }
         [DataMember]
         public uint TotalCommandsRun { get; set; }
         [DataMember]

@@ -23,11 +23,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         [Name("1PerHour")]
         Hours,
         [Name("1PerSpark")]
-        Sparks,
-        [Name("1PerEmber")]
-        Embers,
-        [Name("FanProgression")]
-        FanProgression,
+        Bits,
         Custom,
         Disabled,
     }
@@ -106,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                         this.OnlineRateInterval = 60;
                     }
                 }
-                else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks || this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers || this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression)
+                else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Bits)
                 {
                     this.OnlineRateAmount = 1;
                     this.OnlineRateInterval = 1;
@@ -131,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private CurrencyAcquireRateTypeEnum onlineRate;
         public List<CurrencyAcquireRateTypeEnum> OnlineRates { get; private set; } = new List<CurrencyAcquireRateTypeEnum>(EnumHelper.GetEnumList<CurrencyAcquireRateTypeEnum>());
-        public bool IsOnlineRateTimeBased { get { return this.OnlineRate != CurrencyAcquireRateTypeEnum.Sparks && this.OnlineRate != CurrencyAcquireRateTypeEnum.Embers && this.OnlineRate != CurrencyAcquireRateTypeEnum.FanProgression; } }
+        public bool IsOnlineRateTimeBased { get { return this.OnlineRate != CurrencyAcquireRateTypeEnum.Bits; } }
         public bool IsCustomOnlineRate { get { return this.OnlineRate == CurrencyAcquireRateTypeEnum.Custom; } }
         public int OnlineRateAmount
         {
@@ -380,17 +376,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.MaxAmount = this.Currency.MaxAmount;
             }
 
-            if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Sparks)
+            if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Bits)
             {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.Sparks;
-            }
-            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Embers)
-            {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.Embers;
-            }
-            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression)
-            {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.FanProgression;
+                this.OnlineRate = CurrencyAcquireRateTypeEnum.Bits;
             }
             else if (this.Currency.IsOnlineIntervalMinutes)
             {
@@ -834,9 +822,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.Currency.OfflineAcquireInterval = this.OfflineRateInterval;
 
             this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.None;
-            if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
-            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
-            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+            if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Bits) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Bits; }
 
             this.Currency.RegularBonus = this.RegularBonus;
             this.Currency.SubscriberBonus = this.SubscriberBonus;

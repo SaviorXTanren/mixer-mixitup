@@ -220,26 +220,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private double donationBonus = 1.5;
-        public double SparkBonus
-        {
-            get { return this.sparkBonus; }
-            set
-            {
-                this.sparkBonus = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private double sparkBonus = 0.1;
-        public double EmberBonus
-        {
-            get { return this.emberBonus; }
-            set
-            {
-                this.emberBonus = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private double emberBonus = 1.5;
 
         public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
@@ -307,8 +287,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.HostBonus = this.StreamPass.HostBonus;
             this.SubscribeBonus = this.StreamPass.SubscribeBonus;
             this.DonationBonus = this.StreamPass.DonationBonus;
-            this.SparkBonus = this.StreamPass.SparkBonus;
-            this.EmberBonus = this.StreamPass.EmberBonus;
 
             this.DefaultLevelUpCommand = this.StreamPass.DefaultLevelUpCommand;
             foreach (var kvp in this.StreamPass.CustomLevelUpCommands)
@@ -446,18 +424,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
-            if (this.SparkBonus < 0)
-            {
-                await DialogHelper.ShowMessage("The Spark Bonus must be greater than or equal to 0");
-                return false;
-            }
-
-            if (this.EmberBonus < 0)
-            {
-                await DialogHelper.ShowMessage("The Ember Bonus must be greater than or equal to 0");
-                return false;
-            }
-
             if (this.CustomLevelUpCommands.GroupBy(c => c.Level).Any(c => c.Count() > 1))
             {
                 await DialogHelper.ShowMessage("There can only be 1 custom level up command per individual level");
@@ -498,8 +464,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.StreamPass.HostBonus = this.HostBonus;
             this.StreamPass.SubscribeBonus = this.SubscribeBonus;
             this.StreamPass.DonationBonus = this.DonationBonus;
-            this.StreamPass.SparkBonus = this.SparkBonus;
-            this.StreamPass.EmberBonus = this.EmberBonus;
 
             this.StreamPass.DefaultLevelUpCommand = this.DefaultLevelUpCommand;
             this.StreamPass.CustomLevelUpCommands.Clear();

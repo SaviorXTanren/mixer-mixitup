@@ -59,22 +59,30 @@ namespace MixItUp.Base.Services
 
         // Mixer = 100
 
+        [Obsolete]
         [Name("Mixer Channel Stream Start")]
         MixerChannelStreamStart = 100,
+        [Obsolete]
         [Name("Mixer Channel Stream Stop")]
         MixerChannelStreamStop = 101,
+        [Obsolete]
         [Name("Mixer Channel Hosted")]
         MixerChannelHosted = 102,
 
+        [Obsolete]
         [Name("Mixer Channel Followed")]
         MixerChannelFollowed = 110,
+        [Obsolete]
         [Name("Mixer Channel Unfollowed")]
         MixerChannelUnfollowed = 111,
 
+        [Obsolete]
         [Name("Mixer Channel Subscribed")]
         MixerChannelSubscribed = 120,
+        [Obsolete]
         [Name("Mixer Channel Resubscribed")]
         MixerChannelResubscribed = 121,
+        [Obsolete]
         [Name("Mixer Channel Subscription Gifted")]
         MixerChannelSubscriptionGifted = 122,
 
@@ -95,14 +103,19 @@ namespace MixItUp.Base.Services
         //[Name("Mixer Chat User Timeout")]
         //MixerChatUserTimeout = 156,
 
+        [Obsolete]
         [Name("Mixer Channel Sparks Spent")]
         MixerChannelSparksUsed = 170,
+        [Obsolete]
         [Name("Mixer Channel Embers Spent")]
         MixerChannelEmbersUsed = 171,
+        [Obsolete]
         [Name("Mixer Channel Skill Used")]
         MixerChannelSkillUsed = 172,
+        [Obsolete]
         [Name("Mixer Channel Milestone Reached")]
         MixerChannelMilestoneReached = 173,
+        [Obsolete]
         [Name("Mixer Channel Fan Progression Level-Up")]
         MixerChannelFanProgressionLevelUp = 174,
 
@@ -217,10 +230,9 @@ namespace MixItUp.Base.Services
 
     public interface IEventService
     {
-        IMixerEventService MixerEventService { get; }
         ITwitchEventService TwitchEventService { get; }
 
-        Task Initialize(IMixerEventService mixerEventService, ITwitchEventService twitchEventService);
+        Task Initialize(ITwitchEventService twitchEventService);
 
         EventCommand GetEventCommand(EventTypeEnum type);
 
@@ -235,7 +247,7 @@ namespace MixItUp.Base.Services
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
 
-            EventTypeEnum.MixerChannelStreamStart, EventTypeEnum.MixerChannelStreamStop, EventTypeEnum.MixerChannelFollowed, EventTypeEnum.MixerChannelUnfollowed, EventTypeEnum.MixerChannelHosted, EventTypeEnum.MixerChannelSubscribed, EventTypeEnum.MixerChannelResubscribed,
+            EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelUnfollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
         };
 
         private LockedDictionary<EventTypeEnum, HashSet<Guid>> userEventTracking = new LockedDictionary<EventTypeEnum, HashSet<Guid>>();
@@ -282,13 +294,10 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public IMixerEventService MixerEventService { get; private set; }
-
         public ITwitchEventService TwitchEventService { get; private set; }
 
-        public Task Initialize(IMixerEventService mixerEventService, ITwitchEventService twitchEventService)
+        public Task Initialize(ITwitchEventService twitchEventService)
         {
-            this.MixerEventService = mixerEventService;
             this.TwitchEventService = twitchEventService;
             return Task.FromResult(0);
         }

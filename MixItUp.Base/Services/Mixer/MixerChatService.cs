@@ -121,7 +121,6 @@ namespace MixItUp.Base.Services.Mixer
                         this.streamerClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
                         this.streamerClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
                         this.streamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                        this.streamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
                         this.streamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                         this.streamerClient.OnReplyOccurred += ChatClient_OnReplyOccurred;
                         if (ChannelSession.AppSettings.DiagnosticLogging)
@@ -179,7 +178,6 @@ namespace MixItUp.Base.Services.Mixer
                     this.streamerClient.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
                     this.streamerClient.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
                     this.streamerClient.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
-                    this.streamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
                     this.streamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                     this.streamerClient.OnReplyOccurred -= ChatClient_OnReplyOccurred;
                     if (ChannelSession.AppSettings.DiagnosticLogging)
@@ -698,27 +696,6 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
-        {
-            MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(skillAttribution);
-
-            // Add artificial delay to ensure skill event data from Constellation was received.
-            for (int i = 0; i < 8; i++)
-            {
-                await Task.Delay(250);
-                if (ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.ContainsKey(skillAttribution.id))
-                {
-                    message.Skill.SetPayload(ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered[skillAttribution.id]);
-                    ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.Remove(skillAttribution.id);
-                    break;
-                }
-            }
-
-            this.OnMessageOccurred(sender, message);
-
-            this.ProcessSkill(message);
-        }
-
         protected async void ChatClient_OnReplyOccurred(object sender, ReplyPacket e)
         {
             try
@@ -749,10 +726,6 @@ namespace MixItUp.Base.Services.Mixer
                     if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
                     {
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
-                    }
-                    else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
-                    {
-                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
                     }
                 }
             }

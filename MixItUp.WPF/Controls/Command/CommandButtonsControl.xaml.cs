@@ -163,20 +163,16 @@ namespace MixItUp.WPF.Controls.Command
                     EventCommand eventCommand = command as EventCommand;
                     switch (eventCommand.EventCommandType)
                     {
-                        case EventTypeEnum.MixerChannelHosted:
+                        case EventTypeEnum.TwitchChannelHosted:
+                        case EventTypeEnum.TwitchChannelRaided:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
-                            extraSpecialIdentifiers["isautohost"] = "False";
                             break;
-                        case EventTypeEnum.MixerChannelResubscribed:
+                        case EventTypeEnum.TwitchChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             extraSpecialIdentifiers["usersubstreak"] = "3";
                             break;
-                        case EventTypeEnum.MixerChannelFanProgressionLevelUp:
-                            extraSpecialIdentifiers["userfanprogressionnext"] = "200";
-                            extraSpecialIdentifiers["userfanprogressionrank"] = "10";
-                            extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
-                            extraSpecialIdentifiers["userfanprogressionimage"] = "https://static.mixer.com/img/design/ui/fan-progression/v1_badges/purple/large.gif";
-                            extraSpecialIdentifiers["userfanprogression"] = "100";
+                        case EventTypeEnum.TwitchChannelBitsCheered:
+                            extraSpecialIdentifiers["bitsamount"] = "10";
                             break;
                         case EventTypeEnum.ChatUserTimeout:
                             extraSpecialIdentifiers["timeoutlength"] = "5m";
@@ -231,34 +227,6 @@ namespace MixItUp.WPF.Controls.Command
                         case EventTypeEnum.StreamlootsPackPurchased:
                         case EventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
-                            break;
-                        case EventTypeEnum.MixerChannelSparksUsed:
-                            extraSpecialIdentifiers["sparkamount"] = "10";
-                            break;
-                        case EventTypeEnum.MixerChannelEmbersUsed:
-                        case EventTypeEnum.MixerChannelSkillUsed:
-                            extraSpecialIdentifiers["skillname"] = "Lots of stars";
-                            extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);
-                            extraSpecialIdentifiers["skillcosttype"] = "Embers";
-                            extraSpecialIdentifiers["skillcost"] = "50";
-                            extraSpecialIdentifiers["skillimage"] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
-                            extraSpecialIdentifiers["skillissparks"] = false.ToString();
-                            extraSpecialIdentifiers["skillisembers"] = true.ToString();
-                            extraSpecialIdentifiers["skillmessage"] = "Hello World!";
-                            extraSpecialIdentifiers["emberamount"] = "10";
-                            break;
-                        case EventTypeEnum.MixerChannelMilestoneReached:
-                            extraSpecialIdentifiers["milestoneamount"] = "100";
-                            extraSpecialIdentifiers["milestoneremainingamount"] = "100";
-                            extraSpecialIdentifiers["milestonereward"] = "$10.00";
-                            extraSpecialIdentifiers["milestonenextamount"] = "100";
-                            extraSpecialIdentifiers["milestonenextremainingamount"] = "100";
-                            extraSpecialIdentifiers["milestonenextreward"] = "$10.00";
-                            extraSpecialIdentifiers["milestonefinalamount"] = "100";
-                            extraSpecialIdentifiers["milestonefinalremainingamount"] = "100";
-                            extraSpecialIdentifiers["milestonefinalreward"] = "$10.00";
-                            extraSpecialIdentifiers["milestoneearnedamount"] = "100";
-                            extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
                             break;
                     }
                 }

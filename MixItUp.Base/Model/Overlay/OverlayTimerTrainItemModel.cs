@@ -37,8 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         public double DonationBonus { get; set; }
         [DataMember]
         public double SparkBonus { get; set; }
-        [DataMember]
-        public double EmberBonus { get; set; }
 
         [JsonIgnore]
         private int timeLeft;
@@ -61,7 +59,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTimerTrainItemModel() : base() { }
 
         public OverlayTimerTrainItemModel(string htmlText, int minimumSecondsToShow, string textColor, string textFont, int textSize, double followBonus,
-            double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus)
+            double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus)
             : base(OverlayItemModelTypeEnum.TimerTrain, htmlText)
         {
             this.MinimumSecondsToShow = minimumSecondsToShow;
@@ -73,7 +71,6 @@ namespace MixItUp.Base.Model.Overlay
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.SparkBonus = sparkBonus;
-            this.EmberBonus = emberBonus;
         }
 
         [JsonIgnore]
@@ -103,10 +100,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             }
-            if (this.EmberBonus > 0.0)
-            {
-                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
-            }
 
             this.timeLeft = 0;
             this.stackedTime = 0;
@@ -127,7 +120,6 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             this.timeLeft = 0;
             this.stackedTime = 0;
@@ -210,8 +202,6 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddSeconds(donation.Amount * this.DonationBonus); }
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddSeconds(sparkUsage.Item2 * this.SparkBonus); }
-
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddSeconds(emberUsage.Amount * this.EmberBonus); }
 
         private async Task AddSeconds(double seconds)
         {

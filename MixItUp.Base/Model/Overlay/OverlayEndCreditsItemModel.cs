@@ -27,7 +27,9 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Gifted Subs")]
         GiftedSubs,
         Donations,
+        [Obsolete]
         Sparks,
+        [Obsolete]
         Embers,
         Subscribers,
         Moderators,
@@ -109,8 +111,6 @@ namespace MixItUp.Base.Model.Overlay
         private Dictionary<Guid, uint> resubs = new Dictionary<Guid, uint>();
         private Dictionary<Guid, uint> giftedSubs = new Dictionary<Guid, uint>();
         private Dictionary<Guid, double> donations = new Dictionary<Guid, double>();
-        private Dictionary<Guid, uint> sparks = new Dictionary<Guid, uint>();
-        private Dictionary<Guid, uint> embers = new Dictionary<Guid, uint>();
 
         public OverlayEndCreditsItemModel() : base() { }
 
@@ -181,14 +181,6 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.donations[userID] = 12.34;
                 }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Sparks))
-                {
-                    this.sparks[userID] = 10;
-                }
-                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Embers))
-                {
-                    this.embers[userID] = 10;
-                }
             }
             return Task.FromResult(0);
         }
@@ -225,14 +217,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Sparks))
-            {
-                GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Embers))
-            {
-                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
-            }
             return base.Initialize();
         }
 
@@ -247,8 +231,6 @@ namespace MixItUp.Base.Model.Overlay
             this.resubs.Clear();
             this.giftedSubs.Clear();
             this.donations.Clear();
-            this.sparks.Clear();
-            this.embers.Clear();
 
             await base.Reset();
         }
@@ -291,8 +273,6 @@ namespace MixItUp.Base.Model.Overlay
                         case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
                         case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
                         case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
-                        case OverlayEndCreditsSectionTypeEnum.Sparks: items = this.GetUsersDictionary(this.sparks); break;
-                        case OverlayEndCreditsSectionTypeEnum.Embers: items = this.GetUsersDictionary(this.embers); break;
                     }
                     await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items);
                 }
@@ -374,32 +354,6 @@ namespace MixItUp.Base.Model.Overlay
                 this.AddUserForRole(donation.User);
             }
             this.donations[donation.User.ID] += donation.Amount;
-        }
-
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
-        {
-            if (this.ShouldIncludeUser(sparkUsage.Item1))
-            {
-                if (!this.sparks.ContainsKey(sparkUsage.Item1.ID))
-                {
-                    this.sparks[sparkUsage.Item1.ID] = 0;
-                    this.AddUserForRole(sparkUsage.Item1);
-                }
-                this.sparks[sparkUsage.Item1.ID] += sparkUsage.Item2;
-            }
-        }
-
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
-        {
-            if (this.ShouldIncludeUser(emberUsage.User))
-            {
-                if (!this.embers.ContainsKey(emberUsage.User.ID))
-                {
-                    this.embers[emberUsage.User.ID] = 0;
-                    this.AddUserForRole(emberUsage.User);
-                }
-                this.embers[emberUsage.User.ID] += emberUsage.Amount;
-            }
         }
 
         private void AddUserForRole(UserViewModel user)

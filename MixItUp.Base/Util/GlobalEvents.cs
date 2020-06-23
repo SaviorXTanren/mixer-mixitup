@@ -199,15 +199,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserEmberUsageModel> OnEmberUseOccurred;
-        public static void EmberUseOccurred(UserEmberUsageModel ember)
-        {
-            if (GlobalEvents.OnEmberUseOccurred != null)
-            {
-                GlobalEvents.OnEmberUseOccurred(null, ember);
-            }
-        }
-
         public static event EventHandler<MixerSkillChatMessageViewModel> OnSkillUseOccurred;
         public static void SkillUseOccurred(MixerSkillChatMessageViewModel skill)
         {

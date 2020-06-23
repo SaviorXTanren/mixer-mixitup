@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -20,7 +19,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.leaderboardType = EnumHelper.GetEnumValueFromString<OverlayLeaderboardListItemTypeEnum>(value);
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsCurrencyRankType");
-                this.NotifyPropertyChanged("IsSparksEmbersType");
                 this.NotifyPropertyChanged("IsDonationsType");
                 this.NotifyPropertyChanged("SupportsRefreshUpdating");
             }
@@ -28,7 +26,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         private OverlayLeaderboardListItemTypeEnum leaderboardType;
 
         public bool IsCurrencyRankType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank; } }
-        public bool IsSparksEmbersType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers; } }
         public bool HasNewLeaderCommand { get { return this.NewLeaderCommand != null; } }
         public bool DoesNotHaveNewLeaderCommand { get { return !this.HasNewLeaderCommand; } }
 
@@ -89,10 +86,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     this.CurrencyRank = ChannelSession.Settings.Currency[item.CurrencyID];
                 }
             }
-            else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)
-            {
-                this.sparksEmbersDate = item.LeaderboardDateRange;
-            }
         }
 
         public override OverlayItemModelBase GetOverlayItem()
@@ -109,14 +102,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
                             this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.CurrencyRank, this.NewLeaderCommand);
-                    }
-                }
-                else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)
-                {
-                    if (!string.IsNullOrEmpty(this.SparksEmbersDateString))
-                    {
-                        return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate, this.NewLeaderCommand);
                     }
                 }
                 else

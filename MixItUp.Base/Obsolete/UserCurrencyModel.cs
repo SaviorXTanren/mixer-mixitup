@@ -54,12 +54,6 @@ namespace MixItUp.Base.Model.User
         public string Name { get; set; }
 
         [DataMember]
-        public bool IsTrackingSparks { get; set; }
-        [DataMember]
-        public bool IsTrackingEmbers { get; set; }
-        [DataMember]
-        public bool IsTrackingFanProgression { get; set; }
-        [DataMember]
         public bool IsTrackingBits { get; set; }
 
         [DataMember]
@@ -254,48 +248,31 @@ namespace MixItUp.Base.Model.User
         {
             if (this.IsActive)
             {
-                if (this.IsTrackingFanProgression)
+                int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                if (interval > 0)
                 {
+                    DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                    bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
                     foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                     {
-                        if (!user.Data.IsCurrencyRankExempt)
+                        if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                         {
-                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > this.GetAmount(user.Data))
+                            int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                            if (minutes % interval == 0)
                             {
-                                this.SetAmount(user.Data, (int)user.MixerFanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
-                            }
-                        }
-                    }
-                }
-                else if (!this.IsTrackingSparks && !this.IsTrackingEmbers && !this.IsTrackingBits)
-                {
-                    int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
-                    if (interval > 0)
-                    {
-                        DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
-                        {
-                            if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
-                            {
-                                int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                                if (minutes % interval == 0)
+                                this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                if (bonusesCanBeApplied)
                                 {
-                                    this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                                    if (bonusesCanBeApplied)
+                                    if (user.HasPermissionsTo(UserRoleEnum.Mod) && this.ModeratorBonus > 0)
                                     {
-                                        if (user.HasPermissionsTo(UserRoleEnum.Mod) && this.ModeratorBonus > 0)
-                                        {
-                                            this.AddAmount(user.Data, this.ModeratorBonus);
-                                        }
-                                        else if (user.HasPermissionsTo(UserRoleEnum.Subscriber) && this.SubscriberBonus > 0)
-                                        {
-                                            this.AddAmount(user.Data, this.SubscriberBonus);
-                                        }
+                                        this.AddAmount(user.Data, this.ModeratorBonus);
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    else if (user.HasPermissionsTo(UserRoleEnum.Subscriber) && this.SubscriberBonus > 0)
+                                    {
+                                        this.AddAmount(user.Data, this.SubscriberBonus);
+                                    }
                                 }
+                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
                             }
                         }
                     }

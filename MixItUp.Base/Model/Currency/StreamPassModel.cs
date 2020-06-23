@@ -49,10 +49,6 @@ namespace MixItUp.Base.Model.Currency
         public int SubscribeBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
-        [DataMember]
-        public double SparkBonus { get; set; }
-        [DataMember]
-        public double EmberBonus { get; set; }
 
         [DataMember]
         public Guid DefaultLevelUpCommandID { get; set; }
@@ -84,8 +80,6 @@ namespace MixItUp.Base.Model.Currency
             this.HostBonus = copy.HostBonus;
             this.SubscribeBonus = copy.SubscribeBonus;
             this.DonationBonus = copy.DonationBonus;
-            this.SparkBonus = copy.SparkBonus;
-            this.EmberBonus = copy.EmberBonus;
 
             this.DefaultLevelUpCommandID = this.DuplicateCommand(copy.DefaultLevelUpCommandID);
             this.CustomLevelUpCommands.Clear();
