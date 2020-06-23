@@ -183,7 +183,7 @@ namespace MixItUp.WPF
                 }
                 catch (Exception) { }
 
-                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerUser != null) ? ChannelSession.MixerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
+                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", 0, FileLoggerHandler.CurrentLogFilePath));
 
                 Task.Delay(3000).Wait();
             }

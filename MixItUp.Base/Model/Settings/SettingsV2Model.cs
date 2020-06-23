@@ -65,10 +65,6 @@ namespace MixItUp.Base.Model.Settings
         #region Authentication
 
         [DataMember]
-        public OAuthTokenModel MixerUserOAuthToken { get; set; }
-        [DataMember]
-        public OAuthTokenModel MixerBotOAuthToken { get; set; }
-        [DataMember]
         public uint MixerUserID { get; set; }
         [DataMember]
         public uint MixerChannelID { get; set; }
@@ -531,11 +527,10 @@ namespace MixItUp.Base.Model.Settings
 
         public SettingsV2Model() { }
 
-        public SettingsV2Model(ExpandedChannelModel channel, bool isStreamer = true)
+        public SettingsV2Model(string name, bool isStreamer = true)
             : this()
         {
-            this.Name = channel.token;
-            this.MixerChannelID = channel.id;
+            this.Name = name;
             this.IsStreamer = isStreamer;
 
             this.InitializeMissingData();
@@ -658,15 +653,6 @@ namespace MixItUp.Base.Model.Settings
             Logger.Log(LogLevel.Debug, "Copying over latest values into Settings object");
 
             this.Version = SettingsV2Model.LatestVersion;
-
-            if (ChannelSession.MixerUserConnection != null)
-            {
-                this.MixerUserOAuthToken = ChannelSession.MixerUserConnection.Connection.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.MixerBotConnection != null)
-            {
-                this.MixerBotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
-            }
 
             if (ChannelSession.TwitchUserConnection != null)
             {

@@ -254,8 +254,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.MixerID > 0 || this.InteractiveIDs.Count > 0) { return StreamingPlatformTypeEnum.Mixer; }
-                else if (!string.IsNullOrEmpty(this.TwitchID)) { return StreamingPlatformTypeEnum.Twitch; }
+                if (!string.IsNullOrEmpty(this.TwitchID)) { return StreamingPlatformTypeEnum.Twitch; }
                 return StreamingPlatformTypeEnum.None;
             }
         }
@@ -264,8 +263,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerID.ToString(); }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchID; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchID; }
                 return null;
             }
         }
@@ -274,8 +272,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUsername; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchVisualName; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchVisualName; }
                 return this.UnassociatedUsername;
             }
         }
@@ -284,8 +281,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUserRoles; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchUserRoles; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }
@@ -294,8 +290,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerAvatarLink; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
                 return string.Empty;
             }
         }
@@ -304,8 +299,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return $"https://www.mixer.com/{this.Username}"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
                 return string.Empty;
             }
         }
@@ -314,14 +308,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerAccountDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchAccountDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchAccountDate; }
                 return null;
             }
             set
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerAccountDate = value; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchAccountDate = value; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchAccountDate = value; }
             }
         }
 
@@ -329,14 +321,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerFollowDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchFollowDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchFollowDate; }
                 return null;
             }
             set
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerFollowDate = value; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchFollowDate = value; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchFollowDate = value; }
 
                 if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -353,14 +343,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerSubscribeDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscribeDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscribeDate; }
                 return null;
             }
             set
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerSubscribeDate = value; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
             }
         }
 
@@ -368,8 +356,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return "/Assets/Images/Mixer-Small.png"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
                 return null;
             }
         }
@@ -380,7 +367,6 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.IsPlatformSubscriber)
                 {
-                    if (this.Platform == StreamingPlatformTypeEnum.Mixer && ChannelSession.MixerChannel.badge != null) { return ChannelSession.MixerChannel.badge.url; }
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch && this.TwitchSubscriberBadge != null) { return this.TwitchSubscriberBadge.image_url_1x; }
                 }
                 return null;
@@ -391,8 +377,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.IsNullOrEmpty(this.TwitchID); }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.IsNullOrEmpty(this.TwitchID); }
                 return false;
             }
         }
@@ -679,27 +664,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.UpdatedThisSession = true;
                     this.LastUpdated = DateTimeOffset.Now;
 
-                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-                    {
-                        await this.RefreshMixerUserDetails();
-                        await this.RefreshMixerUserFanProgression();
-                        await this.RefreshMixerUserFollowDate();
-
-                        if (!this.IsInChat)
-                        {
-                            await this.RefreshMixerChatDetails();
-                        }
-
-                        if (this.IsPlatformSubscriber)
-                        {
-                            await this.RefreshMixerSubscriberDetails();
-                        }
-                        else
-                        {
-                            this.SubscribeDate = null;
-                        }
-                    }
-                    else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                     {
                         await this.RefreshTwitchUserDetails();
                         await this.RefreshTwitchUserAccountDate();
@@ -861,8 +826,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            if ((ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.online) ||
-                (ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.id > 0 && !ChannelSession.TwitchStreamV5.is_playlist))
+            if (ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.id > 0 && ChannelSession.TwitchStreamV5.IsLive)
             {
                 this.Data.ViewingMinutes++;
             }
@@ -957,52 +921,6 @@ namespace MixItUp.Base.ViewModel.User
 
         #region Mixer Refresh
 
-        private async Task RefreshMixerUserDetails()
-        {
-            UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
-            if (user != null)
-            {
-                this.SetMixerUserDetails(user);
-            }
-        }
-
-        private async Task RefreshMixerUserFanProgression() { this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, this.GetMixerUserModel()); }
-
-        private async Task RefreshMixerUserFollowDate() { this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetMixerUserModel()); }
-
-        private async Task RefreshMixerChatDetails()
-        {
-            ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
-            if (chatUser != null)
-            {
-                this.SetMixerChatDetails(chatUser);
-            }
-        }
-
-        private async Task RefreshMixerSubscriberDetails()
-        {
-            DateTimeOffset subDate = DateTimeOffset.MinValue;
-            UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-            if (userGroups != null)
-            {
-                subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
-                if (subDate > DateTimeOffset.MinValue)
-                {
-                    this.SubscribeDate = subDate;
-                    int totalMonths = this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
-                    if (this.Data.TotalMonthsSubbed < totalMonths)
-                    {
-                        this.Data.TotalMonthsSubbed = (uint)totalMonths;
-                    }
-                }
-            }
-
-            if (subDate == DateTimeOffset.MinValue)
-            {
-                this.SubscribeDate = null;
-            }
-        }
-
         private void SetMixerUserDetails(Mixer.Base.Model.User.UserModel user)
         {
             if (user.createdAt.GetValueOrDefault() > DateTimeOffset.MinValue)
@@ -1035,11 +953,6 @@ namespace MixItUp.Base.ViewModel.User
                 if (roles.Contains("Partner") || roles.Contains("VerifiedPartner")) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
                 if (roles.Contains("Pro")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
                 if (roles.Contains("Banned")) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
-            }
-
-            if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))
-            {
-                this.UserRoles.Add(UserRoleEnum.Streamer);
             }
         }
 

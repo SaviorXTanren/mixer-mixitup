@@ -723,9 +723,6 @@
     <Compile Include="Controls\MainControls\ActionGroupControl.xaml.cs">
       <DependentUpon>ActionGroupControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
-      <DependentUpon>ChannelControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
       <DependentUpon>GamesControl.xaml</DependentUpon>
     </Compile>
@@ -997,12 +994,6 @@
     </Compile>
     <Compile Include="Windows\Dashboard\DashboardWindow.xaml.cs">
       <DependentUpon>DashboardWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Favorites\FavoriteGroupWindow.xaml.cs">
-      <DependentUpon>FavoriteGroupWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
-      <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\LicenseAgreementWindow.xaml.cs">
       <DependentUpon>LicenseAgreementWindow.xaml</DependentUpon>
@@ -1502,10 +1493,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\ChannelControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\GamesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1889,14 +1876,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Dashboard\DashboardWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Favorites\FavoriteGroupWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

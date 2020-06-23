@@ -114,7 +114,7 @@ namespace MixItUp.WPF.Services
         {
             this.telemetryClient.Context.User.Id = userID;
 
-            string playFabUserID = HashHelper.ComputeMD5Hash("Mixer-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.MixerUser.id);
+            string playFabUserID = HashHelper.ComputeMD5Hash("Twitch-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.TwitchChannelNewAPI.id);
             this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = playFabUserID, CreateAccount = true }));
         }
 

@@ -311,23 +311,24 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            bool isLive = ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive;
             if (this.IsActive)
             {
                 if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
-                    int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    int interval = isLive ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
+                        bool bonusesCanBeApplied = (ChannelSession.TwitchStreamV5.IsLive || this.OfflineAcquireAmount > 0);
                         foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                int minutes = isLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    this.AddAmount(user.Data, isLive ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         int bonus = 0;

@@ -518,32 +518,15 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                         }
 
                         await this.Currency.Reset();
-
-                        HashSet<uint> subscriberIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber))
-                        {
-                            subscriberIDs.Add(user.id);
-                        }
-
-                        HashSet<uint> modIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod))
-                        {
-                            modIDs.Add(user.id);
-                        }
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.ChannelEditor))
-                        {
-                            modIDs.Add(user.id);
-                        }
-
                         foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
                             this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
-                            if (modIDs.Contains(userData.MixerID))
+                            if (userData.TwitchUserRoles.Contains(UserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(UserRoleEnum.ChannelEditor))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.ModeratorBonus * intervalsToGive);
                             }
-                            else if (subscriberIDs.Contains(userData.MixerID))
+                            else if (userData.TwitchUserRoles.Contains(UserRoleEnum.Subscriber))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
                             }
@@ -555,6 +538,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
             this.ImportFromFileCommand = this.CreateCommand(async (parameter) =>
             {
+                return;
+
                 this.userImportData.Clear();
 
                 if (await DialogHelper.ShowConfirmation(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
@@ -610,11 +595,11 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(id);
+                                            //mixerUser = await ChannelSession.MixerUserConnection.GetUser(id);
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(username);
+                                            //mixerUser = await ChannelSession.MixerUserConnection.GetUser(username);
                                         }
                                     }
 

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Game;
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
@@ -29,15 +28,11 @@ namespace MixItUp.Base.Model.User
             this.DateTime = DateTimeOffset.MinValue;
         }
 
-        public UserQuoteModel(int id, string quote, DateTimeOffset dateTime, GameTypeModel game)
+        public UserQuoteModel(int id, string quote, DateTimeOffset dateTime)
         {
             this.ID = id;
             this.Quote = quote;
             this.DateTime = dateTime;
-            if (game != null)
-            {
-                this.GameName = game.name;
-            }
         }
     }
 }

@@ -26,12 +26,6 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
-        public static MixerConnectionService MixerUserConnection { get; private set; }
-        public static MixerConnectionService MixerBotConnection { get; private set; }
-        public static PrivatePopulatedUserModel MixerUser { get; private set; }
-        public static PrivatePopulatedUserModel MixerBot { get; private set; }
-        public static ExpandedChannelModel MixerChannel { get; private set; }
-
         public static TwitchConnectionService TwitchUserConnection { get; private set; }
         public static TwitchConnectionService TwitchBotConnection { get; private set; }
         public static TwitchV5API.Users.UserModel TwitchUserV5 { get; private set; }
@@ -124,36 +118,6 @@ namespace MixItUp.Base
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
-        public static async Task<Result> ConnectMixerUser(bool isStreamer)
-        {
-            Result<MixerConnectionService> result = await MixerConnectionService.ConnectUser(isStreamer);
-            if (result.Success)
-            {
-                ChannelSession.MixerUserConnection = result.Value;
-                ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
-                if (ChannelSession.MixerUser == null)
-                {
-                    return new Result("Failed to get Mixer user data");
-                }
-            }
-            return result;
-        }
-
-        public static async Task<Result> ConnectMixerBot()
-        {
-            Result<MixerConnectionService> result = await MixerConnectionService.ConnectBot();
-            if (result.Success)
-            {
-                ChannelSession.MixerBotConnection = result.Value;
-                ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
-                if (ChannelSession.MixerBot == null)
-                {
-                    return new Result("Failed to get Mixer bot data");
-                }
-            }
-            return result;
-        }
-
         public static async Task<Result> ConnectTwitchUser(bool isStreamer)
         {
             Result<TwitchConnectionService> result = await TwitchConnectionService.ConnectUser(isStreamer);
@@ -199,52 +163,6 @@ namespace MixItUp.Base
         {
             Result userResult = null;
             ChannelSession.Settings = settings;
-
-            // Mixer connection
-
-            Result<MixerConnectionService> mixerResult = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
-            if (mixerResult.Success)
-            {
-                ChannelSession.MixerUserConnection = mixerResult.Value;
-                userResult = mixerResult;
-            }
-            else
-            {
-                userResult = await ChannelSession.ConnectMixerUser(ChannelSession.Settings.IsStreamer);
-            }
-
-            if (userResult.Success)
-            {
-                ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
-                if (ChannelSession.MixerUser == null)
-                {
-                    return new Result("Failed to get Mixer user data");
-                }
-
-                if (settings.MixerBotOAuthToken != null)
-                {
-                    mixerResult = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
-                    if (mixerResult.Success)
-                    {
-                        ChannelSession.MixerBotConnection = mixerResult.Value;
-                        ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
-                        if (ChannelSession.MixerBot == null)
-                        {
-                            return new Result("Failed to get Mixer bot data");
-                        }
-                    }
-                    else
-                    {
-                        settings.MixerBotOAuthToken = null;
-                        return new Result(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
-                    }
-                }
-            }
-            else
-            {
-                ChannelSession.Settings.MixerUserOAuthToken = null;
-                return userResult;
-            }
 
             // Twitch connection
 
@@ -301,12 +219,6 @@ namespace MixItUp.Base
             return userResult;
         }
 
-
-        public static async Task DisconnectMixerBot()
-        {
-            ChannelSession.MixerBotConnection = null;
-        }
-
         public static async Task DisconnectTwitchBot()
         {
             ChannelSession.TwitchBotConnection = null;
@@ -334,15 +246,6 @@ namespace MixItUp.Base
 
         public static async Task RefreshUser()
         {
-            if (ChannelSession.MixerUser != null)
-            {
-                PrivatePopulatedUserModel mixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
-                if (mixerUser != null)
-                {
-                    ChannelSession.MixerUser = mixerUser;
-                }
-            }
-
             if (ChannelSession.TwitchUserNewAPI != null)
             {
                 TwitchNewAPI.Users.UserModel twitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
@@ -361,15 +264,6 @@ namespace MixItUp.Base
 
         public static async Task RefreshChannel()
         {
-            if (ChannelSession.MixerChannel != null)
-            {
-                ExpandedChannelModel mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerChannel.id);
-                if (mixerChannel != null)
-                {
-                    ChannelSession.MixerChannel = mixerChannel;
-                }
-            }
-
             if (ChannelSession.TwitchChannelV5 != null)
             {
                 TwitchV5API.Channel.ChannelModel twitchChannel = await ChannelSession.TwitchUserConnection.GetV5APIChannel(ChannelSession.TwitchChannelV5.id);
@@ -401,15 +295,6 @@ namespace MixItUp.Base
 
             UserViewModel user = null;
 
-            if (ChannelSession.MixerUser != null)
-            {
-                user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
-                if (user == null)
-                {
-                    user = new UserViewModel(ChannelSession.MixerUser);
-                }
-            }
-
             if (ChannelSession.TwitchUserNewAPI != null)
             {
                 user = ChannelSession.Services.User.GetUserByTwitchID(ChannelSession.TwitchUserNewAPI.id);
@@ -440,16 +325,6 @@ namespace MixItUp.Base
             {
                 bool isModerator = !string.IsNullOrEmpty(modChannelName);
 
-                ExpandedChannelModel mixerChannel = null;
-                if (!isModerator)
-                {
-                    mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerUser.channel.id);
-                }
-                else
-                {
-                    mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(modChannelName);
-                }
-
                 TwitchNewAPI.Users.UserModel twitchChannelNew = null;
                 TwitchV5API.Channel.ChannelModel twitchChannelv5 = null;
                 if (!isModerator)
@@ -463,28 +338,22 @@ namespace MixItUp.Base
                     twitchChannelv5 = await ChannelSession.TwitchUserConnection.GetV5APIChannel(ChannelSession.TwitchChannelV5.id);
                 }
 
-                if (mixerChannel != null && twitchChannelNew != null && twitchChannelv5 != null)
+                if (twitchChannelNew != null && twitchChannelv5 != null)
                 {
                     try
                     {
-                        if (isModerator && mixerChannel.id == ChannelSession.MixerUser.channel.id)
+                        if (isModerator && twitchChannelNew.id == ChannelSession.TwitchUserNewAPI.id)
                         {
                             GlobalEvents.ShowMessageBox($"You are trying to sign in as a moderator to your own channel. Please use the Streamer login to access your channel.");
                             return false;
                         }
 
-                        ChannelSession.MixerChannel = mixerChannel;
                         ChannelSession.TwitchChannelNewAPI = twitchChannelNew;
                         ChannelSession.TwitchChannelV5 = twitchChannelv5;
 
                         if (ChannelSession.Settings == null)
                         {
                             IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
-                            if (currentSettings.Any(s => s.MixerChannelID > 0 && s.MixerChannelID == mixerChannel.id && s.IsStreamer == !isModerator))
-                            {
-                                GlobalEvents.ShowMessageBox($"There already exists settings for the account {mixerChannel.token}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
-                                return false;
-                            }
 
                             if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id) && s.IsStreamer == !isModerator))
                             {
@@ -492,20 +361,9 @@ namespace MixItUp.Base
                                 return false;
                             }
 
-                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(mixerChannel, modChannelName == null);
+                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name, modChannelName == null);
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
-
-                        if (ChannelSession.Settings.MixerUserID > 0 && ChannelSession.MixerUser.id != ChannelSession.Settings.MixerUserID)
-                        {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.MixerUser.username} - {ChannelSession.MixerUser.id} - {ChannelSession.Settings.MixerUserID}");
-
-                            GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
-                            ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
-                            ChannelSession.Settings.MixerUserOAuthToken.refreshToken = string.Empty;
-                            ChannelSession.Settings.MixerUserOAuthToken.expiresIn = 0;
-                            return false;
-                        }
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.TwitchUserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.TwitchUserID))
                         {
@@ -517,10 +375,7 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        ChannelSession.Settings.Name = ChannelSession.MixerChannel.token;
-
-                        ChannelSession.Settings.MixerUserID = ChannelSession.MixerUser.id;
-                        ChannelSession.Settings.MixerChannelID = ChannelSession.MixerChannel.id;
+                        ChannelSession.Settings.Name = ChannelSession.TwitchChannelNewAPI.display_name;
 
                         ChannelSession.Settings.TwitchUserID = ChannelSession.TwitchUserNewAPI.id;
                         ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchChannelNewAPI.id;
@@ -765,14 +620,6 @@ namespace MixItUp.Base
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
                         await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
-
-                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.MixerUser.id.ToString(), ChannelSession.IsStreamer, ChannelSession.MixerChannel.partnered);
-                        if (ChannelSession.Settings.IsStreamer)
-                        {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendUserFeatureEvent(new UserFeatureEvent(ChannelSession.MixerUser.id)); });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        }
 
                         AsyncRunner.RunBackgroundTask(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
                     }

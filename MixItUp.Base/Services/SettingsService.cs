@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SettingsV2Model>> GetAllSettings();
 
-        Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer);
+        Task<SettingsV2Model> Create(string name, bool isStreamer);
 
         Task Initialize(SettingsV2Model settings);
 
@@ -157,10 +157,9 @@ namespace MixItUp.Base.Services
             return allSettings;
         }
 
-        public Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer)
+        public Task<SettingsV2Model> Create(string name, bool isStreamer)
         {
-            SettingsV2Model settings = new SettingsV2Model(channel, isStreamer);
-            return Task.FromResult(settings);
+            return Task.FromResult(new SettingsV2Model(name, isStreamer));
         }
 
         public async Task Initialize(SettingsV2Model settings)
@@ -837,8 +836,6 @@ namespace MixItUp.Base.Services
 
             // Copy old values into new settings
 
-            newSettings.MixerUserOAuthToken = oldSettings.OAuthToken;
-            newSettings.MixerBotOAuthToken = oldSettings.BotOAuthToken;
             if (oldSettings.Channel != null)
             {
                 newSettings.Name = oldSettings.Channel.token;

@@ -1,5 +1,4 @@
 ﻿using ExcelDataReader;
-using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
@@ -14,6 +13,7 @@ using System.Data;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Model.Import.Streamlabs
 {
@@ -145,21 +145,21 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             this.AddCurrencyRankCommands(rank);
             this.AddCurrencyRankCommands(currency);
 
-            foreach (StreamlabsChatBotViewerModel viewer in this.Viewers)
-            {
-                try
-                {
-                    UserModel user = await ChannelSession.MixerUserConnection.GetUser(viewer.Name);
-                    if (user != null)
-                    {
-                        UserDataModel userData = new UserDataModel(user);
-                        ChannelSession.Settings.AddUserData(userData);
-                        rank.SetAmount(userData, viewer.Hours);
-                        currency.SetAmount(userData, viewer.Points);
-                    }
-                }
-                catch (Exception) { }
-            }
+            //foreach (StreamlabsChatBotViewerModel viewer in this.Viewers)
+            //{
+            //    try
+            //    {
+            //        UserModel user = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(viewer.Name);
+            //        if (user != null)
+            //        {
+            //            UserDataModel userData = new UserDataModel(user);
+            //            ChannelSession.Settings.AddUserData(userData);
+            //            rank.SetAmount(userData, viewer.Hours);
+            //            currency.SetAmount(userData, viewer.Points);
+            //        }
+            //    }
+            //    catch (Exception) { }
+            //}
 
             foreach (StreamlabsChatBotCommandModel command in this.Commands)
             {
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
             foreach (string quote in this.Quotes)
             {
-                ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue, null));
+                ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue));
             }
 
             if (ChannelSession.Settings.Quotes.Count > 0)

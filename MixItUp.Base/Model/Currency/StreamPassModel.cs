@@ -201,7 +201,8 @@ namespace MixItUp.Base.Model.Currency
         public void UpdateUserData()
         {
             DateTime date = DateTimeOffset.Now.Date;
-            if (ChannelSession.MixerChannel.online && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            bool isLive = (ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive);
+            if (isLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())

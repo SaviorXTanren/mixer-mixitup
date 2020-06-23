@@ -187,7 +187,7 @@ namespace MixItUp.WPF
                         return;
                     }
 
-                    Result result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    Result result = await ChannelSession.ConnectTwitchUser(isStreamer: false);
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);
@@ -200,17 +200,9 @@ namespace MixItUp.WPF
                     }
                 }
 
-                IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
-                if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
-                {
-                    ShowMainWindow(new MainWindow());
-                    this.Hide();
-                    this.Close();
-                }
-                else
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
-                }
+                ShowMainWindow(new MainWindow());
+                this.Hide();
+                this.Close();
             });
         }
 

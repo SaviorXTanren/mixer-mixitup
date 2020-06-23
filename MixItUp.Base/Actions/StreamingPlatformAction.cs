@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -73,20 +72,11 @@ namespace MixItUp.Base.Actions
             this.lastArguments = arguments;
             if (this.ActionType == StreamingPlatformActionType.Host)
             {
-                string hostChannelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
-                ChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(hostChannelName);
-                if (channel != null)
-                {
-                    await ChannelSession.MixerUserConnection.SetHostChannel(ChannelSession.MixerChannel, channel);
-                }
+
             }
             else if (this.ActionType == StreamingPlatformActionType.RunAd)
             {
-                bool result = await ChannelSession.MixerUserConnection.RunAd(ChannelSession.MixerChannel);
-                if (!result)
-                {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "The ad could not be run, please verify your channel is approved for ads and that you have not already run an ad recently.");
-                }
+
             }
         }
     }

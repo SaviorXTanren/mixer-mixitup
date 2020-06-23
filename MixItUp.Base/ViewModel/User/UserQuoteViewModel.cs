@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserQuoteViewModel(UserQuoteModel model) { this.Model = model; }
 
-        public UserQuoteViewModel(string quote, DateTimeOffset dateTime, GameTypeModel game) { this.Model = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quote, dateTime, game); }
+        public UserQuoteViewModel(string quote, DateTimeOffset dateTime) { this.Model = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quote, dateTime); }
 
         public override string ToString()
         {

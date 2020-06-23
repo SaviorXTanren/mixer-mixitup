@@ -48,23 +48,6 @@ namespace MixItUp.WPF.Controls.Dialogs
                 this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
                 bool follows = false;
-                if (this.user.MixerChannelID > 0)
-                {
-                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerUserConnection.GetChannel(this.user.MixerChannelID);
-                    if (channelToCheck != null)
-                    {
-                        follows = (await ChannelSession.MixerUserConnection.CheckIfFollows(channelToCheck, ChannelSession.MixerUser)).HasValue;
-                        if (channelToCheck.online)
-                        {
-                            this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
-                        }
-                        else
-                        {
-                            this.StreamStatusTextBlock.Text = "Offline";
-                        }
-                    }
-                }
-
                 if (follows)
                 {
                     this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;

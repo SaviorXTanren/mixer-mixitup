@@ -134,18 +134,6 @@ namespace MixItUp.Base.Model.Overlay
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 this.userSubDates.Clear();
-                await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber, (collection) =>
-                {
-                    foreach (UserWithGroupsModel userWithGroups in collection)
-                    {
-                        DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
-                        if (subDate.HasValue)
-                        {
-                            this.userSubDates[new UserViewModel(userWithGroups)] = subDate.GetValueOrDefault();
-                        }
-                    }
-                    return Task.FromResult(0);
-                });
 
                 await this.UpdateSubscribers();
 

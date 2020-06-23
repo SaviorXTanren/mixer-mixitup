@@ -413,11 +413,6 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(CostreamUsersSpecialIdentifier))
-            {
-                this.ReplaceSpecialIdentifier(CostreamUsersSpecialIdentifier, await CostreamChatCommand.GetCostreamUsers());
-            }
-
             if (ChannelSession.Services.Twitter.IsConnected && this.ContainsSpecialIdentifier("tweet"))
             {
                 IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
@@ -460,47 +455,9 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
             }
 
-            if (this.ContainsSpecialIdentifier(FeaturedChannelsSpecialIdentifer))
-            {
-                if (ChannelSession.MixerUserConnection != null)
-                {
-                    IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.MixerUserConnection.GetFeaturedChannels();
-                    if (featuredChannels != null)
-                    {
-                        this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
-                    }
-                }
-            }
-
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                if (ChannelSession.MixerUserConnection != null)
-                {
-                    ChannelDetailsModel details = await ChannelSession.MixerUserConnection.GetChannelDetails(ChannelSession.MixerChannel);
-                    if (details != null)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "agerating", details.audience);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", details.viewersCurrent.ToString());
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", details.viewersTotal.ToString());
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
-                    }
-
-                    if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
-                    {
-                        IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.MixerUserConnection.GetHosters(ChannelSession.MixerChannel);
-                        if (hosters != null)
-                        {
-                            this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
-                        }
-                        else
-                        {
-                            this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
-                        }
-                    }
-                }
-                else if (ChannelSession.TwitchUserConnection != null && ChannelSession.TwitchStreamV5 != null)
+                if (ChannelSession.TwitchUserConnection != null && ChannelSession.TwitchStreamV5 != null)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelNewAPI.description);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
@@ -508,67 +465,6 @@ namespace MixItUp.Base.Util
                 }
 
                 this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
-            }
-
-            if (this.ContainsSpecialIdentifier(MilestoneSpecialIdentifierHeader) && ChannelSession.MixerUserConnection != null)
-            {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
-                if (patronageStatus != null)
-                {
-                    this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
-
-                    PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
-                    if (patronagePeriod != null)
-                    {
-                        if (patronagePeriod.endTime.HasValue)
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "endtime", patronagePeriod.endTime.Value.ToLocalTime().ToFriendlyDateTimeString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "timeremaining", DateTimeOffset.UtcNow.GetAge(patronagePeriod.endTime.Value, includeTime: true));
-                        }
-
-                        IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
-
-                        PatronageMilestoneModel patronageMilestone = patronageMilestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
-                        if (patronageMilestone != null)
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingamount", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.PercentageAmountText());
-                        }
-
-                        PatronageMilestoneModel patronageNextMilestone = patronageMilestones.FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
-                        if (patronageNextMilestone != null)
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingnextamount", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.PercentageAmountText());
-                        }
-
-                        PatronageMilestoneModel patronageFinalMilestone = patronageMilestones.OrderByDescending(m => m.id).FirstOrDefault();
-                        if (patronageNextMilestone != null)
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingfinalamount", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.PercentageAmountText());
-                        }
-
-                        PatronageMilestoneModel patronageMilestoneHighestEarned = null;
-                        IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
-                        if (patronageMilestonesEarned != null && patronageMilestonesEarned.Count() > 0)
-                        {
-                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
-                        }
-
-                        if (patronageMilestoneHighestEarned != null)
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.PercentageAmountText());
-                        }
-                        else
-                        {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", "0");
-                        }
-                    }
-                }
             }
 
             if (this.ContainsSpecialIdentifier(UserSpecialIdentifierHeader))
@@ -650,37 +546,6 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
-                // TO-DO: Fix Twitch & Mixer user support for random user
-
-                IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
-
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
-                {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id));
-                    if (users != null && users.Count() > 0)
-                    {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSpecialIdentifierHeader);
-                    }
-                }
-
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
-                {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id) && u.IsFollower);
-                    if (users != null && users.Count() > 0)
-                    {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
-                    }
-                }
-
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
-                {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id) && u.HasPermissionsTo(UserRoleEnum.Subscriber));
-                    if (users != null && users.Count() > 0)
-                    {
-                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
-                    }
-                }
-
                 if (this.ContainsSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
                 {
                     await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRangeRegexPattern, (min, max) =>

@@ -102,8 +102,8 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 string messagePartString = (string)messagePart;
 
-                                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-                                bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerUser.username);
+                                bool isWhisperToStreamer = false; //this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
+                                bool isStreamerTagged = false; //messagePartString.Contains("@" + ChannelSession.MixerUser.username);
 
                                 this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged), isItalicized: italics);
                             }

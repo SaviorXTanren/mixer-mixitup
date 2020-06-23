@@ -301,21 +301,6 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<PatronagePeriodModel> GetPatronagePeriod(PatronageStatusModel patronageStatus) { return await this.RunAsync(this.Connection.Patronage.GetPatronagePeriod(patronageStatus.patronagePeriodId)); }
 
-        public async Task<PatronageMilestoneModel> GetCurrentPatronageMilestone()
-        {
-            PatronageStatusModel patronageStatus = await this.GetPatronageStatus(ChannelSession.MixerChannel);
-            if (patronageStatus != null)
-            {
-                PatronagePeriodModel patronagePeriod = await this.GetPatronagePeriod(patronageStatus);
-                if (patronagePeriod != null)
-                {
-                    IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
-                    return patronageMilestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
-                }
-            }
-            return null;
-        }
-
         public async Task<SkillCatalogModel> GetSkillCatalog(ChannelModel channel) { return await this.RunAsync(this.Connection.Skills.GetSkillCatalog(channel)); }
 
         public async Task<bool> RunAd(ChannelModel channel) { return await this.RunAsync(this.Connection.Ads.RunAd(channel)); }

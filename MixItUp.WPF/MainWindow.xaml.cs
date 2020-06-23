@@ -121,9 +121,9 @@ namespace MixItUp.WPF
                 this.Title += $" - {MixItUp.Base.Resources.Moderator}";
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.MixerChannel?.token))
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))
             {
-                this.Title += " - " + ChannelSession.MixerChannel.token;
+                this.Title += " - " + ChannelSession.Settings.Name;
             }
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
@@ -133,7 +133,6 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Chat, new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
             if (ChannelSession.Settings.IsStreamer)
             {
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");

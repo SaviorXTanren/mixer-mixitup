@@ -47,15 +47,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.All, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
-
-            ChatMessageEventModel messageEvent = new ChatMessageEventModel()
-            {
-                id = Guid.NewGuid(),
-                user_id = ChannelSession.MixerUser.id,
-                user_name = ChannelSession.MixerUser.username,
-                channel = ChannelSession.MixerChannel.id,
-                message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
-            };
             this.GlobalEvents_OnChatMessageReceived(this, message);
             return Task.FromResult(0);
         }
@@ -98,7 +89,7 @@ namespace MixItUp.Base.Model.Overlay
                     item.TemplateReplacements.Add("USERNAME", item.User.Username);
                     item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
                     item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                    item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsPlatformSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
+                    item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
                     item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
 
                     await this.listSemaphore.WaitAndRelease(() =>

@@ -14,36 +14,14 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [Route("{userID:int:min(0)}")]
         public UserModel Get(uint userID)
         {
-            UserModel user = ChannelSession.MixerUserConnection.GetUser(userID).Result;
-            if (user == null)
-            {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "User ID not found"
-                };
-                throw new HttpResponseException(resp);
-            }
-
-            return user;
+            return null;
         }
 
         [Route("{username}")]
         [HttpGet]
         public UserModel Get(string username)
         {
-            UserModel user = ChannelSession.MixerUserConnection.GetUser(username).Result;
-            if (user == null)
-            {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Username not found"
-                };
-                throw new HttpResponseException(resp);
-            }
-
-            return user;
+            return null;
         }
     }
 }

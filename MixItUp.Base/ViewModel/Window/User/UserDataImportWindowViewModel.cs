@@ -100,6 +100,8 @@ namespace MixItUp.Base.ViewModel.Window.User
 
             this.ImportButtonCommand = this.CreateCommand(async (parameter) =>
             {
+                return;
+
                 try
                 {
                     int usersImported = 0;
@@ -226,29 +228,29 @@ namespace MixItUp.Base.ViewModel.Window.User
                                         }
                                         else
                                         {
-                                            UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(mixerID);
-                                            if (mixerUser != null)
-                                            {
-                                                user = new UserDataModel(mixerUser);
-                                            }
+                                            //UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(mixerID);
+                                            //if (mixerUser != null)
+                                            //{
+                                            //    user = new UserDataModel(mixerUser);
+                                            //}
                                         }
                                     }
                                 }
                                 else if (!string.IsNullOrEmpty(mixerUsername))
                                 {
-                                    UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(mixerUsername);
-                                    if (mixerUser != null)
-                                    {
-                                        user = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
-                                        if (user == null)
-                                        {
-                                            user = new UserDataModel(mixerUser);
-                                        }
-                                        else
-                                        {
-                                            newUser = false;
-                                        }
-                                    }
+                                    //UserModel mixerUser = await ChannelSession.MixerUserConnection.GetUser(mixerUsername);
+                                    //if (mixerUser != null)
+                                    //{
+                                    //    user = ChannelSession.Settings.GetUserDataByMixerID(mixerUser.id);
+                                    //    if (user == null)
+                                    //    {
+                                    //        user = new UserDataModel(mixerUser);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        newUser = false;
+                                    //    }
+                                    //}
                                 }
 
                                 if (user != null)

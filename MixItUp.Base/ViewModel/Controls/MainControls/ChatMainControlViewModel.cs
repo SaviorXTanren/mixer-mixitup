@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public bool ShowChatUserList { get { return !ChannelSession.Settings.HideChatUserList; } }
 
-        public uint ViewersCount
+        public long ViewersCount
         {
             get { return this.viewersCount; }
             set
@@ -26,9 +26,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private uint viewersCount;
+        private long viewersCount;
 
-        public uint ChattersCount
+        public long ChattersCount
         {
             get { return this.chattersCount; }
             set
@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private uint chattersCount;
+        private long chattersCount;
 
         public string EnableDisableButtonText
         {
@@ -110,8 +110,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         private void RefreshNumbers()
         {
-            this.ViewersCount = ChannelSession.MixerChannel.viewersCurrent;
-            this.ChattersCount = (uint)ChannelSession.Services.Chat.AllUsers.Count;
+            if (ChannelSession.TwitchStreamV5 != null)
+            {
+                this.ViewersCount = ChannelSession.TwitchStreamV5.viewers;
+            }
+            this.ChattersCount = ChannelSession.Services.Chat.AllUsers.Count;
         }
 
         private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)

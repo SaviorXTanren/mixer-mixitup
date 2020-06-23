@@ -385,10 +385,6 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.IgnoreBotAccountCommands)
                     {
-                        if (ChannelSession.MixerBot != null && message.User.MixerID.Equals(ChannelSession.MixerBot.id))
-                        {
-                            return;
-                        }
                         if (ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
                         {
                             return;

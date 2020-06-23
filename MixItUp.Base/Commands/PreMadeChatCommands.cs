@@ -203,19 +203,22 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(ChannelSession.MixerChannel.type.name);
-                    if (details == null)
+                    if (ChannelSession.TwitchStreamV5 != null)
                     {
-                        details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.MixerChannel.type.name);
-                    }
+                        GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(ChannelSession.TwitchStreamV5.game);
+                        if (details == null)
+                        {
+                            details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.TwitchStreamV5.game);
+                        }
 
-                    if (details != null)
-                    {
-                        await ChannelSession.Services.Chat.SendMessage(details.ToString());
-                    }
-                    else
-                    {
-                        await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.MixerChannel.type.name);
+                        if (details != null)
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(details.ToString());
+                        }
+                        else
+                        {
+                            await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchStreamV5.game);
+                        }
                     }
                 }
             }));
@@ -233,7 +236,7 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.MixerChannel.name);
+                    await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchUserNewAPI.description);
                 }
             }));
         }
@@ -241,18 +244,9 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
-        public static async Task<DateTimeOffset> GetStartTime()
+        public static Task<DateTimeOffset> GetStartTime()
         {
-            BroadcastModel broadcast = await ChannelSession.MixerUserConnection.GetCurrentBroadcast(ChannelSession.MixerChannel);
-            if (broadcast != null && broadcast.online)
-            {
-                DateTimeOffset startTime = broadcast.startedAt.ToLocalTime();
-                if (startTime > DateTimeOffset.MinValue)
-                {
-                    return startTime;
-                }
-            }
-            return DateTimeOffset.MinValue;
+            return Task.FromResult(DateTimeOffset.MinValue);
         }
 
         public UptimeChatCommand()
@@ -272,59 +266,6 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.Services.Chat.SendMessage("Stream is currently offline");
                     }
-                }
-            }));
-        }
-    }
-
-    public class CostreamChatCommand : PreMadeChatCommand
-    {
-        public static async Task<string> GetCostreamUsers()
-        {
-            CostreamModel costream = await ChannelSession.MixerUserConnection.GetCurrentCostream();
-            if (costream != null && costream.channels != null)
-            {
-                List<UserModel> costreamUsers = new List<UserModel>();
-                foreach (CostreamChannelModel channel in costream.channels)
-                {
-                    UserModel user = await ChannelSession.MixerUserConnection.GetUser(channel.userId);
-                    if (user != null)
-                    {
-                        costreamUsers.Add(user);
-                    }
-                }
-
-                if (costreamUsers.Count > 0)
-                {
-                    return string.Join(", ", costreamUsers.Select(u => "@" + u.username));
-                }
-            }
-            return "@" + ChannelSession.MixerChannel.token;
-        }
-
-        public CostreamChatCommand()
-            : base(MixItUp.Base.Resources.Costream, "costream", 5, UserRoleEnum.User)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    await ChannelSession.Services.Chat.SendMessage("Costream Users: " + await CostreamChatCommand.GetCostreamUsers());
-                }
-            }));
-        }
-    }
-
-    public class MixerAgeChatCommand : PreMadeChatCommand
-    {
-        public MixerAgeChatCommand()
-            : base(MixItUp.Base.Resources.MixerAge, "mixerage", 5, UserRoleEnum.User)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Mixer Age: " + user.AccountAgeString);
                 }
             }));
         }
@@ -370,37 +311,6 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Streamer Age: " + user.AccountAgeString);
-                }
-            }));
-        }
-    }
-
-    public class SparksChatCommand : PreMadeChatCommand
-    {
-        public SparksChatCommand()
-            : base(MixItUp.Base.Resources.Sparks, "sparks", 5, UserRoleEnum.User)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.GetMixerUserModel());
-
-                    if (arguments.Count() == 1)
-                    {
-                        string username = arguments.ElementAt(0);
-                        if (username.StartsWith("@"))
-                        {
-                            username = username.Substring(1);
-                        }
-
-                        userModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                    }
-
-                    if (userModel != null)
-                    {
-                        await ChannelSession.Services.Chat.SendMessage(userModel.username + "'s Sparks: " + userModel.sparks);
-                    }
                 }
             }));
         }
@@ -517,7 +427,7 @@ namespace MixItUp.Base.Commands
                         string quoteText = quoteBuilder.ToString();
                         quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
+                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now);
                         ChannelSession.Settings.Quotes.Add(quote);
                         await ChannelSession.SaveSettings();
 
@@ -631,7 +541,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    string gameName;
+                    string gameName = null;
                     if (arguments.Count() > 0)
                     {
                         gameName = string.Join(" ", arguments);
@@ -639,7 +549,7 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.RefreshChannel();
-                        gameName = ChannelSession.MixerChannel.type.name;
+                        //gameName = ChannelSession.MixerChannel.type.name;
                     }
 
                     GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(gameName);
@@ -734,7 +644,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    string gameName;
+                    string gameName = null;
                     if (arguments.Count() > 0)
                     {
                         gameName = string.Join(" ", arguments);
@@ -742,7 +652,7 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.RefreshChannel();
-                        gameName = ChannelSession.MixerChannel.type.name;
+                        //gameName = ChannelSession.MixerChannel.type.name;
                     }
 
                     GameInformation details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
@@ -772,7 +682,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, name: string.Join(" ", arguments));
+                        //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, name: string.Join(" ", arguments));
                         await ChannelSession.RefreshChannel();
                     }
                     else
@@ -796,21 +706,21 @@ namespace MixItUp.Base.Commands
                     if (arguments.Count() > 0)
                     {
                         GameTypeModel newGame = null;
-                        if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
-                        {
-                            newGame = await ChannelSession.MixerUserConnection.GetGameType(gameID);
-                        }
-                        else
-                        {
-                            string newGameName = string.Join(" ", arguments);
-                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerUserConnection.GetGameTypes(newGameName, 25);
+                        //if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
+                        //{
+                        //    newGame = await ChannelSession.MixerUserConnection.GetGameType(gameID);
+                        //}
+                        //else
+                        //{
+                        //    string newGameName = string.Join(" ", arguments);
+                        //    IEnumerable<GameTypeModel> games = await ChannelSession.MixerUserConnection.GetGameTypes(newGameName, 25);
 
-                            newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
-                        }
+                        //    newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
+                        //}
 
                         if (newGame != null)
                         {
-                            await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
+                            //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
                             await ChannelSession.RefreshChannel();
 
                             await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + newGame.name);
@@ -851,7 +761,7 @@ namespace MixItUp.Base.Commands
                         rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
                         if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(Adult18PlusSetting))
                         {
-                            await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, ageRating: rating);
+                            //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, ageRating: rating);
                             await ChannelSession.RefreshChannel();
 
                             return;
