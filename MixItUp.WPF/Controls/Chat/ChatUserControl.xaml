@@ -24,7 +24,7 @@
 
         <UsersControls:UserProfileAvatarControl x:Name="AvatarImage" Grid.Column="0" DataContext="{Binding}" Size="16" VerticalAlignment="Center" />
 
-        <!--<Image x:Name="PlatformImage" Source="{Binding PlatformBadgeLink}" Margin="3,0,0,0" Grid.Column="1" VerticalAlignment="Center" />-->
+        <Image x:Name="PlatformImage" Source="{Binding PlatformBadgeLink}" Margin="3,0,0,0" Grid.Column="1" VerticalAlignment="Center" Visibility="Collapsed" />
 
         <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="3,0,0,0" Grid.Column="2" VerticalAlignment="Center" />
 
