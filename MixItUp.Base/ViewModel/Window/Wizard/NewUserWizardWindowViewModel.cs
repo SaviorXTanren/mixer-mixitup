@@ -273,7 +273,9 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     }
 
                     this.StreamerAccountsPageVisible = false;
-                    this.ScorpBotPageVisible = true;
+                    //this.ScorpBotPageVisible = true;
+
+                    this.CommandActionsPageVisible = true;
                 }
                 else if (this.ScorpBotPageVisible)
                 {
@@ -362,7 +364,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 else if (this.CommandActionsPageVisible)
                 {
                     this.CommandActionsPageVisible = false;
-                    this.StreamlabsChatbotPageVisible = true;
+                    //this.StreamlabsChatbotPageVisible = true;
+                    this.StreamerAccountsPageVisible = true;
                 }
                 else if (this.FinalPageVisible)
                 {
