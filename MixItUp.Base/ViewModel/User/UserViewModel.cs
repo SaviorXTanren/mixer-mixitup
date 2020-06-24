@@ -721,7 +721,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            if (ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.id > 0 && ChannelSession.TwitchStreamV5.IsLive)
+            if (ChannelSession.TwitchStreamIsLive)
             {
                 this.Data.ViewingMinutes++;
             }

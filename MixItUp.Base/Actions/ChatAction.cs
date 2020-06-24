@@ -55,7 +55,7 @@ namespace MixItUp.Base.Actions
                     {
                         whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, arguments);
                     }
-                    await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
+                    await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer, forceWhisper: true);
                 }
                 else
                 {

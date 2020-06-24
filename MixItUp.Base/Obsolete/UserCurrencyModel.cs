@@ -248,20 +248,19 @@ namespace MixItUp.Base.Model.User
         {
             if (this.IsActive)
             {
-                bool isLive = (ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive);
-                int interval = isLive ? this.AcquireInterval : this.OfflineAcquireInterval;
+                int interval = ChannelSession.TwitchStreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
                 if (interval > 0)
                 {
                     DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                    bool bonusesCanBeApplied = (isLive || this.OfflineAcquireAmount > 0);
+                    bool bonusesCanBeApplied = (ChannelSession.TwitchStreamIsLive || this.OfflineAcquireAmount > 0);
                     foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                     {
                         if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                         {
-                            int minutes = isLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                            int minutes = ChannelSession.TwitchStreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                             if (minutes % interval == 0)
                             {
-                                this.AddAmount(user.Data, isLive ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                this.AddAmount(user.Data, ChannelSession.TwitchStreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
                                 if (bonusesCanBeApplied)
                                 {
                                     if (user.HasPermissionsTo(UserRoleEnum.Mod) && this.ModeratorBonus > 0)

@@ -31,6 +31,8 @@ namespace MixItUp.Base
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchChannelNewAPI { get; private set; }
 
+        public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
+
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV2Model Settings { get; private set; }
 
