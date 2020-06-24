@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.API.Models
@@ -7,7 +8,10 @@ namespace MixItUp.API.Models
     public class User
     {
         [DataMember]
-        public uint ID { get; set; }
+        public Guid ID { get; set; }
+
+        [DataMember]
+        public string TwitchID { get; set; }
 
         [DataMember]
         public string UserName { get; set; }
@@ -20,6 +24,5 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public List<InventoryAmount> InventoryAmounts { get; set; } = new List<InventoryAmount>();
-
-          }
+    }
 }

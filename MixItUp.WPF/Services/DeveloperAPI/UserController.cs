@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         private User UpdateUser(UserDataModel user, User updatedUserData)
         {
-            if (updatedUserData == null || !updatedUserData.ID.Equals(user.MixerID))
+            if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -194,7 +194,8 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         {
             User user = new User
             {
-                ID = userData.MixerID,
+                ID = userData.ID,
+                TwitchID = userData.TwitchID,
                 UserName = userData.Username,
                 ViewingMinutes = userData.ViewingMinutes
             };
