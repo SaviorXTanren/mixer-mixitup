@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;

@@ -26,6 +26,7 @@ namespace MixItUp.Base.ViewModel.User
         Partner = 25,
         Follower = 30,
         Regular = 35,
+        VIP = 38,
         Subscriber = 40,
         GlobalMod = 48,
         Mod = 50,
@@ -630,6 +631,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
                 if (this.IsTwitchSubscriber || this.HasTwitchSubscriberFounderBadge) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
                 if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
+                if (this.HasTwitchBadge("vip")) { this.UserRoles.Add(UserRoleEnum.VIP); } else { this.UserRoles.Remove(UserRoleEnum.VIP); }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null)
                 {
