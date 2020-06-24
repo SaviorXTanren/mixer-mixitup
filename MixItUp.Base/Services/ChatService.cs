@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -148,6 +149,12 @@ namespace MixItUp.Base.Services
             if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
                 await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+
+                if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                {
+                    UserViewModel user = ChannelSession.GetCurrentUser();
+                    await this.AddMessage(TwitchChatMessageViewModel.CreateMessage(user, message));
+                }
             }
         }
 

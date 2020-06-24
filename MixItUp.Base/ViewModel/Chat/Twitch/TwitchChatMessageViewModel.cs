@@ -8,11 +8,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
     public class TwitchChatMessageViewModel : UserChatMessageViewModel
     {
-        public static TwitchChatMessageViewModel CreateWhisper(UserViewModel user, string message)
+        public static TwitchChatMessageViewModel CreateMessage(UserViewModel user, string message)
         {
             TwitchChatMessageViewModel result = new TwitchChatMessageViewModel(user);
             result.ProcessMessageContents(message);
-            result.TargetUsername = user.Username;
             return result;
         }
 
