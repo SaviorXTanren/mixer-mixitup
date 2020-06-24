@@ -116,10 +116,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             foreach (var giveData in giveDatas)
             {
                 UserDataModel user = null;
-                if (uint.TryParse(giveData.UsernameOrID, out uint userID))
-                {
-                    user = ChannelSession.Settings.GetUserDataByMixerID(userID);
-                }
 
                 if (user == null)
                 {

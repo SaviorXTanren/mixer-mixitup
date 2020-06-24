@@ -58,7 +58,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = MixItUp.Base.Resources.NewStreamer });
+                this.streamerSettings.Add(new SettingsV2Model() { ID = Guid.Empty, Name = MixItUp.Base.Resources.NewStreamer });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -114,7 +114,7 @@ namespace MixItUp.WPF
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
                         SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
-                        if (setting.MixerChannelID == 0)
+                        if (setting.ID == Guid.Empty)
                         {
                             await this.NewStreamerLogin();
                         }

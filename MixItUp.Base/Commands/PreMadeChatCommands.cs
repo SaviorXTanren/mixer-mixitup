@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -982,6 +983,73 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.Services.Chat.Whisper(user, "Usage: !startgiveaway <GIVEAWAY ITEM>");
                     }
+                }
+            }));
+        }
+    }
+
+    public class LinkMixerAccountChatCommand : PreMadeChatCommand
+    {
+        public static Dictionary<Guid, Guid> LinkedAccounts = new Dictionary<Guid, Guid>();
+
+        public LinkMixerAccountChatCommand()
+            : base("linkmixeraccount", "linkmixeraccount", 0, UserRoleEnum.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (arguments != null && arguments.Count() == 1)
+                {
+                    string mixerUsername = arguments.First().ToLower().Replace("@", "");
+                    if (ChannelSession.Settings.MixerUsernameLookups.ContainsKey(mixerUsername))
+                    {
+                        UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(ChannelSession.Settings.MixerUsernameLookups[mixerUsername]);
+                        if (mixerUserData != null)
+                        {
+                            LinkedAccounts[user.ID] = mixerUserData.ID;
+                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @{user.Username}\" in chat to approve this linking.");
+                            return;
+                        }
+                    }
+                    await ChannelSession.Services.Chat.Whisper(user, "There is no Mixer user data for that username");
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !linkmixeraccount <MIXER USERNAME>");
+                }
+            }));
+        }
+    }
+
+    public class ApproveMixerAccountChatCommand : PreMadeChatCommand
+    {
+        public ApproveMixerAccountChatCommand()
+            : base("approvemixeraccount", "approvemixeraccount", 0, UserRoleEnum.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (arguments != null && arguments.Count() == 1)
+                {
+                    UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(arguments.First().Replace("@", ""), user.Platform);
+                    if (targetUser != null && LinkMixerAccountChatCommand.LinkedAccounts.ContainsKey(targetUser.ID))
+                    {
+                        UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountChatCommand.LinkedAccounts[targetUser.ID]);
+                        if (mixerUserData != null)
+                        {
+                            LinkMixerAccountChatCommand.LinkedAccounts.Remove(targetUser.ID);
+                            targetUser.Data.MergeData(mixerUserData);
+
+                            ChannelSession.Settings.MixerUsernameLookups.Remove(mixerUserData.MixerUsername);
+                            ChannelSession.Settings.UserData.Remove(mixerUserData.ID);
+
+                            await ChannelSession.Services.Chat.SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{user.Username}.");
+                            return;
+                        }
+                    }
+                    await ChannelSession.Services.Chat.Whisper(user, "There is no Mixer user data for that username");
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !approvemixeraccount <USERNAME>");
                 }
             }));
         }

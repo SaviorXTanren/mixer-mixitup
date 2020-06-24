@@ -490,9 +490,10 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
-        private Dictionary<uint, Guid> MixerUserIDLookups { get; set; } = new Dictionary<uint, Guid>();
-        [JsonIgnore]
         private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
+
+        [JsonIgnore]
+        public Dictionary<string, Guid> MixerUsernameLookups { get; set; } = new Dictionary<string, Guid>();
 
         #endregion Database Data
 
@@ -546,13 +547,14 @@ namespace MixItUp.Base.Model.Settings
                 {
                     UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                     this.UserData[userData.ID] = userData;
-                    if (userData.MixerID > 0)
-                    {
-                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
-                    }
                     if (!string.IsNullOrEmpty(userData.TwitchID))
                     {
                         this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                    }
+
+                    if (userData.MixerID > 0 && !string.IsNullOrEmpty(userData.MixerUsername))
+                    {
+                        this.MixerUsernameLookups[userData.MixerUsername.ToLower()] = userData.ID;
                     }
                 });
                 this.UserData.ClearTracking();
@@ -790,22 +792,6 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public UserDataModel GetUserDataByMixerID(uint mixerID)
-        {
-            lock (this.UserData)
-            {
-                if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
-                {
-                    Guid id = this.MixerUserIDLookups[mixerID];
-                    if (this.UserData.ContainsKey(id))
-                    {
-                        return this.UserData[id];
-                    }
-                }
-                return null;
-            }
-        }
-
         public UserDataModel GetUserDataByTwitchID(string twitchID)
         {
             lock (this.UserData)
@@ -825,10 +811,6 @@ namespace MixItUp.Base.Model.Settings
         public void AddUserData(UserDataModel user)
         {
             this.UserData[user.ID] = user;
-            if (user.MixerID > 0)
-            {
-                this.MixerUserIDLookups[user.MixerID] = user.ID;
-            }
             if (!string.IsNullOrEmpty(user.TwitchID))
             {
                 this.TwitchUserIDLookups[user.TwitchID] = user.ID;

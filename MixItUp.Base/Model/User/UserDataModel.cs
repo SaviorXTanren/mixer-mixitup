@@ -116,8 +116,6 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public bool IsCurrencyRankExempt { get; set; }
-        [DataMember]
-        public bool IsSparkExempt { get; set; }
 
         [DataMember]
         public string PatreonUserID { get; set; }
@@ -315,6 +313,62 @@ namespace MixItUp.Base.Model.User
         public override string ToString()
         {
             return this.Username;
+        }
+
+        public void MergeData(UserDataModel other)
+        {
+            foreach (var kvp in other.CurrencyAmounts)
+            {
+                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.CurrencyAmounts[kvp.Key] += other.CurrencyAmounts[kvp.Key];
+            }
+
+            foreach (var kvp in other.InventoryAmounts)
+            {
+                if (!this.InventoryAmounts.ContainsKey(kvp.Key))
+                {
+                    this.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
+                }
+                foreach (var itemKVP in other.InventoryAmounts[kvp.Key])
+                {
+                    if (!this.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
+                    {
+                        this.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
+                    }
+                    this.InventoryAmounts[kvp.Key][itemKVP.Key] += other.InventoryAmounts[kvp.Key][itemKVP.Key];
+                }
+            }
+
+            foreach (var kvp in other.StreamPassAmounts)
+            {
+                if (!this.StreamPassAmounts.ContainsKey(kvp.Key))
+                {
+                    this.StreamPassAmounts[kvp.Key] = 0;
+                }
+                this.StreamPassAmounts[kvp.Key] += other.StreamPassAmounts[kvp.Key];
+            }
+
+            this.CustomTitle = other.CustomTitle;
+            this.ViewingMinutes += other.ViewingMinutes;
+            this.OfflineViewingMinutes += other.OfflineViewingMinutes;
+
+            this.CustomCommands = other.CustomCommands;
+            this.EntranceCommand = other.EntranceCommand;
+
+            this.IsCurrencyRankExempt = other.IsCurrencyRankExempt;
+            this.PatreonUserID = other.PatreonUserID;
+
+            this.TotalStreamsWatched = other.TotalStreamsWatched;
+            this.TotalAmountDonated = other.TotalAmountDonated;
+            this.TotalSubsGifted = other.TotalSubsGifted;
+            this.TotalSubsReceived = other.TotalSubsReceived;
+            this.TotalChatMessageSent = other.TotalChatMessageSent;
+            this.TotalTimesTagged = other.TotalTimesTagged;
+            this.TotalCommandsRun = other.TotalCommandsRun;
+            this.TotalMonthsSubbed = other.TotalMonthsSubbed;
         }
     }
 }

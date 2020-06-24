@@ -319,14 +319,6 @@ namespace MixItUp.Base.ViewModel.User
 
         public string UnassociatedUsername { get { return this.Data.UnassociatedUsername; } private set { this.Data.UnassociatedUsername = value; } }
 
-        #region Mixer
-
-        public uint MixerID { get { return this.Data.MixerID; } private set { if (value > 0) { this.Data.MixerID = value; } } }
-        public string MixerUsername { get { return this.Data.MixerUsername; } private set { if (!string.IsNullOrEmpty(value)) { this.Data.MixerUsername = value; } } }
-        public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { if (value > 0) { this.Data.MixerChannelID = value; } } }
-
-        #endregion Mixer
-
         #region Twitch
 
         public string TwitchID { get { return this.Data.TwitchID; } private set { this.Data.TwitchID = value; } }
