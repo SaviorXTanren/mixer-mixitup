@@ -2961,4 +2961,7 @@
   <data name="ChannelPoints" xml:space="preserve">
     <value>Channel Points</value>
   </data>
+  <data name="Platform" xml:space="preserve">
+    <value>Platform</value>
+  </data>
 </root>
