@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (await this.Validate())
             {
-                if (this.command == null)
+                if (this.command == null || string.IsNullOrEmpty(this.command.Name))
                 {
                     this.command = new TwitchChannelPointsCommand(this.NameTextBox.Text);
                     ChannelSession.Settings.TwitchChannelPointsCommands.Add(this.command);

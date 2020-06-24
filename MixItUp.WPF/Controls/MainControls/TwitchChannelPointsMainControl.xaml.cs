@@ -70,5 +70,17 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.viewModel.Refresh();
         }
+
+        private void ImportMixPlayCommand_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.viewModel.SelectedMixPlayCommand != null)
+            {
+                TwitchChannelPointsCommand command = new TwitchChannelPointsCommand();
+                command.Actions.AddRange(this.viewModel.SelectedMixPlayCommand.Actions);
+                CommandWindow window = new CommandWindow(new TwitchChannelPointsCommandDetailsControl(command));
+                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                window.Show();
+            }
+        }
     }
 }

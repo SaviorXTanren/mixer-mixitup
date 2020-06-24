@@ -12,6 +12,7 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -485,6 +486,9 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseDictionary<Guid, CustomCommand> CustomCommands { get; set; } = new DatabaseDictionary<Guid, CustomCommand>();
 
         [JsonIgnore]
+        public List<MixPlayCommand> OldMixPlayCommands { get; set; } = new List<MixPlayCommand>();
+
+        [JsonIgnore]
         public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
 
         [JsonIgnore]
@@ -606,6 +610,16 @@ namespace MixItUp.Base.Model.Settings
                         CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
                         this.CustomCommands[command.ID] = command;
                     }
+#pragma warning disable CS0612 // Type or member is obsolete
+                    else if (type == CommandTypeEnum.Interactive)
+                    {
+                        MixPlayCommand command = JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]);
+                        if (command is MixPlayButtonCommand || command is MixPlayTextBoxCommand)
+                        {
+                            this.OldMixPlayCommands.Add(command);
+                        }
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 });
 
                 this.ChatCommands.ClearTracking();

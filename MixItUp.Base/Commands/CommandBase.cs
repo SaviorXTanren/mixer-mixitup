@@ -345,4 +345,42 @@ namespace MixItUp.Base.Commands
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
+
+    #region Obsolete Commands
+
+    public class MixPlayCommand : CommandBase
+    {
+        [JsonProperty]
+        public uint GameID { get; set; }
+
+        public MixPlayCommand() { }
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
+
+        public override string ToString() { return this.GameID + " - " + this.Name; }
+    }
+
+    public class MixPlayButtonCommand : MixPlayCommand
+    {
+        public MixPlayButtonCommand() { }
+    }
+
+    public class MixPlayJoystickCommand : MixPlayCommand
+    {
+        private class MixPlayJoystickAction : ActionBase
+        {
+            protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
+
+            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.FromResult(0); }
+        }
+
+        public MixPlayJoystickCommand() { }
+    }
+
+    public class MixPlayTextBoxCommand : MixPlayCommand
+    {
+        public MixPlayTextBoxCommand() { }
+    }
+
+    #endregion Obsolete Commands
 }
