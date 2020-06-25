@@ -1041,7 +1041,7 @@ namespace MixItUp.Base.Commands
                             ChannelSession.Settings.MixerUsernameLookups.Remove(mixerUserData.MixerUsername);
                             ChannelSession.Settings.UserData.Remove(mixerUserData.ID);
 
-                            await ChannelSession.Services.Chat.SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{user.Username}.");
+                            await ChannelSession.Services.Chat.SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{targetUser.Username}.");
                             return;
                         }
                     }
