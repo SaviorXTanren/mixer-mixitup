@@ -17,6 +17,7 @@ namespace MixItUp.Base.Commands
     public enum CommandTypeEnum
     {
         Chat = 0,
+        [Obsolete]
         [Name("MixPlay")]
         Interactive = 1,
         Event = 2,
@@ -25,6 +26,7 @@ namespace MixItUp.Base.Commands
         ActionGroup = 5,
         Game = 6,
         Remote = 7,
+        TwitchChannelPoints = 8,
     }
 
     [DataContract]
@@ -130,6 +132,8 @@ namespace MixItUp.Base.Commands
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
         }
+
+        public CommandBase(string name, CommandTypeEnum type) : this(name, type, new List<string>() { }) { }
 
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
 
@@ -341,4 +345,42 @@ namespace MixItUp.Base.Commands
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
+
+    #region Obsolete Commands
+
+    public class MixPlayCommand : CommandBase
+    {
+        [JsonProperty]
+        public uint GameID { get; set; }
+
+        public MixPlayCommand() { }
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
+
+        public override string ToString() { return this.GameID + " - " + this.Name; }
+    }
+
+    public class MixPlayButtonCommand : MixPlayCommand
+    {
+        public MixPlayButtonCommand() { }
+    }
+
+    public class MixPlayJoystickCommand : MixPlayCommand
+    {
+        private class MixPlayJoystickAction : ActionBase
+        {
+            protected override SemaphoreSlim AsyncSemaphore { get { return null; } }
+
+            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.FromResult(0); }
+        }
+
+        public MixPlayJoystickCommand() { }
+    }
+
+    public class MixPlayTextBoxCommand : MixPlayCommand
+    {
+        public MixPlayTextBoxCommand() { }
+    }
+
+    #endregion Obsolete Commands
 }

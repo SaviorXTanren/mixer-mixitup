@@ -130,9 +130,6 @@ namespace MixItUp.Base.ViewModel.Window.User
             this.Metrics1.Add(new UserMetricViewModel(MixItUp.Base.Resources.CommandsRun, this.User.Data.TotalCommandsRun.ToString()));
 
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.TaggedInChat, this.User.Data.TotalTimesTagged.ToString()));
-            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.SparksSpent, this.User.Data.TotalSparksSpent.ToString()));
-            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.EmbersSpent, this.User.Data.TotalEmbersSpent.ToString()));
-            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.SkillsUsed, this.User.Data.TotalSkillsUsed.ToString()));
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, string.Format("{0:C}", Math.Round(this.User.Data.TotalAmountDonated, 2))));
         }
 

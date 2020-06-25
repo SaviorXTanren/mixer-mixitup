@@ -7,6 +7,7 @@ namespace MixItUp.Base.Model
     {
         None = 0,
 
+        [Obsolete]
         Mixer = 1,
         Twitch = 2,
         YouTube = 4,

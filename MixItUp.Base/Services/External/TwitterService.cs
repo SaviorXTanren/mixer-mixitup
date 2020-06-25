@@ -1,8 +1,5 @@
 ﻿using LinqToTwitter;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -45,7 +42,7 @@ namespace MixItUp.Base.Services.External
             this.Links = new List<string>();
         }
 
-        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.MixerChannel.token.ToLower()))); } }
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ChannelSession.TwitchChannelNewAPI.login.ToLower()))); } }
     }
 
     public interface ITwitterService : IOAuthExternalService

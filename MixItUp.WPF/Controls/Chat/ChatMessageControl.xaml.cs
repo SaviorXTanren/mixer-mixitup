@@ -1,10 +1,8 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
-using MixItUp.WPF.Services;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -12,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TwitchV5API = Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -56,6 +55,8 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 this.Message = (ChatMessageViewModel)this.DataContext;
                 this.Message.OnDeleted += Message_OnDeleted;
+                bool italics = false;
+
                 if (this.DataContext is AlertChatMessageViewModel)
                 {
                     AlertChatMessageViewModel alert = (AlertChatMessageViewModel)this.DataContext;
@@ -87,36 +88,10 @@ namespace MixItUp.WPF.Controls.Chat
                     this.MessageWrapPanel.Children.Add(header);
 
                     bool showMessage = true;
-                    if (this.DataContext is MixerSkillChatMessageViewModel)
+                    if (this.DataContext is TwitchChatMessageViewModel)
                     {
-                        MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)this.DataContext;
-                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
-                        {
-                            GifSkillHoverControl gifSkillControl = new GifSkillHoverControl();
-                            gifSkillControl.DataContext = skillMessage;
-                            this.MessageWrapPanel.Children.Add(gifSkillControl);
-                        }
-                        else
-                        {
-                            this.MessageWrapPanel.Children.Add(new ChatImageControl(skillMessage.Skill));
-                        }
-
-                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Other)
-                        {
-                            this.AddStringMessage(skillMessage.Skill.Name);
-                        }
-
-                        if (skillMessage.Skill.IsEmbersSkill)
-                        {
-                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
-                        }
-                        else
-                        {
-                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
-                            showMessage = false;
-                        }
-
-                        this.AddStringMessage(" " + skillMessage.Skill.Cost.ToString());
+                        TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
+                        italics = twitchMessage.IsSlashMe;
                     }
 
                     if (showMessage)
@@ -127,18 +102,18 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 string messagePartString = (string)messagePart;
 
-                                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-                                bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerUser.username);
+                                bool isWhisperToStreamer = false; //this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
+                                bool isStreamerTagged = false; //messagePartString.Contains("@" + ChannelSession.MixerUser.username);
 
-                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged));
+                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged), isItalicized: italics);
                             }
-                            else if (messagePart is MixerChatEmoteModel)
+                            else if (messagePart is TwitchV5API.EmoteModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixerChatEmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchV5API.EmoteModel)messagePart));
                             }
-                            else if (messagePart is MixrElixrEmoteModel)
+                            else if (messagePart is BetterTTVEmoteModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixrElixrEmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((BetterTTVEmoteModel)messagePart));
                             }
                         }
                     }
@@ -146,7 +121,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void AddStringMessage(string text, bool isHighlighted = false, SolidColorBrush foreground = null)
+        private void AddStringMessage(string text, bool isHighlighted = false, bool isItalicized = false, SolidColorBrush foreground = null)
         {
             foreach (string word in text.Split(new string[] { " " }, StringSplitOptions.None))
             {
@@ -164,6 +139,14 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
                     textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                }
+
+                if (isItalicized)
+                {
+                    foreach (var run in textBlock.Inlines)
+                    {
+                        run.FontStyle = FontStyles.Italic;
+                    }
                 }
 
                 this.textBlocks.Add(textBlock);

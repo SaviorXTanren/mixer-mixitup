@@ -23,9 +23,13 @@ namespace MixItUp.Base.Model.Currency
     public enum CurrencySpecialTrackingEnum
     {
         None = 0,
+        [Obsolete]
         Sparks = 1,
+        [Obsolete]
         Embers = 2,
-        FanProgression = 3
+        [Obsolete]
+        FanProgression = 3,
+        Bits = 4,
     }
 
     [DataContract]
@@ -309,35 +313,21 @@ namespace MixItUp.Base.Model.Currency
         {
             if (this.IsActive)
             {
-                if (this.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression)
+                if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
-                    foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
-                    {
-                        if (!user.Data.IsCurrencyRankExempt)
-                        {
-                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > this.GetAmount(user.Data))
-                            {
-                                this.SetAmount(user.Data, (int)user.MixerFanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
-                            }
-                        }
-                    }
-                }
-                else if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
-                {
-                    int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    int interval = ChannelSession.TwitchStreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
+                        bool bonusesCanBeApplied = (ChannelSession.TwitchStreamIsLive || this.OfflineAcquireAmount > 0);
                         foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                int minutes = ChannelSession.TwitchStreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    this.AddAmount(user.Data, ChannelSession.TwitchStreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         int bonus = 0;

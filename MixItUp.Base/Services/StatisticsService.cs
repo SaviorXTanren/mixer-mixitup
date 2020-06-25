@@ -1,13 +1,9 @@
-﻿using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Model.Statistics;
+﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -30,12 +26,6 @@ namespace MixItUp.Base.Services
         public EventStatisticDataTrackerModel GiftedSubscriptionsTracker { get; private set; }
         public StaticTextStatisticDataTrackerModel AllSubsTracker { get; private set; }
 
-        public EventStatisticDataTrackerModel MixPlayTracker { get; private set; }
-        public EventStatisticDataTrackerModel SparksTracker { get; private set; }
-        public EventStatisticDataTrackerModel EmbersTracker { get; private set; }
-        public StaticTextStatisticDataTrackerModel MilestoneTracker { get; private set; }
-        public StaticTextStatisticDataTrackerModel SparksEmbersTracker { get; private set; }
-
         public EventStatisticDataTrackerModel DonationsTracker { get; private set; }
 
         public StatisticsService() { }
@@ -51,21 +41,16 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
 
-            ChannelSession.Services.MixPlay.OnControlUsed += MixPlay_OnControlUsed;
-
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
-
-            GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
 
             this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel("Viewers", "EyeOutline", true, (StatisticDataTrackerModelBase stats) =>
             {
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.MixerChannel != null)
+                if (ChannelSession.TwitchStreamV5 != null)
                 {
-                    viewersCurrent = (int)ChannelSession.MixerChannel.viewersCurrent;
+                    viewersCurrent = (int)ChannelSession.TwitchStreamV5.viewers;
                 }
 
                 numberStats.AddValue(viewersCurrent);
@@ -106,66 +91,6 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            this.MixPlayTracker = new EventStatisticDataTrackerModel("MixPlay", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
-            {
-                return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.AverageString);
-            });
-
-            this.SparksTracker = new EventStatisticDataTrackerModel("Sparks", "/Assets/Images/Sparks.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTrackerModel dataTracker) =>
-            {
-                return string.Format("Users: {0},    Total: {1},    Average: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
-            });
-            this.EmbersTracker = new EventStatisticDataTrackerModel("Embers", "/Assets/Images/Embers.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTrackerModel dataTracker) =>
-            {
-                return string.Format("Users: {0},    Total: {1},    Average: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
-            });
-
-            this.MilestoneTracker = new StaticTextStatisticDataTrackerModel("Milestones", "DiamondStone", true, async (StatisticDataTrackerModelBase stats) =>
-            {
-                StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
-                staticStats.ClearValues();
-
-                if (ChannelSession.MixerUserConnection != null && ChannelSession.MixerChannel != null)
-                {
-                    PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
-                    if (patronageStatus != null)
-                    {
-                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
-                        if (patronagePeriod != null)
-                        {
-                            IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
-                            IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
-                            if (patronageMilestonesEarned.Count() > 0)
-                            {
-                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
-                                if (patronageMilestoneHighestEarned != null)
-                                {
-                                    staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
-                                    staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
-                                    staticStats.AddValue("Total Boost", patronageMilestoneHighestEarned.PercentageAmountText());
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                staticStats.AddValue("Milestone #", "0");
-                staticStats.AddValue("Total Sparks", "0");
-                staticStats.AddValue("Total Boost", "0%");
-            });
-
-            this.SparksEmbersTracker = new StaticTextStatisticDataTrackerModel("Sparks/Embers", "DiamondStone", true, (StatisticDataTrackerModelBase stats) =>
-            {
-                StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
-                staticStats.ClearValues();
-
-                staticStats.AddValue(Resources.Sparks, ChannelSession.Services.Statistics?.SparksTracker?.TotalValue.ToString() ?? "0");
-                staticStats.AddValue(Resources.Embers, ChannelSession.Services.Statistics?.EmbersTracker?.TotalValue.ToString() ?? "0");
-
-                return Task.FromResult(0);
-            });
-
             this.DonationsTracker = new EventStatisticDataTrackerModel("Donations", "CashMultiple", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
                 return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
@@ -180,10 +105,6 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.SubscriberTracker);
             this.Statistics.Add(this.ResubscriberTracker);
             this.Statistics.Add(this.GiftedSubscriptionsTracker);
-            this.Statistics.Add(this.MixPlayTracker);
-            this.Statistics.Add(this.SparksTracker);
-            this.Statistics.Add(this.EmbersTracker);
-            this.Statistics.Add(this.MilestoneTracker);
             this.Statistics.Add(this.DonationsTracker);
         }
 
@@ -217,24 +138,9 @@ namespace MixItUp.Base.Services
             this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
         }
 
-        private void MixPlay_OnControlUsed(object sender, MixPlayInputEvent e)
-        {
-            this.MixPlayTracker.OnStatisticEventOccurred(e.Control.controlID, e.User.Username);
-        }
-
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
         {
             this.DonationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
-        }
-
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> e)
-        {
-            this.SparksTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
-        }
-
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel e)
-        {
-            this.EmbersTracker.OnStatisticEventOccurred(e.User.Username, e.Amount);
         }
     }
 }

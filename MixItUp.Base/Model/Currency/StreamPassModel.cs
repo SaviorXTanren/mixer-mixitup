@@ -49,10 +49,6 @@ namespace MixItUp.Base.Model.Currency
         public int SubscribeBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
-        [DataMember]
-        public double SparkBonus { get; set; }
-        [DataMember]
-        public double EmberBonus { get; set; }
 
         [DataMember]
         public Guid DefaultLevelUpCommandID { get; set; }
@@ -84,8 +80,6 @@ namespace MixItUp.Base.Model.Currency
             this.HostBonus = copy.HostBonus;
             this.SubscribeBonus = copy.SubscribeBonus;
             this.DonationBonus = copy.DonationBonus;
-            this.SparkBonus = copy.SparkBonus;
-            this.EmberBonus = copy.EmberBonus;
 
             this.DefaultLevelUpCommandID = this.DuplicateCommand(copy.DefaultLevelUpCommandID);
             this.CustomLevelUpCommands.Clear();
@@ -207,7 +201,7 @@ namespace MixItUp.Base.Model.Currency
         public void UpdateUserData()
         {
             DateTime date = DateTimeOffset.Now.Date;
-            if (ChannelSession.MixerChannel.online && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            if (ChannelSession.TwitchStreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())

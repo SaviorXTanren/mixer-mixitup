@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             }
 
             var quoteText = quote.QuoteText.Trim(new char[] { ' ', '\'', '\"' });
-            UserQuoteViewModel newQuote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
+            UserQuoteViewModel newQuote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now);
             ChannelSession.Settings.Quotes.Add(newQuote);
             await ChannelSession.SaveSettings();
 

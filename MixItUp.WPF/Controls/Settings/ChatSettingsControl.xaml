@@ -128,11 +128,11 @@
         <TextBlock Grid.Row="22" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ShowMessageTimestamp}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="22" Grid.Column="2" x:Name="ShowMessageTimestampsToggleButton" Checked="ShowMessageTimestampsToggleButton_Checked" Unchecked="ShowMessageTimestampsToggleButton_Checked" />
 
-        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ShowMixrElixrEmotes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="ShowMixrElixrEmotesToggleButton" Checked="ShowMixrElixrEmotesToggleButton_Checked" Unchecked="ShowMixrElixrEmotesToggleButton_Checked" />
+        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show BetterTTV Emotes (Requires Restart):</TextBlock>
+        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="ShowBetterTTVEmotesToggleButton" Checked="ShowBetterTTVEmotesToggleButton_Checked" Unchecked="ShowBetterTTVEmotesToggleButton_Checked" />
 
         <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
-
+        
         <TextBlock Grid.Row="28" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AllowCommandsToBeWhispered}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="28" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
 

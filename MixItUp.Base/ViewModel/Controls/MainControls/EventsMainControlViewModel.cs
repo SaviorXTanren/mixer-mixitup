@@ -75,6 +75,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     return "Mixer";
                 }
+                else if (eventNumber >= 200 && eventNumber < 300)
+                {
+                    return "Twitch";
+                }
                 else
                 {
                     return "Generic";
@@ -101,19 +105,17 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.EventCommands.Clear();
 
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelStreamStart));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelStreamStop));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelFollowed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelUnfollowed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelHosted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelResubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscriptionGifted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelFanProgressionLevelUp));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSkillUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSparksUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelEmbersUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelMilestoneReached));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
 
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));

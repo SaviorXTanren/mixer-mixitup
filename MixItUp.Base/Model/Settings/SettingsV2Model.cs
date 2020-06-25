@@ -1,9 +1,6 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.Favorites;
-using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -31,7 +28,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 42;
+        public const int LatestVersion = 43;
 
         public const string SettingsDirectoryName = "Settings";
 
@@ -67,13 +64,18 @@ namespace MixItUp.Base.Model.Settings
         #region Authentication
 
         [DataMember]
-        public OAuthTokenModel MixerUserOAuthToken { get; set; }
-        [DataMember]
-        public OAuthTokenModel MixerBotOAuthToken { get; set; }
-        [DataMember]
         public uint MixerUserID { get; set; }
         [DataMember]
         public uint MixerChannelID { get; set; }
+
+        [JsonProperty]
+        public OAuthTokenModel TwitchUserOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TwitchBotOAuthToken { get; set; }
+		[JsonProperty]
+		public string TwitchUserID { get; set; }
+        [JsonProperty]
+        public string TwitchChannelID { get; set; }
 
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
@@ -162,7 +164,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
         [DataMember]
-        public bool ShowMixrElixrEmotes { get; set; }
+        public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowChatMessageTimestamps { get; set; }
 
@@ -192,25 +194,6 @@ namespace MixItUp.Base.Model.Settings
         public int NotificationServiceDisconnectSoundVolume { get; set; } = 100;
 
         #endregion Notifications
-
-        #region MixPlay
-
-        [DataMember]
-        public uint DefaultMixPlayGame { get; set; }
-        [DataMember]
-        public bool PreventUnknownMixPlayUsers { get; set; }
-        [DataMember]
-        public bool PreventSmallerMixPlayCooldowns { get; set; }
-        [DataMember]
-        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
-
-        [DataMember]
-        public Dictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
-
-        [DataMember]
-        public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; } = new Dictionary<uint, JObject>();
-
-        #endregion MixPlay
 
         #region Users
 
@@ -479,9 +462,6 @@ namespace MixItUp.Base.Model.Settings
         public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();
 
         [DataMember]
-        public List<FavoriteGroupModel> FavoriteGroups { get; set; } = new List<FavoriteGroupModel>();
-
-        [DataMember]
         public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; } = new Dictionary<string, CommandGroupSettings>();
         [DataMember]
         public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
@@ -495,15 +475,18 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseList<EventCommand> EventCommands { get; set; } = new DatabaseList<EventCommand>();
         [JsonIgnore]
-        public DatabaseList<MixPlayCommand> MixPlayCommands { get; set; } = new DatabaseList<MixPlayCommand>();
-        [JsonIgnore]
         public DatabaseList<TimerCommand> TimerCommands { get; set; } = new DatabaseList<TimerCommand>();
         [JsonIgnore]
         public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
         [JsonIgnore]
         public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
         [JsonIgnore]
+        public DatabaseList<TwitchChannelPointsCommand> TwitchChannelPointsCommands { get; set; } = new DatabaseList<TwitchChannelPointsCommand>();
+        [JsonIgnore]
         public DatabaseDictionary<Guid, CustomCommand> CustomCommands { get; set; } = new DatabaseDictionary<Guid, CustomCommand>();
+
+        [JsonIgnore]
+        public List<MixPlayCommand> OldMixPlayCommands { get; set; } = new List<MixPlayCommand>();
 
         [JsonIgnore]
         public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
@@ -511,7 +494,10 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
-        private Dictionary<uint, Guid> MixerUserIDLookups { get; set; } = new Dictionary<uint, Guid>();
+        private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
+
+        [JsonIgnore]
+        public Dictionary<string, Guid> MixerUsernameLookups { get; set; } = new Dictionary<string, Guid>();
 
         #endregion Database Data
 
@@ -543,11 +529,10 @@ namespace MixItUp.Base.Model.Settings
 
         public SettingsV2Model() { }
 
-        public SettingsV2Model(ExpandedChannelModel channel, bool isStreamer = true)
+        public SettingsV2Model(string name, bool isStreamer = true)
             : this()
         {
-            this.Name = channel.token;
-            this.MixerChannelID = channel.id;
+            this.Name = name;
             this.IsStreamer = isStreamer;
 
             this.InitializeMissingData();
@@ -566,7 +551,15 @@ namespace MixItUp.Base.Model.Settings
                 {
                     UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                     this.UserData[userData.ID] = userData;
-                    this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.TwitchID))
+                    {
+                        this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                    }
+
+                    if (userData.MixerID > 0 && !string.IsNullOrEmpty(userData.MixerUsername))
+                    {
+                        this.MixerUsernameLookups[userData.MixerUsername.ToLower()] = userData.ID;
+                    }
                 });
                 this.UserData.ClearTracking();
 
@@ -596,10 +589,6 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.EventCommands.Add(JSONSerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
                     }
-                    else if (type == CommandTypeEnum.Interactive)
-                    {
-                        this.MixPlayCommands.Add(JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
-                    }
                     else if (type == CommandTypeEnum.Timer)
                     {
                         this.TimerCommands.Add(JSONSerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
@@ -612,19 +601,33 @@ namespace MixItUp.Base.Model.Settings
                     {
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
+                    else if (type == CommandTypeEnum.TwitchChannelPoints)
+                    {
+                        this.TwitchChannelPointsCommands.Add(JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommand>((string)data["Data"]));
+                    }
                     else if (type == CommandTypeEnum.Custom)
                     {
                         CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
                         this.CustomCommands[command.ID] = command;
                     }
+#pragma warning disable CS0612 // Type or member is obsolete
+                    else if (type == CommandTypeEnum.Interactive)
+                    {
+                        MixPlayCommand command = JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]);
+                        if (command is MixPlayButtonCommand || command is MixPlayTextBoxCommand)
+                        {
+                            this.OldMixPlayCommands.Add(command);
+                        }
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 });
 
                 this.ChatCommands.ClearTracking();
                 this.EventCommands.ClearTracking();
-                this.MixPlayCommands.ClearTracking();
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
+                this.TwitchChannelPointsCommands.ClearTracking();
                 this.CustomCommands.ClearTracking();
 
                 foreach (CounterModel counter in this.Counters.Values.ToList())
@@ -669,13 +672,13 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV2Model.LatestVersion;
 
-            if (ChannelSession.MixerUserConnection != null)
+            if (ChannelSession.TwitchUserConnection != null)
             {
-                this.MixerUserOAuthToken = ChannelSession.MixerUserConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             }
-            if (ChannelSession.MixerBotConnection != null)
+            if (ChannelSession.TwitchBotConnection != null)
             {
-                this.MixerBotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchBotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)
@@ -729,8 +732,7 @@ namespace MixItUp.Base.Model.Settings
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames =
-                this.MixPlayCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
-                .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
             var allUnusedCooldownGroupNames = this.CooldownGroups.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
@@ -765,10 +767,10 @@ namespace MixItUp.Base.Model.Settings
                 List<Guid> removedCommands = new List<Guid>();
                 removedCommands.AddRange(this.ChatCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.EventCommands.GetRemovedValues().Select(c => c.ID));
-                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.TimerCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.GameCommands.GetRemovedValues().Select(c => c.ID));
+                removedCommands.AddRange(this.TwitchChannelPointsCommands.GetRemovedValues().Select(c => c.ID));
                 removedCommands.AddRange(this.CustomCommands.GetRemovedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
                     removedCommands.Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
@@ -776,10 +778,10 @@ namespace MixItUp.Base.Model.Settings
                 List<CommandBase> addedChangedCommands = new List<CommandBase>();
                 addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.TwitchChannelPointsCommands.GetAddedChangedValues());
                 addedChangedCommands.AddRange(this.CustomCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
@@ -804,13 +806,13 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public UserDataModel GetUserDataByMixerID(uint mixerID)
+        public UserDataModel GetUserDataByTwitchID(string twitchID)
         {
             lock (this.UserData)
             {
-                if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
+                if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
                 {
-                    Guid id = this.MixerUserIDLookups[mixerID];
+                    Guid id = this.TwitchUserIDLookups[twitchID];
                     if (this.UserData.ContainsKey(id))
                     {
                         return this.UserData[id];
@@ -823,9 +825,9 @@ namespace MixItUp.Base.Model.Settings
         public void AddUserData(UserDataModel user)
         {
             this.UserData[user.ID] = user;
-            if (user.MixerID > 0)
+            if (!string.IsNullOrEmpty(user.TwitchID))
             {
-                this.MixerUserIDLookups[user.MixerID] = user.ID;
+                this.TwitchUserIDLookups[user.TwitchID] = user.ID;
             }
             this.UserData.ManualValueChanged(user.ID);
         }

@@ -18,6 +18,7 @@ namespace MixItUp.WPF.Controls.Chat
         private void ChatUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             this.AvatarImage.Size = ChannelSession.Settings.ChatFontSize;
+            this.PlatformImage.Width = this.PlatformImage.Height = ChannelSession.Settings.ChatFontSize;
             this.SubscriberImage.Width = this.SubscriberImage.Height = ChannelSession.Settings.ChatFontSize;
             this.UsernameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }

@@ -44,7 +44,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -60,22 +59,6 @@
             <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click" Content="{x:Static resx:Resources.BasicSoundCommand}"/>
 
             <Button x:Name="AdvancedCommandButton" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" Click="AdvancedCommandButton_Click" Content="{x:Static resx:Resources.AdvancedCommand}"/>
-
-            <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Grid.Column="1" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Static resx:Resources.DownloadFrom}"/>
-                    <Image Grid.Column="2" Source="..\..\Logo.png" />
-                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
-                </Grid>
-            </Button>
         </Grid>
         
         <ContentControl Margin="10" x:Name="MainContentControl" Visibility="Collapsed" Grid.Row="0" />

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using StreamingClient.Base.Util;
+﻿using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

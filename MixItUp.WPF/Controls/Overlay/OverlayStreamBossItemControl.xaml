@@ -78,10 +78,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding StartingHealthString}"  MaterialDesign:HintAssist.Hint="Starting Health" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
@@ -93,10 +89,6 @@
             <TextBox Grid.Column="6" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
             <TextBox Grid.Column="8" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
-
-            <TextBox Grid.Column="10" Text="{Binding SparkBonusString}" MaterialDesign:HintAssist.Hint="Spark Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
-
-            <TextBox Grid.Column="12" Text="{Binding EmberBonusString}" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">

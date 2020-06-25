@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;

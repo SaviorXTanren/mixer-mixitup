@@ -1,14 +1,10 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
@@ -62,7 +58,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = MixItUp.Base.Resources.NewStreamer });
+                this.streamerSettings.Add(new SettingsV2Model() { ID = Guid.Empty, Name = MixItUp.Base.Resources.NewStreamer });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -118,7 +114,7 @@ namespace MixItUp.WPF
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
                         SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
-                        if (setting.MixerChannelID == 0)
+                        if (setting.ID == Guid.Empty)
                         {
                             await this.NewStreamerLogin();
                         }
@@ -187,7 +183,7 @@ namespace MixItUp.WPF
                         return;
                     }
 
-                    Result result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    Result result = await ChannelSession.ConnectTwitchUser(isStreamer: false);
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);
@@ -200,17 +196,9 @@ namespace MixItUp.WPF
                     }
                 }
 
-                IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
-                if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
-                {
-                    ShowMainWindow(new MainWindow());
-                    this.Hide();
-                    this.Close();
-                }
-                else
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
-                }
+                ShowMainWindow(new MainWindow());
+                this.Hide();
+                this.Close();
             });
         }
 

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -13,13 +12,16 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayProgressBarItemTypeEnum
     {
-        Followers,
-        Subscribers,
-        Donations,
-        Sparks,
-        Milestones,
-        Custom,
-        Embers,
+        Followers = 0,
+        Subscribers = 1,
+        Donations = 2,
+        [Obsolete]
+        Sparks = 3,
+        [Obsolete]
+        Milestones = 4,
+        Custom = 5,
+        [Obsolete]
+        Embers = 6,
     }
 
     [DataContract]
@@ -74,8 +76,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         private bool GoalReached { get; set; }
 
-        private bool refreshMilestone;
-
         public OverlayProgressBarItemModel() : base() { }
 
         public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, double startAmount, double goalAmount, int resetAfterDays, string progressColor,
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                this.CurrentAmount = (int)ChannelSession.MixerChannel.numFollowers;
+                this.CurrentAmount = ChannelSession.TwitchChannelV5.followers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
                 GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
@@ -137,31 +137,6 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
-            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Sparks)
-            {
-                GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
-            }
-            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Embers)
-            {
-                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
-            }
-            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
-            {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
-                if (patronageStatus != null)
-                {
-                    this.CurrentAmount = patronageStatus.patronageEarned;
-                }
-
-                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
-                if (currentMilestone != null)
-                {
-                    this.GoalAmount = currentMilestone.target;
-                }
-
-                GlobalEvents.OnPatronageUpdateOccurred += GlobalEvents_OnPatronageUpdateOccurred;
-                GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
-            }
 
             await base.Enable();
         }
@@ -174,10 +149,6 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
-            GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
-            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
             await base.Disable();
         }
@@ -202,19 +173,6 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.StartAmount > 0)
                 {
                     amount = this.CurrentAmount - this.StartAmount;
-                }
-            }
-            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
-            {
-                if (this.refreshMilestone)
-                {
-                    this.refreshMilestone = false;
-                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
-                    if (currentMilestone != null)
-                    {
-                        goal = this.GoalAmount = currentMilestone.target;
-                        this.GoalReached = false;
-                    }
                 }
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
@@ -280,18 +238,6 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e) { this.AddAmount(1); }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddAmount(donation.Amount); }
-
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> user) { this.AddAmount(user.Item2); }
-
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddAmount(emberUsage.Amount); }
-
-        private void GlobalEvents_OnPatronageUpdateOccurred(object sender, PatronageStatusModel patronageStatus) { this.AddAmount(patronageStatus.patronageEarned); }
-
-        private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone)
-        {
-            this.refreshMilestone = true;
-            this.SendUpdateRequired();
-        }
 
         private void AddAmount(double amount)
         {

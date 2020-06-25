@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -33,6 +32,7 @@ namespace MixItUp.Base.Actions
         [Name("CounterCreateAndUpdate")]
         Counter,
         GameQueue,
+        [Obsolete]
         [Name("MixPlay")]
         Interactive,
         TextToSpeech,
@@ -56,6 +56,7 @@ namespace MixItUp.Base.Actions
         StreamlabsOBS,
         StreamingSoftware,
         Streamlabs,
+        [Obsolete]
         MixerClips,
         Command,
         Serial,
@@ -156,6 +157,41 @@ namespace MixItUp.Base.Actions
 
 #pragma warning disable CS0612 // Type or member is obsolete
         public SpotifyAction() : base(ActionTypeEnum.Spotify) { }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+
+    [DataContract]
+    public class InteractiveAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveAction.asyncSemaphore; } }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public InteractiveAction() : base(ActionTypeEnum.Interactive) { }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+
+
+    [DataContract]
+    public class MixerClipsAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return MixerClipsAction.asyncSemaphore; } }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public MixerClipsAction() : base(ActionTypeEnum.MixerClips) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)

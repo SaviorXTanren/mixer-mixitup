@@ -90,13 +90,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 return command;
             }
 
-            command = ChannelSession.Settings.MixPlayCommands.SingleOrDefault(c => c.ID == commandId);
-            if (command != null)
-            {
-                category = "MixPlay";
-                return command;
-            }
-
             command = ChannelSession.Settings.EventCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
@@ -139,7 +132,6 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         {
             List<Command> allCommands = new List<Command>();
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ChatCommands, "Chat"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.MixPlayCommands, "Interactive"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.EventCommands, "Event"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.TimerCommands, "Timer"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ActionGroupCommands, "ActionGroup"));

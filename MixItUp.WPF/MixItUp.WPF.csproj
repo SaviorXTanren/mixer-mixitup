@@ -158,9 +158,6 @@
     <Reference Include="Microsoft.Owin.Hosting, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Hosting.4.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.2\lib\netstandard2.0\Mixer.Base.dll</HintPath>
-    </Reference>
     <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
@@ -186,7 +183,7 @@
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
     <Reference Include="StreamingClient.Base, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Mixer.1.0.0.2\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.6\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -335,6 +332,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Twitch.Base, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.6\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
       <Private>True</Private>
@@ -385,9 +385,6 @@
     <Compile Include="Controls\Actions\OvrStreamActionControl.xaml.cs">
       <DependentUpon>OvrStreamActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\MixerClipsActionControl.xaml.cs">
-      <DependentUpon>MixerClipsActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\CommandActionControl.xaml.cs">
       <DependentUpon>CommandActionControl.xaml</DependentUpon>
     </Compile>
@@ -418,9 +415,6 @@
     <Compile Include="Controls\Actions\InputActionControl.xaml.cs">
       <DependentUpon>InputActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\InteractiveActionControl.xaml.cs">
-      <DependentUpon>InteractiveActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
@@ -429,9 +423,6 @@
     </Compile>
     <Compile Include="Controls\Actions\SpecialIdentifierActionControl.xaml.cs">
       <DependentUpon>SpecialIdentifierActionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
-      <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\StreamingSoftwareActionControl.xaml.cs">
       <DependentUpon>StreamingSoftwareActionControl.xaml</DependentUpon>
@@ -461,15 +452,6 @@
     <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
       <DependentUpon>ChatImageControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
-      <DependentUpon>GifImageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\GifSkillHoverControl.xaml.cs">
-      <DependentUpon>GifSkillHoverControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
-      <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -482,12 +464,6 @@
     <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
       <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicMixPlayButtonCommandEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicMixPlayTextBoxCommandEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
     </Compile>
@@ -498,11 +474,8 @@
     <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
       <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayJoystickCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayTextBoxCommandDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
@@ -543,9 +516,6 @@
     </Compile>
     <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
       <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
-      <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
@@ -617,25 +587,12 @@
     <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
       <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
-    <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
-      <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\FlySwatterInteractiveControl.xaml.cs">
-      <DependentUpon>FlySwatterInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
-      <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingWindowControlBase.cs" />
     <Compile Include="Controls\MainControls\AccountsControl.xaml.cs">
       <DependentUpon>AccountsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
-      <DependentUpon>AutoHosterControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
@@ -644,20 +601,17 @@
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
-    <Compile Include="Controls\MainControls\MixPlayControl.xaml.cs">
-      <DependentUpon>MixPlayControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\RedemptionStoreControl.xaml.cs">
       <DependentUpon>RedemptionStoreControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
-      <DependentUpon>SongRequestControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
       <DependentUpon>StreamPassControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsMainControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
@@ -689,9 +643,6 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml.cs">
-      <DependentUpon>OverlaySparkCrystalItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayStreamClipItemControl.xaml.cs">
       <DependentUpon>OverlayStreamClipItemControl.xaml</DependentUpon>
@@ -769,17 +720,11 @@
     <Compile Include="Controls\MainControls\ActionGroupControl.xaml.cs">
       <DependentUpon>ActionGroupControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
-      <DependentUpon>ChannelControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
       <DependentUpon>GamesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
-      <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
       <DependentUpon>UserDialogControl.xaml</DependentUpon>
@@ -803,9 +748,6 @@
     <Compile Include="Controls\Command\CommandDetailsControlBase.cs" />
     <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
       <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml.cs">
-      <DependentUpon>MixPlayButtonCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
@@ -876,9 +818,6 @@
     </Compile>
     <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
       <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
-      <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
@@ -956,9 +895,6 @@
     <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
       <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\InteractiveSettingsControl.xaml.cs">
-      <DependentUpon>InteractiveSettingsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
       <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
     </Compile>
@@ -991,31 +927,6 @@
     <Compile Include="Controls\Statistics\StatisticsOverviewControl.xaml.cs">
       <DependentUpon>StatisticsOverviewControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Store\CategoryCommandListingControl.xaml.cs">
-      <DependentUpon>CategoryCommandListingControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\CommandListingRatingDownloadsControl.xaml.cs">
-      <DependentUpon>CommandListingRatingDownloadsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\LargeCommandListingControl.xaml.cs">
-      <DependentUpon>LargeCommandListingControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\ListingReviewDialogControl.xaml.cs">
-      <DependentUpon>ListingReviewDialogControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\ListingUserReviewControl.xaml.cs">
-      <DependentUpon>ListingUserReviewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\MainStoreControl.xaml.cs">
-      <DependentUpon>MainStoreControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\SearchCommandListingControl.xaml.cs">
-      <DependentUpon>SearchCommandListingControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\SmallCommandListingControl.xaml.cs">
-      <DependentUpon>SmallCommandListingControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Store\StoreListingControl.cs" />
     <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
       <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
     </Compile>
@@ -1033,8 +944,6 @@
     <Compile Include="Services\DeveloperAPI\CommandController.cs" />
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
-    <Compile Include="Services\DeveloperAPI\MixerUserController.cs" />
-    <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
@@ -1079,12 +988,6 @@
     <Compile Include="Windows\Dashboard\DashboardWindow.xaml.cs">
       <DependentUpon>DashboardWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Favorites\FavoriteGroupWindow.xaml.cs">
-      <DependentUpon>FavoriteGroupWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
-      <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\LicenseAgreementWindow.xaml.cs">
       <DependentUpon>LicenseAgreementWindow.xaml</DependentUpon>
     </Compile>
@@ -1097,9 +1000,6 @@
     </Compile>
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Store\UploadStoreListingWindow.xaml.cs">
-      <DependentUpon>UploadStoreListingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Users\UserDataEditorWindow.xaml.cs">
       <DependentUpon>UserDataEditorWindow.xaml</DependentUpon>
@@ -1150,10 +1050,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Actions\MixerClipsActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Actions\CommandActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1194,10 +1090,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\InteractiveActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Actions\OverlayActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1207,10 +1099,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SpecialIdentifierActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\SpotifyActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1250,18 +1138,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Chat\GifImageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\GifSkillHoverControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\GifSkillPopoutControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1278,14 +1154,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1298,11 +1166,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml">
+    <Page Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1355,10 +1219,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CommandSelectorDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1454,27 +1314,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Interactive\DropMapInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\FlySwatterInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\MixerPaintInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\LicenseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\AccountsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MainControls\AutoHosterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1486,10 +1330,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\MainControls\MixPlayControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1498,11 +1338,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\SongRequestControl.xaml">
+    <Page Include="Controls\MainControls\StreamPassControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\StreamPassControl.xaml">
+    <Page Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1543,10 +1383,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1650,19 +1486,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\ChannelControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\GamesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\ModerationControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1699,10 +1527,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\EventCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1795,10 +1619,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\JustGivingServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Services\MixerBotAccountServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1902,10 +1722,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\InteractiveSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Settings\MainSettingsContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1943,38 +1759,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Statistics\StatisticsOverviewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\CategoryCommandListingControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\CommandListingRatingDownloadsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\LargeCommandListingControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\ListingReviewDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\ListingUserReviewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\MainStoreControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\SearchCommandListingControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Store\SmallCommandListingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2084,14 +1868,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Favorites\FavoriteGroupWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Windows\LicenseAgreementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2105,10 +1881,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\PopOut\PopOutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Store\UploadStoreListingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2184,7 +1956,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\Github.png" />
-    <Resource Include="Assets\Images\Mixer.png" />
     <Resource Include="Assets\Images\Twitter.png" />
   </ItemGroup>
   <ItemGroup>
@@ -2197,10 +1968,6 @@
     <ProjectReference Include="..\APIs\MixItUp.API\MixItUp.API.csproj">
       <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
       <Name>MixItUp.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
-      <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
-      <Name>MixItUp.AutoHoster</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0E494ACC-C46A-4DED-922B-FF378556BE8A}</Project>
@@ -2241,8 +2008,6 @@
     <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
       <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
     </Resource>
-    <Resource Include="Assets\Images\Embers.png" />
-    <Resource Include="Assets\Images\Sparks.png" />
     <Resource Include="..\MixPlay\apex-legends-drop-map\src\map.png">
       <Link>Assets\Images\ApexLegendsDropMap\map.png</Link>
     </Resource>
@@ -2262,7 +2027,11 @@
     <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
     <Resource Include="Assets\Images\CommandExample.png" />
     <Resource Include="Assets\Images\ExampleRecipe.png" />
-    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe" />
+    <Resource Include="Assets\Images\Twitch.png" />
+    <Resource Include="Assets\Images\Twitch-Small.png" />
+    <Content Include="Assets\OBS\obs-websocket-4.8.0-Windows-Installer.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

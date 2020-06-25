@@ -1,13 +1,8 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.API;
-using MixItUp.Base.Model.Store;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.API;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -18,31 +13,12 @@ namespace MixItUp.Base.Services
 {
     public interface IMixItUpService
     {
-        Task RefreshOAuthToken();
-
         Task<MixItUpUpdateModel> GetLatestUpdate();
         Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
         Task<MixItUpUpdateModel> GetLatestTestUpdate();
 
         Task SendUserFeatureEvent(UserFeatureEvent feature);
         Task SendIssueReport(IssueReportModel report);
-
-        Task<StoreDetailListingModel> GetStoreListing(Guid ID);
-        Task AddStoreListing(StoreDetailListingModel listing);
-        Task UpdateStoreListing(StoreDetailListingModel listing);
-        Task DeleteStoreListing(Guid ID);
-
-        Task<IEnumerable<StoreListingModel>> GetTopStoreListingsForTag(string tag);
-        Task<StoreListingModel> GetTopRandomStoreListings();
-
-        Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search);
-
-        Task AddStoreReview(StoreListingReviewModel review);
-        Task UpdateStoreReview(StoreListingReviewModel review);
-
-        Task AddStoreListingDownload(StoreListingModel listing);
-        Task AddStoreListingUses(StoreListingUsesModel uses);
-        Task AddStoreListingReport(StoreListingReportModel report);
     }
 
     public class MixItUpService : IMixItUpService, IDisposable
@@ -50,23 +26,9 @@ namespace MixItUp.Base.Services
         public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
         //public const string MixItUpAPIEndpoint = "http://localhost:33901/api/"; // Dev Endpoint
 
-        private OAuthTokenModel token = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public MixItUpService()
-        {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundCommandUsesUpload, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed            
-        }
-
-        public async Task RefreshOAuthToken()
-        {
-            if (ChannelSession.MixerUser != null)
-            {
-                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.MixerUser.id);
-            }
-        }
+        public MixItUpService() { }
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
@@ -81,58 +43,6 @@ namespace MixItUp.Base.Services
         }
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
-
-        public async Task<StoreDetailListingModel> GetStoreListing(Guid ID)
-        {
-            StoreDetailListingModel listing = await this.GetAsync<StoreDetailListingModel>("store/details?id=" + ID);
-            if (listing != null)
-            {
-                await listing.SetUser();
-                await listing.SetReviewUsers();
-            }
-            return listing;
-        }
-        public async Task AddStoreListing(StoreDetailListingModel listing) { await this.PostAsync("store/details", listing); }
-        public async Task UpdateStoreListing(StoreDetailListingModel listing) { await this.PutAsync("store/details", listing); }
-        public async Task DeleteStoreListing(Guid ID) { await this.DeleteAsync("store/details?id=" + ID); }
-
-        public async Task<IEnumerable<StoreListingModel>> GetTopStoreListingsForTag(string tag)
-        {
-            IEnumerable<StoreListingModel> listings = await this.GetAsync<IEnumerable<StoreListingModel>>("store/top?tag=" + tag);
-            await this.SetStoreListingUsers(listings);
-            return listings;
-        }
-        public async Task<StoreListingModel> GetTopRandomStoreListings()
-        {
-            IEnumerable<StoreListingModel> listings = await this.GetAsync<IEnumerable<StoreListingModel>>("store/top");
-            if (listings != null && listings.Count() > 0)
-            {
-                StoreListingModel listing = listings.FirstOrDefault();
-                await listing.SetUser();
-                return listing;
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search)
-        {
-            IEnumerable<StoreListingModel> listings = await this.PostAsyncWithResult<IEnumerable<StoreListingModel>>("store/search?search=", search);
-            await this.SetStoreListingUsers(listings);
-            return listings;
-        }
-
-        public async Task AddStoreReview(StoreListingReviewModel review) { await this.PostAsync("store/reviews", review); }
-        public async Task UpdateStoreReview(StoreListingReviewModel review) { await this.PutAsync("store/reviews", review); }
-
-        public async Task AddStoreListingDownload(StoreListingModel listing) { await this.PostAsync("store/metadata/downloads", listing.ID); }
-        public async Task AddStoreListingUses(StoreListingUsesModel uses)
-        {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                await this.PostAsync("store/metadata/uses", uses);
-            }
-        }
-        public async Task AddStoreListingReport(StoreListingReportModel report) { await this.PostAsync("store/metadata/reports", report); }
 
         private async Task<T> GetAsync<T>(string endpoint)
         {
@@ -239,36 +149,6 @@ namespace MixItUp.Base.Services
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private async Task SetStoreListingUsers(IEnumerable<StoreListingModel> listings)
-        {
-            if (listings != null)
-            {
-                foreach (StoreListingModel listing in listings)
-                {
-                    await listing.SetUser();
-                }
-            }
-        }
-
-        private async Task BackgroundCommandUsesUpload()
-        {
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                try
-                {
-                    Dictionary<Guid, long> commandUses = CommandBase.GetCommandUses();
-                    foreach (var kvp in commandUses)
-                    {
-                        await this.AddStoreListingUses(new StoreListingUsesModel() { ID = kvp.Key, Uses = kvp.Value });
-                        await Task.Delay(2000);
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                await Task.Delay(60000);
-            }
         }
 
         private async Task ProcessResponseIfError(HttpResponseMessage response)

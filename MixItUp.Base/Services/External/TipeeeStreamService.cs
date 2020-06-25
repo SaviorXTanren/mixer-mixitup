@@ -158,7 +158,7 @@ namespace MixItUp.Base.Services.External
     {
         private const string BaseAddress = "https://api.tipeeestream.com/";
 
-        public const string ClientID = "9611_u5i668t3urk0wcksc84kcgsgckc04wk4ookw0so04kkwgw0cg";
+        public const string ClientID = "13420_3cfbu3ejsccgs4sg8s0sgos8cs0cwkg0k4wg80w4k08w4c08sk";
 
         public const string ListeningURL = "http://localhost:8919";
 

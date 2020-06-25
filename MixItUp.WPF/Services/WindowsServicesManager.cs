@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services.DeveloperAPI;
 using System.Threading.Tasks;
@@ -18,7 +17,6 @@ namespace MixItUp.WPF.Services
             this.User = new UserService();
             this.Chat = new ChatService();
             this.Events = new EventService();
-            this.MixPlay = new MixerMixPlayService();
 
             this.Settings = new SettingsService();
             this.Statistics = new StatisticsService();
@@ -52,7 +50,6 @@ namespace MixItUp.WPF.Services
             this.Twitter = new TwitterService();
             this.OvrStream = new WindowsOvrStreamService();
             this.Overlay = new OverlayService();
-            this.MixrElixr = new MixrElixrService();
 
             this.OBSStudio = new WindowsOBSService();
             this.StreamlabsOBS = new StreamlabsOBSService();

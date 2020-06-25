@@ -1,9 +1,6 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

@@ -75,7 +75,7 @@ namespace MixItUp.Base.Services.External
     {
         private const string BaseAddress = "https://treatstream.com/api/";
 
-        public const string ClientID = "xr7qxfpymxsdabivcit0sjv64qv2u5x34058pzvw";
+        public const string ClientID = "n3x0h4lmr0sayf23f9rxtaqghbikvlszv3psgzbt";
 
         public const string ListeningURL = "http://localhost:8919";
 

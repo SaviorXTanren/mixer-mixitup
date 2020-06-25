@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;

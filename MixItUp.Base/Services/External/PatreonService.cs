@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -313,7 +312,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     var body = new List<KeyValuePair<string, string>>
@@ -321,7 +320,7 @@ namespace MixItUp.Base.Services.External
                         new KeyValuePair<string, string>("grant_type", "authorization_code"),
                         new KeyValuePair<string, string>("client_id", PatreonService.ClientID),
                         new KeyValuePair<string, string>("client_secret", ChannelSession.Services.Secrets.GetSecret("PatreonSecret")),
-                        new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                        new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL),
                         new KeyValuePair<string, string>("code", authorizationCode),
                     };
 

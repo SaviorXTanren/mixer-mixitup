@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -40,12 +39,12 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
-                            ExpandedChannelModel channelToFollow = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
-                            await ChannelSession.MixerUserConnection.Follow(channelToFollow, ChannelSession.MixerUser);
+
+
                             break;
                         case UserDialogResult.Unfollow:
-                            ExpandedChannelModel channelToUnfollow = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
-                            await ChannelSession.MixerUserConnection.Unfollow(channelToUnfollow, ChannelSession.MixerUser);
+
+
                             break;
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.Username)))
@@ -59,7 +58,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 await ChannelSession.Services.Chat.UnmodUser(user);
                             }
                             break;
-                        case UserDialogResult.MixerPage:
+                        case UserDialogResult.ChannelPage:
                             ProcessHelper.LaunchLink($"https://mixer.com/{user.Username}");
                             break;
                         case UserDialogResult.EditUser:

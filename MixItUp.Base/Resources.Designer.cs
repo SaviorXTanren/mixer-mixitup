@@ -61,6 +61,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1 Per Bit.
+        /// </summary>
+        public static string _1PerBit {
+            get {
+                return ResourceManager.GetString("1PerBit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 Per Ember.
         /// </summary>
         public static string _1PerEmber {
@@ -426,6 +435,15 @@ namespace MixItUp.Base {
         public static string AddQuote {
             get {
                 return ResourceManager.GetString("AddQuote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Reward Command.
+        /// </summary>
+        public static string AddRewardCommand {
+            get {
+                return ResourceManager.GetString("AddRewardCommand", resourceCulture);
             }
         }
         
@@ -1119,6 +1137,15 @@ namespace MixItUp.Base {
         public static string ChannelName {
             get {
                 return ResourceManager.GetString("ChannelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Points.
+        /// </summary>
+        public static string ChannelPoints {
+            get {
+                return ResourceManager.GetString("ChannelPoints", resourceCulture);
             }
         }
         
@@ -5245,6 +5272,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platform.
+        /// </summary>
+        public static string Platform {
+            get {
+                return ResourceManager.GetString("Platform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Play.
         /// </summary>
         public static string Play {
@@ -5988,6 +6024,15 @@ namespace MixItUp.Base {
         public static string Reviews {
             get {
                 return ResourceManager.GetString("Reviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reward Name.
+        /// </summary>
+        public static string RewardName {
+            get {
+                return ResourceManager.GetString("RewardName", resourceCulture);
             }
         }
         
@@ -7563,6 +7608,15 @@ namespace MixItUp.Base {
         public static string TweetMessage {
             get {
                 return ResourceManager.GetString("TweetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Points.
+        /// </summary>
+        public static string TwitchChannelPoints {
+            get {
+                return ResourceManager.GetString("TwitchChannelPoints", resourceCulture);
             }
         }
         

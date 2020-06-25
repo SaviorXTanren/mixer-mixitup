@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Client;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;

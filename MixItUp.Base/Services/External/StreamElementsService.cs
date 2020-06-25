@@ -1,5 +1,4 @@
-﻿using Mixer.Base;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -146,7 +145,7 @@ namespace MixItUp.Base.Services.External
                     bodyContent.Add(new KeyValuePair<string, string>("client_id", StreamElementsService.ClientID));
                     bodyContent.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
                     bodyContent.Add(new KeyValuePair<string, string>("code", authorizationCode));
-                    bodyContent.Add(new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
+                    bodyContent.Add(new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
 
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken(StreamElementsService.TokenUrl, StreamElementsService.ClientID, clientSecret, bodyContent);
                     if (this.token != null)
@@ -201,7 +200,7 @@ namespace MixItUp.Base.Services.External
                 bodyContent.Add(new KeyValuePair<string, string>("client_id", StreamElementsService.ClientID));
                 bodyContent.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
                 bodyContent.Add(new KeyValuePair<string, string>("refresh_token", this.token.refreshToken));
-                bodyContent.Add(new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
+                bodyContent.Add(new KeyValuePair<string, string>("redirect_uri", OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
 
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken(StreamElementsService.TokenUrl, StreamElementsService.ClientID, clientSecret, bodyContent);
             }

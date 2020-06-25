@@ -1,15 +1,9 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -77,11 +71,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (await DialogHelper.ShowConfirmation("This will delete the settings of the currently logged in account and restore the settings from the backup. Are you sure you wish to do this?"))
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|Mix It Up Settings V1 Backup (*.{1})|*.{1}|All files (*.*)|*.*",
-                    SettingsV2Model.SettingsBackupFileExtension,
-#pragma warning disable CS0612 // Type or member is obsolete
-                    SettingsV1Model.SettingsBackupFileExtension));
-#pragma warning restore CS0612 // Type or member is obsolete
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}||All files (*.*)|*.*", SettingsV2Model.SettingsBackupFileExtension));
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
@@ -170,13 +160,7 @@ namespace MixItUp.WPF.Controls.Settings
                 {
                     if (await DialogHelper.ShowConfirmation("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
                     {
-                        await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Banned, async (collection) =>
-                        {
-                            foreach (UserWithGroupsModel user in collection)
-                            {
-                                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user, new List<UserRoleEnum>() { UserRoleEnum.Banned });
-                            }
-                        });
+
                     }
                 }
                 else

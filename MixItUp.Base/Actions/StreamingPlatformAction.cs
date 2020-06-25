@@ -1,5 +1,6 @@
-﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -9,15 +10,18 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Ads;
 
 namespace MixItUp.Base.Actions
 {
     public enum StreamingPlatformActionType
     {
         Host,
+        [Obsolete]
         Poll,
         [Name("Run Ad")]
-        RunAd
+        RunAd,
+        Raid,
     }
 
     [DataContract]
@@ -42,9 +46,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string HostChannelName { get; set; }
 
-        [JsonIgnore]
-        private IEnumerable<string> lastArguments = null;
-
         public CommandBase Command { get { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); } }
 
         public static StreamingPlatformAction CreateHostAction(string channelName)
@@ -54,13 +55,10 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingPlatformAction CreatePollAction(string question, uint length, IEnumerable<string> answers, CommandBase command)
+        public static StreamingPlatformAction CreateRaidAction(string channelName)
         {
-            StreamingPlatformAction action = new StreamingPlatformAction(StreamingPlatformActionType.Poll);
-            action.PollQuestion = question;
-            action.PollLength = length;
-            action.PollAnswers = new List<string>(answers);
-            action.CommandID = (command != null) ? command.ID : Guid.Empty;
+            StreamingPlatformAction action = new StreamingPlatformAction(StreamingPlatformActionType.Raid);
+            action.HostChannelName = channelName;
             return action;
         }
 
@@ -79,71 +77,28 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            this.lastArguments = arguments;
-            if (this.ActionType == StreamingPlatformActionType.Poll)
+            if (this.ActionType == StreamingPlatformActionType.Host)
             {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    string pollQuestion = await this.ReplaceStringWithSpecialModifiers(this.PollQuestion, user, arguments);
-                    List<string> pollAnswers = new List<string>();
-                    foreach (string pollAnswer in this.PollAnswers)
-                    {
-                        pollAnswers.Add(await this.ReplaceStringWithSpecialModifiers(pollAnswer, user, arguments));
-                    }
-
-                    if (this.CommandID != Guid.Empty)
-                    {
-                        ChannelSession.Services.Chat.OnPollEndOccurred += Chat_OnPollEnd;
-                    }
-                    await ChannelSession.Services.Chat.StartPoll(pollQuestion, pollAnswers, this.PollLength);
-                }
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
+                await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
-            else if (this.ActionType == StreamingPlatformActionType.Host)
+            else if (this.ActionType == StreamingPlatformActionType.Raid)
             {
-                string hostChannelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
-                ChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(hostChannelName);
-                if (channel != null)
-                {
-                    await ChannelSession.MixerUserConnection.SetHostChannel(ChannelSession.MixerChannel, channel);
-                }
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
+                await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == StreamingPlatformActionType.RunAd)
             {
-                bool result = await ChannelSession.MixerUserConnection.RunAd(ChannelSession.MixerChannel);
-                if (!result)
+                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchChannelNewAPI, 60);
+                if (response == null)
                 {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "The ad could not be run, please verify your channel is approved for ads and that you have not already run an ad recently.");
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "ERROR: We were unable to run an ad, please try again later");
+                }
+                else if (!string.IsNullOrEmpty(response.message))
+                {
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "ERROR: " + response.message);
                 }
             }
-        }
-
-        private void Chat_OnPollEnd(object sender, Dictionary<string, uint> results)
-        {
-            ChannelSession.Services.Chat.OnPollEndOccurred -= Chat_OnPollEnd;
-            Task.Run(async () =>
-            {
-                try
-                {
-                    if (results.Count > 0)
-                    {
-                        var winner = results.OrderByDescending(r => r.Value).First();
-                        if (winner.Value > 0)
-                        {
-                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
-                            if (command != null)
-                            {
-                                this.extraSpecialIdentifiers["pollresultanswer"] = winner.Key;
-                                this.extraSpecialIdentifiers["pollresulttotal"] = winner.Value.ToString();
-                                await command.Perform(this.platform, arguments: this.lastArguments, extraSpecialIdentifiers: this.GetExtraSpecialIdentifiers());
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            });
         }
     }
 }

@@ -93,28 +93,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private double donationBonus;
 
-        public string SparkBonusString
-        {
-            get { return this.sparkBonus.ToString(); }
-            set
-            {
-                this.sparkBonus = this.GetPositiveDoubleFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        private double sparkBonus;
-
-        public string EmberBonusString
-        {
-            get { return this.emberBonus.ToString(); }
-            set
-            {
-                this.emberBonus = this.GetPositiveDoubleFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        private double emberBonus;
-
         public OverlayTimerTrainItemViewModel()
         {
             this.Font = "Arial";
@@ -127,8 +105,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.hostBonus = 1.0;
             this.subBonus = 10.0;
             this.donationBonus = 1.0;
-            this.sparkBonus = 0.01;
-            this.emberBonus = 0.1;
         }
 
         public OverlayTimerTrainItemViewModel(OverlayTimerTrainItemModel item)
@@ -143,8 +119,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.hostBonus = item.HostBonus;
             this.subBonus = item.SubscriberBonus;
             this.donationBonus = item.DonationBonus;
-            this.sparkBonus = item.SparkBonus;
-            this.emberBonus = item.EmberBonus;
 
             this.HTML = item.HTML;
         }
@@ -156,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
                 return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
-                    this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus);
+                    this.subBonus, this.donationBonus);
             }
             return null;
         }

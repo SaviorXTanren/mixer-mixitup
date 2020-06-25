@@ -1,10 +1,5 @@
-﻿using Mixer.Base.Model.Clips;
-using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.Patronage;
-using MixItUp.Base.Model.MixPlay;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -75,33 +70,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<MixPlaySharedProjectModel> OnInteractiveSharedProjectAdded;
-        public static void InteractiveSharedProjectAdded(MixPlaySharedProjectModel sharedProject)
-        {
-            if (GlobalEvents.OnInteractiveSharedProjectAdded != null)
-            {
-                GlobalEvents.OnInteractiveSharedProjectAdded(null, sharedProject);
-            }
-        }
-
-        public static event EventHandler<MixPlayGameModel> OnInteractiveConnected;
-        public static void InteractiveConnected(MixPlayGameModel game)
-        {
-            if (GlobalEvents.OnInteractiveConnected != null)
-            {
-                GlobalEvents.OnInteractiveConnected(null, game);
-            }
-        }
-
-        public static event EventHandler OnInteractiveDisconnected;
-        public static void InteractiveDisconnected()
-        {
-            if (GlobalEvents.OnInteractiveDisconnected != null)
-            {
-                GlobalEvents.OnInteractiveDisconnected(null, new EventArgs());
-            }
-        }
-
         public static event EventHandler OnGameQueueUpdated;
         public static void GameQueueUpdated()
         {
@@ -165,15 +133,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserViewModel> OnProgressionLevelUpOccurred;
-        public static void ProgressionLevelUpOccurred(UserViewModel user)
-        {
-            if (GlobalEvents.OnProgressionLevelUpOccurred != null)
-            {
-                GlobalEvents.OnProgressionLevelUpOccurred(null, user);
-            }
-        }
-
         public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
         public static void HostOccurred(Tuple<UserViewModel, int> user)
         {
@@ -201,75 +160,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler OnSongRequestsChangedOccurred;
-        public static void SongRequestsChangedOccurred()
-        {
-            if (GlobalEvents.OnSongRequestsChangedOccurred != null)
-            {
-                GlobalEvents.OnSongRequestsChangedOccurred(null, new EventArgs());
-            }
-        }
-
         public static event EventHandler<bool> OnGiveawaysChangedOccurred;
         public static void GiveawaysChangedOccurred(bool usersUpdated = false)
         {
             if (GlobalEvents.OnGiveawaysChangedOccurred != null)
             {
                 GlobalEvents.OnGiveawaysChangedOccurred(null, usersUpdated);
-            }
-        }
-
-        public static event EventHandler<Tuple<UserViewModel, uint>> OnSparkUseOccurred;
-        public static void SparkUseOccurred(Tuple<UserViewModel, uint> spark)
-        {
-            if (GlobalEvents.OnSparkUseOccurred != null)
-            {
-                GlobalEvents.OnSparkUseOccurred(null, spark);
-            }
-        }
-
-        public static event EventHandler<UserEmberUsageModel> OnEmberUseOccurred;
-        public static void EmberUseOccurred(UserEmberUsageModel ember)
-        {
-            if (GlobalEvents.OnEmberUseOccurred != null)
-            {
-                GlobalEvents.OnEmberUseOccurred(null, ember);
-            }
-        }
-
-        public static event EventHandler<MixerSkillChatMessageViewModel> OnSkillUseOccurred;
-        public static void SkillUseOccurred(MixerSkillChatMessageViewModel skill)
-        {
-            if (GlobalEvents.OnSkillUseOccurred != null)
-            {
-                GlobalEvents.OnSkillUseOccurred(null, skill);
-            }
-        }
-
-        public static event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
-        public static void PatronageUpdateOccurred(PatronageStatusModel patronageStatus)
-        {
-            if (GlobalEvents.OnPatronageUpdateOccurred != null)
-            {
-                GlobalEvents.OnPatronageUpdateOccurred(null, patronageStatus);
-            }
-        }
-
-        public static event EventHandler<PatronageMilestoneModel> OnPatronageMilestoneReachedOccurred;
-        public static void PatronageMilestoneReachedOccurred(PatronageMilestoneModel patronageMilestone)
-        {
-            if (GlobalEvents.OnPatronageMilestoneReachedOccurred != null)
-            {
-                GlobalEvents.OnPatronageMilestoneReachedOccurred(null, patronageMilestone);
-            }
-        }
-
-        public static event EventHandler<ClipModel> OnMixerClipCreated;
-        public static void MixerClipCreated(ClipModel clip)
-        {
-            if (GlobalEvents.OnMixerClipCreated != null)
-            {
-                GlobalEvents.OnMixerClipCreated(null, clip);
             }
         }
 

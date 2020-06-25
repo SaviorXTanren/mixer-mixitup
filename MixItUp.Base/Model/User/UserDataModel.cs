@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
@@ -26,6 +24,22 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
 
+        [JsonIgnore]
+        public StreamingPlatformTypeEnum Platform
+        {
+            get
+            {
+                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
+#pragma warning restore CS0612 // Type or member is obsolete
+                if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
+
+                return platform;
+            }
+        }
+
         [DataMember]
         public string UnassociatedUsername { get; set; }
 
@@ -47,21 +61,38 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset? MixerFollowDate { get; set; }
         [DataMember]
         public DateTimeOffset? MixerSubscribeDate { get; set; }
-        [DataMember]
-        public UserFanProgressionModel MixerFanProgression { get; set; }
-
-        [JsonIgnore]
-        public int Sparks { get; set; }
-        [JsonIgnore]
-        public uint CurrentViewerCount { get; set; }
-        [JsonIgnore]
-        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get; set; } = new LockedDictionary<string, MixPlayParticipantModel>();
-        [JsonIgnore]
-        public string InteractiveGroupID { get; set; }
-        [JsonIgnore]
-        public bool IsInInteractiveTimeout { get; set; }
 
         #endregion Mixer
+
+        #region Twitch
+
+        [DataMember]
+        public string TwitchID { get; set; }
+        [DataMember]
+        public string TwitchUsername { get; set; }
+        [DataMember]
+        public string TwitchDisplayName { get; set; }
+        [DataMember]
+        public string TwitchAvatarLink { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+        [DataMember]
+        public Dictionary<string, int> TwitchBadges { get; set; } = new Dictionary<string, int>();
+        [DataMember]
+        public Dictionary<string, int> TwitchBadgeInfo { get; set; } = new Dictionary<string, int>();
+
+        [DataMember]
+        public string TwitchColor { get; set; }
+
+        [DataMember]
+        public DateTimeOffset? TwitchAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchSubscribeDate { get; set; }
+
+        #endregion Twitch
 
         [DataMember]
         public Dictionary<Guid, int> CurrencyAmounts { get; set; } = new Dictionary<Guid, int>();
@@ -85,8 +116,6 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public bool IsCurrencyRankExempt { get; set; }
-        [DataMember]
-        public bool IsSparkExempt { get; set; }
 
         [DataMember]
         public string PatreonUserID { get; set; }
@@ -99,9 +128,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public double TotalAmountDonated { get; set; }
         [DataMember]
-        public uint TotalSparksSpent { get; set; }
-        [DataMember]
-        public uint TotalEmbersSpent { get; set; }
+        public uint TotalBitsSpent { get; set; }
         [DataMember]
         public uint TotalSubsGifted { get; set; }
         [DataMember]
@@ -110,8 +137,6 @@ namespace MixItUp.Base.Model.User
         public uint TotalChatMessageSent { get; set; }
         [DataMember]
         public uint TotalTimesTagged { get; set; }
-        [DataMember]
-        public uint TotalSkillsUsed { get; set; }
         [DataMember]
         public uint TotalCommandsRun { get; set; }
         [DataMember]
@@ -141,26 +166,6 @@ namespace MixItUp.Base.Model.User
 
         public UserDataModel() { }
 
-        public UserDataModel(uint id, string username)
-            : this()
-        {
-            this.MixerID = id;
-            this.MixerUsername = username;
-        }
-
-        public UserDataModel(UserModel user)
-        {
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-        }
-
-        public UserDataModel(UserViewModel user)
-        {
-            this.ID = user.ID;
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.Username;
-        }
-
         public UserDataModel(ScorpBotViewerModel viewer)
         {
             this.MixerID = viewer.MixerID;
@@ -170,11 +175,6 @@ namespace MixItUp.Base.Model.User
 
         public UserDataModel(StreamlabsChatBotViewerModel viewer)
         {
-            if (viewer.Platform == StreamingPlatformTypeEnum.Mixer)
-            {
-                this.MixerID = viewer.ID;
-                this.MixerUsername = viewer.Name;
-            }
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
@@ -183,8 +183,11 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                if (this.MixerID > 0) { return this.MixerUsername; }
-                return this.UnassociatedUsername;
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
+#pragma warning restore CS0612 // Type or member is obsolete
+                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
+                return string.Empty;
             }
         }
 
@@ -310,6 +313,62 @@ namespace MixItUp.Base.Model.User
         public override string ToString()
         {
             return this.Username;
+        }
+
+        public void MergeData(UserDataModel other)
+        {
+            foreach (var kvp in other.CurrencyAmounts)
+            {
+                if (!this.CurrencyAmounts.ContainsKey(kvp.Key))
+                {
+                    this.CurrencyAmounts[kvp.Key] = 0;
+                }
+                this.CurrencyAmounts[kvp.Key] += other.CurrencyAmounts[kvp.Key];
+            }
+
+            foreach (var kvp in other.InventoryAmounts)
+            {
+                if (!this.InventoryAmounts.ContainsKey(kvp.Key))
+                {
+                    this.InventoryAmounts[kvp.Key] = new Dictionary<Guid, int>();
+                }
+                foreach (var itemKVP in other.InventoryAmounts[kvp.Key])
+                {
+                    if (!this.InventoryAmounts[kvp.Key].ContainsKey(itemKVP.Key))
+                    {
+                        this.InventoryAmounts[kvp.Key][itemKVP.Key] = 0;
+                    }
+                    this.InventoryAmounts[kvp.Key][itemKVP.Key] += other.InventoryAmounts[kvp.Key][itemKVP.Key];
+                }
+            }
+
+            foreach (var kvp in other.StreamPassAmounts)
+            {
+                if (!this.StreamPassAmounts.ContainsKey(kvp.Key))
+                {
+                    this.StreamPassAmounts[kvp.Key] = 0;
+                }
+                this.StreamPassAmounts[kvp.Key] += other.StreamPassAmounts[kvp.Key];
+            }
+
+            this.CustomTitle = other.CustomTitle;
+            this.ViewingMinutes += other.ViewingMinutes;
+            this.OfflineViewingMinutes += other.OfflineViewingMinutes;
+
+            this.CustomCommands = other.CustomCommands;
+            this.EntranceCommand = other.EntranceCommand;
+
+            this.IsCurrencyRankExempt = other.IsCurrencyRankExempt;
+            this.PatreonUserID = other.PatreonUserID;
+
+            this.TotalStreamsWatched = other.TotalStreamsWatched;
+            this.TotalAmountDonated = other.TotalAmountDonated;
+            this.TotalSubsGifted = other.TotalSubsGifted;
+            this.TotalSubsReceived = other.TotalSubsReceived;
+            this.TotalChatMessageSent = other.TotalChatMessageSent;
+            this.TotalTimesTagged = other.TotalTimesTagged;
+            this.TotalCommandsRun = other.TotalCommandsRun;
+            this.TotalMonthsSubbed = other.TotalMonthsSubbed;
         }
     }
 }

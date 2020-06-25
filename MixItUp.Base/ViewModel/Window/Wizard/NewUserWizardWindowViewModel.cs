@@ -54,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
         }
         private bool streamerAccountsPageVisible;
 
-        public StreamingPlatformAccountControlViewModel Mixer { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Mixer);
+        public StreamingPlatformAccountControlViewModel Twitch { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Twitch);
 
         #endregion Accounts Page
 
@@ -213,8 +213,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
             this.YouTubeCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); return Task.FromResult(0); });
             this.WikiCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); return Task.FromResult(0); });
 
-            this.Mixer.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
-            this.Mixer.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
 
             this.ScorpBotDirectoryBrowseCommand = this.CreateCommand((parameter) =>
             {
@@ -266,14 +266,16 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else if (this.StreamerAccountsPageVisible)
                 {
-                    if (!this.Mixer.IsUserAccountConnected)
+                    if (!this.Twitch.IsUserAccountConnected)
                     {
-                        this.StatusMessage = "A Mixer Streamer account must be signed in.";
+                        this.StatusMessage = "Twitch Streamer account must be signed in.";
                         return;
                     }
 
                     this.StreamerAccountsPageVisible = false;
-                    this.ScorpBotPageVisible = true;
+                    //this.ScorpBotPageVisible = true;
+
+                    this.CommandActionsPageVisible = true;
                 }
                 else if (this.ScorpBotPageVisible)
                 {
@@ -296,7 +298,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     if (!string.IsNullOrEmpty(this.StreamlabsChatbotDirectory))
                     {
                         this.StatusMessage = "Gathering Streamlabs ChatBot Data...";
-                        this.StreamlabsChatBot = await StreamlabsChatBotDataModel.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Mixer, this.StreamlabsChatbotDirectory);
+                        this.StreamlabsChatBot = await StreamlabsChatBotDataModel.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Twitch, this.StreamlabsChatbotDirectory);
                         if (this.StreamlabsChatBot == null)
                         {
                             this.StatusMessage = "Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assistance.";
@@ -362,7 +364,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 else if (this.CommandActionsPageVisible)
                 {
                     this.CommandActionsPageVisible = false;
-                    this.StreamlabsChatbotPageVisible = true;
+                    //this.StreamlabsChatbotPageVisible = true;
+                    this.StreamerAccountsPageVisible = true;
                 }
                 else if (this.FinalPageVisible)
                 {

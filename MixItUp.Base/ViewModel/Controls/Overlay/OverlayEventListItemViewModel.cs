@@ -46,36 +46,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
 
-        public bool ShowSparks
-        {
-            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Sparks); }
-            set
-            {
-                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Sparks, value);
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public bool ShowEmbers
-        {
-            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Embers); }
-            set
-            {
-                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Embers, value);
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public bool ShowMilestones
-        {
-            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Milestones); }
-            set
-            {
-                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Milestones, value);
-                this.NotifyPropertyChanged();
-            }
-        }
-
         private HashSet<OverlayEventListItemTypeEnum> eventListTypes = new HashSet<OverlayEventListItemTypeEnum>();
 
         public OverlayEventListItemViewModel()

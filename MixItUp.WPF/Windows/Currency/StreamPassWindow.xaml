@@ -198,8 +198,6 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <TextBox Grid.Column="0" Text="{Binding SubscribeBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubscribeBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
@@ -207,8 +205,6 @@
                                 <TextBox Grid.Column="2" Text="{Binding DonationBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DonationBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
                                 <TextBox Grid.Column="4" Text="{Binding SparkBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SparkBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
-
-                                <TextBox Grid.Column="6" Text="{Binding EmberBonus}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EmberBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
                             </Grid>
                         </Grid>
                     </GroupBox>

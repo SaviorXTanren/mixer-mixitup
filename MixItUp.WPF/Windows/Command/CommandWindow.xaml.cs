@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.MixPlay;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Controls.Store;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -34,40 +32,19 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
-        public void DownloadCommandFromStore(Guid storeListingID, IEnumerable<ActionBase> actions)
-        {
-            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, storeListingID, actions));
-        }
-
         protected override async Task OnLoaded()
         {
             if (this.commandDetailsControl != null)
             {
                 CommandBase command = this.commandDetailsControl.GetExistingCommand();
 
-                if (this.commandDetailsControl is MixPlayJoystickCommandDetailsControl)
-                {
-                    this.ShowCommandEditor(new EmptyCommandEditorControl(this, this.commandDetailsControl));
-                }
-                else if (command != null && command.Actions.Count > 0)
+                if (command != null && command.Actions.Count > 0)
                 {
                     if (command.IsBasic)
                     {
                         if (command is ChatCommand)
                         {
                             this.ShowCommandEditor(new BasicChatCommandEditorControl(this, (ChatCommand)command));
-                        }
-                        else if (command is MixPlayButtonCommand)
-                        {
-                            MixPlayButtonCommandDetailsControl interactiveCommandDetails = (MixPlayButtonCommandDetailsControl)this.commandDetailsControl;
-                            this.ShowCommandEditor(new BasicMixPlayButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                                interactiveCommandDetails.Control, (MixPlayButtonCommand)command));
-                        }
-                        else if (command is MixPlayTextBoxCommand)
-                        {
-                            MixPlayTextBoxCommandDetailsControl interactiveCommandDetails = (MixPlayTextBoxCommandDetailsControl)this.commandDetailsControl;
-                            this.ShowCommandEditor(new BasicMixPlayTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                                interactiveCommandDetails.Control, (MixPlayTextBoxCommand)command));
                         }
                         else if (command is EventCommand)
                         {
@@ -83,7 +60,8 @@ namespace MixItUp.WPF.Windows.Command
                         this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                     }
                 }
-                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl)
+                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl ||
+                    this.commandDetailsControl is TwitchChannelPointsCommandDetailsControl)
                 {
                     this.BasicChatCommandButton.Visibility = Visibility.Collapsed;
                     this.BasicSoundCommandButton.Visibility = Visibility.Collapsed;
@@ -107,18 +85,6 @@ namespace MixItUp.WPF.Windows.Command
             {
                 this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Chat, ((ChatCommandDetailsControl)this.commandDetailsControl).AutoAddToChatCommands));
             }
-            else if (this.commandDetailsControl is MixPlayButtonCommandDetailsControl)
-            {
-                MixPlayButtonCommandDetailsControl interactiveCommandDetails = (MixPlayButtonCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicMixPlayButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                    (MixPlayButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
-            }
-            else if (this.commandDetailsControl is MixPlayTextBoxCommandDetailsControl)
-            {
-                MixPlayTextBoxCommandDetailsControl interactiveCommandDetails = (MixPlayTextBoxCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicMixPlayTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                    (MixPlayTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
-            }
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {
                 EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
@@ -135,18 +101,6 @@ namespace MixItUp.WPF.Windows.Command
             if (this.commandDetailsControl is ChatCommandDetailsControl)
             {
                 this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Sound, ((ChatCommandDetailsControl)this.commandDetailsControl).AutoAddToChatCommands));
-            }
-            if (this.commandDetailsControl is MixPlayButtonCommandDetailsControl)
-            {
-                MixPlayButtonCommandDetailsControl interactiveCommandDetails = (MixPlayButtonCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicMixPlayButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                    (MixPlayButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
-            }
-            if (this.commandDetailsControl is MixPlayTextBoxCommandDetailsControl)
-            {
-                MixPlayTextBoxCommandDetailsControl interactiveCommandDetails = (MixPlayTextBoxCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicMixPlayTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version,
-                    (MixPlayTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
             }
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {
@@ -178,13 +132,6 @@ namespace MixItUp.WPF.Windows.Command
             {
                 this.CommandSaveSuccessfully(this, e);
             }
-        }
-
-        private void DownloadFromStoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.CommandSelectionGrid.Visibility = Visibility.Collapsed;
-            this.MainContentControl.Visibility = Visibility.Visible;
-            this.MainContentControl.Content = new MainStoreControl(this);
         }
     }
 }

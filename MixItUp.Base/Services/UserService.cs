@@ -1,48 +1,25 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.MixPlay;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
-    public static class ChatUserModelExtensions
-    {
-        public static ChatUserModel ToChatUserModel(this ChatUserEventModel chatUser) { return new ChatUserModel() { userId = chatUser.id, userName = chatUser.username, userRoles = chatUser.roles }; }
-
-        public static ChatUserModel ToChatUserModel(this ChatMessageUserModel chatMessageUser) { return new ChatUserModel() { userId = chatMessageUser.user_id, userName = chatMessageUser.user_name, userRoles = chatMessageUser.user_roles }; }
-    }
-
     public interface IUserService
     {
         UserViewModel GetUserByID(Guid id);
 
         UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
 
-        UserViewModel GetUserByMixerID(uint id);
+        UserViewModel GetUserByTwitchID(string id);
 
-        UserViewModel GetUserByMixPlayID(string id);
+        Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
 
-        IEnumerable<UserViewModel> GetUsersByMixerID(IEnumerable<uint> ids);
-
-        Task<UserViewModel> AddOrUpdateUser(UserModel userModel);
-
-        Task<UserViewModel> AddOrUpdateUser(ChatUserEventModel chatUser);
-
-        Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser);
-
-        Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser);
-
-        Task<UserViewModel> RemoveUser(ChatUserEventModel chatUser);
-
-        Task<UserViewModel> RemoveUser(ChatUserModel chatUser);
-
-        Task<UserViewModel> RemoveUser(MixPlayParticipantModel mixplayUser);
+        Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin);
 
         void Clear();
 
@@ -59,9 +36,8 @@ namespace MixItUp.Base.Services
 
         private LockedDictionary<Guid, UserViewModel> usersByID = new LockedDictionary<Guid, UserViewModel>();
 
-        private LockedDictionary<uint, UserViewModel> usersByMixerID = new LockedDictionary<uint, UserViewModel>();
-        private LockedDictionary<string, UserViewModel> usersByMixerUsername = new LockedDictionary<string, UserViewModel>();
-        private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
+        private LockedDictionary<string, UserViewModel> usersByTwitchID = new LockedDictionary<string, UserViewModel>();
+        private LockedDictionary<string, UserViewModel> usersByTwitchLogin = new LockedDictionary<string, UserViewModel>();
 
         public UserViewModel GetUserByID(Guid id)
         {
@@ -77,93 +53,38 @@ namespace MixItUp.Base.Services
             username = username.ToLower().Replace("@", "");
             UserViewModel user = null;
 
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer) || platform == StreamingPlatformTypeEnum.None)
+            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
             {
-                if (this.usersByMixerUsername.TryGetValue(username, out user))
+                if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
                 {
                     return user;
                 }
             }
-
             return null;
         }
 
-        public UserViewModel GetUserByMixerID(uint id)
+        public UserViewModel GetUserByTwitchID(string id)
         {
-            if (this.usersByMixerID.TryGetValue(id, out UserViewModel user))
+            if (this.usersByTwitchID.TryGetValue(id, out UserViewModel user))
             {
                 return user;
             }
             return null;
         }
 
-        public UserViewModel GetUserByMixPlayID(string id)
+        public async Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser)
         {
-            if (this.usersByMixPlayID.TryGetValue(id, out UserViewModel user))
+            if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
             {
+                UserViewModel user = new UserViewModel(twitchChatUser);
+                if (this.usersByTwitchID.ContainsKey(twitchChatUser.id))
+                {
+                    user = this.usersByTwitchID[twitchChatUser.id];
+                }
+                await this.AddOrUpdateUser(user);
                 return user;
             }
             return null;
-        }
-
-        public IEnumerable<UserViewModel> GetUsersByMixerID(IEnumerable<uint> ids)
-        {
-            List<UserViewModel> results = new List<UserViewModel>();
-            foreach (uint id in ids)
-            {
-                if (this.usersByMixerID.TryGetValue(id, out UserViewModel user))
-                {
-                    results.Add(user);
-                }
-            }
-            return results;
-        }
-
-        public async Task<UserViewModel> AddOrUpdateUser(UserModel userModel)
-        {
-            UserViewModel user = new UserViewModel(userModel);
-            if (user.MixerID > 0)
-            {
-                if (this.usersByMixerID.ContainsKey(user.MixerID))
-                {
-                    user = this.usersByMixerID[user.MixerID];
-                }
-                await this.AddOrUpdateUser(user);
-            }
-            return user;
-        }
-
-        public async Task<UserViewModel> AddOrUpdateUser(ChatUserEventModel chatUser) { return await this.AddOrUpdateUser(chatUser.ToChatUserModel()); }
-
-        public async Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser)
-        {
-            UserViewModel user = new UserViewModel(chatUser);
-            if (chatUser.userId.HasValue && chatUser.userId.GetValueOrDefault() > 0)
-            {
-                if (this.usersByMixerID.ContainsKey(chatUser.userId.GetValueOrDefault()))
-                {
-                    user = this.usersByMixerID[chatUser.userId.GetValueOrDefault()];
-                }
-                user.SetMixerChatDetails(chatUser);
-                await this.AddOrUpdateUser(user);
-            }
-            return user;
-        }
-
-        public async Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser)
-        {
-            UserViewModel user = new UserViewModel(mixplayUser);
-            if (mixplayUser.userID > 0 && !string.IsNullOrEmpty(mixplayUser.sessionID))
-            {
-                if (this.usersByMixerID.ContainsKey(mixplayUser.userID))
-                {
-                    user = this.usersByMixerID[mixplayUser.userID];
-                }
-                user.SetMixerMixPlayDetails(mixplayUser);
-                this.usersByMixPlayID[mixplayUser.sessionID] = user;
-                await this.AddOrUpdateUser(user);
-            }
-            return user;
         }
 
         private async Task AddOrUpdateUser(UserViewModel user)
@@ -172,10 +93,10 @@ namespace MixItUp.Base.Services
             {
                 this.usersByID[user.ID] = user;
 
-                if (user.MixerID > 0 && !string.IsNullOrEmpty(user.MixerUsername))
+                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
                 {
-                    this.usersByMixerID[user.MixerID] = user;
-                    this.usersByMixerUsername[user.MixerUsername.ToLower()] = user;
+                    this.usersByTwitchID[user.TwitchID] = user;
+                    this.usersByTwitchLogin[user.TwitchUsername] = user;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username))
@@ -200,32 +121,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<UserViewModel> RemoveUser(ChatUserEventModel chatUser) { return await this.RemoveUser(chatUser.ToChatUserModel()); }
-
-        public async Task<UserViewModel> RemoveUser(ChatUserModel chatUser)
+        public async Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin)
         {
-            if (this.usersByMixerID.TryGetValue(chatUser.userId.GetValueOrDefault(), out UserViewModel user))
+            if (this.usersByTwitchLogin.TryGetValue(twitchLogin, out UserViewModel user))
             {
-                user.RemoveMixerChatDetails(chatUser);
-                if (user.InteractiveIDs.Count == 0)
-                {
-                    await this.RemoveUser(user);
-                }
-                return user;
-            }
-            return null;
-        }
-
-        public async Task<UserViewModel> RemoveUser(MixPlayParticipantModel mixplayUser)
-        {
-            if (this.usersByMixPlayID.TryGetValue(mixplayUser.sessionID, out UserViewModel user))
-            {
-                this.usersByMixPlayID.Remove(mixplayUser.sessionID);
-                user.RemoveMixerMixPlayDetails(mixplayUser);
-                if (user.InteractiveIDs.Count == 0 && !user.IsInChat)
-                {
-                    await this.RemoveUser(user);
-                }
+                await this.RemoveUser(user);
                 return user;
             }
             return null;
@@ -235,10 +135,10 @@ namespace MixItUp.Base.Services
         {
             this.usersByID.Remove(user.ID);
 
-            if (user.MixerID > 0)
+            if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
             {
-                this.usersByMixerID.Remove(user.MixerID);
-                this.usersByMixerUsername.Remove(user.MixerUsername);
+                this.usersByTwitchID.Remove(user.TwitchID);
+                this.usersByTwitchLogin.Remove(user.TwitchUsername);
             }
 
             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
@@ -248,9 +148,8 @@ namespace MixItUp.Base.Services
         {
             this.usersByID.Clear();
 
-            this.usersByMixerID.Clear();
-            this.usersByMixerUsername.Clear();
-            this.usersByMixPlayID.Clear();
+            this.usersByTwitchID.Clear();
+            this.usersByTwitchLogin.Clear();
         }
 
         public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }

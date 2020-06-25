@@ -59,8 +59,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Action}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -88,19 +86,6 @@
             <Button x:Name="ExportButton" Click="ExportButton_Click" Grid.Column="10" ToolTip="{x:Static resx:Resources.ExportActions}" Content="{MaterialDesign:PackIcon Export}" />
 
             <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="12" ToolTip="{x:Static resx:Resources.ImportActions}" Content="{MaterialDesign:PackIcon Import}" />
-
-            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="14" ToolTip="{x:Static resx:Resources.UploadTo}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Static resx:Resources.UploadTo}"/>
-                    <MaterialDesign:PackIcon Grid.Column="2" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
-                </Grid>
-            </Button>
 
         </Grid>
     </Grid>

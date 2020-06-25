@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -11,6 +10,19 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
+    public class WebSocketPacket
+    {
+        /// <summary>
+        /// The type of packet.
+        /// </summary>
+        public string type { get; set; }
+
+        /// <summary>
+        /// The ID of the packet.
+        /// </summary>
+        public uint id { get; set; }
+    }
+
     public abstract class WebSocketServerBase : WebSocketBase
     {
         public event EventHandler OnConnectedOccurred = delegate { };

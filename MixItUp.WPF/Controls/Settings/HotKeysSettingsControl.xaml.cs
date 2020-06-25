@@ -1,9 +1,7 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;

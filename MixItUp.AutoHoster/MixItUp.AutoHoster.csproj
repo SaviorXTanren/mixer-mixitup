@@ -68,6 +68,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Twitch.Base, Version=0.1.0.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twitch.Base.0.1.0.15\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

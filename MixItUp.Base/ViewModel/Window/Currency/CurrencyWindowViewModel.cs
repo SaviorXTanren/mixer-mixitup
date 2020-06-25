@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
@@ -23,11 +22,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         [Name("1PerHour")]
         Hours,
         [Name("1PerSpark")]
-        Sparks,
-        [Name("1PerEmber")]
-        Embers,
-        [Name("FanProgression")]
-        FanProgression,
+        Bits,
         Custom,
         Disabled,
     }
@@ -106,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                         this.OnlineRateInterval = 60;
                     }
                 }
-                else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks || this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers || this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression)
+                else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Bits)
                 {
                     this.OnlineRateAmount = 1;
                     this.OnlineRateInterval = 1;
@@ -131,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private CurrencyAcquireRateTypeEnum onlineRate;
         public List<CurrencyAcquireRateTypeEnum> OnlineRates { get; private set; } = new List<CurrencyAcquireRateTypeEnum>(EnumHelper.GetEnumList<CurrencyAcquireRateTypeEnum>());
-        public bool IsOnlineRateTimeBased { get { return this.OnlineRate != CurrencyAcquireRateTypeEnum.Sparks && this.OnlineRate != CurrencyAcquireRateTypeEnum.Embers && this.OnlineRate != CurrencyAcquireRateTypeEnum.FanProgression; } }
+        public bool IsOnlineRateTimeBased { get { return this.OnlineRate != CurrencyAcquireRateTypeEnum.Bits; } }
         public bool IsCustomOnlineRate { get { return this.OnlineRate == CurrencyAcquireRateTypeEnum.Custom; } }
         public int OnlineRateAmount
         {
@@ -380,17 +375,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.MaxAmount = this.Currency.MaxAmount;
             }
 
-            if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Sparks)
+            if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Bits)
             {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.Sparks;
-            }
-            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.Embers)
-            {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.Embers;
-            }
-            else if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.FanProgression)
-            {
-                this.OnlineRate = CurrencyAcquireRateTypeEnum.FanProgression;
+                this.OnlineRate = CurrencyAcquireRateTypeEnum.Bits;
             }
             else if (this.Currency.IsOnlineIntervalMinutes)
             {
@@ -530,32 +517,15 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                         }
 
                         await this.Currency.Reset();
-
-                        HashSet<uint> subscriberIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber))
-                        {
-                            subscriberIDs.Add(user.id);
-                        }
-
-                        HashSet<uint> modIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod))
-                        {
-                            modIDs.Add(user.id);
-                        }
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.ChannelEditor))
-                        {
-                            modIDs.Add(user.id);
-                        }
-
                         foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.Currency.AcquireInterval;
                             this.Currency.AddAmount(userData, this.Currency.AcquireAmount * intervalsToGive);
-                            if (modIDs.Contains(userData.MixerID))
+                            if (userData.TwitchUserRoles.Contains(UserRoleEnum.Mod) || userData.TwitchUserRoles.Contains(UserRoleEnum.ChannelEditor))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.ModeratorBonus * intervalsToGive);
                             }
-                            else if (subscriberIDs.Contains(userData.MixerID))
+                            else if (userData.TwitchUserRoles.Contains(UserRoleEnum.Subscriber))
                             {
                                 this.Currency.AddAmount(userData, this.Currency.SubscriberBonus * intervalsToGive);
                             }
@@ -567,107 +537,109 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
             this.ImportFromFileCommand = this.CreateCommand(async (parameter) =>
             {
-                this.userImportData.Clear();
+                return;
 
-                if (await DialogHelper.ShowConfirmation(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
-                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
-                {
-                    try
-                    {
-                        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
-                        if (!string.IsNullOrEmpty(filePath))
-                        {
-                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
-                            string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                            if (lines.Count() > 0)
-                            {
-                                foreach (string line in lines)
-                                {
-                                    UserModel mixerUser = null;
-                                    uint id = 0;
-                                    string username = null;
-                                    int amount = 0;
+                //this.userImportData.Clear();
 
-                                    string[] segments = line.Split(new string[] { " ", "\t", "," }, StringSplitOptions.RemoveEmptyEntries);
-                                    if (segments.Count() == 2)
-                                    {
-                                        if (!int.TryParse(segments[1], out amount))
-                                        {
-                                            throw new InvalidOperationException("File is not in the correct format");
-                                        }
+                //if (await DialogHelper.ShowConfirmation(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
+                //    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
+                //{
+                //    try
+                //    {
+                //        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                //        if (!string.IsNullOrEmpty(filePath))
+                //        {
+                //            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
+                //            string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                //            if (lines.Count() > 0)
+                //            {
+                //                foreach (string line in lines)
+                //                {
+                //                    UserModel mixerUser = null;
+                //                    uint id = 0;
+                //                    string username = null;
+                //                    int amount = 0;
 
-                                        if (!uint.TryParse(segments[0], out id))
-                                        {
-                                            username = segments[0];
-                                        }
-                                    }
-                                    else if (segments.Count() == 3)
-                                    {
-                                        if (!uint.TryParse(segments[0], out id))
-                                        {
-                                            throw new InvalidOperationException("File is not in the correct format");
-                                        }
+                //                    string[] segments = line.Split(new string[] { " ", "\t", "," }, StringSplitOptions.RemoveEmptyEntries);
+                //                    if (segments.Count() == 2)
+                //                    {
+                //                        if (!int.TryParse(segments[1], out amount))
+                //                        {
+                //                            throw new InvalidOperationException("File is not in the correct format");
+                //                        }
 
-                                        if (!int.TryParse(segments[2], out amount))
-                                        {
-                                            throw new InvalidOperationException("File is not in the correct format");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        throw new InvalidOperationException("File is not in the correct format");
-                                    }
+                //                        if (!uint.TryParse(segments[0], out id))
+                //                        {
+                //                            username = segments[0];
+                //                        }
+                //                    }
+                //                    else if (segments.Count() == 3)
+                //                    {
+                //                        if (!uint.TryParse(segments[0], out id))
+                //                        {
+                //                            throw new InvalidOperationException("File is not in the correct format");
+                //                        }
 
-                                    if (amount > 0)
-                                    {
-                                        if (id > 0)
-                                        {
-                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(id);
-                                        }
-                                        else if (!string.IsNullOrEmpty(username))
-                                        {
-                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(username);
-                                        }
-                                    }
+                //                        if (!int.TryParse(segments[2], out amount))
+                //                        {
+                //                            throw new InvalidOperationException("File is not in the correct format");
+                //                        }
+                //                    }
+                //                    else
+                //                    {
+                //                        throw new InvalidOperationException("File is not in the correct format");
+                //                    }
 
-                                    if (mixerUser != null)
-                                    {
-                                        UserViewModel user = new UserViewModel(mixerUser);
-                                        if (!this.userImportData.ContainsKey(user.ID))
-                                        {
-                                            this.userImportData[user.ID] = amount;
-                                        }
-                                        this.userImportData[user.ID] = Math.Max(this.userImportData[user.ID], amount);
-                                        this.ImportFromFileText = string.Format("{0} {1}...", this.userImportData.Count(), MixItUp.Base.Resources.Imported);
-                                    }
-                                }
+                //                    if (amount > 0)
+                //                    {
+                //                        if (id > 0)
+                //                        {
+                //                            //mixerUser = await ChannelSession.MixerUserConnection.GetUser(id);
+                //                        }
+                //                        else if (!string.IsNullOrEmpty(username))
+                //                        {
+                //                            //mixerUser = await ChannelSession.MixerUserConnection.GetUser(username);
+                //                        }
+                //                    }
 
-                                foreach (var kvp in this.userImportData)
-                                {
-                                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
-                                    {
-                                        MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
-                                        this.Currency.SetAmount(userData, kvp.Value);
-                                    }
-                                }
+                //                    if (mixerUser != null)
+                //                    {
+                //                        UserViewModel user = new UserViewModel(mixerUser);
+                //                        if (!this.userImportData.ContainsKey(user.ID))
+                //                        {
+                //                            this.userImportData[user.ID] = amount;
+                //                        }
+                //                        this.userImportData[user.ID] = Math.Max(this.userImportData[user.ID], amount);
+                //                        this.ImportFromFileText = string.Format("{0} {1}...", this.userImportData.Count(), MixItUp.Base.Resources.Imported);
+                //                    }
+                //                }
 
-                                this.ImportFromFileText = MixItUp.Base.Resources.ImportFromFile;
-                                return;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
+                //                foreach (var kvp in this.userImportData)
+                //                {
+                //                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
+                //                    {
+                //                        MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.UserData[kvp.Key];
+                //                        this.Currency.SetAmount(userData, kvp.Value);
+                //                    }
+                //                }
 
-                    await DialogHelper.ShowMessage("We were unable to import the data. Please ensure your file is in one of the following formats:" +
-                        Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
-                        Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
-                        Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
+                //                this.ImportFromFileText = MixItUp.Base.Resources.ImportFromFile;
+                //                return;
+                //            }
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Logger.Log(ex);
+                //    }
 
-                    this.ImportFromFileText = MixItUp.Base.Resources.ImportFromFile;
-                }
+                //    await DialogHelper.ShowMessage("We were unable to import the data. Please ensure your file is in one of the following formats:" +
+                //        Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
+                //        Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
+                //        Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
+
+                //    this.ImportFromFileText = MixItUp.Base.Resources.ImportFromFile;
+                //}
             });
 
             this.ExportToFileCommand = this.CreateCommand(async (parameter) =>
@@ -678,7 +650,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     StringBuilder fileContents = new StringBuilder();
                     foreach (MixItUp.Base.Model.User.UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.Username, this.Currency.GetAmount(userData)));
+                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
                     }
                     await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
                 }
@@ -834,9 +806,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.Currency.OfflineAcquireInterval = this.OfflineRateInterval;
 
             this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.None;
-            if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Sparks) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Sparks; }
-            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Embers) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Embers; }
-            else if (this.OnlineRate == CurrencyAcquireRateTypeEnum.FanProgression) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.FanProgression; }
+            if (this.OnlineRate == CurrencyAcquireRateTypeEnum.Bits) { this.Currency.SpecialTracking = CurrencySpecialTrackingEnum.Bits; }
 
             this.Currency.RegularBonus = this.RegularBonus;
             this.Currency.SubscriberBonus = this.SubscriberBonus;
