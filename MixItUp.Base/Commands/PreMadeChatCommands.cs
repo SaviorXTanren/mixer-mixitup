@@ -242,6 +242,10 @@ namespace MixItUp.Base.Commands
     {
         public static Task<DateTimeOffset> GetStartTime()
         {
+            if (ChannelSession.TwitchStreamIsLive && DateTimeOffset.TryParse(ChannelSession.TwitchStreamV5.created_at, out DateTimeOffset start))
+            {
+                return Task.FromResult(start);
+            }
             return Task.FromResult(DateTimeOffset.MinValue);
         }
 
