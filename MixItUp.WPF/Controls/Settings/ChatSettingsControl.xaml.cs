@@ -52,6 +52,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
             this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
             this.OnlyShowAlertsInDashboardToggleButton.IsChecked = ChannelSession.Settings.OnlyShowAlertsInDashboard;
+            this.ShowBetterTTVEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowBetterTTVEmotes;
 
             await base.InitializeInternal();
         }
