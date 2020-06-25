@@ -22,10 +22,10 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             get
             {
                 List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
-                //if (ChannelSession.Services.Chat.MixerChatService.IsBotConnected)
-                //{
-                //    results.Add(MixItUp.Base.Resources.Bot);
-                //}
+                if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsBotConnected)
+                {
+                    results.Add(MixItUp.Base.Resources.Bot);
+                }
                 return results;
             }
         }
