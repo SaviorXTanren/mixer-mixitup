@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
             return Task.FromResult(replacementSets);

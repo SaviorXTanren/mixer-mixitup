@@ -70,7 +70,7 @@ namespace MixItUp.Base.Actions
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers);
+                    await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
                 }
             }
         }

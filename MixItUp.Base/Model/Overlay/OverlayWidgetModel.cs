@@ -82,25 +82,25 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task LoadCachedData() { await this.Item.LoadCachedData(); }
 
-        public async Task ShowItem() { await this.ShowItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task ShowItem() { await this.ShowItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>(), StreamingPlatformTypeEnum.All); }
 
-        public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             IOverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
-                await overlay.ShowItem(this.Item, user, arguments, extraSpecialIdentifiers);
+                await overlay.ShowItem(this.Item, user, arguments, extraSpecialIdentifiers, platform);
             }
         }
 
-        public async Task UpdateItem() { await this.UpdateItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task UpdateItem() { await this.UpdateItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>(), StreamingPlatformTypeEnum.All); }
 
-        public async Task UpdateItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task UpdateItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             IOverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
-                await overlay.UpdateItem(this.Item, user, arguments, extraSpecialIdentifiers);
+                await overlay.UpdateItem(this.Item, user, arguments, extraSpecialIdentifiers, platform);
             }
         }
 

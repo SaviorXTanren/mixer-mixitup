@@ -20,13 +20,13 @@ namespace MixItUp.Base.Model.Overlay
             this.HTML = html;
         }
 
-        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             if (jobj != null && jobj.ContainsKey("HTML"))
             {
-                jobj["HTML"] = this.PerformTemplateReplacements(jobj["HTML"].ToString(), await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers));
+                jobj["HTML"] = this.PerformTemplateReplacements(jobj["HTML"].ToString(), await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers, platform));
             }
-            await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
+            await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
         }
 
         protected string PerformTemplateReplacements(string text, Dictionary<string, string> templateReplacements)
@@ -38,7 +38,7 @@ namespace MixItUp.Base.Model.Overlay
             return text;
         }
 
-        protected virtual Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected virtual Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             return Task.FromResult(new Dictionary<string, string>());
         }

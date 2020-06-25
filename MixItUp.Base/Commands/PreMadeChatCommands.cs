@@ -199,13 +199,12 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await ChannelSession.RefreshChannel();
-
-                    if (ChannelSession.TwitchStreamV5 != null)
+                    if (ChannelSession.TwitchChannelV5 != null)
                     {
-                        GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(ChannelSession.TwitchStreamV5.game);
+                        GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(ChannelSession.TwitchChannelV5.game);
                         if (details == null)
                         {
-                            details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.TwitchStreamV5.game);
+                            details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.TwitchChannelV5.game);
                         }
 
                         if (details != null)
@@ -214,7 +213,7 @@ namespace MixItUp.Base.Commands
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchStreamV5.game);
+                            await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchChannelV5.game);
                         }
                     }
                 }
@@ -233,7 +232,7 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchUserNewAPI.description);
+                    await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchChannelV5.status);
                 }
             }));
         }
@@ -546,7 +545,10 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.RefreshChannel();
-                        //gameName = ChannelSession.MixerChannel.type.name;
+                        if (ChannelSession.TwitchChannelV5 != null)
+                        {
+                            gameName = ChannelSession.TwitchChannelV5.game;
+                        }
                     }
 
                     GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(gameName);
@@ -649,7 +651,10 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.RefreshChannel();
-                        //gameName = ChannelSession.MixerChannel.type.name;
+                        if (ChannelSession.TwitchChannelV5 != null)
+                        {
+                            gameName = ChannelSession.TwitchChannelV5.game;
+                        }
                     }
 
                     GameInformation details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
@@ -679,8 +684,11 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, name: string.Join(" ", arguments));
+                        string name = string.Join(" ", arguments);
+                        await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, status: name);
                         await ChannelSession.RefreshChannel();
+                        await ChannelSession.Services.Chat.Whisper(user, "Title Updated: " + name);
+                        return;
                     }
                     else
                     {
@@ -702,70 +710,26 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        //GameTypeModel newGame = null;
-                        //if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
-                        //{
-                        //    newGame = await ChannelSession.MixerUserConnection.GetGameType(gameID);
-                        //}
-                        //else
-                        //{
-                        //    string newGameName = string.Join(" ", arguments);
-                        //    IEnumerable<GameTypeModel> games = await ChannelSession.MixerUserConnection.GetGameTypes(newGameName, 25);
-
-                        //    newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
-                        //}
-
-                        //if (newGame != null)
-                        //{
-                        //    await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
-                        //    await ChannelSession.RefreshChannel();
-
-                        //    await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + newGame.name);
-                        //}
-                        //else
-                        //{
-                        //    await ChannelSession.Services.Chat.Whisper(user, "We could not find a game with that name/ID");
-                        //}
+                        string name = string.Join(" ", arguments).ToLower();
+                        IEnumerable<Twitch.Base.Models.NewAPI.Games.GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(name);
+                        if (games != null && games.Count() > 0)
+                        {
+                            Twitch.Base.Models.NewAPI.Games.GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(name));
+                            if (game == null)
+                            {
+                                game = games.First();
+                            }
+                            await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, game: game);
+                            await ChannelSession.RefreshChannel();
+                            await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + game.name);
+                            return;
+                        }
+                        await ChannelSession.Services.Chat.Whisper(user, "We could not find a game with that name");
                     }
                     else
                     {
                         await ChannelSession.Services.Chat.Whisper(user, "Usage: !setgame <GAME NAME>");
                     }
-                }
-            }));
-        }
-    }
-
-    public class SetAudienceChatCommand : PreMadeChatCommand
-    {
-        private const string FamilySetting = "family";
-        private const string TeenSetting = "teen";
-        private const string AdultSettings = "adult";
-        private const string Adult18PlusSetting = "18+";
-
-        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
-
-        public SetAudienceChatCommand()
-            : base(MixItUp.Base.Resources.SetAudience, "setaudience", 5, UserRoleEnum.Mod)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Services.Chat != null)
-                {
-                    if (arguments.Count() == 1)
-                    {
-                        string rating = arguments.ElementAt(0);
-                        rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
-                        if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(Adult18PlusSetting))
-                        {
-                            //await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, ageRating: rating);
-                            await ChannelSession.RefreshChannel();
-
-                            return;
-                        }
-                    }
-
-                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !setaudience family|teen|adult");
                 }
             }));
         }
