@@ -71,7 +71,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (await DialogHelper.ShowConfirmation("This will delete the settings of the currently logged in account and restore the settings from the backup. Are you sure you wish to do this?"))
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}||All files (*.*)|*.*", SettingsV2Model.SettingsBackupFileExtension));
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV2Model.SettingsBackupFileExtension));
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
