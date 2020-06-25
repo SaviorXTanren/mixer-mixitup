@@ -50,7 +50,7 @@ namespace MixItUp.Base.Actions
                 if (overlay != null)
                 {
                     var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale);
-                    await overlay.ShowItem(overlayItem, user, arguments, this.extraSpecialIdentifiers);
+                    await overlay.ShowItem(overlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
                 }
             }
             else

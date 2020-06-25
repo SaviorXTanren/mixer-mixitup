@@ -299,16 +299,16 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             JObject jobj = JObject.FromObject(this);
-            await this.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
+            await this.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
             return jobj;
         }
 
         public virtual Task LoadCachedData() { return Task.FromResult(0); }
 
-        protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
             if (jobj != null)
             {
@@ -316,19 +316,19 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (jobj[key].Type == JTokenType.String)
                     {
-                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), user, arguments, extraSpecialIdentifiers);
+                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), user, arguments, extraSpecialIdentifiers, platform);
                     }
                     else if (jobj[key].Type == JTokenType.Object)
                     {
-                        await this.PerformReplacements((JObject)jobj[key], user, arguments, extraSpecialIdentifiers);
+                        await this.PerformReplacements((JObject)jobj[key], user, arguments, extraSpecialIdentifiers, platform);
                     }
                 }
             }
         }
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: false);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, platform: platform, encode: false);
             if (extraSpecialIdentifiers != null)
             {
                 foreach (var kvp in extraSpecialIdentifiers)
