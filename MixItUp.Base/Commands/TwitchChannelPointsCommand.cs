@@ -9,7 +9,7 @@ namespace MixItUp.Base.Commands
         public TwitchChannelPointsCommand() { }
 
         public TwitchChannelPointsCommand(string name)
-            : base(name, CommandTypeEnum.TwitchChannelPointsCommand, name)
+            : base(name, CommandTypeEnum.TwitchChannelPoints, name)
         { }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return TwitchChannelPointsCommand.twitchChannelPointsCommandPerformSemaphore; } }
