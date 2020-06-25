@@ -340,22 +340,62 @@ namespace MixItUp.Base.Services
 
             if (settings.IsStreamer)
             {
+                List<EventCommand> eventCommandsToAdd = new List<EventCommand>();
+                List<EventCommand> eventCommandsToRemove = new List<EventCommand>();
                 foreach (EventCommand command in settings.EventCommands)
                 {
+                    EventCommand newCommand = null;
                     switch (command.EventCommandType)
                     {
 #pragma warning disable CS0612 // Type or member is obsolete
-                        case EventTypeEnum.MixerChannelEmbersUsed: command.EventCommandType = EventTypeEnum.TwitchChannelBitsCheered; break;
-                        case EventTypeEnum.MixerChannelFollowed: command.EventCommandType = EventTypeEnum.TwitchChannelFollowed; break;
-                        case EventTypeEnum.MixerChannelHosted: command.EventCommandType = EventTypeEnum.TwitchChannelRaided; break;
-                        case EventTypeEnum.MixerChannelResubscribed: command.EventCommandType = EventTypeEnum.TwitchChannelResubscribed; break;
-                        case EventTypeEnum.MixerChannelStreamStart: command.EventCommandType = EventTypeEnum.TwitchChannelStreamStart; break;
-                        case EventTypeEnum.MixerChannelStreamStop: command.EventCommandType = EventTypeEnum.TwitchChannelStreamStop; break;
-                        case EventTypeEnum.MixerChannelSubscribed: command.EventCommandType = EventTypeEnum.TwitchChannelSubscribed; break;
-                        case EventTypeEnum.MixerChannelSubscriptionGifted: command.EventCommandType = EventTypeEnum.TwitchChannelSubscriptionGifted; break;
-                        case EventTypeEnum.MixerChannelUnfollowed: command.EventCommandType = EventTypeEnum.TwitchChannelUnfollowed; break;
+                        case EventTypeEnum.MixerChannelEmbersUsed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelBitsCheered);
+                            break;
+                        case EventTypeEnum.MixerChannelFollowed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelFollowed);
+                            break;
+                        case EventTypeEnum.MixerChannelHosted:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelRaided);
+                            break;
+                        case EventTypeEnum.MixerChannelResubscribed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelResubscribed);
+                            break;
+                        case EventTypeEnum.MixerChannelStreamStart:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStart);
+                            break;
+                        case EventTypeEnum.MixerChannelStreamStop:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStop);
+                            break;
+                        case EventTypeEnum.MixerChannelSubscribed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscribed);
+                            break;
+                        case EventTypeEnum.MixerChannelSubscriptionGifted:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted);
+                            break;
+                        case EventTypeEnum.MixerChannelUnfollowed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelUnfollowed);
+                            break;
 #pragma warning restore CS0612 // Type or member is obsolete
                     }
+
+                    if (newCommand != null)
+                    {
+                        eventCommandsToAdd.Add(newCommand);
+                        eventCommandsToRemove.Add(command);
+
+                        newCommand.Actions.AddRange(command.Actions);
+                        newCommand.Unlocked = command.Unlocked;
+                        newCommand.IsEnabled = command.IsEnabled;
+                    }
+                }
+
+                foreach (EventCommand command in eventCommandsToRemove)
+                {
+                    settings.EventCommands.Remove(command);
+                }
+                foreach (EventCommand command in eventCommandsToAdd)
+                {
+                    settings.EventCommands.Add(command);
                 }
 
                 settings.StreamElementsOAuthToken = null;
