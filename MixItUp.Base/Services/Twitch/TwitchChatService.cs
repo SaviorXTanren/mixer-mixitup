@@ -79,6 +79,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchChatService : StreamingPlatformServiceBase, ITwitchChatService
     {
+        private const int MaxMessageLength = 510;
+
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
@@ -327,10 +329,20 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync(async () =>
             {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
                     await client.SendMessage(ChannelSession.TwitchChannelNewAPI, message);
+                }
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    // Adding delay to prevent messages from arriving in wrong order
+                    await Task.Delay(250);
+
+                    await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
                 }
             });
         }
@@ -339,10 +351,20 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync(async () =>
             {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
                     await client.SendWhisperMessage(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                }
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    // Adding delay to prevent messages from arriving in wrong order
+                    await Task.Delay(250);
+
+                    await this.SendWhisperMessage(user, subMessage, sendAsStreamer: sendAsStreamer);
                 }
             });
         }
@@ -507,6 +529,50 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
+        private async Task AddAlertChatMessage(UserViewModel user, string message)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+            }
+        }
+
+        private async Task DownloadBetterTTVEmotes(string channelName = null)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.betterttv.net/2/channels/" + channelName : "https://api.betterttv.net/2/emotes");
+                    if (jobj != null && jobj.ContainsKey("emotes"))
+                    {
+                        JArray array = (JArray)jobj["emotes"];
+                        foreach (BetterTTVEmoteModel emote in array.ToTypedArray<BetterTTVEmoteModel>())
+                        {
+                            this.betterTTVEmotes[emote.code] = emote;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private string SplitLargeMessage(string message, out string subMessage)
+        {
+            subMessage = null;
+            if (message.Length >= MaxMessageLength)
+            {
+                string tempMessage = message.Substring(0, MaxMessageLength - 1);
+                int splitIndex = tempMessage.LastIndexOf(' ');
+                if (splitIndex > 0 && (splitIndex + 1) < message.Length)
+                {
+                    subMessage = message.Substring(splitIndex + 1);
+                    message = message.Substring(0, splitIndex);
+                }
+            }
+            return message;
+        }
+
         private async void UserClient_OnPingReceived(object sender, EventArgs e)
         {
             Logger.Log(LogLevel.Debug, "Twitch User Client - Ping");
@@ -602,6 +668,14 @@ namespace MixItUp.Base.Services.Twitch
                 else
                 {
                     UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(message.UserID);
+                    if (user == null)
+                    {
+                        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(message.UserLogin);
+                        if (twitchUser != null)
+                        {
+                            user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
+                        }
+                    }
                     this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
                 }
             }
@@ -705,14 +779,6 @@ namespace MixItUp.Base.Services.Twitch
             Logger.Log(LogLevel.Debug, string.Format("Twitch Chat Packet Sent: {0}", packet));
         }
 
-        private async Task AddAlertChatMessage(UserViewModel user, string message)
-        {
-            if (ChannelSession.Settings.ChatShowEventAlerts)
-            {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
-            }
-        }
-
         private async void UserClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
         {
             ChannelSession.DisconnectionOccurred("Twitch User Chat");
@@ -745,26 +811,6 @@ namespace MixItUp.Base.Services.Twitch
             while (!result.Success);
 
             ChannelSession.ReconnectionOccurred("Twitch Bot Chat");
-        }
-
-        private async Task DownloadBetterTTVEmotes(string channelName = null)
-        {
-            try
-            {
-                using (AdvancedHttpClient client = new AdvancedHttpClient())
-                {
-                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.betterttv.net/2/channels/" + channelName : "https://api.betterttv.net/2/emotes");
-                    if (jobj != null && jobj.ContainsKey("emotes"))
-                    {
-                        JArray array = (JArray)jobj["emotes"];
-                        foreach (BetterTTVEmoteModel emote in array.ToTypedArray<BetterTTVEmoteModel>())
-                        {
-                            this.betterTTVEmotes[emote.code] = emote;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }
