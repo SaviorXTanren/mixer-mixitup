@@ -161,9 +161,9 @@ namespace MixItUp.WPF.Controls.Command
                     EventCommand eventCommand = command as EventCommand;
                     switch (eventCommand.EventCommandType)
                     {
-                        case EventTypeEnum.TwitchChannelHosted:
                         case EventTypeEnum.TwitchChannelRaided:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
+                            extraSpecialIdentifiers["raidviewercount"] = "123";
                             break;
                         case EventTypeEnum.TwitchChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
