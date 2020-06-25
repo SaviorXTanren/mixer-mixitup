@@ -443,11 +443,20 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                if (ChannelSession.TwitchUserConnection != null && ChannelSession.TwitchStreamV5 != null)
+                if (ChannelSession.TwitchUserConnection != null)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelNewAPI.description);
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", ChannelSession.TwitchChannelNewAPI.view_count.ToString());
+                    if (ChannelSession.TwitchChannelV5 != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ChannelSession.TwitchChannelV5.status);
+                    }
+                    if (ChannelSession.TwitchStreamV5 != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
+                    }
+                    if (ChannelSession.TwitchChannelNewAPI != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", ChannelSession.TwitchChannelNewAPI.view_count.ToString());
+                    }
                 }
 
                 this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
