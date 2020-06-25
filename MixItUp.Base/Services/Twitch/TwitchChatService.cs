@@ -652,6 +652,7 @@ namespace MixItUp.Base.Services.Twitch
                             GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
 
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
+                            trigger.SpecialIdentifiers["raidviewercount"] = viewerCount.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
 
                             await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, viewerCount));
