@@ -602,6 +602,14 @@ namespace MixItUp.Base.Services.Twitch
                 else
                 {
                     UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(message.UserID);
+                    if (user == null)
+                    {
+                        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(message.UserLogin);
+                        if (twitchUser != null)
+                        {
+                            user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
+                        }
+                    }
                     this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
                 }
             }
