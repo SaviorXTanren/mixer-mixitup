@@ -244,7 +244,7 @@ namespace MixItUp.Base.Commands
         {
             if (ChannelSession.TwitchStreamIsLive && DateTimeOffset.TryParse(ChannelSession.TwitchStreamV5.created_at, out DateTimeOffset start))
             {
-                return Task.FromResult(start);
+                return Task.FromResult(start.ToLocalTime());
             }
             return Task.FromResult(DateTimeOffset.MinValue);
         }
