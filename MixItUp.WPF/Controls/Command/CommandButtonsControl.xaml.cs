@@ -166,9 +166,16 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["hostviewercount"] = "123";
                             extraSpecialIdentifiers["raidviewercount"] = "123";
                             break;
+                        case EventTypeEnum.TwitchChannelSubscribed:
+                            extraSpecialIdentifiers["message"] = "Test Message";
+                            break;
                         case EventTypeEnum.TwitchChannelResubscribed:
+                            extraSpecialIdentifiers["message"] = "Test Message";
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             extraSpecialIdentifiers["usersubstreak"] = "3";
+                            break;
+                        case EventTypeEnum.TwitchChannelSubscriptionGifted:
+                            extraSpecialIdentifiers["usersubplan"] = "Tier 1";
                             break;
                         case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
                             extraSpecialIdentifiers["subsgiftedamount"] = "5";
