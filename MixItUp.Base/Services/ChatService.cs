@@ -186,7 +186,10 @@ namespace MixItUp.Base.Services
         {
             if (message.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.DeleteMessage(message);
+                if (!string.IsNullOrEmpty(message.ID))
+                {
+                    await this.TwitchChatService.DeleteMessage(message);
+                }
                 if (!message.IsDeleted)
                 {
                     await message.Delete();
