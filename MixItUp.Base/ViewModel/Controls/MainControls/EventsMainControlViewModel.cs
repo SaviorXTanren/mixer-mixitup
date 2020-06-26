@@ -108,12 +108,13 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
+            //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
 

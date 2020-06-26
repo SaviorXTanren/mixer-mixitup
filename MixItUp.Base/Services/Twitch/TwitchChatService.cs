@@ -85,6 +85,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
 
+        private const string SubMysteryGiftUserNoticeMessageID = "submysterygift";
+
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
 
@@ -618,12 +620,24 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
+        private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
             if (user != null)
             {
                 user.SetTwitchChatDetails(userNotice);
+            }
+
+            if (SubMysteryGiftUserNoticeMessageID.Equals(userNotice.MessageID) && userNotice.SubTotalGifted > 0)
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
+                trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
+                if (int.TryParse(userNotice.SubPlan, out int subPlanNumber))
+                {
+                    subPlanNumber = subPlanNumber / 1000;
+                    trigger.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
+                }
+                await ChannelSession.Services.Events.PerformEvent(trigger);
             }
         }
 

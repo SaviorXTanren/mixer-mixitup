@@ -21,7 +21,7 @@
     
     <Grid MinWidth="400" MinHeight="100">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -60,6 +60,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="100" Content="{x:Static resx:Resources.Add}" Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" />
+        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="80" Content="{x:Static resx:Resources.Add}" Style="{StaticResource MaterialDesignRaisedButton}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

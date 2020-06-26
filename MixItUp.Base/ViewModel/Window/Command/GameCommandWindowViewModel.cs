@@ -57,7 +57,11 @@ namespace MixItUp.Base.ViewModel.Window.Command
             this.DefaultCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
             if (this.DefaultCurrency == null)
             {
-                this.DefaultCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.IsPrimary);
+                this.DefaultCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => !c.IsRank);
+                if (this.DefaultCurrency == null)
+                {
+                    this.DefaultCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault();
+                }
             }
 
             this.GameListings.Add(new GameTypeListing("Beach Ball", "The Beach Ball game hits a beach ball to a player, who must then hit it off to someone else. If the person who the beach ball is going towards does not respond in time, then that user misses the hit and the game ends. The user who hit the beach ball last is dubbed the winner ($username) and the user who failed to hit the beach ball is dubbed the loser ($targetusername). By default, the passing of the beach ball is done randomly to a new user, but you can optionally allow the passer to specify who it gets hit to."

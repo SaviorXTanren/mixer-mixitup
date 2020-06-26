@@ -50,45 +50,45 @@
 
         <WrapPanel Margin="5">
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource RolePopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Role" ToggleContent="{StaticResource RolePopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:RoleRequirementControl x:Name="Role" DataContext="{Binding Role}" />
+                    <local:RoleRequirementControl DataContext="{Binding Role}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource CooldownPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Cooldown" ToggleContent="{StaticResource CooldownPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:CooldownRequirementControl x:Name="Cooldown" DataContext="{Binding Cooldown}" />
+                    <local:CooldownRequirementControl DataContext="{Binding Cooldown}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource CurrencyPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Currency" ToggleContent="{StaticResource CurrencyPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:CurrencyRequirementControl x:Name="Currency" DataContext="{Binding Currency}" />
+                    <local:CurrencyRequirementControl DataContext="{Binding Currency}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource RankPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Rank" ToggleContent="{StaticResource RankPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:RankRequirementControl x:Name="Rank" DataContext="{Binding Rank}" />
+                    <local:RankRequirementControl DataContext="{Binding Rank}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource InventoryPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Inventory" ToggleContent="{StaticResource InventoryPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:InventoryRequirementControl x:Name="Inventory" DataContext="{Binding Inventory}" />
+                    <local:InventoryRequirementControl DataContext="{Binding Inventory}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource ThresholdPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Threshold" ToggleContent="{StaticResource ThresholdPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:ThresholdRequirementControl x:Name="Threshold" DataContext="{Binding Threshold}" />
+                    <local:ThresholdRequirementControl DataContext="{Binding Threshold}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox ToggleContent="{StaticResource SettingsPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="Settings" ToggleContent="{StaticResource SettingsPopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <local:SettingsRequirementControl x:Name="Settings" DataContext="{Binding Settings}" />
+                    <local:SettingsRequirementControl DataContext="{Binding Settings}" />
                 </Grid>
             </MaterialDesign:PopupBox>
 

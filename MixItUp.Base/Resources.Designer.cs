@@ -7387,6 +7387,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tier.
+        /// </summary>
+        public static string Tier {
+            get {
+                return ResourceManager.GetString("Tier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tiltify Donation.
         /// </summary>
         public static string TiltifyDonation {

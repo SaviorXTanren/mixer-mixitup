@@ -129,7 +129,7 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Raided")]
         TwitchChannelRaided = 203,
 
-        [Name("Twitch Channel Followed")]
+        [Name("Twitch Channel Followed (1 Min Delay)")]
         TwitchChannelFollowed = 210,
         [Name("Twitch Channel Unfollowed")]
         TwitchChannelUnfollowed = 211,
@@ -140,6 +140,8 @@ namespace MixItUp.Base.Services
         TwitchChannelResubscribed = 221,
         [Name("Twitch Channel Subscription Gifted")]
         TwitchChannelSubscriptionGifted = 222,
+        [Name("Twitch Channel Mass Subscriptions Gifted")]
+        TwitchChannelMassSubscriptionsGifted = 223,
 
         //[Name("Twitch Chat New User Joined")]
         //TwitchChatUserFirstJoin = 250,
