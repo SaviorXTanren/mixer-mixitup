@@ -9,7 +9,7 @@ namespace MixItUp.Base.Services
     {
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
-        void TrackLogin(string userID, bool isStreamer, bool isPartner);
+        void TrackLogin(string userID, string userType);
         void TrackCommand(CommandTypeEnum type, bool isBasic);
         void TrackAction(ActionTypeEnum type);
 
