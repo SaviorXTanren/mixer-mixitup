@@ -103,7 +103,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 // Remove all deprecated actions
-                actions.RemoveAll(a => a is SongRequestAction || a is SpotifyAction);
+                actions.RemoveAll(a => a is SongRequestAction || a is SpotifyAction || a is InteractiveAction || a is MixerClipsAction);
 
                 foreach (ActionBase action in actions)
                 {
