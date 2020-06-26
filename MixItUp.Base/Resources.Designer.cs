@@ -1384,6 +1384,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clip creation failed, please try again later.
+        /// </summary>
+        public static string ClipCreationFailed {
+            get {
+                return ResourceManager.GetString("ClipCreationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Length (15-300 Secs).
         /// </summary>
         public static string ClipLength {
@@ -3441,6 +3450,15 @@ namespace MixItUp.Base {
         public static string IncludeCommandAssets {
             get {
                 return ResourceManager.GetString("IncludeCommandAssets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Delay.
+        /// </summary>
+        public static string IncludeDelay {
+            get {
+                return ResourceManager.GetString("IncludeDelay", resourceCulture);
             }
         }
         
@@ -6555,6 +6573,15 @@ namespace MixItUp.Base {
         public static string ShopCurrency {
             get {
                 return ResourceManager.GetString("ShopCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Clip Info In Chat.
+        /// </summary>
+        public static string ShowClipInfoInChat {
+            get {
+                return ResourceManager.GetString("ShowClipInfoInChat", resourceCulture);
             }
         }
         

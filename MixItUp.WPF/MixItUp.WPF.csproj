@@ -370,6 +370,9 @@
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ClipsAction.xaml.cs">
+      <DependentUpon>ClipsAction.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ConditionalActionControl.xaml.cs">
       <DependentUpon>ConditionalActionControl.xaml</DependentUpon>
     </Compile>
@@ -1027,6 +1030,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ChatActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ClipsAction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

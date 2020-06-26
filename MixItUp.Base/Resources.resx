@@ -2967,4 +2967,13 @@
   <data name="Tier" xml:space="preserve">
     <value>Tier</value>
   </data>
+  <data name="ClipCreationFailed" xml:space="preserve">
+    <value>Clip creation failed, please try again later</value>
+  </data>
+  <data name="IncludeDelay" xml:space="preserve">
+    <value>Include Delay</value>
+  </data>
+  <data name="ShowClipInfoInChat" xml:space="preserve">
+    <value>Show Clip Info In Chat</value>
+  </data>
 </root>
