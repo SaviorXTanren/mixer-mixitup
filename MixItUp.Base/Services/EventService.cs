@@ -129,7 +129,7 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Raided")]
         TwitchChannelRaided = 203,
 
-        [Name("Twitch Channel Followed")]
+        [Name("Twitch Channel Followed (1 Min Delay)")]
         TwitchChannelFollowed = 210,
         [Name("Twitch Channel Unfollowed")]
         TwitchChannelUnfollowed = 211,
