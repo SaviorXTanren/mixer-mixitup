@@ -269,12 +269,7 @@ namespace MixItUp.Base
                 if (twitchChannel != null)
                 {
                     ChannelSession.TwitchChannelV5 = twitchChannel;
-
-                    TwitchV5API.Streams.StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
-                    if (stream != null)
-                    {
-                        ChannelSession.TwitchStreamV5 = stream;
-                    }
+                    ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
                 }
             }
 
