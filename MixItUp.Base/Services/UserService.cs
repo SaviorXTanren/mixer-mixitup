@@ -32,7 +32,7 @@ namespace MixItUp.Base.Services
 
     public class UserService : IUserService
     {
-        public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "HypeBot", "boomtvmod", "StreamJar", "PretzelRocks", "ScottyBot", "Streamlabs", "StreamElements" };
+        public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "boomtvmod", "streamjar", "pretzelrocks", "scottybot", "streamlabs", "streamelements", "nightbot", "deepbot", "moobot", "coebot", "wizebot", "phantombot", "stay_hydrated_bot" };
 
         private LockedDictionary<Guid, UserViewModel> usersByID = new LockedDictionary<Guid, UserViewModel>();
 
@@ -99,7 +99,7 @@ namespace MixItUp.Base.Services
                     this.usersByTwitchLogin[user.TwitchUsername] = user;
                 }
 
-                if (UserService.SpecialUserAccounts.Contains(user.Username))
+                if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
                 {
                     user.IgnoreForQueries = true;
                 }
