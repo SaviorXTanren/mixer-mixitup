@@ -140,6 +140,8 @@ namespace MixItUp.Base.Services
         TwitchChannelResubscribed = 221,
         [Name("Twitch Channel Subscription Gifted")]
         TwitchChannelSubscriptionGifted = 222,
+        [Name("Twitch Channel Mass Subscriptions Gifted")]
+        TwitchChannelMassSubscriptionsGifted = 223,
 
         //[Name("Twitch Chat New User Joined")]
         //TwitchChatUserFirstJoin = 250,

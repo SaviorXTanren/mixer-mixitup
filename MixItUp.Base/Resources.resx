@@ -2964,4 +2964,7 @@
   <data name="Platform" xml:space="preserve">
     <value>Platform</value>
   </data>
+  <data name="Tier" xml:space="preserve">
+    <value>Tier</value>
+  </data>
 </root>

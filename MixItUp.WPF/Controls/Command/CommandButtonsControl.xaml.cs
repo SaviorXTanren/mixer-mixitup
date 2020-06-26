@@ -170,6 +170,10 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             extraSpecialIdentifiers["usersubstreak"] = "3";
                             break;
+                        case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
+                            extraSpecialIdentifiers["subsgiftedamount"] = "5";
+                            extraSpecialIdentifiers["usersubplan"] = "Tier 1";
+                            break;
                         case EventTypeEnum.TwitchChannelBitsCheered:
                             extraSpecialIdentifiers["bitsamount"] = "10";
                             break;
