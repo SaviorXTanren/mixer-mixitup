@@ -258,6 +258,8 @@ namespace MixItUp.Base.Services.Twitch
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
             trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            GlobalEvents.BitsOccurred(user, packet.bits_used);
         }
 
         private void PubSub_OnBitsBadgeReceived(object sender, PubSubBitBadgeEventModel packet)

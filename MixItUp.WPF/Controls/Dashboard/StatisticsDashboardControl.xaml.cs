@@ -25,6 +25,7 @@ namespace MixItUp.WPF.Controls.Dashboard
             this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.FollowTracker));
             this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.AllSubsTracker));
             this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.DonationsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.BitsTracker));
 
             foreach (StatisticsOverviewControl statisticControl in this.statisticControls)
             {

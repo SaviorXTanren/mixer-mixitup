@@ -27,6 +27,7 @@ namespace MixItUp.Base.Services
         public StaticTextStatisticDataTrackerModel AllSubsTracker { get; private set; }
 
         public EventStatisticDataTrackerModel DonationsTracker { get; private set; }
+        public EventStatisticDataTrackerModel BitsTracker { get; private set; }
 
         public StatisticsService() { }
 
@@ -42,6 +43,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
 
             this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel("Viewers", "EyeOutline", true, (StatisticDataTrackerModelBase stats) =>
             {
@@ -96,6 +98,11 @@ namespace MixItUp.Base.Services
                 return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
             });
 
+            this.BitsTracker = new EventStatisticDataTrackerModel("Bits", "Decagram", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            {
+                return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
+            });
+
             this.Statistics = new List<StatisticDataTrackerModelBase>();
             this.Statistics.Add(this.ViewerTracker);
             this.Statistics.Add(this.ChatterTracker);
@@ -106,6 +113,7 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.ResubscriberTracker);
             this.Statistics.Add(this.GiftedSubscriptionsTracker);
             this.Statistics.Add(this.DonationsTracker);
+            this.Statistics.Add(this.BitsTracker);
         }
 
         private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
@@ -140,7 +148,12 @@ namespace MixItUp.Base.Services
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
         {
-            this.DonationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
+            this.DonationsTracker.OnStatisticEventOccurred(e.Username, e.Amount);
+        }
+
+        private void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            this.BitsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
     }
 }

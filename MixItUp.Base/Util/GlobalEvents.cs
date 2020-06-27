@@ -151,6 +151,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Tuple<UserViewModel, int>> OnBitsOccurred;
+        public static void BitsOccurred(UserViewModel user, int amount)
+        {
+            if (GlobalEvents.OnDonationOccurred != null)
+            {
+                GlobalEvents.OnBitsOccurred(null, new Tuple<UserViewModel, int>(user, amount));
+            }
+        }
+
         public static event EventHandler<Tuple<UserViewModel, int>> OnStreamlootsPurchaseOccurred;
         public static void StreamlootsPurchaseOccurred(Tuple<UserViewModel, int> purchase)
         {

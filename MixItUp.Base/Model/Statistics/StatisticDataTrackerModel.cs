@@ -28,7 +28,7 @@ namespace MixItUp.Base.Model.Statistics
 
         public StatisticDataPointModel(string identifier, double value)
         {
-            this.Identifier = identifier;
+            this.Identifier = !string.IsNullOrEmpty(identifier) ? identifier : string.Empty;
             this.ValueDecimal = value;
             this.DateTime = DateTimeOffset.Now;
         }
