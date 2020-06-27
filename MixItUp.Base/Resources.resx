@@ -2976,4 +2976,7 @@
   <data name="ShowClipInfoInChat" xml:space="preserve">
     <value>Show Clip Info In Chat</value>
   </data>
+  <data name="BotAccountMustBeDifferent" xml:space="preserve">
+    <value>The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in.</value>
+  </data>
 </root>

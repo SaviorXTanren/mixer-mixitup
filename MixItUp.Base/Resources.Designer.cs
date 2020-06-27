@@ -1006,6 +1006,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in..
+        /// </summary>
+        public static string BotAccountMustBeDifferent {
+            get {
+                return ResourceManager.GetString("BotAccountMustBeDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Brown.
         /// </summary>
         public static string Brown {

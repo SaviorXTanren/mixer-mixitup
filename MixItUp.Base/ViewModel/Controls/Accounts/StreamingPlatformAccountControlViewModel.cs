@@ -181,8 +181,16 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                         result = await ChannelSession.ConnectTwitchBot();
                         if (result.Success)
                         {
-                            this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                            this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
+                            if (ChannelSession.TwitchBotNewAPI.id.Equals(ChannelSession.TwitchUserNewAPI?.id))
+                            {
+                                await ChannelSession.DisconnectTwitchBot();
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else
+                            {
+                                this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
+                                this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
+                            }
                         }
                     }
 
