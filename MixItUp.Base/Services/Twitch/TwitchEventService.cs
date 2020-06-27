@@ -387,7 +387,7 @@ namespace MixItUp.Base.Services.Twitch
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => c.Name.Equals(redemption.reward.title));
+            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
             if (command != null)
             {
                 await command.Perform(user, extraSpecialIdentifiers: specialIdentifiers);
