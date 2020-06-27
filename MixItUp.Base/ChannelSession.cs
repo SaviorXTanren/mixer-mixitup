@@ -395,6 +395,8 @@ namespace MixItUp.Base
                         twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
                         twitchPlatformServiceTasks.Add(twitchEventService.Connect());
 
+                        await Task.WhenAll(twitchPlatformServiceTasks);
+
                         if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
