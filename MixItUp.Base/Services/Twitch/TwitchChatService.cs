@@ -632,12 +632,10 @@ namespace MixItUp.Base.Services.Twitch
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
                 trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
-                if (int.TryParse(userNotice.SubPlan, out int subPlanNumber))
-                {
-                    subPlanNumber = subPlanNumber / 1000;
-                    trigger.SpecialIdentifiers["usersubplan"] = $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
-                }
+                trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(userNotice.SubPlan);
                 await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
             }
         }
 

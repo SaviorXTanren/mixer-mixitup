@@ -26,6 +26,19 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
+        public static string GetSubTierFromText(string subPlan)
+        {
+            if (int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
+            {
+                subPlanNumber = subPlanNumber / 1000;
+                return $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
+            }
+            else
+            {
+                return subPlan;
+            }
+        }
+
         private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
         {
             PubSubTopicsEnum.ChannelBitsEventsV2,
@@ -261,6 +274,8 @@ namespace MixItUp.Base.Services.Twitch
             trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
+            await this.AddAlertChatMessage(user, string.Format("{0} Cheered {1} Bits", user.Username, packet.bits_used));
+
             GlobalEvents.BitsOccurred(user, packet.bits_used);
         }
 
@@ -283,7 +298,8 @@ namespace MixItUp.Base.Services.Twitch
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -309,8 +325,9 @@ namespace MixItUp.Base.Services.Twitch
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                    trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
@@ -351,7 +368,8 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
-            trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -401,6 +419,8 @@ namespace MixItUp.Base.Services.Twitch
             {
                 await command.Perform(user, extraSpecialIdentifiers: specialIdentifiers);
             }
+
+            await this.AddAlertChatMessage(user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title));
         }
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)
