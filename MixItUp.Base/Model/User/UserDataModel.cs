@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public double TotalAmountDonated { get; set; }
         [DataMember]
-        public uint TotalBitsSpent { get; set; }
+        public uint TotalBitsCheered { get; set; }
         [DataMember]
         public uint TotalSubsGifted { get; set; }
         [DataMember]

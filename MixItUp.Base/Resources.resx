@@ -2982,4 +2982,7 @@
   <data name="BitsBonus" xml:space="preserve">
     <value>Bits Bonus</value>
   </data>
+  <data name="BitsCheered" xml:space="preserve">
+    <value>Bits Cheered</value>
+  </data>
 </root>

@@ -970,6 +970,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bits Cheered.
+        /// </summary>
+        public static string BitsCheered {
+            get {
+                return ResourceManager.GetString("BitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Black.
         /// </summary>
         public static string Black {

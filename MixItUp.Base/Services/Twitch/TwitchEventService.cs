@@ -252,6 +252,8 @@ namespace MixItUp.Base.Services.Twitch
                 streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * packet.bits_used));
             }
 
+            user.Data.TotalBitsCheered += (uint)packet.bits_used;
+
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageAmountData] = packet.bits_used;
 

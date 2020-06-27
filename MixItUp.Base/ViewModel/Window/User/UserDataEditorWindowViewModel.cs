@@ -131,6 +131,7 @@ namespace MixItUp.Base.ViewModel.Window.User
 
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.TaggedInChat, this.User.Data.TotalTimesTagged.ToString()));
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, string.Format("{0:C}", Math.Round(this.User.Data.TotalAmountDonated, 2))));
+            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.BitsCheered, string.Format("{0:C}", this.User.Data.TotalBitsCheered)));
         }
 
         public void AddUserOnlyChatCommand(ChatCommand command)
