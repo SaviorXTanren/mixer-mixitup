@@ -220,6 +220,7 @@ namespace MixItUp.Base
 
         public static async Task DisconnectTwitchBot()
         {
+            ChannelSession.Settings.TwitchBotOAuthToken = null;
             ChannelSession.TwitchBotConnection = null;
             if (ChannelSession.Services.Chat.TwitchChatService != null)
             {
