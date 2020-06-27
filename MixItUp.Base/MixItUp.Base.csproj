@@ -43,12 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SkillsCatalogData.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
   </ItemGroup>
 
@@ -66,9 +60,6 @@
     </None>
     <None Update="SettingsTemplateDatabase.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SkillsCatalogData.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

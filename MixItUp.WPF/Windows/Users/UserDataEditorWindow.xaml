@@ -75,9 +75,6 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding User.Username}" VerticalAlignment="Center" />
-
-                                <Image Grid.Column="2" Source="{Binding User.MixerFanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
-                                <TextBlock Grid.Column="4" Text="{Binding User.MixerFanProgression.level.level}" VerticalAlignment="Center" />
                             </Grid>
 
                             <Grid Grid.Row="2">

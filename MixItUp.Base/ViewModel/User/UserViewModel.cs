@@ -210,14 +210,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public HashSet<UserRoleEnum> UserRoles
-        {
-            get
-            {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchUserRoles; }
-                return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
-            }
-        }
+        public HashSet<UserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
 
         public string AvatarLink
         {
@@ -368,7 +361,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser { get { return this.Data.PatreonUser; } set { this.Data.PatreonUser = value; } }
 
-        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.Max() : UserRoleEnum.User; } }
+        public UserRoleEnum PrimaryRole { get { return (this.UserRoles.Count() > 0) ? this.UserRoles.ToList().Max() : UserRoleEnum.User; } }
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
@@ -417,14 +410,14 @@ namespace MixItUp.Base.ViewModel.User
                     if (this.Data.RolesDisplayString == null)
                     {
                         List<UserRoleEnum> userRoles = this.UserRoles.ToList();
-                        if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Banned))
+                        if (this.Data.UserRoles.Contains(UserRoleEnum.Banned))
                         {
                             userRoles.Clear();
                             userRoles.Add(UserRoleEnum.Banned);
                         }
                         else
                         {
-                            if (this.Data.MixerUserRoles.Count() > 1)
+                            if (this.Data.UserRoles.Count() > 1)
                             {
                                 userRoles.Remove(UserRoleEnum.User);
                             }
@@ -434,12 +427,12 @@ namespace MixItUp.Base.ViewModel.User
                                 userRoles.Remove(UserRoleEnum.Mod);
                             }
 
-                            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                            if (this.Data.UserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
                             {
                                 userRoles.Remove(UserRoleEnum.Follower);
                             }
 
-                            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                            if (this.Data.UserRoles.Contains(UserRoleEnum.Streamer))
                             {
                                 userRoles.Remove(UserRoleEnum.ChannelEditor);
                                 userRoles.Remove(UserRoleEnum.Subscriber);
