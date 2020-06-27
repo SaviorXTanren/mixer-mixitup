@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user)
         {
-            TimeSpan timeLeft = new TimeSpan(0, 0, 0);
+            TimeSpan timeLeft = new TimeSpan(0, 0, -1);
             if (this.Type == CooldownTypeEnum.Individual)
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.Amount) - DateTimeOffset.Now;
@@ -89,9 +89,10 @@ namespace MixItUp.Base.Model.Requirements
                 }
             }
 
-            if (timeLeft.TotalSeconds >= 0)
+            int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
+            if (totalSeconds > 0)
             {
-                await this.SendChatWhisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", (int)Math.Ceiling(timeLeft.TotalSeconds)));
+                await this.SendChatWhisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", totalSeconds));
                 return false;
             }
             return true;
