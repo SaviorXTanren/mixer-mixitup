@@ -56,8 +56,6 @@
                 </Grid>
             </GroupBox>
 
-            <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" Grid.Column="1" HorizontalAlignment="Center" />
-
             <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.Moderator}" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
 
