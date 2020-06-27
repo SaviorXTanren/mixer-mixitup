@@ -926,7 +926,7 @@ namespace MixItUp.Base.Commands
             {
                 foreach (UserViewModel u in ChannelSession.Services.User.GetAllWorkableUsers().Shuffle())
                 {
-                    if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
+                    if (!u.Data.IsCurrencyRankExempt && !u.IgnoreForQueries && (this.targetUser == null || !u.Equals(this.targetUser)))
                     {
                         return u;
                     }
