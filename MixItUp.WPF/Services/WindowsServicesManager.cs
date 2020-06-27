@@ -12,7 +12,6 @@ namespace MixItUp.WPF.Services
         {
             this.Secrets = new SecretsService();
             this.MixItUpService = new MixItUpService();
-            this.MixerStatus = new MixerStatusService();
 
             this.User = new UserService();
             this.Chat = new ChatService();

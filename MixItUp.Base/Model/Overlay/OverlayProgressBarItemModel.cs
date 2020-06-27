@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.Overlay
         Custom = 5,
         [Obsolete]
         Embers = 6,
+        Bits = 7,
     }
 
     [DataContract]
@@ -137,6 +138,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Bits)
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
 
             await base.Enable();
         }
@@ -149,6 +154,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }
@@ -238,6 +244,8 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e) { this.AddAmount(1); }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddAmount(donation.Amount); }
+
+        private void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { this.AddAmount(e.Item2); }
 
         private void AddAmount(double amount)
         {

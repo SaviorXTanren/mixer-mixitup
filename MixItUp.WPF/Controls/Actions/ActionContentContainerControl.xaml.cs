@@ -126,6 +126,10 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.IFTTT:
                         this.actionControl = (this.action != null) ? new IFTTTActionControl((IFTTTAction)this.action) : new IFTTTActionControl();
                         break;
+                    case ActionTypeEnum.Clips:
+                        this.actionControl = (this.action != null) ? new ClipsActionControl((ClipsAction)this.action) : new ClipsActionControl();
+                        break;
+
 #pragma warning disable CS0612 // Type or member is obsolete
                     case ActionTypeEnum.ActionGroup:
                         if (this.action != null)

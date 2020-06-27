@@ -64,6 +64,7 @@ namespace MixItUp.Base.Actions
         OvrStream,
         StreamingPlatform,
         IFTTT,
+        Clips,
 
         Custom = 99,
     }

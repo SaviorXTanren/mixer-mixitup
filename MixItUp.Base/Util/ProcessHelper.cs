@@ -11,11 +11,14 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                ProcessStartInfo processInfo = new ProcessStartInfo(url)
+                if (!string.IsNullOrEmpty(url))
                 {
-                    UseShellExecute = true
-                };
-                Process.Start(processInfo);
+                    ProcessStartInfo processInfo = new ProcessStartInfo(url)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(processInfo);
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

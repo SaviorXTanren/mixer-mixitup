@@ -101,11 +101,7 @@ namespace MixItUp.WPF.Controls.Chat
                             if (messagePart is string)
                             {
                                 string messagePartString = (string)messagePart;
-
-                                bool isWhisperToStreamer = false; //this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-                                bool isStreamerTagged = false; //messagePartString.Contains("@" + ChannelSession.MixerUser.username);
-
-                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged), isItalicized: italics);
+                                this.AddStringMessage(messagePartString, isHighlighted: messagePartString.Contains("@" + ChannelSession.TwitchUserNewAPI.login, StringComparison.CurrentCultureIgnoreCase), isItalicized: italics);
                             }
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {

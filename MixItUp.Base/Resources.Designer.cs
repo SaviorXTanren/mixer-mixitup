@@ -961,6 +961,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bits Bonus.
+        /// </summary>
+        public static string BitsBonus {
+            get {
+                return ResourceManager.GetString("BitsBonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bits Cheered.
+        /// </summary>
+        public static string BitsCheered {
+            get {
+                return ResourceManager.GetString("BitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Black.
         /// </summary>
         public static string Black {
@@ -1002,6 +1020,15 @@ namespace MixItUp.Base {
         public static string BotAccount {
             get {
                 return ResourceManager.GetString("BotAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in..
+        /// </summary>
+        public static string BotAccountMustBeDifferent {
+            get {
+                return ResourceManager.GetString("BotAccountMustBeDifferent", resourceCulture);
             }
         }
         
@@ -1380,6 +1407,15 @@ namespace MixItUp.Base {
         public static string Click {
             get {
                 return ResourceManager.GetString("Click", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clip creation failed, please try again later.
+        /// </summary>
+        public static string ClipCreationFailed {
+            get {
+                return ResourceManager.GetString("ClipCreationFailed", resourceCulture);
             }
         }
         
@@ -3441,6 +3477,15 @@ namespace MixItUp.Base {
         public static string IncludeCommandAssets {
             get {
                 return ResourceManager.GetString("IncludeCommandAssets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Delay.
+        /// </summary>
+        public static string IncludeDelay {
+            get {
+                return ResourceManager.GetString("IncludeDelay", resourceCulture);
             }
         }
         
@@ -6555,6 +6600,15 @@ namespace MixItUp.Base {
         public static string ShopCurrency {
             get {
                 return ResourceManager.GetString("ShopCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Clip Info In Chat.
+        /// </summary>
+        public static string ShowClipInfoInChat {
+            get {
+                return ResourceManager.GetString("ShowClipInfoInChat", resourceCulture);
             }
         }
         

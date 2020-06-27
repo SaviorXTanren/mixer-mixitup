@@ -269,12 +269,7 @@ namespace MixItUp.Base
                 if (twitchChannel != null)
                 {
                     ChannelSession.TwitchChannelV5 = twitchChannel;
-
-                    TwitchV5API.Streams.StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
-                    if (stream != null)
-                    {
-                        ChannelSession.TwitchStreamV5 = stream;
-                    }
+                    ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
                 }
             }
 
@@ -393,37 +388,14 @@ namespace MixItUp.Base
                         await ChannelSession.Services.Telemetry.Connect();
                         ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
 
-                        List<Task<Result>> mixerConnections = new List<Task<Result>>();
-
-                        await Task.WhenAll(mixerConnections);
-
-                        if (mixerConnections.Any(c => !c.Result.Success))
-                        {
-                            string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            string message = "Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
-
-                            if (mixerConnections.All(c => c.Result.Success))
-                            {
-                                if (!await DialogHelper.ShowConfirmation(message + Environment.NewLine + Environment.NewLine +
-                                        "We have determined this to be a non-blocking error, which means we can attempt to log you in and ignore this. However, some features may not work as a result and you may run into some bugs."
-                                        + Environment.NewLine + Environment.NewLine + "Would you like to ignore this and log in?"))
-                                {
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                GlobalEvents.ShowMessageBox(message);
-                                return false;
-                            }
-                        }
-
                         TwitchChatService twitchChatService = new TwitchChatService();
                         TwitchEventService twitchEventService = new TwitchEventService();
 
                         List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
-                        mixerConnections.Add(twitchChatService.ConnectUser());
-                        mixerConnections.Add(twitchEventService.Connect());
+                        twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
+                        twitchPlatformServiceTasks.Add(twitchEventService.Connect());
+
+                        await Task.WhenAll(twitchPlatformServiceTasks);
 
                         if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
                         {
@@ -438,8 +410,8 @@ namespace MixItUp.Base
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
-                        Logger.Log(LogLevel.Error, "Mixer Services - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to connect to Mixer services. If this continues, please visit the Mix It Up Discord for assistance." +
+                        Logger.Log(LogLevel.Error, "Twitch Services - " + JSONSerializerHelper.SerializeToString(ex));
+                        await DialogHelper.ShowMessage("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
                             Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
                         return false;
                     }
@@ -615,6 +587,8 @@ namespace MixItUp.Base
                                 ChannelSession.Settings.RedemptionStorePurchases.Remove(purchase);
                             }
                         }
+
+                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ChannelSession.TwitchChannelNewAPI?.broadcaster_type);
 
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);

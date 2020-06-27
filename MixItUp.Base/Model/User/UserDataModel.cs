@@ -24,22 +24,6 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public bool UpdatedThisSession { get; set; } = false;
 
-        [JsonIgnore]
-        public StreamingPlatformTypeEnum Platform
-        {
-            get
-            {
-                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
-
-#pragma warning disable CS0612 // Type or member is obsolete
-                if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
-#pragma warning restore CS0612 // Type or member is obsolete
-                if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
-
-                return platform;
-            }
-        }
-
         [DataMember]
         public string UnassociatedUsername { get; set; }
 
@@ -128,7 +112,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public double TotalAmountDonated { get; set; }
         [DataMember]
-        public uint TotalBitsSpent { get; set; }
+        public uint TotalBitsCheered { get; set; }
         [DataMember]
         public uint TotalSubsGifted { get; set; }
         [DataMember]
@@ -179,6 +163,22 @@ namespace MixItUp.Base.Model.User
         }
 
         [JsonIgnore]
+        public StreamingPlatformTypeEnum Platform
+        {
+            get
+            {
+                StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
+#pragma warning restore CS0612 // Type or member is obsolete
+                if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
+
+                return platform;
+            }
+        }
+
+        [JsonIgnore]
         public string Username
         {
             get
@@ -188,6 +188,16 @@ namespace MixItUp.Base.Model.User
 #pragma warning restore CS0612 // Type or member is obsolete
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
                 return string.Empty;
+            }
+        }
+
+        [JsonIgnore]
+        public HashSet<UserRoleEnum> UserRoles
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUserRoles; }
+                return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }
 

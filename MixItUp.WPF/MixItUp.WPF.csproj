@@ -370,6 +370,9 @@
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ClipsAction.xaml.cs">
+      <DependentUpon>ClipsAction.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ConditionalActionControl.xaml.cs">
       <DependentUpon>ConditionalActionControl.xaml</DependentUpon>
     </Compile>
@@ -615,9 +618,6 @@
     </Compile>
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MixerStatusAlertControl.xaml.cs">
-      <DependentUpon>MixerStatusAlertControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
@@ -1030,6 +1030,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\ClipsAction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\ConditionalActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1347,10 +1351,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\UsersControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MixerStatusAlertControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

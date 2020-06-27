@@ -7,8 +7,6 @@ namespace MixItUp.Base.Services
     {
         public IMixItUpService MixItUpService { get; protected set; }
 
-        public IMixerStatusService MixerStatus { get; protected set; }
-
         public IUserService User { get; protected set; }
 
         public IChatService Chat { get; protected set; }

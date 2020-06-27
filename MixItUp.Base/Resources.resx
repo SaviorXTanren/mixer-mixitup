@@ -2967,4 +2967,22 @@
   <data name="Tier" xml:space="preserve">
     <value>Tier</value>
   </data>
+  <data name="ClipCreationFailed" xml:space="preserve">
+    <value>Clip creation failed, please try again later</value>
+  </data>
+  <data name="IncludeDelay" xml:space="preserve">
+    <value>Include Delay</value>
+  </data>
+  <data name="ShowClipInfoInChat" xml:space="preserve">
+    <value>Show Clip Info In Chat</value>
+  </data>
+  <data name="BotAccountMustBeDifferent" xml:space="preserve">
+    <value>The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in.</value>
+  </data>
+  <data name="BitsBonus" xml:space="preserve">
+    <value>Bits Bonus</value>
+  </data>
+  <data name="BitsCheered" xml:space="preserve">
+    <value>Bits Cheered</value>
+  </data>
 </root>

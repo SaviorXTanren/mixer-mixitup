@@ -35,6 +35,8 @@ namespace MixItUp.Base.Model.Overlay
         public double SubscriberBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
+        [DataMember]
+        public double BitsBonus { get; set; }
 
         [JsonIgnore]
         private int timeLeft;
@@ -57,7 +59,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTimerTrainItemModel() : base() { }
 
         public OverlayTimerTrainItemModel(string htmlText, int minimumSecondsToShow, string textColor, string textFont, int textSize, double followBonus,
-            double hostBonus, double subscriberBonus, double donationBonus)
+            double hostBonus, double subscriberBonus, double donationBonus, double bitsBonus)
             : base(OverlayItemModelTypeEnum.TimerTrain, htmlText)
         {
             this.MinimumSecondsToShow = minimumSecondsToShow;
@@ -68,6 +70,7 @@ namespace MixItUp.Base.Model.Overlay
             this.HostBonus = hostBonus;
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
+            this.BitsBonus = bitsBonus;
         }
 
         [JsonIgnore]
@@ -93,6 +96,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
+            if (this.BitsBonus > 0.0)
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
 
             this.timeLeft = 0;
             this.stackedTime = 0;
@@ -112,6 +119,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
 
             this.timeLeft = 0;
             this.stackedTime = 0;
@@ -192,6 +200,8 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddSeconds(donation.Amount * this.DonationBonus); }
+
+        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { await this.AddSeconds(e.Item2 * this.BitsBonus); }
 
         private async Task AddSeconds(double seconds)
         {

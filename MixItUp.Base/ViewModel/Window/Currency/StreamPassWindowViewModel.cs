@@ -220,6 +220,16 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private double donationBonus = 1.5;
+        public double BitsBonus
+        {
+            get { return this.bitsBonus; }
+            set
+            {
+                this.bitsBonus = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double bitsBonus = 1.5;
 
         public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
@@ -287,6 +297,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.HostBonus = this.StreamPass.HostBonus;
             this.SubscribeBonus = this.StreamPass.SubscribeBonus;
             this.DonationBonus = this.StreamPass.DonationBonus;
+            this.BitsBonus = this.StreamPass.BitsBonus;
 
             this.DefaultLevelUpCommand = this.StreamPass.DefaultLevelUpCommand;
             foreach (var kvp in this.StreamPass.CustomLevelUpCommands)
@@ -424,6 +435,12 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 return false;
             }
 
+            if (this.BitsBonus < 0)
+            {
+                await DialogHelper.ShowMessage("The Bits Bonus must be greater than or equal to 0");
+                return false;
+            }
+
             if (this.CustomLevelUpCommands.GroupBy(c => c.Level).Any(c => c.Count() > 1))
             {
                 await DialogHelper.ShowMessage("There can only be 1 custom level up command per individual level");
@@ -464,6 +481,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.StreamPass.HostBonus = this.HostBonus;
             this.StreamPass.SubscribeBonus = this.SubscribeBonus;
             this.StreamPass.DonationBonus = this.DonationBonus;
+            this.StreamPass.BitsBonus = this.BitsBonus;
 
             this.StreamPass.DefaultLevelUpCommand = this.DefaultLevelUpCommand;
             this.StreamPass.CustomLevelUpCommands.Clear();

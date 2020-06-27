@@ -75,9 +75,6 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding User.Username}" VerticalAlignment="Center" />
-
-                                <Image Grid.Column="2" Source="{Binding User.MixerFanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
-                                <TextBlock Grid.Column="4" Text="{Binding User.MixerFanProgression.level.level}" VerticalAlignment="Center" />
                             </Grid>
 
                             <Grid Grid.Row="2">
@@ -241,17 +238,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                             <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" />
-
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SparkExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                            <ToggleButton Grid.Column="6" IsChecked="{Binding User.Data.IsSparkExempt}" />
 
                         </Grid>
 

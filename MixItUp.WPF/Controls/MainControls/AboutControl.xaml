@@ -30,8 +30,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
@@ -80,10 +78,10 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
@@ -97,56 +95,21 @@
                         <Image Source="/Assets/Images/Discord.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="4" Grid.Row="0" x:Name="YouTubeButton" Height="50" Click="YouTubeButton_Click" Background="Transparent">
+                    <Button Grid.Column="0" Grid.Row="2" x:Name="YouTubeButton" Height="50" Click="YouTubeButton_Click" Background="Transparent">
                         <Image Source="/Assets/Images/YouTube.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="0" Grid.Row="2" x:Name="MixerButton" Height="50" Click="MixerButton_Click" Background="Transparent">
-                        <Image Source="/Assets/Images/Mixer.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Button Grid.Column="2" Grid.Row="2" x:Name="MixerButton" Height="50" Click="TwitchButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Twitch-Small.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="2" Grid.Row="2" x:Name="WikiButton" Height="50" Click="WikiButton_Click" Background="Transparent">
+                    <Button Grid.Column="0" Grid.Row="4" x:Name="WikiButton" Height="50" Click="WikiButton_Click" Background="Transparent">
                         <Image Source="/Assets/Images/Wiki.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="4" Grid.Row="2" x:Name="GithubButton" Height="50" Click="GithubButton_Click" Background="Transparent">
+                    <Button Grid.Column="2" Grid.Row="4" x:Name="GithubButton" Height="50" Click="GithubButton_Click" Background="Transparent">
                         <Image Source="/Assets/Images/Github.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
-                </Grid>
-            </GroupBox>
-
-            <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.HelpfulLinks}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">
-                            <TextBlock Text="{x:Static resx:Resources.MixerStatus}"/>
-                        </Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="0" Grid.Column="2">
-                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">
-                            <TextBlock Text="{x:Static resx:Resources.MixerSupport}"/>
-                        </Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="2" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="2" Grid.Column="2">
-                        <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
-                    </TextBlock>
                 </Grid>
             </GroupBox>
         </Grid>
@@ -174,7 +137,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" x:Name="SaviorXTanrenMixerButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SaviorXTanrenMixerButton_Click" Height="100">
+                    <Button Grid.Column="0" x:Name="SaviorXTanrenButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SaviorXTanrenButton_Click" Height="100">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -182,14 +145,14 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/7207866/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
+                            <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/saviorxtanren-profile_image-03a0b918ad9b65c6-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">SaviorXTanren</TextBlock>
 
                         </Grid>
                     </Button>
 
-                    <Button Grid.Column="2" x:Name="VerbatimTMixerButton" Style="{StaticResource MaterialDesignFlatButton}" Click="VerbatimTMixerButton_Click" Height="100">
+                    <Button Grid.Column="2" x:Name="VerbatimTButton" Style="{StaticResource MaterialDesignFlatButton}" Click="VerbatimTButton_Click" Height="100">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -197,14 +160,14 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/34871051/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
+                            <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/e510a4d3-9fe0-41ff-afd5-2fc8120e8e45-profile_image-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">VerbatimT</TextBlock>
 
                         </Grid>
                     </Button>
 
-                    <Button Grid.Column="4" x:Name="TyrenDesMixerButton" Style="{StaticResource MaterialDesignFlatButton}" Click="TyrenDesMixerButton_Click" Height="100">
+                    <Button Grid.Column="4" x:Name="TyrenDesButton" Style="{StaticResource MaterialDesignFlatButton}" Click="TyrenDesButton_Click" Height="100">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -212,7 +175,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/3758644/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
+                            <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/tyrendes-profile_image-eb5907e56a532f5c-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">TyrenDes</TextBlock>
 

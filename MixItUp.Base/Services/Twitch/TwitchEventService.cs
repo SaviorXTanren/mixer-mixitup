@@ -26,6 +26,19 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
+        public static string GetSubTierFromText(string subPlan)
+        {
+            if (int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
+            {
+                subPlanNumber = subPlanNumber / 1000;
+                return $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
+            }
+            else
+            {
+                return subPlan;
+            }
+        }
+
         private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
         {
             PubSubTopicsEnum.ChannelBitsEventsV2,
@@ -173,7 +186,7 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             user.Data.TwitchFollowDate = DateTimeOffset.Now;
 
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.Data;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
                             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                             {
@@ -242,17 +255,28 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
-            foreach (CurrencyModel emberCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
+            foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
             {
-                emberCurrency.AddAmount(user.Data, packet.bits_used);
+                bitsCurrency.AddAmount(user.Data, packet.bits_used);
             }
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user.Data;
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * packet.bits_used));
+            }
+
+            user.Data.TotalBitsCheered += (uint)packet.bits_used;
+
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageAmountData] = packet.bits_used;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
             trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            await this.AddAlertChatMessage(user, string.Format("{0} Cheered {1} Bits", user.Username, packet.bits_used));
+
+            GlobalEvents.BitsOccurred(user, packet.bits_used);
         }
 
         private void PubSub_OnBitsBadgeReceived(object sender, PubSubBitBadgeEventModel packet)
@@ -274,9 +298,10 @@ namespace MixItUp.Base.Services.Twitch
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now;
@@ -300,10 +325,11 @@ namespace MixItUp.Base.Services.Twitch
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                    trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
@@ -342,9 +368,10 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
-            trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.Data;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
             receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
@@ -387,11 +414,13 @@ namespace MixItUp.Base.Services.Twitch
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => c.Name.Equals(redemption.reward.title));
+            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
             if (command != null)
             {
                 await command.Perform(user, extraSpecialIdentifiers: specialIdentifiers);
             }
+
+            await this.AddAlertChatMessage(user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title));
         }
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)
