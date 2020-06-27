@@ -19,6 +19,7 @@ namespace MixItUp.Base.Model.Overlay
         Sparks,
         [Obsolete]
         Embers,
+        Bits,
     }
 
     [DataContract]
@@ -75,6 +76,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
+            if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Bits)
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
 
             await base.Enable();
         }
@@ -86,6 +91,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }
@@ -140,11 +146,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
-            {
-                this.subs.Add(e.Item2.ID);
-                await this.AddEvent(e.Item2.Username);
-            }
+            await this.AddEvent(e.Item2.Username);
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
@@ -152,6 +154,14 @@ namespace MixItUp.Base.Model.Overlay
             if (this.MinimumAmountRequiredToShow == 0.0 || donation.Amount >= this.MinimumAmountRequiredToShow)
             {
                 await this.AddEvent(donation.Username + ": " + donation.AmountText);
+            }
+        }
+
+        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            if (this.MinimumAmountRequiredToShow == 0.0 || e.Item2 >= this.MinimumAmountRequiredToShow)
+            {
+                await this.AddEvent(e.Item1.Username + ": " + e.Item2);
             }
         }
 

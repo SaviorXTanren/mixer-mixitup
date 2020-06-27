@@ -30,6 +30,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -74,6 +76,17 @@
 
                 <TextBlock Grid.Column="0" VerticalAlignment="Center">Donations:</TextBlock>
                 <CheckBox IsChecked="{Binding ShowDonations}" Grid.Column="2" VerticalAlignment="Center" />
+            </Grid>
+
+            <Grid Grid.Column="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Bits:</TextBlock>
+                <CheckBox IsChecked="{Binding ShowBits}" Grid.Column="2" VerticalAlignment="Center" />
             </Grid>
 
         </Grid>

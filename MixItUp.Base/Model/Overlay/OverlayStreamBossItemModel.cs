@@ -67,6 +67,8 @@ namespace MixItUp.Base.Model.Overlay
         public double SubscriberBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
+        [DataMember]
+        public double BitsBonus { get; set; }
 
         [DataMember]
         public double HealingBonus { get; set; }
@@ -103,12 +105,11 @@ namespace MixItUp.Base.Model.Overlay
 
         private HashSet<Guid> follows = new HashSet<Guid>();
         private HashSet<Guid> hosts = new HashSet<Guid>();
-        private HashSet<Guid> subs = new HashSet<Guid>();
 
         public OverlayStreamBossItemModel() : base() { }
 
         public OverlayStreamBossItemModel(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
-            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double healingBonus, double overkillBonus,
+            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double bitsBonus, double healingBonus, double overkillBonus,
             OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(OverlayItemModelTypeEnum.StreamBoss, htmlText)
         {
@@ -124,6 +125,7 @@ namespace MixItUp.Base.Model.Overlay
             this.HostBonus = hostBonus;
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
+            this.BitsBonus = bitsBonus;
             this.HealingBonus = healingBonus;
             this.OverkillBonus = overkillBonus;
             this.DamageAnimation = damageAnimation;
@@ -174,6 +176,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
+            if (this.BitsBonus > 0.0)
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
 
             await base.Enable();
         }
@@ -186,6 +192,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }
@@ -292,31 +299,21 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
-            {
-                this.subs.Add(user.ID);
-                await this.ReduceHealth(user, this.SubscriberBonus);
-            }
+            await this.ReduceHealth(user, this.SubscriberBonus);
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
-            {
-                this.subs.Add(user.Item1.ID);
-                await this.ReduceHealth(user.Item1, this.SubscriberBonus);
-            }
+            await this.ReduceHealth(user.Item1, this.SubscriberBonus);
         }
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
-            {
-                this.subs.Add(e.Item2.ID);
-                await this.ReduceHealth(e.Item2, this.SubscriberBonus);
-            }
+            await this.ReduceHealth(e.Item2, this.SubscriberBonus);
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
+
+        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { await this.ReduceHealth(e.Item1, (e.Item2 * this.BitsBonus)); }
     }
 }

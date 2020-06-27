@@ -93,6 +93,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private double donationBonus;
 
+        public string BitsBonusString
+        {
+            get { return this.bitsBonus.ToString(); }
+            set
+            {
+                this.bitsBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double bitsBonus;
+
         public OverlayTimerTrainItemViewModel()
         {
             this.Font = "Arial";
@@ -104,7 +115,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.followBonus = 1.0;
             this.hostBonus = 1.0;
             this.subBonus = 10.0;
-            this.donationBonus = 1.0;
+            this.donationBonus = 1.5;
+            this.bitsBonus = 1.5;
         }
 
         public OverlayTimerTrainItemViewModel(OverlayTimerTrainItemModel item)
@@ -119,6 +131,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.hostBonus = item.HostBonus;
             this.subBonus = item.SubscriberBonus;
             this.donationBonus = item.DonationBonus;
+            this.bitsBonus = item.BitsBonus;
 
             this.HTML = item.HTML;
         }
@@ -130,7 +143,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
                 return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
-                    this.subBonus, this.donationBonus);
+                    this.subBonus, this.donationBonus, this.bitsBonus);
             }
             return null;
         }

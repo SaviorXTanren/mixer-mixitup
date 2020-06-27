@@ -46,6 +46,16 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
 
+        public bool ShowBits
+        {
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Bits); }
+            set
+            {
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Bits, value);
+                this.NotifyPropertyChanged();
+            }
+        }
+
         private HashSet<OverlayEventListItemTypeEnum> eventListTypes = new HashSet<OverlayEventListItemTypeEnum>();
 
         public OverlayEventListItemViewModel()

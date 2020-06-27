@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.Overlay
         Sparks,
         [Obsolete]
         Embers,
+        Bits,
     }
 
     [DataContract]
@@ -77,6 +78,10 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
                 GlobalEvents.OnStreamlootsPurchaseOccurred += GlobalEvents_OnStreamlootsPurchaseOccurred;
             }
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Bits))
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
 
             await base.Enable();
         }
@@ -90,6 +95,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
 
             await base.Disable();
         }
@@ -142,6 +148,8 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
         private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.Username, string.Format("Purchased {0} Packs", purchase.Item2)); }
+
+        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { await this.AddEvent(e.Item1.Username, string.Format("Cheer {0} Bits", e.Item2)); }
 
         private async Task AddEvent(string name, string details)
         {

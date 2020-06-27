@@ -62,7 +62,7 @@
 
             <TextBox Grid.Column="8" Text="{Binding SparkBonusString}" MaterialDesign:HintAssist.Hint="Spark Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="10" Text="{Binding EmberBonusString}" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="10" Text="{Binding BitsBonusString}" MaterialDesign:HintAssist.Hint="Bits Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
         </Grid>
 
         <TextBox Grid.Row="4" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" />
