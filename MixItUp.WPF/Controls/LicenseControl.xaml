@@ -29,7 +29,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017-2019 Matthew Olivo. All rights reserved.</TextBlock>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017-2020 Matthew Olivo. All rights reserved.</TextBlock>
 
         <TextBlock Grid.Row="2" TextWrapping="Wrap">MIT License</TextBlock>
 

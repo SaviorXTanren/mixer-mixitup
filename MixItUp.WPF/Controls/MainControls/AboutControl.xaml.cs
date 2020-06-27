@@ -1,7 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Util;
-using System.Diagnostics;
-using System.IO;
+﻿using MixItUp.Base.Util;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,16 +33,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void YouTubeButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); }
 
-        private void MixerButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixer.com/team/MixItUp"); }
+        private void TwitchButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/MixItUp"); }
 
         private void WikiButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); }
 
         private void GithubButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup"); }
 
-        private void SaviorXTanrenMixerButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixer.com/SaviorXTanren"); }
+        private void SaviorXTanrenButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/SaviorXTanren"); }
 
-        private void VerbatimTMixerButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixer.com/VerbatimT"); }
+        private void VerbatimTButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/VerbatimT"); }
 
-        private void TyrenDesMixerButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://mixer.com/TyrenDes"); }
+        private void TyrenDesButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitch.tv/TyrenDes"); }
     }
 }
