@@ -238,17 +238,10 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                             <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" />
-
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SparkExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                            <ToggleButton Grid.Column="6" IsChecked="{Binding User.Data.IsSparkExempt}" />
 
                         </Grid>
 
