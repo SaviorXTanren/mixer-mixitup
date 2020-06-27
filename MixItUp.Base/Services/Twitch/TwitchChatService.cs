@@ -729,7 +729,7 @@ namespace MixItUp.Base.Services.Twitch
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.Data;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
                             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
