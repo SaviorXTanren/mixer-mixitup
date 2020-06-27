@@ -242,9 +242,14 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
-            foreach (CurrencyModel emberCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
+            foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
             {
-                emberCurrency.AddAmount(user.Data, packet.bits_used);
+                bitsCurrency.AddAmount(user.Data, packet.bits_used);
+            }
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * packet.bits_used));
             }
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user.ID;

@@ -2979,4 +2979,7 @@
   <data name="BotAccountMustBeDifferent" xml:space="preserve">
     <value>The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in.</value>
   </data>
+  <data name="BitsBonus" xml:space="preserve">
+    <value>Bits Bonus</value>
+  </data>
 </root>
