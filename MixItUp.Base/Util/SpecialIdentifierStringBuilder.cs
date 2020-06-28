@@ -67,8 +67,8 @@ namespace MixItUp.Base.Util
         public const string LatestHostViewerCountData = "latesthostviewercount";
         public const string LatestSubscriberUserData = "latestsubscriber";
         public const string LatestSubscriberSubMonthsData = "latestsubscribersubmonths";
-        public const string LatestBitsUsageUserData = "latestbitsusage";
-        public const string LatestBitsUsageAmountData = "latestbitsusageamount";
+        public const string LatestBitsCheerUserData = "latestbitscheer";
+        public const string LatestBitsCheerAmountData = "latestbitscheeramount";
         public const string LatestDonationUserData = "latestdonation";
         public const string LatestDonationAmountData = "latestdonationamount";
 
@@ -560,7 +560,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestHostUserData, SpecialIdentifierStringBuilder.LatestHostViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
-            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsUsageUserData, SpecialIdentifierStringBuilder.LatestBitsUsageAmountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsCheerUserData, SpecialIdentifierStringBuilder.LatestBitsCheerAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.SpecialIdentifier))
