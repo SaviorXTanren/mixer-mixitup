@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
@@ -56,17 +57,20 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             if (!string.IsNullOrEmpty(message))
             {
-                string[] parts = message.Split(new char[] { ' ' });
+                string[] parts = message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string part in parts)
                 {
                     this.AddStringMessagePart(part);
-                    if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+                    if (ChannelSession.Services.Chat.TwitchChatService != null)
                     {
-                        this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
-                    }
-                    else if (ChannelSession.Settings.ShowBetterTTVEmotes && ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes.ContainsKey(part))
-                    {
-                        this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes[part];
+                        if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+                        {
+                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
+                        }
+                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes.ContainsKey(part))
+                        {
+                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes[part];
+                        }
                     }
                 }
             }
