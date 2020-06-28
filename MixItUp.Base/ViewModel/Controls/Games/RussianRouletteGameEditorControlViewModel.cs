@@ -58,11 +58,11 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
 
-            this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in the russian roulette match! Let's see who walks away the winner...", whisper: true);
+            this.UserJoinCommand = this.CreateBasicChatCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
-            this.UserSuccessCommand = this.CreateBasicChatCommand("You survived and walked away with $gamepayout " + currency.Name + "!", whisper: true);
-            this.UserFailCommand = this.CreateBasicChatCommand("Looks like luck was not on your side. Better luck next time...", whisper: true);
+            this.UserSuccessCommand = this.CreateBasicChatCommand();
+            this.UserFailCommand = this.CreateBasicChatCommand();
             this.GameCompleteCommand = this.CreateBasicChatCommand("The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout " + currency.Name + "!");
         }
 

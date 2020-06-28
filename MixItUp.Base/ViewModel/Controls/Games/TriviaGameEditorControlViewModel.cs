@@ -147,11 +147,11 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion", "$gameanswers");
 
-            this.UserJoinCommand = this.CreateBasicChatCommand("You've put in your guess, let's wait and see which one is right...", whisper: true);
+            this.UserJoinCommand = this.CreateBasicChatCommand();
 
-            this.UserSuccessCommand = this.CreateBasicCurrencyCommand($"You guessed correct and won $gamepayout {currency.Name}!", currency, "$gamepayout", whisper: true);
+            this.UserSuccessCommand = this.CreateBasicCurrencyCommand(currency, "$gamepayout");
 
-            this.CorrectAnswerCommand = this.CreateBasicChatCommand("The correct answer was $gamecorrectanswer!");
+            this.CorrectAnswerCommand = this.CreateBasicChatCommand($"The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {currency.Name}!");
         }
 
         public TriviaGameEditorControlViewModel(TriviaGameCommand command)

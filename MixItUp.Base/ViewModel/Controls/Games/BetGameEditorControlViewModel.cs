@@ -102,15 +102,15 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");
-            this.UserJoinedCommand = this.CreateBasicChatCommand("Your bet option has been selected!", whisper: true);
+            this.UserJoinedCommand = this.CreateBasicChatCommand();
 
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
             this.BetsClosedCommand = this.CreateBasicChatCommand("All bets are now closed! Let's wait and see what the result is...");
-            this.UserFailCommand = this.CreateBasicChatCommand("Lady luck wasn't with you today, better luck next time...", whisper: true);
+            this.UserFailCommand = this.CreateBasicChatCommand();
             this.GameCompleteCommand = this.CreateBasicChatCommand("$gamebetwinningoption was the winning choice!");
 
-            this.Options.Add(new BetOutcome("Win Match", this.CreateBasicChatCommand("We both won! Which mean you won $gamepayout " + currency.Name + "!", whisper: true), 200));
-            this.Options.Add(new BetOutcome("Lose Match", this.CreateBasicChatCommand("Well, I lose and you won $gamepayout " + currency.Name + ", so there's something at least...", whisper: true), 200));
+            this.Options.Add(new BetOutcome("Win Match", this.CreateBasicChatCommand(), 200));
+            this.Options.Add(new BetOutcome("Lose Match", this.CreateBasicChatCommand(), 200));
         }
 
         public BetGameEditorControlViewModel(BetGameCommand command)

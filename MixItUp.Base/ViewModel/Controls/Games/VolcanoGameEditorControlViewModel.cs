@@ -124,7 +124,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.PayoutCommand = this.CreateBasic2ChatCommand("As @$username drops their " + currency.Name + " into the Volcano, a loud eruption occurs and $gamepayout " + currency.Name + " land on top of them!",
                 "The Volcano is exploding out coins! Quick, type \"!volcano collect\" in chat in the next 30 seconds!");
 
-            this.CollectCommand = this.CreateBasicChatCommand("@$username after scavenging the aftermath, you walk away with $gamepayout " + currency.Name + "!", whisper: true);
+            this.CollectCommand = this.CreateBasicChatCommand("@$username walked away with $gamepayout " + currency.Name + "after scavenging the aftermath!");
         }
 
         public VolcanoGameEditorControlViewModel(VolcanoGameCommand command)
