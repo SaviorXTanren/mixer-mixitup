@@ -127,10 +127,16 @@ namespace MixItUp.Base.Services.Twitch
 
         public static DateTimeOffset GetTwitchDateTime(string dateTime)
         {
-            if (DateTime.TryParse(dateTime, out DateTime start))
+            if (!string.IsNullOrEmpty(dateTime))
             {
-                DateTimeOffset startUTC = new DateTimeOffset(start, TimeSpan.Zero);
-                return startUTC.ToLocalTime();
+                if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase) && DateTimeOffset.TryParse(dateTime, out DateTimeOffset startUTC))
+                {
+                    return startUTC.ToLocalTime();
+                }
+                else if (DateTime.TryParse(dateTime, out DateTime start))
+                {
+                    return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
+                }
             }
             return DateTimeOffset.MinValue;
         }
