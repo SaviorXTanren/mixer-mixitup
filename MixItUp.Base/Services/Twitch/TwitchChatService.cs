@@ -113,8 +113,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<string> initialUserLogins = new List<string>();
 
-        private bool streamStartDetected = false;
-
         public TwitchChatService() { }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }

@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services
         string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false);
 
         bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null);
-        Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false);
+        Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false);
     }
 
     public class ModerationService : IModerationService
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Services
                     {
                         if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                         {
-                            return "Banned Word";
+                            return "The previous message was deleted due to a filtered word";
                         }
                     }
                 }
@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
                 {
                     if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                     {
-                        return "The following word is not allowed: " + word;
+                        return "The previous message was deleted due to a filtered word";
                     }
                 }
 
@@ -144,7 +144,7 @@ namespace MixItUp.Base.Services
                     if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                     {
                         await ChannelSession.Services.Chat.BanUser(user);
-                        return "The following word is banned: " + word;
+                        return "The previous message was deleted due to a banned Word";
                     }
                 }
             }
@@ -308,7 +308,7 @@ namespace MixItUp.Base.Services
             return true;
         }
 
-        public async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
+        public async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false)
         {
             if (user != null)
             {
@@ -360,11 +360,7 @@ namespace MixItUp.Base.Services
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
-                }
-                else if (isInteractive)
-                {
-                    await ChannelSession.Services.Chat.Whisper(user, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format("Your message has been deleted because only {0} can participate currently.", reason));
                 }
             }
         }

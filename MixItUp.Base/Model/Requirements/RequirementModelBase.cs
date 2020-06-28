@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (ChannelSession.Services.Chat != null)
             {
-                await ChannelSession.Services.Chat.Whisper(user, message);
+                await ChannelSession.Services.Chat.SendMessage(message);
             }
         }
     }

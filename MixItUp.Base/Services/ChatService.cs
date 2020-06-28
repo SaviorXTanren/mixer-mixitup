@@ -38,8 +38,8 @@ namespace MixItUp.Base.Services
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
         Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All);
-        Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false, bool forceWhisper = false);
-        Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false, bool forceWhisper = false);
+        Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false);
+        Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
 
         Task DeleteMessage(ChatMessageViewModel message);
         Task ClearMessages();
@@ -158,27 +158,20 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false, bool forceWhisper = false)
+        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false)
         {
             if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
-                if (forceWhisper)
-                {
-                    await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
-                }
-                else
-                {
-                    await this.SendMessage(message, sendAsStreamer);
-                }
+                await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
             }
         }
 
-        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false, bool forceWhisper = false)
+        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user != null)
             {
-                await this.Whisper(user, message, sendAsStreamer, waitForResponse, forceWhisper);
+                await this.Whisper(user, message, sendAsStreamer);
             }
         }
 
@@ -350,7 +343,7 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.WhisperAllAlerts)
                 {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
+                    await ChannelSession.Services.Chat.SendMessage(message.PlainTextMessage, false);
                 }
                 GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
             }
@@ -366,7 +359,7 @@ namespace MixItUp.Base.Services
                     // Don't send this if it's in response to another "You are whisperer #" message
                     if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false, forceWhisper: true);
+                        await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
                     }
                 }
                 else

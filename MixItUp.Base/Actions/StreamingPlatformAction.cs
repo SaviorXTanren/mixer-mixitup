@@ -92,11 +92,11 @@ namespace MixItUp.Base.Actions
                 AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchChannelNewAPI, 60);
                 if (response == null)
                 {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "ERROR: We were unable to run an ad, please try again later");
+                    await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
                 }
                 else if (!string.IsNullOrEmpty(response.message))
                 {
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "ERROR: " + response.message);
+                    await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
                 }
             }
         }

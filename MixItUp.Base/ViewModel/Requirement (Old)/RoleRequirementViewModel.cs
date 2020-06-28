@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (ChannelSession.Services.Chat != null)
             {
                 string role = EnumLocalizationHelper.GetLocalizedName(this.MixerRole);
-                await ChannelSession.Services.Chat.Whisper(user, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
             }
         }
     }

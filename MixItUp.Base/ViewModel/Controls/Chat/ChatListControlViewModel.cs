@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                         username = username.Trim();
                         username = username.Replace("@", "");
 
-                        await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer, waitForResponse: true, forceWhisper: true);
+                        await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer);
                     }
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {
