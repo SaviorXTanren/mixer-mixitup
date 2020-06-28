@@ -9,13 +9,14 @@
 
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v0.5.6.1009:</h2>
+        <h2 style="color: #2e6c80;">v0.5.6.1009-1010:</h2>
         <ul>
             <li>Re-adding service alert notifications for Twitch service incidents</li>
             <li>Adjusting logic for detecting Twitch Channel Stream Start event to increase accuracy. As a result of this judgement, the event now has up to a 1 minute delay on triggering</li>
             <li>Removing Twitch Channel Stream Stop event command until an accurate way of determining it can be discovered</li>
             <li>The follow &amp; unfollow buttons on the Chat User pop-up dialog have been re-enabled</li>
             <li>Newly created Game sub-command have now been adjusted to remove all chat whispers with the exception of the Treasure Defense game. If a game-sub command only contained a whisper chat action, the command will now be an empty command that can be optionally used</li>
+            <li>Fixing bug that prevented games &amp; other specialized commands from not running</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
