@@ -745,44 +745,6 @@ namespace MixItUp.Base.Services.Twitch
                         }
                     }
                 }
-                else if (packet.Command.Equals("HOSTTARGET"))
-                {
-                    string[] splits = packet.Get1SkippedParameterText.Split(new char[] { ' ' });
-                    if (splits.Length > 0)
-                    {
-                        bool isUnhost = splits[0].Equals("-");
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(30000);
-
-                            StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
-
-                            EventTrigger trigger = null;
-                            if (isUnhost)
-                            {
-                                if (stream != null && stream.id > 0 && !stream.is_playlist)
-                                {
-                                    this.streamStartDetected = true;
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
-                                }
-                            }
-                            else if (this.streamStartDetected)
-                            {
-                                if (stream == null || stream.id == 0)
-                                {
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, ChannelSession.GetCurrentUser());
-                                }
-                            }
-
-                            if (trigger != null && ChannelSession.Services.Events.CanPerformEvent(trigger))
-                            {
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
-                            }
-                        });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
-                }
             }
         }
 

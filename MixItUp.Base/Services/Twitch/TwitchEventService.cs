@@ -20,8 +20,12 @@ namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchEventService
     {
+        bool IsConnected { get; }
+
         Task<Result> Connect();
         Task Disconnect();
+
+        Task CheckForStreamStart();
     }
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
@@ -54,12 +58,17 @@ namespace MixItUp.Base.Services.Twitch
 
         private HashSet<string> follows = new HashSet<string>();
 
+        private DateTimeOffset streamStartCheckTime = DateTimeOffset.Now;
+
         public override string Name { get { return "Twitch Events"; } }
+
+        public bool IsConnected { get; private set; }
 
         public TwitchEventService() { }
 
         public async Task<Result> Connect()
         {
+            this.IsConnected = false;
             if (ChannelSession.TwitchUserConnection != null)
             {
                 return await this.AttemptConnect(async () =>
@@ -113,6 +122,8 @@ namespace MixItUp.Base.Services.Twitch
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
 
+                        this.IsConnected = true;
+
                         return new Result();
                     }
                     catch (Exception ex)
@@ -162,7 +173,25 @@ namespace MixItUp.Base.Services.Twitch
             {
                 Logger.Log(ex);
             }
+            this.IsConnected = false;
             this.pubSub = null;
+        }
+
+        public async Task CheckForStreamStart()
+        {
+            if (streamStartCheckTime != DateTimeOffset.MaxValue)
+            {
+                DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                if (startTime != DateTimeOffset.MinValue && startTime > streamStartCheckTime)
+                {
+                    streamStartCheckTime = DateTimeOffset.MaxValue;
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
+                    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                    {
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+                }
+            }
         }
 
         private async Task FollowerBackground(CancellationToken cancellationToken)

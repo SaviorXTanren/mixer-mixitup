@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -242,10 +243,9 @@ namespace MixItUp.Base.Commands
     {
         public static Task<DateTimeOffset> GetStartTime()
         {
-            if (ChannelSession.TwitchStreamIsLive && DateTime.TryParse(ChannelSession.TwitchStreamV5.created_at, out DateTime start))
+            if (ChannelSession.TwitchStreamIsLive)
             {
-                DateTimeOffset startUTC = new DateTimeOffset(start, TimeSpan.Zero);
-                return Task.FromResult(startUTC.ToLocalTime());
+                return Task.FromResult(TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at));
             }
             return Task.FromResult(DateTimeOffset.MinValue);
         }

@@ -106,7 +106,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Clear();
 
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
             //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));

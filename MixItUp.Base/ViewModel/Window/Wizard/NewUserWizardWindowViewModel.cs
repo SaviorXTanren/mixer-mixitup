@@ -316,7 +316,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else if (this.FinalPageVisible)
                 {
-                    if (!await ChannelSession.InitializeSession(modChannelName: null))
+                    if (!await ChannelSession.InitializeSession())
                     {
                         await DialogHelper.ShowMessage("Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.");
                         return;

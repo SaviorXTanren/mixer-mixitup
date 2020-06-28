@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -802,18 +803,18 @@ namespace MixItUp.Base.ViewModel.User
         private async Task RefreshTwitchUserAccountDate()
         {
             TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
-            if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at) && DateTimeOffset.TryParse(twitchV5User.created_at, out DateTimeOffset createdDate))
+            if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at))
             {
-                this.AccountDate = createdDate;
+                this.AccountDate = TwitchPlatformService.GetTwitchDateTime(twitchV5User.created_at);
             }
         }
 
         private async Task RefreshTwitchUserFollowDate()
         {
             UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, this.GetTwitchNewAPIUserModel());
-            if (follow != null && !string.IsNullOrEmpty(follow.followed_at) && DateTimeOffset.TryParse(follow.followed_at, out DateTimeOffset followDate))
+            if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
             {
-                this.FollowDate = followDate;
+                this.FollowDate = TwitchPlatformService.GetTwitchDateTime(follow.followed_at);
             }
             else
             {
@@ -826,9 +827,9 @@ namespace MixItUp.Base.ViewModel.User
             if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
             {
                 TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, this.GetTwitchV5APIUserModel());
-                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at) && DateTimeOffset.TryParse(subscription.created_at, out DateTimeOffset subDate))
+                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
                 {
-                    this.SubscribeDate = subDate;
+                    this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
                 }
                 else
                 {

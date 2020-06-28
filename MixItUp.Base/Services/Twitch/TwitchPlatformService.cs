@@ -125,6 +125,16 @@ namespace MixItUp.Base.Services.Twitch
             return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
         }
 
+        public static DateTimeOffset GetTwitchDateTime(string dateTime)
+        {
+            if (DateTime.TryParse(dateTime, out DateTime start))
+            {
+                DateTimeOffset startUTC = new DateTimeOffset(start, TimeSpan.Zero);
+                return startUTC.ToLocalTime();
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         public TwitchConnection Connection { get; private set; }
 
         public override string Name { get { return "Twitch Connection"; } }
