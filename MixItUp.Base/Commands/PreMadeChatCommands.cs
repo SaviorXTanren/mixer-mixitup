@@ -242,9 +242,10 @@ namespace MixItUp.Base.Commands
     {
         public static Task<DateTimeOffset> GetStartTime()
         {
-            if (ChannelSession.TwitchStreamIsLive && DateTimeOffset.TryParse(ChannelSession.TwitchStreamV5.created_at, out DateTimeOffset start))
+            if (ChannelSession.TwitchStreamIsLive && DateTime.TryParse(ChannelSession.TwitchStreamV5.created_at, out DateTime start))
             {
-                return Task.FromResult(start.ToLocalTime());
+                DateTimeOffset startUTC = new DateTimeOffset(start, TimeSpan.Zero);
+                return Task.FromResult(startUTC.ToLocalTime());
             }
             return Task.FromResult(DateTimeOffset.MinValue);
         }
