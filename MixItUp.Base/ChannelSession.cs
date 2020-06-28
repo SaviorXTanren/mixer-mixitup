@@ -29,7 +29,6 @@ namespace MixItUp.Base
         public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
-        public static TwitchNewAPI.Users.UserModel TwitchChannelNewAPI { get; private set; }
 
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
 
@@ -272,15 +271,6 @@ namespace MixItUp.Base
                     ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
                 }
             }
-
-            if (ChannelSession.TwitchChannelNewAPI != null)
-            {
-                TwitchNewAPI.Users.UserModel twitchChannel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(ChannelSession.TwitchChannelNewAPI.login);
-                if (twitchChannel != null)
-                {
-                    ChannelSession.TwitchChannelNewAPI = twitchChannel;
-                }
-            }
         }
 
         public static UserViewModel GetCurrentUser()
@@ -313,49 +303,31 @@ namespace MixItUp.Base
             GlobalEvents.ServiceReconnect(serviceName);
         }
 
-        public static async Task<bool> InitializeSession(string modChannelName = null)
+        public static async Task<bool> InitializeSession()
         {
             try
             {
-                bool isModerator = !string.IsNullOrEmpty(modChannelName);
-
-                TwitchNewAPI.Users.UserModel twitchChannelNew = null;
-                TwitchV5API.Channel.ChannelModel twitchChannelv5 = null;
-                if (!isModerator)
-                {
-                    twitchChannelNew = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
-                    twitchChannelv5 = await ChannelSession.TwitchUserConnection.GetCurrentV5APIChannel();
-                }
-                else
-                {
-                    twitchChannelNew = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(modChannelName);
-                    twitchChannelv5 = await ChannelSession.TwitchUserConnection.GetV5APIChannel(ChannelSession.TwitchChannelV5.id);
-                }
-
+                TwitchNewAPI.Users.UserModel twitchChannelNew = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
+                TwitchV5API.Channel.ChannelModel twitchChannelv5 = await ChannelSession.TwitchUserConnection.GetCurrentV5APIChannel();
                 if (twitchChannelNew != null && twitchChannelv5 != null)
                 {
                     try
                     {
-                        if (isModerator && twitchChannelNew.id == ChannelSession.TwitchUserNewAPI.id)
-                        {
-                            GlobalEvents.ShowMessageBox($"You are trying to sign in as a moderator to your own channel. Please use the Streamer login to access your channel.");
-                            return false;
-                        }
-
-                        ChannelSession.TwitchChannelNewAPI = twitchChannelNew;
+                        ChannelSession.TwitchUserNewAPI = twitchChannelNew;
                         ChannelSession.TwitchChannelV5 = twitchChannelv5;
+                        ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
 
                         if (ChannelSession.Settings == null)
                         {
                             IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
 
-                            if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id) && s.IsStreamer == !isModerator))
+                            if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id)))
                             {
                                 GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.display_name}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                                 return false;
                             }
 
-                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name, modChannelName == null);
+                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name, isStreamer: true);
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
@@ -369,10 +341,10 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        ChannelSession.Settings.Name = ChannelSession.TwitchChannelNewAPI.display_name;
+                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
 
                         ChannelSession.Settings.TwitchUserID = ChannelSession.TwitchUserNewAPI.id;
-                        ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchChannelNewAPI.id;
+                        ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchUserNewAPI.id;
                     }
                     catch (Exception ex)
                     {
@@ -588,7 +560,7 @@ namespace MixItUp.Base
                             }
                         }
 
-                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ChannelSession.TwitchChannelNewAPI?.broadcaster_type);
+                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ChannelSession.TwitchUserNewAPI?.broadcaster_type);
 
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
@@ -641,6 +613,11 @@ namespace MixItUp.Base
                 await ChannelSession.RefreshUser();
 
                 await ChannelSession.RefreshChannel();
+
+                if (ChannelSession.Services.Events.TwitchEventService != null && ChannelSession.Services.Events.TwitchEventService.IsConnected)
+                {
+                    await ChannelSession.Services.Events.TwitchEventService.CheckForStreamStart();
+                }
 
                 if (sessionBackgroundTimer >= 5)
                 {

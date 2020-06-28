@@ -60,12 +60,12 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Treasure Defense with a $gamebet " + currency.Name + " entry fee! Type !treasure to join in!");
 
-            this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in to the defense of the treasure! Let's see what role you're assigned...", whisper: true);
+            this.UserJoinCommand = this.CreateBasicChatCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
-            this.KnightUserCommand = this.CreateBasicChatCommand("You've been selected as a Knight; convince the King to pick you so can protect the treasure!", whisper: true);
+            this.KnightUserCommand = this.CreateBasicChatCommand();
             this.ThiefUserCommand = this.CreateBasicChatCommand("You've been selected as a Thief; convince the King you are a Knight so you can steal the treasure!", whisper: true);
-            this.KingUserCommand = this.CreateBasicChatCommand("King @$username has discovered the treasure! They must type \"!treasure <PLAYER>\" in chat to pick who will defend the treasure");
+            this.KingUserCommand = this.CreateBasicChatCommand("King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type \"!treasure <PLAYER>\" in chat to pick who will defend the treasure!");
 
             this.KnightSelectedCommand = this.CreateBasicChatCommand("King @$username picked @$targetusername to defend the treasure...and they were a Knight! They defended the treasure, giving the King & Knights $gamepayout " + currency.Name + " each!");
             this.ThiefSelectedCommand = this.CreateBasicChatCommand("King @$username picked @$targetusername to defend the treasure...and they were a Thief! They stole the treasure, giving all Thieves $gamepayout " + currency.Name + " each!");

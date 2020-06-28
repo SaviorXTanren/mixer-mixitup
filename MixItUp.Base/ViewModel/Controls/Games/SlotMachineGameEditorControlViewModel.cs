@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public SlotMachineGameEditorControlViewModel(CurrencyModel currency)
             : this()
         {
-            this.FailureOutcomeCommand = this.CreateBasicChatCommand("Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...", whisper: true);
+            this.FailureOutcomeCommand = this.CreateBasicChatCommand("Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...");
 
             this.Outcomes.Add(new SlotMachineOutcome("O", "O", "O", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 200, 200, 200));
             this.Outcomes.Add(new SlotMachineOutcome("$", "O", "$", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 150, 150, 150, anyOrder: true));

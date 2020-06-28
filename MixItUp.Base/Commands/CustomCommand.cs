@@ -5,9 +5,11 @@ namespace MixItUp.Base.Commands
 {
     public class CustomCommand : CommandBase
     {
+        public static CustomCommand BasicChatCommand(string name) { return new CustomCommand(name); }
+
         public static CustomCommand BasicChatCommand(string name, string message, bool isWhisper = false)
         {
-            CustomCommand command = new CustomCommand(name);
+            CustomCommand command = CustomCommand.BasicChatCommand(name);
             command.Actions.Add(new ChatAction(message, isWhisper: isWhisper));
             return command;
         }

@@ -453,9 +453,9 @@ namespace MixItUp.Base.Util
                     {
                         this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ChannelSession.TwitchStreamV5.viewers.ToString());
                     }
-                    if (ChannelSession.TwitchChannelNewAPI != null)
+                    if (ChannelSession.TwitchUserNewAPI != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", ChannelSession.TwitchChannelNewAPI.view_count.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewertotal", ChannelSession.TwitchUserNewAPI.view_count.ToString());
                     }
                 }
 

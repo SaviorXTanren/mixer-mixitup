@@ -488,7 +488,7 @@ namespace MixItUp.Base.Services
                 else
                 {
                     CustomCommand buyCommand = new CustomCommand(InventoryWindowViewModel.ItemsBoughtCommandName);
-                    buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+                    buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
                     settings.SetCustomCommand(buyCommand);
                     newInventory.ItemsBoughtCommandID = buyCommand.ID;
                 }
@@ -501,7 +501,7 @@ namespace MixItUp.Base.Services
                 else
                 {
                     CustomCommand sellCommand = new CustomCommand(InventoryWindowViewModel.ItemsSoldCommandName);
-                    sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+                    sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
                     settings.SetCustomCommand(sellCommand);
                     newInventory.ItemsSoldCommandID = sellCommand.ID;
                 }

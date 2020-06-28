@@ -20,8 +20,12 @@ namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchEventService
     {
+        bool IsConnected { get; }
+
         Task<Result> Connect();
         Task Disconnect();
+
+        Task CheckForStreamStart();
     }
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
@@ -54,15 +58,20 @@ namespace MixItUp.Base.Services.Twitch
 
         private HashSet<string> follows = new HashSet<string>();
 
+        private DateTimeOffset streamStartCheckTime = DateTimeOffset.Now;
+
         public override string Name { get { return "Twitch Events"; } }
+
+        public bool IsConnected { get; private set; }
 
         public TwitchEventService() { }
 
         public async Task<Result> Connect()
         {
+            this.IsConnected = false;
             if (ChannelSession.TwitchUserConnection != null)
             {
-                return await this.AttemptConnect(async () =>
+                return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
@@ -93,7 +102,7 @@ namespace MixItUp.Base.Services.Twitch
                         List<PubSubListenTopicModel> topics = new List<PubSubListenTopicModel>();
                         foreach (PubSubTopicsEnum topic in TwitchEventService.topicTypes)
                         {
-                            topics.Add(new PubSubListenTopicModel(topic, ChannelSession.TwitchUserNewAPI.id));
+                            topics.Add(new PubSubListenTopicModel(topic, (string)ChannelSession.TwitchUserNewAPI.id));
                         }
 
                         await this.pubSub.Listen(topics);
@@ -105,13 +114,15 @@ namespace MixItUp.Base.Services.Twitch
                         this.cancellationTokenSource = new CancellationTokenSource();
 
                         follows.Clear();
-                        IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchChannelNewAPI, maxResult: 100);
+                        IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers((UserModel)ChannelSession.TwitchUserNewAPI, maxResult: 100);
                         foreach (UserFollowModel follow in followers)
                         {
                             follows.Add(follow.from_id);
                         }
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
+
+                        this.IsConnected = true;
 
                         return new Result();
                     }
@@ -120,7 +131,7 @@ namespace MixItUp.Base.Services.Twitch
                         Logger.Log(ex);
                         return new Result(ex);
                     }
-                });
+                }));
             }
             return new Result("Twitch connection has not been established");
         }
@@ -162,14 +173,32 @@ namespace MixItUp.Base.Services.Twitch
             {
                 Logger.Log(ex);
             }
+            this.IsConnected = false;
             this.pubSub = null;
+        }
+
+        public async Task CheckForStreamStart()
+        {
+            if (streamStartCheckTime != DateTimeOffset.MaxValue)
+            {
+                DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                if (startTime != DateTimeOffset.MinValue && startTime > streamStartCheckTime)
+                {
+                    streamStartCheckTime = DateTimeOffset.MaxValue;
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
+                    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                    {
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+                }
+            }
         }
 
         private async Task FollowerBackground(CancellationToken cancellationToken)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                foreach (UserFollowModel follow in await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchChannelNewAPI, maxResult: 100))
+                foreach (UserFollowModel follow in await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100))
                 {
                     if (!follows.Contains(follow.from_id))
                     {

@@ -169,7 +169,7 @@ namespace MixItUp.Base.Commands
 
         public Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            if (this.IsEnabled)
+            if (this.IsEnabled && this.Actions.Count > 0)
             {
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this.Name}");
 

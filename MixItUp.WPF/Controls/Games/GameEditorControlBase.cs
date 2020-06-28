@@ -26,10 +26,10 @@ namespace MixItUp.WPF.Controls.Games
             }
         }
 
-        protected CustomCommand CreateBasicChatCommand(string message, bool whisper = false)
+        protected CustomCommand CreateBasicChatCommand(string message)
         {
             CustomCommand command = new CustomCommand("Game Sub-Command");
-            command.Actions.Add(new ChatAction(message, sendAsStreamer: false, isWhisper: whisper));
+            command.Actions.Add(new ChatAction(message, sendAsStreamer: false));
             return command;
         }
 

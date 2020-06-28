@@ -50,22 +50,24 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
-            username = username.ToLower().Replace("@", "");
             UserViewModel user = null;
-
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
+            if (!string.IsNullOrEmpty(username))
             {
-                if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
+                username = username.ToLower().Replace("@", "");
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
                 {
-                    return user;
+                    if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
+                    {
+                        return user;
+                    }
                 }
             }
-            return null;
+            return user;
         }
 
         public UserViewModel GetUserByTwitchID(string id)
         {
-            if (this.usersByTwitchID.TryGetValue(id, out UserViewModel user))
+            if (!string.IsNullOrEmpty(id) && this.usersByTwitchID.TryGetValue(id, out UserViewModel user))
             {
                 return user;
             }
@@ -123,7 +125,7 @@ namespace MixItUp.Base.Services
 
         public async Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin)
         {
-            if (this.usersByTwitchLogin.TryGetValue(twitchLogin, out UserViewModel user))
+            if (!string.IsNullOrEmpty(twitchLogin) && this.usersByTwitchLogin.TryGetValue(twitchLogin, out UserViewModel user))
             {
                 await this.RemoveUser(user);
                 return user;

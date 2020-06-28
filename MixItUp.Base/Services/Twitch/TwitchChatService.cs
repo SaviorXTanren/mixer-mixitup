@@ -113,8 +113,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<string> initialUserLogins = new List<string>();
 
-        private bool streamStartDetected = false;
-
         public TwitchChatService() { }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
@@ -126,7 +124,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (ChannelSession.TwitchUserConnection != null)
             {
-                return await this.AttemptConnect(async () =>
+                return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
@@ -161,7 +159,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.userClient.Join(ChannelSession.TwitchChannelNewAPI);
+                        await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
 
@@ -174,7 +172,7 @@ namespace MixItUp.Base.Services.Twitch
                         Logger.Log(ex);
                         return new Result(ex);
                     }
-                });
+                }));
             }
             return new Result("Twitch connection has not been established");
         }
@@ -217,7 +215,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (ChannelSession.TwitchUserConnection != null)
             {
-                return await this.AttemptConnect(async () =>
+                return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
@@ -242,7 +240,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.botClient.Join(ChannelSession.TwitchChannelNewAPI);
+                        await this.botClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
                         await Task.Delay(3000);
 
@@ -253,7 +251,7 @@ namespace MixItUp.Base.Services.Twitch
                         Logger.Log(ex);
                         return new Result(ex);
                     }
-                });
+                }));
             }
             return new Result("Twitch connection has not been established");
         }
@@ -295,13 +293,13 @@ namespace MixItUp.Base.Services.Twitch
 
             Task<IEnumerable<ChatBadgeSetModel>> globalChatBadges = ChannelSession.TwitchUserConnection.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadges);
-            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadges = ChannelSession.TwitchUserConnection.GetChannelChatBadges(ChannelSession.TwitchChannelNewAPI);
+            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadges = ChannelSession.TwitchUserConnection.GetChannelChatBadges(ChannelSession.TwitchUserNewAPI);
             initializationTasks.Add(channelChatBadges);
 
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
                 initializationTasks.Add(this.DownloadBetterTTVEmotes());
-                initializationTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchChannelNewAPI.login));
+                initializationTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchUserNewAPI.login));
             }
 
             await Task.WhenAll(initializationTasks);
@@ -329,14 +327,14 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 message = this.SplitLargeMessage(message, out string subMessage);
 
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
-                    await client.SendMessage(ChannelSession.TwitchChannelNewAPI, message);
+                    await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
                 }
 
                 if (!string.IsNullOrEmpty(subMessage))
@@ -346,19 +344,19 @@ namespace MixItUp.Base.Services.Twitch
 
                     await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
                 }
-            });
+            }));
         }
 
         public async Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 message = this.SplitLargeMessage(message, out string subMessage);
 
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
-                    await client.SendWhisperMessage(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                    await client.SendWhisperMessage((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), message);
                 }
 
                 if (!string.IsNullOrEmpty(subMessage))
@@ -368,103 +366,103 @@ namespace MixItUp.Base.Services.Twitch
 
                     await this.SendWhisperMessage(user, subMessage, sendAsStreamer: sendAsStreamer);
                 }
-            });
+            }));
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.DeleteMessage(ChannelSession.TwitchChannelNewAPI, message.ID);
+                    await client.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
                 }
-            });
+            }));
         }
 
         public async Task ClearMessages()
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.ClearChat(ChannelSession.TwitchChannelNewAPI);
+                    await client.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
                 }
-            });
+            }));
         }
 
         public async Task ModUser(UserViewModel user)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.ModUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                    await client.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            });
+            }));
         }
 
         public async Task UnmodUser(UserViewModel user)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.UnmodUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                    await client.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            });
+            }));
         }
 
         public async Task TimeoutUser(UserViewModel user, int lengthInSeconds)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.TimeoutUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
+                    await client.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
                 }
-            });
+            }));
         }
 
         public async Task BanUser(UserViewModel user)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.BanUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                    await client.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            });
+            }));
         }
 
         public async Task UnbanUser(UserViewModel user)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.UnbanUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                    await client.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            });
+            }));
         }
 
         public async Task RunCommercial(int lengthInSeconds)
         {
-            await this.RunAsync(async () =>
+            await this.RunAsync((Func<Task>)(async () =>
             {
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.RunCommercial(ChannelSession.TwitchChannelNewAPI, lengthInSeconds);
+                    await client.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
                 }
-            });
+            }));
         }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
@@ -743,44 +741,6 @@ namespace MixItUp.Base.Services.Twitch
 
                             await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, viewerCount));
                         }
-                    }
-                }
-                else if (packet.Command.Equals("HOSTTARGET"))
-                {
-                    string[] splits = packet.Get1SkippedParameterText.Split(new char[] { ' ' });
-                    if (splits.Length > 0)
-                    {
-                        bool isUnhost = splits[0].Equals("-");
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(30000);
-
-                            StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
-
-                            EventTrigger trigger = null;
-                            if (isUnhost)
-                            {
-                                if (stream != null && stream.id > 0 && !stream.is_playlist)
-                                {
-                                    this.streamStartDetected = true;
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
-                                }
-                            }
-                            else if (this.streamStartDetected)
-                            {
-                                if (stream == null || stream.id == 0)
-                                {
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, ChannelSession.GetCurrentUser());
-                                }
-                            }
-
-                            if (trigger != null && ChannelSession.Services.Events.CanPerformEvent(trigger))
-                            {
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
-                            }
-                        });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Twitch;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -48,6 +49,8 @@ namespace MixItUp.Base.Services
         public IIFTTTService IFTTT { get; protected set; }
         public IStreamlootsService Streamloots { get; protected set; }
         public IJustGivingService JustGiving { get; protected set; }
+
+        public TwitchStatusService TwitchStatus { get; protected set; }
 
         public abstract void SetSecrets(SecretsService secretsService);
 

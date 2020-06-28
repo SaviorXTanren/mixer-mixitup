@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 timeLeft = CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
-            await ChannelSession.Services.Chat.Whisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
+            await ChannelSession.Services.Chat.SendMessage(string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
         }
 
         public void UpdateCooldown(UserViewModel user)

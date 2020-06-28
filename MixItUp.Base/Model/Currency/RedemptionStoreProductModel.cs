@@ -98,7 +98,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
                 }
                 return;
             }
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
                     }
                     return;
                 }
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
                     }
                     return;
                 }
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.YouDoNotHavePermissions);
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions);
                 }
                 return;
             }
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
                 }
             }
         }

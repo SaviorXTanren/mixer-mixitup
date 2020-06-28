@@ -120,7 +120,7 @@ namespace MixItUp.Base.Services
 
         // Twitch = 200
 
-        [Name("Twitch Channel Stream Start")]
+        [Name("Twitch Channel Stream Start (1 Min Delay)")]
         TwitchChannelStreamStart = 200,
         [Name("Twitch Channel Stream Stop")]
         TwitchChannelStreamStop = 201,

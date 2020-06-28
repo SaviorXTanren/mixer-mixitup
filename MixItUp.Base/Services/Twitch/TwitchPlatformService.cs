@@ -125,6 +125,22 @@ namespace MixItUp.Base.Services.Twitch
             return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
         }
 
+        public static DateTimeOffset GetTwitchDateTime(string dateTime)
+        {
+            if (!string.IsNullOrEmpty(dateTime))
+            {
+                if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase) && DateTimeOffset.TryParse(dateTime, out DateTimeOffset startUTC))
+                {
+                    return startUTC.ToLocalTime();
+                }
+                else if (DateTime.TryParse(dateTime, out DateTime start))
+                {
+                    return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
+                }
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         public TwitchConnection Connection { get; private set; }
 
         public override string Name { get { return "Twitch Connection"; } }
@@ -188,6 +204,10 @@ namespace MixItUp.Base.Services.Twitch
             }
             return null;
         }
+
+        public async Task<bool> FollowUser(NewAPI.Users.UserModel channel, NewAPI.Users.UserModel user) { return await this.RunAsync(this.Connection.NewAPI.Users.FollowUser(channel, user)); }
+
+        public async Task<bool> UnfollowUser(NewAPI.Users.UserModel channel, NewAPI.Users.UserModel user) { return await this.RunAsync(this.Connection.NewAPI.Users.UnfollowUser(channel, user)); }
 
         public async Task<NewAPI.Games.GameModel> GetNewAPIGameByID(string id) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 

@@ -23,7 +23,6 @@ namespace MixItUp.WPF
         private bool updateFound = false;
 
         private ObservableCollection<SettingsV2Model> streamerSettings = new ObservableCollection<SettingsV2Model>();
-        private ObservableCollection<SettingsV2Model> moderatorSettings = new ObservableCollection<SettingsV2Model>();
 
         public LoginWindow()
         {
@@ -39,7 +38,6 @@ namespace MixItUp.WPF
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             this.ExistingStreamerComboBox.ItemsSource = streamerSettings;
-            this.ModeratorChannelComboBox.ItemsSource = moderatorSettings;
 
             await this.CheckForUpdates();
 
@@ -48,10 +46,6 @@ namespace MixItUp.WPF
                 if (setting.IsStreamer)
                 {
                     this.streamerSettings.Add(setting);
-                }
-                else
-                {
-                    this.moderatorSettings.Add(setting);
                 }
             }
 
@@ -65,16 +59,9 @@ namespace MixItUp.WPF
                 }
             }
 
-            if (this.moderatorSettings.Count == 1)
-            {
-                this.ModeratorChannelComboBox.SelectedIndex = 0;
-            }
-
             if (ChannelSession.AppSettings.AutoLogInID != Guid.Empty)
             {
                 var allSettings = this.streamerSettings.ToList();
-                allSettings.AddRange(this.moderatorSettings);
-
                 SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.ID == ChannelSession.AppSettings.AutoLogInID);
                 if (autoLogInSettings != null)
                 {
@@ -150,58 +137,6 @@ namespace MixItUp.WPF
             });
         }
 
-        private void ModeratorChannelComboBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                this.ModeratorLoginButton_Click(this, new RoutedEventArgs());
-            }
-        }
-
-        private async void ModeratorLoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                if (string.IsNullOrEmpty(this.ModeratorChannelComboBox.Text))
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoChannelName);
-                    return;
-                }
-
-                if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
-                {
-                    SettingsV2Model setting = (SettingsV2Model)this.ModeratorChannelComboBox.SelectedItem;
-                    if (!await this.ExistingSettingLogin(setting))
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (!await this.ShowLicenseAgreement())
-                    {
-                        return;
-                    }
-
-                    Result result = await ChannelSession.ConnectTwitchUser(isStreamer: false);
-                    if (!result.Success)
-                    {
-                        await DialogHelper.ShowMessage(result.Message);
-                        return;
-                    }
-
-                    if (!await ChannelSession.InitializeSession(this.ModeratorChannelComboBox.Text))
-                    {
-                        return;
-                    }
-                }
-
-                ShowMainWindow(new MainWindow());
-                this.Hide();
-                this.Close();
-            });
-        }
-
         private async Task CheckForUpdates()
         {
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
@@ -239,7 +174,7 @@ namespace MixItUp.WPF
             Result result = await ChannelSession.ConnectUser(setting);
             if (result.Success)
             {
-                if (await ChannelSession.InitializeSession(setting.IsStreamer ? null : setting.Name))
+                if (await ChannelSession.InitializeSession())
                 {
                     return true;
                 }

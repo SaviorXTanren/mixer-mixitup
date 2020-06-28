@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services.DeveloperAPI;
 using System.Threading.Tasks;
@@ -53,6 +54,8 @@ namespace MixItUp.WPF.Services
             this.OBSStudio = new WindowsOBSService();
             this.StreamlabsOBS = new StreamlabsOBSService();
             this.XSplit = new XSplitService("http://localhost:8211/");
+
+            this.TwitchStatus = new TwitchStatusService();
 
             this.Settings.Initialize();
             FileSerializerHelper.Initialize(this.FileService);

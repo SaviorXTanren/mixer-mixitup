@@ -98,11 +98,11 @@ namespace MixItUp.Base.ViewModel.Requirement
                 InventoryModel inventory = this.GetInventory();
                 if (inventory != null && inventory.ItemExists(this.ItemID))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} items to do this", this.Amount));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} items to do this", this.Amount));
                 }
             }
         }

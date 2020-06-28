@@ -69,26 +69,30 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user)
         {
-            TimeSpan timeLeft = new TimeSpan(0, 0, 1);
+            TimeSpan timeLeft = new TimeSpan(0, 0, -1);
             if (this.Type == CooldownTypeEnum.Individual)
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.Amount) - DateTimeOffset.Now;
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.Amount) - DateTimeOffset.Now;
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
                 if (CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
                 {
                     timeLeft = CooldownRequirementModel.groupCooldowns[this.GroupName].AddSeconds(this.Amount) - DateTimeOffset.Now;
                 }
             }
-
-            if (timeLeft.TotalSeconds >= 0)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                await this.SendChatWhisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", (int)Math.Ceiling(timeLeft.TotalSeconds)));
+                if (this.individualCooldowns.ContainsKey(user.ID))
+                {
+                    timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.Amount) - DateTimeOffset.Now;
+                }
+            }
+
+            int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
+            if (totalSeconds > 0)
+            {
+                await this.SendChatWhisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", totalSeconds));
                 return false;
             }
             return true;
@@ -102,11 +106,11 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
+                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
+                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
             }
             return Task.FromResult(0);
         }
@@ -119,11 +123,11 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.MinValue;
+                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+                this.individualCooldowns[user.ID] = DateTimeOffset.MinValue;
             }
             return Task.FromResult(0);
         }
@@ -131,8 +135,8 @@ namespace MixItUp.Base.Model.Requirements
         public override void Reset()
         {
             this.globalCooldown = DateTimeOffset.MinValue;
-            this.individualCooldowns.Clear();
             CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+            this.individualCooldowns.Clear();
         }
     }
 }

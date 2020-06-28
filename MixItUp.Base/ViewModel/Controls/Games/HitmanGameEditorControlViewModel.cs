@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hitman! Type !hitman in chat to play!");
 
-            this.UserJoinCommand = this.CreateBasicChatCommand("You assemble with everyone else, patiently waiting for the hitman to appear...", whisper: true);
+            this.UserJoinCommand = this.CreateBasicChatCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
             this.HitmanApproachingCommand = this.CreateBasicChatCommand("You can feel the presence of the hitman approaching. Get ready...");
