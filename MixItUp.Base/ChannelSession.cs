@@ -29,7 +29,6 @@ namespace MixItUp.Base
         public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
-        public static TwitchNewAPI.Users.UserModel TwitchChannelNewAPI { get; private set; }
 
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
 
@@ -272,15 +271,6 @@ namespace MixItUp.Base
                     ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
                 }
             }
-
-            if (ChannelSession.TwitchChannelNewAPI != null)
-            {
-                TwitchNewAPI.Users.UserModel twitchChannel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(ChannelSession.TwitchChannelNewAPI.login);
-                if (twitchChannel != null)
-                {
-                    ChannelSession.TwitchChannelNewAPI = twitchChannel;
-                }
-            }
         }
 
         public static UserViewModel GetCurrentUser()
@@ -323,7 +313,7 @@ namespace MixItUp.Base
                 {
                     try
                     {
-                        ChannelSession.TwitchChannelNewAPI = twitchChannelNew;
+                        ChannelSession.TwitchUserNewAPI = twitchChannelNew;
                         ChannelSession.TwitchChannelV5 = twitchChannelv5;
                         ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
 
@@ -351,10 +341,10 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        ChannelSession.Settings.Name = ChannelSession.TwitchChannelNewAPI.display_name;
+                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
 
                         ChannelSession.Settings.TwitchUserID = ChannelSession.TwitchUserNewAPI.id;
-                        ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchChannelNewAPI.id;
+                        ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchUserNewAPI.id;
                     }
                     catch (Exception ex)
                     {
@@ -570,7 +560,7 @@ namespace MixItUp.Base
                             }
                         }
 
-                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ChannelSession.TwitchChannelNewAPI?.broadcaster_type);
+                        ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ChannelSession.TwitchUserNewAPI?.broadcaster_type);
 
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);

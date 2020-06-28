@@ -793,7 +793,7 @@ namespace MixItUp.Base.ViewModel.User
         private void SetTwitchRoles()
         {
             this.TwitchUserRoles.Add(UserRoleEnum.User);
-            if (ChannelSession.TwitchChannelNewAPI != null && ChannelSession.TwitchChannelNewAPI.id.Equals(this.TwitchID))
+            if (ChannelSession.TwitchUserNewAPI != null && ChannelSession.TwitchUserNewAPI.id.Equals(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
@@ -811,7 +811,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserFollowDate()
         {
-            UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, this.GetTwitchNewAPIUserModel());
+            UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchUserNewAPI, this.GetTwitchNewAPIUserModel());
             if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
             {
                 this.FollowDate = TwitchPlatformService.GetTwitchDateTime(follow.followed_at);

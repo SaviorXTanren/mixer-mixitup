@@ -39,7 +39,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchChannelNewAPI, this.IncludeDelay);
+            ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.IncludeDelay);
             if (clipCreation != null)
             {
                 for (int i = 0; i < 12; i++)

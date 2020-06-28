@@ -89,7 +89,7 @@ namespace MixItUp.Base.Actions
             }
             else if (this.ActionType == StreamingPlatformActionType.RunAd)
             {
-                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchChannelNewAPI, 60);
+                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, 60);
                 if (response == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
