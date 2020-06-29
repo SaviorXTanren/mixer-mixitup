@@ -63,8 +63,8 @@ namespace MixItUp.Base.Util
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
         public const string LatestFollowerUserData = "latestfollower";
-        public const string LatestHostUserData = "latesthost";
-        public const string LatestHostViewerCountData = "latesthostviewercount";
+        public const string LatestRaidUserData = "latestraid";
+        public const string LatestRaidViewerCountData = "latestraidviewercount";
         public const string LatestSubscriberUserData = "latestsubscriber";
         public const string LatestSubscriberSubMonthsData = "latestsubscribersubmonths";
         public const string LatestBitsCheerUserData = "latestbitscheer";
@@ -558,7 +558,7 @@ namespace MixItUp.Base.Util
             }
 
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
-            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestHostUserData, SpecialIdentifierStringBuilder.LatestHostViewerCountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestRaidUserData, SpecialIdentifierStringBuilder.LatestRaidViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsCheerUserData, SpecialIdentifierStringBuilder.LatestBitsCheerAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
