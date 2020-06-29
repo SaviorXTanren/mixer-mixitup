@@ -42,6 +42,7 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.chat__edit,
             OAuthClientScopeEnum.chat__read,
             OAuthClientScopeEnum.user__edit,
+            OAuthClientScopeEnum.user__edit__broadcast,
             OAuthClientScopeEnum.whispers__read,
             OAuthClientScopeEnum.whispers__edit,
         };
@@ -212,6 +213,18 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<NewAPI.Games.GameModel> GetNewAPIGameByID(string id) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 
         public async Task<IEnumerable<NewAPI.Games.GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }
+
+        public async Task<NewAPI.Channels.ChannelInformationModel> GetChannelInformation(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Channels.GetChannelInformation(channel)); }
+
+        public async Task<bool> UpdateChannelInformation(NewAPI.Users.UserModel channel, string title = null, string gameID = null) { return await this.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title, gameID)); }
+
+        public async Task<IEnumerable<NewAPI.Tags.TagModel>> GetStreamTags() { return await this.RunAsync(this.Connection.NewAPI.Tags.GetStreamTags(int.MaxValue)); }
+
+        public async Task<IEnumerable<NewAPI.Tags.TagModel>> GetStreamTagsForChannel(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Tags.GetStreamTagsForBroadcaster(channel)); }
+
+        public async Task<bool> UpdateStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await this.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
+
+        public async Task<bool> GetStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await this.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 
         public async Task<NewAPI.Ads.AdResponseModel> RunAd(NewAPI.Users.UserModel channel, int length) { return await this.RunAsync(this.Connection.NewAPI.Ads.RunAd(channel, length)); }
 

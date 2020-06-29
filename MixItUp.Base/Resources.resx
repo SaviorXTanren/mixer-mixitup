@@ -2985,4 +2985,7 @@
   <data name="BitsCheered" xml:space="preserve">
     <value>Bits Cheered</value>
   </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
 </root>

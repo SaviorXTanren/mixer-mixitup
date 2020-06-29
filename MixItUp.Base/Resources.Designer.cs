@@ -7261,6 +7261,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag.
+        /// </summary>
+        public static string Tag {
+            get {
+                return ResourceManager.GetString("Tag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tagged In Chat.
         /// </summary>
         public static string TaggedInChat {
