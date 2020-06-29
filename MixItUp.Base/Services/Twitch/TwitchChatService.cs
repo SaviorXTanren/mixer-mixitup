@@ -373,10 +373,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
+                    await this.userClient.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
                 }
             }));
         }
@@ -385,10 +384,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
+                    await this.userClient.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
                 }
             }));
         }
@@ -397,10 +395,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             }));
         }
@@ -409,10 +406,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             }));
         }
@@ -421,10 +417,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
+                    await this.userClient.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
                 }
             }));
         }
@@ -433,10 +428,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             }));
         }
@@ -445,10 +439,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             }));
         }
@@ -457,10 +450,9 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.RunAsync((Func<Task>)(async () =>
             {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
+                if (this.userClient != null)
                 {
-                    await client.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
+                    await this.userClient.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
                 }
             }));
         }
