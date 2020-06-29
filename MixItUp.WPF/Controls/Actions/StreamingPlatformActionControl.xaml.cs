@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using StreamingClient.Base.Util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,10 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.ActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingPlatformActionType>().OrderBy(s => s);
+
+            this.AdLengthComboBox.ItemsSource = new List<int>() { 30, 60, 90, 120, 150, 180 };
+            this.AdLengthComboBox.SelectedIndex = 0;
+
             if (this.action != null)
             {
                 this.ActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.ActionType);
@@ -28,6 +33,10 @@ namespace MixItUp.WPF.Controls.Actions
                 if (this.action.ActionType == StreamingPlatformActionType.Host || this.action.ActionType == StreamingPlatformActionType.Raid)
                 {
                     this.HostChannelNameTextBox.Text = this.action.HostChannelName;
+                }
+                else if (this.action.ActionType == StreamingPlatformActionType.RunAd)
+                {
+                    this.AdLengthComboBox.SelectedItem = this.action.AdLength;
                 }
             }
             return Task.FromResult(0);
@@ -47,7 +56,10 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (actionType == StreamingPlatformActionType.RunAd)
                 {
-                    return StreamingPlatformAction.CreateRunAdAction();
+                    if (this.AdLengthComboBox.SelectedIndex >= 0)
+                    {
+                        return StreamingPlatformAction.CreateRunAdAction((int)this.AdLengthComboBox.SelectedItem);
+                    }
                 }
             }
             return null;
@@ -57,11 +69,17 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.ActionTypeComboBox.SelectedIndex >= 0)
             {
-                this.HostGrid.Visibility = Visibility.Collapsed;
+                this.HostChannelNameTextBox.Visibility = Visibility.Collapsed;
+                this.AdLengthComboBox.Visibility = Visibility.Collapsed;
+
                 StreamingPlatformActionType actionType = EnumHelper.GetEnumValueFromString<StreamingPlatformActionType>((string)this.ActionTypeComboBox.SelectedItem);
                 if (actionType == StreamingPlatformActionType.Host || actionType == StreamingPlatformActionType.Raid)
                 {
-                    this.HostGrid.Visibility = Visibility.Visible;
+                    this.HostChannelNameTextBox.Visibility = Visibility.Visible;
+                }
+                else if (actionType == StreamingPlatformActionType.RunAd)
+                {
+                    this.AdLengthComboBox.Visibility = Visibility.Visible;
                 }
             }
         }

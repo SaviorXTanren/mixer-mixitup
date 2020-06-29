@@ -35,18 +35,10 @@ namespace MixItUp.Base.Actions
         public StreamingPlatformActionType ActionType { get; set; }
 
         [DataMember]
-        public string PollQuestion { get; set; }
-        [DataMember]
-        public List<string> PollAnswers { get; set; }
-        [DataMember]
-        public uint PollLength { get; set; }
-        [DataMember]
-        public Guid CommandID { get; set; }
-
-        [DataMember]
         public string HostChannelName { get; set; }
 
-        public CommandBase Command { get { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); } }
+        [DataMember]
+        public int AdLength { get; set; } = 60;
 
         public static StreamingPlatformAction CreateHostAction(string channelName)
         {
@@ -62,9 +54,11 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingPlatformAction CreateRunAdAction()
+        public static StreamingPlatformAction CreateRunAdAction(int length)
         {
-            return new StreamingPlatformAction(StreamingPlatformActionType.RunAd);
+            StreamingPlatformAction action = new StreamingPlatformAction(StreamingPlatformActionType.RunAd);
+            action.AdLength = length;
+            return action;
         }
 
         public StreamingPlatformAction() : base(ActionTypeEnum.StreamingPlatform) { }
@@ -89,7 +83,7 @@ namespace MixItUp.Base.Actions
             }
             else if (this.ActionType == StreamingPlatformActionType.RunAd)
             {
-                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, 60);
+                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
                 if (response == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
