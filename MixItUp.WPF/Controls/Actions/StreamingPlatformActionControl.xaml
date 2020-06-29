@@ -14,20 +14,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ComboBox x:Name="ActionTypeComboBox" SelectionChanged="ActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-        </Grid>
-
-        <Grid x:Name="HostGrid" Visibility="Collapsed" Grid.Row="2">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="HostChannelNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox x:Name="ActionTypeComboBox" SelectionChanged="ActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox Grid.Column="2" x:Name="HostChannelNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />
+
+            <ComboBox Grid.Column="2" x:Name="AdLengthComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSecs}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Visibility="Collapsed" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

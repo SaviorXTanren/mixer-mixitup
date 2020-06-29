@@ -16,6 +16,11 @@ namespace MixItUp.Base.Util
 
         public static string GetAge(this DateTimeOffset start, DateTimeOffset end, bool includeTime = false)
         {
+            if (start == DateTimeOffset.MinValue || start == DateTimeOffset.MaxValue || end == DateTimeOffset.MinValue || end == DateTimeOffset.MaxValue)
+            {
+                return "Unknown";
+            }
+
             DateTimeOffset valid = end;
             DateTimeOffset test = valid;
 

@@ -341,10 +341,6 @@ namespace MixItUp.Base.Services
 
             if (message is AlertChatMessageViewModel)
             {
-                if (ChannelSession.Settings.WhisperAllAlerts)
-                {
-                    await ChannelSession.Services.Chat.SendMessage(message.PlainTextMessage, false);
-                }
                 GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
             }
             else if (message is UserChatMessageViewModel)

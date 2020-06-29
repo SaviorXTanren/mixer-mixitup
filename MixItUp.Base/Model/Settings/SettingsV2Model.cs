@@ -142,8 +142,6 @@ namespace MixItUp.Base.Model.Settings
         public string ChatMixPlayAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
 
         [DataMember]
-        public bool WhisperAllAlerts { get; set; }
-        [DataMember]
         public bool OnlyShowAlertsInDashboard { get; set; }
         [DataMember]
         public bool LatestChatAtTop { get; set; }
