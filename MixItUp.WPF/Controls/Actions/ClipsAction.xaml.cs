@@ -16,6 +16,8 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            this.ShowClipInfoInChatToggleButton.IsChecked = true;
+
             if (this.action != null)
             {
                 this.IncludeDelayToggleButton.IsChecked = action.IncludeDelay;
