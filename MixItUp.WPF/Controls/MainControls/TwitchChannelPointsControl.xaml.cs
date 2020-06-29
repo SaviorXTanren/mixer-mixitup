@@ -9,13 +9,13 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
-    /// Interaction logic for TwitchChannelPointsMainControl.xaml
+    /// Interaction logic for TwitchChannelPointsControl.xaml
     /// </summary>
-    public partial class TwitchChannelPointsMainControl : MainControlBase
+    public partial class TwitchChannelPointsControl : MainControlBase
     {
         private TwitchChannelPointsMainControlViewModel viewModel;
 
-        public TwitchChannelPointsMainControl()
+        public TwitchChannelPointsControl()
         {
             InitializeComponent();
         }

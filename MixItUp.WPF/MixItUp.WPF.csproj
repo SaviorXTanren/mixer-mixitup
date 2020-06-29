@@ -613,8 +613,8 @@
     <Compile Include="Controls\MainControls\StreamPassControl.xaml.cs">
       <DependentUpon>StreamPassControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml.cs">
-      <DependentUpon>TwitchChannelPointsMainControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\TwitchChannelPointsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
       <DependentUpon>UsersControl.xaml</DependentUpon>
@@ -1349,7 +1349,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\TwitchChannelPointsMainControl.xaml">
+    <Page Include="Controls\MainControls\TwitchChannelPointsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
