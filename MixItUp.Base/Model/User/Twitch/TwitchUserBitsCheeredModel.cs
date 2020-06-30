@@ -22,12 +22,8 @@ namespace MixItUp.Base.Model.User.Twitch
             this.Amount = bitsEvent.bits_used;
             this.Message = !string.IsNullOrEmpty(bitsEvent.chat_message) ? bitsEvent.chat_message : string.Empty;
 
-            this.BitsCheermotes = new List<TwitchBitsCheermoteViewModel>(TwitchChatMessageViewModel.GetBitsCheermotesInMessage(this.Message));
-            foreach (TwitchBitsCheermoteViewModel bitsCheermote in this.BitsCheermotes)
-            {
-                this.Message = this.Message.Replace(bitsCheermote.ID, "");
-            }
-            this.Message = this.Message.Replace("  ", " ");
+            TwitchChatMessageViewModel chatMessage = new TwitchChatMessageViewModel(this.User, this.Message);
+            this.Message = chatMessage.TextOnlyMessageContents;
         }
     }
 }

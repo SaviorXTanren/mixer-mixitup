@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -80,6 +81,8 @@ namespace MixItUp.Base.ViewModel.Chat
                 return null;
             }
         }
+
+        public string TextOnlyMessageContents { get { return string.Join(" ", this.MessageParts.Where(p => p is string)); } }
 
         public virtual bool ContainsOnlyEmotes() { return false; }
 
