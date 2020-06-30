@@ -21,8 +21,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class MainWindow : LoadingWindowBase
     {
-        public string RestoredSettingsFilePath = null;
-
         private bool restartApplication = false;
 
         private bool shutdownStarted = false;
@@ -190,22 +188,7 @@ namespace MixItUp.WPF
                 this.ShuttingDownGrid.Visibility = Visibility.Visible;
                 this.MainMenu.Visibility = Visibility.Collapsed;
 
-                if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
-                {
-                    Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
-
-                    File.Delete(ChannelSession.Settings.SettingsFilePath);
-                    File.Delete(ChannelSession.Settings.DatabaseFilePath);
-
-                    using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
-                    {
-                        zipFile.ExtractToDirectory(SettingsV2Model.SettingsDirectoryName);
-                    }
-                }
-                else
-                {
-                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
-                }
+                await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
 
                 await ChannelSession.AppSettings.Save();
 

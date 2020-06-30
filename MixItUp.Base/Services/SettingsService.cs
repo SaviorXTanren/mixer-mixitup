@@ -106,6 +106,28 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            if (!string.IsNullOrEmpty(ChannelSession.AppSettings.BackupSettingsFilePath) && ChannelSession.AppSettings.BackupSettingsToReplace != Guid.Empty)
+            {
+                Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
+
+                SettingsV2Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
+                if (settings != null)
+                {
+                    File.Delete(settings.SettingsFilePath);
+                    File.Delete(settings.DatabaseFilePath);
+
+                    using (ZipArchive zipFile = ZipFile.Open(ChannelSession.AppSettings.BackupSettingsFilePath, ZipArchiveMode.Read))
+                    {
+                        zipFile.ExtractToDirectory(SettingsV2Model.SettingsDirectoryName);
+                    }
+
+                    ChannelSession.AppSettings.BackupSettingsFilePath = null;
+                    ChannelSession.AppSettings.BackupSettingsToReplace = Guid.Empty;
+
+                    return await this.GetAllSettings();
+                }
+            }
+
             if (backupSettingsLoaded)
             {
                 await DialogHelper.ShowMessage("One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.");
