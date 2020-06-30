@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Bits;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -14,6 +16,24 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             TwitchChatMessageViewModel result = new TwitchChatMessageViewModel(user);
             result.ProcessMessageContents(message);
             return result;
+        }
+
+        public static IEnumerable<TwitchBitsCheermoteViewModel> GetBitsCheermotesInMessage(string message)
+        {
+            HashSet<TwitchBitsCheermoteViewModel> bitsCheermotes = new HashSet<TwitchBitsCheermoteViewModel>();
+            if (!string.IsNullOrEmpty(message) && ChannelSession.Services.Events != null && ChannelSession.Services.Events.TwitchEventService != null)
+            {
+                foreach (TwitchBitsCheermoteViewModel bitsCheermote in ChannelSession.Services.Events.TwitchEventService.BitsCheermotes.OrderByDescending(c => c.ID))
+                {
+                    if (message.Contains(bitsCheermote.ID))
+                    {
+                        bitsCheermotes.Add(bitsCheermote);
+                        message = message.Replace(bitsCheermote.ID, "");
+                    }
+                }
+                message = message.Replace("  ", " ");
+            }
+            return bitsCheermotes;
         }
 
         private const char SOHCharacter = (char)1;

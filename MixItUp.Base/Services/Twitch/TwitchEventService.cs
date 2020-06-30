@@ -15,12 +15,15 @@ using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.PubSub;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchEventService
     {
+        IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
+
         bool IsConnected { get; }
 
         Task<Result> Connect();
@@ -52,6 +55,9 @@ namespace MixItUp.Base.Services.Twitch
             PubSubTopicsEnum.UserWhispers,
             PubSubTopicsEnum.ChannelPointsRedeemed
         };
+
+        public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
+        private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
 
         private PubSubClient pubSub;
 
@@ -113,6 +119,17 @@ namespace MixItUp.Base.Services.Twitch
                         await this.pubSub.Ping();
 
                         this.cancellationTokenSource = new CancellationTokenSource();
+
+                        foreach (BitsCheermoteModel bitsCheermote in await ChannelSession.TwitchUserConnection.GetBitsCheermotes(ChannelSession.TwitchUserNewAPI))
+                        {
+                            foreach (BitsCheermoteTierModel bitsCheermoteTier in bitsCheermote.tiers)
+                            {
+                                if (bitsCheermoteTier.can_cheer)
+                                {
+                                    this.bitsCheermotes.Add(new TwitchBitsCheermoteViewModel(bitsCheermote, bitsCheermoteTier));
+                                }
+                            }
+                        }
 
                         follows.Clear();
                         IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers((UserModel)ChannelSession.TwitchUserNewAPI, maxResult: 100);
