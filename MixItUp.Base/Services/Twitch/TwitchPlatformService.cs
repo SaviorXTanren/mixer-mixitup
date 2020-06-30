@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Twitch.Base;
 using Twitch.Base.Models.NewAPI.Games;
 using Twitch.Base.Models.V5.Channel;
+using Twitch.Base.Models.V5.Teams;
+using Twitch.Base.Services.V5API;
 using NewAPI = Twitch.Base.Models.NewAPI;
 using V5API = Twitch.Base.Models.V5;
 
@@ -183,6 +185,16 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel)); }
 
+        public async Task<IEnumerable<V5API.Streams.StreamModel>> GetV5ChannelStreams(IEnumerable<string> channelIDs, int maxResults) { return await this.RunAsync(this.Connection.V5API.Streams.GetStreams(channelIDs: channelIDs, streamType: StreamType.Live, maxResults: maxResults)); }
+
+        public async Task<IEnumerable<V5API.Streams.StreamModel>> GetV5FollowedStreams(int maxResults) { return await this.RunAsync(this.Connection.V5API.Streams.GetFollowedStreams(StreamType.Live, maxResults)); }
+
+        public async Task<IEnumerable<V5API.Streams.FeaturedStreamModel>> GetV5FeaturedStreams(int maxResults) { return await this.RunAsync(this.Connection.V5API.Streams.GetFeaturedStreams(maxResults)); }
+
+        public async Task<IEnumerable<V5API.Teams.TeamModel>> GetChannelTeams(ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelTeams(channel)); }
+
+        public async Task<TeamDetailsModel> GetTeamDetails(TeamModel team) { return await this.RunAsync(this.Connection.V5API.Teams.GetTeam(team)); }
+
         // New API Methods
 
         public async Task<NewAPI.Users.UserModel> GetNewAPICurrentUser() { return await this.RunAsync(this.Connection.NewAPI.Users.GetCurrentUser()); }
@@ -214,6 +226,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<NewAPI.Games.GameModel>> GetNewAPIGamesByName(string name) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByName(name)); }
 
+        public async Task<IEnumerable<NewAPI.Games.GameModel>> GetNewAPIGamesByIDs(IEnumerable<string> ids) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGamesByID(ids)); }
+
         public async Task<NewAPI.Channels.ChannelInformationModel> GetChannelInformation(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Channels.GetChannelInformation(channel)); }
 
         public async Task<bool> UpdateChannelInformation(NewAPI.Users.UserModel channel, string title = null, string gameID = null) { return await this.RunAsync(this.Connection.NewAPI.Channels.UpdateChannelInformation(channel, title, gameID)); }
@@ -225,6 +239,10 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<bool> UpdateStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await this.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 
         public async Task<bool> GetStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await this.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
+
+        public async Task<IEnumerable<NewAPI.Streams.StreamModel>> GetGameStreams(string gameID, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreams(gameIDs: new List<string>() { gameID }, maxResults: maxResults)); }
+
+        public async Task<IEnumerable<NewAPI.Streams.StreamModel>> GetLanguageStreams(string language, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreams(languages: new List<string>() { language }, maxResults: maxResults)); }
 
         public async Task<NewAPI.Ads.AdResponseModel> RunAd(NewAPI.Users.UserModel channel, int length) { return await this.RunAsync(this.Connection.NewAPI.Ads.RunAd(channel, length)); }
 
