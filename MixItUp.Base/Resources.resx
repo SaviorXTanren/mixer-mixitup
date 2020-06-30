@@ -2985,4 +2985,22 @@
   <data name="BitsCheered" xml:space="preserve">
     <value>Bits Cheered</value>
   </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="FollowedChannels" xml:space="preserve">
+    <value>Followed Channels</value>
+  </data>
+  <data name="OpenChannel" xml:space="preserve">
+    <value>Open Channel</value>
+  </data>
+  <data name="RaidChannel" xml:space="preserve">
+    <value>Raid Channel</value>
+  </data>
+  <data name="SameLanguage" xml:space="preserve">
+    <value>Same Language</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>Team Members</value>
+  </data>
 </root>

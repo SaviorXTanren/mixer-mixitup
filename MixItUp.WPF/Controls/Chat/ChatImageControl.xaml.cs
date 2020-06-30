@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
@@ -48,6 +49,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
 
+        public ChatImageControl(TwitchBitsCheermoteViewModel cheermote) : this() { this.DataContext = cheermote; }
+
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
@@ -70,6 +73,12 @@ namespace MixItUp.WPF.Controls.Chat
                         BetterTTVEmoteModel emote = (BetterTTVEmoteModel)this.DataContext;
                         this.Image.Source = await this.DownloadImageUrl(emote.url);
                         this.Image.ToolTip = this.AltText.Text = emote.code;
+                    }
+                    else if (this.DataContext is TwitchBitsCheermoteViewModel)
+                    {
+                        TwitchBitsCheermoteViewModel cheermote = (TwitchBitsCheermoteViewModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl((ChannelSession.AppSettings.IsDarkBackground) ? cheermote.DarkImage : cheermote.LightImage);
+                        this.Image.ToolTip = this.AltText.Text = cheermote.ID;
                     }
                     else if (this.DataContext is string)
                     {

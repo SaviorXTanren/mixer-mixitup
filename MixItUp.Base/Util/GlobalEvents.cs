@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -151,12 +152,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnBitsOccurred;
-        public static void BitsOccurred(UserViewModel user, int amount)
+        public static event EventHandler<TwitchUserBitsCheeredModel> OnBitsOccurred;
+        public static void BitsOccurred(TwitchUserBitsCheeredModel bitsCheer)
         {
             if (GlobalEvents.OnDonationOccurred != null)
             {
-                GlobalEvents.OnBitsOccurred(null, new Tuple<UserViewModel, int>(user, amount));
+                GlobalEvents.OnBitsOccurred(null, bitsCheer);
             }
         }
 

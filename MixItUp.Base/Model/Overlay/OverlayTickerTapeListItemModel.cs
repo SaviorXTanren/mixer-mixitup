@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -157,11 +158,11 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e)
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e)
         {
-            if (this.MinimumAmountRequiredToShow == 0.0 || e.Item2 >= this.MinimumAmountRequiredToShow)
+            if (this.MinimumAmountRequiredToShow == 0.0 || e.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(e.Item1.Username + ": " + e.Item2);
+                await this.AddEvent(e.User.Username + ": " + e.Amount);
             }
         }
 

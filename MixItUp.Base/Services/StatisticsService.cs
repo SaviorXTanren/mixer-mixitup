@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Services
 
             this.BitsTracker = new EventStatisticDataTrackerModel("Bits", "Decagram", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
-                return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
+                return $"{Resources.Users}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
             });
 
             this.Statistics = new List<StatisticDataTrackerModelBase>();
@@ -151,9 +152,9 @@ namespace MixItUp.Base.Services
             this.DonationsTracker.OnStatisticEventOccurred(e.Username, e.Amount);
         }
 
-        private void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e)
         {
-            this.BitsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
+            this.BitsTracker.OnStatisticEventOccurred(e.User.Username, e.Amount);
         }
     }
 }

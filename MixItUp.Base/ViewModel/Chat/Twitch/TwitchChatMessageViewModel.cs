@@ -9,13 +9,6 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
     public class TwitchChatMessageViewModel : UserChatMessageViewModel
     {
-        public static TwitchChatMessageViewModel CreateMessage(UserViewModel user, string message)
-        {
-            TwitchChatMessageViewModel result = new TwitchChatMessageViewModel(user);
-            result.ProcessMessageContents(message);
-            return result;
-        }
-
         private const char SOHCharacter = (char)1;
         private static readonly string SlashMeAction = SOHCharacter.ToString() + "ACTION ";
 
@@ -51,7 +44,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             this.ProcessMessageContents(whisper.body);
         }
 
-        private TwitchChatMessageViewModel(UserViewModel user) : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user) { }
+        public TwitchChatMessageViewModel(UserViewModel user, string message)
+            : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user)
+        {
+            this.ProcessMessageContents(message);
+        }
 
         private void ProcessMessageContents(string message)
         {
@@ -63,7 +60,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     this.AddStringMessagePart(part);
                     if (ChannelSession.Services.Chat.TwitchChatService != null)
                     {
-                        if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+                        if (ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes.ContainsKey(part))
+                        {
+                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes[part];
+                        }
+                        else if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
                         }

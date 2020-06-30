@@ -21,8 +21,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class MainWindow : LoadingWindowBase
     {
-        public string RestoredSettingsFilePath = null;
-
         private bool restartApplication = false;
 
         private bool shutdownStarted = false;
@@ -133,13 +131,14 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Chat, new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
             if (ChannelSession.Settings.IsStreamer)
             {
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsMainControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.OverlayWidgets, new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
@@ -189,22 +188,7 @@ namespace MixItUp.WPF
                 this.ShuttingDownGrid.Visibility = Visibility.Visible;
                 this.MainMenu.Visibility = Visibility.Collapsed;
 
-                if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
-                {
-                    Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
-
-                    File.Delete(ChannelSession.Settings.SettingsFilePath);
-                    File.Delete(ChannelSession.Settings.DatabaseFilePath);
-
-                    using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
-                    {
-                        zipFile.ExtractToDirectory(SettingsV2Model.SettingsDirectoryName);
-                    }
-                }
-                else
-                {
-                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
-                }
+                await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
 
                 await ChannelSession.AppSettings.Save();
 

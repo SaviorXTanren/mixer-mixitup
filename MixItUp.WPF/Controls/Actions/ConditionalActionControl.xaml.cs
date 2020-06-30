@@ -188,7 +188,12 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.Clauses.Add(new ConditionalClauseViewModel(clause, this));
                 }
-                this.Clauses.First().CanBeRemoved = false;
+
+                if (this.Clauses.Count > 0)
+                {
+                    this.Clauses.First().CanBeRemoved = false;
+                }
+
                 this.Command = this.action.GetCommand();
 
                 if (this.action.Action != null)

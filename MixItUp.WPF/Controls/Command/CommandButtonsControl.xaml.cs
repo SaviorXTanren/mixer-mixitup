@@ -187,6 +187,7 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                         case EventTypeEnum.TwitchChannelBitsCheered:
                             extraSpecialIdentifiers["bitsamount"] = "10";
+                            extraSpecialIdentifiers["Message"] = "Test Message";
                             break;
                         case EventTypeEnum.ChatUserTimeout:
                             extraSpecialIdentifiers["timeoutlength"] = "5m";

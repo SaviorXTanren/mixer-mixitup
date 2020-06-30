@@ -111,6 +111,10 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((BetterTTVEmoteModel)messagePart));
                             }
+                            else if (messagePart is TwitchBitsCheermoteViewModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheermoteViewModel)messagePart));
+                            }
                         }
                     }
                 }

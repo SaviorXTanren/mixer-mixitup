@@ -77,7 +77,8 @@ namespace MixItUp.WPF.Controls.Settings
                     Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
                     if (result.Success)
                     {
-                        ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
+                        ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
+                        ChannelSession.AppSettings.BackupSettingsToReplace = ChannelSession.Settings.ID;
                         ((MainWindow)this.Window).Restart();
                     }
                     else

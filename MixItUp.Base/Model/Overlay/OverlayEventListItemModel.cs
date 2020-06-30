@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -149,7 +150,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.Username, string.Format("Purchased {0} Packs", purchase.Item2)); }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { await this.AddEvent(e.Item1.Username, string.Format("Cheer {0} Bits", e.Item2)); }
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { await this.AddEvent(e.User.Username, string.Format("Cheer {0} Bits", e.Amount)); }
 
         private async Task AddEvent(string name, string details)
         {
