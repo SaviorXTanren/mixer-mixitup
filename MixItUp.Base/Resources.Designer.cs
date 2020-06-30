@@ -3814,7 +3814,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to LatestRelease.
+        ///   Looks up a localized string similar to Latest Release.
         /// </summary>
         public static string LatestRelease {
             get {
