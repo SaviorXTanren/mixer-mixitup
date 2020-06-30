@@ -214,7 +214,7 @@ namespace MixItUp.Base.Services.Twitch
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            user.Data.TwitchFollowDate = DateTimeOffset.Now;
+                            user.FollowDate = DateTimeOffset.Now;
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
