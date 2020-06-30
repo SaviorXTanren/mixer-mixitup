@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -314,6 +315,6 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
 
-        private async void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { await this.ReduceHealth(e.Item1, (e.Item2 * this.BitsBonus)); }
+        private async void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { await this.ReduceHealth(e.User, (e.Amount * this.BitsBonus)); }
     }
 }

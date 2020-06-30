@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -284,28 +285,31 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
+            TwitchUserBitsCheeredModel bitsCheered = new TwitchUserBitsCheeredModel(user, packet);
+
             foreach (CurrencyModel bitsCurrency in ChannelSession.Settings.Currency.Values.Where(c => c.SpecialTracking == CurrencySpecialTrackingEnum.Bits))
             {
-                bitsCurrency.AddAmount(user.Data, packet.bits_used);
+                bitsCurrency.AddAmount(user.Data, bitsCheered.Amount);
             }
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * packet.bits_used));
+                streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
             }
 
-            user.Data.TotalBitsCheered += (uint)packet.bits_used;
+            user.Data.TotalBitsCheered += (uint)bitsCheered.Amount;
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerUserData] = user.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerAmountData] = packet.bits_used;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerAmountData] = bitsCheered.Amount;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
-            trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
+            trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
+            trigger.SpecialIdentifiers["message"] = bitsCheered.Message;
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            await this.AddAlertChatMessage(user, string.Format("{0} Cheered {1} Bits", user.Username, packet.bits_used));
+            await this.AddAlertChatMessage(user, string.Format("{0} Cheered {1} Bits", user.Username, bitsCheered.Amount));
 
-            GlobalEvents.BitsOccurred(user, packet.bits_used);
+            GlobalEvents.BitsOccurred(bitsCheered);
         }
 
         private void PubSub_OnBitsBadgeReceived(object sender, PubSubBitBadgeEventModel packet)

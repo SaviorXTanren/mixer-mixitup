@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -245,7 +246,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddAmount(donation.Amount); }
 
-        private void GlobalEvents_OnBitsOccurred(object sender, Tuple<UserViewModel, int> e) { this.AddAmount(e.Item2); }
+        private void GlobalEvents_OnBitsOccurred(object sender, TwitchUserBitsCheeredModel e) { this.AddAmount(e.Amount); }
 
         private void AddAmount(double amount)
         {
