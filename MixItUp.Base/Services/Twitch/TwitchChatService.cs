@@ -130,6 +130,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<string> initialUserLogins = new List<string>();
 
+        private SemaphoreSlim whisperSemaphore = new SemaphoreSlim(1);
+
         public TwitchChatService() { }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
@@ -396,11 +398,15 @@ namespace MixItUp.Base.Services.Twitch
             {
                 message = this.SplitLargeMessage(message, out string subMessage);
 
-                ChatClient client = this.GetChatClient(sendAsStreamer);
-                if (client != null)
+                await this.whisperSemaphore.WaitAndRelease(async () =>
                 {
-                    await client.SendWhisperMessage((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), message);
-                }
+                    ChatClient client = this.GetChatClient(sendAsStreamer);
+                    if (client != null)
+                    {
+                        await client.SendWhisperMessage((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                    }
+                    await Task.Delay(500);
+                });
 
                 if (!string.IsNullOrEmpty(subMessage))
                 {
