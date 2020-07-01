@@ -18,6 +18,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -28,7 +29,9 @@
 
         <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="3,0,0,0" Grid.Column="2" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="UsernameTextBlock" Grid.Column="4" Text="{Binding Username}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
+        <Image x:Name="BitsBadgeImage" Source="{Binding TwitchBitsBadgeLink}" Visibility="{Binding HasTwitchBitsBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="3,0,0,0" Grid.Column="3" VerticalAlignment="Center" />
+
+        <TextBlock x:Name="UsernameTextBlock" Grid.Column="5" Text="{Binding Username}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>
