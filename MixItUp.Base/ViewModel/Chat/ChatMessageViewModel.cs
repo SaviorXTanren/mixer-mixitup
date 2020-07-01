@@ -55,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.TwitchUserNewAPI.login)); } }
+        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.TwitchUserNewAPI.login)); } }
 
         public bool IsStreamerOrBot { get { return false; } }
 

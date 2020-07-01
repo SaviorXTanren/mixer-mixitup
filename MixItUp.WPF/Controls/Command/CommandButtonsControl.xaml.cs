@@ -183,6 +183,7 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                         case EventTypeEnum.TwitchChannelMassSubscriptionsGifted:
                             extraSpecialIdentifiers["subsgiftedamount"] = "5";
+                            extraSpecialIdentifiers["subsgiftedlifetimeamount"] = "100";
                             extraSpecialIdentifiers["usersubplan"] = "Tier 1";
                             break;
                         case EventTypeEnum.TwitchChannelBitsCheered:

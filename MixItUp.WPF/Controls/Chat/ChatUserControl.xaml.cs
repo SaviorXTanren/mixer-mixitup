@@ -20,6 +20,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.AvatarImage.Size = ChannelSession.Settings.ChatFontSize;
             this.PlatformImage.Width = this.PlatformImage.Height = ChannelSession.Settings.ChatFontSize;
             this.SubscriberImage.Width = this.SubscriberImage.Height = ChannelSession.Settings.ChatFontSize;
+            this.BitsBadgeImage.Width = this.BitsBadgeImage.Height = ChannelSession.Settings.ChatFontSize;
             this.UsernameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }
     }

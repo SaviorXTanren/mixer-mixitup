@@ -23,6 +23,7 @@ namespace MixItUp.Base.Model.Overlay
         EventList,
         GameQueue,
         ChatMessages,
+        [Obsolete]
         StreamClip,
         Leaderboard,
         Timer,
@@ -425,4 +426,17 @@ namespace MixItUp.Base.Model.Overlay
             return string.Empty;
         }
     }
+
+    #region Obsolete
+
+    public class OverlayStreamClipItemModel : OverlayFileItemModelBase
+    {
+        public OverlayStreamClipItemModel() : base() { }
+
+        public OverlayStreamClipItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation) { }
+
+        public override string FileType { get { return "video"; } set { } }
+    }
+
+    #endregion Obsolete
 }

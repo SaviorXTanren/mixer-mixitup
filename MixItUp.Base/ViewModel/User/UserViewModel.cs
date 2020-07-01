@@ -346,6 +346,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchBitsBadge { get; private set; }
 
+        public bool HasTwitchBitsBadge { get { return this.TwitchBitsBadge != null; } }
+
+        public string TwitchBitsBadgeLink { get { return (this.HasTwitchBitsBadge) ? this.TwitchBitsBadge.image_url_1x : string.Empty; } }
+
         #endregion Twitch
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
@@ -640,12 +644,22 @@ namespace MixItUp.Base.ViewModel.User
                         }
                     }
 
-                    if (this.HasTwitchBadge("bits"))
+                    string bitsBadgeName = null;
+                    if (this.HasTwitchBadge("bits-leader"))
                     {
-                        int versionID = this.GetTwitchBadgeVersion("bits");
-                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey("bits") && ChannelSession.Services.Chat.TwitchChatService.ChatBadges["bits"].versions.ContainsKey(versionID.ToString()))
+                        bitsBadgeName = "bits-leader";
+                    }
+                    else if (this.HasTwitchBadge("bits"))
+                    {
+                        bitsBadgeName = "bits";
+                    }
+
+                    if (!string.IsNullOrEmpty(bitsBadgeName) && ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(bitsBadgeName))
+                    {
+                        int versionID = this.GetTwitchBadgeVersion(bitsBadgeName);
+                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges[bitsBadgeName].versions.ContainsKey(versionID.ToString()))
                         {
-                            this.TwitchBitsBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges["bits"].versions[versionID.ToString()];
+                            this.TwitchBitsBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges[bitsBadgeName].versions[versionID.ToString()];
                         }
                     }
                 }

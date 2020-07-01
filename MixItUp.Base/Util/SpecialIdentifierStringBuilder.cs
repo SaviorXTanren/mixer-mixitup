@@ -690,6 +690,20 @@ namespace MixItUp.Base.Util
                     }
                 }
 
+                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
+                {
+                    string gameQueuePosition = "Not In Queue";
+                    if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+                    {
+                        int position = ChannelSession.Services.GameQueueService.GetUserPosition(user);
+                        if (position > 0)
+                        {
+                            gameQueuePosition = position.ToString();
+                        }
+                    }
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition", gameQueuePosition);
+                }
+
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
@@ -732,20 +746,6 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "totalmonthssubbed", user.Data.TotalMonthsSubbed.ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
-
-                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
-                {
-                    string gameQueuePosition = "Not In Queue";
-                    if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
-                    {
-                        int position = ChannelSession.Services.GameQueueService.GetUserPosition(user);
-                        if (position > 0)
-                        {
-                            gameQueuePosition = position.ToString();
-                        }
-                    }
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition", gameQueuePosition);
-                }
 
                 if (ChannelSession.Services.Patreon.IsConnected)
                 {

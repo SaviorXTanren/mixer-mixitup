@@ -52,6 +52,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
             this.OnlyShowAlertsInDashboardToggleButton.IsChecked = ChannelSession.Settings.OnlyShowAlertsInDashboard;
             this.ShowBetterTTVEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowBetterTTVEmotes;
+            this.ShowFrankerFaceZEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowFrankerFaceZEmotes;
 
             await base.InitializeInternal();
         }
@@ -164,6 +165,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void ShowBetterTTVEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ShowBetterTTVEmotes = this.ShowBetterTTVEmotesToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowFrankerFaceZEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ShowFrankerFaceZEmotes = this.ShowFrankerFaceZEmotesToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void ShowMessageTimestampsToggleButton_Checked(object sender, RoutedEventArgs e)
