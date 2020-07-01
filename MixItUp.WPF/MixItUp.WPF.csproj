@@ -647,9 +647,6 @@
     <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayStreamClipItemControl.xaml.cs">
-      <DependentUpon>OverlayStreamClipItemControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
       <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
     </Compile>
@@ -1393,10 +1390,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayStreamClipItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

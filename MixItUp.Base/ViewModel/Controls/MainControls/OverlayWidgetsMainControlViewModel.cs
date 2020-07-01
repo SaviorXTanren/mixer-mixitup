@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModel.Window;
+using StreamingClient.Base.Util;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,10 +19,24 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public void Refresh()
         {
+            List<OverlayWidgetModel> toBeRemoved = new List<OverlayWidgetModel>();
+
             this.OverlayWidgets.Clear();
             foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
             {
-                this.OverlayWidgets.Add(widget);
+                if (EnumHelper.IsObsolete(widget.Item.ItemType))
+                {
+                    toBeRemoved.Add(widget);
+                }
+                else
+                {
+                    this.OverlayWidgets.Add(widget);
+                }
+            }
+
+            foreach (OverlayWidgetModel widget in toBeRemoved)
+            {
+                ChannelSession.Settings.OverlayWidgets.Remove(widget);
             }
 
             this.NotifyPropertyChanges();
