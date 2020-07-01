@@ -49,6 +49,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(BetterTTVEmoteModel emote) : this() { this.DataContext = emote; }
 
+        public ChatImageControl(FrankerFaceZEmoteModel emote) : this() { this.DataContext = emote; }
+
         public ChatImageControl(TwitchBitsCheermoteViewModel cheermote) : this() { this.DataContext = cheermote; }
 
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
@@ -73,6 +75,12 @@ namespace MixItUp.WPF.Controls.Chat
                         BetterTTVEmoteModel emote = (BetterTTVEmoteModel)this.DataContext;
                         this.Image.Source = await this.DownloadImageUrl(emote.url);
                         this.Image.ToolTip = this.AltText.Text = emote.code;
+                    }
+                    else if (this.DataContext is FrankerFaceZEmoteModel)
+                    {
+                        FrankerFaceZEmoteModel emote = (FrankerFaceZEmoteModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl(emote.url);
+                        this.Image.ToolTip = this.AltText.Text = emote.name;
                     }
                     else if (this.DataContext is TwitchBitsCheermoteViewModel)
                     {

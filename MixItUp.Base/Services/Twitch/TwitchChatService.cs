@@ -20,7 +20,6 @@ using Twitch.Base.Models.NewAPI.Bits;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Models.V5.Emotes;
-using Twitch.Base.Models.V5.Streams;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
@@ -35,11 +34,21 @@ namespace MixItUp.Base.Services.Twitch
         public string url { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
     }
 
+    public class FrankerFaceZEmoteModel
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public JObject urls { get; set; }
+
+        public string url { get { return (this.urls != null && this.urls.ContainsKey("2")) ? "https:" + this.urls["2"].ToString() : string.Empty; } }
+    }
+
     public interface ITwitchChatService
     {
         IDictionary<string, EmoteModel> Emotes { get; }
         IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
         IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
+        IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
         IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
@@ -94,6 +103,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
         private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
+
+        public IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get { return this.frankerFaceZEmotes; } }
+        private Dictionary<string, FrankerFaceZEmoteModel> frankerFaceZEmotes = new Dictionary<string, FrankerFaceZEmoteModel>();
 
         public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
         private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
@@ -305,6 +317,12 @@ namespace MixItUp.Base.Services.Twitch
             {
                 initializationTasks.Add(this.DownloadBetterTTVEmotes());
                 initializationTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchUserNewAPI.login));
+            }
+
+            if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
+            {
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ChannelSession.TwitchUserNewAPI.login));
             }
 
             Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = ChannelSession.TwitchUserConnection.GetBitsCheermotes(ChannelSession.TwitchUserNewAPI);
@@ -567,6 +585,34 @@ namespace MixItUp.Base.Services.Twitch
                         foreach (BetterTTVEmoteModel emote in array.ToTypedArray<BetterTTVEmoteModel>())
                         {
                             this.betterTTVEmotes[emote.code] = emote;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task DownloadFrankerFaceZEmotes(string channelName = null)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.frankerfacez.com/v1/room/" + channelName : "https://api.frankerfacez.com/v1/set/global");
+                    if (jobj != null && jobj.ContainsKey("sets"))
+                    {
+                        JObject setsJObj = (JObject)jobj["sets"];
+                        foreach (var kvp in setsJObj)
+                        {
+                            JObject setJObj = (JObject)kvp.Value;
+                            if (setJObj != null && setJObj.ContainsKey("emoticons"))
+                            {
+                                JArray emoticonsJArray = (JArray)setJObj["emoticons"];
+                                foreach (FrankerFaceZEmoteModel emote in emoticonsJArray.ToTypedArray<FrankerFaceZEmoteModel>())
+                                {
+                                    this.frankerFaceZEmotes[emote.name] = emote;
+                                }
+                            }
                         }
                     }
                 }
