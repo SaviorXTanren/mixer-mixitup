@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DataContext = this.viewModel = new GiveawayMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
             this.Requirements.HideThresholdRequirement();
+            this.Requirements.HideSettingsRequirement();
             this.Requirements.SetRequirements(ChannelSession.Settings.GiveawayRequirements);
 
             this.GiveawayStartReminderCommand.DataContext = ChannelSession.Settings.GiveawayStartedReminderCommand;
