@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(this.AddQuoteText, DateTimeOffset.Now));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(this.AddQuoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;
