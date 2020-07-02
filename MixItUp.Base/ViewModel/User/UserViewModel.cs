@@ -129,6 +129,16 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
+        public UserViewModel(ChatClearChatPacketModel packet)
+        {
+            this.SetUserData(twitchID: packet.UserID);
+
+            this.TwitchID = packet.UserID;
+            this.TwitchUsername = packet.UserLogin;
+
+            this.SetTwitchRoles();
+        }
+
         public UserViewModel(PubSubBitsEventV2Model packet)
         {
             this.SetUserData(twitchID: packet.user_id);
