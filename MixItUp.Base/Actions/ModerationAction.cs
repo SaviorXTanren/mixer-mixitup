@@ -31,6 +31,8 @@ namespace MixItUp.Base.Actions
         ModUser,
         [Name("Unmod User")]
         UnmodUser,
+        VIPUser,
+        UnVIPUser
     }
 
     [DataContract]
@@ -102,6 +104,20 @@ namespace MixItUp.Base.Actions
                     else if (this.ModerationType == ModerationActionTypeEnum.UnmodUser)
                     {
                         await ChannelSession.Services.Chat.UnmodUser(targetUser);
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.VIPUser)
+                    {
+                        if (ChannelSession.Services.Chat.TwitchChatService != null)
+                        {
+                            await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true);
+                        }
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.UnVIPUser)
+                    {
+                        if (ChannelSession.Services.Chat.TwitchChatService != null)
+                        {
+                            await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true);
+                        }
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
                     {
