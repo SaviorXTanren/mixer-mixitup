@@ -41,8 +41,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -73,17 +71,17 @@
             </GroupBox>
 
             <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.ContactAndResources}">
-                <Grid HorizontalAlignment="Center">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="40" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
