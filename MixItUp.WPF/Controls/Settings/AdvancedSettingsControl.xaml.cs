@@ -152,23 +152,5 @@ namespace MixItUp.WPF.Controls.Settings
                 ((MainWindow)this.Window).Restart();
             }
         }
-
-        private async void UnbanAllUsersButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                if (ChannelSession.IsStreamer)
-                {
-                    if (await DialogHelper.ShowConfirmation("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
-                    {
-
-                    }
-                }
-                else
-                {
-                    await DialogHelper.ShowMessage("This can only be run by the channel owner");
-                }
-            });
-        }
     }
 }
