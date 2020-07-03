@@ -975,7 +975,7 @@ namespace MixItUp.Base.Commands
                         if (mixerUserData != null)
                         {
                             LinkedAccounts[user.ID] = mixerUserData.ID;
-                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @{user.Username}\" in chat to approve this linking.");
+                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
                             return;
                         }
                     }
@@ -1018,7 +1018,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage("Usage: !approvemixeraccount <USERNAME>");
+                    await ChannelSession.Services.Chat.SendMessage("Usage: !approvemixeraccount <TWITCH USERNAME>");
                 }
             }));
         }
