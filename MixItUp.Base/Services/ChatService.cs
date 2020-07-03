@@ -160,9 +160,12 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false)
         {
-            if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && this.TwitchChatService != null)
+            if (user != null)
             {
-                await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
+                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && this.TwitchChatService != null)
+                {
+                    await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
+                }
             }
         }
 
