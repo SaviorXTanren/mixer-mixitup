@@ -1,10 +1,13 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -32,8 +35,7 @@ namespace MixItUp.Base.Model.Overlay
         };
 
         private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
-        private const string EmoticonMessageHTMLTemplate = @"<span style=""height: {TEXT_SIZE}px; width: {TEXT_SIZE}px; background-repeat: no-repeat; display: inline-block; background-image: url({EMOTICON}); background-position: {EMOTICON_X}px {EMOTICON_Y}px;""></span>";
-        private const string SkillImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
+        private const string ImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
 
         public OverlayChatMessagesListItemModel() : base() { }
 
@@ -77,9 +79,33 @@ namespace MixItUp.Base.Model.Overlay
                     List<string> textParts = new List<string>();
                     foreach (object messagePart in message.MessageParts)
                     {
+                        string imageURL = null;
                         if (messagePart is string)
                         {
                             textParts.Add((string)messagePart);
+                        }
+                        else if (messagePart is EmoteModel)
+                        {
+                            imageURL = ((EmoteModel)messagePart).Size1URL;
+                        }
+                        else if (messagePart is BetterTTVEmoteModel)
+                        {
+                            imageURL = ((BetterTTVEmoteModel)messagePart).url;
+                        }
+                        else if (messagePart is FrankerFaceZEmoteModel)
+                        {
+                            imageURL = ((FrankerFaceZEmoteModel)messagePart).url;
+                        }
+                        else if (messagePart is TwitchBitsCheermoteViewModel)
+                        {
+                            imageURL = ((TwitchBitsCheermoteViewModel)messagePart).LightImage;
+                        }
+
+                        if (!string.IsNullOrEmpty(imageURL))
+                        {
+                            string imageText = OverlayChatMessagesListItemModel.ImageMessageHTMLTemplate;
+                            imageText = imageText.Replace("{IMAGE}", imageURL);
+                            textParts.Add(imageText);
                         }
                     }
 
