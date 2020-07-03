@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
@@ -488,7 +487,7 @@ namespace MixItUp.Base.Commands
             UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
             if (targetUser != null)
             {
-                if (!currency.HasAmount(targetUser.Data, betAmount))
+                if (targetUser.Data.IsCurrencyRankExempt || !currency.HasAmount(targetUser.Data, betAmount))
                 {
                     await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} does not have {1} {2}", targetUser.Username, betAmount, currency.Name));
                     return null;
