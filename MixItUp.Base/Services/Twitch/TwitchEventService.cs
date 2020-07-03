@@ -383,7 +383,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel packet)
         {
-            UserViewModel gifter = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            UserViewModel gifter = packet.IsAnonymousGiftedSubscription ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
             if (gifter == null)
             {
                 gifter = new UserViewModel(packet);
@@ -400,10 +400,6 @@ namespace MixItUp.Base.Services.Twitch
                 });
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
-            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
-            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
-
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
@@ -416,6 +412,10 @@ namespace MixItUp.Base.Services.Twitch
             receiver.Data.TotalSubsReceived++;
             receiver.Data.TotalMonthsSubbed++;
 
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
+            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+            trigger.SpecialIdentifiers["isanonymous"] = packet.IsAnonymousGiftedSubscription.ToString();
             trigger.Arguments.Add(receiver.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
 

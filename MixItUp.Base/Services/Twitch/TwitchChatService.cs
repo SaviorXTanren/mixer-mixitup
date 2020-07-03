@@ -97,6 +97,7 @@ namespace MixItUp.Base.Services.Twitch
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
 
         private const string SubMysteryGiftUserNoticeMessageID = "submysterygift";
+        private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
@@ -685,18 +686,21 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-            if (user != null)
-            {
-                user.SetTwitchChatDetails(userNotice);
-            }
-
             if (SubMysteryGiftUserNoticeMessageID.Equals(userNotice.MessageID) && userNotice.SubTotalGifted > 0)
             {
+                bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
+
+                UserViewModel user = isAnonymous ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                if (!isAnonymous && user != null)
+                {
+                    user.SetTwitchChatDetails(userNotice);
+                }
+
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
                 trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
                 trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
                 trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(userNotice.SubPlan);
+                trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
