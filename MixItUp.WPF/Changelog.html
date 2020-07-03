@@ -9,6 +9,26 @@
 
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.6.1014:</h2>
+        <ul>
+            <li>Regular chat messages &amp; whispers now have a 500 millisecond delay included after every message to decrease chance of messages being ignored when sent to Twitch</li>
+            <li>Re-adding Chat User Timeout &amp; Chat User Ban event commands</li>
+            <ul>
+                <li>Chat User Timeout: Does not indicate who performed the timeout, $targetuser___ is the person that received the timeout, $timeoutlength indicates the length of the timeout in seconds</li>
+                <li>Chat User Ban: Does not indicate who performed the ban, $targetuser___ is the person who was banned</li>
+            </ul>
+            <li>Re-adding support for emote intellisense pop-up in Chat UI</li>
+            <li>Adding VIP User and Un-VIP User options to Moderation action</li>
+            <li>Quotes will now properly populate the currently selected game on Twitch when created</li>
+            <li>Running the purchase command for the Redemption Store with no arguments will now list all products that are are infinite in quantity or have remaining quantity</li>
+            <li>Moderators will now show the Moderator badge next to their name in the Chat UI</li>
+            <li>Channel Editors will now be assigned the role, but only if they are assigned the role prior to launching Mix It Up</li>
+            <li>Adding Bits as a section to End Credits Overlay Widget</li>
+            <li>Removing Unban All Users option from Advanced Settings</li>
+            <li>For those that do read changelogs, we've included a little secret in this latest update. If you find it, let us know :)</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.6.1013:</h2>
         <ul>
             <li>Our Wiki documentation for Events has been updated to reflect all currently available functionality within the app: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events</a></li>
