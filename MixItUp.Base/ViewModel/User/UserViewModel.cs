@@ -118,13 +118,13 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(ChatRawPacketModel packet)
+        public UserViewModel(ChatUserNoticePacketModel packet)
         {
-            this.SetUserData(twitchID: packet.Tags["user-id"]);
+            this.SetUserData(twitchID: packet.UserID.ToString());
 
-            this.TwitchID = packet.Tags["user-id"];
-            this.TwitchUsername = packet.Tags["login"];
-            this.TwitchDisplayName = (packet.Tags.ContainsKey("display-name") && !string.IsNullOrEmpty(packet.Tags["display-name"])) ? packet.Tags["display-name"] : this.TwitchUsername;
+            this.TwitchID = packet.UserID.ToString();
+            this.TwitchUsername = packet.RaidUserLogin;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.RaidUserDisplayName)) ? packet.RaidUserDisplayName : this.TwitchUsername;
 
             this.SetTwitchRoles();
         }

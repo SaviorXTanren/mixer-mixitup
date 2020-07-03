@@ -134,12 +134,21 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
-        public static void HostOccurred(Tuple<UserViewModel, int> user)
+        public static event EventHandler<UserViewModel> OnHostOccurred;
+        public static void HostOccurred(UserViewModel user)
         {
             if (GlobalEvents.OnHostOccurred != null)
             {
                 GlobalEvents.OnHostOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnRaidOccurred;
+        public static void RaidOccurred(UserViewModel user, int viewers)
+        {
+            if (GlobalEvents.OnRaidOccurred != null)
+            {
+                GlobalEvents.OnRaidOccurred(null, new Tuple<UserViewModel, int>(user, viewers));
             }
         }
 
