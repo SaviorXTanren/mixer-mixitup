@@ -299,8 +299,8 @@ namespace MixItUp.Base.Services.Twitch
 
             user.Data.TotalBitsCheered += (uint)bitsCheered.Amount;
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerUserData] = user.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerAmountData] = bitsCheered.Amount;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
             trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();

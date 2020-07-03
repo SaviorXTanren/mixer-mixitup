@@ -13,6 +13,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Twitch.Base.Models.NewAPI.Bits;
+using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Util
 {
@@ -27,9 +29,11 @@ namespace MixItUp.Base.Util
         public const string StartSpecialIdentifierHeader = "start";
 
         public const string TopSpecialIdentifierHeader = "top";
-
         public const string TopTimeSpecialIdentifier = TopSpecialIdentifierHeader + "time";
         public const string TopTimeRegexSpecialIdentifier = TopSpecialIdentifierHeader + "\\d+time";
+
+        public const string TopBitsCheeredSpecialIdentifier = TopSpecialIdentifierHeader + "bitscheered";
+        public const string TopBitsCheeredRegexSpecialIdentifier = TopSpecialIdentifierHeader + "\\d+bitscheered";
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
@@ -42,7 +46,6 @@ namespace MixItUp.Base.Util
         public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
         public const string StreamSpecialIdentifierHeader = "stream";
-        public const string StreamHostCountSpecialIdentifier = StreamSpecialIdentifierHeader + "hostcount";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
 
@@ -67,8 +70,8 @@ namespace MixItUp.Base.Util
         public const string LatestRaidViewerCountData = "latestraidviewercount";
         public const string LatestSubscriberUserData = "latestsubscriber";
         public const string LatestSubscriberSubMonthsData = "latestsubscribersubmonths";
-        public const string LatestBitsCheerUserData = "latestbitscheer";
-        public const string LatestBitsCheerAmountData = "latestbitscheeramount";
+        public const string LatestBitsCheeredUserData = "latestbitscheered";
+        public const string LatestBitsCheeredAmountData = "latestbitscheeredamount";
         public const string LatestDonationUserData = "latestdonation";
         public const string LatestDonationAmountData = "latestdonationamount";
 
@@ -264,14 +267,14 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.ToList())
-            {
-                this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
-            }
-
             foreach (var kvp in SpecialIdentifierStringBuilder.CustomSpecialIdentifiers)
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+            }
+
+            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.ToList())
+            {
+                this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
             }
 
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
@@ -288,6 +291,24 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier))
+                {
+                    await this.HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum.Day);
+                    await this.HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum.Week);
+                    await this.HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum.Month);
+                    await this.HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum.Year);
+                    await this.HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum.All);
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier))
+                {
+                    await this.HandleTopBitsCheered(BitsLeaderboardPeriodEnum.Day);
+                    await this.HandleTopBitsCheered(BitsLeaderboardPeriodEnum.Week);
+                    await this.HandleTopBitsCheered(BitsLeaderboardPeriodEnum.Month);
+                    await this.HandleTopBitsCheered(BitsLeaderboardPeriodEnum.Year);
+                    await this.HandleTopBitsCheered(BitsLeaderboardPeriodEnum.All);
+                }
+
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
@@ -321,6 +342,8 @@ namespace MixItUp.Base.Util
                     }
                     await this.HandleUserSpecialIdentifiers(topUser, SpecialIdentifierStringBuilder.TopTimeSpecialIdentifier);
                 }
+
+
 
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
@@ -560,7 +583,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestRaidUserData, SpecialIdentifierStringBuilder.LatestRaidViewerCountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
-            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsCheerUserData, SpecialIdentifierStringBuilder.LatestBitsCheerAmountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsCheeredUserData, SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
             foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.OrderByDescending(c => c.SpecialIdentifier))
@@ -578,6 +601,70 @@ namespace MixItUp.Base.Util
                     char uChar = (char)number;
                     return Task.FromResult(uChar.ToString());
                 });
+            }
+        }
+
+        private async Task HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum period)
+        {
+            if (ChannelSession.TwitchUserConnection != null && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
+            {
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
+                {
+                    string result = "No users found.";
+                    BitsLeaderboardModel leaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(period, total);
+                    if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
+                    {
+                        IEnumerable<BitsLeaderboardUserModel> users = leaderboard.users.OrderBy(l => l.rank);
+
+                        List<string> leaderboardsList = new List<string>();
+                        int position = 1;
+                        for (int i = 0; i < total && i < users.Count(); i++)
+                        {
+                            BitsLeaderboardUserModel user = users.ElementAt(i);
+                            leaderboardsList.Add($"#{i + 1}) {user.user_name} - {user.score}");
+                            position++;
+                        }
+
+                        if (leaderboardsList.Count > 0)
+                        {
+                            result = string.Join(", ", leaderboardsList);
+                        }
+                    }
+                    return result;
+                });
+            }
+        }
+
+        private async Task HandleTopBitsCheered(BitsLeaderboardPeriodEnum period)
+        {
+            if (ChannelSession.TwitchUserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
+            {
+                BitsLeaderboardModel leaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(period, 1);
+                if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
+                {
+                    BitsLeaderboardUserModel bitsUser = leaderboard.users.OrderBy(u => u.rank).First();
+
+                    this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
+
+                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(bitsUser.user_id);
+                    if (user == null)
+                    {
+                        UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(bitsUser.user_id);
+                        if (userData == null)
+                        {
+                            user = new UserViewModel(new Twitch.Base.Models.NewAPI.Users.UserModel()
+                            {
+                                id = bitsUser.user_id,
+                                login = bitsUser.user_name
+                            });
+                        }
+                        else
+                        {
+                            user = new UserViewModel(userData);
+                        }
+                    }
+                    await this.HandleUserSpecialIdentifiers(user, SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower());
+                }
             }
         }
 
