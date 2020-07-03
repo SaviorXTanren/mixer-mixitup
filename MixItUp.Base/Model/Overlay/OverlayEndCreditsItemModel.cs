@@ -40,6 +40,7 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Free Form HTML 3")]
         FreeFormHTML3,
         Bits,
+        Raids,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -103,15 +104,27 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int SpeedNumber { get { return (int)this.Speed; } }
 
+        [JsonIgnore]
         private HashSet<Guid> viewers = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> subs = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> mods = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> follows = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> hosts = new HashSet<Guid>();
+        [JsonIgnore]
+        private Dictionary<Guid, uint> raids = new Dictionary<Guid, uint>();
+        [JsonIgnore]
         private HashSet<Guid> newSubs = new HashSet<Guid>();
+        [JsonIgnore]
         private Dictionary<Guid, uint> resubs = new Dictionary<Guid, uint>();
+        [JsonIgnore]
         private Dictionary<Guid, uint> giftedSubs = new Dictionary<Guid, uint>();
+        [JsonIgnore]
         private Dictionary<Guid, double> donations = new Dictionary<Guid, double>();
+        [JsonIgnore]
         private Dictionary<Guid, uint> bits = new Dictionary<Guid, uint>();
 
         public OverlayEndCreditsItemModel() : base() { }
@@ -167,6 +180,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.hosts.Add(userID);
                 }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Raids))
+                {
+                    this.raids[userID] = 10;
+                }
                 if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
                 {
                     this.newSubs.Add(userID);
@@ -207,6 +224,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
             }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Raids))
+            {
+                GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+            }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
@@ -236,6 +257,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
@@ -251,6 +273,7 @@ namespace MixItUp.Base.Model.Overlay
             this.mods.Clear();
             this.follows.Clear();
             this.hosts.Clear();
+            this.raids.Clear();
             this.newSubs.Clear();
             this.resubs.Clear();
             this.giftedSubs.Clear();
@@ -294,6 +317,7 @@ namespace MixItUp.Base.Model.Overlay
                         case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
                         case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
                         case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
+                        case OverlayEndCreditsSectionTypeEnum.Raids: items = this.GetUsersDictionary(this.raids); break;
                         case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
                         case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
                         case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
@@ -329,12 +353,21 @@ namespace MixItUp.Base.Model.Overlay
             this.follows.Remove(user.ID);
         }
 
-        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        private void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.ID))
             {
-                this.hosts.Add(host.Item1.ID);
-                this.AddUserForRole(host.Item1);
+                this.hosts.Add(host.ID);
+                this.AddUserForRole(host);
+            }
+        }
+
+        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        {
+            if (!this.raids.ContainsKey(raid.Item1.ID))
+            {
+                this.raids[raid.Item1.ID] = (uint)raid.Item2;
+                this.AddUserForRole(raid.Item1);
             }
         }
 
@@ -347,29 +380,29 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> resub)
         {
-            if (!this.resubs.ContainsKey(user.Item1.ID))
+            if (!this.resubs.ContainsKey(resub.Item1.ID))
             {
-                this.resubs[user.Item1.ID] = (uint)user.Item2;
-                this.AddUserForRole(user.Item1);
+                this.resubs[resub.Item1.ID] = (uint)resub.Item2;
+                this.AddUserForRole(resub.Item1);
             }
         }
 
-        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> subGift)
         {
-            if (!this.newSubs.Contains(e.Item2.ID))
+            if (!this.newSubs.Contains(subGift.Item2.ID))
             {
-                this.newSubs.Add(e.Item2.ID);
-                this.AddUserForRole(e.Item2);
+                this.newSubs.Add(subGift.Item2.ID);
+                this.AddUserForRole(subGift.Item2);
             }
 
-            if (!this.giftedSubs.ContainsKey(e.Item1.ID))
+            if (!this.giftedSubs.ContainsKey(subGift.Item1.ID))
             {
-                this.giftedSubs[e.Item1.ID] = 0;
-                this.AddUserForRole(e.Item1);
+                this.giftedSubs[subGift.Item1.ID] = 0;
+                this.AddUserForRole(subGift.Item1);
             }
-            this.giftedSubs[e.Item1.ID]++;
+            this.giftedSubs[subGift.Item1.ID]++;
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)

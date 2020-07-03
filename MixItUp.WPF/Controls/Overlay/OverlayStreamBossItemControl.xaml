@@ -80,19 +80,23 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding StartingHealthString}"  MaterialDesign:HintAssist.Hint="Starting Health" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
             <TextBox Grid.Column="2" Text="{Binding FollowBonusString}" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="4" Text="{Binding HostBonusString}" MaterialDesign:HintAssist.Hint="Host Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
+            <TextBox Grid.Column="4" Text="{Binding HostBonusString}" MaterialDesign:HintAssist.Hint="Host Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="6" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="6" Text="{Binding RaidBonusString}" MaterialDesign:HintAssist.Hint="Raid Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
 
-            <TextBox Grid.Column="8" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="8" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="10" Text="{Binding BitsBonusString}" MaterialDesign:HintAssist.Hint="Bits Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="10" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+
+            <TextBox Grid.Column="12" Text="{Binding BitsBonusString}" MaterialDesign:HintAssist.Hint="Bits Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -11,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.Bits;
+using Twitch.Base.Models.V5.Users;
+using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -24,8 +28,10 @@ namespace MixItUp.Base.Model.Overlay
         Sparks,
         [Obsolete]
         Embers,
+        Bits,
     }
 
+    [Obsolete]
     public enum OverlayLeaderboardListItemDateRangeEnum
     {
         Weekly,
@@ -33,6 +39,7 @@ namespace MixItUp.Base.Model.Overlay
         Yearly,
         [Name("All Time")]
         AllTime,
+        Daily,
     }
 
     [DataContract]
@@ -69,7 +76,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayLeaderboardListItemTypeEnum LeaderboardType { get; set; }
 
         [DataMember]
-        public OverlayLeaderboardListItemDateRangeEnum LeaderboardDateRange { get; set; }
+        public BitsLeaderboardPeriodEnum BitsLeaderboardDateRange { get; set; }
 
         [DataMember]
         public Guid CurrencyID { get; set; }
@@ -80,8 +87,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         private List<OverlayListIndividualItemModel> lastItems { get; set; } = new List<OverlayListIndividualItemModel>();
 
-        private Dictionary<UserViewModel, DateTimeOffset> userSubDates = new Dictionary<UserViewModel, DateTimeOffset>();
-        private Dictionary<UserViewModel, UserDonationModel> userDonations = new Dictionary<UserViewModel, UserDonationModel>();
+        [JsonIgnore]
+        private Dictionary<Guid, DateTimeOffset> userSubDates = new Dictionary<Guid, DateTimeOffset>();
+        [JsonIgnore]
+        private Dictionary<Guid, UserDonationModel> userDonations = new Dictionary<Guid, UserDonationModel>();
 
         private DateTimeOffset lastQuery = DateTimeOffset.MinValue;
 
@@ -97,10 +106,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, OverlayLeaderboardListItemDateRangeEnum dateRange, CustomCommand newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, BitsLeaderboardPeriodEnum dateRange, CustomCommand newLeaderCommand)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
-            this.LeaderboardDateRange = dateRange;
+            this.BitsLeaderboardDateRange = dateRange;
         }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
@@ -116,7 +125,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             get
             {
-                return this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank;
+                return this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank || this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Bits;
             }
         }
 
@@ -131,6 +140,27 @@ namespace MixItUp.Base.Model.Overlay
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 this.userSubDates.Clear();
+                IEnumerable<UserSubscriptionModel> subscribers = await ChannelSession.TwitchUserConnection.GetSubscribersV5(ChannelSession.TwitchChannelV5, int.MaxValue);
+
+                foreach (UserSubscriptionModel subscriber in subscribers)
+                {
+                    UserViewModel user = null;
+                    UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(subscriber.user.id);
+                    if (userData != null)
+                    {
+                        user = new UserViewModel(userData);
+                    }
+                    else
+                    {
+                        user = new UserViewModel(subscriber.user);
+                    }
+
+                    DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
+                    if (subDate.HasValue)
+                    {
+                        this.userSubDates[user.ID] = subDate.GetValueOrDefault();
+                    }
+                }
 
                 await this.UpdateSubscribers();
 
@@ -177,6 +207,37 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Bits && this.lastQuery.TotalMinutesFromNow() > 1)
+            {
+                BitsLeaderboardModel bitsLeaderboard = null;
+                switch (this.BitsLeaderboardDateRange)
+                {
+                    case BitsLeaderboardPeriodEnum.Day:
+                        bitsLeaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Day, this.TotalToShow);
+                        break;
+                    case BitsLeaderboardPeriodEnum.Week:
+                        bitsLeaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Week, this.TotalToShow);
+                        break;
+                    case BitsLeaderboardPeriodEnum.Month:
+                        bitsLeaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Month, this.TotalToShow);
+                        break;
+                    case BitsLeaderboardPeriodEnum.Year:
+                        bitsLeaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Year, this.TotalToShow);
+                        break;
+                    case BitsLeaderboardPeriodEnum.All:
+                        bitsLeaderboard = await ChannelSession.TwitchUserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.All, this.TotalToShow);
+                        break;
+                }
+                this.lastQuery = DateTimeOffset.Now;
+
+                if (bitsLeaderboard != null && bitsLeaderboard.users != null)
+                {
+                    foreach (BitsLeaderboardUserModel bitsUser in bitsLeaderboard.users.OrderBy(u => u.rank).Take(this.TotalToShow))
+                    {
+                        items.Add(new OverlayLeaderboardItem(bitsUser.user_name, bitsUser.score.ToString()));
+                    }
+                }
+            }
 
             if (items.Count > 0)
             {
@@ -188,7 +249,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            userSubDates[user] = DateTimeOffset.Now;
+            userSubDates[user.ID] = DateTimeOffset.Now;
             await this.UpdateSubscribers();
         }
 
@@ -210,7 +271,11 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                items.Add(new OverlayLeaderboardItem(kvp.Key, kvp.Value.GetAge()));
+                UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                if (userData != null)
+                {
+                    items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.GetAge()));
+                }
             }
 
             await this.ProcessLeaderboardItems(items);
@@ -221,12 +286,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             UserViewModel user = donation.User;
 
-            if (!this.userDonations.ContainsKey(user))
+            if (!this.userDonations.ContainsKey(user.ID))
             {
-                this.userDonations[user] = donation.Copy();
-                this.userDonations[user].Amount = 0.0;
+                this.userDonations[user.ID] = donation.Copy();
+                this.userDonations[user.ID].Amount = 0.0;
             }
-            this.userDonations[user].Amount += donation.Amount;
+            this.userDonations[user.ID].Amount += donation.Amount;
 
             List<OverlayLeaderboardItem> items = new List<OverlayLeaderboardItem>();
 
@@ -234,7 +299,11 @@ namespace MixItUp.Base.Model.Overlay
             for (int i = 0; i < orderedUsers.Count() && items.Count() < this.TotalToShow; i++)
             {
                 var kvp = orderedUsers.ElementAt(i);
-                items.Add(new OverlayLeaderboardItem(kvp.Key, kvp.Value.AmountText));
+                UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
+                if (userData != null)
+                {
+                    items.Add(new OverlayLeaderboardItem(new UserViewModel(userData), kvp.Value.AmountText));
+                }
             }
 
             await this.ProcessLeaderboardItems(items);

@@ -243,11 +243,12 @@ namespace MixItUp.Base.Commands
     {
         public static Task<DateTimeOffset> GetStartTime()
         {
+            DateTimeOffset startTime = DateTimeOffset.MinValue;
             if (ChannelSession.TwitchStreamIsLive)
             {
-                return Task.FromResult(TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at));
+                startTime = TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at).GetValueOrDefault();
             }
-            return Task.FromResult(DateTimeOffset.MinValue);
+            return Task.FromResult(startTime);
         }
 
         public UptimeChatCommand()
@@ -975,7 +976,7 @@ namespace MixItUp.Base.Commands
                         if (mixerUserData != null)
                         {
                             LinkedAccounts[user.ID] = mixerUserData.ID;
-                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @{user.Username}\" in chat to approve this linking.");
+                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
                             return;
                         }
                     }
@@ -1018,7 +1019,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage("Usage: !approvemixeraccount <USERNAME>");
+                    await ChannelSession.Services.Chat.SendMessage("Usage: !approvemixeraccount <TWITCH USERNAME>");
                 }
             }));
         }

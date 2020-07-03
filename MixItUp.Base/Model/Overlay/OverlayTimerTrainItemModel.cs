@@ -33,6 +33,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double HostBonus { get; set; }
         [DataMember]
+        public double RaidBonus { get; set; }
+        [DataMember]
         public double SubscriberBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
@@ -52,6 +54,8 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private HashSet<Guid> hosts = new HashSet<Guid>();
         [JsonIgnore]
+        private HashSet<Guid> raids = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> subs = new HashSet<Guid>();
 
         [JsonIgnore]
@@ -60,7 +64,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTimerTrainItemModel() : base() { }
 
         public OverlayTimerTrainItemModel(string htmlText, int minimumSecondsToShow, string textColor, string textFont, int textSize, double followBonus,
-            double hostBonus, double subscriberBonus, double donationBonus, double bitsBonus)
+            double hostBonus, double raidBonus, double subscriberBonus, double donationBonus, double bitsBonus)
             : base(OverlayItemModelTypeEnum.TimerTrain, htmlText)
         {
             this.MinimumSecondsToShow = minimumSecondsToShow;
@@ -69,6 +73,7 @@ namespace MixItUp.Base.Model.Overlay
             this.TextSize = textSize;
             this.FollowBonus = followBonus;
             this.HostBonus = hostBonus;
+            this.RaidBonus = raidBonus;
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.BitsBonus = bitsBonus;
@@ -86,6 +91,10 @@ namespace MixItUp.Base.Model.Overlay
             if (this.HostBonus > 0.0)
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
+            }
+            if (this.RaidBonus > 0.0)
+            {
+                GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
             }
             if (this.SubscriberBonus > 0.0)
             {
@@ -115,6 +124,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Disable()
         {
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
@@ -164,12 +174,21 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        private async void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.ID))
             {
-                this.hosts.Add(host.Item1.ID);
-                await this.AddSeconds(Math.Max(host.Item2, 1) * this.HostBonus);
+                this.hosts.Add(host.ID);
+                await this.AddSeconds(this.HostBonus);
+            }
+        }
+
+        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        {
+            if (!this.raids.Contains(raid.Item1.ID))
+            {
+                this.raids.Add(raid.Item1.ID);
+                await this.AddSeconds(Math.Max(raid.Item2, 1) * this.RaidBonus);
             }
         }
 

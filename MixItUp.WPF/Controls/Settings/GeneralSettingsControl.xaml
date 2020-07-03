@@ -41,10 +41,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="OptOutTrackingTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.OptOutofDataTracking}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -69,18 +65,13 @@
 
         <Separator Grid.Row="14" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.DownloadAndInstallffmpeg}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <TextBlock Grid.Row="16" Grid.Column="2" HorizontalAlignment="Center" Text="{x:Static resx:Resources.Disabled}"/>
+        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.SaveChatEventLogs}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="SaveChatEventLogsToggleButton" HorizontalAlignment="Left" Checked="SaveChatEventLogsToggleButton_Checked" Unchecked="SaveChatEventLogsToggleButton_Checked" />
 
         <Separator Grid.Row="18" Grid.ColumnSpan="2" Margin="10" />
-
-        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.SaveChatEventLogs}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="20" Grid.Column="2" x:Name="SaveChatEventLogsToggleButton" HorizontalAlignment="Left" Checked="SaveChatEventLogsToggleButton_Checked" Unchecked="SaveChatEventLogsToggleButton_Checked" />
-
-        <Separator Grid.Row="22" Grid.ColumnSpan="2" Margin="10" />
         
-        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.Language}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ComboBox x:Name="LanguageComboBox" Grid.Row="24" Grid.Column="2" SelectionChanged="LanguageComboBox_SelectionChanged">
+        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.Language}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <ComboBox x:Name="LanguageComboBox" Grid.Row="20" Grid.Column="2" SelectionChanged="LanguageComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

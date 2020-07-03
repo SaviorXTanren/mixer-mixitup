@@ -40,6 +40,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private double hostBonus;
 
+        public string RaidBonusString
+        {
+            get { return this.raidBonus.ToString(); }
+            set
+            {
+                this.raidBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double raidBonus;
+
         public string SubBonusString
         {
             get { return this.subBonus.ToString(); }
@@ -219,6 +230,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.startingHealth = 5000;
             this.followBonus = 1.0;
             this.hostBonus = 1.0;
+            this.raidBonus = 1.0;
             this.subBonus = 10.0;
             this.donationBonus = 1.5;
             this.bitsBonus = 1.5;
@@ -235,6 +247,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.startingHealth = item.StartingHealth;
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;
+            this.raidBonus = item.RaidBonus;
             this.subBonus = item.SubscriberBonus;
             this.donationBonus = item.DonationBonus;
             this.bitsBonus = item.BitsBonus;
@@ -269,7 +282,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 return new OverlayStreamBossItemModel(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
-                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.bitsBonus, this.healingBonus, this.overkillBonus,
+                    this.ProgressColor, this.followBonus, this.hostBonus, this.raidBonus, this.subBonus, this.donationBonus, this.bitsBonus, this.healingBonus, this.overkillBonus,
                     this.damageAnimation, this.newBossAnimation, this.NewBossCommand);
             }
             return null;

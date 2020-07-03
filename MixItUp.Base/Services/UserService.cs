@@ -105,6 +105,14 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
+                else if (ChannelSession.GetCurrentUser().ID.Equals(user.ID))
+                {
+                    user.IgnoreForQueries = true;
+                }
+                else if (ChannelSession.TwitchBotNewAPI != null && ChannelSession.TwitchBotNewAPI.id.Equals(user.TwitchID))
+                {
+                    user.IgnoreForQueries = true;
+                }
                 else
                 {
                     user.IgnoreForQueries = false;

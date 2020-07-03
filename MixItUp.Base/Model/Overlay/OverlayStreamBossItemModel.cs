@@ -3,6 +3,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double HostBonus { get; set; }
         [DataMember]
+        public double RaidBonus { get; set; }
+        [DataMember]
         public double SubscriberBonus { get; set; }
         [DataMember]
         public double DonationBonus { get; set; }
@@ -104,13 +107,17 @@ namespace MixItUp.Base.Model.Overlay
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
+        [JsonIgnore]
         private HashSet<Guid> follows = new HashSet<Guid>();
+        [JsonIgnore]
         private HashSet<Guid> hosts = new HashSet<Guid>();
+        [JsonIgnore]
+        private HashSet<Guid> raids = new HashSet<Guid>();
 
         public OverlayStreamBossItemModel() : base() { }
 
         public OverlayStreamBossItemModel(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
-            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double bitsBonus, double healingBonus, double overkillBonus,
+            string progressColor, double followBonus, double hostBonus, double raidBonus, double subscriberBonus, double donationBonus, double bitsBonus, double healingBonus, double overkillBonus,
             OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(OverlayItemModelTypeEnum.StreamBoss, htmlText)
         {
@@ -124,6 +131,7 @@ namespace MixItUp.Base.Model.Overlay
             this.ProgressColor = progressColor;
             this.FollowBonus = followBonus;
             this.HostBonus = hostBonus;
+            this.RaidBonus = raidBonus;
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.BitsBonus = bitsBonus;
@@ -167,6 +175,10 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
             }
+            if (this.RaidBonus > 0.0)
+            {
+                GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
+            }
             if (this.SubscriberBonus > 0.0)
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
@@ -189,6 +201,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
@@ -289,12 +302,21 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        private async void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.ID))
             {
-                this.hosts.Add(host.Item1.ID);
-                await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
+                this.hosts.Add(host.ID);
+                await this.ReduceHealth(host, this.HostBonus);
+            }
+        }
+
+        private async void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> raid)
+        {
+            if (!this.raids.Contains(raid.Item1.ID))
+            {
+                this.raids.Add(raid.Item1.ID);
+                await this.ReduceHealth(raid.Item1, (Math.Max(raid.Item2, 1) * this.RaidBonus));
             }
         }
 

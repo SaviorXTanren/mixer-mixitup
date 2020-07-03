@@ -12,6 +12,7 @@ using Twitch.Base.Models.V5.Channel;
 using Twitch.Base.Models.V5.Teams;
 using Twitch.Base.Services.V5API;
 using NewAPI = Twitch.Base.Models.NewAPI;
+using NewAPIServices = Twitch.Base.Services.NewAPI;
 using V5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.Services.Twitch
@@ -128,7 +129,7 @@ namespace MixItUp.Base.Services.Twitch
             return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
         }
 
-        public static DateTimeOffset GetTwitchDateTime(string dateTime)
+        public static DateTimeOffset? GetTwitchDateTime(string dateTime)
         {
             if (!string.IsNullOrEmpty(dateTime))
             {
@@ -141,7 +142,7 @@ namespace MixItUp.Base.Services.Twitch
                     return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
                 }
             }
-            return DateTimeOffset.MinValue;
+            return null;
         }
 
         public TwitchConnection Connection { get; private set; }
@@ -182,6 +183,10 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<V5API.Users.UserModel>> GetV5APIChannelEditors(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelEditors(channel)); }
 
         public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck)); }
+
+        public async Task<IEnumerable<V5API.Users.UserSubscriptionModel>> GetSubscribersV5(V5API.Channel.ChannelModel channel, int maxResults = 1) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelSubscribers(channel, maxResults)); }
+
+        public async Task<long> GetSubscriberCountV5(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelSubscribersCount(channel)); }
 
         public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user)); }
 
@@ -251,6 +256,8 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<NewAPI.Clips.ClipCreationModel> CreateClip(NewAPI.Users.UserModel channel, bool delay) { return await this.RunAsync(this.Connection.NewAPI.Clips.CreateClip(channel, delay)); }
 
         public async Task<NewAPI.Clips.ClipModel> GetClip(NewAPI.Clips.ClipCreationModel clip) { return await this.RunAsync(this.Connection.NewAPI.Clips.GetClip(clip)); }
+
+        public async Task<NewAPI.Bits.BitsLeaderboardModel> GetBitsLeaderboard(NewAPIServices.BitsLeaderboardPeriodEnum period, int count) { return await this.RunAsync(this.Connection.NewAPI.Bits.GetBitsLeaderboard(startedAt: DateTimeOffset.Now, period: period, count: count)); }
 
         public async Task<IEnumerable<NewAPI.Bits.BitsCheermoteModel>> GetBitsCheermotes(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Bits.GetCheermotes(channel)); }
 

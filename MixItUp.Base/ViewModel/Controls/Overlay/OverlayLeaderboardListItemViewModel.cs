@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
+using Twitch.Base.Services.NewAPI;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -19,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.leaderboardType = EnumHelper.GetEnumValueFromString<OverlayLeaderboardListItemTypeEnum>(value);
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsCurrencyRankType");
+                this.NotifyPropertyChanged("IsBitsType");
                 this.NotifyPropertyChanged("IsDonationsType");
                 this.NotifyPropertyChanged("SupportsRefreshUpdating");
             }
@@ -26,20 +28,21 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         private OverlayLeaderboardListItemTypeEnum leaderboardType;
 
         public bool IsCurrencyRankType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank; } }
+        public bool IsBitsType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Bits; } }
         public bool HasNewLeaderCommand { get { return this.NewLeaderCommand != null; } }
         public bool DoesNotHaveNewLeaderCommand { get { return !this.HasNewLeaderCommand; } }
 
-        public IEnumerable<string> SparksEmbersDateStrings { get; set; } = EnumHelper.GetEnumNames<OverlayLeaderboardListItemDateRangeEnum>();
-        public string SparksEmbersDateString
+        public IEnumerable<string> BitsDateStrings { get; set; } = EnumHelper.GetEnumNames<BitsLeaderboardPeriodEnum>();
+        public string BitsDateString
         {
-            get { return EnumHelper.GetEnumName(this.sparksEmbersDate); }
+            get { return EnumHelper.GetEnumName(this.bitsDate); }
             set
             {
-                this.sparksEmbersDate = EnumHelper.GetEnumValueFromString<OverlayLeaderboardListItemDateRangeEnum>(value);
+                this.bitsDate = EnumHelper.GetEnumValueFromString<BitsLeaderboardPeriodEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayLeaderboardListItemDateRangeEnum sparksEmbersDate;
+        private BitsLeaderboardPeriodEnum bitsDate;
 
         public IEnumerable<CurrencyModel> CurrencyRanks { get; set; } = ChannelSession.Settings.Currency.Values.ToList();
         public CurrencyModel CurrencyRank
@@ -86,6 +89,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     this.CurrencyRank = ChannelSession.Settings.Currency[item.CurrencyID];
                 }
             }
+            else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Bits)
+            {
+                this.bitsDate = item.BitsLeaderboardDateRange;
+            }
         }
 
         public override OverlayItemModelBase GetOverlayItem()
@@ -102,6 +109,14 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
                             this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.CurrencyRank, this.NewLeaderCommand);
+                    }
+                }
+                else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Bits)
+                {
+                    if (!string.IsNullOrEmpty(this.BitsDateString))
+                    {
+                        return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.bitsDate, this.NewLeaderCommand);
                     }
                 }
                 else

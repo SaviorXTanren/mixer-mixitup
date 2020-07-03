@@ -71,6 +71,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private double hostBonus;
 
+        public string RaidBonusString
+        {
+            get { return this.raidBonus.ToString(); }
+            set
+            {
+                this.raidBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double raidBonus;
+
         public string SubBonusString
         {
             get { return this.subBonus.ToString(); }
@@ -114,6 +125,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
             this.followBonus = 1.0;
             this.hostBonus = 1.0;
+            this.raidBonus = 1.0;
             this.subBonus = 10.0;
             this.donationBonus = 1.5;
             this.bitsBonus = 1.5;
@@ -129,6 +141,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;
+            this.raidBonus = item.RaidBonus;
             this.subBonus = item.SubscriberBonus;
             this.donationBonus = item.DonationBonus;
             this.bitsBonus = item.BitsBonus;
@@ -142,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             {
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
-                return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
+                return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus, this.raidBonus,
                     this.subBonus, this.donationBonus, this.bitsBonus);
             }
             return null;

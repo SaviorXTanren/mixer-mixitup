@@ -84,6 +84,18 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
+        public UserViewModel(TwitchV5API.Users.UserModel twitchUser)
+        {
+            this.SetUserData(twitchID: twitchUser.id);
+
+            this.TwitchID = twitchUser.id;
+            this.TwitchUsername = twitchUser.name;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
+            this.TwitchAvatarLink = twitchUser.logo;
+
+            this.SetTwitchRoles();
+        }
+
         public UserViewModel(ChatMessagePacketModel twitchMessage)
         {
             this.SetUserData(twitchID: twitchMessage.UserID);
@@ -118,13 +130,13 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(ChatRawPacketModel packet)
+        public UserViewModel(ChatUserNoticePacketModel packet)
         {
-            this.SetUserData(twitchID: packet.Tags["user-id"]);
+            this.SetUserData(twitchID: packet.UserID.ToString());
 
-            this.TwitchID = packet.Tags["user-id"];
-            this.TwitchUsername = packet.Tags["login"];
-            this.TwitchDisplayName = (packet.Tags.ContainsKey("display-name") && !string.IsNullOrEmpty(packet.Tags["display-name"])) ? packet.Tags["display-name"] : this.TwitchUsername;
+            this.TwitchID = packet.UserID.ToString();
+            this.TwitchUsername = packet.RaidUserLogin;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.RaidUserDisplayName)) ? packet.RaidUserDisplayName : this.TwitchUsername;
 
             this.SetTwitchRoles();
         }

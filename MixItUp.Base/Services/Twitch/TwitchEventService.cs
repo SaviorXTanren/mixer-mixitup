@@ -299,8 +299,8 @@ namespace MixItUp.Base.Services.Twitch
 
             user.Data.TotalBitsCheered += (uint)bitsCheered.Amount;
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerUserData] = user.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheerAmountData] = bitsCheered.Amount;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
             trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
@@ -383,7 +383,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel packet)
         {
-            UserViewModel gifter = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            UserViewModel gifter = packet.IsAnonymousGiftedSubscription ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
             if (gifter == null)
             {
                 gifter = new UserViewModel(packet);
@@ -400,22 +400,28 @@ namespace MixItUp.Base.Services.Twitch
                 });
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
-            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
-            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+            uint monthsGifted = packet.IsMultiMonth ? (uint)packet.multi_month_duration : 1;
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.ID;
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = monthsGifted;
 
             receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
-                currency.AddAmount(gifter.Data, currency.OnSubscribeBonus);
+                for (int i = 0; i < monthsGifted; i++)
+                {
+                    currency.AddAmount(gifter.Data, currency.OnSubscribeBonus);
+                }
             }
-            gifter.Data.TotalSubsGifted++;
-            receiver.Data.TotalSubsReceived++;
-            receiver.Data.TotalMonthsSubbed++;
+            gifter.Data.TotalSubsGifted += monthsGifted;
+            receiver.Data.TotalSubsReceived += monthsGifted;
+            receiver.Data.TotalMonthsSubbed += monthsGifted;
 
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
+            trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
+            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+            trigger.SpecialIdentifiers["usermonthsgifted"] = monthsGifted.ToString();
+            trigger.SpecialIdentifiers["isanonymous"] = packet.IsAnonymousGiftedSubscription.ToString();
             trigger.Arguments.Add(receiver.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
