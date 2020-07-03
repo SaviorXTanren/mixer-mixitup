@@ -18,8 +18,6 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class GeneralSettingsControl : SettingsControlBase
     {
-        private const string FFMPEGDownloadLink = "https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-4.0-win32-static.zip";
-
         public static readonly string OptOutTrackingTooltip =
             "This option allows you to opt-out of any tracking of your" + Environment.NewLine +
             "data via our back-end services. We track data around app" + Environment.NewLine +
@@ -93,8 +91,6 @@ namespace MixItUp.WPF.Controls.Settings
                 this.DefaultAudioOutputComboBox.SelectedItem = SoundAction.DefaultAudioDevice;
             }
             this.SaveChatEventLogsToggleButton.IsChecked = ChannelSession.Settings.SaveChatEventLogs;
-
-            this.CheckFFMPEGInstallation();
 
             await base.InitializeInternal();
         }
@@ -180,33 +176,6 @@ namespace MixItUp.WPF.Controls.Settings
                     ChannelSession.Settings.DefaultAudioOutput = audioDeviceName;
                 }
             }
-        }
-
-        private async void DownloadAndInstallFFMPEGButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), "ffmpeg.zip");
-
-                await Task.Run(() =>
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        client.DownloadFile(new Uri(GeneralSettingsControl.FFMPEGDownloadLink), zipFilePath);
-                    }
-                });
-
-                await ChannelSession.Services.FileService.UnzipFiles(zipFilePath, ChannelSession.Services.FileService.GetApplicationDirectory());
-            });
-
-            this.CheckFFMPEGInstallation();
-        }
-
-        private void CheckFFMPEGInstallation()
-        {
-            //bool mmpegExists = ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath());
-            //this.DownloadAndInstallFFMPEGButton.Visibility = (mmpegExists) ? Visibility.Collapsed : Visibility.Visible;
-            //this.FFMPEGInstalledTextBlock.Visibility = (mmpegExists) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SaveChatEventLogsToggleButton_Checked(object sender, RoutedEventArgs e)
