@@ -21,6 +21,7 @@ namespace MixItUp.Base.Services
         public EventStatisticDataTrackerModel FollowTracker { get; private set; }
         public EventStatisticDataTrackerModel UnfollowTracker { get; private set; }
         public EventStatisticDataTrackerModel HostsTracker { get; private set; }
+        public EventStatisticDataTrackerModel RaidsTracker { get; private set; }
 
         public EventStatisticDataTrackerModel SubscriberTracker { get; private set; }
         public EventStatisticDataTrackerModel ResubscriberTracker { get; private set; }
@@ -39,6 +40,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnFollowOccurred += Constellation_OnFollowOccurred;
             GlobalEvents.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
             GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
+            GlobalEvents.OnRaidOccurred += GlobalEvents_OnRaidOccurred;
             GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
@@ -72,10 +74,11 @@ namespace MixItUp.Base.Services
 
             this.FollowTracker = new EventStatisticDataTrackerModel("Follows", "AccountMultiplePlus", true, new List<string>() { "Username", "Date & Time" });
             this.UnfollowTracker = new EventStatisticDataTrackerModel("Unfollows", "AccountMultipleMinus", true, new List<string>() { "Username", "Date & Time" });
+            this.HostsTracker = new EventStatisticDataTrackerModel("Hosts", "AccountNetwork", true, new List<string>() { "Username", "Date & Time" });
 
-            this.HostsTracker = new EventStatisticDataTrackerModel("Hosts", "AccountSupervisor", true, new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            this.RaidsTracker = new EventStatisticDataTrackerModel("Raids", "AccountMultipleMinus", true, new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
-                return string.Format("Hosts: {0},    Total Viewers: {1},    Average Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
+                return string.Format("Raids: {0},    Total Viewers: {1},    Average Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
             });
 
             this.SubscriberTracker = new EventStatisticDataTrackerModel("Subscribes", "AccountStar", true, new List<string>() { "Username", "Date & Time" });
@@ -110,6 +113,7 @@ namespace MixItUp.Base.Services
             this.Statistics.Add(this.FollowTracker);
             this.Statistics.Add(this.UnfollowTracker);
             this.Statistics.Add(this.HostsTracker);
+            this.Statistics.Add(this.RaidsTracker);
             this.Statistics.Add(this.SubscriberTracker);
             this.Statistics.Add(this.ResubscriberTracker);
             this.Statistics.Add(this.GiftedSubscriptionsTracker);
@@ -127,9 +131,14 @@ namespace MixItUp.Base.Services
             this.UnfollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
-        private void Constellation_OnHostedOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void Constellation_OnHostedOccurred(object sender, UserViewModel e)
         {
-            this.HostsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
+            this.HostsTracker.OnStatisticEventOccurred(e.Username);
+        }
+
+        private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
         private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)

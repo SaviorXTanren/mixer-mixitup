@@ -32,6 +32,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -63,11 +65,22 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Raids:</TextBlock>
+                <CheckBox IsChecked="{Binding ShowRaids}" Grid.Column="2" VerticalAlignment="Center" />
+            </Grid>
+
+            <Grid Grid.Column="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
                 <TextBlock Grid.Column="0" VerticalAlignment="Center">Sub/Resubs:</TextBlock>
                 <CheckBox IsChecked="{Binding ShowSubscribers}" Grid.Column="2" VerticalAlignment="Center" />
             </Grid>
 
-            <Grid Grid.Column="6">
+            <Grid Grid.Column="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
@@ -78,7 +91,7 @@
                 <CheckBox IsChecked="{Binding ShowDonations}" Grid.Column="2" VerticalAlignment="Center" />
             </Grid>
 
-            <Grid Grid.Column="8">
+            <Grid Grid.Column="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />

@@ -26,6 +26,16 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
 
+        public bool ShowRaids
+        {
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Raids); }
+            set
+            {
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Raids, value);
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public bool ShowSubscribers
         {
             get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Subscribers); }
