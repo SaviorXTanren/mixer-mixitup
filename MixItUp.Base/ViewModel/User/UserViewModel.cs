@@ -129,6 +129,16 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
+        public UserViewModel(ChatClearChatPacketModel packet)
+        {
+            this.SetUserData(twitchID: packet.UserID);
+
+            this.TwitchID = packet.UserID;
+            this.TwitchUsername = packet.UserLogin;
+
+            this.SetTwitchRoles();
+        }
+
         public UserViewModel(PubSubBitsEventV2Model packet)
         {
             this.SetUserData(twitchID: packet.user_id);
@@ -344,11 +354,17 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchSubscriberBadge { get; private set; }
 
-        public ChatBadgeModel TwitchBitsBadge { get; private set; }
+        public bool HasTwitchModeratorBadge { get { return this.TwitchModeratorBadge != null; } }
+
+        public string TwitchModeratorBadgeLink { get { return (this.HasTwitchModeratorBadge) ? this.TwitchModeratorBadge.image_url_1x : string.Empty; } }
+
+        public ChatBadgeModel TwitchModeratorBadge { get; private set; }
 
         public bool HasTwitchBitsBadge { get { return this.TwitchBitsBadge != null; } }
 
         public string TwitchBitsBadgeLink { get { return (this.HasTwitchBitsBadge) ? this.TwitchBitsBadge.image_url_1x : string.Empty; } }
+
+        public ChatBadgeModel TwitchBitsBadge { get; private set; }
 
         #endregion Twitch
 
@@ -625,6 +641,11 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null)
                 {
+                    if (this.TwitchUserRoles.Contains(UserRoleEnum.Mod))
+                    {
+                        this.TwitchModeratorBadge = this.GetTwitchBadgeURL("moderator");
+                    }
+
                     string name = null;
                     if (this.HasTwitchSubscriberBadge)
                     {
@@ -637,11 +658,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        int versionID = this.GetTwitchBadgeVersion(name);
-                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(name) && ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
-                        {
-                            this.TwitchSubscriberBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
-                        }
+                        this.TwitchSubscriberBadge = this.GetTwitchBadgeURL(name);
                     }
 
                     string bitsBadgeName = null;
@@ -654,13 +671,9 @@ namespace MixItUp.Base.ViewModel.User
                         bitsBadgeName = "bits";
                     }
 
-                    if (!string.IsNullOrEmpty(bitsBadgeName) && ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(bitsBadgeName))
+                    if (!string.IsNullOrEmpty(bitsBadgeName))
                     {
-                        int versionID = this.GetTwitchBadgeVersion(bitsBadgeName);
-                        if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges[bitsBadgeName].versions.ContainsKey(versionID.ToString()))
-                        {
-                            this.TwitchBitsBadge = ChannelSession.Services.Chat.TwitchChatService.ChatBadges[bitsBadgeName].versions[versionID.ToString()];
-                        }
+                        this.TwitchBitsBadge = this.GetTwitchBadgeURL(bitsBadgeName);
                     }
                 }
             }
@@ -680,6 +693,19 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         private bool HasTwitchBadge(string name) { return this.GetTwitchBadgeVersion(name) >= 0; }
+
+        private ChatBadgeModel GetTwitchBadgeURL(string name)
+        {
+            if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(name))
+            {
+                int versionID = this.GetTwitchBadgeVersion(name);
+                if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                {
+                    return ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
+                }
+            }
+            return null;
+        }
 
         #endregion Twitch Data Setter Functions
 
@@ -811,6 +837,16 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
+
+            if (ChannelSession.TwitchChannelEditorsV5.Contains(this.TwitchID))
+            {
+                this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
+            }
+            else
+            {
+                this.TwitchUserRoles.Remove(UserRoleEnum.ChannelEditor);
+            }
+
             this.IsInChat = true;
         }
 

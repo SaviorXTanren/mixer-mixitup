@@ -3003,4 +3003,10 @@
   <data name="TeamMembers" xml:space="preserve">
     <value>Team Members</value>
   </data>
+  <data name="UnVIPUser" xml:space="preserve">
+    <value>Un-VIP User</value>
+  </data>
+  <data name="VIPUser" xml:space="preserve">
+    <value>VIP User</value>
+  </data>
 </root>

@@ -7846,6 +7846,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Un-VIP User.
+        /// </summary>
+        public static string UnVIPUser {
+            get {
+                return ResourceManager.GetString("UnVIPUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string Update {
@@ -8382,6 +8391,15 @@ namespace MixItUp.Base {
         public static string ViewingTwoHours {
             get {
                 return ResourceManager.GetString("ViewingTwoHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIP User.
+        /// </summary>
+        public static string VIPUser {
+            get {
+                return ResourceManager.GetString("VIPUser", resourceCulture);
             }
         }
         

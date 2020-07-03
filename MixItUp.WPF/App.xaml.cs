@@ -69,6 +69,7 @@ namespace MixItUp.WPF
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
         {
+            string baseTheme = null;
             colorScheme = colorScheme.Replace(" ", "");
 
             // Change Material Design Color Scheme
@@ -86,6 +87,20 @@ namespace MixItUp.WPF
                 newMDCResourceDictionary.Source = new Uri($"Themes/MixItUpTheme.{fullThemeName}.xaml", UriKind.Relative);
                 SolidColorBrush mainApplicationBackground = (SolidColorBrush)newMDCResourceDictionary["MainApplicationBackground"];
                 backgroundColorName = (mainApplicationBackground.ToString().Equals("#FFFFFFFF")) ? "Light" : "Dark";
+
+                bool containsBaseTheme = false;
+                foreach (string key in newMDCResourceDictionary.Keys)
+                {
+                    if (key.Equals("BaseTheme"))
+                    {
+                        containsBaseTheme = true;
+                    }
+                }
+
+                if (containsBaseTheme)
+                {
+                    baseTheme =(string)newMDCResourceDictionary["BaseTheme"];
+                }
             }
             else
             {
@@ -102,8 +117,12 @@ namespace MixItUp.WPF
             }
             Application.Current.Resources.MergedDictionaries.Remove(existingMDTResourceDictionary);
 
-            var themeSource = $"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.{backgroundColorName}.xaml";
-            var newMDTResourceDictionary = new ResourceDictionary() { Source = new Uri(themeSource) };
+            var themeSource = new Uri($"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.{backgroundColorName}.xaml");
+            if (!string.IsNullOrEmpty(baseTheme))
+            {
+                themeSource = new Uri($"Themes/MixItUpBaseTheme.{baseTheme}.xaml", UriKind.Relative);
+            }
+            var newMDTResourceDictionary = new ResourceDictionary() { Source = themeSource };
 
             Application.Current.Resources.MergedDictionaries.Add(newMDTResourceDictionary);
 

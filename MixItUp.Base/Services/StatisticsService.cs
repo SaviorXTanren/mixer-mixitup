@@ -101,7 +101,7 @@ namespace MixItUp.Base.Services
 
             this.BitsTracker = new EventStatisticDataTrackerModel("Bits", "Decagram", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
-                return $"{Resources.Users}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
+                return $"{Resources.Users}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValue},    {Resources.Average}: {dataTracker.AverageValueString}";
             });
 
             this.Statistics = new List<StatisticDataTrackerModelBase>();

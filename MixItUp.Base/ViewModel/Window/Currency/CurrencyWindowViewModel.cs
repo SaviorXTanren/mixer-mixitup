@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         Minutes,
         [Name("1PerHour")]
         Hours,
-        [Name("1PerSpark")]
+        [Name("1PerBit")]
         Bits,
         Custom,
         Disabled,

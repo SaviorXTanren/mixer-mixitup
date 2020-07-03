@@ -428,7 +428,7 @@ namespace MixItUp.Base.Commands
                         string quoteText = quoteBuilder.ToString();
                         quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now);
+                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
                         ChannelSession.Settings.Quotes.Add(quote);
                         await ChannelSession.SaveSettings();
 

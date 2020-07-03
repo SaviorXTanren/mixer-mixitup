@@ -39,6 +39,7 @@ namespace MixItUp.Base.Model.Overlay
         FreeFormHTML2,
         [Name("Free Form HTML 3")]
         FreeFormHTML3,
+        Bits,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -111,6 +112,7 @@ namespace MixItUp.Base.Model.Overlay
         private Dictionary<Guid, uint> resubs = new Dictionary<Guid, uint>();
         private Dictionary<Guid, uint> giftedSubs = new Dictionary<Guid, uint>();
         private Dictionary<Guid, double> donations = new Dictionary<Guid, double>();
+        private Dictionary<Guid, uint> bits = new Dictionary<Guid, uint>();
 
         public OverlayEndCreditsItemModel() : base() { }
 
@@ -181,6 +183,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.donations[userID] = 12.34;
                 }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Bits))
+                {
+                    this.bits[userID] = 123;
+                }
             }
             return Task.FromResult(0);
         }
@@ -217,7 +223,25 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Bits))
+            {
+                GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
+            }
             return base.Initialize();
+        }
+
+        public override Task Disable()
+        {
+            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
+            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnBitsOccurred -= GlobalEvents_OnBitsOccurred;
+            return Task.FromResult(0);
         }
 
         public override async Task Reset()
@@ -231,6 +255,7 @@ namespace MixItUp.Base.Model.Overlay
             this.resubs.Clear();
             this.giftedSubs.Clear();
             this.donations.Clear();
+            this.bits.Clear();
 
             await base.Reset();
         }
@@ -273,6 +298,7 @@ namespace MixItUp.Base.Model.Overlay
                         case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
                         case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
                         case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
+                        case OverlayEndCreditsSectionTypeEnum.Bits: items = this.GetUsersDictionary(this.bits); break;
                     }
                     await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items, platform);
                 }
@@ -356,6 +382,16 @@ namespace MixItUp.Base.Model.Overlay
             this.donations[donation.User.ID] += donation.Amount;
         }
 
+        private void GlobalEvents_OnBitsOccurred(object sender, User.Twitch.TwitchUserBitsCheeredModel bits)
+        {
+            if (!this.bits.ContainsKey(bits.User.ID))
+            {
+                this.bits[bits.User.ID] = 0;
+                this.AddUserForRole(bits.User);
+            }
+            this.bits[bits.User.ID] += (uint)bits.Amount;
+        }
+
         private void AddUserForRole(UserViewModel user)
         {
             if (this.ShouldIncludeUser(user))
@@ -374,6 +410,21 @@ namespace MixItUp.Base.Model.Overlay
 
         private bool ShouldIncludeUser(UserViewModel user)
         {
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.ID.Equals(ChannelSession.GetCurrentUser()?.ID))
+            {
+                return false;
+            }
+
+            if (ChannelSession.TwitchBotConnection != null && string.Equals(user.TwitchID, ChannelSession.TwitchBotNewAPI?.id))
+            {
+                return false;
+            }
+
             return true;
         }
 

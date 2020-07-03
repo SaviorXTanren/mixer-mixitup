@@ -28,11 +28,12 @@ namespace MixItUp.Base.Model.User
             this.DateTime = DateTimeOffset.MinValue;
         }
 
-        public UserQuoteModel(int id, string quote, DateTimeOffset dateTime)
+        public UserQuoteModel(int id, string quote, DateTimeOffset dateTime, string gameName)
         {
             this.ID = id;
             this.Quote = quote;
             this.DateTime = dateTime;
+            this.GameName = gameName;
         }
     }
 }

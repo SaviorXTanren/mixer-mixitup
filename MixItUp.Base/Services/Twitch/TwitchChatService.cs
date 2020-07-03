@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchChatService : StreamingPlatformServiceBase, ITwitchChatService
     {
-        private const int MaxMessageLength = 510;
+        private const int MaxMessageLength = 400;
 
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
@@ -130,6 +130,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private List<string> initialUserLogins = new List<string>();
 
+        private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
         private SemaphoreSlim whisperSemaphore = new SemaphoreSlim(1);
 
         public TwitchChatService() { }
@@ -165,6 +166,7 @@ namespace MixItUp.Base.Services.Twitch
                         this.userClient.OnUserLeaveReceived += UserClient_OnUserLeaveReceived;
                         this.userClient.OnUserStateReceived += UserClient_OnUserStateReceived;
                         this.userClient.OnUserNoticeReceived += UserClient_OnUserNoticeReceived;
+                        this.userClient.OnChatClearReceived += UserClient_OnChatClearReceived;
                         this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
 
                         this.userClient.OnUserListReceived += UserClient_OnUserListReceived;
@@ -209,9 +211,11 @@ namespace MixItUp.Base.Services.Twitch
                     this.userClient.OnPacketReceived -= Client_OnPacketReceived;
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
                     this.userClient.OnPingReceived -= UserClient_OnPingReceived;
-                    this.userClient.OnUserListReceived -= UserClient_OnUserListReceived;
                     this.userClient.OnUserJoinReceived -= UserClient_OnUserJoinReceived;
                     this.userClient.OnUserLeaveReceived -= UserClient_OnUserLeaveReceived;
+                    this.userClient.OnUserStateReceived -= UserClient_OnUserStateReceived;
+                    this.userClient.OnUserNoticeReceived -= UserClient_OnUserNoticeReceived;
+                    this.userClient.OnChatClearReceived -= UserClient_OnChatClearReceived;
                     this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
 
                     await this.userClient.Disconnect();
@@ -372,50 +376,42 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await this.messageSemaphore.WaitAndRelease(async () =>
             {
-                message = this.SplitLargeMessage(message, out string subMessage);
-
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
-                    await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                    string subMessage = null;
+                    do
+                    {
+                        message = this.SplitLargeMessage(message, out subMessage);
+                        await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                        message = subMessage;
+                        await Task.Delay(500);
+                    }
+                    while (!string.IsNullOrEmpty(message));
                 }
-
-                if (!string.IsNullOrEmpty(subMessage))
-                {
-                    // Adding delay to prevent messages from arriving in wrong order
-                    await Task.Delay(250);
-
-                    await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
-                }
-            }));
+            });
         }
 
         public async Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await this.messageSemaphore.WaitAndRelease(async () =>
             {
-                message = this.SplitLargeMessage(message, out string subMessage);
-
-                await this.whisperSemaphore.WaitAndRelease(async () =>
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
                 {
-                    ChatClient client = this.GetChatClient(sendAsStreamer);
-                    if (client != null)
+                    string subMessage = null;
+                    do
                     {
+                        message = this.SplitLargeMessage(message, out subMessage);
                         await client.SendWhisperMessage((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                        message = subMessage;
+                        await Task.Delay(500);
                     }
-                    await Task.Delay(500);
-                });
-
-                if (!string.IsNullOrEmpty(subMessage))
-                {
-                    // Adding delay to prevent messages from arriving in wrong order
-                    await Task.Delay(250);
-
-                    await this.SendWhisperMessage(user, subMessage, sendAsStreamer: sendAsStreamer);
+                    while (!string.IsNullOrEmpty(message));
                 }
-            }));
+            });
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
@@ -704,6 +700,37 @@ namespace MixItUp.Base.Services.Twitch
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
+            }
+        }
+
+        private async void UserClient_OnChatClearReceived(object sender, ChatClearChatPacketModel chatClear)
+        {
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(chatClear.UserID);
+            if (user == null)
+            {
+                user = new UserViewModel(chatClear);
+            }
+
+            if (chatClear.IsClear)
+            {
+                await this.AddAlertChatMessage(user, "Chat Cleared");
+            }
+            else if (chatClear.IsTimeout)
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserTimeout);
+                trigger.Arguments.Add("@" + user.Username);
+                trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                await this.AddAlertChatMessage(user, string.Format("{0} Timed Out for {1} seconds", user.Username, chatClear.BanDuration));
+            }
+            else if (chatClear.IsBan)
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan);
+                trigger.Arguments.Add("@" + user.Username);
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                await this.AddAlertChatMessage(user, string.Format("{0} Banned", user.Username));
             }
         }
 
