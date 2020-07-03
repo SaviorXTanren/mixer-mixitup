@@ -243,11 +243,12 @@ namespace MixItUp.Base.Commands
     {
         public static Task<DateTimeOffset> GetStartTime()
         {
+            DateTimeOffset startTime = DateTimeOffset.MinValue;
             if (ChannelSession.TwitchStreamIsLive)
             {
-                return Task.FromResult(TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at));
+                startTime = TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at).GetValueOrDefault();
             }
-            return Task.FromResult(DateTimeOffset.MinValue);
+            return Task.FromResult(startTime);
         }
 
         public UptimeChatCommand()

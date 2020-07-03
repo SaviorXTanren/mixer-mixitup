@@ -84,6 +84,18 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
+        public UserViewModel(TwitchV5API.Users.UserModel twitchUser)
+        {
+            this.SetUserData(twitchID: twitchUser.id);
+
+            this.TwitchID = twitchUser.id;
+            this.TwitchUsername = twitchUser.name;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
+            this.TwitchAvatarLink = twitchUser.logo;
+
+            this.SetTwitchRoles();
+        }
+
         public UserViewModel(ChatMessagePacketModel twitchMessage)
         {
             this.SetUserData(twitchID: twitchMessage.UserID);
