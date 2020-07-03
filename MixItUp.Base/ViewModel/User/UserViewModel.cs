@@ -837,6 +837,16 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
+
+            if (ChannelSession.TwitchChannelEditorsV5.Contains(this.TwitchID))
+            {
+                this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
+            }
+            else
+            {
+                this.TwitchUserRoles.Remove(UserRoleEnum.ChannelEditor);
+            }
+
             this.IsInChat = true;
         }
 

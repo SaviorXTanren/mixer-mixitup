@@ -179,6 +179,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<IEnumerable<V5API.Users.UserFollowModel>> GetV5APIFollowers(V5API.Channel.ChannelModel channel, int maxResult = 1) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelFollowers(channel, maxResult)); }
 
+        public async Task<IEnumerable<V5API.Users.UserModel>> GetV5APIChannelEditors(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelEditors(channel)); }
+
         public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck)); }
 
         public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user)); }

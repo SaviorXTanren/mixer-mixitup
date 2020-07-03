@@ -27,9 +27,9 @@ namespace MixItUp.Base
         public static TwitchV5API.Users.UserModel TwitchUserV5 { get; private set; }
         public static TwitchV5API.Channel.ChannelModel TwitchChannelV5 { get; private set; }
         public static TwitchV5API.Streams.StreamModel TwitchStreamV5 { get; private set; }
+        public static HashSet<string> TwitchChannelEditorsV5 { get; private set; } = new HashSet<string>();
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
-
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
@@ -316,6 +316,15 @@ namespace MixItUp.Base
                         ChannelSession.TwitchUserNewAPI = twitchChannelNew;
                         ChannelSession.TwitchChannelV5 = twitchChannelv5;
                         ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
+
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
+                        if (channelEditors != null)
+                        {
+                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            {
+                                ChannelSession.TwitchChannelEditorsV5.Add(channelEditor.id);
+                            }
+                        }
 
                         if (ChannelSession.Settings == null)
                         {
