@@ -39,6 +39,8 @@ namespace MixItUp.Base.Util
 
         public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
+        public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
+        public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "subscriber";
 
         public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
@@ -581,6 +583,33 @@ namespace MixItUp.Base.Util
                         int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
                         return Task.FromResult(number.ToString());
                     });
+                }
+
+                IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
+                {
+                    if (workableUsers != null && workableUsers.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(workableUsers.ElementAt(RandomHelper.GenerateRandomNumber(workableUsers.Count())), RandomSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader))
+                {
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsFollower);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader))
+                {
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.IsSubscriber);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                    }
                 }
             }
 
