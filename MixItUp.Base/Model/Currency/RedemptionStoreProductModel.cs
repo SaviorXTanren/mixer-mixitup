@@ -92,66 +92,81 @@ namespace MixItUp.Base.Model.Currency
 
         public static async Task Purchase(UserViewModel user, IEnumerable<string> arguments)
         {
-            string name = string.Join(" ", arguments);
-            RedemptionStoreProductModel product = ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-            if (product == null)
+            if (arguments.Count() == 0)
             {
-                if (ChannelSession.Services.Chat != null)
+                List<string> items = new List<string>();
+                foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values.ToList())
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
+                    if (product.IsInfinite || product.CurrentAmount > 0)
+                    {
+                        items.Add(product.Name);
+                    }
                 }
-                return;
+                await ChannelSession.Services.Chat.SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
             }
-
-            if (!product.IsInfinite)
+            else
             {
-                if (product.CurrentAmount <= 0)
+                string name = string.Join(" ", arguments);
+                RedemptionStoreProductModel product = ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                if (product == null)
                 {
                     if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
                     }
                     return;
                 }
 
-                ThresholdRequirementModel threshold = product.Requirements.Threshold;
-                if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
+                if (!product.IsInfinite)
                 {
-                    if (ChannelSession.Services.Chat != null)
+                    if (product.CurrentAmount <= 0)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                        if (ChannelSession.Services.Chat != null)
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                        }
+                        return;
                     }
-                    return;
+
+                    ThresholdRequirementModel threshold = product.Requirements.Threshold;
+                    if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
+                    {
+                        if (ChannelSession.Services.Chat != null)
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                        }
+                        return;
+                    }
                 }
-            }
 
-            if (await product.Requirements.Validate(user))
-            {
-                await product.Requirements.Perform(user);
-                foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user))
+                if (await product.Requirements.Validate(user))
                 {
-                    if (!product.IsInfinite)
+                    await product.Requirements.Perform(user);
+                    foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user))
                     {
-                        product.CurrentAmount--;
-                    }
+                        if (!product.IsInfinite)
+                        {
+                            product.CurrentAmount--;
+                        }
 
-                    RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, u);
-                    ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
+                        RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, u);
+                        ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
 
-                    if (product.AutoRedeem)
-                    {
-                        await purchase.Redeem();
-                    }
-                    else
-                    {
-                        purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
+                        if (product.AutoRedeem)
+                        {
+                            await purchase.Redeem();
+                        }
+                        else
+                        {
+                            purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
 
-                        Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                        extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+                            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                            extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                        await ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID).Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                            await ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID).Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
 
-                        GlobalEvents.RedemptionStorePurchasesUpdated();
+                            GlobalEvents.RedemptionStorePurchasesUpdated();
+                        }
                     }
                 }
             }
