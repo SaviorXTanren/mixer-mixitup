@@ -1447,6 +1447,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clip Playback.
+        /// </summary>
+        public static string ClipPlayback {
+            get {
+                return ResourceManager.GetString("ClipPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {

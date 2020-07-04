@@ -3018,4 +3018,7 @@
   <data name="Changelog" xml:space="preserve">
     <value>Changelog</value>
   </data>
+  <data name="ClipPlayback" xml:space="preserve">
+    <value>Clip Playback</value>
+  </data>
 </root>

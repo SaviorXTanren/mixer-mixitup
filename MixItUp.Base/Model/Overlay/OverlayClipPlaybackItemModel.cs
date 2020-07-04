@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Overlay
         public override Task LoadTestData()
         {
             this.Platform = StreamingPlatformTypeEnum.All;
-            this.lastClipURL = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/Clip/TwitchTestClip.mp4";
+            this.lastClipURL = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/Clips/TestClipImage.png";
             return Task.FromResult(0);
         }
 
