@@ -9,6 +9,34 @@
 
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.6.1015:</h2>
+        <ul>
+            <li>Large-scale adding, updating, &amp; removal of Special Identifiers: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers</a></li>
+            <li>The following is a summary of the changes made to Special Identifiers. Please see the link above for full details:</li>
+            <ul>
+                <li>$userage has been replaced by $useraccountage</li>
+                <li>Adding $usertotalbitscheered</li>
+                <li>Removing $userchannelid, $userchannellive, $userchannelfeatured, &amp; $usergameimage</li>
+                <li>Adding $userstreamtitle, $userstreamgame, $userstreamfollowercount, &amp; $userstreamviewscount</li>
+                <li>Adding $topXbitscheered____, $topbitscheereduser___, &amp; $topbitscheeredamount</li>
+                <li>All $uptime___ &amp; $start___ Special Identifiers have been replaced by $streamuptime___ &amp; $streamstart___</li>
+                <li>$streamagerating &amp; $streamhostcount have been removed</li>
+                <li>$streamtitle, $streamgame, $streamviewercount, &amp; $streamchattercount have been re-added</li>
+                <li>$streamfollowcount has been replaced by $streamfollowercount</li>
+                <li>$streamsubcount has been replaced by $streamsubscribercount</li>
+                <li>$streamviewertotal has been replaced by $streamviewscount</li>
+                <li>$featuredchannel &amp; $costreamusers have been removed</li>
+                <li>$randomuser___ &amp; $randomfolloweruser___ have been re-added</li>
+                <li>$randomsubuser___ has been replaced by $randomsubscriberuser___</li>
+            </ul>
+            <li>Adding $isanonymous Special Identifier to Twitch Channel Subscription Gifted event command to indicate whether it is an anonymous gifting</li>
+            <li>Adding $usersubmonthsgifted Special Identifier to Twitch Channel Subscription Gifted event command to indicate the amount of subscription months gifted to that user</li>
+            <li>Separating out references to Hosts vs Raids on areas such as Statistics &amp; Overlay Widgets</li>
+            <li>Adding support for Bits to Leaderboard Overlay Widget</li>
+            <li>Adding option to Advanced Settings to delete currently signed-in settings</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.6.1014:</h2>
         <ul>
             <li>Regular chat messages &amp; whispers now have a 500 millisecond delay included after every message to decrease chance of messages being ignored when sent to Twitch</li>
