@@ -420,7 +420,7 @@ namespace MixItUp.Base.Services.Twitch
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
             trigger.SpecialIdentifiers["usersubplanname"] = packet.sub_plan_name;
             trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
-            trigger.SpecialIdentifiers["usermonthsgifted"] = monthsGifted.ToString();
+            trigger.SpecialIdentifiers["usersubmonthsgifted"] = monthsGifted.ToString();
             trigger.SpecialIdentifiers["isanonymous"] = packet.IsAnonymousGiftedSubscription.ToString();
             trigger.Arguments.Add(receiver.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
