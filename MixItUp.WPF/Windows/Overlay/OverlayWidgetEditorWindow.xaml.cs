@@ -47,6 +47,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
                 if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetGameEditorControl(new OverlayChatMessagesListItemControl((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayClipPlaybackItemModel) { this.SetGameEditorControl(new OverlayClipPlaybackItemControl((OverlayClipPlaybackItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetGameEditorControl(new OverlayEventListItemControl((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayGameQueueListItemModel) { this.SetGameEditorControl(new OverlayGameQueueListItemControl((OverlayGameQueueListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayProgressBarItemModel) { this.SetGameEditorControl(new OverlayProgressBarItemControl((OverlayProgressBarItemModel)this.viewModel.OverlayWidget.Item)); }
@@ -65,6 +66,7 @@ namespace MixItUp.WPF.Windows.Overlay
             else
             {
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ChatMessages, new OverlayChatMessagesListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ClipPlayback, new OverlayClipPlaybackItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EventList, new OverlayEventListItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.GameQueue, new OverlayGameQueueListItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ProgressBar, new OverlayProgressBarItemControl());

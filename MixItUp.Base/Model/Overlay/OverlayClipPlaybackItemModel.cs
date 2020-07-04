@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayClipItemModel : OverlayFileItemModelBase
+    public class OverlayClipPlaybackItemModel : OverlayFileItemModelBase
     {
         [DataMember]
         public int Volume { get; set; }
@@ -24,10 +24,10 @@ namespace MixItUp.Base.Model.Overlay
         private Twitch.Base.Models.NewAPI.Clips.ClipModel lastTwitchClip = null;
         private string lastClipURL = null;
 
-        public OverlayClipItemModel() : base() { }
+        public OverlayClipPlaybackItemModel() : base() { }
 
-        public OverlayClipItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
-            : base(OverlayItemModelTypeEnum.Clip, string.Empty, width, height)
+        public OverlayClipPlaybackItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
+            : base(OverlayItemModelTypeEnum.ClipPlayback, string.Empty, width, height)
         {
             this.Width = width;
             this.Height = height;
@@ -97,6 +97,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnTwitchClipCreated(object sender, Twitch.Base.Models.NewAPI.Clips.ClipModel clip)
         {
             this.lastTwitchClip = clip;
+            this.SendUpdateRequired();
         }
     }
 }
