@@ -137,6 +137,8 @@ namespace MixItUp.Base.Services
                     File.Delete(settings.SettingsFilePath);
                     File.Delete(settings.DatabaseFilePath);
 
+                    ChannelSession.AppSettings.SettingsToDelete = Guid.Empty;
+
                     return await this.GetAllSettings();
                 }
             }
