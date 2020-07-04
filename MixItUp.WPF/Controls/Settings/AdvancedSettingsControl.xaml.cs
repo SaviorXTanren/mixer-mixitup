@@ -152,5 +152,14 @@ namespace MixItUp.WPF.Controls.Settings
                 ((MainWindow)this.Window).Restart();
             }
         }
+
+        private async void DeleteSettingsDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await DialogHelper.ShowConfirmation("This will completely delete the settings of the currently logged in account and is not reversible. Are you sure you wish to do this?"))
+            {
+                ChannelSession.AppSettings.SettingsToDelete = ChannelSession.Settings.ID;
+                ((MainWindow)this.Window).Restart();
+            }
+        }
     }
 }

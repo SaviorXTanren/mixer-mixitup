@@ -3009,4 +3009,10 @@
   <data name="VIPUser" xml:space="preserve">
     <value>VIP User</value>
   </data>
+  <data name="DeleteCurrentSettingsData" xml:space="preserve">
+    <value>Delete Current Settings Data</value>
+  </data>
+  <data name="DeleteSettings" xml:space="preserve">
+    <value>Delete Settings</value>
+  </data>
 </root>
