@@ -127,6 +127,19 @@ namespace MixItUp.Base.Services
                     return await this.GetAllSettings();
                 }
             }
+            else if (ChannelSession.AppSettings.SettingsToDelete != Guid.Empty)
+            {
+                Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
+
+                SettingsV2Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                if (settings != null)
+                {
+                    File.Delete(settings.SettingsFilePath);
+                    File.Delete(settings.DatabaseFilePath);
+
+                    return await this.GetAllSettings();
+                }
+            }
 
             if (backupSettingsLoaded)
             {

@@ -40,6 +40,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AccessTheFolderWhereMixItUpIsInstalled}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -86,5 +88,8 @@
 
         <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ClearAllUserDataHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="ClearAllUserDataButton" Grid.Row="18" Grid.Column="2" Content="{x:Static resx:Resources.ClearUserData}" Click="ClearAllUserDataButton_Click" />
+
+        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="Delete Current Settings Data:" />
+        <Button x:Name="DeleteSettingsDataButton" Grid.Row="20" Grid.Column="2" Content="Delete Settings" Click="DeleteSettingsDataButton_Click" />
     </Grid>
 </local:SettingsControlBase>

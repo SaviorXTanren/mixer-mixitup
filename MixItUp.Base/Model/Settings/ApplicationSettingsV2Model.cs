@@ -92,9 +92,11 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string BackupSettingsFilePath { get; set; }
-
         [DataMember]
         public Guid BackupSettingsToReplace { get; set; }
+
+        [DataMember]
+        public Guid SettingsToDelete { get; set; }
 
         [JsonIgnore]
         public bool IsDarkBackground { get { return this.BackgroundColor.Equals("Dark"); } }
