@@ -196,5 +196,14 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnRedemptionStorePurchasesUpdated(null, new EventArgs());
             }
         }
+
+        public static event EventHandler<Twitch.Base.Models.NewAPI.Clips.ClipModel> OnTwitchClipCreated;
+        public static void TwitchClipCreated(Twitch.Base.Models.NewAPI.Clips.ClipModel clip)
+        {
+            if (GlobalEvents.OnTwitchClipCreated != null)
+            {
+                GlobalEvents.OnTwitchClipCreated(null, clip);
+            }
+        }
     }
 }

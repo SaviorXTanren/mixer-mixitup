@@ -35,7 +35,8 @@ namespace MixItUp.Base.Model.Overlay
         [Obsolete]
         SparkCrystal,
         EndCredits,
-        Sound
+        Sound,
+        Clip,
     }
 
     public enum OverlayItemPositionType
