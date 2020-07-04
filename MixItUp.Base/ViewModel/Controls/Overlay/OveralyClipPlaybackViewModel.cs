@@ -27,16 +27,16 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int height;
 
-        public int Volume
+        public bool Muted
         {
-            get { return this.volume; }
+            get { return this.muted; }
             set
             {
-                this.volume = value;
+                this.muted = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int volume;
+        private bool muted;
 
         public string EntranceAnimationString
         {
@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             this.width = OverlayVideoItemModel.DefaultWidth;
             this.height = OverlayVideoItemModel.DefaultHeight;
-            this.Volume = 100;
+            this.Muted = false;
         }
 
         public OverlayClipPlaybackItemViewModel(OverlayClipPlaybackItemModel item)
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             this.width = item.Width;
             this.height = item.Height;
-            this.Volume = item.Volume;
+            this.Muted = item.Muted;
             this.entranceAnimation = item.Effects.EntranceAnimation;
             this.exitAnimation = item.Effects.ExitAnimation;
         }
@@ -81,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (this.width > 0 && this.height > 0)
             {
-                return new OverlayClipPlaybackItemModel(width, height, this.volume, this.entranceAnimation, this.exitAnimation);
+                return new OverlayClipPlaybackItemModel(width, height, this.muted, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }

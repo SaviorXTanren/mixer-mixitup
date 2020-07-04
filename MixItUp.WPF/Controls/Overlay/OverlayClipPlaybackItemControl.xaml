@@ -26,8 +26,8 @@
 
         <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-        <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,10,0,0">Volume:</TextBlock>
-        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-28,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+        <TextBlock Grid.Column="4" VerticalAlignment="Center">Muted:</TextBlock>
+        <ToggleButton IsChecked="{Binding Muted}" VerticalAlignment="Center" Grid.Column="6" ToolTip="Muted" />
 
         <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 

@@ -2,7 +2,6 @@
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayClipPlaybackItemModel : OverlayFileItemModelBase
     {
         [DataMember]
-        public int Volume { get; set; }
+        public bool Muted { get; set; }
 
         [DataMember]
         public double Duration { get; set; }
@@ -26,12 +25,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayClipPlaybackItemModel() : base() { }
 
-        public OverlayClipPlaybackItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
+        public OverlayClipPlaybackItemModel(int width, int height, bool muted, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
             : base(OverlayItemModelTypeEnum.ClipPlayback, string.Empty, width, height)
         {
             this.Width = width;
             this.Height = height;
-            this.Volume = volume;
+            this.Muted = muted;
             this.Effects = new OverlayItemEffectsModel(entranceAnimation, OverlayItemEffectVisibleAnimationTypeEnum.None, exitAnimation, 0);
         }
 
@@ -42,9 +41,6 @@ namespace MixItUp.Base.Model.Overlay
         public override string FileType { get { return "video"; } set { } }
 
         [DataMember]
-        public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } set { } }
-
-        [DataMember]
         public string PlatformName { get { return this.Platform.ToString(); } set { } }
 
         [JsonIgnore]
@@ -53,7 +49,9 @@ namespace MixItUp.Base.Model.Overlay
         public override Task LoadTestData()
         {
             this.Platform = StreamingPlatformTypeEnum.All;
+            this.Effects.Duration = this.Duration = 3;
             this.lastClipURL = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/Clips/TestClipImage.png";
+
             return Task.FromResult(0);
         }
 
@@ -77,8 +75,12 @@ namespace MixItUp.Base.Model.Overlay
             if (this.lastTwitchClip != null)
             {
                 this.Platform = StreamingPlatformTypeEnum.Twitch;
-                this.lastClipURL = this.lastTwitchClip.embed_url;
-                this.Effects.Duration = Math.Max(0, 30);
+                this.lastClipURL = this.lastTwitchClip.embed_url + "&parent=localhost";
+                if (this.Muted)
+                {
+                    this.lastClipURL += "&muted=true";
+                }
+                this.Effects.Duration = this.Duration = 30;
 
                 this.lastTwitchClip = null;
             }
