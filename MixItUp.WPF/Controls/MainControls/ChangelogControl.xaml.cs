@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using MixItUp.Base.Util;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -11,12 +13,19 @@ namespace MixItUp.WPF.Controls.MainControls
         public ChangelogControl()
         {
             InitializeComponent();
+
+            GlobalEvents.OnMainMenuStateChanged += GlobalEvents_OnMainMenuStateChanged;
         }
 
         protected override Task InitializeInternal()
         {
             this.ChangelogWebBrowser.Navigate("file:///" + Path.GetFullPath("Changelog.html"));
             return base.InitializeInternal();
+        }
+
+        private void GlobalEvents_OnMainMenuStateChanged(object sender, bool state)
+        {
+            this.ChangelogWebBrowser.Visibility = (state) ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

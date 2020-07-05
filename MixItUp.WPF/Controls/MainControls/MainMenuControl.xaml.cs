@@ -1,11 +1,8 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -213,5 +210,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
             });
         }
+
+        private void MenuToggleButton_Checked(object sender, RoutedEventArgs e) { GlobalEvents.MainMenuStateChained(true); }
+
+        private void MenuToggleButton_Unchecked(object sender, RoutedEventArgs e) { GlobalEvents.MainMenuStateChained(false); }
     }
 }

@@ -8,6 +8,15 @@ namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler<bool> OnMainMenuStateChanged;
+        public static void MainMenuStateChained(bool state)
+        {
+            if (GlobalEvents.OnMainMenuStateChanged != null)
+            {
+                GlobalEvents.OnMainMenuStateChanged(null, state);
+            }
+        }
+
         public static event EventHandler<string> OnShowMessageBox;
         public static void ShowMessageBox(string message)
         {
