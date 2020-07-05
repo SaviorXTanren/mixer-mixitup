@@ -114,7 +114,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             this.Events = new List<StreamlabsChatBotEventModel>();
         }
 
-        public async Task ImportSettings()
+        public Task ImportSettings()
         {
             CurrencyModel rank = new CurrencyModel()
             {
@@ -187,6 +187,8 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             {
                 ChannelSession.Settings.QuotesEnabled = true;
             }
+
+            return Task.FromResult(0);
         }
 
         public void AddCommands(List<List<string>> values)

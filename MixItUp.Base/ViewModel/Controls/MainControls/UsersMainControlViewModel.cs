@@ -79,25 +79,25 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     List<List<string>> contents = new List<List<string>>();
 
-                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "MixerID", "Username", "Roles", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle",
-                        "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged", "TotalCommandsRun", "TotalMonthsSubbed",
-                        "LastSeen" };
+                    List<string> columns = new List<string>() { "MixItUpID", "TwitchID", "MixerID", "Username", "PrimaryRole", "ViewingMinutes", "OfflineViewingMinutes", "CustomTitle" };
                     foreach (var kvp in ChannelSession.Settings.Currency)
                     {
                         columns.Add(kvp.Value.Name.Replace(" ", ""));
                     }
+                    columns.AddRange(new List<string>() { "TotalStreamsWatched", "TotalAmountDonated", "TotalSubsGifted", "TotalSubsReceived", "TotalChatMessagesSent", "TotalTimesTagged",
+                        "TotalCommandsRun", "TotalMonthsSubbed", "LastSeen" });
                     contents.Add(columns);
 
                     foreach (UserDataModel user in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.MixerID.ToString(), user.Username, string.Join(",", user.UserRoles),
-                            user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle, user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(),
-                            user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(), user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(),
-                            user.TotalMonthsSubbed.ToString(), user.LastSeen.ToFriendlyDateTimeString(), };
+                        List<string> data = new List<string>() { user.ID.ToString(), user.TwitchID, user.MixerID.ToString(), user.Username, user.UserRoles.Max().ToString(),
+                            user.ViewingMinutes.ToString(), user.OfflineViewingMinutes.ToString(), user.CustomTitle };
                         foreach (var kvp in ChannelSession.Settings.Currency)
                         {
                             data.Add(kvp.Value.GetAmount(user).ToString());
                         }
+                        data.AddRange(new List<string>() { user.TotalStreamsWatched.ToString(), user.TotalAmountDonated.ToString(), user.TotalSubsGifted.ToString(), user.TotalSubsReceived.ToString(),
+                            user.TotalChatMessageSent.ToString(), user.TotalTimesTagged.ToString(), user.TotalCommandsRun.ToString(), user.TotalMonthsSubbed.ToString(), user.LastSeen.ToFriendlyDateTimeString() });
                         contents.Add(data);
                     }
 
