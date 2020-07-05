@@ -3015,4 +3015,10 @@
   <data name="DeleteSettings" xml:space="preserve">
     <value>Delete Settings</value>
   </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+  <data name="ClipPlayback" xml:space="preserve">
+    <value>Clip Playback</value>
+  </data>
 </root>

@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
@@ -11,6 +13,9 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
     {
         private const char SOHCharacter = (char)1;
         private static readonly string SlashMeAction = SOHCharacter.ToString() + "ACTION ";
+
+        private static HashSet<long> messageEmotesHashSet = new HashSet<long>();
+        private static Dictionary<string, EmoteModel> messageEmotesCache = new Dictionary<string, EmoteModel>();
 
         public bool IsSlashMe { get; set; }
 
@@ -20,6 +25,25 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             : base(message.ID, StreamingPlatformTypeEnum.Twitch, (user != null) ? user : new UserViewModel(message))
         {
             this.User.SetTwitchChatDetails(message);
+
+            foreach (var kvp in message.EmotesDictionary)
+            {
+                if (!messageEmotesHashSet.Contains(kvp.Key) && kvp.Value.Count > 0)
+                {
+                    long emoteID = kvp.Key;
+                    Tuple<int, int> instance = kvp.Value.FirstOrDefault();
+                    if (0 <= instance.Item1 && instance.Item1 < message.Message.Length && 0 <= instance.Item2 && instance.Item2 < message.Message.Length)
+                    {
+                        string emoteCode = message.Message.Substring(instance.Item1, instance.Item2 - instance.Item1 + 1);
+                        messageEmotesCache[emoteCode] = new EmoteModel()
+                        {
+                            id = emoteID,
+                            code = emoteCode
+                        };
+                        messageEmotesHashSet.Add(kvp.Key);
+                    }
+                }
+            }
 
             if (message.Message.StartsWith(SlashMeAction) && message.Message.Last() == SOHCharacter)
             {
@@ -67,6 +91,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                         else if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
+                        }
+                        else if (messageEmotesCache.ContainsKey(part))
+                        {
+                            this.MessageParts[this.MessageParts.Count - 1] = messageEmotesCache[part];
                         }
                         else if (ChannelSession.Settings.ShowBetterTTVEmotes && ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes.ContainsKey(part))
                         {

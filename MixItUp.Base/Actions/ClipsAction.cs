@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -59,6 +60,8 @@ namespace MixItUp.Base.Actions
                 await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clip.url);
             }
             this.extraSpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
+
+            GlobalEvents.TwitchClipCreated(clip);
         }
     }
 }

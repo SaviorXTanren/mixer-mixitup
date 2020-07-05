@@ -1105,6 +1105,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changelog.
+        /// </summary>
+        public static string Changelog {
+            get {
+                return ResourceManager.GetString("Changelog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel.
         /// </summary>
         public static string Channel {
@@ -1434,6 +1443,15 @@ namespace MixItUp.Base {
         public static string ClipName {
             get {
                 return ResourceManager.GetString("ClipName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clip Playback.
+        /// </summary>
+        public static string ClipPlayback {
+            get {
+                return ResourceManager.GetString("ClipPlayback", resourceCulture);
             }
         }
         
@@ -2158,11 +2176,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Current Settings Data.
+        /// </summary>
+        public static string DeleteCurrentSettingsData {
+            get {
+                return ResourceManager.GetString("DeleteCurrentSettingsData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you wish to remove this group?.
         /// </summary>
         public static string DeleteFavoriteGroupConfirmation {
             get {
                 return ResourceManager.GetString("DeleteFavoriteGroupConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Settings.
+        /// </summary>
+        public static string DeleteSettings {
+            get {
+                return ResourceManager.GetString("DeleteSettings", resourceCulture);
             }
         }
         

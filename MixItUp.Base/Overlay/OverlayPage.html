@@ -297,8 +297,8 @@
                                     streamBossUpdatePacket(packet.data);
                                 }
                             }
-                            else if (packet.data.ItemTypeName === "StreamClip") {
-                                streamClipPacket(packet.data);
+                            else if (packet.data.ItemTypeName === "ClipPlayback") {
+                                clipPlaybackPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" ||
                                 packet.data.ItemTypeName === "GameQueue" || packet.data.ItemTypeName === "SongRequests" ||
@@ -510,34 +510,23 @@
                 }
             }
 
-            function streamClipPacket(data) {
-                if (data.FullLink !== null) {
-                    var addedElement = document.createElement('div');
-                    addedElement.id = data.ID;
+            function clipPlaybackPacket(data) {
+                if (data.FullLink !== null && data.PlatformName !== null) {
+                    if (data.PlatformName === "All") {
+                        imagePacket(data);
+                    }
+                    else if (data.PlatformName === "Twitch") {
+                        var addedElement = document.createElement('iframe');
+                        addedElement.src = data.FullLink;
+                        addedElement.width = data.Width;
+                        addedElement.height = data.Height;
+                        addedElement.frameBorder = 0;
+                        addedElement.preload = "auto";
+                        addedElement.scrolling = false;
+                        addedElement.autoplay = true;
 
-                    var videoElement = document.createElement('video');
-                    videoElement.id = "video-" + data.ID;
-                    videoElement.className += 'video-js vjs-default-skin';
-                    videoElement.frameBorder = 0;
-                    videoElement.volume = data.VolumeDecimal;
-
-                    addedElement.appendChild(videoElement);
-
-                    addWaitRemoveElement(data, addedElement);
-
-                    var player = videojs(videoElement, {
-                        autoplay: 'play',
-                        controls: false,
-                        width: data.Width,
-                        height: data.Height,
-                        volume: data.VolumeDecimal
-                    });
-
-                    player.ready(function () {
-                        player.volume(data.VolumeDecimal);
-                    });
-
-                    player.src(data.FullLink);
+                        addWaitRemoveElement(data, addedElement);
+                    }
                 }
             }
 
