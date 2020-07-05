@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
@@ -7,8 +6,6 @@ using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
 using StreamingClient.Base.Util;
 using System;
-using System.IO;
-using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
