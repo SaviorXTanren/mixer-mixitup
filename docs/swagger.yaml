@@ -24,10 +24,6 @@ tags:
     description: Operations related to Mix It Up Commands
   - name: Inventory
     description: Operations related to Mix It Up Inventory data
-  - name: Mixer
-    description: Mixer Passthrough APIs
-  - name: MixPlay
-    description: Operations related to MixPlay users
 
 paths:
   '/users/{usernameOrID}':
@@ -78,7 +74,29 @@ paths:
           description: User not found
           schema:
             $ref: '#/definitions/Error'
-
+  '/users/twitch/{usernameOrID}':
+    parameters:
+      - name: usernameOrID
+        in: path
+        description: 'The Twitch name or ID that needs to be fetched'
+        required: true
+        type: string
+    get:
+      tags:
+        - User
+      summary: Get Twitch user data by username or ID
+      operationId: getTwitchUserByNameOrID
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '404':
+          description: User not found
+          schema:
+            $ref: '#/definitions/Error'
   '/users':
     post:
       summary: This API can be used to lookup multiple users at once.
@@ -575,105 +593,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  '/mixplay/broadcast':
-    post:
-      tags:
-        - MixPlay
-      summary: Sends a broadcast message to MixPlay
-      description: | 
-        This API can be used post messages directly to you MixPlay web clients.
-      operationId: broadcastEvent
-      parameters:
-        - name: broadcastEvent
-          description: 'The data to broadcast and related scopes.'
-          in: body
-          required: true
-          schema:
-           $ref: '#/definitions/MixPlayBroadcast'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-        '400':
-          description: Invalid data submitted
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/mixplay/user/{participantIDOrUserNameOrUserId}':
-    parameters:
-      - name: participantIDOrUserNameOrUserId
-        in: path
-        description: 'The participant ID, UserName, or UserId ID to query'
-        required: true
-        type: string
-    get:
-      tags:
-        - MixPlay
-      summary: Gets the specified MixPlay user by their participant ID
-      description: | 
-        This API can be used to get the MixPlay user information for a participant
-      operationId: getMixPlayUserByID
-      parameters:
-        - name: participantIDOrUserNameOrUserId
-          in: path
-          description: 'The ID that needs to be fetched. This can be the MixPlay participant ID, the Mixer UserName, or the Mixer User ID.'
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixPlayUser'
-        '404':
-          description: User not found
-          schema:
-            $ref: '#/definitions/Error'
-
-  '/mixplay/users':
-    get:
-      tags:
-        - MixPlay
-      summary: Gets All Active MixPlay Users
-      description: | 
-        This API is used to look up MixPlay participants.
-      operationId: getAllMixPlayUsers
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ListOfMixPlayUser'
-
-  '/mixer/users/{usernameOrID}':
-    get:
-      tags:
-        - Mixer
-      summary: Get Mixer user data by username
-      description: | 
-        This API can be used to get Mixer data directly from the Mixer service.
-      operationId: getMixerUserByNameOrID
-      parameters:
-        - name: usernameOrID
-          in: path
-          description: 'The username or ID that needs to be fetched'
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MixerUser'
-        '404':
-          description: User not found
-          schema:
-            $ref: '#/definitions/Error'
-
 definitions:
   MixItUpAddQuote:
     type: object
@@ -711,38 +630,21 @@ definitions:
     items:
       $ref: '#/definitions/MixItUpQuote'
 
-  MixPlayUser:
-    type: object
-    required: [ ID ]
-    properties:
-      ID:
-        description: The Mixer User ID.
-        type: integer
-        example: 7207866
-      UserName:
-        description: The Mixer Username.
-        type: string
-        example: SaviorXTanren
-      ParticipantIDs:
-        type: array
-        items:
-          type: string
-
-  ListOfMixPlayUser:
-    type: array
-    items:
-      $ref: '#/definitions/MixPlayUser'
-
   MixItUpUser:
     type: object
     required: [ ID, ViewingMinutes, CurrencyAmounts ]
     properties:
       ID:
-        description: The Mixer User ID.
-        type: integer
-        example: 7207866
-      UserName:
-        description: The Mixer Username.
+        description: The Mix It Up User ID.
+        type: string
+        format: uuid
+        example: 137CD793-F4E7-4330-8282-B06E52644F78
+      TwitchID:
+        description: The Twitch User ID.
+        type: string
+        example: 1234567890
+      Username:
+        description: The username.
         type: string
         example: SaviorXTanren
       ViewingMinutes:
@@ -763,9 +665,10 @@ definitions:
     required: [ ID, CurrencyAmounts ]
     properties:
       ID:
-        description: The Mixer User ID.
-        type: integer
-        example: 7207866
+        description: The Mix It Up User ID.
+        type: string
+        format: uuid
+        example: 137CD793-F4E7-4330-8282-B06E52644F78
       ViewingMinutes:
         description: The number of minutes the user has been in the stream.
         type: integer
@@ -1017,23 +920,6 @@ definitions:
         type: boolean
         example: false
         default: false
-
-  MixPlayBroadcast:
-    type: object
-    required: [ Scopes, Data ]
-    properties:
-      Scopes:
-        description: "The list of scopes. For example: everyone, group:id, scene:id, participant:uuid"
-        type: array
-        items:
-          type: string
-      Data:
-        description: Any JSON data you want to send.
-        type: object
-
-  MixerUser:
-    type: object
-    description: See Mixer docs
 
   Error:
     type: object
