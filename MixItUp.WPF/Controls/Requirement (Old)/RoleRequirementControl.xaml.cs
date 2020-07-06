@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,17 +32,34 @@ namespace MixItUp.WPF.Controls.Requirement
                 this.tempRole = role;
                 this.RoleComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
                 this.RoleComboBox.SelectedItem = role.MixerRole;
+
+                if (role.SubscriberTier > 0)
+                {
+                    this.SubTierComboBox.SelectedIndex = role.SubscriberTier - 1;
+                }
+                else
+                {
+                    this.SubTierComboBox.SelectedIndex = 0;
+                }
             }
         }
 
         private void RequirementControl_Loaded(object sender, RoutedEventArgs e)
         {
+            this.SubTierComboBox.ItemsSource = RoleRequirementViewModel.SubTierNames;
+
             this.SetRoleRequirement(this.tempRole);
         }
 
         private void RoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.tempRole.MixerRole = (UserRoleEnum)this.RoleComboBox.SelectedItem;
+            this.SubTierComboBox.Visibility = (this.tempRole.MixerRole == UserRoleEnum.Subscriber) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void SubTierComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.tempRole.SubscriberTier = this.SubTierComboBox.SelectedIndex + 1;
         }
     }
 }

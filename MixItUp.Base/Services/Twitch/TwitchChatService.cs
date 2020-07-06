@@ -732,7 +732,7 @@ namespace MixItUp.Base.Services.Twitch
                     EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
                     trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
                     trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
-                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(userNotice.SubPlan);
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(userNotice.SubPlan);
                     trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
                     await ChannelSession.Services.Events.PerformEvent(trigger);
 

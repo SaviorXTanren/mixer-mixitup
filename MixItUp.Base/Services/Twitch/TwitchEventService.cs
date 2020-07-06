@@ -29,12 +29,21 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
-        public static string GetSubTierFromText(string subPlan)
+        public static int GetSubTierNumberFromText(string subPlan)
         {
             if (!string.IsNullOrEmpty(subPlan) && int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
             {
-                subPlanNumber = subPlanNumber / 1000;
-                return $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
+                return subPlanNumber / 1000;
+            }
+            return 0;
+        }
+
+        public static string GetSubTierNameFromText(string subPlan)
+        {
+            int subTier = TwitchEventService.GetSubTierNumberFromText(subPlan);
+            if (subTier > 0)
+            {
+                return $"{MixItUp.Base.Resources.Tier} {subTier}";
             }
             else
             {
@@ -328,8 +337,8 @@ namespace MixItUp.Base.Services.Twitch
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierFromText(packet.sub_plan);
-                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+                    trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -356,8 +365,8 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
-                    trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierFromText(packet.sub_plan);
-                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+                    trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
@@ -415,8 +424,8 @@ namespace MixItUp.Base.Services.Twitch
             receiver.Data.TotalMonthsSubbed += monthsGifted;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
-            trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierFromText(packet.sub_plan);
-            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(packet.sub_plan);
+            trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+            trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
             trigger.SpecialIdentifiers["usersubmonthsgifted"] = monthsGifted.ToString();
             trigger.SpecialIdentifiers["isanonymous"] = packet.IsAnonymousGiftedSubscription.ToString();
             trigger.Arguments.Add(receiver.Username);

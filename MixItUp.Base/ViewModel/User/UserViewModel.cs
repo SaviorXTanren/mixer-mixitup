@@ -301,6 +301,18 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public int SubscribeTier
+        {
+            get
+            {
+                if (this.IsPlatformSubscriber)
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscriberTier; }
+                }
+                return 0;
+            }
+        }
+
         public string PlatformBadgeLink
         {
             get
@@ -892,10 +904,12 @@ namespace MixItUp.Base.ViewModel.User
                 if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
                 {
                     this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
+                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.sub_plan);
                 }
                 else
                 {
                     this.SubscribeDate = null;
+                    this.Data.TwitchSubscriberTier = 0;
                 }
             }
         }

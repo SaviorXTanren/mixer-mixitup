@@ -61,6 +61,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1.
+        /// </summary>
+        public static string _1 {
+            get {
+                return ResourceManager.GetString("1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 Per Bit.
         /// </summary>
         public static string _1PerBit {
@@ -102,6 +111,24 @@ namespace MixItUp.Base {
         public static string _1PerSpark {
             get {
                 return ResourceManager.GetString("1PerSpark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2.
+        /// </summary>
+        public static string _2 {
+            get {
+                return ResourceManager.GetString("2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3.
+        /// </summary>
+        public static string _3 {
+            get {
+                return ResourceManager.GetString("3", resourceCulture);
             }
         }
         
@@ -7306,6 +7333,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sub Tier.
+        /// </summary>
+        public static string SubTier {
+            get {
+                return ResourceManager.GetString("SubTier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subtract from all chat users.
         /// </summary>
         public static string SubtractFromAllChatUsers {
@@ -7536,6 +7572,33 @@ namespace MixItUp.Base {
         public static string Tier {
             get {
                 return ResourceManager.GetString("Tier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tier 1.
+        /// </summary>
+        public static string Tier1 {
+            get {
+                return ResourceManager.GetString("Tier1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tier 2.
+        /// </summary>
+        public static string Tier2 {
+            get {
+                return ResourceManager.GetString("Tier2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tier 3.
+        /// </summary>
+        public static string Tier3 {
+            get {
+                return ResourceManager.GetString("Tier3", resourceCulture);
             }
         }
         
