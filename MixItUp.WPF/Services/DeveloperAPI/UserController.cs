@@ -1,8 +1,8 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +24,16 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             foreach (var usernameOrID in usernamesOrIDs)
             {
                 UserDataModel user = null;
-                if (user == null)
+                if (!string.IsNullOrEmpty(usernameOrID))
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
-                }
-
-                if (user == null && Guid.TryParse(usernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
+                    if (Guid.TryParse(usernameOrID, out Guid userId))
+                    {
+                        user = ChannelSession.Settings.GetUserData(userId);
+                    }
+                    else
+                    {
+                        user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
+                    }
                 }
 
                 if (user != null)
@@ -43,22 +45,29 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return users;
         }
 
-        [Route("{username}")]
+        [Route("{usernameOrID}")]
         [HttpGet]
-        public User Get(string username)
+        public User Get(string usernameOrID)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
-            if (user == null && Guid.TryParse(username, out Guid userId))
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserData(userId);
+                if (Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+                else
+                {
+                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
+                }
             }
 
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Username not found"
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User not found"
                 };
                 throw new HttpResponseException(resp);
             }
@@ -66,22 +75,56 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return UserFromUserDataViewModel(user);
         }
 
-        [Route("{username}")]
-        [HttpPut, HttpPatch]
-        public User Update(string username, [FromBody] User updatedUserData)
+        [Route("twitch/{usernameOrID}")]
+        [HttpGet]
+        public User GetTwitch(string usernameOrID)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
-            if (user == null && Guid.TryParse(username, out Guid userId))
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserData(userId);
+                user = ChannelSession.Settings.GetUserDataByTwitchID(usernameOrID);
+                if (user == null)
+                {
+                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
+                }
             }
 
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Username not found"
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User not found"
+                };
+                throw new HttpResponseException(resp);
+            }
+
+            return UserFromUserDataViewModel(user);
+        }
+
+        [Route("{usernameOrID}")]
+        [HttpPut, HttpPatch]
+        public User Update(string usernameOrID, [FromBody] User updatedUserData)
+        {
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
+            {
+                if (Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+                else
+                {
+                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
+                }
+            }
+
+            if (user == null)
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User not found"
                 };
                 throw new HttpResponseException(resp);
             }
@@ -121,10 +164,17 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserCurrency(string usernameOrID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
-            if (user == null && Guid.TryParse(usernameOrID, out Guid userId))
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserData(userId);
+                if (Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+                else
+                {
+                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
+                }
             }
 
             if (user == null)
@@ -132,7 +182,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
                     Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Username not found"
+                    ReasonPhrase = "User not found"
                 };
                 throw new HttpResponseException(resp);
             }
@@ -144,10 +194,17 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserInventory(string usernameOrID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
-            if (user == null && Guid.TryParse(usernameOrID, out Guid userId))
+            UserDataModel user = null;
+            if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserData(userId);
+                if (Guid.TryParse(usernameOrID, out Guid userId))
+                {
+                    user = ChannelSession.Settings.GetUserData(userId);
+                }
+                else
+                {
+                    user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, usernameOrID);
+                }
             }
 
             if (user == null)
@@ -155,7 +212,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
                 {
                     Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {usernameOrID}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Username not found"
+                    ReasonPhrase = "User not found"
                 };
                 throw new HttpResponseException(resp);
             }
@@ -196,7 +253,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             {
                 ID = userData.ID,
                 TwitchID = userData.TwitchID,
-                UserName = userData.Username,
+                Username = userData.Username,
                 ViewingMinutes = userData.ViewingMinutes
             };
 

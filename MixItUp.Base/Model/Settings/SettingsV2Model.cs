@@ -12,7 +12,6 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -495,9 +494,8 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
         private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
-
         [JsonIgnore]
-        public Dictionary<string, Guid> MixerUsernameLookups { get; set; } = new Dictionary<string, Guid>();
+        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> UsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
 
         #endregion Database Data
 
@@ -547,19 +545,32 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.FileService.CopyFile(SettingsV2Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
                 }
 
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                {
+                    this.UsernameLookups[platform] = new Dictionary<string, Guid>();
+                }
+
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
                     UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                     this.UserData[userData.ID] = userData;
-                    if (!string.IsNullOrEmpty(userData.TwitchID))
+                    if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                     {
                         this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                        if (!string.IsNullOrEmpty(userData.TwitchUsername))
+                        {
+                            this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
+                        }
                     }
-
-                    if (userData.MixerID > 0 && !string.IsNullOrEmpty(userData.MixerUsername))
+#pragma warning disable CS0612 // Type or member is obsolete
+                    else if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
                     {
-                        this.MixerUsernameLookups[userData.MixerUsername.ToLower()] = userData.ID;
+                        if (!string.IsNullOrEmpty(userData.MixerUsername))
+                        {
+                            this.UsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
+                        }
                     }
+#pragma warning restore CS0612 // Type or member is obsolete
                 });
                 this.UserData.ClearTracking();
 
@@ -820,6 +831,39 @@ namespace MixItUp.Base.Model.Settings
                 }
                 return null;
             }
+        }
+
+        public UserDataModel GetUserDataByUsername(StreamingPlatformTypeEnum platform, string username)
+        {
+            if (!string.IsNullOrEmpty(username))
+            {
+                if (platform == StreamingPlatformTypeEnum.All)
+                {
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
+                    {
+                        UserDataModel userData = this.GetUserDataByUsername(p, username);
+                        if (userData != null)
+                        {
+                            return userData;
+                        }
+                    }
+                }
+                else
+                {
+                    lock (this.UserData)
+                    {
+                        if (this.UsernameLookups.ContainsKey(platform) && this.UsernameLookups[platform].ContainsKey(username.ToLowerInvariant()))
+                        {
+                            Guid id = this.UsernameLookups[platform][username.ToLowerInvariant()];
+                            if (this.UserData.ContainsKey(id))
+                            {
+                                return this.UserData[id];
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         public void AddUserData(UserDataModel user)

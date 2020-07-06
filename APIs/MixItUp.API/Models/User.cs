@@ -14,7 +14,7 @@ namespace MixItUp.API.Models
         public string TwitchID { get; set; }
 
         [DataMember]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [DataMember]
         public int? ViewingMinutes { get; set; }

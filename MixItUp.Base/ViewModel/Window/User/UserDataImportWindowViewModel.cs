@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -252,9 +253,11 @@ namespace MixItUp.Base.ViewModel.Window.User
                                 }
                                 else if (!string.IsNullOrEmpty(mixerUsername))
                                 {
-                                    if (ChannelSession.Settings.MixerUsernameLookups.ContainsKey(mixerUsername))
+#pragma warning disable CS0612 // Type or member is obsolete
+                                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
+#pragma warning restore CS0612 // Type or member is obsolete
+                                    if (mixerUserData != null)
                                     {
-                                        user = ChannelSession.Settings.GetUserData(ChannelSession.Settings.MixerUsernameLookups[mixerUsername]);
                                         newUser = false;
                                     }
                                     else
