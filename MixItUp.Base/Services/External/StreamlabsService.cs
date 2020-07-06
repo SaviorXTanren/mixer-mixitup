@@ -17,7 +17,7 @@ namespace MixItUp.Base.Services.External
         public string ID { get; set; }
 
         [JsonProperty("name")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [JsonProperty("message")]
         public string Message { get; set; }
@@ -27,6 +27,12 @@ namespace MixItUp.Base.Services.External
 
         [JsonProperty("amount")]
         public double Amount { get; set; }
+
+        [JsonProperty("from")]
+        public string FromUsername { get; set; }
+
+        [JsonProperty("from_user_id")]
+        public string FromUserID { get; set; }
 
         [JsonIgnore]
         public DateTimeOffset CreatedAtDateTime { get { return DateTimeOffset.UtcNow; } }
@@ -40,7 +46,8 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.Streamlabs,
 
                 ID = this.ID,
-                Username = this.UserName,
+                UserID = this.FromUserID,
+                Username = this.Username,
                 Message = this.Message,
 
                 Amount = Math.Round(this.Amount, 2),
@@ -156,7 +163,6 @@ namespace MixItUp.Base.Services.External
                     if (data != null)
                     {
                         JObject eventJObj = JObject.Parse(data.ToString());
-
                         if (eventJObj.ContainsKey("type"))
                         {
                             if (eventJObj["type"].Value<string>().Equals("donation", StringComparison.InvariantCultureIgnoreCase))

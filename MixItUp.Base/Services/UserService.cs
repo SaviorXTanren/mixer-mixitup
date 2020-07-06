@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -26,6 +27,8 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> GetAllUsers();
 
         IEnumerable<UserViewModel> GetAllWorkableUsers();
+
+        UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username);
 
         int Count();
     }
@@ -168,6 +171,51 @@ namespace MixItUp.Base.Services
         {
             IEnumerable<UserViewModel> results = this.GetAllUsers();
             return results.Where(u => !u.IgnoreForQueries);
+        }
+
+        public UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username)
+        {
+            UserViewModel user = null;
+            if (!string.IsNullOrEmpty(userID))
+            {
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && user == null)
+                {
+                    user = ChannelSession.Services.User.GetUserByTwitchID(userID);
+                }
+
+                if (user == null)
+                {
+                    UserDataModel userData = null;
+                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && userData == null)
+                    {
+                        userData = ChannelSession.Settings.GetUserDataByTwitchID(userID);
+                    }
+
+                    if (userData != null)
+                    {
+                        user = new UserViewModel(userData);
+                    }
+                }
+            }
+
+            if (user == null)
+            {
+                user = ChannelSession.Services.User.GetUserByUsername(username);
+                if (user == null)
+                {
+                    UserDataModel userData = ChannelSession.Settings.GetUserDataByUsername(platform, username);
+                    if (userData != null)
+                    {
+                        user = new UserViewModel(userData);
+                    }
+                    else
+                    {
+                        user = new UserViewModel(username);
+                    }
+                }
+            }
+
+            return user;
         }
 
         public int Count() { return this.usersByID.Count; }

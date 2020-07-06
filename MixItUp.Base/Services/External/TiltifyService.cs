@@ -25,7 +25,7 @@ namespace MixItUp.Base.Services.External
         public int ID { get; set; }
 
         [JsonProperty("username")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [JsonProperty("slug")]
         public string Slug { get; set; }
