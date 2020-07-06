@@ -14,7 +14,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
         Icon="./Logo.ico"
-        Title="Mix It Up - Installer" Height="150" Width="400">
+        Title="Mix It Up - Installer" Height="200" Width="450">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -47,7 +47,7 @@
             </Grid>
 
             <ProgressBar Visibility="{Binding IsOperationBeingPerformed, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="{Binding IsOperationIndeterminate, FallbackValue=True}" Value="{Binding OperationProgress, Mode=OneWay, FallbackValue=0}" Grid.Row="2" HorizontalAlignment="Center" Height="20" Width="250" />
-            <TextBlock Text="{Binding DisplayText2}" Visibility="{Binding ErrorOccurred, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding DisplayText2}" Visibility="{Binding ErrorOccurred, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="380" />
         </Grid>
     </Grid>
 </Window>

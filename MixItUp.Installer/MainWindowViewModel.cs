@@ -139,6 +139,17 @@ namespace MixItUp.Installer
         }
         private bool errorOccurred;
 
+        public string SpecificErrorMessage
+        {
+            get { return this.specificErrorMessage; }
+            private set
+            {
+                this.specificErrorMessage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string specificErrorMessage;
+
         public string HyperlinkAddress
         {
             get { return this.hyperlinkAddress; }
@@ -260,8 +271,16 @@ namespace MixItUp.Installer
 
             if (!result && !this.ErrorOccurred)
             {
-                this.HyperlinkAddress = InstallerLogFileName;
-                this.ShowError(string.Format("{0} file created:", InstallerLogFileName), "Please visit our support Discord or send an email to support@mixitupapp.com with the contents of this file.");
+                if (!string.IsNullOrEmpty(this.SpecificErrorMessage))
+                {
+                    this.HyperlinkAddress = InstallerLogFileName;
+                    this.ShowError(string.Format("{0} file created:", InstallerLogFileName), this.SpecificErrorMessage);
+                }
+                else
+                {
+                    this.HyperlinkAddress = InstallerLogFileName;
+                    this.ShowError(string.Format("{0} file created:", InstallerLogFileName), "Please visit our support Discord or send an email to support@mixitupapp.com with the contents of this file.");
+                }
             }
             return result;
         }
@@ -436,6 +455,16 @@ namespace MixItUp.Installer
                         }
                     }
                 }
+            }
+            catch (UnauthorizedAccessException uaex)
+            {
+                this.SpecificErrorMessage = "We were unable to update due to a file lock issue. Please try rebooting your PC and then running the update. You can also download and re-run our installer to update your installation.";
+                this.WriteToLogFile(uaex.ToString());
+            }
+            catch (WebException wex)
+            {
+                this.SpecificErrorMessage = "We were unable to update due to a network issue, please try again later. If this issue persists, please try restarting your PC and/or router or flush the DNS cache on your computer.";
+                this.WriteToLogFile(wex.ToString());
             }
             catch (Exception ex)
             {
