@@ -455,8 +455,6 @@ namespace MixItUp.Base.Services.External
                     JObject jobj = await this.GetAsync<JObject>(next);
                     next = null;
 
-                    Logger.ForceLog(LogLevel.Debug, JSONSerializerHelper.SerializeToString(jobj));
-
                     if (jobj != null && jobj.ContainsKey("data"))
                     {
                         JArray dataArray = (JArray)jobj["data"];

@@ -60,7 +60,15 @@ namespace MixItUp.Base.Model.User
                         this.user = ChannelSession.Services.User.GetUserByUsername(this.Username);
                         if (this.user == null)
                         {
-                            this.user = new UserViewModel(this.Username);
+                            UserDataModel userData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, this.Username);
+                            if (userData != null)
+                            {
+                                this.user = new UserViewModel(userData);
+                            }
+                            else
+                            {
+                                this.user = new UserViewModel(this.Username);
+                            }
                         }
                     }
                 }
