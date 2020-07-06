@@ -9,6 +9,7 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
@@ -687,53 +688,60 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
-            if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+            try
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-                if (user == null)
+                if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    user = new UserViewModel(userNotice);
-                }
-                user.SetTwitchChatDetails(userNotice);
-
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
-                if (ChannelSession.Services.Events.CanPerformEvent(trigger))
-                {
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
-                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
-
-                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                    UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                    if (user == null)
                     {
-                        currency.AddAmount(user.Data, currency.OnHostBonus);
+                        user = new UserViewModel(userNotice);
+                    }
+                    user.SetTwitchChatDetails(userNotice);
+
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
+                    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                    {
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = userNotice.RaidViewerCount;
+
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                        {
+                            currency.AddAmount(user.Data, currency.OnHostBonus);
+                        }
+
+                        GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
+
+                        trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
+                        trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                        await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount));
+                    }
+                }
+                else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
+                {
+                    bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
+
+                    UserViewModel user = isAnonymous ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                    if (!isAnonymous && user != null)
+                    {
+                        user.SetTwitchChatDetails(userNotice);
                     }
 
-                    GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
-
-                    trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
-                    trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
+                    trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
+                    trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
+                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(userNotice.SubPlan);
+                    trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
                     await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                    await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount));
+                    await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
                 }
             }
-            else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
+            catch (Exception ex)
             {
-                bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
-
-                UserViewModel user = isAnonymous ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-                if (!isAnonymous && user != null)
-                {
-                    user.SetTwitchChatDetails(userNotice);
-                }
-
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
-                trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
-                trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
-                trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierFromText(userNotice.SubPlan);
-                trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
-                await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
+                Logger.Log(ex);
             }
         }
 
