@@ -31,7 +31,7 @@ namespace MixItUp.Base.Services.Twitch
     {
         public static string GetSubTierFromText(string subPlan)
         {
-            if (int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
+            if (!string.IsNullOrEmpty(subPlan) && int.TryParse(subPlan, out int subPlanNumber) && subPlanNumber >= 1000)
             {
                 subPlanNumber = subPlanNumber / 1000;
                 return $"{MixItUp.Base.Resources.Tier} {subPlanNumber}";
