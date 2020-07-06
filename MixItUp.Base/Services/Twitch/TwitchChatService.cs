@@ -741,7 +741,9 @@ namespace MixItUp.Base.Services.Twitch
             }
             catch (Exception ex)
             {
+                Logger.ForceLog(LogLevel.Debug, JSONSerializerHelper.SerializeToString(userNotice));
                 Logger.Log(ex);
+                throw ex;
             }
         }
 
