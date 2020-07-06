@@ -36,6 +36,11 @@ namespace MixItUp.Base.Services.External
         [JsonProperty("created")]
         public DateTimeOffset? Created { get; set; }
 
+        [JsonProperty("social_connections")]
+        public JObject SocialConnections { get; set; }
+
+        public PatreonUser() { }
+
         [JsonIgnore]
         public string LookupName
         {
@@ -48,8 +53,6 @@ namespace MixItUp.Base.Services.External
                 return this.FullName;
             }
         }
-
-        public PatreonUser() { }
 
         public override bool Equals(object obj)
         {
@@ -442,7 +445,7 @@ namespace MixItUp.Base.Services.External
         public async Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers()
         {
             List<PatreonCampaignMember> results = new List<PatreonCampaignMember>();
-            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents,currently_entitled_amount_cents,lifetime_support_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.Campaign.ID);
+            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents,currently_entitled_amount_cents,lifetime_support_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity,social_connections", this.Campaign.ID);
             try
             {
                 do
@@ -451,6 +454,8 @@ namespace MixItUp.Base.Services.External
 
                     JObject jobj = await this.GetAsync<JObject>(next);
                     next = null;
+
+                    Logger.ForceLog(LogLevel.Debug, JSONSerializerHelper.SerializeToString(jobj));
 
                     if (jobj != null && jobj.ContainsKey("data"))
                     {
