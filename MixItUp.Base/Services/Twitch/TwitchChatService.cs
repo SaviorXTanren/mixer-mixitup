@@ -96,8 +96,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
 
-        private const string RaidUserNoticeMessageID = "raid";
-        private const string SubMysteryGiftUserNoticeMessageID = "submysterygift";
+        private const string RaidUserNoticeMessageTypeID = "raid";
+        private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
@@ -572,7 +572,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 
@@ -687,7 +687,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnUserNoticeReceived(object sender, ChatUserNoticePacketModel userNotice)
         {
-            if (RaidUserNoticeMessageID.Equals(userNotice.MessageID))
+            if (RaidUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
             {
                 UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
                 if (user == null)
@@ -716,7 +716,7 @@ namespace MixItUp.Base.Services.Twitch
                     await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount));
                 }
             }
-            else if (SubMysteryGiftUserNoticeMessageID.Equals(userNotice.MessageID) && userNotice.SubTotalGifted > 0)
+            else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
             {
                 bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
 

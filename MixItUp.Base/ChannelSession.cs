@@ -623,11 +623,6 @@ namespace MixItUp.Base
 
                 await ChannelSession.RefreshChannel();
 
-                if (ChannelSession.Services.Events.TwitchEventService != null && ChannelSession.Services.Events.TwitchEventService.IsConnected)
-                {
-                    await ChannelSession.Services.Events.TwitchEventService.CheckForStreamStart();
-                }
-
                 if (sessionBackgroundTimer >= 5)
                 {
                     await ChannelSession.SaveSettings();

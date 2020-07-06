@@ -25,8 +25,6 @@ namespace MixItUp.Base.Services.Twitch
 
         Task<Result> Connect();
         Task Disconnect();
-
-        Task CheckForStreamStart();
     }
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
@@ -121,7 +119,7 @@ namespace MixItUp.Base.Services.Twitch
                             follows.Add(follow.from_id);
                         }
 
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
+                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundEventChecks);
 
                         this.IsConnected = true;
 
@@ -178,27 +176,26 @@ namespace MixItUp.Base.Services.Twitch
             this.pubSub = null;
         }
 
-        public async Task CheckForStreamStart()
-        {
-            if (streamStartCheckTime != DateTimeOffset.MaxValue)
-            {
-                DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
-                if (startTime != DateTimeOffset.MinValue && startTime > streamStartCheckTime)
-                {
-                    streamStartCheckTime = DateTimeOffset.MaxValue;
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
-                    if (ChannelSession.Services.Events.CanPerformEvent(trigger))
-                    {
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-                }
-            }
-        }
-
-        private async Task FollowerBackground(CancellationToken cancellationToken)
+        private async Task BackgroundEventChecks(CancellationToken cancellationToken)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
+                if (streamStartCheckTime != DateTimeOffset.MaxValue)
+                {
+                    DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                    if (startTime != DateTimeOffset.MinValue && startTime > streamStartCheckTime)
+                    {
+                        Logger.Log(LogLevel.Debug, "Stream start detected");
+
+                        streamStartCheckTime = DateTimeOffset.MaxValue;
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
+                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                        {
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                        }
+                    }
+                }
+
                 foreach (UserFollowModel follow in await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100))
                 {
                     if (!follows.Contains(follow.from_id))
@@ -475,7 +472,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 

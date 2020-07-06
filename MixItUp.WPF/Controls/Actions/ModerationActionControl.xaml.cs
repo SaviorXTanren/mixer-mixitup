@@ -63,6 +63,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.PurgeUser ||
                     moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.UnbanUser ||
                     moderationType == ModerationActionTypeEnum.ModUser || moderationType == ModerationActionTypeEnum.UnmodUser ||
+                    moderationType == ModerationActionTypeEnum.VIPUser || moderationType == ModerationActionTypeEnum.UnVIPUser ||
                     moderationType == ModerationActionTypeEnum.AddModerationStrike || moderationType == ModerationActionTypeEnum.RemoveModerationStrike)
                 {
                     this.UserNameTextBox.Visibility = Visibility.Visible;
