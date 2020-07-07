@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -969,16 +970,15 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments != null && arguments.Count() == 1)
                 {
-                    string mixerUsername = arguments.First().ToLower().Replace("@", "");
-                    if (ChannelSession.Settings.MixerUsernameLookups.ContainsKey(mixerUsername))
+                    string mixerUsername = arguments.First().Replace("@", "");
+#pragma warning disable CS0612 // Type or member is obsolete
+                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
+#pragma warning restore CS0612 // Type or member is obsolete
+                    if (mixerUserData != null)
                     {
-                        UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(ChannelSession.Settings.MixerUsernameLookups[mixerUsername]);
-                        if (mixerUserData != null)
-                        {
-                            LinkedAccounts[user.ID] = mixerUserData.ID;
-                            await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
-                            return;
-                        }
+                        LinkedAccounts[user.ID] = mixerUserData.ID;
+                        await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
+                        return;
                     }
                     await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
                 }
@@ -1008,7 +1008,6 @@ namespace MixItUp.Base.Commands
                             LinkMixerAccountChatCommand.LinkedAccounts.Remove(targetUser.ID);
                             targetUser.Data.MergeData(mixerUserData);
 
-                            ChannelSession.Settings.MixerUsernameLookups.Remove(mixerUserData.MixerUsername);
                             ChannelSession.Settings.UserData.Remove(mixerUserData.ID);
 
                             await ChannelSession.Services.Chat.SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{targetUser.Username}.");

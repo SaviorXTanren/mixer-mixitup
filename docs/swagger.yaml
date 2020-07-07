@@ -74,7 +74,29 @@ paths:
           description: User not found
           schema:
             $ref: '#/definitions/Error'
-
+  '/users/twitch/{usernameOrID}':
+    parameters:
+      - name: usernameOrID
+        in: path
+        description: 'The Twitch name or ID that needs to be fetched'
+        required: true
+        type: string
+    get:
+      tags:
+        - User
+      summary: Get Twitch user data by username or ID
+      operationId: getTwitchUserByNameOrID
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '404':
+          description: User not found
+          schema:
+            $ref: '#/definitions/Error'
   '/users':
     post:
       summary: This API can be used to lookup multiple users at once.
@@ -617,7 +639,11 @@ definitions:
         type: string
         format: uuid
         example: 137CD793-F4E7-4330-8282-B06E52644F78
-      UserName:
+      TwitchID:
+        description: The Twitch User ID.
+        type: string
+        example: 1234567890
+      Username:
         description: The username.
         type: string
         example: SaviorXTanren

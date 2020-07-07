@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -116,15 +117,16 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             foreach (var giveData in giveDatas)
             {
                 UserDataModel user = null;
-
-                if (user == null)
+                if (!string.IsNullOrEmpty(giveData.UsernameOrID))
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u != null && u.Username != null && u.Username.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
-                }
-
-                if (user == null && Guid.TryParse(giveData.UsernameOrID, out Guid userId))
-                {
-                    user = ChannelSession.Settings.GetUserData(userId);
+                    if (Guid.TryParse(giveData.UsernameOrID, out Guid userId))
+                    {
+                        user = ChannelSession.Settings.GetUserData(userId);
+                    }
+                    else
+                    {
+                        user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.All, giveData.UsernameOrID);
+                    }
                 }
 
                 if (user != null && giveData.Amount > 0)

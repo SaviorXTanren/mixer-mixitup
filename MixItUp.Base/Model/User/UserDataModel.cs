@@ -75,6 +75,8 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset? TwitchFollowDate { get; set; }
         [DataMember]
         public DateTimeOffset? TwitchSubscribeDate { get; set; }
+        [DataMember]
+        public int TwitchSubscriberTier { get; set; } = 0;
 
         #endregion Twitch
 

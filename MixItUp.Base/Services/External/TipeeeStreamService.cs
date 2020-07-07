@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -26,6 +27,19 @@ namespace MixItUp.Base.Services.External
     }
 
     [DataContract]
+    public class TipeeeStreamUserProvider
+    {
+        [JsonProperty("code")]
+        public string Platform { get; set; }
+
+        [JsonProperty("id")]
+        public string UserID { get; set; }
+
+        [JsonProperty("username")]
+        public string Username { get; set; }
+    }
+
+    [DataContract]
     public class TipeeeStreamUser
     {
         [JsonProperty("avatar")]
@@ -41,7 +55,7 @@ namespace MixItUp.Base.Services.External
         public string Country { get; set; }
 
         [JsonProperty("providers")]
-        public JArray Providers { get; set; }
+        public List<TipeeeStreamUserProvider> Providers { get; set; } = new List<TipeeeStreamUserProvider>();
 
         [JsonProperty("created_at")]
         public DateTimeOffset CreatedDate { get; set; }

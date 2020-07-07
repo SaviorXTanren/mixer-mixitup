@@ -301,6 +301,18 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public int SubscribeTier
+        {
+            get
+            {
+                if (this.IsPlatformSubscriber)
+                {
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscriberTier; }
+                }
+                return 0;
+            }
+        }
+
         public string PlatformBadgeLink
         {
             get
@@ -371,6 +383,12 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchModeratorBadgeLink { get { return (this.HasTwitchModeratorBadge) ? this.TwitchModeratorBadge.image_url_1x : string.Empty; } }
 
         public ChatBadgeModel TwitchModeratorBadge { get; private set; }
+
+        public bool HasTwitchVIPBadge { get { return this.TwitchVIPBadge != null; } }
+
+        public string TwitchVIPBadgeLink { get { return (this.HasTwitchVIPBadge) ? this.TwitchVIPBadge.image_url_1x : string.Empty; } }
+
+        public ChatBadgeModel TwitchVIPBadge { get; private set; }
 
         public bool HasTwitchBitsBadge { get { return this.TwitchBitsBadge != null; } }
 
@@ -673,6 +691,15 @@ namespace MixItUp.Base.ViewModel.User
                         this.TwitchSubscriberBadge = this.GetTwitchBadgeURL(name);
                     }
 
+                    if (this.TwitchSubscriberBadge == null && this.TwitchUserRoles.Contains(UserRoleEnum.VIP))
+                    {
+                        this.TwitchVIPBadge = this.GetTwitchBadgeURL("vip");
+                    }
+                    else
+                    {
+                        this.TwitchVIPBadge = null;
+                    }
+
                     string bitsBadgeName = null;
                     if (this.HasTwitchBadge("bits-leader"))
                     {
@@ -892,10 +919,12 @@ namespace MixItUp.Base.ViewModel.User
                 if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
                 {
                     this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);
+                    this.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(subscription.sub_plan);
                 }
                 else
                 {
                     this.SubscribeDate = null;
+                    this.Data.TwitchSubscriberTier = 0;
                 }
             }
         }
@@ -944,7 +973,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.Username, StringComparison.CurrentCultureIgnoreCase));
+                    patreonUser = campaignMembers.FirstOrDefault(u => this.Platform.HasFlag(u.User.Platform) && string.Equals(u.User.PlatformUserID, this.PlatformID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 this.PatreonUser = patreonUser;

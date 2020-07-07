@@ -46,6 +46,7 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.chat__read,
             OAuthClientScopeEnum.user__edit,
             OAuthClientScopeEnum.user__edit__broadcast,
+            OAuthClientScopeEnum.user__edit__follows,
             OAuthClientScopeEnum.whispers__read,
             OAuthClientScopeEnum.whispers__edit,
         };

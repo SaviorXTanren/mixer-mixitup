@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -41,11 +42,21 @@ namespace MixItUp.Base.Services.External
 
         public UserDonationModel ToGenericDonation()
         {
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All;
+            foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
+            {
+                if (string.Equals(p.ToString(), this.SenderType, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    platform = p;
+                }
+            }
+
             return new UserDonationModel()
             {
                 Source = UserDonationSourceEnum.TreatStream,
 
                 ID = Guid.NewGuid().ToString(),
+                Platform = platform,
                 Username = this.Sender,
                 Type = this.Title,
                 Message = this.Message,

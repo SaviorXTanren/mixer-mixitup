@@ -348,11 +348,18 @@ namespace MixItUp.Base.Services
             }
             else if (message is UserChatMessageViewModel)
             {
-                if (message.IsWhisper)
+                if (message.IsWhisper && !message.IsStreamerOrBot)
                 {
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
+                    }
+
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
                     }
 
                     // Don't send this if it's in response to another "You are whisperer #" message
@@ -377,6 +384,34 @@ namespace MixItUp.Base.Services
                     else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
                     {
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
+                    }
+
+                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    {
+                        this.userEntranceCommands.Add(message.User.ID);
+                        if (message.User.Data.EntranceCommand != null)
+                        {
+                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
+
+                    message.User.Data.TotalChatMessageSent++;
+
+                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
+                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
+                    {
+                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                        if (primaryTaggedUser != null)
+                        {
+                            primaryTaggedUser.Data.TotalTimesTagged++;
+                        }
                     }
                 }
 
@@ -431,46 +466,6 @@ namespace MixItUp.Base.Services
                                 }
                             }
                             break;
-                        }
-                    }
-                }
-
-                if (message.IsWhisper)
-                {
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-                }
-                else
-                {
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
-                    {
-                        this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
-                        {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-
-                    message.User.Data.TotalChatMessageSent++;
-
-                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
-                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
-                    {
-                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
-                        if (primaryTaggedUser != null)
-                        {
-                            primaryTaggedUser.Data.TotalTimesTagged++;
                         }
                     }
                 }
