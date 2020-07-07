@@ -723,9 +723,14 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
 
-                    UserViewModel user = isAnonymous ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-                    if (!isAnonymous && user != null)
+                    UserViewModel user = new UserViewModel("An Anonymous Gifter");
+                    if (!isAnonymous)
                     {
+                        user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                        if (user == null)
+                        {
+                            user = new UserViewModel(userNotice);
+                        }
                         user.SetTwitchChatDetails(userNotice);
                     }
 
