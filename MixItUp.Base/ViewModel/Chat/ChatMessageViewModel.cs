@@ -57,7 +57,24 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ChannelSession.TwitchUserNewAPI.login)); } }
 
-        public bool IsStreamerOrBot { get { return false; } }
+        public virtual bool IsStreamerOrBot
+        {
+            get
+            {
+                if (this.User != null)
+                {
+                    if (this.User.ID.Equals(ChannelSession.GetCurrentUser().ID))
+                    {
+                        return true;
+                    }
+                    else if (ChannelSession.TwitchBotNewAPI != null && string.Equals(ChannelSession.TwitchBotNewAPI.id, this.User.TwitchID, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
         public bool ShowTimestamp { get { return ChannelSession.Settings.ShowChatMessageTimestamps; } }
 
