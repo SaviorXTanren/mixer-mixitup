@@ -114,7 +114,7 @@ namespace MixItUp.Base.Services.External
         }
 
         [JsonIgnore]
-        public JObject TwitchData { get { return (this.SocialConnections != null && this.SocialConnections.ContainsKey("twitch")) ? (JObject)this.SocialConnections["twitch"] : null; } }
+        public JObject TwitchData { get { return (this.SocialConnections != null && this.SocialConnections.ContainsKey("twitch") && this.SocialConnections["twitch"] is JObject) ? (JObject)this.SocialConnections["twitch"] : null; } }
 
         public override bool Equals(object obj)
         {
