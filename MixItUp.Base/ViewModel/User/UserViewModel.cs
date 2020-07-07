@@ -384,6 +384,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchModeratorBadge { get; private set; }
 
+        public bool HasTwitchVIPBadge { get { return this.TwitchVIPBadge != null; } }
+
+        public string TwitchVIPBadgeLink { get { return (this.HasTwitchVIPBadge) ? this.TwitchVIPBadge.image_url_1x : string.Empty; } }
+
+        public ChatBadgeModel TwitchVIPBadge { get; private set; }
+
         public bool HasTwitchBitsBadge { get { return this.TwitchBitsBadge != null; } }
 
         public string TwitchBitsBadgeLink { get { return (this.HasTwitchBitsBadge) ? this.TwitchBitsBadge.image_url_1x : string.Empty; } }
@@ -683,6 +689,15 @@ namespace MixItUp.Base.ViewModel.User
                     if (!string.IsNullOrEmpty(name))
                     {
                         this.TwitchSubscriberBadge = this.GetTwitchBadgeURL(name);
+                    }
+
+                    if (this.TwitchSubscriberBadge == null && this.TwitchUserRoles.Contains(UserRoleEnum.VIP))
+                    {
+                        this.TwitchVIPBadge = this.GetTwitchBadgeURL("vip");
+                    }
+                    else
+                    {
+                        this.TwitchVIPBadge = null;
                     }
 
                     string bitsBadgeName = null;
