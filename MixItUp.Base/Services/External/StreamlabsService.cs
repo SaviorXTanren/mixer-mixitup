@@ -6,6 +6,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -46,7 +47,6 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.Streamlabs,
 
                 ID = this.ID,
-                UserID = this.FromUserID,
                 Username = this.Username,
                 Message = this.Message,
 

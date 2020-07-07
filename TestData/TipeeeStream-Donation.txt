@@ -1,0 +1,56 @@
+{{
+  "event": {
+    "id": 246434460,
+    "type": "donation",
+    "user": {
+      "locked": false,
+      "hash_id": 442713,
+      "hash": "6071222c606ab27ccf7d2896cda79fc02490c334e278dba5debaa4f8b0cebd19",
+      "avatar": 3294207,
+      "hasPayment": "2018-12-31T12:36:06-08:00",
+      "currency": {
+        "code": "USD",
+        "symbol": "$",
+        "label": "US Dollar",
+        "available": true
+      },
+      "country": "US",
+      "campaignActivation": 0,
+      "id": 442713,
+      "username": "saviorxtanren",
+      "pseudo": "SaviorXTanren",
+      "providers": [
+        {
+          "connectedAt": "2020-07-06T17:06:20-07:00",
+          "code": "twitch",
+          "id": "43375553",
+          "username": "SaviorXTanren",
+          "master": true,
+          "created_at": "2020-07-06T00:06:10-07:00",
+          "channel": "https://www.twitch.tv/saviorxtanren"
+        }
+      ],
+      "email_confirmation_at": "2020-04-25T18:14:15-07:00",
+      "created_at": "2018-07-13T18:50:30-07:00",
+      "session_at": "2018-07-13T18:50:30-07:00",
+      "parameters": []
+    },
+    "ref": "DONATION_13343884",
+    "created_at": "2020-07-06T17:07:28-07:00",
+    "inserted_at": "2020-07-06T17:07:29-07:00",
+    "display": true,
+    "parameters": {
+      "username": "mixitupapp",
+      "amount": 1,
+      "currency": "USD",
+      "campaignId": 0,
+      "fees": 0,
+      "user_id": 589565,
+      "formattedMessage": "hello!",
+      "message": "Hello!",
+      "identifier": "24211fb321bf1f1608d175cdc14e072a3d495256"
+    },
+    "formattedAmount": "$1.00",
+    "parameters.amount": 1
+  }
+}}

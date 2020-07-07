@@ -118,7 +118,7 @@ namespace MixItUp.Base.Services.External
 
         public UserDonationModel ToGenericDonation()
         {
-            UserDonationModel result = new UserDonationModel()
+            return new UserDonationModel()
             {
                 Source = UserDonationSourceEnum.TipeeeStream,
 
@@ -130,21 +130,6 @@ namespace MixItUp.Base.Services.External
 
                 DateTime = DateTimeOffset.Now,
             };
-
-            if (this.User != null && this.User.Providers != null)
-            {
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
-                {
-                    TipeeeStreamUserProvider provider = this.User.Providers.FirstOrDefault(p => string.Equals(platform.ToString(), p.Platform, StringComparison.InvariantCultureIgnoreCase));
-                    if (provider != null)
-                    {
-                        result.UserID = provider.UserID;
-                        result.Username = provider.Username;
-                        break;
-                    }
-                }
-            }
-            return result;
         }
     }
 

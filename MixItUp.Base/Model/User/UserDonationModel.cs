@@ -33,8 +33,6 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.All;
         [DataMember]
-        public string UserID { get; set; }
-        [DataMember]
         public string Username { get; set; }
         [DataMember]
         public string Type { get; set; }
@@ -61,7 +59,7 @@ namespace MixItUp.Base.Model.User
                 {
                     if (this.user == null)
                     {
-                        this.user = ChannelSession.Services.User.GetUserFullSearch(this.Platform, this.UserID, this.Username);
+                        this.user = ChannelSession.Services.User.GetUserFullSearch(this.Platform, null, this.Username);
                     }
                 }
                 return this.user;

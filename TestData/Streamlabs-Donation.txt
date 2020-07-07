@@ -1,0 +1,26 @@
+{
+  "type": "donation",
+  "message": [
+    {
+      "id": 134233464,
+      "name": "MixItUpAppTest",
+      "amount": "1.0000000000",
+      "formatted_amount": "$1.00",
+      "formattedAmount": "$1.00",
+      "message": "Hello!",
+      "currency": "USD",
+      "emotes": "",
+      "iconClassName": "fab paypal",
+      "to": {
+        "name": "SaviorXTanren"
+      },
+      "from": "MixItUpAppTest",
+      "from_user_id": 30337627,
+      "donation_currency": "USD",
+      "source": "paypal",
+      "_id": "b952aa95c8833c88e2a6cdc223b7aaa7",
+      "priority": 10
+    }
+  ],
+  "event_id": "evt_70b3bfcbe2b643e159fde431c3f4d9c2"
+}
