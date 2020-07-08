@@ -1833,6 +1833,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MixItUpTheme.Atl3msPlexify.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\MixItUpTheme.AwkwardTysonAmericana.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
