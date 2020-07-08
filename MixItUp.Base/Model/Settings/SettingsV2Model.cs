@@ -456,6 +456,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public List<string> RecentStreamTitles { get; set; } = new List<string>();
+        [DataMember]
+        public List<string> RecentStreamGames { get; set; } = new List<string>();
 
         [DataMember]
         public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();

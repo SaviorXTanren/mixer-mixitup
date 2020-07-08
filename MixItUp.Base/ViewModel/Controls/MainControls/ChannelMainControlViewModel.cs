@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -129,18 +130,18 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private string title;
 
-        public ObservableCollection<GameModel> Games { get; private set; } = new ObservableCollection<GameModel>();
+        public ObservableCollection<string> PastGameNames { get; private set; } = new ObservableCollection<string>();
 
-        public GameModel Game
+        public string GameName
         {
-            get { return this.game; }
+            get { return this.gameName; }
             set
             {
-                this.game = value;
+                this.gameName = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private GameModel game;
+        private string gameName;
 
         public ObservableCollection<TagViewModel> Tags { get; private set; } = new ObservableCollection<TagViewModel>();
 
@@ -182,7 +183,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public ObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ObservableCollection<SearchFindChannelToRaidItemViewModel>();
 
-        private Dictionary<string, GameModel> gameLookup = new Dictionary<string, GameModel>();
+        private GameModel currentGame;
 
         public ChannelMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -200,12 +201,31 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.UpdateChannelInformationCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.TwitchUserConnection.UpdateChannelInformation(ChannelSession.TwitchUserNewAPI, this.Title, this.Game?.id);
+                bool failedToFindGame = false;
+                if (this.currentGame != null && !string.IsNullOrEmpty(this.GameName) && this.GameName.Length > 3 && !string.Equals(this.currentGame.name, this.GameName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    IEnumerable<GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(this.GameName);
+                    if (games != null && games.Count() > 0)
+                    {
+                        this.currentGame = games.First();
+                    }
+                    else
+                    {
+                        failedToFindGame = true;
+                    }
+                }
+
+                await ChannelSession.TwitchUserConnection.UpdateChannelInformation(ChannelSession.TwitchUserNewAPI, this.Title, this.currentGame?.id);
 
                 IEnumerable<TagModel> tags = this.CustomTags.Select(t => t.Tag);
                 await ChannelSession.TwitchUserConnection.UpdateStreamTagsForChannel(ChannelSession.TwitchUserNewAPI, tags);
 
                 await this.RefreshChannelInformation();
+
+                if (failedToFindGame)
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToUpdateGame);
+                }
             });
 
             this.SearchFindChannelToRaidCommand = this.CreateCommand(async (parameter) =>
@@ -221,9 +241,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         results.Add(new SearchFindChannelToRaidItemViewModel(stream.stream));
                     }
                 }
-                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameGame && this.Game != null)
+                else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameGame && this.currentGame != null)
                 {
-                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ChannelSession.TwitchUserConnection.GetGameStreams(this.Game.id, 10);
+                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ChannelSession.TwitchUserConnection.GetGameStreams(this.currentGame.id, 10);
                     if (streams.Count() > 0)
                     {
                         Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
@@ -293,24 +313,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             });
         }
 
-        public async Task<bool> SetSearchGamesForName(string name)
-        {
-            this.Games.Clear();
-            if (!string.IsNullOrEmpty(name) && name.Length > 3)
-            {
-                IEnumerable<GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(name);
-                if (games != null && games.Count() > 0)
-                {
-                    foreach (GameModel game in games)
-                    {
-                        this.Games.Add(game);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
         public void RemoveTag(TagViewModel tag)
         {
             this.CustomTags.Remove(tag);
@@ -322,6 +324,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             foreach (string title in ChannelSession.Settings.RecentStreamTitles)
             {
                 this.PastTitles.Add(title);
+            }
+
+            foreach (string game in ChannelSession.Settings.RecentStreamGames)
+            {
+                this.PastGameNames.Add(game);
             }
 
             List<TagViewModel> tags = new List<TagViewModel>();
@@ -369,11 +376,22 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
                 if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
                 {
-                    this.Game = new GameModel()
+                    this.currentGame = new GameModel()
                     {
                         id = this.ChannelInformation.game_id,
                         name = this.ChannelInformation.game_name
                     };
+
+                    this.GameName = this.currentGame.name;
+
+                    if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
+                    {
+                        ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
+                        while (ChannelSession.Settings.RecentStreamGames.Count > 5)
+                        {
+                            ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                        }
+                    }
                 }
             }
 
