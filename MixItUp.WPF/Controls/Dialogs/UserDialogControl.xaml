@@ -184,7 +184,7 @@
                     <system:String>DemoteFromMod</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="SecurityClose" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="ShieldOff" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
                 </StackPanel>
             </Button>
 
