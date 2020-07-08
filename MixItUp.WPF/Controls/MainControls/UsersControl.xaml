@@ -46,7 +46,7 @@
         </Grid>
 
         <Grid Grid.Row="1" Visibility="{Binding LimitedResults, Converter={StaticResource BooleanToVisibilityConverter}}" Height="30">
-            <TextBlock Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center">** LIMITING TO FIRST 200 USERS **</TextBlock>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">** LIMITING TO FIRST 200 USERS **</TextBlock>
         </Grid>
 
         <Grid Grid.Row="2" Margin="10,0">

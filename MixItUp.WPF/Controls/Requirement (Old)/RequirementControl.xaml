@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="5" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" Text="{x:Static resx:Resources.UsageRequirements}"/>
+                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.UsageRequirements}"/>
 
                 <Button Grid.Column="2" x:Name="UsageRequirementsHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="UsageRequirementsHelpButton_Click" />
             </Grid>

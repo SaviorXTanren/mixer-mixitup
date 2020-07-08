@@ -27,14 +27,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ColorScheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ColorScheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <local:ColorSchemeComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="ColorSchemeComboBox_SelectionChanged" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.BackgroundColor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.BackgroundColor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="BackgroundColorComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -45,7 +43,7 @@
 
         <Separator Grid.Row="4" Grid.ColumnSpan="3" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.FullTheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FullTheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ComboBox x:Name="FullThemeComboBox" Grid.Row="6" Grid.Column="2" SelectionChanged="FullThemeComboBox_SelectionChanged" DisplayMemberPath="Key" />
 
     </Grid>

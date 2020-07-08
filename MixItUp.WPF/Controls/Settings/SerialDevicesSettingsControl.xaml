@@ -31,7 +31,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
                 <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center">
