@@ -12,7 +12,6 @@ namespace MixItUp.WPF.Controls.Statistics
     /// </summary>
     public partial class StatisticsOverviewControl : LoadingControlBase
     {
-        private PackIconKind icon;
         private StatisticDataTrackerModelBase dataTracker;
 
         public StatisticsOverviewControl(StatisticDataTrackerModelBase dataTracker)
@@ -26,12 +25,6 @@ namespace MixItUp.WPF.Controls.Statistics
 
         protected override Task OnLoaded()
         {
-            this.StatisticNameTextBlock.Text = this.dataTracker.Name;
-            if (this.dataTracker.IsPackIcon)
-            {
-                this.PackIcon.Kind = this.icon = EnumHelper.GetEnumValueFromString<PackIconKind>(this.dataTracker.IconName);
-            }
-
             Task.Run(async () =>
             {
                 try

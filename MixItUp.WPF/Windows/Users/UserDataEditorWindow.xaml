@@ -245,7 +245,7 @@
 
                         </Grid>
 
-                        <ComboBox Grid.Row="4" ItemsSource="{Binding PatreonUsers}" SelectedItem="{Binding PatreonUser}" IsEnabled="{Binding IsPatreonConnected}" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonUser}" DisplayMemberPath="User.LookupName" Width="200" />
+                        <ComboBox Grid.Row="4" ItemsSource="{Binding PatreonUsers}" SelectedItem="{Binding PatreonUser}" IsEnabled="{Binding IsPatreonConnected}" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonUser}" DisplayMemberPath="User.PlatformUsername" Width="200" />
 
                     </Grid>
                 </GroupBox>

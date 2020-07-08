@@ -2932,6 +2932,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We were unable to update your game because we could not find a game matching that name.
+        /// </summary>
+        public static string FailedToUpdateGame {
+            get {
+                return ResourceManager.GetString("FailedToUpdateGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Family.
         /// </summary>
         public static string Family {

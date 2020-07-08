@@ -13,7 +13,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Name}" Grid.Row="0" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" />
+        <TextBlock Text="{Binding Name}" Grid.Row="0" TextDecorations="Underline" />
 
         <StackPanel x:Name="InventoryItemsStackPanel" Grid.Row="2" Margin="20,0,0,0" />
     </Grid>

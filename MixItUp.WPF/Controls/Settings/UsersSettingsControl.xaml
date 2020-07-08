@@ -35,13 +35,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="0,15,0,0" Text="{Binding Source={x:Static resx:Resources.RegularStatusOnlineViewingTime}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,15,0,0" Text="{Binding Source={x:Static resx:Resources.RegularStatusOnlineViewingTime}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <TextBox x:Name="RegularUserMinimumHoursTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredHours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MinWidth="100" TextChanged="RegularUserMinimumHoursTextBox_TextChanged" />
         </Grid>
 
         <Border Grid.Row="2" Style="{StaticResource DefaultBorder}" />
 
-        <TextBlock Grid.Row="4" Text="{x:Static resx:Resources.UserTitles}" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" />
+        <TextBlock Grid.Row="4" Text="{x:Static resx:Resources.UserTitles}" HorizontalAlignment="Center" />
 
         <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="6" BorderThickness="1" Width="450">
             <DataGrid x:Name="UserTitlesDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">

@@ -218,7 +218,6 @@ namespace MixItUp.Base.Model.Overlay
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
-                GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
             {
@@ -255,7 +254,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
             GlobalEvents.OnRaidOccurred -= GlobalEvents_OnRaidOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
@@ -346,11 +344,6 @@ namespace MixItUp.Base.Model.Overlay
                 this.follows.Add(user.ID);
                 this.AddUserForRole(user);
             }
-        }
-
-        private void GlobalEvents_OnUnfollowOccurred(object sender, UserViewModel user)
-        {
-            this.follows.Remove(user.ID);
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, UserViewModel host)

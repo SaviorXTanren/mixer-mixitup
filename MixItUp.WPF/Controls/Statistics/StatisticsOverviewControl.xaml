@@ -27,10 +27,9 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <MaterialDesign:PackIcon x:Name="PackIcon" Visibility="{Binding IsPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
-        <Image x:Name="ImageIcon" Source="{Binding IconName}" Visibility="{Binding IsImageIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
+        <MaterialDesign:PackIcon Kind="{Binding IconName}" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="StatisticNameTextBlock" Grid.Column="1" Margin="20,0,0,0" Width="90" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" />
+        <TextBlock x:Name="StatisticNameTextBlock" Text="{Binding Name}" Grid.Column="1" Margin="20,0,0,0" Width="90" VerticalAlignment="Center" TextDecorations="Underline" />
 
         <TextBlock x:Name="StatisticOverviewDataTextBlock" Grid.Column="3" VerticalAlignment="Center" />
     </Grid>

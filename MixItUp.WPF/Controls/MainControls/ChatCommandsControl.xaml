@@ -138,7 +138,7 @@
                                 <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
                                     <Expander.Header>
                                         <Grid Background="Transparent">
-                                            <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+                                            <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" />
 
                                             <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                         </Grid>

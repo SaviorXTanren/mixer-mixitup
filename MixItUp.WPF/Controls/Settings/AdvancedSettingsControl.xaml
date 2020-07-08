@@ -44,16 +44,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AccessTheFolderWhereMixItUpIsInstalled}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AccessTheFolderWhereMixItUpIsInstalled}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="InstallationDirectoryButton" Grid.Row="0" Grid.Column="2" Content="{x:Static resx:Resources.InstallationFolder}" Click="InstallationDirectoryButton_Click" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.BackupYourSettingsToAZipFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.BackupYourSettingsToAZipFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="BackupSettingsButton" Grid.Row="2" Grid.Column="2" Content="{x:Static resx:Resources.BackupSettings}" Click="BackupSettingsButton_Click" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.RestoreYourSettingsFromAZipFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RestoreYourSettingsFromAZipFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="RestoreSettingsButton" Grid.Row="4" Grid.Column="2" Content="{x:Static resx:Resources.RestoreSettings}" Click="RestoreSettingsButton_Click" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.AutomatedSettingsBackup}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutomatedSettingsBackup}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Grid Grid.Row="6" Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -74,22 +74,22 @@
 
         <Separator Grid.Row="8" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ReRunWizardHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ReRunWizardHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="ReRunWizardSettingsButton" Grid.Row="10" Grid.Column="2" Content="{x:Static resx:Resources.NewUserWizard}" Click="ReRunWizardSettingsButton_Click" />
 
-        <TextBlock Grid.Row="12" Grid.Column="0" x:Name="UnlockAllCommandsTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.UnlockAllCommandsHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="12" Grid.Column="0" x:Name="UnlockAllCommandsTextBlock" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockAllCommandsHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="UnlockAllCommandsToggleButton" Checked="UnlockAllCommandsToggleButton_Checked" Unchecked="UnlockAllCommandsToggleButton_Checked" />
 
         <Separator Grid.Row="14" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.EnableDisableDiagnosticsHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EnableDisableDiagnosticsHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="EnableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="{x:Static resx:Resources.EnableDiagnostics}" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
         <Button x:Name="DisableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="{x:Static resx:Resources.DisableDiagnostics}" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
 
-        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ClearAllUserDataHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ClearAllUserDataHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <Button x:Name="ClearAllUserDataButton" Grid.Row="18" Grid.Column="2" Content="{x:Static resx:Resources.ClearUserData}" Click="ClearAllUserDataButton_Click" />
 
-        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="Delete Current Settings Data:" />
+        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Text="Delete Current Settings Data:" />
         <Button x:Name="DeleteSettingsDataButton" Grid.Row="20" Grid.Column="2" Content="Delete Settings" Click="DeleteSettingsDataButton_Click" />
     </Grid>
 </local:SettingsControlBase>

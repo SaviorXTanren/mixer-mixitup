@@ -40,7 +40,7 @@
 
                         <ComboBox Grid.Column="0" Text="{Binding Title}" ItemsSource="{Binding PastTitles}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Title}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <ComboBox Grid.Column="2" x:Name="GameNameComboBox" Text="{Binding GameName}" ItemsSource="{Binding Games}" SelectedItem="{Binding Game}" DisplayMemberPath="name" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        <ComboBox Grid.Column="2" Text="{Binding GameName}" ItemsSource="{Binding PastGameNames}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </Grid>
 
                     <Grid Grid.Row="2">
