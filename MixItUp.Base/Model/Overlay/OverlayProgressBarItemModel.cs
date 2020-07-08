@@ -127,7 +127,6 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentAmount = ChannelSession.TwitchChannelV5.followers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
-                GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)
             {
@@ -150,7 +149,6 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Disable()
         {
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
@@ -235,8 +233,6 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { this.AddAmount(1); }
-
-        private void GlobalEvents_OnUnfollowOccurred(object sender, UserViewModel user) { this.AddAmount(-1); }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user) { this.AddAmount(1); }
 

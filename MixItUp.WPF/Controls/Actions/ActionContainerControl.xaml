@@ -43,8 +43,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" x:Uid="GroupBoxHeaderTextBlock" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" Visibility="Collapsed" />
-                    <TextBox Grid.Column="0" x:Uid="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Width="150" Visibility="Visible" TextChanged="GroupBoxHeaderTextBox_TextChanged" Style="{StaticResource LabelHeaderTextBox}" />
+                    <TextBlock Grid.Column="0" x:Uid="GroupBoxHeaderTextBlock" Foreground="{StaticResource WhiteColor}" Visibility="Collapsed" />
+                    <TextBox Grid.Column="0" x:Uid="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Width="250" Visibility="Visible" TextChanged="GroupBoxHeaderTextBox_TextChanged" Style="{StaticResource LabelHeaderTextBox}" />
 
                     <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-10" />
 

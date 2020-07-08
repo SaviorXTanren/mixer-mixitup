@@ -107,15 +107,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserViewModel> OnUnfollowOccurred;
-        public static void UnfollowOccurred(UserViewModel user)
-        {
-            if (GlobalEvents.OnUnfollowOccurred != null)
-            {
-                GlobalEvents.OnUnfollowOccurred(null, user);
-            }
-        }
-
         public static event EventHandler<UserViewModel> OnSubscribeOccurred;
         public static void SubscribeOccurred(UserViewModel user)
         {

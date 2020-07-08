@@ -73,7 +73,7 @@
         <GroupBox Grid.Row="6" Width="700">
             <GroupBox.Header>
                 <Grid>
-                    <TextBlock VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}">Custom Questions</TextBlock>
+                    <TextBlock VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}">Custom Questions</TextBlock>
 
                     <Button HorizontalAlignment="Right" Content="{MaterialDesign:PackIcon Plus}" Command="{Binding AddCustomQuestionCommand}" />
                 </Grid>

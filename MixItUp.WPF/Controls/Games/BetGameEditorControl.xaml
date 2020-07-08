@@ -98,7 +98,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Bet Options</TextBlock>
+                    <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Bet Options</TextBlock>
 
                     <Button Grid.Column="2" Command="{Binding AddOutcomeCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center">Add Option</Button>
                 </Grid>

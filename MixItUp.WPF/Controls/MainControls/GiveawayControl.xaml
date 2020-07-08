@@ -99,7 +99,7 @@
 
                     <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-                    <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
+                    <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" MinWidth="220" />
                 </Grid>
 
                 <Grid Grid.Row="8" HorizontalAlignment="Center">

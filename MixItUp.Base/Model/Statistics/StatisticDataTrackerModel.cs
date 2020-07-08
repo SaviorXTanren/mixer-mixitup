@@ -38,7 +38,6 @@ namespace MixItUp.Base.Model.Statistics
     {
         public string Name { get; private set; }
         public string IconName { get; private set; }
-        public bool IsPackIcon { get; private set; }
 
         public DateTimeOffset StartTime { get; private set; }
 
@@ -46,11 +45,10 @@ namespace MixItUp.Base.Model.Statistics
 
         private Func<StatisticDataTrackerModelBase, Task> updateFunction;
 
-        public StatisticDataTrackerModelBase(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
+        public StatisticDataTrackerModelBase(string name, string iconName, Func<StatisticDataTrackerModelBase, Task> updateFunction)
         {
             this.Name = name;
             this.IconName = iconName;
-            this.IsPackIcon = isPackIcon;
             this.DataPoints = new List<StatisticDataPointModel>();
             this.updateFunction = updateFunction;
 
@@ -92,8 +90,6 @@ namespace MixItUp.Base.Model.Statistics
         public double LastValue { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Last().ValueDecimal : 0.0; } }
         public string LastValueString { get { return Math.Round(LastValue, 2).ToString(); } }
 
-        public bool IsImageIcon { get { return !this.IsPackIcon; } }
-
         public abstract IEnumerable<string> GetExportHeaders();
 
         public virtual IEnumerable<List<string>> GetExportData()
@@ -128,8 +124,8 @@ namespace MixItUp.Base.Model.Statistics
 
     public class StaticTextStatisticDataTrackerModel : StatisticDataTrackerModelBase
     {
-        public StaticTextStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
-            : base(name, iconName, isPackIcon, updateFunction)
+        public StaticTextStatisticDataTrackerModel(string name, string iconName, Func<StatisticDataTrackerModelBase, Task> updateFunction)
+            : base(name, iconName, updateFunction)
         { }
 
         public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPointModel(identifier, value)); }
@@ -162,8 +158,8 @@ namespace MixItUp.Base.Model.Statistics
 
     public class TrackedNumberStatisticDataTrackerModel : StatisticDataTrackerModelBase
     {
-        public TrackedNumberStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
-            : base(name, iconName, isPackIcon, updateFunction)
+        public TrackedNumberStatisticDataTrackerModel(string name, string iconName, Func<StatisticDataTrackerModelBase, Task> updateFunction)
+            : base(name, iconName, updateFunction)
         { }
 
         public void AddValue(int value) { this.DataPoints.Add(new StatisticDataPointModel(value)); }
@@ -201,8 +197,8 @@ namespace MixItUp.Base.Model.Statistics
 
         private Func<EventStatisticDataTrackerModel, string> customToStringFunction;
 
-        public EventStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, IEnumerable<string> exportHeaders, Func<EventStatisticDataTrackerModel, string> customToStringFunction = null)
-            : base(name, iconName, isPackIcon, (StatisticDataTrackerModelBase stats) => { return Task.FromResult(0); })
+        public EventStatisticDataTrackerModel(string name, string iconName, IEnumerable<string> exportHeaders, Func<EventStatisticDataTrackerModel, string> customToStringFunction = null)
+            : base(name, iconName, (StatisticDataTrackerModelBase stats) => { return Task.FromResult(0); })
         {
             this.exportHeaders = exportHeaders;
             this.customToStringFunction = customToStringFunction;

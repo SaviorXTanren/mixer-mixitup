@@ -71,7 +71,7 @@
                         <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="100">
                             <DataGridTextColumn.Header>
                                 <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
-                                    <MaterialDesign:PackIcon Kind="Wunderlist" Height="24" Width="24" />
+                                    <MaterialDesign:PackIcon Kind="ShieldStar" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
                             <DataGridTextColumn.CellStyle>
