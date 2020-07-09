@@ -187,6 +187,8 @@ namespace MixItUp.Base.ViewModel.User
             this.Data = userData;
         }
 
+        private UserViewModel() { }
+
         private void SetUserData(string twitchID = null)
         {
             if (!string.IsNullOrEmpty(twitchID))
