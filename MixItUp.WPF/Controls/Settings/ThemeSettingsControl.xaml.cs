@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private Dictionary<string, string> availableFullThemes = new Dictionary<string, string>() { { MixItUp.Base.Resources.None, string.Empty }, { "1 Year Anniversary", "1YearAnniversary" },
             { "Mixer", "Mixer" }, { "Twitch", "Twitch" }, { "Atl3m's Plexify", "Atl3msPlexify" }, { "AwkwardTyson - Americana", "AwkwardTysonAmericana" },
-            { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" }, { "Dusty's Purple Potion", "DustysPurplePotion" }, { "Insert Coin Theater", "InsertCoinTheater" },
+            { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" }, { "BlueLeprechaunTV", "BlueLeprechaunTV" }, { "Dusty's Purple Potion", "DustysPurplePotion" }, { "Insert Coin Theater", "InsertCoinTheater" },
             { "Nibbles' Carrot Patch", "NibblesCarrotPatch" }, { "Stark Contrast", "StarkContrast" }, { "Tacos After Dark", "TacosAfterDark" }, { "Team Boom", "TeamBoom" } };
 
         public ThemeSettingsControl()
