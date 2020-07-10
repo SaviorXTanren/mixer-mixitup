@@ -260,11 +260,18 @@ namespace MixItUp.Base.Model.Currency
 
         private Guid DuplicateCommand(Guid id)
         {
-            CustomCommand command = ChannelSession.Settings.GetCustomCommand(id);
-            command = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(command));
-            command.ID = Guid.NewGuid();
-            ChannelSession.Settings.SetCustomCommand(command);
-            return command.ID;
+            if (id != Guid.Empty)
+            {
+                CustomCommand command = ChannelSession.Settings.GetCustomCommand(id);
+                if (command != null)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(command));
+                    command.ID = Guid.NewGuid();
+                    ChannelSession.Settings.SetCustomCommand(command);
+                    return command.ID;
+                }
+            }
+            return Guid.Empty;
         }
     }
 }

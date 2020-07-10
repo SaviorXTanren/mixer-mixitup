@@ -1013,8 +1013,10 @@ namespace MixItUp.Base.Commands
                             await ChannelSession.Services.Chat.SendMessage($"The user data from the account {mixerUserData.MixerUsername} on Mixer has been deleted and merged into @{targetUser.Username}.");
                             return;
                         }
+                        await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
+                        return;
                     }
-                    await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
+                    await ChannelSession.Services.Chat.SendMessage("The specified Twitch user has not run the !linkmixeraccount command");
                 }
                 else
                 {
