@@ -194,6 +194,11 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["bitsamount"] = "10";
                             extraSpecialIdentifiers["Message"] = "Test Message";
                             break;
+                        case EventTypeEnum.TwitchChannelPointsRedeemed:
+                            extraSpecialIdentifiers["rewardname"] = "Test Reward";
+                            extraSpecialIdentifiers["rewardcost"] = "100";
+                            extraSpecialIdentifiers["message"] = "Test Message";
+                            break;
                         case EventTypeEnum.ChatUserTimeout:
                             extraSpecialIdentifiers["timeoutlength"] = "5m";
                             break;
