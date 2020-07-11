@@ -780,6 +780,8 @@ namespace MixItUp.Base.Services.Twitch
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await this.AddAlertChatMessage(user, string.Format("{0} Banned", user.Username));
+
+                await ChannelSession.Services.User.RemoveUserByTwitchLogin(user.Data.TwitchUsername);
             }
         }
 
