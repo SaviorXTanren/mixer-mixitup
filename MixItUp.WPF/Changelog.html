@@ -5,7 +5,64 @@
     <body>
         <p style="font-size: large;"><b><u>Our Next Steps: </u></b><a href="http://mixitupapp.com/ournextsteps">http://mixitupapp.com/ournextsteps</a></p>
 
+        <p style="font-size: medium; color: purple"><b><u>TWITCH SUPPORT: This update contains the addition of Twitch support and the removal of Mixer support. If you plan on continuing to stream on Mixer, please Skip this update until you are ready to switch platforms. If you are not switching to Twitch, you should still take this update to ensure you are on the latest version when &amp; if your new platform becomes supported.</u></b></p>
+
         <h1 style="color: #5e9ca0;">Changelog</h1>
+
+        <h2 style="color: #2e6c80;">v0.5.7.0:</h2>
+        <ul>
+            <li>Adding support for Twitch &amp; the removal of support for Mixer</li>
+            <li>Large-scale updates to our Wiki to reflect all changes made as part of the migration: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki">https://github.com/SaviorXTanren/mixer-mixitup/wiki</a></li>
+            <li>The following features have been removed and will not be returning:</li>
+            <ul>
+                <li>MixPlay</li>
+                <li>Mixer-specific event commands</li>
+                <li>Sparks, Embers, &amp; Milestones</li>
+                <li>Auto Hoster</li>
+            </ul>
+            <li>The following features are being temporarily removed and will be returning in some form after changes and/or investigation:</li>
+            <ul>
+                <li>Mix It Up Store</li>
+                <li>Mix It Up Remote</li>
+                <li>New User Wizard importing</li>
+            </ul>
+            <li>The following features have been replaced by an equivalent feature:</li>
+            <ul>
+                <li>All Mixer event commands have been migrated over to their Twitch equivilents if they were possible. Please see our Wiki page for a full explanation of how each new event command works: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events</a></li>
+                <li>MixPlay has been replaced by its equivilent of Channel Points. Custom Channel Point Rewards that are created can be linked to a command in Mix It Up that will automatically be run when the reward is purchased: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points</a></li>
+                <li>The Mixer Clips action has been removed and the Clips action has been added. You will need to manually add this action to any existing commands that used to use the Mixer Clips action</li>
+                <li>The Stream Clip Playback Overlay Widget has been removed and the Clip Playback Overlay Widget has been added. You will need to manually add this Overlay Widget to use this functionality</li>
+                <li>Features that took advantage of Sparks &amp; Embers have now been updated to use Bits instead</li>
+                <li>Chat User Timeout: Does not indicate who performed the timeout, $targetuser___ is the person that received the timeout, $timeoutlength indicates the length of the timeout in seconds</li>
+                <li>Chat User Ban: Does not indicate who performed the ban, $targetuser___ is the person who was banned</li>
+            </ul>
+            <li>Various Special Identifiers have been adjusted or removed based on what data is available on Twitch. The following is a summary of the changes made, please see our Wiki page for full details:  <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers</a></li>
+            <ul>
+                <li>$userage has been replaced by $useraccountage</li>
+                <li>Adding $usertotalbitscheered</li>
+                <li>Removing $userchannelid, $userchannellive, $userchannelfeatured, &amp; $usergameimage</li>
+                <li>Adding $userstreamtitle, $userstreamgame, $userstreamfollowercount, &amp; $userstreamviewscount</li>
+                <li>Adding $topXbitscheered____, $topbitscheereduser___, &amp; $topbitscheeredamount</li>
+                <li>All $uptime___ &amp; $start___ Special Identifiers have been replaced by $streamuptime___ &amp; $streamstart___</li>
+                <li>$streamagerating &amp; $streamhostcount have been removed</li>
+                <li>$streamfollowcount has been replaced by $streamfollowercount</li>
+                <li>$streamsubcount has been replaced by $streamsubscribercount</li>
+                <li>$streamviewertotal has been replaced by $streamviewscount</li>
+                <li>$featuredchannel &amp; $costreamusers have been removed</li>
+                <li>$randomsubuser___ has been replaced by $randomsubscriberuser___</li>
+            </ul>
+            <li>Special Identifiers that are unique to a specific feature have been moved to that respective feature's Wiki page. For example, to see what Special Identifiers only work with Channel Points, visit the Channel Points Wiki page</li>
+            <li>Due to limits &amp; restrictions that Twitch places on whispers, all automated chat whispers from things such as error messages that relied on whispers will now appear as regular chat messages. Anything that is specifically indicated to be a whisper by you, such as via a Chat action, will continue to be an actual whisper</li>
+            <li>Adding !linkmixeraccount &amp; !approvemixeraccount pre-made chat command to assist with merging the user's Mix It Up data from their Mixer account over to their Twitch account</li>
+            <li>The following services will be automatically disconnected and must be manually reconnected to change from your Mixer account to your Twitch account: Streamlabs, StreamElements, TipeeeStream, TreatStream, StreamJar</li>
+            <li>Adding the ability to specify the required tier for Subscriber role for Role Usage Requirements</li>
+            <li>Adding support for BetterTTV &amp; FrankerFaceZ emotes. This can be enabled by heading to Settings -> Chat</li>
+            <li>Patreon patrons that have their Twitch account link will now improve user account pairing process with Mix It Up</li>
+            <li>When restoring backed up settings, the restoration process will not occur after the application restarts to prevent an occassional locking state that can occur</li>
+            <li>Updating Developer APIs to support querying information for Twitch users</li>
+            <li>Adding the following new themes: Mixer, Twitch, Atl3m's Plexify, BlueLeprechaunTV</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
 
         <h2 style="color: #2e6c80;">v0.5.6.0:</h2>
         <ul>
