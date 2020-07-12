@@ -47,11 +47,18 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.ActionTypeComboBox.SelectedIndex >= 0)
             {
                 StreamingPlatformActionType actionType = EnumHelper.GetEnumValueFromString<StreamingPlatformActionType>((string)this.ActionTypeComboBox.SelectedItem);
-                if (actionType == StreamingPlatformActionType.Host || actionType == StreamingPlatformActionType.Raid)
+                if (actionType == StreamingPlatformActionType.Host)
                 {
                     if (!string.IsNullOrEmpty(this.HostChannelNameTextBox.Text))
                     {
                         return StreamingPlatformAction.CreateHostAction(this.HostChannelNameTextBox.Text);
+                    }
+                }
+                else if (actionType == StreamingPlatformActionType.Raid)
+                {
+                    if (!string.IsNullOrEmpty(this.HostChannelNameTextBox.Text))
+                    {
+                        return StreamingPlatformAction.CreateRaidAction(this.HostChannelNameTextBox.Text);
                     }
                 }
                 else if (actionType == StreamingPlatformActionType.RunAd)
