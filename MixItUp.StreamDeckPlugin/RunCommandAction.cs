@@ -46,7 +46,7 @@ namespace MixItUp.StreamDeckPlugin
                 this.actionSettings = settings.ToObject<RunCommandSettings>();
             }
 
-            await this.connection.SetTitleAsync("Loading...", this.Context, SDKTarget.HardwareAndSoftware);
+            await this.connection.SetTitleAsync("Loading...", this.Context, SDKTarget.HardwareAndSoftware, null);
             await this.RefreshTitleAsync();
         }
 
@@ -78,7 +78,7 @@ namespace MixItUp.StreamDeckPlugin
         {
             if (!string.IsNullOrEmpty(this.actionSettings.Title))
             {
-                await this.connection.SetTitleAsync(this.actionSettings.Title, this.Context, SDKTarget.HardwareAndSoftware);
+                await this.connection.SetTitleAsync(this.actionSettings.Title, this.Context, SDKTarget.HardwareAndSoftware, null);
             }
             else if (this.actionSettings.CommandId.HasValue)
             {
@@ -98,17 +98,17 @@ namespace MixItUp.StreamDeckPlugin
 
                 if (command == null)
                 {
-                    await this.connection.SetTitleAsync("Command\nNot\nFound", this.Context, SDKTarget.HardwareAndSoftware);
+                    await this.connection.SetTitleAsync("Command\nNot\nFound", this.Context, SDKTarget.HardwareAndSoftware, null);
                 }
                 else
                 {
                     string title = command.Name.Replace(' ', '\n');
-                    await this.connection.SetTitleAsync(title, this.Context, SDKTarget.HardwareAndSoftware);
+                    await this.connection.SetTitleAsync(title, this.Context, SDKTarget.HardwareAndSoftware, null);
                 }
             }
             else
             {
-                await this.connection.SetTitleAsync("Command\nNot\nSelected", this.Context, SDKTarget.HardwareAndSoftware);
+                await this.connection.SetTitleAsync("Command\nNot\nSelected", this.Context, SDKTarget.HardwareAndSoftware, null);
             }
         }
 
