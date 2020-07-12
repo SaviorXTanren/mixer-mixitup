@@ -120,7 +120,7 @@ namespace MixItUp.Base.Services
 
         // Twitch = 200
 
-        [Name("Twitch Channel Stream Start (1 Min Delay)")]
+        [Name("Twitch Channel Stream Start (1 Minute Delay)")]
         TwitchChannelStreamStart = 200,
         [Name("Twitch Channel Stream Stop")]
         TwitchChannelStreamStop = 201,
@@ -129,7 +129,7 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Raided")]
         TwitchChannelRaided = 203,
 
-        [Name("Twitch Channel Followed (1 Min Delay)")]
+        [Name("Twitch Channel Followed (1 Minute Delay)")]
         TwitchChannelFollowed = 210,
         [Name("Twitch Channel Unfollowed")]
         TwitchChannelUnfollowed = 211,
@@ -169,21 +169,19 @@ namespace MixItUp.Base.Services
 
         [Name("Streamlabs Donation")]
         StreamlabsDonation = 1000,
-        [Name("GawkBox Donation")]
-        GawkBoxDonation = 1010,
-        [Name("Tiltify Donation")]
+        [Name("Tiltify Donation (1 Minute Delay)")]
         TiltifyDonation = 1020,
-        [Name("Extra Life Donation")]
+        [Name("Extra Life Donation (1 Minute Delay)")]
         ExtraLifeDonation = 1030,
         [Name("TipeeeStream Donation")]
         TipeeeStreamDonation = 1040,
         [Name("TreatStream Donation")]
         TreatStreamDonation = 1050,
-        [Name("Patreon Subscribed")]
+        [Name("Patreon Subscribed (1 Minute Delay)")]
         PatreonSubscribed = 1060,
-        [Name("StreamJar Donation")]
+        [Name("StreamJar Donation (1 Minute Delay)")]
         StreamJarDonation = 1070,
-        [Name("JustGiving Donation")]
+        [Name("JustGiving Donation (1 Minute Delay)")]
         JustGivingDonation = 1080,
         [Name("Streamloots Card Redeemed")]
         StreamlootsCardRedeemed = 1090,
@@ -191,7 +189,7 @@ namespace MixItUp.Base.Services
         StreamlootsPackPurchased = 1091,
         [Name("Streamloots Pack Gifted")]
         StreamlootsPackGifted = 1092,
-        [Name("StreamElements Donation")]
+        [Name("StreamElements Donation (1 Minute Delay)")]
         StreamElementsDonation = 1100,
     }
 

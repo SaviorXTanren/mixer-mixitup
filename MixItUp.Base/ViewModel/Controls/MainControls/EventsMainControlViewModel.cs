@@ -27,11 +27,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             get
             {
                 int eventNumber = (int)this.EventType;
-                if (this.EventType == EventTypeEnum.GawkBoxDonation)
-                {
-                    return "GawkBox";
-                }
-                else if (this.EventType == EventTypeEnum.StreamlabsDonation)
+                if (this.EventType == EventTypeEnum.StreamlabsDonation)
                 {
                     return "Streamlabs";
                 }

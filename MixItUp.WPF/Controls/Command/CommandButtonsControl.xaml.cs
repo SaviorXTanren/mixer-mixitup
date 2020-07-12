@@ -203,7 +203,6 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["timeoutlength"] = "5m";
                             break;
                         case EventTypeEnum.StreamlabsDonation:
-                        case EventTypeEnum.GawkBoxDonation:
                         case EventTypeEnum.TiltifyDonation:
                         case EventTypeEnum.ExtraLifeDonation:
                         case EventTypeEnum.TipeeeStreamDonation:
@@ -221,7 +220,6 @@ namespace MixItUp.WPF.Controls.Command
                             switch (eventCommand.EventCommandType)
                             {
                                 case EventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
-                                case EventTypeEnum.GawkBoxDonation: donation.Source = UserDonationSourceEnum.GawkBox; break;
                                 case EventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
                                 case EventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
                                 case EventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
