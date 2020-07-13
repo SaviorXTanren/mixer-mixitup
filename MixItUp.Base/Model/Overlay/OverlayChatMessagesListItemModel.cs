@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -109,13 +110,17 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
-                    item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
-                    item.TemplateReplacements.Add("USERNAME", item.User.Username);
-                    item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
-                    item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                    item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
-                    item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+                    UserViewModel user = item.GetUser();
+                    if (user != null)
+                    {
+                        item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
+                        item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
+                        item.TemplateReplacements.Add("USERNAME", user.Username);
+                        item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
+                        item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[user.PrimaryRoleColorName]);
+                        item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
+                        item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+                    }
 
                     await this.listSemaphore.WaitAndRelease(() =>
                     {

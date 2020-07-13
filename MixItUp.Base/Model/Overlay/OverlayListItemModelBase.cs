@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -24,7 +26,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public UserViewModel User { get; set; }
+        public Guid UserID { get; set; }
         [DataMember]
         public int Position { get; set; }
 
@@ -41,14 +43,34 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string Hash { get; set; } = string.Empty;
 
+        [JsonIgnore]
+        private UserViewModel cachedUser;
+
         public OverlayListIndividualItemModel() { }
+
+        public UserViewModel GetUser()
+        {
+            if (this.cachedUser == null && this.UserID != Guid.Empty)
+            {
+                this.cachedUser = ChannelSession.Services.User.GetUserByID(this.UserID);
+                if (this.cachedUser == null)
+                {
+                    UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);
+                    if (userData != null)
+                    {
+                        this.cachedUser = new UserViewModel(userData);
+                    }
+                }
+            }
+            return this.cachedUser;
+        }
 
         public static OverlayListIndividualItemModel CreateAddItem(string id, UserViewModel user, int position, string html)
         {
             return new OverlayListIndividualItemModel()
             {
                 ID = id,
-                User = user,
+                UserID = (user != null) ? user.ID : Guid.Empty,
                 Position = position,
                 HTML = html,
                 Add = true
