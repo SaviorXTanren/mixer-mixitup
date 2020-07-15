@@ -793,6 +793,8 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
                     {
+                        Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
+
                         string hoster = message.Message.Substring(0, message.Message.IndexOf(' '));
                         UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster, StreamingPlatformTypeEnum.Twitch);
                         if (user == null)
