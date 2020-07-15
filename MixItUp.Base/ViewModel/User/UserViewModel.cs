@@ -633,7 +633,7 @@ namespace MixItUp.Base.ViewModel.User
                     Logger.Log($"User refresh time: {refreshTime} ms");
                     if (refreshTime > 500)
                     {
-                        Logger.Log(LogLevel.Error, string.Format("Long user rfresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
+                        Logger.Log(LogLevel.Error, string.Format("Long user refresh time detected for the following user: {0} - {1} - {2} ms", this.ID, this.Username, refreshTime));
                     }
                 }
             }

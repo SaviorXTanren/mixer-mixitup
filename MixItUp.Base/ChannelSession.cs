@@ -450,6 +450,7 @@ namespace MixItUp.Base
                                     }
                                     catch (Exception sex)
                                     {
+                                        Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.Name);
                                         Logger.Log(sex);
                                     }
                                 }
@@ -460,6 +461,7 @@ namespace MixItUp.Base
                                 }
                                 catch (Exception sex)
                                 {
+                                    Logger.Log(LogLevel.Error, "Error in batch external service connection");
                                     Logger.Log(sex);
                                 }
 
@@ -480,6 +482,7 @@ namespace MixItUp.Base
                                     }
                                     catch (Exception sex)
                                     {
+                                        Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.Name);
                                         Logger.Log(sex);
                                         failedServices.Add(kvp.Key);
                                     }
