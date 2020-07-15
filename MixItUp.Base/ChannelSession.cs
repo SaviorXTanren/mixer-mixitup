@@ -437,29 +437,51 @@ namespace MixItUp.Base
                                 {
                                     Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
 
-                                    if (kvp.Key is IOAuthExternalService && kvp.Value != null)
+                                    try
                                     {
-                                        externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
+                                        if (kvp.Key is IOAuthExternalService && kvp.Value != null)
+                                        {
+                                            externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
+                                        }
+                                        else
+                                        {
+                                            externalServiceTasks[kvp.Key] = kvp.Key.Connect();
+                                        }
                                     }
-                                    else
+                                    catch (Exception sex)
                                     {
-                                        externalServiceTasks[kvp.Key] = kvp.Key.Connect();
+                                        Logger.Log(sex);
                                     }
                                 }
-                                await Task.WhenAll(externalServiceTasks.Values);
+
+                                try
+                                {
+                                    await Task.WhenAll(externalServiceTasks.Values);
+                                }
+                                catch (Exception sex)
+                                {
+                                    Logger.Log(sex);
+                                }
 
                                 List<IExternalService> failedServices = new List<IExternalService>();
                                 foreach (var kvp in externalServiceTasks)
                                 {
-                                    if (!kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
+                                    try
                                     {
-                                        Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
-
-                                        result = await kvp.Key.Connect();
-                                        if (!result.Success)
+                                        if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                                         {
-                                            failedServices.Add(kvp.Key);
+                                            Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+                                            result = await kvp.Key.Connect();
+                                            if (!result.Success)
+                                            {
+                                                failedServices.Add(kvp.Key);
+                                            }
                                         }
+                                    }
+                                    catch (Exception sex)
+                                    {
+                                        Logger.Log(sex);
+                                        failedServices.Add(kvp.Key);
                                     }
                                 }
 
