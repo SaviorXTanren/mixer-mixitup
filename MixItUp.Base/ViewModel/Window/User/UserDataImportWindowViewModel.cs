@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.Window.User
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 List<string> splits = new List<string>();
-                                foreach (string split in line.Split(new char[] { ' ', '\t', ',' }))
+                                foreach (string split in line.Split(new char[] { ' ', '\t', ',', ';' }))
                                 {
                                     splits.Add(split);
                                 }
