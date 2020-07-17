@@ -3045,4 +3045,7 @@
   <data name="FailedToUpdateGame" xml:space="preserve">
     <value>We were unable to update your game because we could not find a game matching that name</value>
   </data>
+  <data name="NotSubscribed" xml:space="preserve">
+    <value>Not Subscribed</value>
+  </data>
 </root>

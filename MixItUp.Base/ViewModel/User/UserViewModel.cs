@@ -316,6 +316,15 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string SubscribeTierString
+        {
+            get
+            {
+                int tier = this.SubscribeTier;
+                return (tier > 0) ? $"{MixItUp.Base.Resources.Tier} {tier}" : MixItUp.Base.Resources.NotSubscribed;
+            }
+        }
+
         public string PlatformBadgeLink
         {
             get
