@@ -112,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
 
             if (this.IsUserAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchUserNewAPI != null)
                 {
                     this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
                     this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
             }
             if (this.IsBotAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchBotNewAPI != null)
                 {
                     this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
                     this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
@@ -144,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
-                        if (result.Success)
+                        if (result.Success && ChannelSession.TwitchUserNewAPI != null)
                         {
                             this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
                             this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
@@ -187,7 +187,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                                 await ChannelSession.DisconnectTwitchBot();
                                 result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
                             }
-                            else
+                            else if (ChannelSession.TwitchBotNewAPI != null)
                             {
                                 this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
                                 this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
