@@ -976,7 +976,7 @@
     <value>Follower Only</value>
   </data>
   <data name="FontSize" xml:space="preserve">
-    <value>FontSize</value>
+    <value>Font Size</value>
   </data>
   <data name="Four" xml:space="preserve">
     <value>Four</value>
@@ -1525,7 +1525,7 @@
     <value>Options</value>
   </data>
   <data name="OptOutofDataTracking" xml:space="preserve">
-    <value>Opt-Out of Data Tracking*</value>
+    <value>Opt-Out of Data Tracking</value>
   </data>
   <data name="Orange" xml:space="preserve">
     <value>Orange</value>
@@ -3047,5 +3047,14 @@
   </data>
   <data name="NotSubscribed" xml:space="preserve">
     <value>Not Subscribed</value>
+  </data>
+  <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
+    <value>The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in Mixer user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs.</value>
+  </data>
+  <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
+    <value>This option allows you to opt-out of any tracking of your data via our back-end services. We track data around app usage &amp; crashes to help improve your experience. If you select this option, we will stop all tracking of this data. Note that this does not disable any data included with uploading &amp; reviewing Mix It Up store commands.</value>
+  </data>
+  <data name="UpdatePreviewProgramTooltip" xml:space="preserve">
+    <value>The Update Preview Program allows you to get early access to new features &amp; improvements before the general public. This is a great way to give early feedback &amp; provide valuable help. Preview Program updates can have bugs &amp; issues associated with them, so users should only sign up for this if they are willing to work around any possible issues that may arise We encourage users to enable automatic backups and perform a manual backup of their settings before enabling this.</value>
   </data>
 </root>

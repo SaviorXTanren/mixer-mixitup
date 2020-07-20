@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override async Task OnLoaded()
         {
-            this.audioOutputDevices = await ChannelSession.Services.AudioService.GetOutputDevices();
+            this.audioOutputDevices = ChannelSession.Services.AudioService.GetOutputDevices();
 
             List<string> audioOutputDevicesNames = new List<string>();
             audioOutputDevicesNames.Add(SoundAction.DefaultAudioDevice);

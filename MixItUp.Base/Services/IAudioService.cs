@@ -7,8 +7,8 @@ namespace MixItUp.Base.Services
     {
         Task Play(string filePath, int volume, int deviceNumber = -1);
 
-        Task<Dictionary<int, string>> GetOutputDevices();
+        Dictionary<int, string> GetOutputDevices();
 
-        Task<int> GetOutputDevice(string deviceName);
+        int GetOutputDevice(string deviceName);
     }
 }

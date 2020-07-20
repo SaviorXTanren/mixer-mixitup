@@ -897,6 +897,12 @@
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericButtonSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericCombBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericCombBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
       <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -918,6 +924,9 @@
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericToggleSettingsOptionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\UsersSettingsControl.xaml.cs">
       <DependentUpon>UsersSettingsControl.xaml</DependentUpon>
@@ -1734,6 +1743,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericCombBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\HotKeysSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1759,6 +1776,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

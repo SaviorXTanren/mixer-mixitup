@@ -1,15 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
+﻿using MixItUp.Base.ViewModel.Controls.Settings;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Settings
 {
@@ -18,169 +8,24 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class GeneralSettingsControl : SettingsControlBase
     {
-        public static readonly string OptOutTrackingTooltip =
-            "This option allows you to opt-out of any tracking of your" + Environment.NewLine +
-            "data via our back-end services. We track data around app" + Environment.NewLine +
-            "usage & crashes to help improve your experience. If you" + Environment.NewLine +
-            "select this option, we will stop all tracking of this data." + Environment.NewLine + Environment.NewLine +
-            "Note that this does not disable any data included with uploading" + Environment.NewLine +
-            "& reviewing Mix It Up store commands.";
-
-        public static readonly string UpdatePreviewProgramTooltip =
-            "The Update Preview Program allows you to get early access" + Environment.NewLine +
-            "to new features & improvements before the general public." + Environment.NewLine +
-            "This is a great way to give early feedback & provide valuable" + Environment.NewLine +
-            "help. Preview Program updates can have bugs & issues associated" + Environment.NewLine +
-            "with them, so users should only sign up for this if they are" + Environment.NewLine +
-            "willing to work around any possible issues that may arise" + Environment.NewLine +
-            "We encourage users to enable automatic backups and perform " + Environment.NewLine +
-            "a manual backup of their settings before enabling this.";
-
-        public static readonly string AutoLogInTooltip =
-            "The Auto Log-In setting allows Mix It Up to automatically" + Environment.NewLine +
-            "log in the currently signed-in Mixer user account." + Environment.NewLine + Environment.NewLine +
-            "NOTE: If there is a Mix It Up update or you are required" + Environment.NewLine +
-            "to re-authenticate any of your services accounts, you will" + Environment.NewLine +
-            "need to manually log in when this occurs.";
-
-        private Dictionary<int, string> audioOutputDevices = new Dictionary<int, string>();
+        private GeneralSettingsControlViewModel viewModel;
 
         public GeneralSettingsControl()
         {
             InitializeComponent();
 
-            this.OptOutTrackingTextBlock.ToolTip = this.OptOutTrackingToggleButton.ToolTip = OptOutTrackingTooltip;
-
-            this.UpdatePreviewProgramTextBlock.ToolTip = this.UpdatePreviewProgramToggleButton.ToolTip = UpdatePreviewProgramTooltip;
-
-            this.AutoLogInAccountTextBlock.ToolTip = this.AutoLogInAccountToggleButton.ToolTip = AutoLogInTooltip;
-
-            this.DefaultStreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>(
-                new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS });
-
-            var languageOptions = EnumHelper.GetEnumList<LanguageOptions>().ToList();
-            if (!ChannelSession.IsDebug())
-            {
-                languageOptions.Remove(LanguageOptions.Pseudo);
-            }
-
-            this.LanguageComboBox.ItemsSource = languageOptions.OrderBy(l => l.ToString());
+            this.DataContext = this.viewModel = new GeneralSettingsControlViewModel();
         }
 
         protected override async Task InitializeInternal()
         {
-            this.audioOutputDevices = await ChannelSession.Services.AudioService.GetOutputDevices();
-
-            List<string> audioOutputDevicesNames = new List<string>();
-            audioOutputDevicesNames.Add(SoundAction.DefaultAudioDevice);
-            audioOutputDevicesNames.AddRange(this.audioOutputDevices.Values);
-            this.DefaultAudioOutputComboBox.ItemsSource = audioOutputDevicesNames;
-
-            this.OptOutTrackingToggleButton.IsChecked = ChannelSession.Settings.OptOutTracking;
-            this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
-            this.UpdatePreviewProgramToggleButton.IsChecked = ChannelSession.AppSettings.PreviewProgram;
-            this.AutoLogInAccountToggleButton.IsChecked = (ChannelSession.AppSettings.AutoLogInID == ChannelSession.Settings.ID);
-            this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
-            this.LanguageComboBox.SelectedItem = ChannelSession.AppSettings.LanguageOption;
-            if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
-            {
-                this.DefaultAudioOutputComboBox.SelectedItem = ChannelSession.Settings.DefaultAudioOutput;
-            }
-            else
-            {
-                this.DefaultAudioOutputComboBox.SelectedItem = SoundAction.DefaultAudioDevice;
-            }
-            this.SaveChatEventLogsToggleButton.IsChecked = ChannelSession.Settings.SaveChatEventLogs;
-
+            await this.viewModel.OnLoaded();
             await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
-        }
-
-        private void OptOutTrackingToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.OptOutTracking = this.OptOutTrackingToggleButton.IsChecked.GetValueOrDefault();
-            if (ChannelSession.Settings.OptOutTracking)
-            {
-                this.FeatureMeToggleButton.IsEnabled = false;
-                this.FeatureMeToggleButton.IsChecked = false;
-            }
-            else
-            {
-                this.FeatureMeToggleButton.IsEnabled = true;
-            }
-        }
-
-        private void FeatureMeToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.Settings.FeatureMe = this.FeatureMeToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private async void UpdatePreviewProgramToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if (this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault() && !ChannelSession.AppSettings.PreviewProgram)
-            {
-                string text = UpdatePreviewProgramTooltip.Replace(Environment.NewLine, " ");
-                if (!await DialogHelper.ShowConfirmation(text + Environment.NewLine + Environment.NewLine + "Are you sure you wish to join the Preview Program?"))
-                {
-                    ChannelSession.AppSettings.PreviewProgram = false;
-                    this.UpdatePreviewProgramToggleButton.IsChecked = false;
-                    return;
-                }
-            }
-            ChannelSession.AppSettings.PreviewProgram = this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void AutoLogInAccountToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.AppSettings.AutoLogInID = ChannelSession.Settings.ID;
-        }
-
-        private void AutoLogInAccountToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.AppSettings.AutoLogInID = Guid.Empty;
-        }
-
-        private void DefaultStreamingSoftwareComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.DefaultStreamingSoftwareComboBox.SelectedIndex >= 0)
-            {
-                ChannelSession.Settings.DefaultStreamingSoftware = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.DefaultStreamingSoftwareComboBox.SelectedItem);
-            }
-        }
-
-        private void LanguageComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            var selectedLanguage = (LanguageOptions)this.LanguageComboBox.SelectedItem;
-            if (ChannelSession.AppSettings.LanguageOption != selectedLanguage)
-            {
-                ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
-                ChannelSession.AppSettings.LanguageOption = selectedLanguage;
-            }
-        }
-
-        private void DefaultAudioOutputComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.DefaultAudioOutputComboBox.SelectedIndex >= 0)
-            {
-                string audioDeviceName = (string)this.DefaultAudioOutputComboBox.SelectedItem;
-                if (audioDeviceName.Equals(SoundAction.DefaultAudioDevice))
-                {
-                    ChannelSession.Settings.DefaultAudioOutput = null;
-                }
-                else
-                {
-                    ChannelSession.Settings.DefaultAudioOutput = audioDeviceName;
-                }
-            }
-        }
-
-        private void SaveChatEventLogsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.SaveChatEventLogs = this.SaveChatEventLogsToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

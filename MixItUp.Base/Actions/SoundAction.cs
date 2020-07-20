@@ -58,9 +58,8 @@ namespace MixItUp.Base.Actions
                 int audioDevice = -1;
                 if (!string.IsNullOrEmpty(this.OutputDevice))
                 {
-                    audioDevice = await ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
+                    audioDevice = ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
                 }
-
                 await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, audioDevice);
             }
         }

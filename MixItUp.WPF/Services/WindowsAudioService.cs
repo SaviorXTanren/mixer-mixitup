@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Services
 
                     if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
                     {
-                        deviceNumber = await ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
+                        deviceNumber = ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
                     }
 
                     using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Services
             return Task.FromResult(0);
         }
 
-        public Task<Dictionary<int, string>> GetOutputDevices()
+        public Dictionary<int, string> GetOutputDevices()
         {
             Dictionary<int, string> outputDevices = new Dictionary<int, string>();
             for (int i = 0; i < WaveOut.DeviceCount; i++)
@@ -70,12 +70,12 @@ namespace MixItUp.WPF.Services
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
-            return Task.FromResult(outputDevices);
+            return outputDevices;
         }
 
-        public async Task<int> GetOutputDevice(string deviceName)
+        public int GetOutputDevice(string deviceName)
         {
-            Dictionary<int, string> audioOutputDevices = await ChannelSession.Services.AudioService.GetOutputDevices();
+            Dictionary<int, string> audioOutputDevices = ChannelSession.Services.AudioService.GetOutputDevices();
             foreach (var kvp in audioOutputDevices)
             {
                 if (kvp.Value.Equals(deviceName))

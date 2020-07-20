@@ -826,6 +826,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in Mixer user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs..
+        /// </summary>
+        public static string AutoLogInCurrentAccountTooltip {
+            get {
+                return ResourceManager.GetString("AutoLogInCurrentAccountTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automated Settings Backup.
         /// </summary>
         public static string AutomatedSettingsBackup {
@@ -3130,7 +3139,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FontSize.
+        ///   Looks up a localized string similar to Font Size.
         /// </summary>
         public static string FontSize {
             get {
@@ -5155,11 +5164,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Opt-Out of Data Tracking*.
+        ///   Looks up a localized string similar to Opt-Out of Data Tracking.
         /// </summary>
         public static string OptOutofDataTracking {
             get {
                 return ResourceManager.GetString("OptOutofDataTracking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This option allows you to opt-out of any tracking of your data via our back-end services. We track data around app usage &amp; crashes to help improve your experience. If you select this option, we will stop all tracking of this data. Note that this does not disable any data included with uploading &amp; reviewing Mix It Up store commands..
+        /// </summary>
+        public static string OptOutofDataTrackingTooltip {
+            get {
+                return ResourceManager.GetString("OptOutofDataTrackingTooltip", resourceCulture);
             }
         }
         
@@ -8013,6 +8031,15 @@ namespace MixItUp.Base {
         public static string UpdatePreviewProgram {
             get {
                 return ResourceManager.GetString("UpdatePreviewProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Update Preview Program allows you to get early access to new features &amp; improvements before the general public. This is a great way to give early feedback &amp; provide valuable help. Preview Program updates can have bugs &amp; issues associated with them, so users should only sign up for this if they are willing to work around any possible issues that may arise We encourage users to enable automatic backups and perform a manual backup of their settings before enabling this..
+        /// </summary>
+        public static string UpdatePreviewProgramTooltip {
+            get {
+                return ResourceManager.GetString("UpdatePreviewProgramTooltip", resourceCulture);
             }
         }
         
