@@ -172,6 +172,9 @@ namespace MixItUp.Base.Model.Settings
         #region Notifications
 
         [DataMember]
+        public string NotificationsAudioOutput { get; set; }
+
+        [DataMember]
         public string NotificationChatMessageSoundFilePath { get; set; }
         [DataMember]
         public int NotificationChatMessageSoundVolume { get; set; } = 100;

@@ -19,14 +19,12 @@ namespace MixItUp.WPF.Controls.Actions
 
         public SoundActionControl(SoundAction action) : this() { this.action = action; }
 
-        public override async Task OnLoaded()
+        public override Task OnLoaded()
         {
-            this.audioOutputDevices = ChannelSession.Services.AudioService.GetOutputDevices();
-
             List<string> audioOutputDevicesNames = new List<string>();
             audioOutputDevicesNames.Add(SoundAction.DefaultAudioDevice);
             audioOutputDevicesNames.Add(SoundAction.MixItUpOverlay);
-            audioOutputDevicesNames.AddRange(this.audioOutputDevices.Values);
+            audioOutputDevicesNames.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
             this.AudioOutputComboBox.ItemsSource = audioOutputDevicesNames;
 
             this.AudioOutputComboBox.SelectedIndex = 0;
@@ -40,6 +38,8 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 this.SoundVolumeSlider.Value = this.action.VolumeScale;
             }
+
+            return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()

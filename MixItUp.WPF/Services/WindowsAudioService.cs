@@ -12,18 +12,29 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsAudioService : IAudioService
     {
-        public Task Play(string filePath, int volume, int deviceNumber = -1)
+        public async Task Play(string filePath, int volume)
+        {
+            await ChannelSession.Services.AudioService.Play(filePath, volume, null);
+        }
+
+        public Task Play(string filePath, int volume, string deviceName)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
                 Task.Run(async () =>
                 {
-                    float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
+                    int deviceNumber = -1;
+                    if (!string.IsNullOrEmpty(deviceName))
+                    {
+                        deviceNumber = this.GetOutputDeviceID(deviceName);
+                    }
 
                     if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
                     {
-                        deviceNumber = ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
+                        deviceNumber = this.GetOutputDeviceID(ChannelSession.Settings.DefaultAudioOutput);
                     }
+
+                    float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
 
                     using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
                     {
@@ -58,29 +69,36 @@ namespace MixItUp.WPF.Services
             return Task.FromResult(0);
         }
 
-        public Dictionary<int, string> GetOutputDevices()
+        public IEnumerable<string> GetOutputDevices()
         {
-            Dictionary<int, string> outputDevices = new Dictionary<int, string>();
+            List<string> results = new List<string>();
             for (int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 try
                 {
                     WaveOutCapabilities capabilities = WaveOut.GetCapabilities(i);
-                    outputDevices[i] = capabilities.ProductName;
+                    results.Add(capabilities.ProductName);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
-            return outputDevices;
+            return results;
         }
 
-        public int GetOutputDevice(string deviceName)
+        private int GetOutputDeviceID(string deviceName)
         {
-            Dictionary<int, string> audioOutputDevices = ChannelSession.Services.AudioService.GetOutputDevices();
-            foreach (var kvp in audioOutputDevices)
+            if (!string.IsNullOrEmpty(deviceName))
             {
-                if (kvp.Value.Equals(deviceName))
+                for (int i = 0; i < WaveOut.DeviceCount; i++)
                 {
-                    return kvp.Key;
+                    try
+                    {
+                        WaveOutCapabilities capabilities = WaveOut.GetCapabilities(i);
+                        if (deviceName.Equals(capabilities.ProductName))
+                        {
+                            return i;
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
                 }
             }
             return -1;

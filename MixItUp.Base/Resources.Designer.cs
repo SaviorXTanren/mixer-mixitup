@@ -5002,6 +5002,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notifications Audio Output.
+        /// </summary>
+        public static string NotificationsAudioOutput {
+            get {
+                return ResourceManager.GetString("NotificationsAudioOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Replaced.
         /// </summary>
         public static string NotReplaced {

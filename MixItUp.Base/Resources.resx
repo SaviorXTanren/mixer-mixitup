@@ -3057,4 +3057,7 @@
   <data name="UpdatePreviewProgramTooltip" xml:space="preserve">
     <value>The Update Preview Program allows you to get early access to new features &amp; improvements before the general public. This is a great way to give early feedback &amp; provide valuable help. Preview Program updates can have bugs &amp; issues associated with them, so users should only sign up for this if they are willing to work around any possible issues that may arise We encourage users to enable automatic backups and perform a manual backup of their settings before enabling this.</value>
   </data>
+  <data name="NotificationsAudioOutput" xml:space="preserve">
+    <value>Notifications Audio Output</value>
+  </data>
 </root>

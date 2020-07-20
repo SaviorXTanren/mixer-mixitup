@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
             List<string> audioOptions = new List<string>();
             audioOptions.Add(SoundAction.DefaultAudioDevice);
-            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices().Values);
+            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
 
             this.DefaultAudioOutput = new GenericCombBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
                 audioOptions, defaultAudioOption, (value) =>

@@ -5,10 +5,10 @@ namespace MixItUp.Base.Services
 {
     public interface IAudioService
     {
-        Task Play(string filePath, int volume, int deviceNumber = -1);
+        Task Play(string filePath, int volume);
 
-        Dictionary<int, string> GetOutputDevices();
+        Task Play(string filePath, int volume, string deviceName);
 
-        int GetOutputDevice(string deviceName);
+        IEnumerable<string> GetOutputDevices();
     }
 }

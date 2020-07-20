@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,12 +52,7 @@ namespace MixItUp.Base.Actions
             }
             else
             {
-                int audioDevice = -1;
-                if (!string.IsNullOrEmpty(this.OutputDevice))
-                {
-                    audioDevice = ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
-                }
-                await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, audioDevice);
+                await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, this.OutputDevice);
             }
         }
     }
