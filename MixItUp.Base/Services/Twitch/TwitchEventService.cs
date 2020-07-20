@@ -446,23 +446,24 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(redemption.user);
             }
 
+            List<string> arguments = null;
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
             specialIdentifiers["rewardname"] = redemption.reward.title;
             specialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
-            specialIdentifiers["message"] = redemption.user_input;
-
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user);
-            foreach (var kvp in specialIdentifiers)
+            if (!string.IsNullOrEmpty(redemption.user_input))
             {
-                trigger.SpecialIdentifiers[kvp.Key] = kvp.Value;
+                specialIdentifiers["message"] = redemption.user_input;
+                arguments = new List<string>(redemption.user_input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }
 
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, specialIdentifiers);
+            trigger.Arguments = arguments;
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
             TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
             if (command != null)
             {
-                await command.Perform(user, extraSpecialIdentifiers: specialIdentifiers);
+                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
             }
 
             await this.AddAlertChatMessage(user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title));
