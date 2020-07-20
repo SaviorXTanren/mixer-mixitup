@@ -22,7 +22,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         Banned,
         User = 10,
-        Pro = 20,
+        Premium = 20,
         Affiliate = 23,
         Partner = 25,
         Follower = 30,
@@ -390,23 +390,17 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchSubscriberBadge { get; private set; }
 
-        public bool HasTwitchModeratorBadge { get { return this.TwitchModeratorBadge != null; } }
+        public bool HasTwitchRoleBadge { get { return this.TwitchRoleBadge != null; } }
 
-        public string TwitchModeratorBadgeLink { get { return (this.HasTwitchModeratorBadge) ? this.TwitchModeratorBadge.image_url_1x : string.Empty; } }
+        public string TwitchRoleBadgeLink { get { return (this.HasTwitchRoleBadge) ? this.TwitchRoleBadge.image_url_1x : string.Empty; } }
 
-        public ChatBadgeModel TwitchModeratorBadge { get; private set; }
+        public ChatBadgeModel TwitchRoleBadge { get; private set; }
 
-        public bool HasTwitchVIPBadge { get { return this.TwitchVIPBadge != null; } }
+        public bool HasTwitchSpecialtyBadge { get { return this.TwitchSpecialtyBadge != null; } }
 
-        public string TwitchVIPBadgeLink { get { return (this.HasTwitchVIPBadge) ? this.TwitchVIPBadge.image_url_1x : string.Empty; } }
+        public string TwitchSpecialtyBadgeLink { get { return (this.HasTwitchSpecialtyBadge) ? this.TwitchSpecialtyBadge.image_url_1x : string.Empty; } }
 
-        public ChatBadgeModel TwitchVIPBadge { get; private set; }
-
-        public bool HasTwitchBitsBadge { get { return this.TwitchBitsBadge != null; } }
-
-        public string TwitchBitsBadgeLink { get { return (this.HasTwitchBitsBadge) ? this.TwitchBitsBadge.image_url_1x : string.Empty; } }
-
-        public ChatBadgeModel TwitchBitsBadge { get; private set; }
+        public ChatBadgeModel TwitchSpecialtyBadge { get; private set; }
 
         #endregion Twitch
 
@@ -561,7 +555,7 @@ namespace MixItUp.Base.ViewModel.User
                         return "UserGlobalModRoleColor";
                 }
 
-                if (this.UserRoles.Contains(UserRoleEnum.Pro))
+                if (this.UserRoles.Contains(UserRoleEnum.Premium))
                 {
                     return "UserProRoleColor";
                 }
@@ -677,55 +671,27 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
                 if (this.HasTwitchBadge("global_mod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
                 if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
-                if (this.IsTwitchSubscriber || this.HasTwitchSubscriberFounderBadge) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
+                if (this.IsTwitchSubscriber) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Premium); } else { this.UserRoles.Remove(UserRoleEnum.Premium); }
                 if (this.HasTwitchBadge("vip")) { this.UserRoles.Add(UserRoleEnum.VIP); } else { this.UserRoles.Remove(UserRoleEnum.VIP); }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null)
                 {
-                    if (this.TwitchUserRoles.Contains(UserRoleEnum.Mod))
-                    {
-                        this.TwitchModeratorBadge = this.GetTwitchBadgeURL("moderator");
-                    }
+                    if (this.HasTwitchBadge("staff")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("staff"); }
+                    else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
+                    else if (this.HasTwitchBadge("extension")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("extension"); }
+                    else if (this.HasTwitchBadge("twitchbot")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("twitchbot"); }
+                    else if (this.TwitchUserRoles.Contains(UserRoleEnum.Mod)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("moderator"); }
+                    else if (this.TwitchUserRoles.Contains(UserRoleEnum.VIP)) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("vip"); }
 
-                    string name = null;
-                    if (this.HasTwitchSubscriberBadge)
-                    {
-                        name = "subscriber";
-                    }
-                    else if (this.HasTwitchSubscriberFounderBadge)
-                    {
-                        name = "founder";
-                    }
+                    if (this.HasTwitchSubscriberFounderBadge) { this.TwitchSubscriberBadge = this.GetTwitchBadgeURL("founder"); }
+                    else if (this.HasTwitchSubscriberBadge) { this.TwitchSubscriberBadge = this.GetTwitchBadgeURL("subscriber"); }                   
 
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        this.TwitchSubscriberBadge = this.GetTwitchBadgeURL(name);
-                    }
-
-                    if (this.TwitchSubscriberBadge == null && this.TwitchUserRoles.Contains(UserRoleEnum.VIP))
-                    {
-                        this.TwitchVIPBadge = this.GetTwitchBadgeURL("vip");
-                    }
-                    else
-                    {
-                        this.TwitchVIPBadge = null;
-                    }
-
-                    string bitsBadgeName = null;
-                    if (this.HasTwitchBadge("bits-leader"))
-                    {
-                        bitsBadgeName = "bits-leader";
-                    }
-                    else if (this.HasTwitchBadge("bits"))
-                    {
-                        bitsBadgeName = "bits";
-                    }
-
-                    if (!string.IsNullOrEmpty(bitsBadgeName))
-                    {
-                        this.TwitchBitsBadge = this.GetTwitchBadgeURL(bitsBadgeName);
-                    }
+                    if (this.HasTwitchBadge("sub-gift-leader")) { this.TwitchSpecialtyBadge = this.GetTwitchBadgeURL("sub-gift-leader"); }
+                    else if (this.HasTwitchBadge("bits-leader")) { this.TwitchSpecialtyBadge = this.GetTwitchBadgeURL("bits-leader"); }
+                    else if (this.HasTwitchBadge("sub-gifter")) { this.TwitchSpecialtyBadge = this.GetTwitchBadgeURL("sub-gifter"); }
+                    else if (this.HasTwitchBadge("bits")) { this.TwitchSpecialtyBadge = this.GetTwitchBadgeURL("bits"); }
+                    else if (this.HasTwitchBadge("premium")) { this.TwitchSpecialtyBadge = this.GetTwitchBadgeURL("premium"); }
                 }
             }
 
