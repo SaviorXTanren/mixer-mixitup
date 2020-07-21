@@ -13,7 +13,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:SettingsControlBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-        <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <StackPanel>

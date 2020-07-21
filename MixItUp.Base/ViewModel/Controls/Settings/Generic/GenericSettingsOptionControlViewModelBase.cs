@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModels;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
 {
@@ -11,7 +12,10 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
         public GenericSettingsOptionControlViewModelBase(string name, string tooltip = null)
         {
             this.Name = name;
-            this.Tooltip = tooltip;
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                this.Tooltip = tooltip.AddNewLineEveryXCharacters(75);
+            }
         }
     }
 }

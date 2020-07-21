@@ -2185,20 +2185,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete All Chat Commands When They Are Run.
+        ///   Looks up a localized string similar to Delete Chat Commands When Run.
         /// </summary>
-        public static string DeleteAllChatCommandsWhenTheyAreRun {
+        public static string DeleteChatCommandsWhenRun {
             get {
-                return ResourceManager.GetString("DeleteAllChatCommandsWhenTheyAreRun", resourceCulture);
+                return ResourceManager.GetString("DeleteChatCommandsWhenRun", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete Chat Command When Run.
+        ///   Looks up a localized string similar to Delete Chat Message When Run.
         /// </summary>
-        public static string DeleteChatWhenRun {
+        public static string DeleteChatMessageWhenRun {
             get {
-                return ResourceManager.GetString("DeleteChatWhenRun", resourceCulture);
+                return ResourceManager.GetString("DeleteChatMessageWhenRun", resourceCulture);
             }
         }
         
@@ -2383,11 +2383,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t Delete Chat Command When Run.
+        ///   Looks up a localized string similar to Don&apos;t Delete Chat Message When Run.
         /// </summary>
-        public static string DontDeleteChatWhenRun {
+        public static string DontDeleteChatMessageWhenRun {
             get {
-                return ResourceManager.GetString("DontDeleteChatWhenRun", resourceCulture);
+                return ResourceManager.GetString("DontDeleteChatMessageWhenRun", resourceCulture);
             }
         }
         
@@ -7972,11 +7972,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unlock all commands types.
+        ///   Looks up a localized string similar to Unlock All Command Types.
         /// </summary>
-        public static string UnlockAllCommandsHeader {
+        public static string UnlockAllCommandTypes {
             get {
-                return ResourceManager.GetString("UnlockAllCommandsHeader", resourceCulture);
+                return ResourceManager.GetString("UnlockAllCommandTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up has build in Command locking functionality which ensures only 1 command type (Chat, Interactive, etc) can run at the same time and ensures that each command finishes in the order it was run in. This option will allow you to disable locking on ALL commands. Be aware that this could cause some unforeseen issues, so please use with caution..
+        /// </summary>
+        public static string UnlockAllCommandTypesTooltip {
+            get {
+                return ResourceManager.GetString("UnlockAllCommandTypesTooltip", resourceCulture);
             }
         }
         

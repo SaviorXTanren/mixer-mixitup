@@ -14,13 +14,6 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class AdvancedSettingsControl : SettingsControlBase
     {
-        public static readonly string UnlockedAllTooltip =
-            "Mix It Up has build in Command locking functionality which ensures only" + Environment.NewLine +
-            "1 command type (Chat, Interactive, etc) can run at the same time and" + Environment.NewLine +
-            "ensures that each command finishes in the order it was run in." + Environment.NewLine + Environment.NewLine +
-            "This option will allow you to disable locking on ALL commands. Be aware" + Environment.NewLine +
-            "that this could cause some unforeseen issues, so please use with caution.";
-
         public AdvancedSettingsControl()
         {
             InitializeComponent();
@@ -29,8 +22,6 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task InitializeInternal()
         {
             this.SettingsBackupRateComboBox.ItemsSource = Enum.GetValues(typeof(SettingsBackupRateEnum));
-            this.UnlockAllCommandsTextBlock.ToolTip = UnlockedAllTooltip;
-            this.UnlockAllCommandsToggleButton.ToolTip = UnlockedAllTooltip;
 
             this.SettingsBackupRateComboBox.SelectedItem = ChannelSession.Settings.SettingsBackupRate;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.SettingsBackupLocation))
@@ -38,7 +29,6 @@ namespace MixItUp.WPF.Controls.Settings
                 this.SettingsBackupRateComboBox.IsEnabled = true;
             }
 
-            this.UnlockAllCommandsToggleButton.IsChecked = ChannelSession.Settings.UnlockAllCommands;
             this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.AppSettings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
             this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.AppSettings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -132,11 +122,6 @@ namespace MixItUp.WPF.Controls.Settings
                 ChannelSession.AppSettings.DiagnosticLogging = false;
                 ((MainWindow)this.Window).Restart();
             }
-        }
-
-        private void UnlockAllCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.UnlockAllCommands = this.UnlockAllCommandsToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private async void ClearAllUserDataButton_Click(object sender, RoutedEventArgs e)

@@ -45,10 +45,6 @@ namespace MixItUp.WPF.Controls.Settings
             this.HideChatUserListToggleButton.IsChecked = ChannelSession.Settings.HideChatUserList;
             this.HideDeletedMessagesToggleButton.IsChecked = ChannelSession.Settings.HideDeletedMessages;
             this.TrackWhispererNumberToggleButton.IsChecked = ChannelSession.Settings.TrackWhispererNumber;
-            this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
-            this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
-            this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
-            this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
             this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
             this.OnlyShowAlertsInDashboardToggleButton.IsChecked = ChannelSession.Settings.OnlyShowAlertsInDashboard;
             this.ShowBetterTTVEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowBetterTTVEmotes;
@@ -140,26 +136,6 @@ namespace MixItUp.WPF.Controls.Settings
         private void TrackWhispererNumberToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.TrackWhispererNumber = this.TrackWhispererNumberToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void AllowCommandWhisperingToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.AllowCommandWhispering = this.AllowCommandWhisperingToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void IgnoreBotAccountCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.IgnoreBotAccountCommands = this.IgnoreBotAccountCommandsToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void CommandsOnlyInYourStreamToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.CommandsOnlyInYourStream = this.CommandsOnlyInYourStreamToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void DeleteChatCommandsWhenRunToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void ShowBetterTTVEmotesToggleButton_Checked(object sender, RoutedEventArgs e)

@@ -699,11 +699,8 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
-    <value>Delete All Chat Commands When They Are Run</value>
-  </data>
-  <data name="DeleteChatWhenRun" xml:space="preserve">
-    <value>Delete Chat Command When Run</value>
+  <data name="DeleteChatCommandsWhenRun" xml:space="preserve">
+    <value>Delete Chat Commands When Run</value>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>Delete Command</value>
@@ -752,9 +749,6 @@
   </data>
   <data name="Donators" xml:space="preserve">
     <value>Donators</value>
-  </data>
-  <data name="DontDeleteChatWhenRun" xml:space="preserve">
-    <value>Don't Delete Chat Command When Run</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
@@ -2292,8 +2286,8 @@
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
-  <data name="UnlockAllCommandsHeader" xml:space="preserve">
-    <value>Unlock all commands types</value>
+  <data name="UnlockAllCommandTypes" xml:space="preserve">
+    <value>Unlock All Command Types</value>
   </data>
   <data name="UnlockCommand" xml:space="preserve">
     <value>Unlock Command</value>
@@ -3059,5 +3053,14 @@
   </data>
   <data name="NotificationsAudioOutput" xml:space="preserve">
     <value>Notifications Audio Output</value>
+  </data>
+  <data name="DeleteChatMessageWhenRun" xml:space="preserve">
+    <value>Delete Chat Message When Run</value>
+  </data>
+  <data name="DontDeleteChatMessageWhenRun" xml:space="preserve">
+    <value>Don't Delete Chat Message When Run</value>
+  </data>
+  <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
+    <value>Mix It Up has build in Command locking functionality which ensures only 1 command type (Chat, Interactive, etc) can run at the same time and ensures that each command finishes in the order it was run in. This option will allow you to disable locking on ALL commands. Be aware that this could cause some unforeseen issues, so please use with caution.</value>
   </data>
 </root>
