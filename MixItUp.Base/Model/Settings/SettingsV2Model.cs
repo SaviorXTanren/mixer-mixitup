@@ -910,13 +910,13 @@ namespace MixItUp.Base.Model.Settings
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
 
-            if (this.RedemptionStoreManualRedeemNeededCommandID == Guid.Empty)
+            if (this.GetCustomCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
                 CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
                 this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
                 this.SetCustomCommand(command);
             }
-            if (this.RedemptionStoreDefaultRedemptionCommandID == Guid.Empty)
+            if (this.GetCustomCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
                 CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
                 this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
