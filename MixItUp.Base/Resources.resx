@@ -3063,4 +3063,7 @@
   <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
     <value>Mix It Up has build in Command locking functionality which ensures only 1 command type (Chat, Interactive, etc) can run at the same time and ensures that each command finishes in the order it was run in. This option will allow you to disable locking on ALL commands. Be aware that this could cause some unforeseen issues, so please use with caution.</value>
   </data>
+  <data name="ClearAllUserDataWarning" xml:space="preserve">
+    <value>This will clear all data for your Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
+  </data>
 </root>

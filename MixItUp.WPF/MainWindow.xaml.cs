@@ -30,6 +30,8 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
+            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
 
@@ -227,5 +229,7 @@ namespace MixItUp.WPF
                 e.Cancel = true;
             }
         }
+
+        private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
     }
 }

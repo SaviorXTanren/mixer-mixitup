@@ -8,6 +8,15 @@ namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler OnRestartRequested;
+        public static void RestartRequested()
+        {
+            if (GlobalEvents.OnRestartRequested != null)
+            {
+                GlobalEvents.OnRestartRequested(null, new EventArgs());
+            }
+        }
+
         public static event EventHandler<bool> OnMainMenuStateChanged;
         public static void MainMenuStateChained(bool state)
         {

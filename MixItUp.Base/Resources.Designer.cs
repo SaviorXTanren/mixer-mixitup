@@ -1411,6 +1411,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This will clear all data for your Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?.
+        /// </summary>
+        public static string ClearAllUserDataWarning {
+            get {
+                return ResourceManager.GetString("ClearAllUserDataWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear Chat.
         /// </summary>
         public static string ClearChat {

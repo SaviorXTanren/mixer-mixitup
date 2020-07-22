@@ -40,8 +40,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AccessTheFolderWhereMixItUpIsInstalled}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -83,10 +81,7 @@
         <Button x:Name="EnableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="{x:Static resx:Resources.EnableDiagnostics}" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
         <Button x:Name="DisableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="{x:Static resx:Resources.DisableDiagnostics}" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
 
-        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ClearAllUserDataHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Button x:Name="ClearAllUserDataButton" Grid.Row="18" Grid.Column="2" Content="{x:Static resx:Resources.ClearUserData}" Click="ClearAllUserDataButton_Click" />
-
-        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Text="Delete Current Settings Data:" />
-        <Button x:Name="DeleteSettingsDataButton" Grid.Row="20" Grid.Column="2" Content="Delete Settings" Click="DeleteSettingsDataButton_Click" />
+        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Text="Delete Current Settings Data:" />
+        <Button x:Name="DeleteSettingsDataButton" Grid.Row="18" Grid.Column="2" Content="Delete Settings" Click="DeleteSettingsDataButton_Click" />
     </Grid>
 </local:SettingsControlBase>

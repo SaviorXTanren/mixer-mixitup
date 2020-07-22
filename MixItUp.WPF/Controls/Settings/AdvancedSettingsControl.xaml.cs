@@ -124,20 +124,6 @@ namespace MixItUp.WPF.Controls.Settings
             }
         }
 
-        private async void ClearAllUserDataButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (await DialogHelper.ShowConfirmation("This will clear all data for your Users, which includes their Hours, Currency, Rank, & Custom User Commands, then restart Mix It Up." +
-                Environment.NewLine + Environment.NewLine + "This CAN NOT be un-done! Are you sure you wish to do this?"))
-            {
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    await ChannelSession.Settings.ClearAllUserData();
-                    await ChannelSession.SaveSettings();
-                });
-                ((MainWindow)this.Window).Restart();
-            }
-        }
-
         private async void DeleteSettingsDataButton_Click(object sender, RoutedEventArgs e)
         {
             if (await DialogHelper.ShowConfirmation("This will completely delete the settings of the currently logged in account and is not reversible. Are you sure you wish to do this?"))
