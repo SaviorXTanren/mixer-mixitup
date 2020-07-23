@@ -10,6 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <Util:ColorBrushConverter x:Key="ColorBrushConverter" />
     </UserControl.Resources>
@@ -18,11 +19,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" ToolTip="{Binding Tooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-        <ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" IsEnabled="{Binding Enabled}" Width="{Binding Width}" ToolTip="{Binding Tooltip}">
+        <ToggleButton Grid.Column="1" IsChecked="{Binding Enabled}" ToolTip="{Binding Tooltip}" Visibility="{Binding ShowEnabledOption, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Margin="0,0,20,0" />
+
+        <ComboBox Grid.Column="2" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" IsEnabled="{Binding Enabled}" Width="{Binding Width}" ToolTip="{Binding Tooltip}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="5,0,0,0">

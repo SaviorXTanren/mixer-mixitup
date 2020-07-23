@@ -68,42 +68,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowUserJoinLeave}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="2" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <ToggleButton Grid.Column="0" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="UserJoinLeaveColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
-
-        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowEventAlerts}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="4" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <ToggleButton Grid.Column="0" x:Name="ShowEventAlertsToggleButton" Checked="ShowEventAlertsToggleButton_Checked" Unchecked="ShowEventAlertsToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="EventAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
-
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowMixPlayAlerts}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="6" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <ToggleButton Grid.Column="0" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="InteractiveAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
-
         <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OnlyShowAlertsInDashboard}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="8" Grid.Column="2" x:Name="OnlyShowAlertsInDashboardToggleButton" Checked="OnlyShowAlertsInDashboardToggleButton_Checked" Unchecked="OnlyShowAlertsInDashboardToggleButton_Checked" />
 

@@ -41,18 +41,19 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 {
                     if (value != null)
                     {
-                        if (!value.Name.Equals(ChannelSession.AppSettings.ColorScheme))
+                        if (!string.Equals(ChannelSession.AppSettings.ColorScheme, value))
                         {
                             ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                         }
-                        ChannelSession.AppSettings.ColorScheme = value.Name;
+                        ChannelSession.AppSettings.ColorScheme = value;
                     }
                 });
+            this.ColorScheme.RemoveNonThemes();
 
             this.BackgroundColor = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.BackgroundColor, AvailableBackgroundColors, ChannelSession.AppSettings.BackgroundColor,
                 (value) =>
                 {
-                    if (!value.Equals(ChannelSession.AppSettings.BackgroundColor))
+                    if (!string.Equals(ChannelSession.AppSettings.BackgroundColor, value))
                     {
                         ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                     }
@@ -69,11 +70,11 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 {
                     if (value != null)
                     {
-                        if (!value.Key.Equals(ChannelSession.AppSettings.FullThemeName))
+                        if (!string.Equals(ChannelSession.AppSettings.FullThemeName, value?.Key))
                         {
                             ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                         }
-                        ChannelSession.AppSettings.FullThemeName = value.Key;
+                        ChannelSession.AppSettings.FullThemeName = value?.Key;
                     }
                 });
         }

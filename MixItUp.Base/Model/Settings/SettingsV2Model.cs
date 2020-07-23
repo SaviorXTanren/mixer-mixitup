@@ -127,18 +127,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int ChatFontSize { get; set; } = 13;
-        [DataMember]
-        public bool ChatShowUserJoinLeave { get; set; }
-        [DataMember]
-        public string ChatUserJoinLeaveColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
-        [DataMember]
-        public bool ChatShowEventAlerts { get; set; }
-        [DataMember]
-        public string ChatEventAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
-        [DataMember]
-        public bool ChatShowMixPlayAlerts { get; set; }
-        [DataMember]
-        public string ChatMixPlayAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
 
         [DataMember]
         public bool OnlyShowAlertsInDashboard { get; set; }
@@ -168,6 +156,31 @@ namespace MixItUp.Base.Model.Settings
         public bool ShowChatMessageTimestamps { get; set; }
 
         #endregion Chat
+
+        #region Alerts
+
+        [DataMember]
+        public string AlertUserJoinLeaveColor { get; set; }
+        [DataMember]
+        public string AlertFollowColor { get; set; }
+        [DataMember]
+        public string AlertHostColor { get; set; }
+        [DataMember]
+        public string AlertRaidColor { get; set; }
+        [DataMember]
+        public string AlertSubColor { get; set; }
+        [DataMember]
+        public string AlertGiftedSubColor { get; set; }
+        [DataMember]
+        public string AlertMassGiftedSubColor { get; set; }
+        [DataMember]
+        public string AlertBitsCheeredColor { get; set; }
+        [DataMember]
+        public string AlertChannelPointsColor { get; set; }
+        [DataMember]
+        public string AlertModerationColor { get; set; }
+
+        #endregion Alerts
 
         #region Notifications
 
@@ -512,6 +525,19 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         [Obsolete]
         public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+
+        [DataMember]
+        [Obsolete]
+        public bool ChatShowUserJoinLeave { get; set; }
+        [DataMember]
+        [Obsolete]
+        public string ChatUserJoinLeaveColorScheme { get; set; } = null;
+        [DataMember]
+        [Obsolete]
+        public bool ChatShowEventAlerts { get; set; }
+        [DataMember]
+        [Obsolete]
+        public string ChatEventAlertsColorScheme { get; set; } = null;
 
         #endregion Obsolete
 

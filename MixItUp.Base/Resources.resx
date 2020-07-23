@@ -3066,4 +3066,31 @@
   <data name="ClearAllUserDataWarning" xml:space="preserve">
     <value>This will clear all data for your Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
   </data>
+  <data name="ShowBitsCheered" xml:space="preserve">
+    <value>Show Bits Cheered</value>
+  </data>
+  <data name="ShowChannelPoints" xml:space="preserve">
+    <value>Show Channel Points</value>
+  </data>
+  <data name="ShowFollows" xml:space="preserve">
+    <value>Show Follows</value>
+  </data>
+  <data name="ShowGiftedSubs" xml:space="preserve">
+    <value>Show Gifted Subs</value>
+  </data>
+  <data name="ShowHosts" xml:space="preserve">
+    <value>Show Hosts</value>
+  </data>
+  <data name="ShowMassGiftedSubs" xml:space="preserve">
+    <value>Show Mass Gifted Subs</value>
+  </data>
+  <data name="ShowModeration" xml:space="preserve">
+    <value>Show Moderation</value>
+  </data>
+  <data name="ShowRaids" xml:space="preserve">
+    <value>Show Raids</value>
+  </data>
+  <data name="ShowSubs" xml:space="preserve">
+    <value>Show Subs</value>
+  </data>
 </root>

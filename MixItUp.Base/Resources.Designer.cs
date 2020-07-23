@@ -6757,6 +6757,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Bits Cheered.
+        /// </summary>
+        public static string ShowBitsCheered {
+            get {
+                return ResourceManager.GetString("ShowBitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Channel Points.
+        /// </summary>
+        public static string ShowChannelPoints {
+            get {
+                return ResourceManager.GetString("ShowChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Clip Info In Chat.
         /// </summary>
         public static string ShowClipInfoInChat {
@@ -6775,6 +6793,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Follows.
+        /// </summary>
+        public static string ShowFollows {
+            get {
+                return ResourceManager.GetString("ShowFollows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Gifted Subs.
+        /// </summary>
+        public static string ShowGiftedSubs {
+            get {
+                return ResourceManager.GetString("ShowGiftedSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hosts.
+        /// </summary>
+        public static string ShowHosts {
+            get {
+                return ResourceManager.GetString("ShowHosts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Info In Chat.
         /// </summary>
         public static string ShowInfoInChat {
@@ -6789,6 +6834,15 @@ namespace MixItUp.Base {
         public static string ShowLatestChatMessagesAtTopInsteadOfBottom {
             get {
                 return ResourceManager.GetString("ShowLatestChatMessagesAtTopInsteadOfBottom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Mass Gifted Subs.
+        /// </summary>
+        public static string ShowMassGiftedSubs {
+            get {
+                return ResourceManager.GetString("ShowMassGiftedSubs", resourceCulture);
             }
         }
         
@@ -6820,11 +6874,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Moderation.
+        /// </summary>
+        public static string ShowModeration {
+            get {
+                return ResourceManager.GetString("ShowModeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show On Chat List Context Menu.
         /// </summary>
         public static string ShowOnChatListContextMenu {
             get {
                 return ResourceManager.GetString("ShowOnChatListContextMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Raids.
+        /// </summary>
+        public static string ShowRaids {
+            get {
+                return ResourceManager.GetString("ShowRaids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Subs.
+        /// </summary>
+        public static string ShowSubs {
+            get {
+                return ResourceManager.GetString("ShowSubs", resourceCulture);
             }
         }
         

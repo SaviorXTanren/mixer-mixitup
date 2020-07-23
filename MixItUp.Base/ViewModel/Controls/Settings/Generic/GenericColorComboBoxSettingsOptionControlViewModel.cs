@@ -41,8 +41,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
     {
         private static IEnumerable<ColorOptionViewModel> AvailableColors = ColorSchemes.HTMLColorSchemeDictionary.Select(c => new ColorOptionViewModel(c.Key, c.Value));
 
-        public GenericColorComboBoxSettingsOptionControlViewModel(string name, string initialValue, Action<ColorOptionViewModel> valueSetter, string tooltip = null)
-            : base(name, AvailableColors, null, valueSetter, tooltip)
+        public GenericColorComboBoxSettingsOptionControlViewModel(string name, string initialValue, Action<string> valueSetter, string tooltip = null)
+            : base(name, AvailableColors, null, (value) => { valueSetter(value?.Name); }, tooltip)
         {
             this.Value = this.Values.FirstOrDefault(c => c.Name.Equals(initialValue));
         }
