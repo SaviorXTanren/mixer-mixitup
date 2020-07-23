@@ -5,7 +5,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
 {
     public class GenericComboBoxSettingsOptionControlViewModel<T> : GenericSettingsOptionControlViewModelBase
     {
-        public IEnumerable<T> Values { get; set; }
+        public List<T> Values { get; set; }
 
         public T Value
         {
@@ -39,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
         public GenericComboBoxSettingsOptionControlViewModel(string name, IEnumerable<T> values, T initialValue, Action<T> valueSetter, string tooltip = null)
             : base(name, tooltip)
         {
-            this.Values = values;
+            this.Values = new List<T>(values);
             this.value = initialValue;
             this.valueSetter = valueSetter;
         }

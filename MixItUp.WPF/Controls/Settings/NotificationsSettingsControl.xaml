@@ -13,6 +13,7 @@
     <local:SettingsControlBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
     </local:SettingsControlBase.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

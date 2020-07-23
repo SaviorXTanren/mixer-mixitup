@@ -903,6 +903,9 @@
     <Compile Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericButtonSettingsOptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericColorComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
     </Compile>
@@ -1751,6 +1754,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
