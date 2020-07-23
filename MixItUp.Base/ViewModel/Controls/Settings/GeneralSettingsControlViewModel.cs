@@ -15,9 +15,9 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public GenericToggleSettingsOptionControlViewModel AutoLogIn { get; set; }
         public GenericToggleSettingsOptionControlViewModel PreviewProgram { get; set; }
 
-        public GenericCombBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
-        public GenericCombBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum> DefaultStreamingSoftware { get; set; }
-        public GenericCombBoxSettingsOptionControlViewModel<string> DefaultAudioOutput { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<LanguageOptions> Language { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum> DefaultStreamingSoftware { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<string> DefaultAudioOutput { get; set; }
 
         public GeneralSettingsControlViewModel()
         {
@@ -37,14 +37,14 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
             {
                 languageOptions.Remove(LanguageOptions.Pseudo);
             }
-            this.Language = new GenericCombBoxSettingsOptionControlViewModel<LanguageOptions>(MixItUp.Base.Resources.Language,
+            this.Language = new GenericComboBoxSettingsOptionControlViewModel<LanguageOptions>(MixItUp.Base.Resources.Language,
                 languageOptions.OrderBy(l => l.ToString()), ChannelSession.AppSettings.LanguageOption, (value) =>
                 {
                     ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                     ChannelSession.AppSettings.LanguageOption = value;
                 });
 
-            this.DefaultStreamingSoftware = new GenericCombBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum>(MixItUp.Base.Resources.DefaultStreamingSoftware,
+            this.DefaultStreamingSoftware = new GenericComboBoxSettingsOptionControlViewModel<StreamingSoftwareTypeEnum>(MixItUp.Base.Resources.DefaultStreamingSoftware,
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS },
                 ChannelSession.Settings.DefaultStreamingSoftware, (value) => { ChannelSession.Settings.DefaultStreamingSoftware = value; });
 
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
             audioOptions.Add(SoundAction.DefaultAudioDevice);
             audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
 
-            this.DefaultAudioOutput = new GenericCombBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
+            this.DefaultAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
                 audioOptions, defaultAudioOption, (value) =>
                 {
                     if (value.Equals(SoundAction.DefaultAudioDevice))

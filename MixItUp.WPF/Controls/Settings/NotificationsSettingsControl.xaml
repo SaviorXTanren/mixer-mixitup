@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <GenericSettingsControls:GenericCombBoxSettingsOptionControl Grid.Row="0" DataContext="{Binding NotificationsAudioOutput}" />
+        <GenericSettingsControls:GenericComboBoxSettingsOptionControl Grid.Row="0" DataContext="{Binding NotificationsAudioOutput}" />
 
         <Separator Grid.Row="2" Margin="10" />
 

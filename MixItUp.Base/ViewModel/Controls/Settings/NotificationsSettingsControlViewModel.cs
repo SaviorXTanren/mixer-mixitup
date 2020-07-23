@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
     public class NotificationsSettingsControlViewModel : UIViewModelBase
     {
-        public GenericCombBoxSettingsOptionControlViewModel<string> NotificationsAudioOutput { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<string> NotificationsAudioOutput { get; set; }
 
         public ObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ObservableCollection<IndividualNotificationSettingViewModel>();
 
@@ -126,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
             audioOptions.Add(SoundAction.DefaultAudioDevice);
             audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
 
-            this.NotificationsAudioOutput = new GenericCombBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
+            this.NotificationsAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
                 audioOptions, defaultAudioOption, (value) =>
                 {
                     if (value.Equals(SoundAction.DefaultAudioDevice))

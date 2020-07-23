@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </UserControl.Resources>
-    <ComboBox x:Name="ColorComboBox">
+    <ComboBox ItemsSource="{Binding }">
         <ComboBox.ItemTemplate>
             <DataTemplate>
                 <Grid Margin="0,0">

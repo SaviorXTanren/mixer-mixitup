@@ -888,6 +888,9 @@
     <Compile Include="Controls\Settings\AdvancedSettingsControl.xaml.cs">
       <DependentUpon>AdvancedSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\AlertsSettingsControl.xaml.cs">
+      <DependentUpon>AlertsSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\ChatSettingsControl.xaml.cs">
       <DependentUpon>ChatSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -903,8 +906,11 @@
     <Compile Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml.cs">
       <DependentUpon>GenericButtonSettingsOptionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\Generic\GenericCombBoxSettingsOptionControl.xaml.cs">
-      <DependentUpon>GenericCombBoxSettingsOptionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericComboBoxColorSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericComboBoxColorSettingsOptionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
       <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
@@ -1734,6 +1740,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\AlertsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\ChatSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1754,7 +1764,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\Generic\GenericCombBoxSettingsOptionControl.xaml">
+    <Page Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericComboBoxColorSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

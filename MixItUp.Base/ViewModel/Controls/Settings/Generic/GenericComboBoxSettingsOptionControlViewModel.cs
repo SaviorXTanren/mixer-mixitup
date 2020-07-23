@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
 {
-    public class GenericCombBoxSettingsOptionControlViewModel<T> : GenericSettingsOptionControlViewModelBase
+    public class GenericComboBoxSettingsOptionControlViewModel<T> : GenericSettingsOptionControlViewModelBase
     {
         public IEnumerable<T> Values { get; set; }
 
@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
         }
         private bool enabled = true;
 
-        public GenericCombBoxSettingsOptionControlViewModel(string name, IEnumerable<T> values, T initialValue, Action<T> valueSetter, string tooltip = null)
+        public GenericComboBoxSettingsOptionControlViewModel(string name, IEnumerable<T> values, T initialValue, Action<T> valueSetter, string tooltip = null)
             : base(name, tooltip)
         {
             this.Values = values;
