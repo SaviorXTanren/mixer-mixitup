@@ -14,10 +14,15 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         private const char SOHCharacter = (char)1;
         private static readonly string SlashMeAction = SOHCharacter.ToString() + "ACTION ";
 
+        private const string TagMessageID = "msg-id";
+        private const string MessageIDHighlightedMessage = "highlighted-message";
+
         private static HashSet<long> messageEmotesHashSet = new HashSet<long>();
         private static Dictionary<string, EmoteModel> messageEmotesCache = new Dictionary<string, EmoteModel>();
 
         public bool IsSlashMe { get; set; }
+
+        public bool IsHighlightedMessage { get; set; }
 
         public string WhisperThreadID { get; set; }
 
@@ -44,6 +49,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     }
                 }
             }
+
+            this.IsHighlightedMessage = message.RawPacket.Tags.ContainsKey(TagMessageID) && message.RawPacket.Tags[TagMessageID].Equals(MessageIDHighlightedMessage);
 
             if (message.Message.StartsWith(SlashMeAction) && message.Message.Last() == SOHCharacter)
             {

@@ -56,6 +56,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.Message = (ChatMessageViewModel)this.DataContext;
                 this.Message.OnDeleted += Message_OnDeleted;
                 bool italics = false;
+                bool highlighted = false;
 
                 if (this.DataContext is AlertChatMessageViewModel)
                 {
@@ -88,10 +89,18 @@ namespace MixItUp.WPF.Controls.Chat
                     this.MessageWrapPanel.Children.Add(header);
 
                     bool showMessage = true;
+
+                    if (this.DataContext is ChatMessageViewModel)
+                    {
+                        ChatMessageViewModel message = (ChatMessageViewModel)this.DataContext;
+                        highlighted = highlighted || message.IsStreamerTagged;
+                    }
+
                     if (this.DataContext is TwitchChatMessageViewModel)
                     {
                         TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
                         italics = twitchMessage.IsSlashMe;
+                        highlighted = highlighted || twitchMessage.IsHighlightedMessage;
                     }
 
                     if (showMessage)
@@ -101,7 +110,7 @@ namespace MixItUp.WPF.Controls.Chat
                             if (messagePart is string)
                             {
                                 string messagePartString = (string)messagePart;
-                                this.AddStringMessage(messagePartString, isHighlighted: messagePartString.Contains("@" + ChannelSession.TwitchUserNewAPI.login, StringComparison.CurrentCultureIgnoreCase), isItalicized: italics);
+                                this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {
