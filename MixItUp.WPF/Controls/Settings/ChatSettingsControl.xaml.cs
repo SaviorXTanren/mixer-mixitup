@@ -36,7 +36,6 @@ namespace MixItUp.WPF.Controls.Settings
             this.HideDeletedMessagesToggleButton.IsChecked = ChannelSession.Settings.HideDeletedMessages;
             this.TrackWhispererNumberToggleButton.IsChecked = ChannelSession.Settings.TrackWhispererNumber;
             this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
-            this.OnlyShowAlertsInDashboardToggleButton.IsChecked = ChannelSession.Settings.OnlyShowAlertsInDashboard;
             this.ShowBetterTTVEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowBetterTTVEmotes;
             this.ShowFrankerFaceZEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowFrankerFaceZEmotes;
 
@@ -96,11 +95,6 @@ namespace MixItUp.WPF.Controls.Settings
         private void ShowMessageTimestampsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ShowChatMessageTimestamps = this.ShowMessageTimestampsToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void OnlyShowAlertsInDashboardToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.OnlyShowAlertsInDashboard = this.OnlyShowAlertsInDashboardToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

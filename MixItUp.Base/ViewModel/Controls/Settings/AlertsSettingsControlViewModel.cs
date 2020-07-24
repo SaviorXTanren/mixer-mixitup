@@ -5,6 +5,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 {
     public class AlertsSettingsControlViewModel : UIViewModelBase
     {
+        public GenericToggleSettingsOptionControlViewModel OnlyShowAlertsInDashboard { get; set; }
+
         public GenericColorComboBoxSettingsOptionControlViewModel UserJoinLeave { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel Follow { get; set; }
         public GenericColorComboBoxSettingsOptionControlViewModel Host { get; set; }
@@ -18,6 +20,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
         public AlertsSettingsControlViewModel()
         {
+            this.OnlyShowAlertsInDashboard = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.OnlyShowAlertsInDashboard, ChannelSession.Settings.OnlyShowAlertsInDashboard, (value) => { ChannelSession.Settings.OnlyShowAlertsInDashboard = value; });
+
             this.UserJoinLeave = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowUserJoinLeave, ChannelSession.Settings.AlertUserJoinLeaveColor, (value) => { ChannelSession.Settings.AlertUserJoinLeaveColor = value; });
             this.Follow = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowFollows, ChannelSession.Settings.AlertFollowColor, (value) => { ChannelSession.Settings.AlertFollowColor = value; });
             this.Host = new GenericToggleColorComboBoxSettingsControlViewModel(MixItUp.Base.Resources.ShowHosts, ChannelSession.Settings.AlertHostColor, (value) => { ChannelSession.Settings.AlertHostColor = value; });

@@ -16,6 +16,10 @@
 
     <Grid Margin="20">
         <StackPanel>
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OnlyShowAlertsInDashboard}" />
+
+            <Separator Margin="10" />
+
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding UserJoinLeave}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding Follow}" />
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding Host}" />

@@ -68,9 +68,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OnlyShowAlertsInDashboard}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="8" Grid.Column="2" x:Name="OnlyShowAlertsInDashboardToggleButton" Checked="OnlyShowAlertsInDashboardToggleButton_Checked" Unchecked="OnlyShowAlertsInDashboardToggleButton_Checked" />
-
         <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowLatestChatMessagesAtTopInsteadOfBottom}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ToggleButton Grid.Row="10" Grid.Column="2" x:Name="LatestChatAtTopToggleButton" Checked="LatestChatAtTopToggleButton_Checked" Unchecked="LatestChatAtTopToggleButton_Checked" />
 
