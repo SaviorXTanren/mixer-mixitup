@@ -26,7 +26,7 @@
 
         <ToggleButton Grid.Column="1" IsChecked="{Binding Enabled}" ToolTip="{Binding Tooltip}" Visibility="{Binding ShowEnabledOption, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Margin="0,0,20,0" />
 
-        <ComboBox Grid.Column="2" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" IsEnabled="{Binding Enabled}" Width="{Binding Width}" ToolTip="{Binding Tooltip}">
+        <ComboBox Grid.Column="2" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" IsEnabled="{Binding Enabled}" Width="150" ToolTip="{Binding Tooltip}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="5,0,0,0">

@@ -30,6 +30,7 @@ namespace MixItUp.Base.Model.Settings
         public const int LatestVersion = 43;
 
         public const string SettingsDirectoryName = "Settings";
+        public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
 
         public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 

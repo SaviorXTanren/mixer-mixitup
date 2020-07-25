@@ -345,8 +345,8 @@
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
     <value>Auto Log-In Current Account</value>
   </data>
-  <data name="AutomatedSettingsBackup" xml:space="preserve">
-    <value>Automated Settings Backup</value>
+  <data name="AutomatedSettingsBackupRate" xml:space="preserve">
+    <value>Automated Settings Backup Rate</value>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatic Reset</value>
@@ -363,8 +363,8 @@
   <data name="BackupSettings" xml:space="preserve">
     <value>Backup Settings</value>
   </data>
-  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
-    <value>Backup your settings to a zip file</value>
+  <data name="BackupYourCurrentSettings" xml:space="preserve">
+    <value>Backup your current settings</value>
   </data>
   <data name="Banned" xml:space="preserve">
     <value>Banned</value>
@@ -1758,8 +1758,8 @@
   <data name="RequiredUsers" xml:space="preserve">
     <value>Required Users</value>
   </data>
-  <data name="ReRunWizardHeader" xml:space="preserve">
-    <value>Re-run the New User Wizard to re-import your data</value>
+  <data name="ReRunNewUserWizard" xml:space="preserve">
+    <value>Re-run the New User Wizard</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
@@ -1779,8 +1779,8 @@
   <data name="RestoreSettings" xml:space="preserve">
     <value>Restore Settings</value>
   </data>
-  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
-    <value>Restore your settings from a zip file</value>
+  <data name="RestoreASettingsBackup" xml:space="preserve">
+    <value>Restore a Settings Backup</value>
   </data>
   <data name="Resubs" xml:space="preserve">
     <value>Resubs</value>
@@ -3092,6 +3092,15 @@
   </data>
   <data name="ShowSubs" xml:space="preserve">
     <value>Show Subs</value>
+  </data>
+  <data name="AutomatedSettingsBackupLocation" xml:space="preserve">
+    <value>Automated Settings Backup Location</value>
+  </data>
+  <data name="DiagnosticLogging" xml:space="preserve">
+    <value>Diagnostic Logging</value>
+  </data>
+  <data name="DiagnosticLoggingToolip" xml:space="preserve">
+    <value>Diagnostic Logging helps to diagnose specific issues by logging out additional information of what is being done while Mix It Up is running. These logs will typically be huge in comparision to regular logs, so this should only be done when specifically advised by a Mix It Up developer and should be disabled immediately after the problem is solved.</value>
   </data>
   <data name="ShowBetterTTVEmotes" xml:space="preserve">
     <value>Show BetterTTV Emotes (Requires Restart)</value>

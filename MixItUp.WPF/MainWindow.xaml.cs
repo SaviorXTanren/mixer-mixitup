@@ -95,12 +95,6 @@ namespace MixItUp.WPF
             this.Close();
         }
 
-        public void ReRunWizard()
-        {
-            ChannelSession.Settings.ReRunWizard = true;
-            this.Restart();
-        }
-
         protected override async Task OnLoaded()
         {
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);

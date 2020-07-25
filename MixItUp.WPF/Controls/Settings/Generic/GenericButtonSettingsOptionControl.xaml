@@ -19,6 +19,6 @@
 
         <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" ToolTip="{Binding Tooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
-        <Button Grid.Column="1" Content="{Binding ButtonName}" Command="{Binding Command}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" />
+        <Button Grid.Column="1" Content="{Binding ButtonName}" Command="{Binding Command}" IsEnabled="{Binding Enabled}" ToolTip="{Binding Tooltip}" Width="150" />
     </Grid>
 </UserControl>

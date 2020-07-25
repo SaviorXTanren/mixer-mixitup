@@ -835,11 +835,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automated Settings Backup.
+        ///   Looks up a localized string similar to Automated Settings Backup Location.
         /// </summary>
-        public static string AutomatedSettingsBackup {
+        public static string AutomatedSettingsBackupLocation {
             get {
-                return ResourceManager.GetString("AutomatedSettingsBackup", resourceCulture);
+                return ResourceManager.GetString("AutomatedSettingsBackupLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automated Settings Backup Rate.
+        /// </summary>
+        public static string AutomatedSettingsBackupRate {
+            get {
+                return ResourceManager.GetString("AutomatedSettingsBackupRate", resourceCulture);
             }
         }
         
@@ -907,11 +916,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Backup your settings to a zip file.
+        ///   Looks up a localized string similar to Backup your current settings.
         /// </summary>
-        public static string BackupYourSettingsToAZipFile {
+        public static string BackupYourCurrentSettings {
             get {
-                return ResourceManager.GetString("BackupYourSettingsToAZipFile", resourceCulture);
+                return ResourceManager.GetString("BackupYourCurrentSettings", resourceCulture);
             }
         }
         
@@ -2262,6 +2271,24 @@ namespace MixItUp.Base {
         public static string Details {
             get {
                 return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging.
+        /// </summary>
+        public static string DiagnosticLogging {
+            get {
+                return ResourceManager.GetString("DiagnosticLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging helps to diagnose specific issues by logging out additional information of what is being done while Mix It Up is running. These logs will typically be huge in comparision to regular logs, so this should only be done when specifically advised by a Mix It Up developer and should be disabled immediately after the problem is solved..
+        /// </summary>
+        public static string DiagnosticLoggingToolip {
+            get {
+                return ResourceManager.GetString("DiagnosticLoggingToolip", resourceCulture);
             }
         }
         
@@ -6100,11 +6127,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Re-run the New User Wizard to re-import your data.
+        ///   Looks up a localized string similar to Re-run the New User Wizard.
         /// </summary>
-        public static string ReRunWizardHeader {
+        public static string ReRunNewUserWizard {
             get {
-                return ResourceManager.GetString("ReRunWizardHeader", resourceCulture);
+                return ResourceManager.GetString("ReRunNewUserWizard", resourceCulture);
             }
         }
         
@@ -6163,20 +6190,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restore a Settings Backup.
+        /// </summary>
+        public static string RestoreASettingsBackup {
+            get {
+                return ResourceManager.GetString("RestoreASettingsBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restore Settings.
         /// </summary>
         public static string RestoreSettings {
             get {
                 return ResourceManager.GetString("RestoreSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Restore your settings from a zip file.
-        /// </summary>
-        public static string RestoreYourSettingsFromAZipFile {
-            get {
-                return ResourceManager.GetString("RestoreYourSettingsFromAZipFile", resourceCulture);
             }
         }
         

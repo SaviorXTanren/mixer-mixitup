@@ -288,7 +288,7 @@ namespace MixItUp.Base.Services
 
         public async Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings)
         {
-            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None && !string.IsNullOrEmpty(settings.SettingsBackupLocation))
+            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
             {
                 Logger.Log(LogLevel.Debug, "Checking whether to perform automatic backup");
 
@@ -300,7 +300,27 @@ namespace MixItUp.Base.Services
 
                 if (newResetDate < DateTimeOffset.Now)
                 {
-                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
+                    string backupPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, SettingsV2Model.DefaultAutomaticBackupSettingsDirectoryName);
+                    if (!string.IsNullOrEmpty(settings.SettingsBackupLocation))
+                    {
+                        backupPath = settings.SettingsBackupLocation;
+                    }
+
+                    if (!Directory.Exists(backupPath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(backupPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
+                            Logger.Log(ex);
+                            return;
+                        }
+                    }
+
+                    string filePath = Path.Combine(backupPath, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
 
                     await this.SavePackagedBackup(settings, filePath);
 
