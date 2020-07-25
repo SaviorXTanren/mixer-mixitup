@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Requirements
             int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
             if (totalSeconds > 0)
             {
-                await this.SendChatWhisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", totalSeconds));
+                await this.SendChatMessage(string.Format("This command is currently on cooldown, please wait another {0} second(s).", totalSeconds));
                 return false;
             }
             return true;

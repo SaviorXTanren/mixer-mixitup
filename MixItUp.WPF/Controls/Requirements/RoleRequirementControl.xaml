@@ -25,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <ComboBox Grid.Row="0" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Role}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -35,6 +36,14 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="1" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0" />
+        <ComboBox Grid.Row="1" ItemsSource="{Binding SubscriberTiers}" SelectedItem="{Binding SubscriberTier}" Visibility="{Binding IsSubscriberRole, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Tier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox Grid.Row="2" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title"  Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
     </Grid>
 </UserControl>

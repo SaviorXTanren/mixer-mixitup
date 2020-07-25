@@ -5416,6 +5416,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Patreon Benefit.
+        /// </summary>
+        public static string PatreonBenefit {
+            get {
+                return ResourceManager.GetString("PatreonBenefit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patreon Benefit Requirement.
         /// </summary>
         public static string PatreonBenefitRequirement {

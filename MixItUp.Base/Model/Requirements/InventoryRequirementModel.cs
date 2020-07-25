@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Requirements
 
             if (!user.Data.IsCurrencyRankExempt && !inventory.HasAmount(user.Data, item, this.Amount))
             {
-                await this.SendChatWhisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, item.Name));
+                await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, item.Name));
                 return false;
             }
 

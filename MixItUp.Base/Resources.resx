@@ -3114,4 +3114,7 @@
   <data name="HideBotMessages" xml:space="preserve">
     <value>Hide Bot Messages</value>
   </data>
+  <data name="PatreonBenefit" xml:space="preserve">
+    <value>Patreon Benefit</value>
+  </data>
 </root>

@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (!rankSystem.HasAmount(user.Data, rank.Amount))
                     {
-                        await this.SendChatWhisper(user, string.Format("You do not have the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendChatMessage(string.Format("You do not have the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (rankSystem.GetRank(user.Data) != rank)
                     {
-                        await this.SendChatWhisper(user, string.Format("You do not have the required rank of {0} to do this", rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendChatMessage(string.Format("You do not have the required rank of {0} to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }
@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.Requirements
                     RankModel nextRank = rankSystem.GetNextRank(user.Data);
                     if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(user.Data, nextRank.Amount))
                     {
-                        await this.SendChatWhisper(user, string.Format("You are over the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendChatMessage(string.Format("You are over the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }

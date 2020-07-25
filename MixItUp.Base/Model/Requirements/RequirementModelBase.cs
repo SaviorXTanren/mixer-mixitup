@@ -31,13 +31,5 @@ namespace MixItUp.Base.Model.Requirements
                 await ChannelSession.Services.Chat.SendMessage(message);
             }
         }
-
-        protected async Task SendChatWhisper(UserViewModel user, string message)
-        {
-            if (ChannelSession.Services.Chat != null)
-            {
-                await ChannelSession.Services.Chat.SendMessage(message);
-            }
-        }
     }
 }
