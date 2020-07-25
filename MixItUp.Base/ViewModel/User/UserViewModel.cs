@@ -247,6 +247,59 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string Color
+        {
+            get
+            {
+                lock (colorLock)
+                {
+                    if (!string.IsNullOrEmpty(this.Data.Color))
+                    {
+                        return this.Data.Color;
+                    }
+
+                    if (ChannelSession.Settings.UseCustomUsernameColors)
+                    {
+                        foreach (UserRoleEnum role in this.UserRoles.OrderByDescending(r => r))
+                        {
+                            if (ChannelSession.Settings.CustomUsernameColors.ContainsKey(role))
+                            {
+                                string name = ChannelSession.Settings.CustomUsernameColors[role];
+                                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+                                {
+                                    this.Data.Color = ColorSchemes.HTMLColorSchemeDictionary[name];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(this.Data.Color))
+                    {
+                        if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                        {
+                            this.Data.Color = this.Data.TwitchColor;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(this.Data.Color))
+                    {
+                        this.Data.Color = "#000000";
+                    }
+
+                    return this.Data.Color;
+                }
+            }
+            private set
+            {
+                lock (colorLock)
+                {
+                    this.Data.Color = string.Empty;
+                }
+            }
+        }
+        private object colorLock = new object();
+
         public string ChannelLink
         {
             get
@@ -538,34 +591,6 @@ namespace MixItUp.Base.ViewModel.User
         public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
-        public string PrimaryRoleColorName
-        {
-            get
-            {
-                switch (this.PrimaryRole)
-                {
-                    case UserRoleEnum.Streamer:
-                        return "UserStreamerRoleColor";
-                    case UserRoleEnum.Staff:
-                        return "UserStaffRoleColor";
-                    case UserRoleEnum.ChannelEditor:
-                    case UserRoleEnum.Mod:
-                        return "UserModRoleColor";
-                    case UserRoleEnum.GlobalMod:
-                        return "UserGlobalModRoleColor";
-                }
-
-                if (this.UserRoles.Contains(UserRoleEnum.Premium))
-                {
-                    return "UserProRoleColor";
-                }
-                else
-                {
-                    return "UserDefaultRoleColor";
-                }
-            }
-        }
-
         public PatreonTier PatreonTier
         {
             get
@@ -697,6 +722,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.SetCommonUserRoles();
 
+            this.Color = null;
             this.RolesDisplayString = null;
         }
 
@@ -843,6 +869,7 @@ namespace MixItUp.Base.ViewModel.User
 
                 this.SetTwitchRoles();
 
+                this.Color = null;
                 this.RolesDisplayString = null;
             }
         }
@@ -934,6 +961,7 @@ namespace MixItUp.Base.ViewModel.User
             }
 
             // Force re-build of roles display string
+            this.Color = null;
             this.RolesDisplayString = null;
         }
 

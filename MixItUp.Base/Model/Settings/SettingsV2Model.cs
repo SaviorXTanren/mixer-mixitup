@@ -134,6 +134,10 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool LatestChatAtTop { get; set; }
         [DataMember]
+        public bool TrackWhispererNumber { get; set; }
+        [DataMember]
+        public bool ShowChatMessageTimestamps { get; set; }
+        [DataMember]
         public bool HideViewerAndChatterNumbers { get; set; }
         [DataMember]
         public bool HideChatUserList { get; set; }
@@ -142,13 +146,14 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool HideBotMessages { get; set; }
         [DataMember]
-        public bool TrackWhispererNumber { get; set; }
-        [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowFrankerFaceZEmotes { get; set; }
+        
         [DataMember]
-        public bool ShowChatMessageTimestamps { get; set; }
+        public bool UseCustomUsernameColors { get; set; }
+        [DataMember]
+        public Dictionary<UserRoleEnum, string> CustomUsernameColors { get; set; } = new Dictionary<UserRoleEnum, string>();
 
         #endregion Chat
 

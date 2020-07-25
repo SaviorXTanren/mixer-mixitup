@@ -8278,6 +8278,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Custom Username Colors.
+        /// </summary>
+        public static string UseCustomUsernameColors {
+            get {
+                return ResourceManager.GetString("UseCustomUsernameColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User.
         /// </summary>
         public static string User {

@@ -25,16 +25,6 @@ namespace MixItUp.Base.Model.Overlay
           </p>
         </div>";
 
-        private static readonly Dictionary<string, string> userColors = new Dictionary<string, string>()
-        {
-            { "UserStreamerRoleColor", "#FFFFFF" },
-            { "UserStaffRoleColor", "#FFD700" },
-            { "UserModRoleColor", "#008000" },
-            { "UserGlobalModRoleColor", "#07FDC6" },
-            { "UserProRoleColor", "#800080" },
-            { "UserDefaultRoleColor", "#0000FF" },
-        };
-
         private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
         private const string ImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
 
@@ -117,7 +107,7 @@ namespace MixItUp.Base.Model.Overlay
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
                         item.TemplateReplacements.Add("USERNAME", user.Username);
                         item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
-                        item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[user.PrimaryRoleColorName]);
+                        item.TemplateReplacements.Add("USER_COLOR", user.Color);
                         item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
                         item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
                     }

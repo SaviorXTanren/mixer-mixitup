@@ -1,7 +1,10 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Settings.Generic;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings
@@ -23,6 +26,9 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
         public GenericToggleSettingsOptionControlViewModel ShowBetterTTVEmotes { get; set; }
         public GenericToggleSettingsOptionControlViewModel ShowFrankerFaceZEmotes { get; set; }
+
+        public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
+        public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
         public ChatSettingsControlViewModel()
         {
@@ -56,6 +62,50 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 (value) => { ChannelSession.Settings.ShowBetterTTVEmotes = value; });
             this.ShowFrankerFaceZEmotes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ShowFrankerFaceZEmotes, ChannelSession.Settings.ShowFrankerFaceZEmotes,
                 (value) => { ChannelSession.Settings.ShowFrankerFaceZEmotes = value; });
+
+            this.UseCustomUsernameColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseCustomUsernameColors, ChannelSession.Settings.UseCustomUsernameColors,
+                (value) =>
+                {
+                    ChannelSession.Settings.UseCustomUsernameColors = value;
+                    this.EnableDisableUsernameColors();
+                });
+
+            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
+            roles.Remove(UserRoleEnum.Banned);
+            roles.Remove(UserRoleEnum.Custom);
+            foreach (UserRoleEnum role in roles.OrderBy(r => r))
+            {
+                string name = EnumHelper.GetEnumName(role);
+                name = MixItUp.Base.Resources.ResourceManager.GetString(name) ?? name;
+                this.CustomUsernameColorsList.Add(new GenericColorComboBoxSettingsOptionControlViewModel(name,
+                    ChannelSession.Settings.CustomUsernameColors.ContainsKey(role) ? ChannelSession.Settings.CustomUsernameColors[role] : null,
+                    (value) =>
+                    {
+                        if (!string.IsNullOrEmpty(value) && !value.Equals(GenericColorComboBoxSettingsOptionControlViewModel.NoneOption))
+                        {
+                            ChannelSession.Settings.CustomUsernameColors[role] = value;
+                        }
+                        else
+                        {
+                            ChannelSession.Settings.CustomUsernameColors.Remove(role);
+                        }
+                    }));
+            }
+
+            foreach (GenericColorComboBoxSettingsOptionControlViewModel colorOption in this.CustomUsernameColorsList)
+            {
+                colorOption.AddNoneOption();
+            }
+
+            this.EnableDisableUsernameColors();
+        }
+
+        private void EnableDisableUsernameColors()
+        {
+            foreach (GenericColorComboBoxSettingsOptionControlViewModel colorOption in this.CustomUsernameColorsList)
+            {
+                colorOption.Enabled = ChannelSession.Settings.UseCustomUsernameColors;
+            }
         }
     }
 }

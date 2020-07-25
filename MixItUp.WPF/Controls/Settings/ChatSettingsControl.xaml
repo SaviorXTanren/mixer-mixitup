@@ -35,6 +35,17 @@
 
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowBetterTTVEmotes}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowFrankerFaceZEmotes}" />
+
+            <Separator Margin="10" />
+
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseCustomUsernameColors}" />
+            <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding CustomUsernameColorsList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
     </Grid>
 </local:SettingsControlBase>

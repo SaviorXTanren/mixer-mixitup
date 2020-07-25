@@ -88,6 +88,8 @@ namespace MixItUp.Base.Model.User
         public Dictionary<Guid, int> StreamPassAmounts { get; set; } = new Dictionary<Guid, int>();
 
         [DataMember]
+        public string Color { get; set; } = string.Empty;
+        [DataMember]
         public string CustomTitle { get; set; }
 
         [DataMember]

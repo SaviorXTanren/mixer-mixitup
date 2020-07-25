@@ -10,16 +10,15 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
         public string Name { get; set; }
         public string ColorCode { get; set; }
 
+        public bool HasColor { get { return !string.IsNullOrEmpty(this.ColorCode); } }
+
         public ColorOptionViewModel() { }
 
-        public ColorOptionViewModel(string name)
-        {
-            this.Name = name;
-        }
+        public ColorOptionViewModel(string name) : this(name, string.Empty) { }
 
         public ColorOptionViewModel(string name, string colorCode)
-            : this(name)
         {
+            this.Name = name;
             this.ColorCode = colorCode;
         }
 
@@ -39,6 +38,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
 
     public class GenericColorComboBoxSettingsOptionControlViewModel : GenericComboBoxSettingsOptionControlViewModel<ColorOptionViewModel>
     {
+        public const string NoneOption = "None";
+
         private static IEnumerable<ColorOptionViewModel> AvailableColors = ColorSchemes.HTMLColorSchemeDictionary.Select(c => new ColorOptionViewModel(c.Key, c.Value));
 
         public GenericColorComboBoxSettingsOptionControlViewModel(string name, string initialValue, Action<string> valueSetter, string tooltip = null)
@@ -51,6 +52,15 @@ namespace MixItUp.Base.ViewModel.Controls.Settings.Generic
         {
             this.Values.Remove(new ColorOptionViewModel("Black"));
             this.Values.Remove(new ColorOptionViewModel("White"));
+        }
+
+        public void AddNoneOption()
+        {
+            this.Values.Insert(0, new ColorOptionViewModel(NoneOption));
+            if (this.Value == null)
+            {
+                this.Value = this.Values[0];
+            }
         }
     }
 }

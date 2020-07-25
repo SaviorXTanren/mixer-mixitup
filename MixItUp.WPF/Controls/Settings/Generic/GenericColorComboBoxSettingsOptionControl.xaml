@@ -32,13 +32,12 @@
                     <Grid Margin="5,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Rectangle Grid.Column="0" Fill="{Binding ColorCode, Converter={StaticResource ColorBrushConverter}}" Height="15" Width="15" VerticalAlignment="Center" />
+                        <Rectangle Grid.Column="0" Fill="{Binding ColorCode, Converter={StaticResource ColorBrushConverter}}" Visibility="{Binding HasColor, Converter={StaticResource BooleanToVisibilityConverter}}" Height="15" Width="15" VerticalAlignment="Center" Margin="0,0,5,0" />
 
-                        <TextBlock Grid.Column="2" Text="{Binding Name, Converter={StaticResource LocalizationConverter}}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name, Converter={StaticResource LocalizationConverter}}" VerticalAlignment="Center" />
                     </Grid>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
