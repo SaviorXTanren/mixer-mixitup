@@ -1,5 +1,11 @@
-﻿using MixItUp.Base.ViewModel.Controls.Settings.Generic;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Settings.Generic;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings
 {
@@ -9,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public GenericToggleSettingsOptionControlViewModel IgnoreBotAccount { get; set; }
         public GenericToggleSettingsOptionControlViewModel DeleteChatCommandsWhenRun { get; set; }
         public GenericToggleSettingsOptionControlViewModel UnlockAllCommandTypes { get; set; }
+
+        public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
         public CommandsSettingsControlViewModel()
         {
@@ -23,6 +31,26 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
             this.UnlockAllCommandTypes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UnlockAllCommandTypes,
                 ChannelSession.Settings.UnlockAllCommands, (value) => { ChannelSession.Settings.UnlockAllCommands = value; }, MixItUp.Base.Resources.UnlockAllCommandTypesTooltip);
+
+            List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
+            actions.Remove(ActionTypeEnum.Custom);
+            foreach (ActionTypeEnum action in actions.OrderBy(at => EnumLocalizationHelper.GetLocalizedName(at)))
+            {
+                string name = EnumHelper.GetEnumName(action);
+                name = MixItUp.Base.Resources.ResourceManager.GetString(name) ?? name;
+                this.HideActionsList.Add(new GenericToggleSettingsOptionControlViewModel(name, ChannelSession.Settings.ActionsToHide.Contains(action),
+                    (value) =>
+                    {
+                        if (value)
+                        {
+                            ChannelSession.Settings.ActionsToHide.Add(action);
+                        }
+                        else
+                        {
+                            ChannelSession.Settings.ActionsToHide.Remove(action);
+                        }
+                    }));
+            }
         }
     }
 }

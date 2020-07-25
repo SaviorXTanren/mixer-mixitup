@@ -142,14 +142,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool TrackWhispererNumber { get; set; }
         [DataMember]
-        public bool AllowCommandWhispering { get; set; }
-        [DataMember]
-        public bool IgnoreBotAccountCommands { get; set; }
-        [DataMember]
-        public bool CommandsOnlyInYourStream { get; set; }
-        [DataMember]
-        public bool DeleteChatCommandsWhenRun { get; set; }
-        [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowFrankerFaceZEmotes { get; set; }
@@ -157,6 +149,22 @@ namespace MixItUp.Base.Model.Settings
         public bool ShowChatMessageTimestamps { get; set; }
 
         #endregion Chat
+
+        #region Commands
+
+        [DataMember]
+        public bool AllowCommandWhispering { get; set; }
+        [DataMember]
+        public bool IgnoreBotAccountCommands { get; set; }
+        [DataMember]
+        public bool DeleteChatCommandsWhenRun { get; set; }
+        [DataMember]
+        public bool UnlockAllCommands { get; set; }
+
+        [DataMember]
+        public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
+
+        #endregion Commands
 
         #region Alerts
 
@@ -428,8 +436,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool ReRunWizard { get; set; }
-        [DataMember]
-        public bool UnlockAllCommands { get; set; }
 
         [DataMember]
         [Obsolete]

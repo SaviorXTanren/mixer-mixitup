@@ -439,11 +439,6 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
-                    {
-                        return;
-                    }
-
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
                     List<PermissionsCommandBase> commands = this.chatCommands.ToList();

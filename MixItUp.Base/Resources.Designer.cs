@@ -3445,6 +3445,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Actions from Command Editor.
+        /// </summary>
+        public static string HideActionsFromCommandEditor {
+            get {
+                return ResourceManager.GetString("HideActionsFromCommandEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Chat User List.
         /// </summary>
         public static string HideChatUserList {

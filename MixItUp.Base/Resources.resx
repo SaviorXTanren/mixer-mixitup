@@ -3108,4 +3108,7 @@
   <data name="ShowFrankerFaceZEmotes" xml:space="preserve">
     <value>Show FrankerFaceZ Emotes (Requires Restart)</value>
   </data>
+  <data name="HideActionsFromCommandEditor" xml:space="preserve">
+    <value>Hide Actions from Command Editor</value>
+  </data>
 </root>
