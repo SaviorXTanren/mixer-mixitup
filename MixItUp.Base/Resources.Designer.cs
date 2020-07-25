@@ -6757,6 +6757,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show BetterTTV Emotes (Requires Restart).
+        /// </summary>
+        public static string ShowBetterTTVEmotes {
+            get {
+                return ResourceManager.GetString("ShowBetterTTVEmotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Bits Cheered.
         /// </summary>
         public static string ShowBitsCheered {
@@ -6798,6 +6807,15 @@ namespace MixItUp.Base {
         public static string ShowFollows {
             get {
                 return ResourceManager.GetString("ShowFollows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show FrankerFaceZ Emotes (Requires Restart).
+        /// </summary>
+        public static string ShowFrankerFaceZEmotes {
+            get {
+                return ResourceManager.GetString("ShowFrankerFaceZEmotes", resourceCulture);
             }
         }
         

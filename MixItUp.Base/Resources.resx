@@ -3093,4 +3093,10 @@
   <data name="ShowSubs" xml:space="preserve">
     <value>Show Subs</value>
   </data>
+  <data name="ShowBetterTTVEmotes" xml:space="preserve">
+    <value>Show BetterTTV Emotes (Requires Restart)</value>
+  </data>
+  <data name="ShowFrankerFaceZEmotes" xml:space="preserve">
+    <value>Show FrankerFaceZ Emotes (Requires Restart)</value>
+  </data>
 </root>
