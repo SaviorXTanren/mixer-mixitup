@@ -569,14 +569,6 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task AddAlertChatMessage(UserViewModel user, string message)
-        {
-            if (ChannelSession.Settings.ChatShowEventAlerts)
-            {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
-            }
-        }
-
         private async Task DownloadBetterTTVEmotes(string channelName = null)
         {
             try
@@ -716,7 +708,7 @@ namespace MixItUp.Base.Services.Twitch
                         trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
                         await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                        await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount));
+                        await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
                     }
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
@@ -741,7 +733,7 @@ namespace MixItUp.Base.Services.Twitch
                     trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
                     await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                    await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
+                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
             }
             catch (Exception ex)
@@ -762,7 +754,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (chatClear.IsClear)
             {
-                await this.AddAlertChatMessage(user, "Chat Cleared");
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, "Chat Cleared", ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsTimeout)
             {
@@ -771,7 +763,7 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Timed Out for {1} seconds", user.Username, chatClear.BanDuration));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Timed Out for {1} seconds", user.Username, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsBan)
             {
@@ -779,7 +771,7 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.Arguments.Add("@" + user.Username);
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Banned", user.Username));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.Username), ChannelSession.Settings.AlertModerationColor));
 
                 await ChannelSession.Services.User.RemoveUserByTwitchLogin(user.Data.TwitchUsername);
             }
@@ -820,7 +812,7 @@ namespace MixItUp.Base.Services.Twitch
 
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                                await this.AddAlertChatMessage(user, string.Format("{0} hosted the channel", user.Username));
+                                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} hosted the channel", user.Username), ChannelSession.Settings.AlertHostColor));
                             }
                         }
                     }

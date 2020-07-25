@@ -232,7 +232,8 @@ namespace MixItUp.Base.Services.Twitch
                             await ChannelSession.Services.Events.PerformEvent(trigger);
 
                             GlobalEvents.FollowOccurred(user);
-                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.Username));
+
+                            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.Username), ChannelSession.Settings.AlertFollowColor));
                         }
                     }
                 }
@@ -313,7 +314,7 @@ namespace MixItUp.Base.Services.Twitch
             trigger.SpecialIdentifiers["message"] = bitsCheered.Message;
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            await this.AddAlertChatMessage(user, string.Format("{0} Cheered {1} Bits", user.Username, bitsCheered.Amount));
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Cheered {1} Bits", user.Username, bitsCheered.Amount), ChannelSession.Settings.AlertBitsCheeredColor));
 
             GlobalEvents.BitsOccurred(bitsCheered);
         }
@@ -355,7 +356,7 @@ namespace MixItUp.Base.Services.Twitch
 
                 GlobalEvents.SubscribeOccurred(user);
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Subscribed", user.Username), ChannelSession.Settings.AlertSubColor));
             }
             else
             {
@@ -383,7 +384,7 @@ namespace MixItUp.Base.Services.Twitch
 
                 GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, months));
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, months));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, months), ChannelSession.Settings.AlertSubColor));
             }
         }
 
@@ -431,7 +432,7 @@ namespace MixItUp.Base.Services.Twitch
             trigger.Arguments.Add(receiver.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            await this.AddAlertChatMessage(gifter, string.Format("{0} Gifted A Subscription To {1}", gifter.Username, receiver.Username));
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, gifter, string.Format("{0} Gifted A Subscription To {1}", gifter.Username, receiver.Username), ChannelSession.Settings.AlertGiftedSubColor));
 
             GlobalEvents.SubscriptionGiftedOccurred(gifter, receiver);
         }
@@ -466,7 +467,7 @@ namespace MixItUp.Base.Services.Twitch
                 await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
             }
 
-            await this.AddAlertChatMessage(user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title));
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));
         }
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)
@@ -475,14 +476,6 @@ namespace MixItUp.Base.Services.Twitch
             {
                 UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.from_id.ToString());
                 await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet, user));
-            }
-        }
-
-        private async Task AddAlertChatMessage(UserViewModel user, string message)
-        {
-            if (ChannelSession.Settings.ChatShowEventAlerts)
-            {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 

@@ -56,6 +56,10 @@ namespace MixItUp.Base.Services
         void RebuildCommandTriggers();
 
         Task AddMessage(ChatMessageViewModel message);
+        Task RemoveMessage(string messageID);
+        Task RemoveMessage(ChatMessageViewModel message);
+
+        Task WriteToChatEventLog(ChatMessageViewModel message);
     }
 
     public class ChatService : IChatService
@@ -357,11 +361,7 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is AlertChatMessageViewModel)
-            {
-                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
-            }
-            else if (message is UserChatMessageViewModel)
+            if (message is UserChatMessageViewModel)
             {
                 if (message.IsWhisper && !message.IsStreamerOrBot)
                 {
@@ -506,15 +506,8 @@ namespace MixItUp.Base.Services
                 }
 
                 GlobalEvents.ChatMessageReceived(message);
-            }
 
-            if (ChannelSession.Settings.SaveChatEventLogs)
-            {
-                try
-                {
-                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
-                }
-                catch (Exception) { }
+                await this.WriteToChatEventLog(message);
             }
 
             Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
@@ -542,6 +535,18 @@ namespace MixItUp.Base.Services
             });
         }
 
+        public async Task WriteToChatEventLog(ChatMessageViewModel message)
+        {
+            if (ChannelSession.Settings.SaveChatEventLogs)
+            {
+                try
+                {
+                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                }
+                catch (Exception) { }
+            }
+        }
+
         private async Task UsersJoined(IEnumerable<UserViewModel> users)
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
@@ -554,16 +559,16 @@ namespace MixItUp.Base.Services
                     this.displayUsers[user.SortableID] = user;
                 }
 
-                if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
+                if (users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await this.AddMessage(alert);
+                await ChannelSession.Services.Alerts.AddAlert(alert);
             }
         }
 
@@ -593,9 +598,9 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
+                    if (users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }
             }
@@ -603,7 +608,7 @@ namespace MixItUp.Base.Services
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await this.AddMessage(alert);
+                await ChannelSession.Services.Alerts.AddAlert(alert);
             }
         }
 

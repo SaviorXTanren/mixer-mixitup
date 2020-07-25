@@ -12,6 +12,7 @@ namespace MixItUp.Base.Services
 
         public IChatService Chat { get; protected set; }
         public IEventService Events { get; protected set; }
+        public IAlertsService Alerts { get; protected set; }
 
         public ISettingsService Settings { get; protected set; }
         public SecretsService Secrets { get; protected set; }

@@ -80,15 +80,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<AlertChatMessageViewModel> OnAlertMessageReceived;
-        public static void AlertMessageReceived(AlertChatMessageViewModel alertMessage)
-        {
-            if (GlobalEvents.OnAlertMessageReceived != null)
-            {
-                GlobalEvents.OnAlertMessageReceived(null, alertMessage);
-            }
-        }
-
         public static event EventHandler OnGameQueueUpdated;
         public static void GameQueueUpdated()
         {
