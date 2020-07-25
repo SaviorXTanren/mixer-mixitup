@@ -140,6 +140,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool HideDeletedMessages { get; set; }
         [DataMember]
+        public bool HideBotMessages { get; set; }
+        [DataMember]
         public bool TrackWhispererNumber { get; set; }
         [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }

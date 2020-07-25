@@ -19,6 +19,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public GenericToggleSettingsOptionControlViewModel HideViewerChatterCount { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideChatUserList { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideDeletedMessages { get; set; }
+        public GenericToggleSettingsOptionControlViewModel HideBotMessages { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel ShowBetterTTVEmotes { get; set; }
         public GenericToggleSettingsOptionControlViewModel ShowFrankerFaceZEmotes { get; set; }
@@ -48,6 +49,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 (value) => { ChannelSession.Settings.HideChatUserList = value; });
             this.HideDeletedMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideDeletedMessages, ChannelSession.Settings.HideDeletedMessages,
                 (value) => { ChannelSession.Settings.HideDeletedMessages = value; });
+            this.HideBotMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideBotMessages, ChannelSession.Settings.HideBotMessages,
+                (value) => { ChannelSession.Settings.HideBotMessages = value; });
 
             this.ShowBetterTTVEmotes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ShowBetterTTVEmotes, ChannelSession.Settings.ShowBetterTTVEmotes,
                 (value) => { ChannelSession.Settings.ShowBetterTTVEmotes = value; });

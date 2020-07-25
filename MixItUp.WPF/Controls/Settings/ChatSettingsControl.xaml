@@ -29,6 +29,7 @@
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideViewerChatterCount}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideChatUserList}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideDeletedMessages}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideBotMessages}" />
 
             <Separator Margin="10" />
 

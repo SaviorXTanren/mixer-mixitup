@@ -3111,4 +3111,7 @@
   <data name="HideActionsFromCommandEditor" xml:space="preserve">
     <value>Hide Actions from Command Editor</value>
   </data>
+  <data name="HideBotMessages" xml:space="preserve">
+    <value>Hide Bot Messages</value>
+  </data>
 </root>

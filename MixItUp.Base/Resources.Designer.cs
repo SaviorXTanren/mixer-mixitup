@@ -3454,6 +3454,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Bot Messages.
+        /// </summary>
+        public static string HideBotMessages {
+            get {
+                return ResourceManager.GetString("HideBotMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Chat User List.
         /// </summary>
         public static string HideChatUserList {

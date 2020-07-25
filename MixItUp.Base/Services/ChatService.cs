@@ -186,10 +186,16 @@ namespace MixItUp.Base.Services
                 {
                     await this.TwitchChatService.DeleteMessage(message);
                 }
-                if (!message.IsDeleted)
-                {
-                    await message.Delete();
-                }
+            }
+
+            if (!message.IsDeleted)
+            {
+                await message.Delete();
+            }
+
+            if (ChannelSession.Settings.HideDeletedMessages)
+            {
+                await this.RemoveMessage(message);
             }
         }
 
@@ -315,18 +321,27 @@ namespace MixItUp.Base.Services
             }
 
             // Add message to chat list
+            bool showMessage = true;
+            if (ChannelSession.Settings.HideBotMessages && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+            {
+                showMessage = false;
+            }
+
             if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
             {
                 await DispatcherHelper.InvokeDispatcher(() =>
                 {
                     this.messagesLookup[message.ID] = message;
-                    if (ChannelSession.Settings.LatestChatAtTop)
+                    if (showMessage)
                     {
-                        this.Messages.Insert(0, message);
-                    }
-                    else
-                    {
-                        this.Messages.Add(message);
+                        if (ChannelSession.Settings.LatestChatAtTop)
+                        {
+                            this.Messages.Insert(0, message);
+                        }
+                        else
+                        {
+                            this.Messages.Add(message);
+                        }
                     }
 
                     if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
@@ -507,6 +522,24 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
             }
+        }
+
+        public async Task RemoveMessage(string messageID)
+        {
+            if (!string.IsNullOrEmpty(messageID) && this.messagesLookup.ContainsKey(messageID))
+            {
+                await this.RemoveMessage(this.messagesLookup[messageID]);
+            }
+        }
+
+        public async Task RemoveMessage(ChatMessageViewModel message)
+        {
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.messagesLookup.Remove(message.ID);
+                this.Messages.Remove(message);
+                return Task.FromResult(0);
+            });
         }
 
         private async Task UsersJoined(IEnumerable<UserViewModel> users)
