@@ -953,11 +953,6 @@ namespace MixItUp.Base.ViewModel.User
                 this.UserRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (this.UserRoles.Contains(UserRoleEnum.ChannelEditor))
-            {
-                this.UserRoles.Add(UserRoleEnum.Mod);
-            }
-
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
                 this.UserRoles.Add(UserRoleEnum.Regular);
