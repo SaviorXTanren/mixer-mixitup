@@ -27,6 +27,10 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public GenericToggleSettingsOptionControlViewModel ShowBetterTTVEmotes { get; set; }
         public GenericToggleSettingsOptionControlViewModel ShowFrankerFaceZEmotes { get; set; }
 
+        public GenericToggleSettingsOptionControlViewModel HideUserAvatar { get; set; }
+        public GenericToggleSettingsOptionControlViewModel HideUserRoleBadge { get; set; }
+        public GenericToggleSettingsOptionControlViewModel HideUserSubscriberBadge { get; set; }
+        public GenericToggleSettingsOptionControlViewModel HideUserSpecialtyBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
         public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
@@ -62,6 +66,15 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 (value) => { ChannelSession.Settings.ShowBetterTTVEmotes = value; });
             this.ShowFrankerFaceZEmotes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ShowFrankerFaceZEmotes, ChannelSession.Settings.ShowFrankerFaceZEmotes,
                 (value) => { ChannelSession.Settings.ShowFrankerFaceZEmotes = value; });
+
+            this.HideUserAvatar = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserAvatar, ChannelSession.Settings.HideUserAvatar,
+                (value) => { ChannelSession.Settings.HideUserAvatar = value; });
+            this.HideUserRoleBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserRoleBadge, ChannelSession.Settings.HideUserRoleBadge,
+                (value) => { ChannelSession.Settings.HideUserRoleBadge = value; });
+            this.HideUserSubscriberBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSubscriberBadge, ChannelSession.Settings.HideUserSubscriberBadge,
+                (value) => { ChannelSession.Settings.HideUserSubscriberBadge = value; });
+            this.HideUserSpecialtyBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSpecialtyBadge, ChannelSession.Settings.HideUserSpecialtyBadge,
+                (value) => { ChannelSession.Settings.HideUserSpecialtyBadge = value; });
 
             this.UseCustomUsernameColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseCustomUsernameColors, ChannelSession.Settings.UseCustomUsernameColors,
                 (value) =>

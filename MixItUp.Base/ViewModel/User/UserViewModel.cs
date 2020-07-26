@@ -246,6 +246,7 @@ namespace MixItUp.Base.ViewModel.User
                 return string.Empty;
             }
         }
+        public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
         public string Color
         {
@@ -443,13 +444,13 @@ namespace MixItUp.Base.ViewModel.User
 
         public ChatBadgeModel TwitchSubscriberBadge { get; private set; }
 
-        public bool HasTwitchRoleBadge { get { return this.TwitchRoleBadge != null; } }
+        public bool HasTwitchRoleBadge { get { return this.TwitchRoleBadge != null && !ChannelSession.Settings.HideUserRoleBadge; } }
 
         public string TwitchRoleBadgeLink { get { return (this.HasTwitchRoleBadge) ? this.TwitchRoleBadge.image_url_1x : string.Empty; } }
 
         public ChatBadgeModel TwitchRoleBadge { get; private set; }
 
-        public bool HasTwitchSpecialtyBadge { get { return this.TwitchSpecialtyBadge != null; } }
+        public bool HasTwitchSpecialtyBadge { get { return this.TwitchSpecialtyBadge != null && !ChannelSession.Settings.HideUserSpecialtyBadge; } }
 
         public string TwitchSpecialtyBadgeLink { get { return (this.HasTwitchSpecialtyBadge) ? this.TwitchSpecialtyBadge.image_url_1x : string.Empty; } }
 
@@ -570,7 +571,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
         public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
-        public bool ShowSubscriberBadge { get { return this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
+        public bool ShowSubscriberBadge { get { return !ChannelSession.Settings.HideUserSubscriberBadge && this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }

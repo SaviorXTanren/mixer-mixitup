@@ -3120,4 +3120,16 @@
   <data name="UseCustomUsernameColors" xml:space="preserve">
     <value>Use Custom Username Colors</value>
   </data>
+  <data name="HideUserAvatar" xml:space="preserve">
+    <value>Hide User Avatar</value>
+  </data>
+  <data name="HideUserRoleBadge" xml:space="preserve">
+    <value>Hide User Role Badge</value>
+  </data>
+  <data name="HideUserSpecialtyBadge" xml:space="preserve">
+    <value>Hide User Specialty Badge</value>
+  </data>
+  <data name="HideUserSubscriberBadge" xml:space="preserve">
+    <value>Hide User Subscriber Badge</value>
+  </data>
 </root>

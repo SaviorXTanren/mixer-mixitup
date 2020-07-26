@@ -137,6 +137,7 @@ namespace MixItUp.Base.Model.Settings
         public bool TrackWhispererNumber { get; set; }
         [DataMember]
         public bool ShowChatMessageTimestamps { get; set; }
+
         [DataMember]
         public bool HideViewerAndChatterNumbers { get; set; }
         [DataMember]
@@ -145,11 +146,21 @@ namespace MixItUp.Base.Model.Settings
         public bool HideDeletedMessages { get; set; }
         [DataMember]
         public bool HideBotMessages { get; set; }
+
         [DataMember]
         public bool ShowBetterTTVEmotes { get; set; }
         [DataMember]
         public bool ShowFrankerFaceZEmotes { get; set; }
-        
+
+        [DataMember]
+        public bool HideUserAvatar { get; set; }
+        [DataMember]
+        public bool HideUserRoleBadge { get; set; }
+        [DataMember]
+        public bool HideUserSubscriberBadge { get; set; }
+        [DataMember]
+        public bool HideUserSpecialtyBadge { get; set; }
+
         [DataMember]
         public bool UseCustomUsernameColors { get; set; }
         [DataMember]

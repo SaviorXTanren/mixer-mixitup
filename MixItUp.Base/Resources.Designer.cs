@@ -3481,6 +3481,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide User Avatar.
+        /// </summary>
+        public static string HideUserAvatar {
+            get {
+                return ResourceManager.GetString("HideUserAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Role Badge.
+        /// </summary>
+        public static string HideUserRoleBadge {
+            get {
+                return ResourceManager.GetString("HideUserRoleBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Specialty Badge.
+        /// </summary>
+        public static string HideUserSpecialtyBadge {
+            get {
+                return ResourceManager.GetString("HideUserSpecialtyBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Subscriber Badge.
+        /// </summary>
+        public static string HideUserSubscriberBadge {
+            get {
+                return ResourceManager.GetString("HideUserSubscriberBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Viewer &amp; Chatter Numbers.
         /// </summary>
         public static string HideViewerAndChatterNumbers {

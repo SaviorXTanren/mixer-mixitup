@@ -38,6 +38,10 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserAvatar}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserRoleBadge}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserSubscriberBadge}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserSpecialtyBadge}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseCustomUsernameColors}" />
             <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding CustomUsernameColorsList}">
                 <ItemsControl.ItemTemplate>
