@@ -208,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
         public NewUserWizardWindowViewModel()
         {
-            this.DiscordCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://discord.gg/geA33sW"); return Task.FromResult(0); });
+            this.DiscordCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); return Task.FromResult(0); });
             this.TwitterCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); return Task.FromResult(0); });
             this.YouTubeCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); return Task.FromResult(0); });
             this.WikiCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); return Task.FromResult(0); });
