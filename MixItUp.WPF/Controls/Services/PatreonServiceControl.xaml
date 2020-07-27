@@ -28,7 +28,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" ItemsSource="{Binding Tiers}" SelectedItem="{Binding SelectedTier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Mixer Sub Equivalent" DisplayMemberPath="Title" Width="200" />
+                <ComboBox Grid.Row="0" ItemsSource="{Binding Tiers}" SelectedItem="{Binding SelectedTier}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Sub Equivalent" DisplayMemberPath="Title" Width="200" />
 
                 <Button Grid.Row="2" Command="{Binding LogOutCommand}" HorizontalAlignment="Center" Width="90">Log Out</Button>
             </Grid>
