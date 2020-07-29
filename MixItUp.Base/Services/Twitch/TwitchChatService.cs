@@ -99,7 +99,6 @@ namespace MixItUp.Base.Services.Twitch
 
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
-        private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
@@ -713,27 +712,10 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
-                    bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
-
-                    UserViewModel user = new UserViewModel("An Anonymous Gifter");
-                    if (!isAnonymous)
+                    if (ChannelSession.Services.Events.TwitchEventService != null)
                     {
-                        user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-                        if (user == null)
-                        {
-                            user = new UserViewModel(userNotice);
-                        }
-                        user.SetTwitchChatDetails(userNotice);
+                        await ChannelSession.Services.Events.TwitchEventService.AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
                     }
-
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
-                    trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
-                    trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
-                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(userNotice.SubPlan);
-                    trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
-                    await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
                 }
             }
             catch (Exception ex)
