@@ -8089,9 +8089,9 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This option helps to ensure that only either the regular Subscription Gifted or Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream.
+        ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
         ///
-        ///For example, if this option is enabled and amount is set to 5, then any time 5 OR LESS subscriptions are gifted at once, it will ONLY run the regular Subscription Gifted event command for each subscription. If MORE THAN 5 [rest of string was truncated]&quot;;.
+        ///For example, if this option is enabled and amount is set to 5, the [rest of string was truncated]&quot;;.
         /// </summary>
         public static string TwitchMassGiftedSubsFilterAmountTooltip {
             get {
