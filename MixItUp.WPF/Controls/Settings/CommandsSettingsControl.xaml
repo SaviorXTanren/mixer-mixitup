@@ -23,6 +23,10 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding TwitchMassGiftedSubsFilterAmount}" />
+
+            <Separator Margin="10" />
+
             <TextBlock Margin="20,10" Text="{Binding Source={x:Static resx:Resources.HideActionsFromCommandEditor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding HideActionsList}">
                 <ItemsControl.ItemTemplate>

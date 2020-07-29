@@ -135,8 +135,12 @@ namespace MixItUp.Base.ViewModel.User
             this.SetUserData(twitchID: packet.UserID.ToString());
 
             this.TwitchID = packet.UserID.ToString();
-            this.TwitchUsername = packet.RaidUserLogin;
-            this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.RaidUserDisplayName)) ? packet.RaidUserDisplayName : this.TwitchUsername;
+            this.TwitchUsername = !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login;
+            this.TwitchDisplayName = !string.IsNullOrEmpty(packet.RaidUserDisplayName) ? packet.RaidUserDisplayName : packet.DisplayName;
+            if (string.IsNullOrEmpty(this.TwitchDisplayName))
+            {
+                this.TwitchDisplayName = this.TwitchUsername;
+            }
 
             this.SetTwitchRoles();
         }

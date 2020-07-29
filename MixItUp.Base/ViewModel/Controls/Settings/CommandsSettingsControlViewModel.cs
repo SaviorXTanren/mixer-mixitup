@@ -16,6 +16,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public GenericToggleSettingsOptionControlViewModel DeleteChatCommandsWhenRun { get; set; }
         public GenericToggleSettingsOptionControlViewModel UnlockAllCommandTypes { get; set; }
 
+        public GenericToggleNumberSettingsOptionControlViewModel TwitchMassGiftedSubsFilterAmount { get; set; }
+
         public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
 
         public CommandsSettingsControlViewModel()
@@ -31,6 +33,9 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
             this.UnlockAllCommandTypes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UnlockAllCommandTypes,
                 ChannelSession.Settings.UnlockAllCommands, (value) => { ChannelSession.Settings.UnlockAllCommands = value; }, MixItUp.Base.Resources.UnlockAllCommandTypesTooltip);
+
+            this.TwitchMassGiftedSubsFilterAmount = new GenericToggleNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmount, ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount,
+                (value) => { ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount = value; }, MixItUp.Base.Resources.TwitchMassGiftedSubsFilterAmountTooltip);
 
             List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
             actions.Remove(ActionTypeEnum.Custom);
