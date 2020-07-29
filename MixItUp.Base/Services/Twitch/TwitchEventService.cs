@@ -96,7 +96,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        public const int BackgroundGiftedSubProcessorTime = 5000;
+        public const int BackgroundGiftedSubProcessorTime = 3000;
 
         public static int GetSubTierNumberFromText(string subPlan)
         {
@@ -137,8 +137,8 @@ namespace MixItUp.Base.Services.Twitch
 
         private DateTimeOffset streamStartCheckTime = DateTimeOffset.Now;
 
-        private List<TwitchGiftedSubEventModel> giftedSubTracker = new List<TwitchGiftedSubEventModel>();
-        private List<TwitchMassGiftedSubEventModel> massGiftedSubTracker = new List<TwitchMassGiftedSubEventModel>();
+        private List<TwitchGiftedSubEventModel> newGiftedSubTracker = new List<TwitchGiftedSubEventModel>();
+        private List<TwitchMassGiftedSubEventModel> newMassGiftedSubTracker = new List<TwitchMassGiftedSubEventModel>();
         private Task giftedSubProcessorTask = null;
 
         public override string Name { get { return "Twitch Events"; } }
@@ -262,9 +262,9 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (massGiftedSubEvent.TotalGifted > ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
                 {
-                    lock (this.massGiftedSubTracker)
+                    lock (this.newMassGiftedSubTracker)
                     {
-                        this.massGiftedSubTracker.Add(massGiftedSubEvent);
+                        this.newMassGiftedSubTracker.Add(massGiftedSubEvent);
                     }
                 }
             }
@@ -494,9 +494,9 @@ namespace MixItUp.Base.Services.Twitch
             TwitchGiftedSubEventModel giftedSubEvent = new TwitchGiftedSubEventModel(gifter, receiver, packet);
             if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount > 0)
             {
-                lock (this.giftedSubTracker)
+                lock (this.newGiftedSubTracker)
                 {
-                    this.giftedSubTracker.Add(giftedSubEvent);
+                    this.newGiftedSubTracker.Add(giftedSubEvent);
                 }
 
                 if (giftedSubProcessorTask == null)
@@ -512,58 +512,62 @@ namespace MixItUp.Base.Services.Twitch
 
         private async Task BackgroundGiftedSubProcessor()
         {
+            Dictionary<Guid, List<TwitchGiftedSubEventModel>> giftedSubs = new Dictionary<Guid, List<TwitchGiftedSubEventModel>>();
+            List<TwitchMassGiftedSubEventModel> massGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+
+            List<TwitchGiftedSubEventModel> tempGiftedSubs = new List<TwitchGiftedSubEventModel>();
+            List<TwitchMassGiftedSubEventModel> tempMassGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
+
             do
             {
                 await Task.Delay(BackgroundGiftedSubProcessorTime);
 
-                List<TwitchGiftedSubEventModel> allGiftedSubs = new List<TwitchGiftedSubEventModel>();
-                lock (this.giftedSubTracker)
+                lock (this.newGiftedSubTracker)
                 {
-                    allGiftedSubs = this.giftedSubTracker.Where(s => s.Processed.AddMilliseconds(BackgroundGiftedSubProcessorTime) >= DateTimeOffset.Now).ToList();
+                    tempGiftedSubs = this.newGiftedSubTracker.ToList();
+                    this.newGiftedSubTracker.Clear();
                 }
 
-                Dictionary<Guid, List<TwitchGiftedSubEventModel>> giftedSubs = new Dictionary<Guid, List<TwitchGiftedSubEventModel>>();
-                foreach (var group in allGiftedSubs.GroupBy(s => s.Gifter.ID, s => s))
+                lock (this.newMassGiftedSubTracker)
                 {
-                    giftedSubs[group.Key] = new List<TwitchGiftedSubEventModel>(group.OrderBy(s => s.Processed));
+                    tempMassGiftedSubs = this.newMassGiftedSubTracker.ToList();
+                    this.newMassGiftedSubTracker.Clear();
                 }
 
-                List<TwitchMassGiftedSubEventModel> massGiftedSubs = new List<TwitchMassGiftedSubEventModel>();
-                lock (this.massGiftedSubTracker)
+                foreach (var group in tempGiftedSubs.GroupBy(s => s.Gifter.ID, s => s))
                 {
-                    massGiftedSubs = this.massGiftedSubTracker.Where(s => s.Processed.AddMilliseconds(BackgroundGiftedSubProcessorTime) >= DateTimeOffset.Now).ToList();
-                }
-
-                foreach (TwitchMassGiftedSubEventModel massGiftedSub in massGiftedSubs)
-                {
-                    if (giftedSubs.ContainsKey(massGiftedSub.Gifter.ID))
+                    Guid id = group.First().IsAnonymous ? Guid.Empty : group.Key;
+                    if (!giftedSubs.ContainsKey(id))
                     {
-                        for (int i = 0; i < massGiftedSub.TotalGifted && giftedSubs[massGiftedSub.Gifter.ID].Count > 0; i++)
-                        {
-                            TwitchGiftedSubEventModel giftedSub = giftedSubs[massGiftedSub.Gifter.ID][0];
-                            giftedSubs[massGiftedSub.Gifter.ID].Remove(giftedSub);
-                            lock (this.giftedSubTracker)
-                            {
-                                this.giftedSubTracker.Remove(giftedSub);
-                            }
-                        }
+                        giftedSubs[id] = new List<TwitchGiftedSubEventModel>();
                     }
-
-                    lock (massGiftedSubTracker)
-                    {
-                        this.massGiftedSubTracker.Remove(massGiftedSub);
-                    }
-                    await ProcessMassGiftedSub(massGiftedSub);
+                    giftedSubs[id].AddRange(group.OrderBy(s => s.Processed));
                 }
 
-                foreach (TwitchGiftedSubEventModel giftedSub in giftedSubs.SelectMany(kvp => kvp.Value))
-                {
-                    await ProcessGiftedSub(giftedSub);
-                }
+                massGiftedSubs.AddRange(tempMassGiftedSubs.OrderBy(s => s.Processed));
 
-            } while (this.giftedSubTracker.Count > 0 && this.massGiftedSubTracker.Count > 0);
+            } while (tempGiftedSubs.Count > 0 || tempMassGiftedSubs.Count > 0);
 
             giftedSubProcessorTask = null;
+
+            foreach (TwitchMassGiftedSubEventModel massGiftedSub in massGiftedSubs)
+            {
+                Guid gifterID = (massGiftedSub.IsAnonymous) ? Guid.Empty : massGiftedSub.Gifter.ID;
+                if (giftedSubs.ContainsKey(gifterID))
+                {
+                    for (int i = 0; i < massGiftedSub.TotalGifted && giftedSubs[gifterID].Count > 0; i++)
+                    {
+                        TwitchGiftedSubEventModel giftedSub = giftedSubs[gifterID][0];
+                        giftedSubs[gifterID].Remove(giftedSub);
+                    }
+                }
+                await ProcessMassGiftedSub(massGiftedSub);
+            }
+
+            foreach (TwitchGiftedSubEventModel giftedSub in giftedSubs.SelectMany(kvp => kvp.Value))
+            {
+                await ProcessGiftedSub(giftedSub);
+            }
         }
 
         private async Task ProcessGiftedSub(TwitchGiftedSubEventModel giftedSubEvent)
