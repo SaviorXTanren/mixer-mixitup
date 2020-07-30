@@ -1,1 +1,30 @@
-{"$type":"Twitch.Base.Models.Clients.Chat.ChatRawPacketModel, Twitch.Base","RawText":"@badge-info=subscriber/1;badges=subscriber/0;color=#00FF7F;display-name=PixelBeardQc;emotes=;flags=;id=44cb7c41-ecf4-435c-98bd-1e2a891df7af;login=pixelbeardqc;mod=0;msg-id=submysterygift;msg-param-mass-gift-count=10;msg-param-origin-id=89\\s82\\s5f\\s60\\s08\\s2e\\s6d\\sc2\\s76\\s90\\s45\\sce\\s97\\s71\\s8f\\s25\\s52\\sac\\sd2\\sf8;msg-param-sender-count=10;msg-param-sub-plan=1000;room-id=416847803;subscriber=1;system-msg=PixelBeardQc\\sis\\sgifting\\s10\\sTier\\s1\\sSubs\\sto\\sMixItUpApp's\\scommunity!\\sThey've\\sgifted\\sa\\stotal\\sof\\s10\\sin\\sthe\\schannel!;tmi-sent-ts=1594506772399;user-id=120135729;user-type= :tmi.twitch.tv USERNOTICE #mixitupapp","Tags":{"$type":"System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib","badge-info":"subscriber/1","badges":"subscriber/0","color":"#00FF7F","display-name":"PixelBeardQc","emotes":"","flags":"","id":"44cb7c41-ecf4-435c-98bd-1e2a891df7af","login":"pixelbeardqc","mod":"0","msg-id":"submysterygift","msg-param-mass-gift-count":"10","msg-param-origin-id":"89 s82 s5f s60 s08 s2e s6d sc2 s76 s90 s45 sce s97 s71 s8f s25 s52 sac sd2 sf8","msg-param-sender-count":"10","msg-param-sub-plan":"1000","room-id":"416847803","subscriber":"1","system-msg":"PixelBeardQc sis sgifting s10 sTier s1 sSubs sto sMixItUpApp's scommunity! sThey've sgifted sa stotal sof s10 sin sthe schannel!","tmi-sent-ts":"1594506772399","user-id":"120135729","user-type":""},"Prefix":"tmi.twitch.tv","Command":"USERNOTICE","Parameters":["#mixitupapp"]}
+{
+	"$type": "Twitch.Base.Models.Clients.Chat.ChatRawPacketModel, Twitch.Base",
+	"RawText": "@badge-info=subscriber/1;badges=subscriber/0;color=#00FF7F;display-name=PixelBeardQc;emotes=;flags=;id=44cb7c41-ecf4-435c-98bd-1e2a891df7af;login=pixelbeardqc;mod=0;msg-id=submysterygift;msg-param-mass-gift-count=10;msg-param-origin-id=89\\s82\\s5f\\s60\\s08\\s2e\\s6d\\sc2\\s76\\s90\\s45\\sce\\s97\\s71\\s8f\\s25\\s52\\sac\\sd2\\sf8;msg-param-sender-count=10;msg-param-sub-plan=1000;room-id=416847803;subscriber=1;system-msg=PixelBeardQc\\sis\\sgifting\\s10\\sTier\\s1\\sSubs\\sto\\sMixItUpApp's\\scommunity!\\sThey've\\sgifted\\sa\\stotal\\sof\\s10\\sin\\sthe\\schannel!;tmi-sent-ts=1594506772399;user-id=120135729;user-type= :tmi.twitch.tv USERNOTICE #mixitupapp",
+	"Tags": {
+		"$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib",
+		"badge-info": "subscriber/1",
+		"badges": "subscriber/0",
+		"color": "#00FF7F",
+		"display-name": "PixelBeardQc",
+		"emotes": "",
+		"flags": "",
+		"id": "44cb7c41-ecf4-435c-98bd-1e2a891df7af",
+		"login": "pixelbeardqc",
+		"mod": "0",
+		"msg-id": "submysterygift",
+		"msg-param-mass-gift-count": "10",
+		"msg-param-origin-id": "89 s82 s5f s60 s08 s2e s6d sc2 s76 s90 s45 sce s97 s71 s8f s25 s52 sac sd2 sf8",
+		"msg-param-sender-count": "10",
+		"msg-param-sub-plan": "1000",
+		"room-id": "416847803",
+		"subscriber": "1",
+		"system-msg": "PixelBeardQc sis sgifting s10 sTier s1 sSubs sto sMixItUpApp's scommunity! sThey've sgifted sa stotal sof s10 sin sthe schannel!",
+		"tmi-sent-ts": "1594506772399",
+		"user-id": "120135729",
+		"user-type": ""
+	},
+	"Prefix": "tmi.twitch.tv",
+	"Command": "USERNOTICE",
+	"Parameters": ["#mixitupapp"]
+}
