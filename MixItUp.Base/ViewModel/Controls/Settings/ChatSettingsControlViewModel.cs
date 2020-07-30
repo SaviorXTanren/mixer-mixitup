@@ -14,6 +14,8 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "XLarge", 20 }, { "XXLarge", 24 }, };
 
         public GenericComboBoxSettingsOptionControlViewModel<string> FontSize { get; set; }
+        public GenericToggleSettingsOptionControlViewModel AddSeparatorsBetweenMessages { get; set; }
+        public GenericToggleSettingsOptionControlViewModel UseAlternatingBackgroundColors { get; set; }
 
         public GenericToggleSettingsOptionControlViewModel ShowLatestChatMessagesAtTop { get; set; }
         public GenericToggleSettingsOptionControlViewModel ShowMessageTimestamp { get; set; }
@@ -42,8 +44,20 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                     if (this.fontSizes.ContainsKey(value))
                     {
                         ChannelSession.Settings.ChatFontSize = this.fontSizes[value];
-                        GlobalEvents.ChatFontSizeChanged();
+                        GlobalEvents.ChatVisualSettingsChanged();
                     }
+                });
+            this.AddSeparatorsBetweenMessages = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.AddSeparatorsBetweenMessages, ChannelSession.Settings.AddSeparatorsBetweenMessages,
+                (value) =>
+                {
+                    ChannelSession.Settings.AddSeparatorsBetweenMessages = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
+            this.UseAlternatingBackgroundColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseAlternatingBackgroundColors, ChannelSession.Settings.UseAlternatingBackgroundColors,
+                (value) =>
+                {
+                    ChannelSession.Settings.UseAlternatingBackgroundColors = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
                 });
 
             this.ShowLatestChatMessagesAtTop = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ShowLatestChatMessagesAtTopInsteadOfBottom, ChannelSession.Settings.LatestChatAtTop,

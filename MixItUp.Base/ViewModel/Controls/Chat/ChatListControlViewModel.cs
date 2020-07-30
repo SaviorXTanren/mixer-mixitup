@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
@@ -16,6 +17,8 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
     public class ChatListControlViewModel : WindowControlViewModelBase
     {
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
+
+        public int AlternationCount { get { return (ChannelSession.Settings.UseAlternatingBackgroundColors) ? 2 : 1; } }
 
         public IEnumerable<string> SendAsOptions
         {
@@ -171,6 +174,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                 return Task.FromResult(0);
             });
 
+            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
             ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
@@ -211,6 +215,11 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             await base.OnVisibleInternal();
 
             this.NotifyPropertyChanged("SendAsOptions");
+        }
+
+        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
+        {
+            this.NotifyPropertyChanged("AlternationCount");
         }
 
         private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)

@@ -3140,4 +3140,10 @@
 
 For example, if this option is enabled and amount is set to 5, then any time 5 OR LESS subscriptions are gifted at once, it will ONLY run the regular Subscription Gifted event command for each subscription. If MORE THAN 5 are gifted, then it will ONLY run the Mass Subscriptions Gifted event command once.</value>
   </data>
+  <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
+    <value>Add Separators Between Messages</value>
+  </data>
+  <data name="UseAlternatingBackgroundColors" xml:space="preserve">
+    <value>Use Alternating Background Colors</value>
+  </data>
 </root>

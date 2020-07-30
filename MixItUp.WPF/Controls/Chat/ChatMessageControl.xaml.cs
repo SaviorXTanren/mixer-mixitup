@@ -30,10 +30,10 @@ namespace MixItUp.WPF.Controls.Chat
             this.Loaded += ChatMessageControl_Loaded;
             this.DataContextChanged += ChatMessageControl_DataContextChanged;
 
-            GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
+            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
         }
 
-        private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
+        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             if (this.Message != null)
             {
@@ -57,6 +57,11 @@ namespace MixItUp.WPF.Controls.Chat
                 this.Message.OnDeleted += Message_OnDeleted;
                 bool italics = false;
                 bool highlighted = false;
+
+                if (ChannelSession.Settings.AddSeparatorsBetweenMessages)
+                {
+                    this.Separator.Visibility = Visibility.Visible;
+                }
 
                 if (this.DataContext is AlertChatMessageViewModel)
                 {

@@ -475,6 +475,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Separators Between Messages.
+        /// </summary>
+        public static string AddSeparatorsBetweenMessages {
+            get {
+                return ResourceManager.GetString("AddSeparatorsBetweenMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Stream Pass.
         /// </summary>
         public static string AddStreamPass {
@@ -8321,6 +8330,15 @@ namespace MixItUp.Base {
         public static string UsageRequirements {
             get {
                 return ResourceManager.GetString("UsageRequirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Alternating Background Colors.
+        /// </summary>
+        public static string UseAlternatingBackgroundColors {
+            get {
+                return ResourceManager.GetString("UseAlternatingBackgroundColors", resourceCulture);
             }
         }
         

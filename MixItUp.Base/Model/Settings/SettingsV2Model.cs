@@ -128,6 +128,10 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public int ChatFontSize { get; set; } = 13;
+        [DataMember]
+        public bool AddSeparatorsBetweenMessages { get; set; }
+        [DataMember]
+        public bool UseAlternatingBackgroundColors { get; set; }
 
         [DataMember]
         public bool OnlyShowAlertsInDashboard { get; set; }

@@ -53,12 +53,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler OnChatFontSizeChanged;
-        public static void ChatFontSizeChanged()
+        public static event EventHandler OnChatVisualSettingsChanged;
+        public static void ChatVisualSettingsChanged()
         {
-            if (GlobalEvents.OnChatFontSizeChanged != null)
+            if (GlobalEvents.OnChatVisualSettingsChanged != null)
             {
-                GlobalEvents.OnChatFontSizeChanged(null, new EventArgs());
+                GlobalEvents.OnChatVisualSettingsChanged(null, new EventArgs());
             }
         }
 
