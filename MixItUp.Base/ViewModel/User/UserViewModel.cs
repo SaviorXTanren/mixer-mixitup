@@ -289,7 +289,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (string.IsNullOrEmpty(this.Data.Color))
                     {
-                        this.Data.Color = "#000000";
+                        this.Data.Color = "MaterialDesignBody";
                     }
 
                     return this.Data.Color;
