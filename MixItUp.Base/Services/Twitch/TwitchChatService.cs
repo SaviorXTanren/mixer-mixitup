@@ -9,7 +9,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
@@ -99,6 +98,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
+        private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
@@ -715,6 +715,13 @@ namespace MixItUp.Base.Services.Twitch
                     if (ChannelSession.Services.Events.TwitchEventService != null)
                     {
                         await ChannelSession.Services.Events.TwitchEventService.AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
+                    }
+                }
+                else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                {
+                    if (ChannelSession.Services.Events.TwitchEventService != null)
+                    {
+                        await ChannelSession.Services.Events.TwitchEventService.AddSub(new TwitchSubEventModel(userNotice));
                     }
                 }
             }
