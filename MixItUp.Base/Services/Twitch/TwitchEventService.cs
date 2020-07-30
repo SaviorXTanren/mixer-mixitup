@@ -233,7 +233,6 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        follows.Clear();
                         IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers((UserModel)ChannelSession.TwitchUserNewAPI, maxResult: 100);
                         foreach (UserFollowModel follow in followers)
                         {
