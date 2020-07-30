@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
@@ -46,8 +47,8 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
-                bool follows = false;
-                if (follows)
+                UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ChannelSession.TwitchUserNewAPI);
+                if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
                     this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
