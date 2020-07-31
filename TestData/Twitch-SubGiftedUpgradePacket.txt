@@ -1,0 +1,28 @@
+{
+	"$type": "Twitch.Base.Models.Clients.Chat.ChatRawPacketModel, Twitch.Base",
+	"RawText": "@badges=moderator/1,subscriber/0,premium/1;color=#FF007E;display-name=Lancers63;emotes=;flags=;id=036defb2-65bc-4c0e-9ba6-494404460431;login=lancers63;mod=1;msg-id=giftpaidupgrade;msg-param-sender-login=xtempahzz;msg-param-sender-name=xTempahzz;room-id=72099346;subscriber=1;system-msg=Lancers63\\sis\\scontinuing\\sthe\\sGift\\sSub\\sthey\\sgot\\sfrom\\sxTempahzz!;tmi-sent-ts=1551163202768;turbo=0;user-id=113992353;user-type=mod :tmi.twitch.tv USERNOTICE #xtempahzz",
+	"Tags": {
+		"$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String, mscorlib]], mscorlib",
+		"badges": "moderator/1,subscriber/0,premium/1",
+		"color": "#FF007E",
+		"display-name": "Lancers63",
+		"emotes": "",
+		"flags": "",
+		"id": "036defb2-65bc-4c0e-9ba6-494404460431",
+		"login": "lancers63",
+		"mod": "1",
+		"msg-id": "giftpaidupgrade",
+		"msg-param-sender-login": "xtempahzz",
+		"msg-param-sender-name": "xTempahzz",
+		"room-id": "72099346",
+		"subscriber": "1",
+		"system-msg": "Lancers63 sis scontinuing sthe sGift sSub sthey sgot sfrom sxTempahzz!",
+		"tmi-sent-ts": "1551163202768",
+		"turbo": "0",
+		"user-id": "113992353",
+		"user-type": "mod"
+	},
+	"Prefix": "tmi.twitch.tv",
+	"Command": "USERNOTICE",
+	"Parameters": ["#xtempahzz"]
+}

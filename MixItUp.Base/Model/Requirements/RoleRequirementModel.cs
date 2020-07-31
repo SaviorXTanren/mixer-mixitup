@@ -13,13 +13,17 @@ namespace MixItUp.Base.Model.Requirements
         public UserRoleEnum Role { get; set; }
 
         [DataMember]
+        public int SubscriberTier { get; set; } = 1;
+
+        [DataMember]
         public string PatreonBenefitID { get; set; }
 
         public RoleRequirementModel() { }
 
-        public RoleRequirementModel(UserRoleEnum role, string patreonBenefitID = null)
+        public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.Role = role;
+            this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
 
@@ -39,10 +43,36 @@ namespace MixItUp.Base.Model.Requirements
                         }
                     }
                 }
-                await this.SendChatWhisper(user, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, EnumLocalizationHelper.GetLocalizedName(this.Role)));
+                await this.SendErrorMessage();
                 return false;
             }
+
+            if (this.Role == UserRoleEnum.Subscriber && !user.ExceedsPermissions(this.Role))
+            {
+                if (user.SubscribeTier < this.SubscriberTier)
+                {
+                    await this.SendErrorMessage();
+                    return false;
+                }
+            }
             return true;
+        }
+
+        private async Task SendErrorMessage()
+        {
+            string role = EnumLocalizationHelper.GetLocalizedName(this.Role);
+            if (this.Role == UserRoleEnum.Subscriber)
+            {
+                string tierText = string.Empty;
+                switch (this.SubscriberTier)
+                {
+                    case 1: tierText = MixItUp.Base.Resources.Tier1; break;
+                    case 2: tierText = MixItUp.Base.Resources.Tier2; break;
+                    case 3: tierText = MixItUp.Base.Resources.Tier3; break;
+                }
+                role = tierText + " " + role;
+            }
+            await this.SendChatMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }
     }
 }

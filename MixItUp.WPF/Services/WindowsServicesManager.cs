@@ -17,6 +17,7 @@ namespace MixItUp.WPF.Services
             this.User = new UserService();
             this.Chat = new ChatService();
             this.Events = new EventService();
+            this.Alerts = new AlertsService();
 
             this.Settings = new SettingsService();
             this.Statistics = new StatisticsService();

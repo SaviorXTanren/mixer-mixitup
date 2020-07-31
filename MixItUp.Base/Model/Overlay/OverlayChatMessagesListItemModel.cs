@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -23,16 +24,6 @@ namespace MixItUp.Base.Model.Overlay
             {MESSAGE}
           </p>
         </div>";
-
-        private static readonly Dictionary<string, string> userColors = new Dictionary<string, string>()
-        {
-            { "UserStreamerRoleColor", "#FFFFFF" },
-            { "UserStaffRoleColor", "#FFD700" },
-            { "UserModRoleColor", "#008000" },
-            { "UserGlobalModRoleColor", "#07FDC6" },
-            { "UserProRoleColor", "#800080" },
-            { "UserDefaultRoleColor", "#0000FF" },
-        };
 
         private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
         private const string ImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
@@ -96,9 +87,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             imageURL = ((FrankerFaceZEmoteModel)messagePart).url;
                         }
-                        else if (messagePart is TwitchBitsCheermoteViewModel)
+                        else if (messagePart is TwitchBitsCheerViewModel)
                         {
-                            imageURL = ((TwitchBitsCheermoteViewModel)messagePart).LightImage;
+                            imageURL = ((TwitchBitsCheerViewModel)messagePart).Tier.LightImage;
                         }
 
                         if (!string.IsNullOrEmpty(imageURL))
@@ -109,13 +100,17 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
-                    item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
-                    item.TemplateReplacements.Add("USERNAME", item.User.Username);
-                    item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
-                    item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                    item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
-                    item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+                    UserViewModel user = item.GetUser();
+                    if (user != null)
+                    {
+                        item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
+                        item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
+                        item.TemplateReplacements.Add("USERNAME", user.Username);
+                        item.TemplateReplacements.Add("USER_IMAGE", user.AvatarLink);
+                        item.TemplateReplacements.Add("USER_COLOR", user.Color);
+                        item.TemplateReplacements.Add("SUB_IMAGE", string.Empty);
+                        item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+                    }
 
                     await this.listSemaphore.WaitAndRelease(() =>
                     {

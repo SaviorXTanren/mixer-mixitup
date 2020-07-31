@@ -1,0 +1,10 @@
+{
+	"$type": "Twitch.Base.Models.Clients.PubSub.PubSubMessagePacketModel, Twitch.Base",
+	"topicID": "416847803",
+	"type": "MESSAGE",
+	"data": {
+		"topic": "channel-subscribe-events-v1.416847803",
+		"message": "{\"benefit_end_month\":0,\"user_name\":\"pixelbeardqc\",\"display_name\":\"PixelBeardQc\",\"channel_name\":\"mixitupapp\",\"user_id\":\"120135729\",\"channel_id\":\"416847803\",\"recipient_id\":\"26683604\",\"recipient_user_name\":\"naragath\",\"recipient_display_name\":\"Naragath\",\"time\":\"2020-07-11T22:32:53.595958067Z\",\"sub_message\":{\"message\":\"\",\"emotes\":null},\"sub_plan\":\"1000\",\"sub_plan_name\":\"Supporter\",\"months\":1,\"context\":\"subgift\",\"is_gift\":true,\"multi_month_duration\":1}"
+	},
+	"nonce": "f446d42f7fd84b4fb8cb1489e2d5f69e"
+}

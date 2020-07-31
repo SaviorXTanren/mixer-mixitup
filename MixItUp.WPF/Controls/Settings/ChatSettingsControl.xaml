@@ -6,143 +6,52 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
-             xmlns:util="clr-namespace:MixItUp.WPF.Util"
-             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:GenericSettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings.Generic"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="450" d:DesignWidth="800">
     <local:SettingsControlBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-        <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:SettingsControlBase.Resources>
+
     <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <StackPanel>
+            <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding FontSize}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AddSeparatorsBetweenMessages}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseAlternatingBackgroundColors}" />
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FontSize}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="FontSizeComboBox_SelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+            <Separator Margin="10" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowUserJoinLeave}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="2" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowLatestChatMessagesAtTop}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowMessageTimestamp}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding TrackWhisperNumbers}" />
 
-            <ToggleButton Grid.Column="0" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="UserJoinLeaveColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
+            <Separator Margin="10" />
+            
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideViewerChatterCount}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideChatUserList}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideDeletedMessages}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideBotMessages}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowEventAlerts}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="4" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Separator Margin="10" />
 
-            <ToggleButton Grid.Column="0" x:Name="ShowEventAlertsToggleButton" Checked="ShowEventAlertsToggleButton_Checked" Unchecked="ShowEventAlertsToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="EventAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowBetterTTVEmotes}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding ShowFrankerFaceZEmotes}" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowMixPlayAlerts}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <Grid Grid.Row="6" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Separator Margin="10" />
 
-            <ToggleButton Grid.Column="0" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
-            <local:ColorSchemeComboBox x:Name="InteractiveAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
-        </Grid>
-
-        <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OnlyShowAlertsInDashboard}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="8" Grid.Column="2" x:Name="OnlyShowAlertsInDashboardToggleButton" Checked="OnlyShowAlertsInDashboardToggleButton_Checked" Unchecked="OnlyShowAlertsInDashboardToggleButton_Checked" />
-
-        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowLatestChatMessagesAtTopInsteadOfBottom}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="10" Grid.Column="2" x:Name="LatestChatAtTopToggleButton" Checked="LatestChatAtTopToggleButton_Checked" Unchecked="LatestChatAtTopToggleButton_Checked" />
-
-        <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.HideViewerAndChatterNumbers}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="HideViewerAndChatterNumbersToggleButton" Checked="HideViewerAndChatterNumbersToggleButton_Checked" Unchecked="HideViewerAndChatterNumbersToggleButton_Checked" />
-
-        <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.HideChatUserList}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="14" Grid.Column="2" x:Name="HideChatUserListToggleButton" Checked="HideChatUserListToggleButton_Checked" Unchecked="HideChatUserListToggleButton_Checked" />
-
-        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.HideDeletedMessages}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="HideDeletedMessagesToggleButton" Checked="HideDeletedMessagesToggleButton_Checked" Unchecked="HideDeletedMessagesToggleButton_Checked" />
-
-        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TrackWhispererNumbers}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="18" Grid.Column="2" x:Name="TrackWhispererNumberToggleButton" Checked="TrackWhispererNumberToggleButton_Checked" Unchecked="TrackWhispererNumberToggleButton_Checked" />
-
-        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowMessageTimestamp}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="20" Grid.Column="2" x:Name="ShowMessageTimestampsToggleButton" Checked="ShowMessageTimestampsToggleButton_Checked" Unchecked="ShowMessageTimestampsToggleButton_Checked" />
-
-        <TextBlock Grid.Row="22" Grid.Column="0" VerticalAlignment="Center">Show BetterTTV Emotes (Requires Restart):</TextBlock>
-        <ToggleButton Grid.Row="22" Grid.Column="2" x:Name="ShowBetterTTVEmotesToggleButton" Checked="ShowBetterTTVEmotesToggleButton_Checked" Unchecked="ShowBetterTTVEmotesToggleButton_Checked" />
-
-        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center">Show FrankerFaceZ Emotes (Requires Restart):</TextBlock>
-        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="ShowFrankerFaceZEmotesToggleButton" Checked="ShowFrankerFaceZEmotesToggleButton_Checked" Unchecked="ShowFrankerFaceZEmotesToggleButton_Checked" />
-
-        <Separator Grid.Row="26" Grid.ColumnSpan="2" Margin="10" />
-        
-        <TextBlock Grid.Row="28" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowCommandsToBeWhispered}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="28" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
-
-        <TextBlock Grid.Row="30" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IgnoreYourBotAccountForCommands}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="30" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
-
-        <TextBlock Grid.Row="32" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowCommandsOnlyInYourChannelDuringACoStream}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="32" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
-
-        <TextBlock Grid.Row="34" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DeleteAllChatCommandsWhenTheyAreRun}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Row="34" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserAvatar}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserRoleBadge}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserSubscriberBadge}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding HideUserSpecialtyBadge}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UseCustomUsernameColors}" />
+            <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding CustomUsernameColorsList}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
     </Grid>
 </local:SettingsControlBase>

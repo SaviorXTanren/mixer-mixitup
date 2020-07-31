@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StreamingClient.Base.Util;
+using System;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -18,7 +19,19 @@ namespace MixItUp.WPF.Util
             string color = (string)value;
             if (!string.IsNullOrEmpty(color))
             {
-                return Application.Current.FindResource(color) as SolidColorBrush;
+                object resource = Application.Current.TryFindResource(color);
+                if (resource == null)
+                {
+                    try
+                    {
+                        return (SolidColorBrush)(new BrushConverter().ConvertFrom(color));
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
+                else
+                {
+                    return resource;
+                }
             }
             return string.Empty;
         }

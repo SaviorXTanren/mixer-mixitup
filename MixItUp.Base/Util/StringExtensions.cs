@@ -52,22 +52,27 @@ namespace MixItUp.Base.Util
 
         public static string AddNewLineEveryXCharacters(this string str, int lineLength)
         {
-            string newString = string.Empty;
-            int x = 0;
-            for (int i = 0; i < str.Length; i++)
+            List<string> newStringParts = new List<string>();
+            foreach (string split in str.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                x++;
-                if (x >= lineLength && str[i] == ' ')
+                string newString = string.Empty;
+                int x = 0;
+                for (int i = 0; i < split.Length; i++)
                 {
-                    newString += Environment.NewLine;
-                    x = 0;
+                    x++;
+                    if (x >= lineLength && split[i] == ' ')
+                    {
+                        newString += Environment.NewLine;
+                        x = 0;
+                    }
+                    else
+                    {
+                        newString += split[i];
+                    }
                 }
-                else
-                {
-                    newString += str[i];
-                }
+                newStringParts.Add(newString);
             }
-            return newString;
+            return string.Join(Environment.NewLine, newStringParts);
         }
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)

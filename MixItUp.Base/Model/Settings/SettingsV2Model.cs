@@ -27,9 +27,10 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 43;
+        public const int LatestVersion = 44;
 
         public const string SettingsDirectoryName = "Settings";
+        public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
 
         public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 
@@ -128,22 +129,19 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int ChatFontSize { get; set; } = 13;
         [DataMember]
-        public bool ChatShowUserJoinLeave { get; set; }
+        public bool AddSeparatorsBetweenMessages { get; set; }
         [DataMember]
-        public string ChatUserJoinLeaveColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
-        [DataMember]
-        public bool ChatShowEventAlerts { get; set; }
-        [DataMember]
-        public string ChatEventAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
-        [DataMember]
-        public bool ChatShowMixPlayAlerts { get; set; }
-        [DataMember]
-        public string ChatMixPlayAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
+        public bool UseAlternatingBackgroundColors { get; set; }
 
         [DataMember]
         public bool OnlyShowAlertsInDashboard { get; set; }
         [DataMember]
         public bool LatestChatAtTop { get; set; }
+        [DataMember]
+        public bool TrackWhispererNumber { get; set; }
+        [DataMember]
+        public bool ShowChatMessageTimestamps { get; set; }
+
         [DataMember]
         public bool HideViewerAndChatterNumbers { get; set; }
         [DataMember]
@@ -151,25 +149,77 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool HideDeletedMessages { get; set; }
         [DataMember]
-        public bool TrackWhispererNumber { get; set; }
+        public bool HideBotMessages { get; set; }
+
+        [DataMember]
+        public bool ShowBetterTTVEmotes { get; set; }
+        [DataMember]
+        public bool ShowFrankerFaceZEmotes { get; set; }
+
+        [DataMember]
+        public bool HideUserAvatar { get; set; }
+        [DataMember]
+        public bool HideUserRoleBadge { get; set; }
+        [DataMember]
+        public bool HideUserSubscriberBadge { get; set; }
+        [DataMember]
+        public bool HideUserSpecialtyBadge { get; set; }
+
+        [DataMember]
+        public bool UseCustomUsernameColors { get; set; }
+        [DataMember]
+        public Dictionary<UserRoleEnum, string> CustomUsernameColors { get; set; } = new Dictionary<UserRoleEnum, string>();
+
+        #endregion Chat
+
+        #region Commands
+
         [DataMember]
         public bool AllowCommandWhispering { get; set; }
         [DataMember]
         public bool IgnoreBotAccountCommands { get; set; }
         [DataMember]
-        public bool CommandsOnlyInYourStream { get; set; }
-        [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
         [DataMember]
-        public bool ShowBetterTTVEmotes { get; set; }
-        [DataMember]
-        public bool ShowFrankerFaceZEmotes { get; set; }
-        [DataMember]
-        public bool ShowChatMessageTimestamps { get; set; }
+        public bool UnlockAllCommands { get; set; }
 
-        #endregion Chat
+        [DataMember]
+        public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;
+
+        [DataMember]
+        public HashSet<ActionTypeEnum> ActionsToHide { get; set; } = new HashSet<ActionTypeEnum>();
+
+        #endregion Commands
+
+        #region Alerts
+
+        [DataMember]
+        public string AlertUserJoinLeaveColor { get; set; }
+        [DataMember]
+        public string AlertFollowColor { get; set; }
+        [DataMember]
+        public string AlertHostColor { get; set; }
+        [DataMember]
+        public string AlertRaidColor { get; set; }
+        [DataMember]
+        public string AlertSubColor { get; set; }
+        [DataMember]
+        public string AlertGiftedSubColor { get; set; }
+        [DataMember]
+        public string AlertMassGiftedSubColor { get; set; }
+        [DataMember]
+        public string AlertBitsCheeredColor { get; set; }
+        [DataMember]
+        public string AlertChannelPointsColor { get; set; }
+        [DataMember]
+        public string AlertModerationColor { get; set; }
+
+        #endregion Alerts
 
         #region Notifications
+
+        [DataMember]
+        public string NotificationsAudioOutput { get; set; }
 
         [DataMember]
         public string NotificationChatMessageSoundFilePath { get; set; }
@@ -411,8 +461,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool ReRunWizard { get; set; }
-        [DataMember]
-        public bool UnlockAllCommands { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -509,6 +557,19 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         [Obsolete]
         public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+
+        [DataMember]
+        [Obsolete]
+        public bool ChatShowUserJoinLeave { get; set; }
+        [DataMember]
+        [Obsolete]
+        public string ChatUserJoinLeaveColorScheme { get; set; } = null;
+        [DataMember]
+        [Obsolete]
+        public bool ChatShowEventAlerts { get; set; }
+        [DataMember]
+        [Obsolete]
+        public string ChatEventAlertsColorScheme { get; set; } = null;
 
         #endregion Obsolete
 
@@ -910,13 +971,13 @@ namespace MixItUp.Base.Model.Settings
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
 
-            if (this.RedemptionStoreManualRedeemNeededCommandID == Guid.Empty)
+            if (this.GetCustomCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
                 CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
                 this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
                 this.SetCustomCommand(command);
             }
-            if (this.RedemptionStoreDefaultRedemptionCommandID == Guid.Empty)
+            if (this.GetCustomCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
                 CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
                 this.RedemptionStoreDefaultRedemptionCommandID = command.ID;

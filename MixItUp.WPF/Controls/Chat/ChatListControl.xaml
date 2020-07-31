@@ -35,7 +35,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <ListView x:Name="ChatList" ItemsSource="{Binding Messages}" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
+            <ListView x:Name="ChatList" ItemsSource="{Binding Messages}" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" AlternationCount="{Binding AlternationCount}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
                 <ListView.Resources>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
@@ -44,6 +44,12 @@
 
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="{StaticResource MaterialDesignTextFieldBoxHoverBackground}" />
+                            </Trigger>
+                        </Style.Triggers>
+
                         <Setter Property="Padding" Value="0"/>
                     </Style>
                 </ListView.ItemContainerStyle>

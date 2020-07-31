@@ -33,24 +33,28 @@
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OverlayEndpoints}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
-            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
-                <ItemsControl x:Name="OverlayEndpointsItemsControl" HorizontalAlignment="Center">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
+                <ItemsControl ItemsSource="{Binding Endpoints}" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="15" />
-                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Column="2"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
+                                <TextBlock Grid.Column="2" VerticalAlignment="Center"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
 
-                                <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
+                                <Button Grid.Column="4" x:Name="CopyEndpointURLButton" Content="{MaterialDesign:PackIcon ContentCopy}" Click="CopyEndpointURLButton_Click" ToolTip="{x:Static resx:Resources.Copy}" />
+
+                                <Button Grid.Column="6" Command="{Binding DeleteCommand}" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -64,9 +68,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="OverlayNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+                <TextBox Grid.Column="0" Text="{Binding NewEndpointName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-                <Button x:Name="AddOverlayButton" Grid.Column="2" Click="AddOverlayButton_Click" Content="{x:Static resx:Resources.Add}"/>
+                <Button Grid.Column="2" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
             </Grid>
         </Grid>
 

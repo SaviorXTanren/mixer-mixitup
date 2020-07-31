@@ -82,15 +82,6 @@ namespace MixItUp.WPF.Controls.Actions
             return null;
         }
 
-        private void SaveToFileToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.ResetOnLoadToggleButton.IsEnabled = this.SaveToFileToggleButton.IsChecked.GetValueOrDefault();
-            if (!this.ResetOnLoadToggleButton.IsEnabled)
-            {
-                this.ResetOnLoadToggleButton.IsChecked = true;
-            }
-        }
-
         private void CounterActionTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.CounterActionTypeComboBox.SelectedIndex == 0)

@@ -154,8 +154,6 @@ namespace MixItUp.Base.Services
 
         public string ShouldTextBeExcessiveModerated(UserViewModel user, string text)
         {
-            text = PrepareTextForChecking(text);
-
             if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationChatTextExcempt))
             {
                 if (ChannelSession.Settings.ModerationCapsBlockCount > 0)
@@ -171,6 +169,9 @@ namespace MixItUp.Base.Services
                         return "Too Many Caps";
                     }
                 }
+
+                // Perform text preparing after checking for caps
+                text = PrepareTextForChecking(text);
 
                 if (ChannelSession.Settings.ModerationPunctuationBlockCount > 0)
                 {

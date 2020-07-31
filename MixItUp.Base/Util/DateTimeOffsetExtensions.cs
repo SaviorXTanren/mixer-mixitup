@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace MixItUp.Base.Util
 {
@@ -115,17 +116,26 @@ namespace MixItUp.Base.Util
 
         public static int TotalMonthsFromNow(this DateTimeOffset dt)
         {
-            DateTime currentDateTime = DateTimeOffset.Now.Date;
-            DateTime tempDateTime = dt.Date;
-
-            int subMonths = 0;
-            while (tempDateTime <= currentDateTime)
+            if (dt == DateTimeOffset.MinValue)
             {
-                tempDateTime = tempDateTime.AddMonths(1);
-                subMonths++;
+                return 0;
             }
 
-            subMonths = Math.Max(subMonths - 1, 0);
+            int subMonths = 1;
+            DateTime currentDateTime = DateTimeOffset.Now.Date;
+            DateTime startDateTime = dt.Date;
+            DateTime tempDateTime = dt.Date;
+
+            do
+            {
+                subMonths++;
+                tempDateTime = tempDateTime.AddMonths(1);
+                if (tempDateTime.Day < startDateTime.Day)
+                {
+                    int correctDay = Math.Min(CultureInfo.InvariantCulture.Calendar.GetDaysInMonth(tempDateTime.Year, tempDateTime.Month), startDateTime.Day);
+                    tempDateTime = tempDateTime.AddDays(correctDay - tempDateTime.Day);
+                }
+            } while (tempDateTime <= currentDateTime);
 
             return subMonths;
         }

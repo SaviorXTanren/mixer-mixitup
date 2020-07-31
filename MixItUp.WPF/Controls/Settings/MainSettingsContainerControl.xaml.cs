@@ -32,8 +32,10 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.General, new GeneralSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.ThemesAndColors, new ThemeSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Chat, new ChatSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Commands, new CommandsSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Alerts, new AlertsSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));

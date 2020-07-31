@@ -9,7 +9,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
@@ -50,7 +49,7 @@ namespace MixItUp.Base.Services.Twitch
         IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
         IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
         IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
-        IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
+        IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
         event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
@@ -99,7 +98,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
-        private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
+        private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
@@ -113,8 +112,8 @@ namespace MixItUp.Base.Services.Twitch
         public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
         private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
 
-        public IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
-        private Dictionary<string, TwitchBitsCheermoteViewModel> bitsCheermotes = new Dictionary<string, TwitchBitsCheermoteViewModel>();
+        public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
+        private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -352,18 +351,10 @@ namespace MixItUp.Base.Services.Twitch
             List<TwitchBitsCheermoteViewModel> cheermotes = new List<TwitchBitsCheermoteViewModel>();
             foreach (BitsCheermoteModel bitsCheermote in cheermotesTask.Result)
             {
-                foreach (BitsCheermoteTierModel bitsCheermoteTier in bitsCheermote.tiers)
+                if (bitsCheermote.tiers.Any(t => t.can_cheer))
                 {
-                    if (bitsCheermoteTier.can_cheer)
-                    {
-                        cheermotes.Add(new TwitchBitsCheermoteViewModel(bitsCheermote, bitsCheermoteTier));
-                    }
+                    this.bitsCheermotes.Add(new TwitchBitsCheermoteViewModel(bitsCheermote));
                 }
-            }
-
-            foreach (TwitchBitsCheermoteViewModel cheermote in cheermotes.OrderByDescending(c => c.ID))
-            {
-                this.bitsCheermotes[cheermote.ID] = cheermote;
             }
 
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
@@ -569,14 +560,6 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task AddAlertChatMessage(UserViewModel user, string message)
-        {
-            if (ChannelSession.Settings.ChatShowEventAlerts)
-            {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
-            }
-        }
-
         private async Task DownloadBetterTTVEmotes(string channelName = null)
         {
             try
@@ -716,32 +699,22 @@ namespace MixItUp.Base.Services.Twitch
                         trigger.SpecialIdentifiers["raidviewercount"] = userNotice.RaidViewerCount.ToString();
                         await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                        await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount));
+                        await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} raided with {1} viewers", user.Username, userNotice.RaidViewerCount), ChannelSession.Settings.AlertRaidColor));
                     }
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
-                    bool isAnonymous = string.Equals(userNotice.Login, AnonymousGiftedUserNoticeLogin, StringComparison.InvariantCultureIgnoreCase);
-
-                    UserViewModel user = new UserViewModel("An Anonymous Gifter");
-                    if (!isAnonymous)
+                    if (ChannelSession.Services.Events.TwitchEventService != null)
                     {
-                        user = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
-                        if (user == null)
-                        {
-                            user = new UserViewModel(userNotice);
-                        }
-                        user.SetTwitchChatDetails(userNotice);
+                        await ChannelSession.Services.Events.TwitchEventService.AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
                     }
-
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelMassSubscriptionsGifted, user);
-                    trigger.SpecialIdentifiers["subsgiftedamount"] = userNotice.SubTotalGifted.ToString();
-                    trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = userNotice.SubTotalGiftedLifetime.ToString();
-                    trigger.SpecialIdentifiers["usersubplan"] = TwitchEventService.GetSubTierNameFromText(userNotice.SubPlan);
-                    trigger.SpecialIdentifiers["isanonymous"] = isAnonymous.ToString();
-                    await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                    await this.AddAlertChatMessage(user, string.Format("{0} Gifted {1} Subs", user.Username, userNotice.SubTotalGifted));
+                }
+                else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
+                {
+                    if (ChannelSession.Services.Events.TwitchEventService != null)
+                    {
+                        await ChannelSession.Services.Events.TwitchEventService.AddSub(new TwitchSubEventModel(userNotice));
+                    }
                 }
             }
             catch (Exception ex)
@@ -762,7 +735,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (chatClear.IsClear)
             {
-                await this.AddAlertChatMessage(user, "Chat Cleared");
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, "Chat Cleared", ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsTimeout)
             {
@@ -771,7 +744,7 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Timed Out for {1} seconds", user.Username, chatClear.BanDuration));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Timed Out for {1} seconds", user.Username, chatClear.BanDuration), ChannelSession.Settings.AlertModerationColor));
             }
             else if (chatClear.IsBan)
             {
@@ -779,7 +752,9 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.Arguments.Add("@" + user.Username);
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                await this.AddAlertChatMessage(user, string.Format("{0} Banned", user.Username));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.Username), ChannelSession.Settings.AlertModerationColor));
+
+                await ChannelSession.Services.User.RemoveUserByTwitchLogin(user.Data.TwitchUsername);
             }
         }
 
@@ -791,6 +766,8 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
                     {
+                        Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(message));
+
                         string hoster = message.Message.Substring(0, message.Message.IndexOf(' '));
                         UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster, StreamingPlatformTypeEnum.Twitch);
                         if (user == null)
@@ -816,7 +793,7 @@ namespace MixItUp.Base.Services.Twitch
 
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                                await this.AddAlertChatMessage(user, string.Format("{0} hosted the channel", user.Username));
+                                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} hosted the channel", user.Username), ChannelSession.Settings.AlertHostColor));
                             }
                         }
                     }

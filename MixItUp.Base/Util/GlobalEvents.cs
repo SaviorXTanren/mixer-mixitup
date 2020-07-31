@@ -8,6 +8,15 @@ namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler OnRestartRequested;
+        public static void RestartRequested()
+        {
+            if (GlobalEvents.OnRestartRequested != null)
+            {
+                GlobalEvents.OnRestartRequested(null, new EventArgs());
+            }
+        }
+
         public static event EventHandler<bool> OnMainMenuStateChanged;
         public static void MainMenuStateChained(bool state)
         {
@@ -44,12 +53,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler OnChatFontSizeChanged;
-        public static void ChatFontSizeChanged()
+        public static event EventHandler OnChatVisualSettingsChanged;
+        public static void ChatVisualSettingsChanged()
         {
-            if (GlobalEvents.OnChatFontSizeChanged != null)
+            if (GlobalEvents.OnChatVisualSettingsChanged != null)
             {
-                GlobalEvents.OnChatFontSizeChanged(null, new EventArgs());
+                GlobalEvents.OnChatVisualSettingsChanged(null, new EventArgs());
             }
         }
 
@@ -68,15 +77,6 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnChatMessageDeleted != null)
             {
                 GlobalEvents.OnChatMessageDeleted(null, messageID);
-            }
-        }
-
-        public static event EventHandler<AlertChatMessageViewModel> OnAlertMessageReceived;
-        public static void AlertMessageReceived(AlertChatMessageViewModel alertMessage)
-        {
-            if (GlobalEvents.OnAlertMessageReceived != null)
-            {
-                GlobalEvents.OnAlertMessageReceived(null, alertMessage);
             }
         }
 

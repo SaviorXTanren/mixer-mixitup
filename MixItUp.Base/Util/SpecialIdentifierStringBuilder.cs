@@ -774,6 +774,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "accountage", user.AccountAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subtier", user.SubscribeTierString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isfollower", user.IsFollower.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());
@@ -884,15 +885,14 @@ namespace MixItUp.Base.Util
 
         private async Task HandleLatestSpecialIdentifier(string userkey, string extrakey = null)
         {
-            if (!string.IsNullOrEmpty(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey] != null)
+            if (this.ContainsSpecialIdentifier(extrakey) && !string.IsNullOrEmpty(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey] != null)
             {
                 this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
             }
 
-            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is Guid)
+            if (this.ContainsSpecialIdentifier(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null)
             {
-                Guid userID = (Guid)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
-                if (ChannelSession.Settings.UserData.ContainsKey(userID))
+                if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
                 {
                     await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Settings.UserData[userID]), userkey);
                 }

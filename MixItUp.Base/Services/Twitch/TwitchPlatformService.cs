@@ -4,6 +4,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base;
@@ -134,11 +135,14 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!string.IsNullOrEmpty(dateTime))
             {
-                if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase) && DateTimeOffset.TryParse(dateTime, out DateTimeOffset startUTC))
+                if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return startUTC.ToLocalTime();
+                    if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
+                    {
+                        return startUTC.ToLocalTime();
+                    }
                 }
-                else if (DateTime.TryParse(dateTime, out DateTime start))
+                else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal, out DateTime start))
                 {
                     return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
                 }

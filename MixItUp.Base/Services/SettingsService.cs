@@ -288,7 +288,7 @@ namespace MixItUp.Base.Services
 
         public async Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings)
         {
-            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None && !string.IsNullOrEmpty(settings.SettingsBackupLocation))
+            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
             {
                 Logger.Log(LogLevel.Debug, "Checking whether to perform automatic backup");
 
@@ -300,7 +300,27 @@ namespace MixItUp.Base.Services
 
                 if (newResetDate < DateTimeOffset.Now)
                 {
-                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
+                    string backupPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, SettingsV2Model.DefaultAutomaticBackupSettingsDirectoryName);
+                    if (!string.IsNullOrEmpty(settings.SettingsBackupLocation))
+                    {
+                        backupPath = settings.SettingsBackupLocation;
+                    }
+
+                    if (!Directory.Exists(backupPath))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(backupPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
+                            Logger.Log(ex);
+                            return;
+                        }
+                    }
+
+                    string filePath = Path.Combine(backupPath, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
 
                     await this.SavePackagedBackup(settings, filePath);
 
@@ -345,6 +365,10 @@ namespace MixItUp.Base.Services
                 {
                     await SettingsV2Upgrader.Version43Upgrade(filePath);
                 }
+                if (currentVersion < 44)
+                {
+                    await SettingsV2Upgrader.Version44Upgrade(filePath);
+                }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV2Model.LatestVersion;
@@ -360,6 +384,34 @@ namespace MixItUp.Base.Services
             }
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
+        }
+
+        public static async Task Version44Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            await settings.Initialize();
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (settings.ChatShowUserJoinLeave)
+            {
+                settings.AlertUserJoinLeaveColor = settings.ChatUserJoinLeaveColorScheme;
+            }
+
+            if (settings.ChatShowEventAlerts)
+            {
+                settings.AlertBitsCheeredColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertChannelPointsColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertFollowColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertGiftedSubColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertHostColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertMassGiftedSubColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertModerationColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertRaidColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertSubColor = settings.ChatEventAlertsColorScheme;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            await ChannelSession.Services.Settings.Save(settings);
         }
 
         public static async Task Version43Upgrade(string filePath)

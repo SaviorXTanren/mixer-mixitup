@@ -9,5 +9,9 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
 
-    <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal" />
+    <StackPanel>
+        <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal" />
+
+        <Separator x:Name="Separator" Margin="0,10,0,0" Visibility="Collapsed" />
+    </StackPanel>
 </UserControl>

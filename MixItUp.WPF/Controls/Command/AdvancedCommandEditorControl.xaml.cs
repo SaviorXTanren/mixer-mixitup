@@ -79,9 +79,12 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (!hasLoaded)
             {
-                var actionTypes = System.Enum.GetValues(typeof(ActionTypeEnum))
-                    .Cast<ActionTypeEnum>()
-                    .Where(v => !EnumHelper.IsObsolete(v) && v != ActionTypeEnum.Custom);
+                List<ActionTypeEnum> actionTypes = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
+                actionTypes.Remove(ActionTypeEnum.Custom);
+                foreach (ActionTypeEnum hiddenActions in ChannelSession.Settings.ActionsToHide)
+                {
+                    actionTypes.Remove(hiddenActions);
+                }
 
                 this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => EnumLocalizationHelper.GetLocalizedName(at));
                 this.ActionsItemsControl.ItemsSource = this.actionControls;

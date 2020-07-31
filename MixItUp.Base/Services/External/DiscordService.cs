@@ -647,11 +647,11 @@ namespace MixItUp.Base.Services.External
         /// </summary>
         public const string ClientBotPermissions = "14081024";
 
-        private const string BaseAddress = "https://discordapp.com/api/";
+        private const string BaseAddress = "https://discord.com/api/";
 
         private const string DefaultClientID = "422657136510631936";
 
-        private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions={1}&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
+        private const string AuthorizationUrl = "https://discord.com/api/oauth2/authorize?client_id={0}&permissions={1}&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 

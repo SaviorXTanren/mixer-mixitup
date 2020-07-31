@@ -182,7 +182,7 @@
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
     <Reference Include="StreamingClient.Base, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.18\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.21\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -331,8 +331,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Twitch.Base, Version=1.0.0.18, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.18\lib\netstandard2.0\Twitch.Base.dll</HintPath>
+    <Reference Include="Twitch.Base, Version=1.0.0.21, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Twitch.1.0.0.21\lib\netstandard2.0\Twitch.Base.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
@@ -888,14 +888,29 @@
     <Compile Include="Controls\Settings\AdvancedSettingsControl.xaml.cs">
       <DependentUpon>AdvancedSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\AlertsSettingsControl.xaml.cs">
+      <DependentUpon>AlertsSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\ChatSettingsControl.xaml.cs">
       <DependentUpon>ChatSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\ColorSchemeComboBox.xaml.cs">
-      <DependentUpon>ColorSchemeComboBox.xaml</DependentUpon>
+    <Compile Include="Controls\Settings\CommandsSettingsControl.xaml.cs">
+      <DependentUpon>CommandsSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericButtonSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericColorComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericComboBoxSettingsOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericNumberSettingsOptionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
       <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
@@ -918,6 +933,9 @@
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml.cs">
+      <DependentUpon>GenericToggleSettingsOptionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\UsersSettingsControl.xaml.cs">
       <DependentUpon>UsersSettingsControl.xaml</DependentUpon>
@@ -1722,15 +1740,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\AlertsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\ChatSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\ColorSchemeComboBox.xaml">
+    <Page Include="Controls\Settings\CommandsSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericButtonSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericColorComboBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericComboBoxSettingsOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericNumberSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1759,6 +1797,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\Generic\GenericToggleSettingsOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2025,9 +2067,6 @@
       <Project>{c8668815-f21e-49c0-8f1a-58bc698153af}</Project>
       <Name>obs-websocket-dotnet</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="AutoUpdater.xml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Images\Discord.png" />

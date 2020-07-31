@@ -29,9 +29,24 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 this.selectedRole = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsSubscriberRole");
             }
         }
         private UserRoleEnum selectedRole = UserRoleEnum.User;
+
+        public bool IsSubscriberRole { get { return this.SelectedRole == UserRoleEnum.Subscriber; } }
+
+        public IEnumerable<int> SubscriberTiers { get { return new List<int>() { 1, 2, 3 }; } }
+        public int SubscriberTier
+        {
+            get { return this.subscriberTier; }
+            set
+            {
+                this.subscriberTier = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int subscriberTier = 1;
 
         public bool IsPatreonConnected { get { return ChannelSession.Services.Patreon.IsConnected; } }
 
@@ -65,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         public RoleRequirementViewModel(RoleRequirementModel requirement)
         {
             this.SelectedRole = requirement.Role;
-
+            this.SubscriberTier = requirement.SubscriberTier;
             if (this.IsPatreonConnected && !string.IsNullOrEmpty(requirement.PatreonBenefitID))
             {
                 this.SelectedPatreonBenefit = this.PatreonBenefits.FirstOrDefault(b => b.ID.Equals(requirement.PatreonBenefitID));
@@ -78,7 +93,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new RoleRequirementModel(this.SelectedRole, this.selectedPatreonBenefit?.ID);
+            return new RoleRequirementModel(this.SelectedRole, this.SubscriberTier, this.selectedPatreonBenefit?.ID);
         }
     }
 }

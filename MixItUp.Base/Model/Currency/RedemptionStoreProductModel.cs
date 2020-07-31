@@ -290,10 +290,13 @@ namespace MixItUp.Base.Model.Currency
                     command = ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
                 }
 
-                Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+                if (command != null)
+                {
+                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                    extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                await command.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    await command.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
 
                 if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
                 {

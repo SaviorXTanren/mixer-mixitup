@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(FrankerFaceZEmoteModel emote) : this() { this.DataContext = emote; }
 
-        public ChatImageControl(TwitchBitsCheermoteViewModel cheermote) : this() { this.DataContext = cheermote; }
+        public ChatImageControl(TwitchBitsCheerViewModel bitsCheer) : this() { this.DataContext = bitsCheer; }
 
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -82,11 +82,13 @@ namespace MixItUp.WPF.Controls.Chat
                         this.Image.Source = await this.DownloadImageUrl(emote.url);
                         this.Image.ToolTip = this.AltText.Text = emote.name;
                     }
-                    else if (this.DataContext is TwitchBitsCheermoteViewModel)
+                    else if (this.DataContext is TwitchBitsCheerViewModel)
                     {
-                        TwitchBitsCheermoteViewModel cheermote = (TwitchBitsCheermoteViewModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl((ChannelSession.AppSettings.IsDarkBackground) ? cheermote.DarkImage : cheermote.LightImage);
-                        this.Image.ToolTip = this.AltText.Text = cheermote.ID;
+                        TwitchBitsCheerViewModel bitsCheer = (TwitchBitsCheerViewModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl((ChannelSession.AppSettings.IsDarkBackground) ? bitsCheer.Tier.DarkImage : bitsCheer.Tier.LightImage);
+                        this.Image.ToolTip = this.AltText.Text = bitsCheer.Text;
+                        this.Text.Visibility = Visibility.Visible;
+                        this.Text.Text = bitsCheer.Amount.ToString();
                     }
                     else if (this.DataContext is string)
                     {

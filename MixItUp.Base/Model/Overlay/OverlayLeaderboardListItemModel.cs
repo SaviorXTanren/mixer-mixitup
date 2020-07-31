@@ -342,9 +342,14 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.NewLeaderCommand != null)
                 {
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
-                    if (this.lastItems.Count() > 0 && updatedList.Count() > 0 && !this.lastItems.First().User.ID.Equals(updatedList.First().User.ID))
+                    if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
                     {
-                        await this.NewLeaderCommand.Perform(updatedList.First().User, arguments: new string[] { this.lastItems.First().User.Username });
+                        UserViewModel previous = this.lastItems.First().GetUser();
+                        UserViewModel current = updatedList.First().GetUser();
+                        if (previous != null && current != null && !previous.ID.Equals(current.ID))
+                        {
+                            await this.NewLeaderCommand.Perform(current, arguments: new string[] { previous.Username });
+                        }
                     }
                 }
 

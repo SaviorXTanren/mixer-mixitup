@@ -56,6 +56,10 @@ namespace MixItUp.Base.Services
         void RebuildCommandTriggers();
 
         Task AddMessage(ChatMessageViewModel message);
+        Task RemoveMessage(string messageID);
+        Task RemoveMessage(ChatMessageViewModel message);
+
+        Task WriteToChatEventLog(ChatMessageViewModel message);
     }
 
     public class ChatService : IChatService
@@ -186,10 +190,16 @@ namespace MixItUp.Base.Services
                 {
                     await this.TwitchChatService.DeleteMessage(message);
                 }
-                if (!message.IsDeleted)
-                {
-                    await message.Delete();
-                }
+            }
+
+            if (!message.IsDeleted)
+            {
+                await message.Delete();
+            }
+
+            if (ChannelSession.Settings.HideDeletedMessages)
+            {
+                await this.RemoveMessage(message);
             }
         }
 
@@ -315,18 +325,27 @@ namespace MixItUp.Base.Services
             }
 
             // Add message to chat list
+            bool showMessage = true;
+            if (ChannelSession.Settings.HideBotMessages && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+            {
+                showMessage = false;
+            }
+
             if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
             {
                 await DispatcherHelper.InvokeDispatcher(() =>
                 {
                     this.messagesLookup[message.ID] = message;
-                    if (ChannelSession.Settings.LatestChatAtTop)
+                    if (showMessage)
                     {
-                        this.Messages.Insert(0, message);
-                    }
-                    else
-                    {
-                        this.Messages.Add(message);
+                        if (ChannelSession.Settings.LatestChatAtTop)
+                        {
+                            this.Messages.Insert(0, message);
+                        }
+                        else
+                        {
+                            this.Messages.Add(message);
+                        }
                     }
 
                     if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
@@ -342,17 +361,13 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is AlertChatMessageViewModel)
-            {
-                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
-            }
-            else if (message is UserChatMessageViewModel)
+            if (message is UserChatMessageViewModel)
             {
                 if (message.IsWhisper && !message.IsStreamerOrBot)
                 {
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                     {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
+                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                     }
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
@@ -379,11 +394,11 @@ namespace MixItUp.Base.Services
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
                     {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
+                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                     }
                     else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
                     {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
+                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                     }
 
                     if (!this.userEntranceCommands.Contains(message.User.ID))
@@ -439,11 +454,6 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
-                    {
-                        return;
-                    }
-
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
                     List<PermissionsCommandBase> commands = this.chatCommands.ToList();
@@ -496,8 +506,37 @@ namespace MixItUp.Base.Services
                 }
 
                 GlobalEvents.ChatMessageReceived(message);
+
+                await this.WriteToChatEventLog(message);
             }
 
+            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
+            if (message.ProcessingTime > 500)
+            {
+                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+            }
+        }
+
+        public async Task RemoveMessage(string messageID)
+        {
+            if (!string.IsNullOrEmpty(messageID) && this.messagesLookup.ContainsKey(messageID))
+            {
+                await this.RemoveMessage(this.messagesLookup[messageID]);
+            }
+        }
+
+        public async Task RemoveMessage(ChatMessageViewModel message)
+        {
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.messagesLookup.Remove(message.ID);
+                this.Messages.Remove(message);
+                return Task.FromResult(0);
+            });
+        }
+
+        public async Task WriteToChatEventLog(ChatMessageViewModel message)
+        {
             if (ChannelSession.Settings.SaveChatEventLogs)
             {
                 try
@@ -505,12 +544,6 @@ namespace MixItUp.Base.Services
                     await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
                 }
                 catch (Exception) { }
-            }
-
-            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
-            if (message.ProcessingTime > 500)
-            {
-                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
             }
         }
 
@@ -526,16 +559,16 @@ namespace MixItUp.Base.Services
                     this.displayUsers[user.SortableID] = user;
                 }
 
-                if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
+                if (users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await this.AddMessage(alert);
+                await ChannelSession.Services.Alerts.AddAlert(alert);
             }
         }
 
@@ -565,9 +598,9 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
+                    if (users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }
             }
@@ -575,7 +608,7 @@ namespace MixItUp.Base.Services
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await this.AddMessage(alert);
+                await ChannelSession.Services.Alerts.AddAlert(alert);
             }
         }
 

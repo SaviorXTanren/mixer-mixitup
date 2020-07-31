@@ -30,6 +30,8 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
+            GlobalEvents.OnRestartRequested += GlobalEvents_OnRestartRequested;
+
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
 
@@ -91,12 +93,6 @@ namespace MixItUp.WPF
         {
             this.restartApplication = true;
             this.Close();
-        }
-
-        public void ReRunWizard()
-        {
-            ChannelSession.Settings.ReRunWizard = true;
-            this.Restart();
         }
 
         protected override async Task OnLoaded()
@@ -227,5 +223,7 @@ namespace MixItUp.WPF
                 e.Cancel = true;
             }
         }
+
+        private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
     }
 }

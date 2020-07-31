@@ -18,6 +18,10 @@ namespace MixItUp.WPF.Util
             {
                 key = value as string;
             }
+            else
+            {
+                key = value.ToString();
+            }
 
             if (!string.IsNullOrEmpty(key))
             {

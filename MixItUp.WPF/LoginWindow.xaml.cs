@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF
 {
@@ -213,6 +214,12 @@ namespace MixItUp.WPF
             window.Show();
             window.Focus();
             return task.Task;
+        }
+
+        public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }

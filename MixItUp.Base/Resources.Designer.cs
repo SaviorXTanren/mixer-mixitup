@@ -19,7 +19,7 @@ namespace MixItUp.Base {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -475,6 +475,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Separators Between Messages.
+        /// </summary>
+        public static string AddSeparatorsBetweenMessages {
+            get {
+                return ResourceManager.GetString("AddSeparatorsBetweenMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Stream Pass.
         /// </summary>
         public static string AddStreamPass {
@@ -826,11 +835,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automated Settings Backup.
+        ///   Looks up a localized string similar to The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in Mixer user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs..
         /// </summary>
-        public static string AutomatedSettingsBackup {
+        public static string AutoLogInCurrentAccountTooltip {
             get {
-                return ResourceManager.GetString("AutomatedSettingsBackup", resourceCulture);
+                return ResourceManager.GetString("AutoLogInCurrentAccountTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automated Settings Backup Location.
+        /// </summary>
+        public static string AutomatedSettingsBackupLocation {
+            get {
+                return ResourceManager.GetString("AutomatedSettingsBackupLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automated Settings Backup Rate.
+        /// </summary>
+        public static string AutomatedSettingsBackupRate {
+            get {
+                return ResourceManager.GetString("AutomatedSettingsBackupRate", resourceCulture);
             }
         }
         
@@ -898,11 +925,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Backup your settings to a zip file.
+        ///   Looks up a localized string similar to Backup your current settings.
         /// </summary>
-        public static string BackupYourSettingsToAZipFile {
+        public static string BackupYourCurrentSettings {
             get {
-                return ResourceManager.GetString("BackupYourSettingsToAZipFile", resourceCulture);
+                return ResourceManager.GetString("BackupYourCurrentSettings", resourceCulture);
             }
         }
         
@@ -1398,6 +1425,15 @@ namespace MixItUp.Base {
         public static string ClearAllUserDataHeader {
             get {
                 return ResourceManager.GetString("ClearAllUserDataHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will clear all data for your Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?.
+        /// </summary>
+        public static string ClearAllUserDataWarning {
+            get {
+                return ResourceManager.GetString("ClearAllUserDataWarning", resourceCulture);
             }
         }
         
@@ -2176,20 +2212,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete All Chat Commands When They Are Run.
+        ///   Looks up a localized string similar to Delete Chat Commands When Run.
         /// </summary>
-        public static string DeleteAllChatCommandsWhenTheyAreRun {
+        public static string DeleteChatCommandsWhenRun {
             get {
-                return ResourceManager.GetString("DeleteAllChatCommandsWhenTheyAreRun", resourceCulture);
+                return ResourceManager.GetString("DeleteChatCommandsWhenRun", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete Chat Command When Run.
+        ///   Looks up a localized string similar to Delete Chat Message When Run.
         /// </summary>
-        public static string DeleteChatWhenRun {
+        public static string DeleteChatMessageWhenRun {
             get {
-                return ResourceManager.GetString("DeleteChatWhenRun", resourceCulture);
+                return ResourceManager.GetString("DeleteChatMessageWhenRun", resourceCulture);
             }
         }
         
@@ -2244,6 +2280,24 @@ namespace MixItUp.Base {
         public static string Details {
             get {
                 return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging.
+        /// </summary>
+        public static string DiagnosticLogging {
+            get {
+                return ResourceManager.GetString("DiagnosticLogging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic Logging helps to diagnose specific issues by logging out additional information of what is being done while Mix It Up is running. These logs will typically be huge in comparision to regular logs, so this should only be done when specifically advised by a Mix It Up developer and should be disabled immediately after the problem is solved..
+        /// </summary>
+        public static string DiagnosticLoggingToolip {
+            get {
+                return ResourceManager.GetString("DiagnosticLoggingToolip", resourceCulture);
             }
         }
         
@@ -2374,11 +2428,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t Delete Chat Command When Run.
+        ///   Looks up a localized string similar to Don&apos;t Delete Chat Message When Run.
         /// </summary>
-        public static string DontDeleteChatWhenRun {
+        public static string DontDeleteChatMessageWhenRun {
             get {
-                return ResourceManager.GetString("DontDeleteChatWhenRun", resourceCulture);
+                return ResourceManager.GetString("DontDeleteChatMessageWhenRun", resourceCulture);
             }
         }
         
@@ -3130,7 +3184,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FontSize.
+        ///   Looks up a localized string similar to Font Size.
         /// </summary>
         public static string FontSize {
             get {
@@ -3400,6 +3454,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide Actions from Command Editor.
+        /// </summary>
+        public static string HideActionsFromCommandEditor {
+            get {
+                return ResourceManager.GetString("HideActionsFromCommandEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Bot Messages.
+        /// </summary>
+        public static string HideBotMessages {
+            get {
+                return ResourceManager.GetString("HideBotMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Chat User List.
         /// </summary>
         public static string HideChatUserList {
@@ -3414,6 +3486,42 @@ namespace MixItUp.Base {
         public static string HideDeletedMessages {
             get {
                 return ResourceManager.GetString("HideDeletedMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Avatar.
+        /// </summary>
+        public static string HideUserAvatar {
+            get {
+                return ResourceManager.GetString("HideUserAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Role Badge.
+        /// </summary>
+        public static string HideUserRoleBadge {
+            get {
+                return ResourceManager.GetString("HideUserRoleBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Specialty Badge.
+        /// </summary>
+        public static string HideUserSpecialtyBadge {
+            get {
+                return ResourceManager.GetString("HideUserSpecialtyBadge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide User Subscriber Badge.
+        /// </summary>
+        public static string HideUserSubscriberBadge {
+            get {
+                return ResourceManager.GetString("HideUserSubscriberBadge", resourceCulture);
             }
         }
         
@@ -4993,11 +5101,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notifications Audio Output.
+        /// </summary>
+        public static string NotificationsAudioOutput {
+            get {
+                return ResourceManager.GetString("NotificationsAudioOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Replaced.
         /// </summary>
         public static string NotReplaced {
             get {
                 return ResourceManager.GetString("NotReplaced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Subscribed.
+        /// </summary>
+        public static string NotSubscribed {
+            get {
+                return ResourceManager.GetString("NotSubscribed", resourceCulture);
             }
         }
         
@@ -5146,11 +5272,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Opt-Out of Data Tracking*.
+        ///   Looks up a localized string similar to Opt-Out of Data Tracking.
         /// </summary>
         public static string OptOutofDataTracking {
             get {
                 return ResourceManager.GetString("OptOutofDataTracking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This option allows you to opt-out of any tracking of your data via our back-end services. We track data around app usage &amp; crashes to help improve your experience. If you select this option, we will stop all tracking of this data. Note that this does not disable any data included with uploading &amp; reviewing Mix It Up store commands..
+        /// </summary>
+        public static string OptOutofDataTrackingTooltip {
+            get {
+                return ResourceManager.GetString("OptOutofDataTrackingTooltip", resourceCulture);
             }
         }
         
@@ -5322,6 +5457,15 @@ namespace MixItUp.Base {
         public static string PartnersOnly {
             get {
                 return ResourceManager.GetString("PartnersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patreon Benefit.
+        /// </summary>
+        public static string PatreonBenefit {
+            get {
+                return ResourceManager.GetString("PatreonBenefit", resourceCulture);
             }
         }
         
@@ -6055,11 +6199,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Re-run the New User Wizard to re-import your data.
+        ///   Looks up a localized string similar to Re-run the New User Wizard.
         /// </summary>
-        public static string ReRunWizardHeader {
+        public static string ReRunNewUserWizard {
             get {
-                return ResourceManager.GetString("ReRunWizardHeader", resourceCulture);
+                return ResourceManager.GetString("ReRunNewUserWizard", resourceCulture);
             }
         }
         
@@ -6118,20 +6262,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restore a Settings Backup.
+        /// </summary>
+        public static string RestoreASettingsBackup {
+            get {
+                return ResourceManager.GetString("RestoreASettingsBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restore Settings.
         /// </summary>
         public static string RestoreSettings {
             get {
                 return ResourceManager.GetString("RestoreSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Restore your settings from a zip file.
-        /// </summary>
-        public static string RestoreYourSettingsFromAZipFile {
-            get {
-                return ResourceManager.GetString("RestoreYourSettingsFromAZipFile", resourceCulture);
             }
         }
         
@@ -6712,6 +6856,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show BetterTTV Emotes (Requires Restart).
+        /// </summary>
+        public static string ShowBetterTTVEmotes {
+            get {
+                return ResourceManager.GetString("ShowBetterTTVEmotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Bits Cheered.
+        /// </summary>
+        public static string ShowBitsCheered {
+            get {
+                return ResourceManager.GetString("ShowBitsCheered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Channel Points.
+        /// </summary>
+        public static string ShowChannelPoints {
+            get {
+                return ResourceManager.GetString("ShowChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Clip Info In Chat.
         /// </summary>
         public static string ShowClipInfoInChat {
@@ -6730,6 +6901,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Follows.
+        /// </summary>
+        public static string ShowFollows {
+            get {
+                return ResourceManager.GetString("ShowFollows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show FrankerFaceZ Emotes (Requires Restart).
+        /// </summary>
+        public static string ShowFrankerFaceZEmotes {
+            get {
+                return ResourceManager.GetString("ShowFrankerFaceZEmotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Gifted Subs.
+        /// </summary>
+        public static string ShowGiftedSubs {
+            get {
+                return ResourceManager.GetString("ShowGiftedSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Hosts.
+        /// </summary>
+        public static string ShowHosts {
+            get {
+                return ResourceManager.GetString("ShowHosts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Info In Chat.
         /// </summary>
         public static string ShowInfoInChat {
@@ -6744,6 +6951,15 @@ namespace MixItUp.Base {
         public static string ShowLatestChatMessagesAtTopInsteadOfBottom {
             get {
                 return ResourceManager.GetString("ShowLatestChatMessagesAtTopInsteadOfBottom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Mass Gifted Subs.
+        /// </summary>
+        public static string ShowMassGiftedSubs {
+            get {
+                return ResourceManager.GetString("ShowMassGiftedSubs", resourceCulture);
             }
         }
         
@@ -6775,11 +6991,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Moderation.
+        /// </summary>
+        public static string ShowModeration {
+            get {
+                return ResourceManager.GetString("ShowModeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show On Chat List Context Menu.
         /// </summary>
         public static string ShowOnChatListContextMenu {
             get {
                 return ResourceManager.GetString("ShowOnChatListContextMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Raids.
+        /// </summary>
+        public static string ShowRaids {
+            get {
+                return ResourceManager.GetString("ShowRaids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Subs.
+        /// </summary>
+        public static string ShowSubs {
+            get {
+                return ResourceManager.GetString("ShowSubs", resourceCulture);
             }
         }
         
@@ -7846,6 +8089,26 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch Mass Gifted Subs Filter Amount.
+        /// </summary>
+        public static string TwitchMassGiftedSubsFilterAmount {
+            get {
+                return ResourceManager.GetString("TwitchMassGiftedSubsFilterAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+        ///
+        ///For example, if this option is enabled and amount is set to 5, the [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string TwitchMassGiftedSubsFilterAmountTooltip {
+            get {
+                return ResourceManager.GetString("TwitchMassGiftedSubsFilterAmountTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitter.
         /// </summary>
         public static string Twitter {
@@ -7936,11 +8199,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unlock all commands types.
+        ///   Looks up a localized string similar to Unlock All Command Types.
         /// </summary>
-        public static string UnlockAllCommandsHeader {
+        public static string UnlockAllCommandTypes {
             get {
-                return ResourceManager.GetString("UnlockAllCommandsHeader", resourceCulture);
+                return ResourceManager.GetString("UnlockAllCommandTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up has build in Command locking functionality which ensures only 1 command type (Chat, Interactive, etc) can run at the same time and ensures that each command finishes in the order it was run in. This option will allow you to disable locking on ALL commands. Be aware that this could cause some unforeseen issues, so please use with caution..
+        /// </summary>
+        public static string UnlockAllCommandTypesTooltip {
+            get {
+                return ResourceManager.GetString("UnlockAllCommandTypesTooltip", resourceCulture);
             }
         }
         
@@ -8008,6 +8280,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Update Preview Program allows you to get early access to new features &amp; improvements before the general public. This is a great way to give early feedback &amp; provide valuable help. Preview Program updates can have bugs &amp; issues associated with them, so users should only sign up for this if they are willing to work around any possible issues that may arise We encourage users to enable automatic backups and perform a manual backup of their settings before enabling this..
+        /// </summary>
+        public static string UpdatePreviewProgramTooltip {
+            get {
+                return ResourceManager.GetString("UpdatePreviewProgramTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Upload.
         /// </summary>
         public static string Upload {
@@ -8053,11 +8334,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use Alternating Background Colors.
+        /// </summary>
+        public static string UseAlternatingBackgroundColors {
+            get {
+                return ResourceManager.GetString("UseAlternatingBackgroundColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Community List (VERY STRICT).
         /// </summary>
         public static string UseCommunityList {
             get {
                 return ResourceManager.GetString("UseCommunityList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Custom Username Colors.
+        /// </summary>
+        public static string UseCustomUsernameColors {
+            get {
+                return ResourceManager.GetString("UseCustomUsernameColors", resourceCulture);
             }
         }
         

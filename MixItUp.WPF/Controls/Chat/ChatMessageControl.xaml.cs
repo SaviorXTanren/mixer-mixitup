@@ -30,10 +30,10 @@ namespace MixItUp.WPF.Controls.Chat
             this.Loaded += ChatMessageControl_Loaded;
             this.DataContextChanged += ChatMessageControl_DataContextChanged;
 
-            GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
+            GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;
         }
 
-        private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
+        private void GlobalEvents_OnChatVisualSettingsChanged(object sender, EventArgs e)
         {
             if (this.Message != null)
             {
@@ -56,6 +56,12 @@ namespace MixItUp.WPF.Controls.Chat
                 this.Message = (ChatMessageViewModel)this.DataContext;
                 this.Message.OnDeleted += Message_OnDeleted;
                 bool italics = false;
+                bool highlighted = false;
+
+                if (ChannelSession.Settings.AddSeparatorsBetweenMessages)
+                {
+                    this.Separator.Visibility = Visibility.Visible;
+                }
 
                 if (this.DataContext is AlertChatMessageViewModel)
                 {
@@ -88,10 +94,18 @@ namespace MixItUp.WPF.Controls.Chat
                     this.MessageWrapPanel.Children.Add(header);
 
                     bool showMessage = true;
+
+                    if (this.DataContext is ChatMessageViewModel)
+                    {
+                        ChatMessageViewModel message = (ChatMessageViewModel)this.DataContext;
+                        highlighted = highlighted || message.IsStreamerTagged;
+                    }
+
                     if (this.DataContext is TwitchChatMessageViewModel)
                     {
                         TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
                         italics = twitchMessage.IsSlashMe;
+                        highlighted = highlighted || twitchMessage.IsHighlightedMessage;
                     }
 
                     if (showMessage)
@@ -101,7 +115,7 @@ namespace MixItUp.WPF.Controls.Chat
                             if (messagePart is string)
                             {
                                 string messagePartString = (string)messagePart;
-                                this.AddStringMessage(messagePartString, isHighlighted: messagePartString.Contains("@" + ChannelSession.TwitchUserNewAPI.login, StringComparison.CurrentCultureIgnoreCase), isItalicized: italics);
+                                this.AddStringMessage(messagePartString, isHighlighted: highlighted, isItalicized: italics);
                             }
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {
@@ -115,9 +129,9 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((FrankerFaceZEmoteModel)messagePart));
                             }
-                            else if (messagePart is TwitchBitsCheermoteViewModel)
+                            else if (messagePart is TwitchBitsCheerViewModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheermoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheerViewModel)messagePart));
                             }
                         }
                     }
@@ -156,20 +170,6 @@ namespace MixItUp.WPF.Controls.Chat
                 this.textBlocks.Add(textBlock);
                 this.MessageWrapPanel.Children.Add(textBlock);
             }
-        }
-
-        private void AddImage(BitmapImage bitmap, int size, string tooltip = "")
-        {
-            Image image = new Image();
-            image.Source = bitmap;
-            image.Width = size;
-            image.Height = size;
-            image.ToolTip = tooltip;
-            image.VerticalAlignment = VerticalAlignment.Center;
-            image.HorizontalAlignment = HorizontalAlignment.Center;
-            image.Margin = new Thickness(5, 0, 5, 0);
-
-            this.MessageWrapPanel.Children.Add(image);
         }
 
         private void Message_OnDeleted(object sender, EventArgs e)

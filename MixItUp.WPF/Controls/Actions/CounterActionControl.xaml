@@ -37,10 +37,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SaveToFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="2" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="{x:Static resx:Resources.SaveToFile}" />
+            <ToggleButton Grid.Column="2" x:Name="SaveToFileToggleButton" ToolTip="{x:Static resx:Resources.SaveToFile}" />
 
             <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.ResetOnLoad}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="6" x:Name="ResetOnLoadToggleButton" ToolTip="{x:Static resx:Resources.ResetOnLoad}" IsChecked="True" IsEnabled="False" />
+            <ToggleButton Grid.Column="6" x:Name="ResetOnLoadToggleButton" ToolTip="{x:Static resx:Resources.ResetOnLoad}" IsChecked="True" />
 
             <TextBlock Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Hyperlink x:Name="CountersFolderHyperlink" Click="CountersFolderHyperlink_Click">

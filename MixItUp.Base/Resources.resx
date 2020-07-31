@@ -345,8 +345,8 @@
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
     <value>Auto Log-In Current Account</value>
   </data>
-  <data name="AutomatedSettingsBackup" xml:space="preserve">
-    <value>Automated Settings Backup</value>
+  <data name="AutomatedSettingsBackupRate" xml:space="preserve">
+    <value>Automated Settings Backup Rate</value>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatic Reset</value>
@@ -363,8 +363,8 @@
   <data name="BackupSettings" xml:space="preserve">
     <value>Backup Settings</value>
   </data>
-  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
-    <value>Backup your settings to a zip file</value>
+  <data name="BackupYourCurrentSettings" xml:space="preserve">
+    <value>Backup your current settings</value>
   </data>
   <data name="Banned" xml:space="preserve">
     <value>Banned</value>
@@ -699,11 +699,8 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
-    <value>Delete All Chat Commands When They Are Run</value>
-  </data>
-  <data name="DeleteChatWhenRun" xml:space="preserve">
-    <value>Delete Chat Command When Run</value>
+  <data name="DeleteChatCommandsWhenRun" xml:space="preserve">
+    <value>Delete Chat Commands When Run</value>
   </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>Delete Command</value>
@@ -752,9 +749,6 @@
   </data>
   <data name="Donators" xml:space="preserve">
     <value>Donators</value>
-  </data>
-  <data name="DontDeleteChatWhenRun" xml:space="preserve">
-    <value>Don't Delete Chat Command When Run</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
@@ -976,7 +970,7 @@
     <value>Follower Only</value>
   </data>
   <data name="FontSize" xml:space="preserve">
-    <value>FontSize</value>
+    <value>Font Size</value>
   </data>
   <data name="Four" xml:space="preserve">
     <value>Four</value>
@@ -1525,7 +1519,7 @@
     <value>Options</value>
   </data>
   <data name="OptOutofDataTracking" xml:space="preserve">
-    <value>Opt-Out of Data Tracking*</value>
+    <value>Opt-Out of Data Tracking</value>
   </data>
   <data name="Orange" xml:space="preserve">
     <value>Orange</value>
@@ -1764,8 +1758,8 @@
   <data name="RequiredUsers" xml:space="preserve">
     <value>Required Users</value>
   </data>
-  <data name="ReRunWizardHeader" xml:space="preserve">
-    <value>Re-run the New User Wizard to re-import your data</value>
+  <data name="ReRunNewUserWizard" xml:space="preserve">
+    <value>Re-run the New User Wizard</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
@@ -1785,8 +1779,8 @@
   <data name="RestoreSettings" xml:space="preserve">
     <value>Restore Settings</value>
   </data>
-  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
-    <value>Restore your settings from a zip file</value>
+  <data name="RestoreASettingsBackup" xml:space="preserve">
+    <value>Restore a Settings Backup</value>
   </data>
   <data name="Resubs" xml:space="preserve">
     <value>Resubs</value>
@@ -2292,8 +2286,8 @@
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
-  <data name="UnlockAllCommandsHeader" xml:space="preserve">
-    <value>Unlock all commands types</value>
+  <data name="UnlockAllCommandTypes" xml:space="preserve">
+    <value>Unlock All Command Types</value>
   </data>
   <data name="UnlockCommand" xml:space="preserve">
     <value>Unlock Command</value>
@@ -3044,5 +3038,112 @@
   </data>
   <data name="FailedToUpdateGame" xml:space="preserve">
     <value>We were unable to update your game because we could not find a game matching that name</value>
+  </data>
+  <data name="NotSubscribed" xml:space="preserve">
+    <value>Not Subscribed</value>
+  </data>
+  <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
+    <value>The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in Mixer user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs.</value>
+  </data>
+  <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
+    <value>This option allows you to opt-out of any tracking of your data via our back-end services. We track data around app usage &amp; crashes to help improve your experience. If you select this option, we will stop all tracking of this data. Note that this does not disable any data included with uploading &amp; reviewing Mix It Up store commands.</value>
+  </data>
+  <data name="UpdatePreviewProgramTooltip" xml:space="preserve">
+    <value>The Update Preview Program allows you to get early access to new features &amp; improvements before the general public. This is a great way to give early feedback &amp; provide valuable help. Preview Program updates can have bugs &amp; issues associated with them, so users should only sign up for this if they are willing to work around any possible issues that may arise We encourage users to enable automatic backups and perform a manual backup of their settings before enabling this.</value>
+  </data>
+  <data name="NotificationsAudioOutput" xml:space="preserve">
+    <value>Notifications Audio Output</value>
+  </data>
+  <data name="DeleteChatMessageWhenRun" xml:space="preserve">
+    <value>Delete Chat Message When Run</value>
+  </data>
+  <data name="DontDeleteChatMessageWhenRun" xml:space="preserve">
+    <value>Don't Delete Chat Message When Run</value>
+  </data>
+  <data name="UnlockAllCommandTypesTooltip" xml:space="preserve">
+    <value>Mix It Up has build in Command locking functionality which ensures only 1 command type (Chat, Interactive, etc) can run at the same time and ensures that each command finishes in the order it was run in. This option will allow you to disable locking on ALL commands. Be aware that this could cause some unforeseen issues, so please use with caution.</value>
+  </data>
+  <data name="ClearAllUserDataWarning" xml:space="preserve">
+    <value>This will clear all data for your Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This CAN NOT be un-done! Are you sure you wish to do this?</value>
+  </data>
+  <data name="ShowBitsCheered" xml:space="preserve">
+    <value>Show Bits Cheered</value>
+  </data>
+  <data name="ShowChannelPoints" xml:space="preserve">
+    <value>Show Channel Points</value>
+  </data>
+  <data name="ShowFollows" xml:space="preserve">
+    <value>Show Follows</value>
+  </data>
+  <data name="ShowGiftedSubs" xml:space="preserve">
+    <value>Show Gifted Subs</value>
+  </data>
+  <data name="ShowHosts" xml:space="preserve">
+    <value>Show Hosts</value>
+  </data>
+  <data name="ShowMassGiftedSubs" xml:space="preserve">
+    <value>Show Mass Gifted Subs</value>
+  </data>
+  <data name="ShowModeration" xml:space="preserve">
+    <value>Show Moderation</value>
+  </data>
+  <data name="ShowRaids" xml:space="preserve">
+    <value>Show Raids</value>
+  </data>
+  <data name="ShowSubs" xml:space="preserve">
+    <value>Show Subs</value>
+  </data>
+  <data name="AutomatedSettingsBackupLocation" xml:space="preserve">
+    <value>Automated Settings Backup Location</value>
+  </data>
+  <data name="DiagnosticLogging" xml:space="preserve">
+    <value>Diagnostic Logging</value>
+  </data>
+  <data name="DiagnosticLoggingToolip" xml:space="preserve">
+    <value>Diagnostic Logging helps to diagnose specific issues by logging out additional information of what is being done while Mix It Up is running. These logs will typically be huge in comparision to regular logs, so this should only be done when specifically advised by a Mix It Up developer and should be disabled immediately after the problem is solved.</value>
+  </data>
+  <data name="ShowBetterTTVEmotes" xml:space="preserve">
+    <value>Show BetterTTV Emotes (Requires Restart)</value>
+  </data>
+  <data name="ShowFrankerFaceZEmotes" xml:space="preserve">
+    <value>Show FrankerFaceZ Emotes (Requires Restart)</value>
+  </data>
+  <data name="HideActionsFromCommandEditor" xml:space="preserve">
+    <value>Hide Actions from Command Editor</value>
+  </data>
+  <data name="HideBotMessages" xml:space="preserve">
+    <value>Hide Bot Messages</value>
+  </data>
+  <data name="PatreonBenefit" xml:space="preserve">
+    <value>Patreon Benefit</value>
+  </data>
+  <data name="UseCustomUsernameColors" xml:space="preserve">
+    <value>Use Custom Username Colors</value>
+  </data>
+  <data name="HideUserAvatar" xml:space="preserve">
+    <value>Hide User Avatar</value>
+  </data>
+  <data name="HideUserRoleBadge" xml:space="preserve">
+    <value>Hide User Role Badge</value>
+  </data>
+  <data name="HideUserSpecialtyBadge" xml:space="preserve">
+    <value>Hide User Specialty Badge</value>
+  </data>
+  <data name="HideUserSubscriberBadge" xml:space="preserve">
+    <value>Hide User Subscriber Badge</value>
+  </data>
+  <data name="TwitchMassGiftedSubsFilterAmount" xml:space="preserve">
+    <value>Twitch Mass Gifted Subs Filter Amount</value>
+  </data>
+  <data name="TwitchMassGiftedSubsFilterAmountTooltip" xml:space="preserve">
+    <value>This option helps to ensure that only the regular Subscription Gifted OR Mass Subscription Gifted event command is run depending on what the number is set to. This is designed to help reduce the spam of subscription gifted commands and provide a better experience for your stream. Note that this will cause the processing of Subscription Gifted &amp; Mass Subscription Gifted event commands to be slightly delayed, typically less than 10 seconds.
+
+For example, if this option is enabled and amount is set to 5, then any time 5 OR LESS subscriptions are gifted at once, it will ONLY run the regular Subscription Gifted event command for each subscription. If MORE THAN 5 are gifted, then it will ONLY run the Mass Subscriptions Gifted event command once.</value>
+  </data>
+  <data name="AddSeparatorsBetweenMessages" xml:space="preserve">
+    <value>Add Separators Between Messages</value>
+  </data>
+  <data name="UseAlternatingBackgroundColors" xml:space="preserve">
+    <value>Use Alternating Background Colors</value>
   </data>
 </root>

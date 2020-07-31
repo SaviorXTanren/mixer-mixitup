@@ -40,6 +40,10 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (await this.Validate())
             {
+                if (this.command == null)
+                {
+                    this.command = new CustomCommand("Custom Command");
+                }
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }

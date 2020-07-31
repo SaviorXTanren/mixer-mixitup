@@ -461,6 +461,11 @@ namespace MixItUp.Installer
                 this.SpecificErrorMessage = "We were unable to update due to a file lock issue. Please try rebooting your PC and then running the update. You can also download and re-run our installer to update your installation.";
                 this.WriteToLogFile(uaex.ToString());
             }
+            catch (IOException ioex)
+            {
+                this.SpecificErrorMessage = "We were unable to update due to a file lock issue. Please try rebooting your PC and then running the update. You can also download and re-run our installer to update your installation.";
+                this.WriteToLogFile(ioex.ToString());
+            }
             catch (WebException wex)
             {
                 this.SpecificErrorMessage = "We were unable to update due to a network issue, please try again later. If this issue persists, please try restarting your PC and/or router or flush the DNS cache on your computer.";
