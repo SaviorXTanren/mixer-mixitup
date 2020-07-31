@@ -129,9 +129,9 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((FrankerFaceZEmoteModel)messagePart));
                             }
-                            else if (messagePart is TwitchBitsCheermoteViewModel)
+                            else if (messagePart is TwitchBitsCheerViewModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheermoteViewModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchBitsCheerViewModel)messagePart));
                             }
                         }
                     }
@@ -170,20 +170,6 @@ namespace MixItUp.WPF.Controls.Chat
                 this.textBlocks.Add(textBlock);
                 this.MessageWrapPanel.Children.Add(textBlock);
             }
-        }
-
-        private void AddImage(BitmapImage bitmap, int size, string tooltip = "")
-        {
-            Image image = new Image();
-            image.Source = bitmap;
-            image.Width = size;
-            image.Height = size;
-            image.ToolTip = tooltip;
-            image.VerticalAlignment = VerticalAlignment.Center;
-            image.HorizontalAlignment = HorizontalAlignment.Center;
-            image.Margin = new Thickness(5, 0, 5, 0);
-
-            this.MessageWrapPanel.Children.Add(image);
         }
 
         private void Message_OnDeleted(object sender, EventArgs e)

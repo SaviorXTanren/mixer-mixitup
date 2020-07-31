@@ -87,9 +87,9 @@ namespace MixItUp.Base.Model.Overlay
                         {
                             imageURL = ((FrankerFaceZEmoteModel)messagePart).url;
                         }
-                        else if (messagePart is TwitchBitsCheermoteViewModel)
+                        else if (messagePart is TwitchBitsCheerViewModel)
                         {
-                            imageURL = ((TwitchBitsCheermoteViewModel)messagePart).LightImage;
+                            imageURL = ((TwitchBitsCheerViewModel)messagePart).Tier.LightImage;
                         }
 
                         if (!string.IsNullOrEmpty(imageURL))

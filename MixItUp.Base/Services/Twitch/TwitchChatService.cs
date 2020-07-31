@@ -49,7 +49,7 @@ namespace MixItUp.Base.Services.Twitch
         IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
         IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
         IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
-        IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
+        IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
         event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
@@ -112,8 +112,8 @@ namespace MixItUp.Base.Services.Twitch
         public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
         private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
 
-        public IDictionary<string, TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
-        private Dictionary<string, TwitchBitsCheermoteViewModel> bitsCheermotes = new Dictionary<string, TwitchBitsCheermoteViewModel>();
+        public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
+        private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -351,18 +351,10 @@ namespace MixItUp.Base.Services.Twitch
             List<TwitchBitsCheermoteViewModel> cheermotes = new List<TwitchBitsCheermoteViewModel>();
             foreach (BitsCheermoteModel bitsCheermote in cheermotesTask.Result)
             {
-                foreach (BitsCheermoteTierModel bitsCheermoteTier in bitsCheermote.tiers)
+                if (bitsCheermote.tiers.Any(t => t.can_cheer))
                 {
-                    if (bitsCheermoteTier.can_cheer)
-                    {
-                        cheermotes.Add(new TwitchBitsCheermoteViewModel(bitsCheermote, bitsCheermoteTier));
-                    }
+                    this.bitsCheermotes.Add(new TwitchBitsCheermoteViewModel(bitsCheermote));
                 }
-            }
-
-            foreach (TwitchBitsCheermoteViewModel cheermote in cheermotes.OrderByDescending(c => c.ID))
-            {
-                this.bitsCheermotes[cheermote.ID] = cheermote;
             }
 
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>

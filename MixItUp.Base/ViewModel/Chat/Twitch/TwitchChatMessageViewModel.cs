@@ -9,6 +9,22 @@ using Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
+    public class TwitchBitsCheerViewModel
+    {
+        public string Text { get; set; }
+
+        public int Amount { get; set; }
+
+        public TwitchBitsCheermoteTierViewModel Tier { get; set; }
+
+        public TwitchBitsCheerViewModel(string text, int amount, TwitchBitsCheermoteTierViewModel tier)
+        {
+            this.Text = text;
+            this.Amount = amount;
+            this.Tier = tier;
+        }
+    }
+
     public class TwitchChatMessageViewModel : UserChatMessageViewModel
     {
         private const char SOHCharacter = (char)1;
@@ -21,6 +37,8 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         private static Dictionary<string, EmoteModel> messageEmotesCache = new Dictionary<string, EmoteModel>();
 
         public bool IsSlashMe { get; set; }
+
+        public bool HasBits { get; set; }
 
         public bool IsHighlightedMessage { get; set; }
 
@@ -50,6 +68,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 }
             }
 
+            this.HasBits = (int.TryParse(message.Bits, out int bits) && bits > 0);
             this.IsHighlightedMessage = message.RawPacket.Tags.ContainsKey(TagMessageID) && message.RawPacket.Tags[TagMessageID].Equals(MessageIDHighlightedMessage);
 
             if (message.Message.StartsWith(SlashMeAction) && message.Message.Last() == SOHCharacter)
@@ -91,11 +110,23 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     this.AddStringMessagePart(part);
                     if (ChannelSession.Services.Chat.TwitchChatService != null)
                     {
-                        if (ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes.ContainsKey(part))
+                        if (this.HasBits)
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes[part];
+                            foreach (TwitchBitsCheermoteViewModel cheermote in ChannelSession.Services.Chat.TwitchChatService.BitsCheermotes)
+                            {
+                                if (part.StartsWith(cheermote.ID) && int.TryParse(part.Replace(cheermote.ID, ""), out int amount) && amount > 0)
+                                {
+                                    TwitchBitsCheermoteTierViewModel tier = cheermote.GetAppropriateTier(amount);
+                                    if (tier != null)
+                                    {
+                                        this.MessageParts[this.MessageParts.Count - 1] = new TwitchBitsCheerViewModel(part, amount, tier);
+                                        continue;
+                                    }
+                                }
+                            }
                         }
-                        else if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+
+                        if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
                         }
