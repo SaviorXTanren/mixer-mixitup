@@ -366,6 +366,7 @@ namespace MixItUp.Base.Services.Twitch
                 if (streamStartCheckTime != DateTimeOffset.MaxValue)
                 {
                     DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                    Logger.Log(LogLevel.Debug, "Check for stream start: " + startTime + " - " + streamStartCheckTime);
                     if (startTime > streamStartCheckTime)
                     {
                         Logger.Log(LogLevel.Debug, "Stream start detected");
