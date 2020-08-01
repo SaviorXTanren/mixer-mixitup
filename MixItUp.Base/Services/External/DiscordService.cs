@@ -139,6 +139,7 @@ namespace MixItUp.Base.Services.External
             Voice = 2,
             GroupDirectMessage = 3,
             Category = 4,
+            Announcements = 5,
         }
 
         [JsonProperty("id")]
