@@ -518,6 +518,7 @@ namespace MixItUp.Base.Services.Twitch
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
                     trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
                     trigger.SpecialIdentifiers["usersubplan"] = planTier;
+                    trigger.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
