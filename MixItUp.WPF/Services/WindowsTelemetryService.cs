@@ -1,7 +1,7 @@
 ﻿using Microsoft.ApplicationInsights;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using PlayFab;
@@ -81,10 +81,10 @@ namespace MixItUp.WPF.Services
             this.TrySendPlayFabTelemetry(PlayFabClientAPI.UpdateUserDataAsync(new UpdateUserDataRequest() { Data = new Dictionary<string, string>() { { "UserID", userID }, { "Platform", "Windows" }, { "User Type", userType } } }));
         }
 
-        public void TrackCommand(CommandTypeEnum type, bool IsBasic)
+        public void TrackCommand(CommandTypeEnum type)
         {
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) }, { "Is Basic", IsBasic.ToString() } }));
-            this.SendPlayFabEvent("Command", new Dictionary<string, object>() { { "Type", EnumHelper.GetEnumName(type) }, { "IsBasic", IsBasic.ToString() } });
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
+            this.SendPlayFabEvent("Command", new Dictionary<string, object>() { { "Type", EnumHelper.GetEnumName(type) } });
         }
 
         public void TrackAction(ActionTypeEnum type)

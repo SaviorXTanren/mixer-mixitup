@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
 using System;
 
@@ -10,7 +10,7 @@ namespace MixItUp.Base.Services
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
         void TrackLogin(string userID, string userType);
-        void TrackCommand(CommandTypeEnum type, bool isBasic);
+        void TrackCommand(CommandTypeEnum type);
         void TrackAction(ActionTypeEnum type);
 
         void TrackRemoteAuthentication(Guid clientID);

@@ -106,8 +106,6 @@ namespace MixItUp.Base.Actions
                 this.platform = platform;
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
 
-                ChannelSession.Services.Telemetry.TrackAction(this.Type);
-
                 await this.PerformInternal(user, arguments);
             });
         }
