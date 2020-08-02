@@ -232,8 +232,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.hostBonus = 1.0;
             this.raidBonus = 1.0;
             this.subBonus = 10.0;
-            this.donationBonus = 1.5;
-            this.bitsBonus = 1.5;
+            this.donationBonus = 10.0;
+            this.bitsBonus = 0.1;
 
             this.healingBonus = 1.0;
             this.overkillBonus = 0.0;
