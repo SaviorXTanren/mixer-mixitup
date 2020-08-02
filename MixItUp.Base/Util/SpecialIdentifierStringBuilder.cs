@@ -409,7 +409,7 @@ namespace MixItUp.Base.Util
                 if (tweets != null && tweets.Count() > 0)
                 {
                     Tweet latestTweet = tweets.FirstOrDefault();
-                    DateTimeOffset latestTweetLocalTime = latestTweet.DateTime.ToLocalTime();
+                    DateTimeOffset latestTweetLocalTime = latestTweet.DateTime.ToCorrectLocalTime();
 
                     this.ReplaceSpecialIdentifier("tweetlatesturl", latestTweet.TweetLink);
                     this.ReplaceSpecialIdentifier("tweetlatesttext", latestTweet.Text);
@@ -420,7 +420,7 @@ namespace MixItUp.Base.Util
                     Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
                     if (streamTweet != null)
                     {
-                        DateTimeOffset streamTweetLocalTime = streamTweet.DateTime.ToLocalTime();
+                        DateTimeOffset streamTweetLocalTime = streamTweet.DateTime.ToCorrectLocalTime();
                         this.ReplaceSpecialIdentifier("tweetstreamurl", streamTweet.TweetLink);
                         this.ReplaceSpecialIdentifier("tweetstreamtext", streamTweet.Text);
                         this.ReplaceSpecialIdentifier("tweetstreamdatetime", streamTweetLocalTime.ToString("g"));

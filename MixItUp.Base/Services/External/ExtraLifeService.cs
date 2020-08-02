@@ -87,7 +87,7 @@ namespace MixItUp.Base.Services.External
                 DateTimeOffset datetime = DateTimeOffset.Now;
                 if (!string.IsNullOrEmpty(this.createdDateUTC) && DateTimeOffset.TryParse(this.createdDateUTC, out datetime))
                 {
-                    datetime = datetime.ToLocalTime();
+                    datetime = datetime.ToCorrectLocalTime();
                 }
                 return datetime;
             }

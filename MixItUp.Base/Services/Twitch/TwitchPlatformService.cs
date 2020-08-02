@@ -139,12 +139,12 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (DateTimeOffset.TryParse(dateTime, out DateTimeOffset startUTC))
                     {
-                        return startUTC.ToLocalTime();
+                        return startUTC.ToCorrectLocalTime();
                     }
                 }
                 else if (DateTime.TryParse(dateTime, out DateTime start))
                 {
-                    return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
+                    return new DateTimeOffset(start, TimeSpan.Zero).ToCorrectLocalTime();
                 }
             }
             return null;
