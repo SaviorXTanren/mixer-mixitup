@@ -95,6 +95,8 @@ namespace MixItUp.Base.Commands
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
+
+        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, string.Join(" ", this.CommandTriggers)); }
     }
 
     public class NewAutoChatCommand

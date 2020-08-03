@@ -250,6 +250,7 @@ namespace MixItUp.Base.Services.External
 
                 MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
+                this.TrackServiceTelemetry("ExtraLife");
                 return new Result();
             }
             return new Result("Could not get Team/Participant data");

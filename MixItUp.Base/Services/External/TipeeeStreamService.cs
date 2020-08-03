@@ -332,6 +332,7 @@ namespace MixItUp.Base.Services.External
                     {
                         if (await this.ConnectSocket())
                         {
+                            this.TrackServiceTelemetry("TipeeeStream");
                             return new Result();
                         }
                         return new Result("Failed to connect to socket");

@@ -260,6 +260,7 @@ namespace MixItUp.Base.Services.External
             if (!string.IsNullOrEmpty(this.authorizer.CredentialStore.OAuthToken))
             {
                 await this.RefreshOAuthToken();
+                this.TrackServiceTelemetry("Twitter");
                 return new Result();
             }
             return new Result("Failed to get authorization");

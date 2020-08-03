@@ -844,6 +844,7 @@ namespace MixItUp.Base.Services.External
                             DiscordWebSocket webSocket = new DiscordWebSocket();
                             if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
                             {
+                                this.TrackServiceTelemetry("Discord");
                                 return new Result();
                             }
                             return new Result("Could not connect Bot Application to web socket");
