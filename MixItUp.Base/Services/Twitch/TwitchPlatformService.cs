@@ -144,6 +144,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
                 {
+                    start = DateTime.SpecifyKind(start, DateTimeKind.Utc);
                     return new DateTimeOffset(start, TimeSpan.Zero).ToCorrectLocalTime();
                 }
             }
