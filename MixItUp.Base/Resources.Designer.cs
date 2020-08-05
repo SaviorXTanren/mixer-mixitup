@@ -7027,6 +7027,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Subs/Resubs.
+        /// </summary>
+        public static string ShowSubsResubs {
+            get {
+                return ResourceManager.GetString("ShowSubsResubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show User Join/Leave.
         /// </summary>
         public static string ShowUserJoinLeave {

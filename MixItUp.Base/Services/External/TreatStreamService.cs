@@ -227,6 +227,7 @@ namespace MixItUp.Base.Services.External
             {
                 if (await this.ConnectSocket())
                 {
+                    this.TrackServiceTelemetry("TreatStream");
                     return new Result();
                 }
                 return new Result("Failed to connect to Socket");

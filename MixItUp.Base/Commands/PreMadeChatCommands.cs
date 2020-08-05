@@ -76,6 +76,8 @@ namespace MixItUp.Base.Commands
             this.Requirements.Role.MixerRole = settings.Permissions;
             this.Requirements.Cooldown.Amount = settings.Cooldown;
         }
+
+        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().Name.ToString()); }
     }
 
     public class MixItUpChatCommand : PreMadeChatCommand

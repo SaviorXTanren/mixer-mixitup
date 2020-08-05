@@ -357,7 +357,7 @@ namespace MixItUp.Base.Services.External
             if (this.user != null)
             {
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
-
+                this.TrackServiceTelemetry("Tiltify");
                 return new Result();
             }
             return new Result("Failed to get User data");

@@ -354,6 +354,8 @@ namespace MixItUp.Base.Commands
             this.totalPayout = 0;
             this.Requirements.UpdateCooldown(user);
         }
+
+        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().Name.ToString()); }
     }
 
     [DataContract]

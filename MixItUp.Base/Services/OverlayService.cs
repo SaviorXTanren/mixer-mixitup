@@ -85,7 +85,7 @@ namespace MixItUp.Base.Services
 
                 this.IsConnected = true;
                 ChannelSession.Settings.EnableOverlay = true;
-
+                ChannelSession.Services.Telemetry.TrackService("Overlay");
                 return new Result();
             }
             catch (Exception ex)

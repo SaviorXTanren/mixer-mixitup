@@ -205,6 +205,7 @@ namespace MixItUp.Base.Commands
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
+                this.TrackTelemetry();
                 if (user != null)
                 {
                     user.Data.TotalCommandsRun++;
@@ -343,6 +344,8 @@ namespace MixItUp.Base.Commands
         public bool Equals(CommandBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
+
+        protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
     }
 
     #region Obsolete Commands

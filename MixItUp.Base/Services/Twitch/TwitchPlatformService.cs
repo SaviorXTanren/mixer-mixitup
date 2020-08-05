@@ -137,14 +137,15 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (DateTimeOffset.TryParse(dateTime, out DateTimeOffset startUTC))
+                    if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
                     {
-                        return startUTC.ToLocalTime();
+                        return startUTC.ToCorrectLocalTime();
                     }
                 }
-                else if (DateTime.TryParse(dateTime, out DateTime start))
+                else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
                 {
-                    return new DateTimeOffset(start, TimeSpan.Zero).ToLocalTime();
+                    start = DateTime.SpecifyKind(start, DateTimeKind.Utc);
+                    return new DateTimeOffset(start, TimeSpan.Zero).ToCorrectLocalTime();
                 }
             }
             return null;

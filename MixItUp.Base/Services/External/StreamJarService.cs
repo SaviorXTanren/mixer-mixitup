@@ -202,7 +202,7 @@ namespace MixItUp.Base.Services.External
                 }
 
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
-
+                this.TrackServiceTelemetry("StreamJar");
                 return new Result();
             }
             return new Result("Failed to get channel data");

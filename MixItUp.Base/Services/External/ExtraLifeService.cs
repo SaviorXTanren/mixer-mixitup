@@ -87,7 +87,7 @@ namespace MixItUp.Base.Services.External
                 DateTimeOffset datetime = DateTimeOffset.Now;
                 if (!string.IsNullOrEmpty(this.createdDateUTC) && DateTimeOffset.TryParse(this.createdDateUTC, out datetime))
                 {
-                    datetime = datetime.ToLocalTime();
+                    datetime = datetime.ToCorrectLocalTime();
                 }
                 return datetime;
             }
@@ -250,6 +250,7 @@ namespace MixItUp.Base.Services.External
 
                 MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
+                this.TrackServiceTelemetry("ExtraLife");
                 return new Result();
             }
             return new Result("Could not get Team/Participant data");

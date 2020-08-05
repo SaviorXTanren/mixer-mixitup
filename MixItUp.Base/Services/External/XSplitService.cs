@@ -103,6 +103,7 @@ namespace MixItUp.Base.Services.External
             if (this.Start())
             {
                 this.IsConnected = true;
+                ChannelSession.Services.Telemetry.TrackService("XSplit");
                 return Task.FromResult(new Result());
             }
             return Task.FromResult(new Result("Failed to start web socket listening server"));

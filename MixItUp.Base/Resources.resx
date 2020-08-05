@@ -3146,4 +3146,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="UseAlternatingBackgroundColors" xml:space="preserve">
     <value>Use Alternating Background Colors</value>
   </data>
+  <data name="ShowSubsResubs" xml:space="preserve">
+    <value>Show Subs/Resubs</value>
+  </data>
 </root>

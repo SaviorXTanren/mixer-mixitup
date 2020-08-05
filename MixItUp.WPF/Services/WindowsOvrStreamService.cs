@@ -38,6 +38,7 @@ namespace MixItUp.WPF.Services
                     GlobalEvents.ServiceReconnect("OvrStream");
 
                     this.IsConnected = true;
+                    ChannelSession.Services.Telemetry.TrackService("OvrStream");
 
                     return new Result();
                 }
