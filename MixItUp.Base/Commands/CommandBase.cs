@@ -345,7 +345,7 @@ namespace MixItUp.Base.Commands
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
-        protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+        protected virtual void TrackTelemetry() { }
     }
 
     #region Obsolete Commands

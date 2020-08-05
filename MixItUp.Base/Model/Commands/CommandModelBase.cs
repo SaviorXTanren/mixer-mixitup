@@ -122,6 +122,8 @@ namespace MixItUp.Base.Model.Commands
                         this.AsyncSemaphore.Release();
                     }
 
+                    this.TrackTelemetry();
+
                     foreach (UserViewModel u in users)
                     {
                         u.Data.TotalCommandsRun++;
@@ -193,5 +195,7 @@ namespace MixItUp.Base.Model.Commands
         public bool Equals(CommandModelBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
+
+        protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
     }
 }

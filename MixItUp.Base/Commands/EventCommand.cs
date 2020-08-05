@@ -34,7 +34,5 @@ namespace MixItUp.Base.Commands
         public override int GetHashCode() { return this.EventCommandType.GetHashCode(); }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
-
-        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.EventCommandType.ToString()); }
     }
 }
