@@ -674,7 +674,7 @@ namespace MixItUp.Base.Services.External
                     catch (Exception ex) { Logger.Log(ex); }
 
                     AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
-
+                    this.TrackServiceTelemetry("Patreon");
                     return new Result();
                 }
                 return new Result("Failed to get Campaign data");

@@ -306,9 +306,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
             this.ManualResetCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("Do you want to reset all item amounts?"))
+                if (this.Inventory != null)
                 {
-                    if (this.Inventory != null)
+                    if (await DialogHelper.ShowConfirmation("Do you want to reset all item amounts?"))
                     {
                         await this.Inventory.Reset();
                     }

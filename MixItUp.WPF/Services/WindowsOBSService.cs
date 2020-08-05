@@ -51,6 +51,7 @@ namespace MixItUp.WPF.Services
                 await this.StartReplayBuffer();
                 this.Connected(this, new EventArgs());
                 ChannelSession.ReconnectionOccurred("OBS");
+                ChannelSession.Services.Telemetry.TrackService("OBS Studio");
                 return new Result();
             }
             return new Result("Failed to connect to OBS Studio web socket.");

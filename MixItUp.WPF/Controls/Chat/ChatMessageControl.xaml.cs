@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using TwitchV5API = Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.WPF.Controls.Chat
@@ -58,10 +57,7 @@ namespace MixItUp.WPF.Controls.Chat
                 bool italics = false;
                 bool highlighted = false;
 
-                if (ChannelSession.Settings.AddSeparatorsBetweenMessages)
-                {
-                    this.Separator.Visibility = Visibility.Visible;
-                }
+                this.Separator.Visibility = (ChannelSession.Settings.AddSeparatorsBetweenMessages) ? Visibility.Visible : Visibility.Collapsed;
 
                 if (this.DataContext is AlertChatMessageViewModel)
                 {

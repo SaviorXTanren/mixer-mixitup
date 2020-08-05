@@ -251,7 +251,7 @@ namespace MixItUp.Base.Services.External
                 }
 
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
-
+                this.TrackServiceTelemetry("JustGiving");
                 return new Result();
             }
             return new Result("Unable to get User data");

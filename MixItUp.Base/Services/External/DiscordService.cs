@@ -139,6 +139,7 @@ namespace MixItUp.Base.Services.External
             Voice = 2,
             GroupDirectMessage = 3,
             Category = 4,
+            Announcements = 5,
         }
 
         [JsonProperty("id")]
@@ -843,6 +844,7 @@ namespace MixItUp.Base.Services.External
                             DiscordWebSocket webSocket = new DiscordWebSocket();
                             if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
                             {
+                                this.TrackServiceTelemetry("Discord");
                                 return new Result();
                             }
                             return new Result("Could not connect Bot Application to web socket");

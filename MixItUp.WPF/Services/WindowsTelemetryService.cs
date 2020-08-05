@@ -81,16 +81,38 @@ namespace MixItUp.WPF.Services
             this.TrySendPlayFabTelemetry(PlayFabClientAPI.UpdateUserDataAsync(new UpdateUserDataRequest() { Data = new Dictionary<string, string>() { { "UserID", userID }, { "Platform", "Windows" }, { "User Type", userType } } }));
         }
 
-        public void TrackCommand(CommandTypeEnum type, bool IsBasic)
+        public void TrackCommand(CommandTypeEnum type, string details = null)
         {
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) }, { "Is Basic", IsBasic.ToString() } }));
-            this.SendPlayFabEvent("Command", new Dictionary<string, object>() { { "Type", EnumHelper.GetEnumName(type) }, { "IsBasic", IsBasic.ToString() } });
+            if (string.IsNullOrEmpty(details))
+            {
+                details = "None";
+            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) }, { "Details", details } }));
+            this.SendPlayFabEvent("Command", new Dictionary<string, object>() { { "Type", EnumHelper.GetEnumName(type) }, { "Details", details } });
         }
 
         public void TrackAction(ActionTypeEnum type)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Action", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
             this.SendPlayFabEvent("Action", "Type", EnumHelper.GetEnumName(type));
+        }
+
+        public void TrackService(string type)
+        {
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Service", new Dictionary<string, string> { { "Type", type } }));
+            this.SendPlayFabEvent("Service", "Type", type);
+        }
+
+        public void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount, long followCount)
+        {
+            if (string.IsNullOrEmpty(type))
+            {
+                type = "Normal";
+            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Channel", new Dictionary<string, string> { { "Type", type }, { "Viewers", viewerCount.ToString() },
+                { "Chatters", chatterCount.ToString() }, { "Game", game }, { "Views", viewCount.ToString() }, { "Follows", followCount.ToString() } }));
+            this.SendPlayFabEvent("Channel", new Dictionary<string, object>() { { "Type", type }, { "Viewers", viewerCount.ToString() }, { "Chatters", chatterCount.ToString() },
+                { "Game", game }, { "Views", viewCount.ToString() }, { "Follows", followCount.ToString() } });
         }
 
         public void TrackRemoteAuthentication(Guid clientID)

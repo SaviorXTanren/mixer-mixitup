@@ -82,19 +82,36 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                 (value) => { ChannelSession.Settings.ShowFrankerFaceZEmotes = value; });
 
             this.HideUserAvatar = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserAvatar, ChannelSession.Settings.HideUserAvatar,
-                (value) => { ChannelSession.Settings.HideUserAvatar = value; });
+                (value) =>
+                {
+                    ChannelSession.Settings.HideUserAvatar = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
             this.HideUserRoleBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserRoleBadge, ChannelSession.Settings.HideUserRoleBadge,
-                (value) => { ChannelSession.Settings.HideUserRoleBadge = value; });
+                (value) =>
+                {
+                    ChannelSession.Settings.HideUserRoleBadge = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
             this.HideUserSubscriberBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSubscriberBadge, ChannelSession.Settings.HideUserSubscriberBadge,
-                (value) => { ChannelSession.Settings.HideUserSubscriberBadge = value; });
+                (value) =>
+                {
+                    ChannelSession.Settings.HideUserSubscriberBadge = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
             this.HideUserSpecialtyBadge = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.HideUserSpecialtyBadge, ChannelSession.Settings.HideUserSpecialtyBadge,
-                (value) => { ChannelSession.Settings.HideUserSpecialtyBadge = value; });
+                (value) =>
+                {
+                    ChannelSession.Settings.HideUserSpecialtyBadge = value;
+                    GlobalEvents.ChatVisualSettingsChanged();
+                });
 
             this.UseCustomUsernameColors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UseCustomUsernameColors, ChannelSession.Settings.UseCustomUsernameColors,
                 (value) =>
                 {
                     ChannelSession.Settings.UseCustomUsernameColors = value;
                     this.EnableDisableUsernameColors();
+                    GlobalEvents.ChatVisualSettingsChanged();
                 });
 
             List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
@@ -116,6 +133,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                         {
                             ChannelSession.Settings.CustomUsernameColors.Remove(role);
                         }
+                        GlobalEvents.ChatVisualSettingsChanged();
                     }));
             }
 

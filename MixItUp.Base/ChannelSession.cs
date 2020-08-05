@@ -652,6 +652,28 @@ namespace MixItUp.Base
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
+
+                    if (ChannelSession.TwitchStreamIsLive)
+                    {
+                        try
+                        {
+                            string type = null;
+                            if (ChannelSession.TwitchUserNewAPI.IsPartner())
+                            {
+                                type = "Partner";
+                            }
+                            else if (ChannelSession.TwitchUserNewAPI.IsAffiliate())
+                            {
+                                type = "Affiliate";
+                            }
+                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ChannelSession.TwitchStreamV5.viewers, ChannelSession.Services.Chat.AllUsers.Count,
+                                ChannelSession.TwitchStreamV5.game, ChannelSession.TwitchChannelV5.views, ChannelSession.TwitchChannelV5.followers);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                        }
+                    }
                 }
             }
         }

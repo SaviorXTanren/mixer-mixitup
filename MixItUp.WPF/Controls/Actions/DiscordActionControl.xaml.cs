@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services.External;
-using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,9 +34,10 @@ namespace MixItUp.WPF.Controls.Actions
             }
             else
             {
-                foreach (DiscordChannel channel in await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server))
+                IEnumerable<DiscordChannel> channels = await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server);
+                foreach (DiscordChannel channel in channels.OrderBy(c => c.Name))
                 {
-                    if (channel.Type == DiscordChannel.DiscordChannelTypeEnum.Text)
+                    if (channel.Type == DiscordChannel.DiscordChannelTypeEnum.Text || channel.Type == DiscordChannel.DiscordChannelTypeEnum.Announcements)
                     {
                         this.channels.Add(channel);
                     }

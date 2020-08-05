@@ -180,7 +180,7 @@ namespace MixItUp.Base.Services.External
                         }
                     }
                 });
-
+                this.TrackServiceTelemetry("Streamlabs");
                 return new Result();
             }
             return new Result("Failed to get web socket token");
