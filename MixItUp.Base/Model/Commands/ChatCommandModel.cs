@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace MixItUp.Base.Model.Commands
 {
+    [DataContract]
     public class ChatCommandModel : CommandModelBase
     {
         public const string CommandWildcardMatchingRegexFormat = "\\s?{0}\\s?";
@@ -53,7 +54,7 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
-        private static SemaphoreSlim chatCommandSemaphore = new SemaphoreSlim(1);
+        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
         public HashSet<string> Triggers { get; set; } = new HashSet<string>();
@@ -64,15 +65,17 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public bool Wildcards { get; set; }
 
-        public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards)
-            : base(name, CommandTypeEnum.Chat)
+        public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation, wildcards) { }
+
+        protected ChatCommandModel(string name, CommandTypeEnum type, HashSet<string> triggers, bool includeExclamation, bool wildcards)
+            : base(name, type)
         {
             this.Triggers = triggers;
             this.IncludeExclamation = includeExclamation;
             this.Wildcards = wildcards;
         }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommandModel.chatCommandSemaphore; } }
+        protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
         public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
         {

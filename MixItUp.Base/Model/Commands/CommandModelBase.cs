@@ -47,21 +47,16 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
-        public CommandModelBase()
+        public CommandModelBase(string name, CommandTypeEnum type)
         {
             this.ID = Guid.NewGuid();
             this.IsEnabled = true;
-        }
-
-        public CommandModelBase(string name, CommandTypeEnum type)
-            : this()
-        {
             this.Name = name;
             this.Type = type;
         }
 
         [JsonIgnore]
-        protected abstract SemaphoreSlim AsyncSemaphore { get; }
+        protected abstract SemaphoreSlim CommandLockSemaphore { get; }
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
@@ -90,7 +85,7 @@ namespace MixItUp.Base.Model.Commands
         {
             try
             {
-                if (this.IsEnabled)
+                if (this.IsEnabled && this.DoesCommandHaveWork)
                 {
                     Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
@@ -116,7 +111,7 @@ namespace MixItUp.Base.Model.Commands
                         platform = user.Platform;
                     }
 
-                    await this.AsyncSemaphore.WaitAsync();
+                    await this.CommandLockSemaphore.WaitAsync();
 
                     List<UserViewModel> users = new List<UserViewModel>() { user };
                     if (this.Requirements != null)
@@ -132,7 +127,7 @@ namespace MixItUp.Base.Model.Commands
 
                     if (this.IsUnlocked)
                     {
-                        this.AsyncSemaphore.Release();
+                        this.CommandLockSemaphore.Release();
                     }
 
                     this.TrackTelemetry();
@@ -145,7 +140,7 @@ namespace MixItUp.Base.Model.Commands
 
                     if (!this.IsUnlocked)
                     {
-                        this.AsyncSemaphore.Release();
+                        this.CommandLockSemaphore.Release();
                     }
                 }
             }
@@ -153,9 +148,9 @@ namespace MixItUp.Base.Model.Commands
             catch (Exception ex) { Logger.Log(ex); }
             finally
             {
-                if (this.AsyncSemaphore.CurrentCount == 0)
+                if (this.CommandLockSemaphore.CurrentCount == 0)
                 {
-                    this.AsyncSemaphore.Release();
+                    this.CommandLockSemaphore.Release();
                 }
             }
         }
@@ -185,6 +180,8 @@ namespace MixItUp.Base.Model.Commands
         public bool Equals(CommandModelBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
+
+        public virtual bool DoesCommandHaveWork { get { return this.Actions.Count > 0; } }
 
         protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
