@@ -10,7 +10,7 @@ namespace MixItUp.Base.Model.Requirements
 {
     public enum CooldownTypeEnum
     {
-        Individual,
+        Standard,
         PerPerson,
         Group,
     }
@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Requirements
         public override async Task<bool> Validate(UserViewModel user)
         {
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
-            if (this.Type == CooldownTypeEnum.Individual)
+            if (this.Type == CooldownTypeEnum.Standard)
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.Amount) - DateTimeOffset.Now;
             }
@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task Perform(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Individual)
+            if (this.Type == CooldownTypeEnum.Standard)
             {
                 this.globalCooldown = DateTimeOffset.Now;
             }
@@ -117,7 +117,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task Refund(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Individual)
+            if (this.Type == CooldownTypeEnum.Standard)
             {
                 this.globalCooldown = DateTimeOffset.MinValue;
             }

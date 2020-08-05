@@ -12,5 +12,7 @@ namespace MixItUp.Base.Model.Commands
         public GameCommandModelBase(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : base(name, CommandTypeEnum.Game, triggers, includeExclamation, wildcards) { }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return GameCommandModelBase.commandLockSemaphore; } }
+
+        public override bool DoesCommandHaveWork { get { return true; } }
     }
 }

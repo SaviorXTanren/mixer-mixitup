@@ -14,6 +14,10 @@ namespace MixItUp.Base.Model.Requirements
 
         public RequirementsSetModel() { }
 
+        public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
+
+        public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
+
         public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
 
         public async Task<bool> Validate(UserViewModel user)

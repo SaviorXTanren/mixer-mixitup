@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Commands
         public bool Unlocked { get; set; }
 
         [DataMember]
-        public RequirementsSetModel Requirements { get; set; }
+        public RequirementsSetModel Requirements { get; set; } = new RequirementsSetModel();
 
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();

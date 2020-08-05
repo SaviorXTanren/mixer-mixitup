@@ -23,7 +23,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.SelectedGroupName = null;
             }
         }
-        private CooldownTypeEnum selectedType = CooldownTypeEnum.Individual;
+        private CooldownTypeEnum selectedType = CooldownTypeEnum.Standard;
 
         public bool IsGroupSelected { get { return this.SelectedType == CooldownTypeEnum.Group; } }
 
