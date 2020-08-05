@@ -65,6 +65,19 @@ namespace MixItUp.Base.Model.Commands
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
+        public void PerformBackground() { this.PerformBackground(ChannelSession.GetCurrentUser()); }
+
+        public void PerformBackground(UserViewModel user) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, null, null); }
+
+        public void PerformBackground(UserViewModel user, IEnumerable<string> arguments) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, arguments, null); }
+
+        public void PerformBackground(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers); }
+
+        public void PerformBackground(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            Task.Run(() => this.Perform(user, platform, arguments, specialIdentifiers));
+        }
+
         public async Task Perform() { await this.Perform(ChannelSession.GetCurrentUser()); }
 
         public async Task Perform(UserViewModel user) { await this.Perform(user, StreamingPlatformTypeEnum.None, null, null); }
@@ -75,34 +88,34 @@ namespace MixItUp.Base.Model.Commands
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            if (this.IsEnabled)
+            try
             {
-                Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
-
-                ChannelSession.Services.Telemetry.TrackCommand(this.Type);
-                
-                if (user == null)
+                if (this.IsEnabled)
                 {
-                    user = ChannelSession.GetCurrentUser();
-                }
+                    Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
-                if (arguments == null)
-                {
-                    arguments = new List<string>();
-                }
+                    ChannelSession.Services.Telemetry.TrackCommand(this.Type);
 
-                if (specialIdentifiers == null)
-                {
-                    specialIdentifiers = new Dictionary<string, string>();
-                }
+                    if (user == null)
+                    {
+                        user = ChannelSession.GetCurrentUser();
+                    }
 
-                if (platform == StreamingPlatformTypeEnum.None)
-                {
-                    platform = user.Platform;
-                }
+                    if (arguments == null)
+                    {
+                        arguments = new List<string>();
+                    }
 
-                try
-                {
+                    if (specialIdentifiers == null)
+                    {
+                        specialIdentifiers = new Dictionary<string, string>();
+                    }
+
+                    if (platform == StreamingPlatformTypeEnum.None)
+                    {
+                        platform = user.Platform;
+                    }
+
                     await this.AsyncSemaphore.WaitAsync();
 
                     List<UserViewModel> users = new List<UserViewModel>() { user };
@@ -135,38 +148,15 @@ namespace MixItUp.Base.Model.Commands
                         this.AsyncSemaphore.Release();
                     }
                 }
-                catch (TaskCanceledException) { }
-                catch (Exception ex) { Logger.Log(ex); }
-                finally
-                {
-                    if (this.AsyncSemaphore.CurrentCount == 0)
-                    {
-                        this.AsyncSemaphore.Release();
-                    }
-                }
             }
-        }
-
-        protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
-        {
-            List<ActionModelBase> actionsToRun = new List<ActionModelBase>(this.Actions);
-            for (int i = 0; i < actionsToRun.Count; i++)
+            catch (TaskCanceledException) { }
+            catch (Exception ex) { Logger.Log(ex); }
+            finally
             {
-                ActionModelBase action = actionsToRun[i];
-                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
-                //{
-                //    ChannelSession.Services.Overlay.StartBatching();
-                //}
-
-                await action.Perform(user, platform, arguments, specialIdentifiers);
-
-                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
-                //{
-                //    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
-                //    {
-                //        await ChannelSession.Services.Overlay.EndBatching();
-                //    }
-                //}
+                if (this.AsyncSemaphore.CurrentCount == 0)
+                {
+                    this.AsyncSemaphore.Release();
+                }
             }
         }
 
@@ -195,6 +185,29 @@ namespace MixItUp.Base.Model.Commands
         public bool Equals(CommandModelBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
+
+        protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            List<ActionModelBase> actionsToRun = new List<ActionModelBase>(this.Actions);
+            for (int i = 0; i < actionsToRun.Count; i++)
+            {
+                ActionModelBase action = actionsToRun[i];
+                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                //{
+                //    ChannelSession.Services.Overlay.StartBatching();
+                //}
+
+                await action.Perform(user, platform, arguments, specialIdentifiers);
+
+                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                //{
+                //    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
+                //    {
+                //        await ChannelSession.Services.Overlay.EndBatching();
+                //    }
+                //}
+            }
+        }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
     }
