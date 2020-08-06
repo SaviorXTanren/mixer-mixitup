@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;

@@ -18,26 +18,6 @@ using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    public enum UserRoleEnum
-    {
-        Banned,
-        User = 10,
-        Premium = 20,
-        Affiliate = 23,
-        Partner = 25,
-        Follower = 30,
-        Regular = 35,
-        VIP = 38,
-        Subscriber = 40,
-        GlobalMod = 48,
-        Mod = 50,
-        ChannelEditor = 55,
-        Staff = 60,
-        Streamer = 70,
-
-        Custom = 99,
-    }
-
     public static class NewAPITwitchUserModelExtensions
     {
         public static bool IsAffiliate(this TwitchNewAPI.Users.UserModel twitchUser)

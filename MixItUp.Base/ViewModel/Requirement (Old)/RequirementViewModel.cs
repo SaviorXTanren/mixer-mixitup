@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

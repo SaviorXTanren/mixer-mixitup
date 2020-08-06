@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;

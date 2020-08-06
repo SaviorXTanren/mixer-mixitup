@@ -1,9 +1,8 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;

@@ -4,7 +4,6 @@ using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +12,26 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
+    public enum UserRoleEnum
+    {
+        Banned,
+        User = 10,
+        Premium = 20,
+        Affiliate = 23,
+        Partner = 25,
+        Follower = 30,
+        Regular = 35,
+        VIP = 38,
+        Subscriber = 40,
+        GlobalMod = 48,
+        Mod = 50,
+        ChannelEditor = 55,
+        Staff = 60,
+        Streamer = 70,
+
+        Custom = 99,
+    }
+
     [DataContract]
     public class UserDataModel : IEquatable<UserDataModel>
     {

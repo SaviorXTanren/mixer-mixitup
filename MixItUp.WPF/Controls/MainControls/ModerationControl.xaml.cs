@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;

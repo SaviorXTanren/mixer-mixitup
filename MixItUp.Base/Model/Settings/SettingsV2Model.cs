@@ -549,30 +549,6 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Database Data
 
-        #region Obsolete
-
-        [DataMember]
-        [Obsolete]
-        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
-        [DataMember]
-        [Obsolete]
-        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
-
-        [DataMember]
-        [Obsolete]
-        public bool ChatShowUserJoinLeave { get; set; }
-        [DataMember]
-        [Obsolete]
-        public string ChatUserJoinLeaveColorScheme { get; set; } = null;
-        [DataMember]
-        [Obsolete]
-        public bool ChatShowEventAlerts { get; set; }
-        [DataMember]
-        [Obsolete]
-        public string ChatEventAlertsColorScheme { get; set; } = null;
-
-        #endregion Obsolete
-
         [JsonIgnore]
         public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.SettingsFileExtension); } }
         [JsonIgnore]

@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Settings.Generic;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;

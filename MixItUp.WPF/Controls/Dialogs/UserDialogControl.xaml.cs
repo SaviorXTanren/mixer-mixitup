@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 using Twitch.Base.Models.NewAPI.Users;

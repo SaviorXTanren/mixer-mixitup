@@ -2,9 +2,9 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

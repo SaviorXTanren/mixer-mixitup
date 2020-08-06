@@ -1,6 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.Requirement;
 using System.Windows;
 using System.Windows.Controls;
 
