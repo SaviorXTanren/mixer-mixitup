@@ -66,9 +66,9 @@
 //        public override bool DoesCommandHaveWork { get { return true; } }
 //    }
 
-//    public class MixItUpChatCommand : PreMadeChatCommandModel
+//    public class MixItUpPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public MixItUpChatCommand() : base("Mix It Up", "mixitup", 5, UserRoleEnum.User) { }
+//        public MixItUpPreMadeChatCommand() : base("Mix It Up", "mixitup", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -76,9 +76,9 @@
 //        }
 //    }
 
-//    public class CommandsChatCommand : PreMadeChatCommandModel
+//    public class CommandsPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public CommandsChatCommand() : base(MixItUp.Base.Resources.Commands, "commands", 0, UserRoleEnum.User) { }
+//        public CommandsPreMadeChatCommand() : base(MixItUp.Base.Resources.Commands, "commands", 0, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -110,9 +110,9 @@
 //        }
 //    }
 
-//    public class GamesChatCommand : PreMadeChatCommandModel
+//    public class GamesPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public GamesChatCommand() : base(MixItUp.Base.Resources.Games, "games", 0, UserRoleEnum.User) { }
+//        public GamesPreMadeChatCommand() : base(MixItUp.Base.Resources.Games, "games", 0, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -137,9 +137,9 @@
 //        }
 //    }
 
-//    public class MixItUpCommandsChatCommand : PreMadeChatCommandModel
+//    public class MixItUpCommandsPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public MixItUpCommandsChatCommand() : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, UserRoleEnum.User) { }
+//        public MixItUpCommandsPreMadeChatCommand() : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -147,9 +147,9 @@
 //        }
 //    }
 
-//    public class GameChatCommand : PreMadeChatCommandModel
+//    public class GamePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public GameChatCommand() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
+//        public GamePreMadeChatCommand() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -174,9 +174,9 @@
 //        }
 //    }
 
-//    public class TitleChatCommand : PreMadeChatCommandModel
+//    public class TitlePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public TitleChatCommand() : base(MixItUp.Base.Resources.Title, new HashSet<string>() { "title", "stream" }, 5, UserRoleEnum.User) { }
+//        public TitlePreMadeChatCommand() : base(MixItUp.Base.Resources.Title, new HashSet<string>() { "title", "stream" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -185,7 +185,7 @@
 //        }
 //    }
 
-//    public class UptimeChatCommand : PreMadeChatCommandModel
+//    public class UptimePreMadeChatCommand : PreMadeChatCommandModel
 //    {
 //        public static Task<DateTimeOffset> GetStartTime()
 //        {
@@ -197,7 +197,7 @@
 //            return Task.FromResult(startTime);
 //        }
 
-//        public UptimeChatCommand()  : base(MixItUp.Base.Resources.Uptime, "uptime", 5, UserRoleEnum.User) { }
+//        public UptimePreMadeChatCommand()  : base(MixItUp.Base.Resources.Uptime, "uptime", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -214,9 +214,9 @@
 //        }
 //    }
 
-//    public class FollowAgeChatCommand : PreMadeChatCommandModel
+//    public class FollowAgePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public FollowAgeChatCommand() : base(MixItUp.Base.Resources.FollowAge, "followage", 5, UserRoleEnum.User) { }
+//        public FollowAgePreMadeChatCommand() : base(MixItUp.Base.Resources.FollowAge, "followage", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -224,9 +224,9 @@
 //        }
 //    }
 
-//    public class SubscribeAgeChatCommand : PreMadeChatCommandModel
+//    public class SubscribeAgePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public SubscribeAgeChatCommand() : base(MixItUp.Base.Resources.SubscribeAge, new HashSet<string>() { "subage", "subscribeage" }, 5, UserRoleEnum.User) { }
+//        public SubscribeAgePreMadeChatCommand() : base(MixItUp.Base.Resources.SubscribeAge, new HashSet<string>() { "subage", "subscribeage" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -234,9 +234,9 @@
 //        }
 //    }
 
-//    public class StreamerAgeChatCommand : PreMadeChatCommandModel
+//    public class StreamerAgePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public StreamerAgeChatCommand() : base(MixItUp.Base.Resources.StreamerAge, new HashSet<string>() { "streamerage", "age" }, 5, UserRoleEnum.User) { }
+//        public StreamerAgePreMadeChatCommand() : base(MixItUp.Base.Resources.StreamerAge, new HashSet<string>() { "streamerage", "age" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -244,9 +244,9 @@
 //        }
 //    }
 
-//    public class QuoteChatCommand : PreMadeChatCommandModel
+//    public class QuotePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public QuoteChatCommand() : base(MixItUp.Base.Resources.Quote, new HashSet<string>() { "quote", "quotes" }, 5, UserRoleEnum.User) { }
+//        public QuotePreMadeChatCommand() : base(MixItUp.Base.Resources.Quote, new HashSet<string>() { "quote", "quotes" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -299,9 +299,9 @@
 //        }
 //    }
 
-//    public class LastQuoteChatCommand : PreMadeChatCommandModel
+//    public class LastQuotePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public LastQuoteChatCommand() : base(MixItUp.Base.Resources.LastQuote, new HashSet<string>() { "lastquote" }, 5, UserRoleEnum.User) { }
+//        public LastQuotePreMadeChatCommand() : base(MixItUp.Base.Resources.LastQuote, new HashSet<string>() { "lastquote" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -325,9 +325,9 @@
 //        }
 //    }
 
-//    public class AddQuoteChatCommand : PreMadeChatCommandModel
+//    public class AddQuotePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public AddQuoteChatCommand() : base(MixItUp.Base.Resources.AddQuote, new HashSet<string>() { "addquote", "quoteadd" }, 5, UserRoleEnum.Mod) { }
+//        public AddQuotePreMadeChatCommand() : base(MixItUp.Base.Resources.AddQuote, new HashSet<string>() { "addquote", "quoteadd" }, 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -367,7 +367,7 @@
 //        }
 //    }
 
-//    public class Magic8BallChatCommand : PreMadeChatCommandModel
+//    public class Magic8BallPreMadeChatCommand : PreMadeChatCommandModel
 //    {
 //        private List<String> responses = new List<string>()
 //        {
@@ -399,7 +399,7 @@
 //            "I don't know, blame @SaviorXTanren..."
 //        };
 
-//        public Magic8BallChatCommand() : base(MixItUp.Base.Resources.MagicEightBall, new HashSet<string>() { "magic8ball", "8ball" }, 5, UserRoleEnum.User) { }
+//        public Magic8BallPreMadeChatCommand() : base(MixItUp.Base.Resources.MagicEightBall, new HashSet<string>() { "magic8ball", "8ball" }, 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -420,7 +420,7 @@
 //        }
 //    }
 
-//    public class XboxGameChatCommand : PreMadeChatCommandModel
+//    public class XboxGamePreMadeChatCommand : PreMadeChatCommandModel
 //    {
 //        public static async Task<GameInformation> GetXboxGameInfo(string gameName)
 //        {
@@ -457,7 +457,7 @@
 //            return null;
 //        }
 
-//        public XboxGameChatCommand() : base(MixItUp.Base.Resources.XboxGame, "xboxgame", 5, UserRoleEnum.User) { }
+//        public XboxGamePreMadeChatCommand() : base(MixItUp.Base.Resources.XboxGame, "xboxgame", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -475,7 +475,7 @@
 //                }
 //            }
 
-//            GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(gameName);
+//            GameInformation details = await XboxGamePreMadeChatCommand.GetXboxGameInfo(gameName);
 //            if (details != null)
 //            {
 //                await ChannelSession.Services.Chat.SendMessage(details.ToString());
@@ -487,7 +487,7 @@
 //        }
 //    }
 
-//    public class SteamGameChatCommand : PreMadeChatCommandModel
+//    public class SteamGamePreMadeChatCommand : PreMadeChatCommandModel
 //    {
 //        private static Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
@@ -508,23 +508,23 @@
 //                        JArray games = (JArray)list;
 //                        foreach (JToken game in games)
 //                        {
-//                            SteamGameChatCommand.steamGameList[game["name"].ToString().ToLower()] = (int)game["appid"];
+//                            SteamGamePreMadeChatCommand.steamGameList[game["name"].ToString().ToLower()] = (int)game["appid"];
 //                        }
 //                    }
 //                }
 //            }
 
 //            int gameID = -1;
-//            if (SteamGameChatCommand.steamGameList.ContainsKey(gameName))
+//            if (SteamGamePreMadeChatCommand.steamGameList.ContainsKey(gameName))
 //            {
-//                gameID = SteamGameChatCommand.steamGameList[gameName];
+//                gameID = SteamGamePreMadeChatCommand.steamGameList[gameName];
 //            }
 //            else
 //            {
-//                string foundGame = SteamGameChatCommand.steamGameList.Keys.FirstOrDefault(g => g.Contains(gameName));
+//                string foundGame = SteamGamePreMadeChatCommand.steamGameList.Keys.FirstOrDefault(g => g.Contains(gameName));
 //                if (foundGame != null)
 //                {
-//                    gameID = SteamGameChatCommand.steamGameList[foundGame];
+//                    gameID = SteamGamePreMadeChatCommand.steamGameList[foundGame];
 //                }
 //            }
 
@@ -558,7 +558,7 @@
 //            return null;
 //        }
 
-//        public SteamGameChatCommand() : base(MixItUp.Base.Resources.SteamGame, "steamgame", 5, UserRoleEnum.User) { }
+//        public SteamGamePreMadeChatCommand() : base(MixItUp.Base.Resources.SteamGame, "steamgame", 5, UserRoleEnum.User) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -576,7 +576,7 @@
 //                }
 //            }
 
-//            GameInformation details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
+//            GameInformation details = await SteamGamePreMadeChatCommand.GetSteamGameInfo(gameName);
 //            if (details != null)
 //            {
 //                await ChannelSession.Services.Chat.SendMessage(details.ToString());
@@ -588,9 +588,9 @@
 //        }
 //    }
 
-//    public class SetTitleChatCommand : PreMadeChatCommandModel
+//    public class SetTitlePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public SetTitleChatCommand() : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, UserRoleEnum.Mod) { }
+//        public SetTitlePreMadeChatCommand() : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -609,9 +609,9 @@
 //        }
 //    }
 
-//    public class SetGameChatCommand : PreMadeChatCommandModel
+//    public class SetGamePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public SetGameChatCommand() : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Mod) { }
+//        public SetGamePreMadeChatCommand() : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -640,9 +640,9 @@
 //        }
 //    }
 
-//    public class SetUserTitleChatCommand : PreMadeChatCommandModel
+//    public class SetUserTitlePreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public SetUserTitleChatCommand() : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, UserRoleEnum.Mod) { }
+//        public SetUserTitlePreMadeChatCommand() : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -671,9 +671,9 @@
 //        }
 //    }
 
-//    public class AddCommandChatCommand : PreMadeChatCommandModel
+//    public class AddCommandPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public AddCommandChatCommand() : base(MixItUp.Base.Resources.AddCommand, "addcommand", 5, UserRoleEnum.Mod) { }
+//        public AddCommandPreMadeChatCommand() : base(MixItUp.Base.Resources.AddCommand, "addcommand", 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -733,9 +733,9 @@
 //        }
 //    }
 
-//    public class UpdateCommandChatCommand : PreMadeChatCommandModel
+//    public class UpdateCommandPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public UpdateCommandChatCommand() : base(MixItUp.Base.Resources.UpdateCommand, new HashSet<string>() { "updatecommand", "editcommand" }, 5, UserRoleEnum.Mod) { }
+//        public UpdateCommandPreMadeChatCommand() : base(MixItUp.Base.Resources.UpdateCommand, new HashSet<string>() { "updatecommand", "editcommand" }, 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -787,9 +787,9 @@
 //        }
 //    }
 
-//    public class DisableCommandChatCommand : PreMadeChatCommandModel
+//    public class DisableCommandPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public DisableCommandChatCommand() : base(MixItUp.Base.Resources.DisableCommand, "disablecommand", 5, UserRoleEnum.Mod) { }
+//        public DisableCommandPreMadeChatCommand() : base(MixItUp.Base.Resources.DisableCommand, "disablecommand", 5, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -820,9 +820,9 @@
 //        }
 //    }
 
-//    public class StartGiveawayChatCommand : PreMadeChatCommandModel
+//    public class StartGiveawayPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public StartGiveawayChatCommand() : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, UserRoleEnum.Streamer) { }
+//        public StartGiveawayPreMadeChatCommand() : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, UserRoleEnum.Streamer) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -841,11 +841,11 @@
 //        }
 //    }
 
-//    public class LinkMixerAccountChatCommand : PreMadeChatCommandModel
+//    public class LinkMixerAccountPreMadeChatCommand : PreMadeChatCommandModel
 //    {
 //        public static Dictionary<Guid, Guid> LinkedAccounts = new Dictionary<Guid, Guid>();
 
-//        public LinkMixerAccountChatCommand() : base("Link Mixer Account", "linkmixeraccount", 0, UserRoleEnum.User)  { }
+//        public LinkMixerAccountPreMadeChatCommand() : base("Link Mixer Account", "linkmixeraccount", 0, UserRoleEnum.User)  { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
@@ -870,9 +870,9 @@
 //        }
 //    }
 
-//    public class ApproveMixerAccountChatCommand : PreMadeChatCommandModel
+//    public class ApproveMixerAccountPreMadeChatCommand : PreMadeChatCommandModel
 //    {
-//        public ApproveMixerAccountChatCommand() : base("Approve Mixer Account", "approvemixeraccount", 0, UserRoleEnum.Mod) { }
+//        public ApproveMixerAccountPreMadeChatCommand() : base("Approve Mixer Account", "approvemixeraccount", 0, UserRoleEnum.Mod) { }
 
 //        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
 //        {
