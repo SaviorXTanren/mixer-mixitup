@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using LinqToTwitter;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -62,14 +63,9 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool IsEnabled { get; set; }
 
-        public ActionModelBase()
+        public ActionModelBase(ActionTypeEnum type)
         {
             this.ID = Guid.NewGuid();
-        }
-
-        public ActionModelBase(ActionTypeEnum type)
-            : this()
-        {
             this.Type = type;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
@@ -93,6 +89,17 @@ namespace MixItUp.Base.Model.Actions
         }
 
         protected abstract Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers);
+
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, bool encode = false)
+        {
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, platform, encode);
+            foreach (var kvp in specialIdentifiers)
+            {
+                siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+            }
+            await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            return siString.ToString();
+        }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
