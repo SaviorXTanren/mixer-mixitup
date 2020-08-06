@@ -24,6 +24,22 @@ namespace MixItUp.Base.Model.Commands
     }
 
     [DataContract]
+    public class CommandGroupSettingsModel
+    {
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public bool IsMinimized { get; set; }
+
+        [DataMember]
+        public int TimerInterval { get; set; }
+
+        public CommandGroupSettingsModel() { }
+
+        public CommandGroupSettingsModel(string name) { this.Name = name; }
+    }
+
+    [DataContract]
     public abstract class CommandModelBase
     {
         [DataMember]
