@@ -11,12 +11,6 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class ChatAction : ActionBase
     {
-        public static readonly Regex UserNameTagRegex = new Regex(@"@\w+");
-        public static readonly Regex WhisperRegex = new Regex(@"^/w(hisper)? @\w+ ", RegexOptions.IgnoreCase);
-        public static readonly Regex ClearRegex = new Regex(@"^/clear$", RegexOptions.IgnoreCase);
-        public static readonly Regex TimeoutRegex = new Regex(@"^/timeout @\w+ \d+$", RegexOptions.IgnoreCase);
-        public static readonly Regex BanRegex = new Regex(@"^/ban @\w+$", RegexOptions.IgnoreCase);
-
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatAction.asyncSemaphore; } }

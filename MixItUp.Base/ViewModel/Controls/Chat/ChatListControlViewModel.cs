@@ -16,6 +16,12 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 {
     public class ChatListControlViewModel : WindowControlViewModelBase
     {
+        public static readonly Regex UserNameTagRegex = new Regex(@"@\w+");
+        public static readonly Regex WhisperRegex = new Regex(@"^/w(hisper)? @\w+ ", RegexOptions.IgnoreCase);
+        public static readonly Regex ClearRegex = new Regex(@"^/clear$", RegexOptions.IgnoreCase);
+        public static readonly Regex TimeoutRegex = new Regex(@"^/timeout @\w+ \d+$", RegexOptions.IgnoreCase);
+        public static readonly Regex BanRegex = new Regex(@"^/ban @\w+$", RegexOptions.IgnoreCase);
+
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
 
         public int AlternationCount { get { return (ChannelSession.Settings.UseAlternatingBackgroundColors) ? 2 : 1; } }
@@ -91,24 +97,24 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             {
                 if (!string.IsNullOrEmpty(this.SendMessageText))
                 {
-                    if (ChatAction.WhisperRegex.IsMatch(this.SendMessageText))
+                    if (ChatListControlViewModel.WhisperRegex.IsMatch(this.SendMessageText))
                     {
-                        Match whisperRegexMatch = ChatAction.WhisperRegex.Match(this.SendMessageText);
+                        Match whisperRegexMatch = ChatListControlViewModel.WhisperRegex.Match(this.SendMessageText);
 
                         string message = this.SendMessageText.Substring(whisperRegexMatch.Value.Length);
 
-                        Match userNameMatch = ChatAction.UserNameTagRegex.Match(whisperRegexMatch.Value);
+                        Match userNameMatch = ChatListControlViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
                         string username = userNameMatch.Value;
                         username = username.Trim();
                         username = username.Replace("@", "");
 
                         await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer);
                     }
-                    else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
+                    else if (ChatListControlViewModel.ClearRegex.IsMatch(this.SendMessageText))
                     {
                         await ChannelSession.Services.Chat.ClearMessages();
                     }
-                    else if (ChatAction.TimeoutRegex.IsMatch(this.SendMessageText))
+                    else if (ChatListControlViewModel.TimeoutRegex.IsMatch(this.SendMessageText))
                     {
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 3)
@@ -134,7 +140,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                             }
                         }
                     }
-                    else if (ChatAction.BanRegex.IsMatch(this.SendMessageText))
+                    else if (ChatListControlViewModel.BanRegex.IsMatch(this.SendMessageText))
                     {
                         string[] splits = this.SendMessageText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (splits.Length == 2)
