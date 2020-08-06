@@ -533,7 +533,7 @@ namespace MixItUp.Base.Model.Currency
                     }
 
                     StringBuilder storeHelp = new StringBuilder();
-                    storeHelp.Append(this.ShopCommand + " list = Lists all the items available for buying/selling ** ");
+                    storeHelp.Append("USAGE: " + this.ShopCommand + " list = Lists all the items available for buying/selling ** ");
                     storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
                     storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
