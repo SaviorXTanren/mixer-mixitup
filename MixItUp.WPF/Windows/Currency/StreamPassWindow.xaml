@@ -232,7 +232,7 @@
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="220">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" />
+                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -264,7 +264,7 @@
                                 <Grid>
                                     <Button x:Name="DefaultLevelUpNewCommandButton" HorizontalAlignment="Center" Click="DefaultLevelUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding DefaultLevelUpCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                                    <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" DeleteClicked="DefaultLevelUpCommandButtons_DeleteClicked" Visibility="{Binding DefaultLevelUpCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" DeleteClicked="DefaultLevelUpCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" Visibility="{Binding DefaultLevelUpCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </Grid>
                             </GroupBox>
                         </Grid>
