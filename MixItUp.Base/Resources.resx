@@ -3149,4 +3149,13 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ShowSubsResubs" xml:space="preserve">
     <value>Show Subs/Resubs</value>
   </data>
+  <data name="ClearAllMixerUserDataWarning" xml:space="preserve">
+    <value>This will clear all data for your old Mixer Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This process will take some time to complete depending on how many users you had and CAN NOT be un-done! Are you sure you wish to do this?</value>
+  </data>
+  <data name="ClearMixerUserData" xml:space="preserve">
+    <value>Clear Mixer Data</value>
+  </data>
+  <data name="ClearMixerUserDataHeader" xml:space="preserve">
+    <value>Clear all Mixer User data</value>
+  </data>
 </root>

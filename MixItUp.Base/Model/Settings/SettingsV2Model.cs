@@ -734,6 +734,24 @@ namespace MixItUp.Base.Model.Settings
             this.InitializeMissingData();
         }
 
+        public void ClearMixerUserData()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (Guid id in this.UsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
+            {
+                this.UserData.Remove(id);
+            }
+
+            foreach (UserDataModel userData in this.UserData.Values.ToList())
+            {
+                if (userData.MixerID > 0)
+                {
+                    this.UserData.Remove(userData.ID);
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+        }
+
         public async Task ClearAllUserData()
         {
             this.UserData.Clear();

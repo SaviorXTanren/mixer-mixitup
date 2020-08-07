@@ -58,8 +58,6 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
             }
         }
 
-        public GenericButtonSettingsOptionControlViewModel ClearUserData { get; set; }
-
         public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>();
 
         public string TitleName
@@ -110,8 +108,22 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
         public ICommand AddCommand { get; set; }
 
+        public GenericButtonSettingsOptionControlViewModel ClearMixerUserData { get; set; }
+
+        public GenericButtonSettingsOptionControlViewModel ClearUserData { get; set; }
+
         public UsersSettingsControlViewModel()
         {
+            this.ClearMixerUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearMixerUserDataHeader, MixItUp.Base.Resources.ClearMixerUserData, this.CreateCommand(async (parameter) =>
+            {
+                if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllMixerUserDataWarning))
+                {
+                    ChannelSession.Settings.ClearMixerUserData();
+                    await ChannelSession.SaveSettings();
+                    GlobalEvents.RestartRequested();
+                }
+            }));
+
             this.ClearUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearUserData, this.CreateCommand(async (parameter) =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllUserDataWarning))
