@@ -51,5 +51,4 @@ namespace MixItUp.Base.Model.Actions
             }
         }
     }
-    }
 }

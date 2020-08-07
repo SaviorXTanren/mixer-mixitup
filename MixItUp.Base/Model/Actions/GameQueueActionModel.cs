@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.GameQueueType == GameQueueActionType.SelectFirstType)
                 {
-                    await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
+                    //await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
                 }
                 else if (this.GameQueueType == GameQueueActionType.ClearQueue)
                 {

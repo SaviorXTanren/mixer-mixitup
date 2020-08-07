@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.GameQueueActionTypeComboBox.SelectedItem = this.action.GameQueueType;
-                this.RoleRequirement.SetRoleRequirement(this.action.RoleRequirement);
+                //this.RoleRequirement.SetRoleRequirement(this.action.RoleRequirement);
                 this.TargetUsernameTextBox.Text = this.action.TargetUsername;
             }
             return Task.FromResult(0);
@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         return null;
                     }
-                    return new GameQueueAction(gameQueueType, this.RoleRequirement.GetRoleRequirement());
+                    //return new GameQueueAction(gameQueueType, this.RoleRequirement.GetRoleRequirement());
                 }
                 return new GameQueueAction(gameQueueType, targetUsername: this.TargetUsernameTextBox.Text);
             }
