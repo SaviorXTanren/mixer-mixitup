@@ -1,6 +1,4 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -19,13 +17,15 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class DiscordActionModel : ActionModelBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return DiscordActionModel.asyncSemaphore; } }
+
         public static DiscordActionModel CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordActionModel(DiscordActionTypeEnum.SendMessage) { SendMessageChannelID = channel.ID, SendMessageText = message, FilePath = filePath }; }
 
         public static DiscordActionModel CreateForMuteSelf(bool mute) { return new DiscordActionModel(DiscordActionTypeEnum.MuteSelf) { ShouldMuteDeafen = mute }; }
 
         public static DiscordActionModel CreateForDeafenSelf(bool deafen) { return new DiscordActionModel(DiscordActionTypeEnum.DeafenSelf) { ShouldMuteDeafen = deafen }; }
-
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
         public DiscordActionTypeEnum DiscordType { get; set; }
@@ -40,8 +40,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string FilePath { get; set; }
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return DiscordActionModel.asyncSemaphore; } }
 
         private DiscordChannel channel;
 

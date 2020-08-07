@@ -1,8 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
-using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -44,10 +41,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string FilePath { get; set; }
 
-        [DataMember]
-        [Obsolete]
-        public MixItUp.Base.Services.DiscordChannel SendMessageChannel { get; set; }
-
         private DiscordChannel channel;
 
         public DiscordAction() : base(ActionTypeEnum.Discord) { }
@@ -64,14 +57,6 @@ namespace MixItUp.Base.Actions
             {
                 if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
                 {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (this.SendMessageChannel != null)
-                    {
-                        this.SendMessageChannelID = SendMessageChannel.ID;
-                        this.SendMessageChannel = null;
-                    }
-#pragma warning restore CS0612 // Type or member is obsolete
-
                     if (this.channel == null)
                     {
                         this.channel = await ChannelSession.Services.Discord.GetChannel(this.SendMessageChannelID);
@@ -95,19 +80,3 @@ namespace MixItUp.Base.Actions
         }
     }
 }
-
-#region Deprecated Classes
-
-namespace MixItUp.Base.Services
-{
-    [Obsolete]
-    public class DiscordChannel
-    {
-        [JsonProperty("id")]
-        public string ID { get; set; }
-
-        public DiscordChannel() { }
-    }
-}
-
-#endregion Deprecated Classes

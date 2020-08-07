@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -27,7 +28,7 @@ namespace MixItUp.Base.Services
         Task MoveDown(UserViewModel user);
 
         Task SelectFirst();
-        Task SelectFirstType(RoleRequirementViewModel requirement);
+        Task SelectFirstType(RoleRequirementModel roleRequirement);
         Task SelectRandom();
 
         int GetUserPosition(UserViewModel user);
@@ -129,19 +130,19 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SelectFirstType(RoleRequirementViewModel requirement)
+        public async Task SelectFirstType(RoleRequirementModel roleRequirement)
         {
-            UserViewModel user = this.queue.FirstOrDefault(u => requirement.DoesMeetRequirement(u));
-            if (user != null)
+            foreach (UserViewModel user in this.queue.ToList())
             {
-                await this.SelectFirst();
+                if (await roleRequirement.Validate(user))
+                {
+                    this.queue.Remove(user);
+                    await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);
+                    GlobalEvents.GameQueueUpdated();
+                    return;
+                }
             }
-            else
-            {
-                this.queue.Remove(user);
-                await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);
-                GlobalEvents.GameQueueUpdated();
-            }
+            await this.SelectFirst();
         }
 
         public async Task SelectRandom()

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -34,14 +34,14 @@ namespace MixItUp.Base.Actions
         public GameQueueActionType GameQueueType { get; set; }
 
         [DataMember]
-        public RoleRequirementViewModel RoleRequirement { get; set; }
+        public RoleRequirementModel RoleRequirement { get; set; }
 
         [DataMember]
         public string TargetUsername { get; set; }
 
         public GameQueueAction() : base(ActionTypeEnum.GameQueue) { }
 
-        public GameQueueAction(GameQueueActionType gameQueueType, RoleRequirementViewModel roleRequirement = null, string targetUsername = null)
+        public GameQueueAction(GameQueueActionType gameQueueType, RoleRequirementModel roleRequirement = null, string targetUsername = null)
             : this()
         {
             this.GameQueueType = gameQueueType;
