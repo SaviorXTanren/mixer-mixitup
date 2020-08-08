@@ -15,8 +15,8 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum WebRequestResponseParseTypeEnum
     {
-        [Name("Special Identifier")]
-        SpecialIdentifier,
+        [Name("Plain Text")]
+        PlainText,
         [Name("JSON to Special Identifers")]
         JSONToSpecialIdentifiers
     }
