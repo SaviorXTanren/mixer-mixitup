@@ -43,9 +43,9 @@ namespace MixItUp.Base.Model.Actions
         Serial,
         Moderation,
         OvrStream,
-        StreamingPlatform,
         IFTTT,
         Clips,
+        Twitch,
     }
 
     [DataContract]
