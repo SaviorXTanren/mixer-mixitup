@@ -74,7 +74,7 @@ namespace MixItUp.Base.Model.Actions
         public static StreamingSoftwareActionModel CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
         {
             StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.Scene);
-            action.Name = sceneName;
+            action.ItemName = sceneName;
             return action;
         }
 
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Actions
         {
             StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.SourceVisibility);
             action.ParentName = sceneName;
-            action.Name = sourceName;
+            action.ItemName = sourceName;
             action.Visible = sourceVisible;
             return action;
         }
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Actions
         {
             return new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.SceneCollection)
             {
-                Name = sceneCollectionName
+                ItemName = sceneCollectionName
             };
         }
 
@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Actions
         public StreamingActionTypeEnum ActionType { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public string ItemName { get; set; }
         [DataMember]
         public string ParentName { get; set; }
 
@@ -175,16 +175,16 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = (StreamingActionTypeEnum)(int)action.ActionType;
             if (this.ActionType == StreamingActionTypeEnum.SceneCollection)
             {
-                this.Name = action.SceneCollectionName;
+                this.ItemName = action.SceneCollectionName;
             }
             else if (this.ActionType == StreamingActionTypeEnum.Scene)
             {
-                this.Name = action.SceneName;
+                this.ItemName = action.SceneName;
             }
             else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions || this.ActionType == StreamingActionTypeEnum.SourceVisibility ||
                 this.ActionType == StreamingActionTypeEnum.TextSource || this.ActionType == StreamingActionTypeEnum.WebBrowserSource)
             {
-                this.Name = action.SourceName;
+                this.ItemName = action.SourceName;
                 this.ParentName = action.SceneName;
             }
             this.Visible = action.SourceVisible;
@@ -238,9 +238,9 @@ namespace MixItUp.Base.Model.Actions
                 if (ssService.IsConnected)
                 {
                     string name = null;
-                    if (!string.IsNullOrEmpty(this.Name))
+                    if (!string.IsNullOrEmpty(this.ItemName))
                     {
-                        name = await this.ReplaceStringWithSpecialModifiers(this.Name, user, platform, arguments, specialIdentifiers);
+                        name = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, platform, arguments, specialIdentifiers);
                     }
 
                     string parentName = null;

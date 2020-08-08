@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model.Actions
         [Name("Run Ad")]
         RunAd,
         Raid,
+        VIPUser,
+        UnVIPUser
     }
 
     [DataContract]
@@ -32,12 +34,16 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public int AdLength { get; set; } = 60;
 
-        public TwitchActionModel(TwitchActionType type, string channelName = null, int adLength = 0)
+        [DataMember]
+        public string Username { get; set; }
+
+        public TwitchActionModel(TwitchActionType type, string channelName = null, int adLength = 0, string username = null)
             : base(ActionTypeEnum.Twitch)
         {
             this.ActionType = type;
             this.ChannelName = channelName;
             this.AdLength = adLength;
+            this.Username = username;
         }
 
         internal TwitchActionModel(MixItUp.Base.Actions.StreamingPlatformAction action)
@@ -82,6 +88,31 @@ namespace MixItUp.Base.Model.Actions
                 else if (!string.IsNullOrEmpty(response.message))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
+                }
+            }
+            else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
+            {
+                UserViewModel targetUser = null;
+                if (!string.IsNullOrEmpty(this.Username))
+                {
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
+                }
+                else
+                {
+                    targetUser = user;
+                }
+
+                if (targetUser != null)
+                {
+                    if (this.ActionType == TwitchActionType.VIPUser)
+                    {
+                        await ChannelSession.Services.Chat.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    }
+                    else if (this.ActionType == TwitchActionType.UnVIPUser)
+                    {
+                        await ChannelSession.Services.Chat.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    }
                 }
             }
         }

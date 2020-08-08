@@ -111,20 +111,6 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ChannelSession.Services.Chat.UnmodUser(targetUser);
                 }
-                else if (this.ActionType == ModerationActionTypeEnum.VIPUser)
-                {
-                    if (ChannelSession.Services.Chat.TwitchChatService != null)
-                    {
-                        await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true);
-                    }
-                }
-                else if (this.ActionType == ModerationActionTypeEnum.UnVIPUser)
-                {
-                    if (ChannelSession.Services.Chat.TwitchChatService != null)
-                    {
-                        await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true);
-                    }
-                }
                 else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                 {
                     string moderationReason = "Manual Moderation Strike";
