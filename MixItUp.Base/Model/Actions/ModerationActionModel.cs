@@ -43,7 +43,7 @@ namespace MixItUp.Base.Model.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return ModerationActionModel.asyncSemaphore; } }
 
         [DataMember]
-        public ModerationActionTypeEnum ModerationType { get; set; }
+        public ModerationActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string UserName { get; set; }
@@ -53,13 +53,22 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string ModerationReason { get; set; }
 
-        public ModerationActionModel(ModerationActionTypeEnum moderationType, string username, string timeAmount, string moderationReason)
+        public ModerationActionModel(ModerationActionTypeEnum actionType, string username, string timeAmount, string moderationReason)
             : base(ActionTypeEnum.Moderation)
         {
-            this.ModerationType = moderationType;
+            this.ActionType = actionType;
             this.UserName = username;
             this.TimeAmount = timeAmount;
             this.ModerationReason = moderationReason;
+        }
+
+        internal ModerationActionModel(MixItUp.Base.Actions.ModerationAction action)
+            : base(ActionTypeEnum.Moderation)
+        {
+            this.ActionType = (ModerationActionTypeEnum)(int)action.ModerationType;
+            this.UserName = action.UserName;
+            this.TimeAmount = action.TimeAmount;
+            this.ModerationReason = action.ModerationReason;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -75,47 +84,47 @@ namespace MixItUp.Base.Model.Actions
                 targetUser = user;
             }
 
-            if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
+            if (this.ActionType == ModerationActionTypeEnum.ClearChat)
             {
                 await ChannelSession.Services.Chat.ClearMessages();
             }
             else if (targetUser != null)
             {
-                if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
+                if (this.ActionType == ModerationActionTypeEnum.PurgeUser)
                 {
                     await ChannelSession.Services.Chat.PurgeUser(targetUser);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
+                else if (this.ActionType == ModerationActionTypeEnum.BanUser)
                 {
                     await ChannelSession.Services.Chat.BanUser(targetUser);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.UnbanUser)
+                else if (this.ActionType == ModerationActionTypeEnum.UnbanUser)
                 {
                     await ChannelSession.Services.Chat.UnbanUser(targetUser);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.ModUser)
+                else if (this.ActionType == ModerationActionTypeEnum.ModUser)
                 {
                     await ChannelSession.Services.Chat.ModUser(targetUser);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.UnmodUser)
+                else if (this.ActionType == ModerationActionTypeEnum.UnmodUser)
                 {
                     await ChannelSession.Services.Chat.UnmodUser(targetUser);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.VIPUser)
+                else if (this.ActionType == ModerationActionTypeEnum.VIPUser)
                 {
                     if (ChannelSession.Services.Chat.TwitchChatService != null)
                     {
                         await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true);
                     }
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.UnVIPUser)
+                else if (this.ActionType == ModerationActionTypeEnum.UnVIPUser)
                 {
                     if (ChannelSession.Services.Chat.TwitchChatService != null)
                     {
                         await ChannelSession.Services.Chat.TwitchChatService.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true);
                     }
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
+                else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                 {
                     string moderationReason = "Manual Moderation Strike";
                     if (!string.IsNullOrEmpty(this.ModerationReason))
@@ -124,7 +133,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     await targetUser.AddModerationStrike(moderationReason);
                 }
-                else if (this.ModerationType == ModerationActionTypeEnum.RemoveModerationStrike)
+                else if (this.ActionType == ModerationActionTypeEnum.RemoveModerationStrike)
                 {
                     await targetUser.RemoveModerationStrike();
                 }
@@ -133,7 +142,7 @@ namespace MixItUp.Base.Model.Actions
                     string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, user, platform, arguments, specialIdentifiers);
                     if (uint.TryParse(timeAmountString, out uint timeAmount))
                     {
-                        if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
+                        if (this.ActionType == ModerationActionTypeEnum.ChatTimeout)
                         {
                             await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
                         }

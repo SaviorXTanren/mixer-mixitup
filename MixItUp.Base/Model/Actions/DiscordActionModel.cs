@@ -21,54 +21,64 @@ namespace MixItUp.Base.Model.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return DiscordActionModel.asyncSemaphore; } }
 
-        public static DiscordActionModel CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordActionModel(DiscordActionTypeEnum.SendMessage) { SendMessageChannelID = channel.ID, SendMessageText = message, FilePath = filePath }; }
+        public static DiscordActionModel CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordActionModel(DiscordActionTypeEnum.SendMessage) { ChannelID = channel.ID, MessageText = message, FilePath = filePath }; }
 
         public static DiscordActionModel CreateForMuteSelf(bool mute) { return new DiscordActionModel(DiscordActionTypeEnum.MuteSelf) { ShouldMuteDeafen = mute }; }
 
         public static DiscordActionModel CreateForDeafenSelf(bool deafen) { return new DiscordActionModel(DiscordActionTypeEnum.DeafenSelf) { ShouldMuteDeafen = deafen }; }
 
         [DataMember]
-        public DiscordActionTypeEnum DiscordType { get; set; }
+        public DiscordActionTypeEnum ActionType { get; set; }
 
         [DataMember]
-        public string SendMessageChannelID { get; set; }
+        public string ChannelID { get; set; }
+
         [DataMember]
-        public string SendMessageText { get; set; }
+        public string MessageText { get; set; }
+        [DataMember]
+        public string FilePath { get; set; }
 
         [DataMember]
         public bool ShouldMuteDeafen { get; set; }
 
-        [DataMember]
-        public string FilePath { get; set; }
-
         private DiscordChannel channel;
 
-        public DiscordActionModel(DiscordActionTypeEnum type)
+        public DiscordActionModel(DiscordActionTypeEnum actionType)
             : base(ActionTypeEnum.Discord)
         {
-            this.DiscordType = type;
+            this.ActionType = actionType;
+        }
+
+        internal DiscordActionModel(MixItUp.Base.Actions.DiscordAction action)
+            : base(ActionTypeEnum.Discord)
+        {
+            this.ActionType = (DiscordActionTypeEnum)(int)action.DiscordType;
+            this.ChannelID = action.SendMessageChannelID;
+            this.MessageText = action.SendMessageText;
+            this.FilePath = action.FilePath;
+            this.ShouldMuteDeafen = action.ShouldMuteDeafen;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
+            if (this.ActionType == DiscordActionTypeEnum.SendMessage)
             {
                 if (this.channel == null)
                 {
-                    this.channel = await ChannelSession.Services.Discord.GetChannel(this.SendMessageChannelID);
+                    this.channel = await ChannelSession.Services.Discord.GetChannel(this.ChannelID);
                 }
 
                 if (this.channel != null)
                 {
-                    string message = await this.ReplaceStringWithSpecialModifiers(this.SendMessageText, user, platform, arguments, specialIdentifiers);
+                    string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, user, platform, arguments, specialIdentifiers);
                     await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
                 }
             }
-            else if (this.DiscordType == DiscordActionTypeEnum.MuteSelf)
+            else if (this.ActionType == DiscordActionTypeEnum.MuteSelf)
             {
                 await ChannelSession.Services.Discord.MuteServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
             }
-            else if (this.DiscordType == DiscordActionTypeEnum.DeafenSelf)
+            else if (this.ActionType == DiscordActionTypeEnum.DeafenSelf)
             {
                 await ChannelSession.Services.Discord.DeafenServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
             }

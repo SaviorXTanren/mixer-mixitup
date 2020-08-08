@@ -30,15 +30,24 @@ namespace MixItUp.Base.Model.Actions
         public bool MakeGloballyUsable { get; set; }
 
         [DataMember]
-        public bool SpecialIdentifierShouldProcessMath { get; set; }
+        public bool ShouldProcessMath { get; set; }
 
-        public SpecialIdentifierActionModel(string specialIdentifierName, string specialIdentifierReplacement, bool makeGloballyUsable, bool specialIdentifierShouldProcessMath)
+        public SpecialIdentifierActionModel(string specialIdentifierName, string specialIdentifierReplacement, bool makeGloballyUsable, bool shouldProcessMath)
             : base(ActionTypeEnum.SpecialIdentifier)
         {
             this.SpecialIdentifierName = specialIdentifierName;
             this.SpecialIdentifierReplacement = specialIdentifierReplacement;
             this.MakeGloballyUsable = makeGloballyUsable;
-            this.SpecialIdentifierShouldProcessMath = specialIdentifierShouldProcessMath;
+            this.ShouldProcessMath = shouldProcessMath;
+        }
+
+        internal SpecialIdentifierActionModel(MixItUp.Base.Actions.SpecialIdentifierAction action)
+            : base(ActionTypeEnum.SpecialIdentifier)
+        {
+            this.SpecialIdentifierName = action.SpecialIdentifierName;
+            this.SpecialIdentifierReplacement = action.SpecialIdentifierReplacement;
+            this.MakeGloballyUsable = action.MakeGloballyUsable;
+            this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -50,7 +59,7 @@ namespace MixItUp.Base.Model.Actions
             replacementText = await this.ProcessStringFunction(replacementText, "tolower", (text) => { return Task.FromResult(text.ToLower()); });
             replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
 
-            if (this.SpecialIdentifierShouldProcessMath)
+            if (this.ShouldProcessMath)
             {
                 try
                 {

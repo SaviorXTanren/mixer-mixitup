@@ -42,6 +42,15 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
+        internal OverlayActionModel(MixItUp.Base.Actions.OverlayAction action)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.OverlayName = action.OverlayName;
+            this.OverlayItem = action.OverlayItem;
+            this.WidgetID = action.WidgetID;
+            this.ShowWidget = action.ShowWidget;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.WidgetID != Guid.Empty)

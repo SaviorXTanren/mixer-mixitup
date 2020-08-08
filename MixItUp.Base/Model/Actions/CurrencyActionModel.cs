@@ -29,6 +29,8 @@ namespace MixItUp.Base.Model.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
+        protected override SemaphoreSlim AsyncSemaphore { get { return CurrencyActionModel.asyncSemaphore; } }
+
         [DataMember]
         public Guid CurrencyID { get; set; }
         [DataMember]
@@ -37,7 +39,7 @@ namespace MixItUp.Base.Model.Actions
         public Guid StreamPassID { get; set; }
 
         [DataMember]
-        public CurrencyActionTypeEnum CurrencyActionType { get; set; }
+        public CurrencyActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string Username { get; set; }
@@ -51,22 +53,22 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public UserRoleEnum MinimumRole { get; set; }
 
-        public CurrencyActionModel(CurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
+        public CurrencyActionModel(CurrencyModel currency, CurrencyActionTypeEnum actionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Currency)
         {
             this.CurrencyID = currency.ID;
-            this.CurrencyActionType = currencyActionType;
+            this.ActionType = actionType;
             this.Amount = amount;
             this.Username = username;
             this.MinimumRole = minimumRole;
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyActionModel(InventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
+        public CurrencyActionModel(InventoryModel inventory, CurrencyActionTypeEnum actionType, string itemName = null, string amount = null, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Currency)
         {
             this.InventoryID = inventory.ID;
-            this.CurrencyActionType = currencyActionType;
+            this.ActionType = actionType;
             this.ItemName = itemName;
             this.Amount = amount;
             this.Username = username;
@@ -74,18 +76,30 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyActionModel(StreamPassModel streamPass, CurrencyActionTypeEnum currencyActionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
+        public CurrencyActionModel(StreamPassModel streamPass, CurrencyActionTypeEnum actionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
             : base(ActionTypeEnum.Currency)
         {
             this.StreamPassID = streamPass.ID;
-            this.CurrencyActionType = currencyActionType;
+            this.ActionType = actionType;
             this.Amount = amount;
             this.Username = username;
             this.MinimumRole = minimumRole;
             this.DeductFromUser = deductFromUser;
         }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return CurrencyActionModel.asyncSemaphore; } }
+        internal CurrencyActionModel(MixItUp.Base.Actions.CurrencyAction action)
+            : base(ActionTypeEnum.Currency)
+        {
+            this.CurrencyID = action.CurrencyID;
+            this.InventoryID = action.InventoryID;
+            this.ItemName = action.ItemName;
+            this.StreamPassID = action.StreamPassID;
+            this.ActionType = (CurrencyActionTypeEnum)(int)action.CurrencyActionType;
+            this.Amount = action.Amount;
+            this.Username = action.Username;
+            this.MinimumRole = action.RoleRequirement;
+            this.DeductFromUser = action.DeductFromUser;
+        }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
@@ -138,7 +152,7 @@ namespace MixItUp.Base.Model.Actions
                 systemName = streamPass.Name;
             }
 
-            if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForAllUsers)
+            if (this.ActionType == CurrencyActionTypeEnum.ResetForAllUsers)
             {
                 if (currency != null)
                 {
@@ -153,7 +167,7 @@ namespace MixItUp.Base.Model.Actions
                     await streamPass.Reset();
                 }
             }
-            else if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForUser)
+            else if (this.ActionType == CurrencyActionTypeEnum.ResetForUser)
             {
                 if (currency != null)
                 {
@@ -185,11 +199,11 @@ namespace MixItUp.Base.Model.Actions
                 }
 
                 HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
-                if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
+                if (this.ActionType == CurrencyActionTypeEnum.AddToUser)
                 {
                     receiverUserData.Add(user.Data);
                 }
-                else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
+                else if (this.ActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
@@ -206,7 +220,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
                 }
-                else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToAllChatUsers || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                else if (this.ActionType == CurrencyActionTypeEnum.AddToAllChatUsers || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                 {
                     foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllWorkableUsers())
                     {
@@ -218,7 +232,7 @@ namespace MixItUp.Base.Model.Actions
                     receiverUserData.Add(ChannelSession.GetCurrentUser().Data);
                 }
 
-                if ((this.DeductFromUser && receiverUserData.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
+                if ((this.DeductFromUser && receiverUserData.Count > 0) || this.ActionType == CurrencyActionTypeEnum.SubtractFromUser)
                 {
                     if (currency != null)
                     {
@@ -255,7 +269,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (currency != null)
                         {
-                            if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 currency.SubtractAmount(receiverUser, amountValue);
                             }
@@ -266,7 +280,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else if (inventory != null)
                         {
-                            if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 inventory.SubtractAmount(receiverUser, item, amountValue);
                             }
@@ -277,7 +291,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else if (streamPass != null)
                         {
-                            if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 streamPass.SubtractAmount(receiverUser, amountValue);
                             }

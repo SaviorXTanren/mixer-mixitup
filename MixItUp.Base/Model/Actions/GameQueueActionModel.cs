@@ -31,25 +31,33 @@ namespace MixItUp.Base.Model.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return GameQueueActionModel.asyncSemaphore; } }
 
         [DataMember]
-        public GameQueueActionType GameQueueType { get; set; }
+        public GameQueueActionType ActionType { get; set; }
 
         [DataMember]
-        public UserRoleEnum RoleRequirement { get; set; }
+        public UserRoleEnum MinimumRole { get; set; }
 
         [DataMember]
         public string TargetUsername { get; set; }
 
-        public GameQueueActionModel(GameQueueActionType gameQueueType, UserRoleEnum roleRequirement = UserRoleEnum.User, string targetUsername = null)
+        public GameQueueActionModel(GameQueueActionType gameQueueType, UserRoleEnum minimumRole = UserRoleEnum.User, string targetUsername = null)
             : base(ActionTypeEnum.GameQueue)
         {
-            this.GameQueueType = gameQueueType;
-            this.RoleRequirement = roleRequirement;
+            this.ActionType = gameQueueType;
+            this.MinimumRole = minimumRole;
             this.TargetUsername = targetUsername;
+        }
+
+        internal GameQueueActionModel(MixItUp.Base.Actions.GameQueueAction action)
+            : base(ActionTypeEnum.GameQueue)
+        {
+            this.ActionType = (GameQueueActionType)(int)action.GameQueueType;
+            this.MinimumRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
+            this.TargetUsername = action.TargetUsername;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            if (this.GameQueueType == GameQueueActionType.EnableDisableQueue)
+            if (this.ActionType == GameQueueActionType.EnableDisableQueue)
             {
                 if (ChannelSession.Services.GameQueueService.IsEnabled)
                 {
@@ -60,11 +68,11 @@ namespace MixItUp.Base.Model.Actions
                     await ChannelSession.Services.GameQueueService.Enable();
                 }
             }
-            else if (this.GameQueueType == GameQueueActionType.EnableQueue)
+            else if (this.ActionType == GameQueueActionType.EnableQueue)
             {
                 await ChannelSession.Services.GameQueueService.Enable();
             }
-            else if (this.GameQueueType == GameQueueActionType.DisableQueue)
+            else if (this.ActionType == GameQueueActionType.DisableQueue)
             {
                 await ChannelSession.Services.GameQueueService.Disable();
             }
@@ -91,39 +99,39 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
 
-                if (this.GameQueueType == GameQueueActionType.JoinQueue)
+                if (this.ActionType == GameQueueActionType.JoinQueue)
                 {
                     await ChannelSession.Services.GameQueueService.Join(user);
                 }
-                else if (this.GameQueueType == GameQueueActionType.JoinFrontOfQueue)
+                else if (this.ActionType == GameQueueActionType.JoinFrontOfQueue)
                 {
                     await ChannelSession.Services.GameQueueService.JoinFront(user);
                 }
-                else if (this.GameQueueType == GameQueueActionType.QueuePosition)
+                else if (this.ActionType == GameQueueActionType.QueuePosition)
                 {
                     await ChannelSession.Services.GameQueueService.PrintUserPosition(user);
                 }
-                else if (this.GameQueueType == GameQueueActionType.QueueStatus)
+                else if (this.ActionType == GameQueueActionType.QueueStatus)
                 {
                     await ChannelSession.Services.GameQueueService.PrintStatus();
                 }
-                else if (this.GameQueueType == GameQueueActionType.LeaveQueue)
+                else if (this.ActionType == GameQueueActionType.LeaveQueue)
                 {
                     await ChannelSession.Services.GameQueueService.Leave(user);
                 }
-                if (this.GameQueueType == GameQueueActionType.SelectFirst)
+                if (this.ActionType == GameQueueActionType.SelectFirst)
                 {
                     await ChannelSession.Services.GameQueueService.SelectFirst();
                 }
-                else if (this.GameQueueType == GameQueueActionType.SelectRandom)
+                else if (this.ActionType == GameQueueActionType.SelectRandom)
                 {
                     await ChannelSession.Services.GameQueueService.SelectRandom();
                 }
-                else if (this.GameQueueType == GameQueueActionType.SelectFirstType)
+                else if (this.ActionType == GameQueueActionType.SelectFirstType)
                 {
                     //await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
                 }
-                else if (this.GameQueueType == GameQueueActionType.ClearQueue)
+                else if (this.ActionType == GameQueueActionType.ClearQueue)
                 {
                     await ChannelSession.Services.GameQueueService.Clear();
                 }

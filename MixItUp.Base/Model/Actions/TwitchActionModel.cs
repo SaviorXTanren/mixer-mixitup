@@ -32,12 +32,32 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public int AdLength { get; set; } = 60;
 
-        private TwitchActionModel(TwitchActionType type, string channelName = null, int adLength = 0)
+        public TwitchActionModel(TwitchActionType type, string channelName = null, int adLength = 0)
             : base(ActionTypeEnum.Twitch)
         {
             this.ActionType = type;
             this.ChannelName = channelName;
             this.AdLength = adLength;
+        }
+
+        internal TwitchActionModel(MixItUp.Base.Actions.StreamingPlatformAction action)
+            : base(ActionTypeEnum.Twitch)
+        {
+            if (action.ActionType == Base.Actions.StreamingPlatformActionType.Host)
+            {
+                this.ActionType = TwitchActionType.Host;
+                this.ChannelName = action.HostChannelName;
+            }
+            else if (action.ActionType == Base.Actions.StreamingPlatformActionType.Raid)
+            {
+                this.ActionType = TwitchActionType.Raid;
+                this.ChannelName = action.HostChannelName;
+            }
+            else if (action.ActionType == Base.Actions.StreamingPlatformActionType.RunAd)
+            {
+                this.ActionType = TwitchActionType.RunAd;
+                this.AdLength = action.AdLength;
+            }
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)

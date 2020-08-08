@@ -28,6 +28,13 @@ namespace MixItUp.Base.Model.Actions
             this.Message = message;
         }
 
+        internal SerialActionModel(MixItUp.Base.Actions.SerialAction action)
+            : base(ActionTypeEnum.Serial)
+        {
+            this.PortName = action.PortName;
+            this.Message = action.Message;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));

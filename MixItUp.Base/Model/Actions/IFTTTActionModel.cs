@@ -32,6 +32,15 @@ namespace MixItUp.Base.Model.Actions
             this.EventValue3 = eventValue3;
         }
 
+        internal IFTTTActionModel(MixItUp.Base.Actions.IFTTTAction action)
+            : base(ActionTypeEnum.IFTTT)
+        {
+            this.EventName = action.EventName;
+            this.EventValue1 = action.EventValue1;
+            this.EventValue2 = action.EventValue2;
+            this.EventValue3 = action.EventValue3;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (ChannelSession.Services.IFTTT.IsConnected)

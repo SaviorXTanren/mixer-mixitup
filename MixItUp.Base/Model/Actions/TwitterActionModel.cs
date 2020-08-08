@@ -31,10 +31,10 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static TwitterActionModel CreateUpdateProfileNameAction(string newProfileName)
+        public static TwitterActionModel CreateUpdateProfileNameAction(string nameUpdate)
         {
             TwitterActionModel action = new TwitterActionModel(TwitterActionTypeEnum.UpdateName);
-            action.NewProfileName = newProfileName;
+            action.NameUpdate = nameUpdate;
             return action;
         }
 
@@ -47,12 +47,21 @@ namespace MixItUp.Base.Model.Actions
         public string ImagePath { get; set; }
 
         [DataMember]
-        public string NewProfileName { get; set; }
+        public string NameUpdate { get; set; }
 
         public TwitterActionModel(TwitterActionTypeEnum actionType)
             : base(ActionTypeEnum.Twitter)
         {
             this.ActionType = actionType;
+        }
+
+        internal TwitterActionModel(MixItUp.Base.Actions.TwitterAction action)
+            : base(ActionTypeEnum.Twitter)
+        {
+            this.ActionType = (TwitterActionTypeEnum)(int)action.ActionType;
+            this.TweetText = action.TweetText;
+            this.ImagePath = action.ImagePath;
+            this.NameUpdate = action.NewProfileName;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -80,7 +89,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    await ChannelSession.Services.Twitter.UpdateName(this.NewProfileName);
+                    await ChannelSession.Services.Twitter.UpdateName(this.NameUpdate);
                 }
             }
         }

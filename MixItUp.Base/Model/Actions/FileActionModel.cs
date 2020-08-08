@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace MixItUp.Base.Model.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return FileActionModel.asyncSemaphore; } }
 
         [DataMember]
-        public FileActionTypeEnum FileActionType { get; set; }
+        public FileActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string FilePath { get; set; }
@@ -38,28 +39,36 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string LineIndexToRead { get; set; }
 
-        public FileActionModel(FileActionTypeEnum fileActionType, string filePath, string transferText)
+        public FileActionModel(FileActionTypeEnum actionType, string filePath, string transferText)
             : base(ActionTypeEnum.File)
         {
-            this.FileActionType = fileActionType;
+            this.ActionType = actionType;
             this.FilePath = filePath;
             this.TransferText = transferText;
+        }
+
+        internal FileActionModel(MixItUp.Base.Actions.FileAction action)
+            : base(ActionTypeEnum.File)
+        {
+            this.ActionType = (FileActionTypeEnum)(int)action.FileActionType;
+            this.TransferText = action.TransferText;
+            this.LineIndexToRead = action.LineIndexToRead;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, platform, arguments, specialIdentifiers);
-            if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
+            if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile)
             {
                 filePath = filePath.ToFilePathString();
 
                 string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
                 textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, user, platform, arguments, specialIdentifiers);
-                if (this.FileActionType == FileActionTypeEnum.SaveToFile)
+                if (this.ActionType == FileActionTypeEnum.SaveToFile)
                 {
                     await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
                 }
-                else if (this.FileActionType == FileActionTypeEnum.AppendToFile)
+                else if (this.ActionType == FileActionTypeEnum.AppendToFile)
                 {
                     string dataToWrite = textToWrite;
                     if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(filePath)))
@@ -76,14 +85,14 @@ namespace MixItUp.Base.Model.Actions
                 string data = await ChannelSession.Services.FileService.ReadFile(filePath);
                 if (!string.IsNullOrEmpty(data))
                 {
-                    if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
-                        this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
+                    if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                        this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
                     {
                         List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
                         if (lines.Count > 0)
                         {
                             int lineIndex = -1;
-                            if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
+                            if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                             {
                                 if (!string.IsNullOrEmpty(this.LineIndexToRead))
                                 {
@@ -108,7 +117,7 @@ namespace MixItUp.Base.Model.Actions
                                 data = lines[lineIndex];
                             }
 
-                            if (this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
+                            if (this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
                             {
                                 if (lineIndex >= 0)
                                 {

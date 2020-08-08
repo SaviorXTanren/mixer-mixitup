@@ -24,7 +24,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class InputActionModel : ActionModelBase
     {
-
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return InputActionModel.asyncSemaphore; } }
@@ -64,6 +63,17 @@ namespace MixItUp.Base.Model.Actions
             this.Shift = shift;
             this.Control = control;
             this.Alt = alt;
+        }
+
+        internal InputActionModel(MixItUp.Base.Actions.InputAction action)
+            : base(ActionTypeEnum.Input)
+        {
+            this.Key = action.Key;
+            if (action.Mouse != null) { this.Mouse = (SimpleInputMouseEnum)(int)action.Mouse; }
+            this.ActionType = (InputActionTypeEnum)(int)action.ActionType;
+            this.Shift = action.Shift;
+            this.Control = action.Control;
+            this.Alt = action.Alt;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)

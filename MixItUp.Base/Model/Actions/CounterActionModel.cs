@@ -37,6 +37,16 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = amount;
         }
 
+        internal CounterActionModel(MixItUp.Base.Actions.CounterAction action)
+            : base(ActionTypeEnum.Counter)
+        {
+            this.CounterName = action.CounterName;
+            if (action.UpdateAmount) { this.ActionType = CounterActionTypeEnum.Update; }
+            else if (action.SetAmount) { this.ActionType = CounterActionTypeEnum.Set; }
+            else if (action.ResetAmount) { this.ActionType = CounterActionTypeEnum.Reset; }
+            this.Amount = action.Amount;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.ActionType == CounterActionTypeEnum.Reset)

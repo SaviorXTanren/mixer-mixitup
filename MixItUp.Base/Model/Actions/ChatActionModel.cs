@@ -31,6 +31,15 @@ namespace MixItUp.Base.Model.Actions
             this.WhisperUserName = whisperUserName;
         }
 
+        internal ChatActionModel(MixItUp.Base.Actions.ChatAction action)
+            : base(ActionTypeEnum.Chat)
+        {
+            this.ChatText = action.ChatText;
+            this.SendAsStreamer = action.SendAsStreamer;
+            this.IsWhisper = action.IsWhisper;
+            this.WhisperUserName = action.WhisperUserName;
+        }
+
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatActionModel.asyncSemaphore; } }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)

@@ -52,6 +52,22 @@ namespace MixItUp.Base.Model.Actions
             this.JSONToSpecialIdentifiers = jsonToSpecialIdentifiers;
         }
 
+        internal WebRequestActionModel(MixItUp.Base.Actions.WebRequestAction action)
+            : base(ActionTypeEnum.WebRequest)
+        {
+            this.Url = action.Url;
+            if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.Chat || action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.Command ||
+                action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.None || action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.SpecialIdentifier)
+            {
+                this.ResponseType = WebRequestResponseParseTypeEnum.PlainText;
+            }
+            else if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
+            {
+                this.ResponseType = WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers;
+                this.JSONToSpecialIdentifiers = action.JSONToSpecialIdentifiers;
+            }
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             using (HttpClient httpClient = new HttpClient())

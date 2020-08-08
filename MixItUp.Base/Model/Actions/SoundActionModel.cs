@@ -35,6 +35,14 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = outputDevice;
         }
 
+        internal SoundActionModel(MixItUp.Base.Actions.SoundAction action)
+            : base(ActionTypeEnum.Sound)
+        {
+            this.FilePath = action.FilePath;
+            this.VolumeScale = action.VolumeScale;
+            this.OutputDevice = action.OutputDevice;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, platform, arguments, specialIdentifiers);

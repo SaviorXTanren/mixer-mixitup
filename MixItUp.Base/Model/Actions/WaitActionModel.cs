@@ -23,6 +23,12 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = amount;
         }
 
+        internal WaitActionModel(MixItUp.Base.Actions.WaitAction action)
+            : base(ActionTypeEnum.Wait)
+        {
+            this.Amount = action.Amount;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, platform, arguments, specialIdentifiers);

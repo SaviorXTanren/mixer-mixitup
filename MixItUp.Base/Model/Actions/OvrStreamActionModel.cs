@@ -3,7 +3,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +30,7 @@ namespace MixItUp.Base.Model.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return OvrStreamActionModel.asyncSemaphore; } }
 
         [DataMember]
-        public OvrStreamActionTypeEnum OvrStreamActionType { get; set; }
+        public OvrStreamActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string TitleName { get; set; }
@@ -39,18 +38,28 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public Dictionary<string, string> Variables { get; set; } = new Dictionary<string, string>();
 
-        public OvrStreamActionModel(OvrStreamActionTypeEnum ovrStreamActionType)
+        public OvrStreamActionModel(OvrStreamActionTypeEnum actionType, string titleName = null, Dictionary<string, string> variables = null)
             : base(ActionTypeEnum.OvrStream)
         {
-            this.OvrStreamActionType = ovrStreamActionType;
+            this.ActionType = actionType;
+            this.TitleName = titleName;
+            this.Variables = variables;
+        }
+
+        internal OvrStreamActionModel(MixItUp.Base.Actions.OvrStreamAction action)
+            : base(ActionTypeEnum.OvrStream)
+        {
+            this.ActionType = (OvrStreamActionTypeEnum)(int)action.OvrStreamActionType;
+            this.TitleName = action.TitleName;
+            this.Variables = action.Variables;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (ChannelSession.Services.OvrStream.IsConnected)
             {
-                if (this.OvrStreamActionType == OvrStreamActionTypeEnum.UpdateVariables ||
-                    this.OvrStreamActionType == OvrStreamActionTypeEnum.PlayTitle)
+                if (this.ActionType == OvrStreamActionTypeEnum.UpdateVariables ||
+                    this.ActionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
                     Dictionary<string, string> processedVariables = new Dictionary<string, string>();
                     foreach (var kvp in this.Variables)
@@ -68,7 +77,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    switch (this.OvrStreamActionType)
+                    switch (this.ActionType)
                     {
                         case OvrStreamActionTypeEnum.UpdateVariables:
                             await ChannelSession.Services.OvrStream.UpdateVariables(this.TitleName, processedVariables);
@@ -78,15 +87,15 @@ namespace MixItUp.Base.Model.Actions
                             break;
                     }
                 }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
+                else if (this.ActionType == OvrStreamActionTypeEnum.HideTitle)
                 {
                     await ChannelSession.Services.OvrStream.HideTitle(this.TitleName);
                 }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.EnableTitle)
+                else if (this.ActionType == OvrStreamActionTypeEnum.EnableTitle)
                 {
                     await ChannelSession.Services.OvrStream.EnableTitle(this.TitleName);
                 }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.DisableTitle)
+                else if (this.ActionType == OvrStreamActionTypeEnum.DisableTitle)
                 {
                     await ChannelSession.Services.OvrStream.DisableTitle(this.TitleName);
                 }

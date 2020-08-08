@@ -34,6 +34,15 @@ namespace MixItUp.Base.Model.Actions
             this.WaitForFinish = waitForFinish;
         }
 
+        internal ExternalProgramActionModel(MixItUp.Base.Actions.ExternalProgramAction action)
+            : base(ActionTypeEnum.ExternalProgram)
+        {
+            this.FilePath = action.FilePath;
+            this.Arguments = action.Arguments;
+            this.ShowWindow = action.ShowWindow;
+            this.WaitForFinish = action.WaitForFinish;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             Process process = new Process();

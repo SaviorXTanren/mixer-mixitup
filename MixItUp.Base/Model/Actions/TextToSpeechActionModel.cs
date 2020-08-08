@@ -128,6 +128,16 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = rate;
         }
 
+        internal TextToSpeechActionModel(MixItUp.Base.Actions.TextToSpeechAction action)
+            : base(ActionTypeEnum.TextToSpeech)
+        {
+            this.SpeechText = action.SpeechText;
+            this.Voice = action.Voice;
+            this.Volume = action.Volume;
+            this.Pitch = action.Pitch;
+            this.Rate = action.Rate;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);

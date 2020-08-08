@@ -49,11 +49,6 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string Value3 { get; set; }
 
-        public ConditionalClauseModel()
-        {
-            this.ComparisionType = ConditionalComparisionTypeEnum.Equals;
-        }
-
         public ConditionalClauseModel(ConditionalComparisionTypeEnum comparisionType, string value1, string value2, string value3)
         {
             this.ComparisionType = comparisionType;
@@ -78,6 +73,7 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public Guid CommandID { get; set; }
+        // TODO
         [DataMember]
         public ActionModelBase Action { get; set; }
 
@@ -101,6 +97,18 @@ namespace MixItUp.Base.Model.Actions
             this.IgnoreCase = ignoreCase;
             this.Operator = op;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
+        }
+
+        internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action)
+            : base(ActionTypeEnum.Conditional)
+        {
+            this.IgnoreCase = action.IgnoreCase;
+            this.Operator = (ConditionalOperatorTypeEnum)(int)action.Operator;
+            this.CommandID = action.CommandID;
+            foreach (var clause in action.Clauses)
+            {
+                this.Clauses.Add(new ConditionalClauseModel((ConditionalComparisionTypeEnum)(int)clause.ComparisionType, clause.Value1, clause.Value2, clause.Value3));
+            }
         }
 
         // TODO

@@ -30,6 +30,13 @@ namespace MixItUp.Base.Model.Actions
             this.ShowClipInfoInChat = showClipInfoInChat;
         }
 
+        internal ClipsActionModel(MixItUp.Base.Actions.ClipsAction action)
+            : base(ActionTypeEnum.Clips)
+        {
+            this.IncludeDelay = action.IncludeDelay;
+            this.ShowClipInfoInChat = action.ShowClipInfoInChat;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.IncludeDelay);

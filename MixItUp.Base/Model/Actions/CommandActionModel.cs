@@ -27,10 +27,7 @@ namespace MixItUp.Base.Model.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return CommandActionModel.asyncSemaphore; } }
 
         [DataMember]
-        public CommandActionTypeEnum CommandActionType { get; set; }
-
-        [DataMember]
-        public string CommandArguments { get; set; }
+        public CommandActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public Guid CommandID { get; set; }
@@ -38,12 +35,15 @@ namespace MixItUp.Base.Model.Actions
         public Type PreMadeType { get; set; }
 
         [DataMember]
+        public string Arguments { get; set; }
+
+        [DataMember]
         public string GroupName { get; set; }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments)
             : base(ActionTypeEnum.Command)
         {
-            this.CommandActionType = commandActionType;
+            this.ActionType = commandActionType;
             if (command is PreMadeChatCommandModelBase)
             {
                 this.PreMadeType = command.GetType();
@@ -54,14 +54,24 @@ namespace MixItUp.Base.Model.Actions
                 this.CommandID = command.ID;
                 this.PreMadeType = null;
             }
-            this.CommandArguments = commandArguments;
+            this.Arguments = commandArguments;
         }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, string groupName)
             : base(ActionTypeEnum.Command)
         {
-            this.CommandActionType = commandActionType;
+            this.ActionType = commandActionType;
             this.GroupName = groupName;
+        }
+
+        internal CommandActionModel(MixItUp.Base.Actions.CommandAction action)
+            : base(ActionTypeEnum.Command)
+        {
+            this.ActionType = (CommandActionTypeEnum)(int)action.CommandActionType;
+            this.CommandID = action.CommandID;
+            this.PreMadeType = action.PreMadeType;
+            this.Arguments = action.CommandArguments;
+            this.GroupName = action.GroupName;
         }
 
         public CommandModelBase Command
@@ -94,14 +104,14 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CommandModelBase command = this.Command;
-            if (this.CommandActionType == CommandActionTypeEnum.RunCommand)
+            if (this.ActionType == CommandActionTypeEnum.RunCommand)
             {
                 if (command != null)
                 {
                     IEnumerable<string> newArguments = null;
-                    if (!string.IsNullOrEmpty(this.CommandArguments))
+                    if (!string.IsNullOrEmpty(this.Arguments))
                     {
-                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.CommandArguments, user, platform, arguments, specialIdentifiers);
+                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.Arguments, user, platform, arguments, specialIdentifiers);
                         newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     }
                     else
@@ -112,22 +122,22 @@ namespace MixItUp.Base.Model.Actions
                     await command.Perform(user, platform, newArguments, specialIdentifiers);
                 }
             }
-            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommand || this.CommandActionType == CommandActionTypeEnum.EnableCommand)
+            else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)
             {
                 if (command != null)
                 {
-                    command.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                    command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             }
-            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommandGroup || this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup)
+            else if (this.ActionType == CommandActionTypeEnum.DisableCommandGroup || this.ActionType == CommandActionTypeEnum.EnableCommandGroup)
             {
                 IEnumerable<CommandModelBase> commands = this.CommandGroup;
                 if (commands != null)
                 {
                     foreach (CommandModelBase cmd in commands)
                     {
-                        cmd.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
+                        cmd.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
                     }
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }

@@ -33,6 +33,14 @@ namespace MixItUp.Base.Model.Actions
             this.AllowProfanity = allowProfanity;
         }
 
+        internal TranslationActionModel(MixItUp.Base.Actions.TranslationAction action)
+            : base(ActionTypeEnum.Translation)
+        {
+            this.Culture = action.Culture;
+            this.Text = action.Text;
+            this.AllowProfanity = action.AllowProfanity;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (ChannelSession.Services.TranslationService != null)
