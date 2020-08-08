@@ -1420,6 +1420,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This will clear all data for your old Mixer Users, which includes their Hours, Currency, Rank, &amp; Custom User Commands, then restart Mix It Up. This process will take some time to complete depending on how many users you had and CAN NOT be un-done! Are you sure you wish to do this?.
+        /// </summary>
+        public static string ClearAllMixerUserDataWarning {
+            get {
+                return ResourceManager.GetString("ClearAllMixerUserDataWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear all User data (Hours, Currency, Rank, etc).
         /// </summary>
         public static string ClearAllUserDataHeader {
@@ -1452,6 +1461,24 @@ namespace MixItUp.Base {
         public static string ClearChatConfirmation {
             get {
                 return ResourceManager.GetString("ClearChatConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Mixer Data.
+        /// </summary>
+        public static string ClearMixerUserData {
+            get {
+                return ResourceManager.GetString("ClearMixerUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear all Mixer User data.
+        /// </summary>
+        public static string ClearMixerUserDataHeader {
+            get {
+                return ResourceManager.GetString("ClearMixerUserDataHeader", resourceCulture);
             }
         }
         

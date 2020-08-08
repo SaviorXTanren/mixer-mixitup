@@ -28,6 +28,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="20,0">
@@ -41,13 +45,11 @@
             <TextBox Grid.Column="2" Text="{Binding RegularMinimumHours}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredHours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MinWidth="100" />
         </Grid>
 
-        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="2" DataContext="{Binding ClearUserData}" />
+        <Border Grid.Row="2" Style="{StaticResource DefaultBorder}" />
 
-        <Border Grid.Row="4" Style="{StaticResource DefaultBorder}" />
+        <TextBlock Grid.Row="4" Text="{x:Static resx:Resources.UserTitles}" HorizontalAlignment="Center" />
 
-        <TextBlock Grid.Row="6" Text="{x:Static resx:Resources.UserTitles}" HorizontalAlignment="Center" />
-
-        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="8" BorderThickness="1" Width="450">
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="6" BorderThickness="1" Width="450">
             <DataGrid ItemsSource="{Binding Titles}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
@@ -64,7 +66,7 @@
             </DataGrid>
         </Border>
 
-        <Grid Grid.Row="10" HorizontalAlignment="Center">
+        <Grid Grid.Row="8" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -89,6 +91,12 @@
 
             <Button Grid.Column="6" Command="{Binding AddCommand}" Content="{x:Static resx:Resources.Add}"/>
         </Grid>
+
+        <Border Grid.Row="10" Style="{StaticResource DefaultBorder}" />
+
+        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="12" DataContext="{Binding ClearMixerUserData}" />
+
+        <GenericSettingsControls:GenericButtonSettingsOptionControl Grid.Row="14" DataContext="{Binding ClearUserData}" />
 
     </Grid>
 </local:SettingsControlBase>

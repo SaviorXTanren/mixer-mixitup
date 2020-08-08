@@ -5,6 +5,56 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.8.0:</h2>
+        <ul>
+            <li>Large-scale re-working of Settings menu, adding new areas and moving various options to better locations</li>
+            <li>Adding filtering option to Commands settings for Twitch Subscription Gifted &amp; Mass Subscriptions Gifted event commands to provide a better experience:</li>
+            <ul>
+                <li>This option allows you to set a filter amount for the Mass Subscriptions Gifted to determine which command is run</li>
+                <li>If the amount gifted is LESS THAN OR EQUAL to the filter amount, then it will only run the Subscription Gifted command once for each user who was gifted a sub</li>
+                <li>If the amount gifted is GREATER THAN the filter amount, it will only run the Mass Subscriptions Gifted command once in total</li>
+                <li>This option is enabled by default and set to 1, it can be disabled or changed by going to Settings -> Commands</li>
+            </ul>
+            <li>Adding Commands menu to Settings for command &amp; action-based options:</li>
+            <ul>
+                <li>Filtering option for Twitch Mass Subscriptions Gifted event command based on amount of sub gifted</li>
+                <li>Adding the ability to hide specific action types from the actions list</li>
+            </ul>
+            <li>Adding Alerts menu to Settings for chat alert-based options:</li>
+            <ul>
+                <li>Enable/disable individual alert options in more detail</li>
+                <li>Set colors for each individual alert type</li>
+            </ul>
+            <li>Adding the following options to the Chat menu in Settings:</li>
+            <ul>
+                <li>Username colors now default to the user's set value on Twitch</li>
+                <li>Custom username colors can be set based on the role of the user</li>
+                <li>Hiding a user's avatar, role badge, subscriber badge, and specialty badge</li>
+                <li>Hiding messages sent by Bot account</li>
+                <li>Add line seperators between messages</li>
+                <li>Alternating background colors for messages</li>
+            </ul>
+            <li>Adding the following options to the Notifications menu in Settings:</li>
+            <ul>
+                <li>Dedicated audio device to use just for notifications</li>
+            </ul>
+            <li>Adding the following options to the Users menu in Settings:</li>
+            <ul>
+                <li>Option to clear all Mixer user data permanently from your settings</li>
+                <li>Moving option to clear all user data from Advanced section to Users section</li>
+            </ul>
+            <li>Automated settings backups will now default to the Mix It Up settings folder when enabled unless a location is set</li>
+            <li>Users that are gifted a sub and choose to continue it by paying for the next month's sub will now trigger the Subscribed event command</li>
+            <li>Adjusting Twitch Channel Points Redeemed event command & Channel Points commands to only translate $message if there is a valid message sent by the user and having it also passed in as arguments to the command</li>
+            <li>Messages that are highlighted by the Twitch Channel Points Reward now show as highlighted in the Mix It Up chat UI</li>
+            <li>Discord actions now list announcement channels for community servers in the list of selectable channels</li>
+            <li>Adding Manual Reset option on Inventory editor window</li>
+            <li>Fixing bug with Bit Cheermotes where individual, non-standard amounts did not display properly (EX: A single bit cheermote for 3 bits)</li>
+            <li>Fixing bug with month computation where it would not include the interim month (EX: Someone has been subbed to you for 40 days, $usersubmonths should be 2)</li>
+            <li>Adjusting logic for handling timezone adjustment for Twitch dates &amp; times</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.7.3:</h2>
         <ul>
             <li>Force reseting Preview Program option for all users, please manually re-enable this option if you wish to stay in the Preview Program</li>
