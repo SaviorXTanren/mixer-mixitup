@@ -56,15 +56,14 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.WebRequest)
         {
             this.Url = action.Url;
-            if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.Chat || action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.Command ||
-                action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.None || action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.SpecialIdentifier)
-            {
-                this.ResponseType = WebRequestResponseParseTypeEnum.PlainText;
-            }
-            else if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
+            if (action.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
             {
                 this.ResponseType = WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers;
                 this.JSONToSpecialIdentifiers = action.JSONToSpecialIdentifiers;
+            }
+            else
+            {
+                this.ResponseType = WebRequestResponseParseTypeEnum.PlainText;
             }
         }
 

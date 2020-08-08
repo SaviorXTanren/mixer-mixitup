@@ -30,9 +30,7 @@ namespace MixItUp.Base.Model.Actions
         [Name("Mod User")]
         ModUser,
         [Name("Unmod User")]
-        UnmodUser,
-        VIPUser,
-        UnVIPUser
+        UnmodUser
     }
 
     [DataContract]
@@ -65,10 +63,13 @@ namespace MixItUp.Base.Model.Actions
         internal ModerationActionModel(MixItUp.Base.Actions.ModerationAction action)
             : base(ActionTypeEnum.Moderation)
         {
-            this.ActionType = (ModerationActionTypeEnum)(int)action.ModerationType;
-            this.UserName = action.UserName;
-            this.TimeAmount = action.TimeAmount;
-            this.ModerationReason = action.ModerationReason;
+            if (action.ModerationType != Base.Actions.ModerationActionTypeEnum.VIPUser && action.ModerationType != Base.Actions.ModerationActionTypeEnum.UnVIPUser)
+            {
+                this.ActionType = (ModerationActionTypeEnum)(int)action.ModerationType;
+                this.UserName = action.UserName;
+                this.TimeAmount = action.TimeAmount;
+                this.ModerationReason = action.ModerationReason;
+            }
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
