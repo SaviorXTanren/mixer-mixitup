@@ -24,6 +24,24 @@ namespace MixItUp.Base.Model.Requirements
             this.Amount = amount;
         }
 
+        internal CurrencyRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
+            : this()
+        {
+            if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                this.CurrencyID = requirement.CurrencyID;
+                this.Amount = requirement.RequiredAmount;
+            }
+            else if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly)
+            {
+
+            }
+            else if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+
+            }
+        }
+
         [JsonIgnore]
         public CurrencyModel Currency
         {

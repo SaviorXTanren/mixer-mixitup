@@ -27,6 +27,13 @@ namespace MixItUp.Base.Model.Requirements
             this.Amount = amount;
         }
 
+        internal InventoryRequirementModel(MixItUp.Base.ViewModel.Requirement.InventoryRequirementViewModel requirement)
+        {
+            this.InventoryID = requirement.InventoryID;
+            this.ItemID = requirement.ItemID;
+            this.Amount = requirement.Amount;
+        }
+
         [JsonIgnore]
         public InventoryModel Inventory
         {

@@ -12,10 +12,13 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public EventTypeEnum EventType { get; set; }
 
-        public EventCommandModel(EventTypeEnum eventType)
-            : base(eventType.ToString(), CommandTypeEnum.Event)
+        public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
+
+        internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
+            : base(command)
         {
-            this.EventType = eventType;
+            this.Name = command.EventCommandType.ToString();
+            this.Type = CommandTypeEnum.Event;
         }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }

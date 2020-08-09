@@ -10,6 +10,13 @@ namespace MixItUp.Base.Model.Commands
 
         public ActionGroupCommandModel(string name) : base(name, CommandTypeEnum.ActionGroup) { }
 
+        internal ActionGroupCommandModel(MixItUp.Base.Commands.ActionGroupCommand command)
+            : base(command)
+        {
+            this.Name = command.Name;
+            this.Type = CommandTypeEnum.ActionGroup;
+        }
+
         protected override SemaphoreSlim CommandLockSemaphore { get { return ActionGroupCommandModel.commandLockSemaphore; } }
     }
 }

@@ -35,6 +35,14 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = runForEachUser;
         }
 
+        internal ThresholdRequirementModel(MixItUp.Base.ViewModel.Requirement.ThresholdRequirementViewModel requirement)
+            : this()
+        {
+            this.Amount = requirement.Amount;
+            this.TimeSpan = requirement.TimeSpan;
+            this.RunForEachUser = false;
+        }
+
         public bool IsEnabled { get { return this.Amount > 0; } }
 
         public List<UserViewModel> GetApplicableUsers()

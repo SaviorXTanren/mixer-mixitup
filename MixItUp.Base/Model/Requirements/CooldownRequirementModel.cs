@@ -37,6 +37,14 @@ namespace MixItUp.Base.Model.Requirements
 
         public CooldownRequirementModel() { }
 
+        internal CooldownRequirementModel(MixItUp.Base.ViewModel.Requirement.CooldownRequirementViewModel requirement)
+            : this()
+        {
+            this.Type = (CooldownTypeEnum)(int)requirement.Type;
+            this.Amount = requirement.Amount;
+            this.GroupName = requirement.GroupName;
+        }
+
         public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
         {
             this.Type = type;

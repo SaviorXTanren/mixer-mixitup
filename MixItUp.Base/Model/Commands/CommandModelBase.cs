@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.Commands
         Game = 5,
         Remote = 6,
         TwitchChannelPoints = 7,
+        PreMade = 8,
     }
 
     [DataContract]
@@ -71,11 +72,17 @@ namespace MixItUp.Base.Model.Commands
             this.Type = type;
         }
 
-        internal CommandModelBase(MixItUp.Base.Commands.CommandBase command)
+        protected CommandModelBase(MixItUp.Base.Commands.CommandBase command)
         {
             this.ID = command.ID;
             this.IsEnabled = command.IsEnabled;
             this.Unlocked = command.Unlocked;
+
+            if (command is MixItUp.Base.Commands.PermissionsCommandBase)
+            {
+                MixItUp.Base.Commands.PermissionsCommandBase pCommand = (MixItUp.Base.Commands.PermissionsCommandBase)command;
+                this.Requirements = new RequirementsSetModel(pCommand.Requirements);
+            }
 
 #pragma warning disable CS0612 // Type or member is obsolete
             foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)

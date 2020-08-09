@@ -35,6 +35,13 @@ namespace MixItUp.Base.Model.Requirements
             this.MatchType = matchType;
         }
 
+        internal RankRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
+        {
+            this.RankSystemID = requirement.CurrencyID;
+            this.RankName = requirement.RankName;
+            this.MatchType = (requirement.MustEqual) ? RankRequirementMatchTypeEnum.EqualTo : RankRequirementMatchTypeEnum.GreaterThanOrEqualTo;
+        }
+
         [JsonIgnore]
         public CurrencyModel RankSystem
         {

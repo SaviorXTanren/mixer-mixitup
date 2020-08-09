@@ -21,6 +21,13 @@ namespace MixItUp.Base.Model.Requirements
 
         public RoleRequirementModel() { }
 
+        internal RoleRequirementModel(MixItUp.Base.ViewModel.Requirement.RoleRequirementViewModel requirement)
+            : this()
+        {
+            this.Role = requirement.MixerRole;
+            this.SubscriberTier = requirement.SubscriberTier;
+        }
+
         public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.Role = role;

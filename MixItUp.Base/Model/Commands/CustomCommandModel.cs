@@ -6,7 +6,14 @@ namespace MixItUp.Base.Model.Commands
     {
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
-        public CustomCommandModel(string name) : base(name, CommandTypeEnum.Timer) { }
+        public CustomCommandModel(string name) : base(name, CommandTypeEnum.Custom) { }
+
+        internal CustomCommandModel(MixItUp.Base.Commands.CustomCommand command)
+            : base(command)
+        {
+            this.Name = command.Name;
+            this.Type = CommandTypeEnum.Custom;
+        }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return CustomCommandModel.commandLockSemaphore; } }
     }

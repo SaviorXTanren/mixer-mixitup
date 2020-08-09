@@ -67,6 +67,16 @@ namespace MixItUp.Base.Model.Commands
 
         public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation, wildcards) { }
 
+        internal ChatCommandModel(MixItUp.Base.Commands.ChatCommand command)
+            : base(command)
+        {
+            this.Name = command.Name;
+            this.Type = CommandTypeEnum.Chat;
+            this.Triggers = command.CommandTriggers;
+            this.IncludeExclamation = command.IncludeExclamationInCommands;
+            this.Wildcards = command.Wildcards;
+        }
+
         protected ChatCommandModel(string name, CommandTypeEnum type, HashSet<string> triggers, bool includeExclamation, bool wildcards)
             : base(name, type)
         {

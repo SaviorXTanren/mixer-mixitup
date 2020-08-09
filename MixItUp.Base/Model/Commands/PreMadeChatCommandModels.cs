@@ -46,7 +46,7 @@ namespace MixItUp.Base.Model.Commands
         public PreMadeChatCommandModelBase(string name, string trigger, int cooldown, UserRoleEnum role) : this(name, new HashSet<string>() { trigger }, cooldown, role) { }
 
         public PreMadeChatCommandModelBase(string name, HashSet<string> triggers, int cooldown, UserRoleEnum role)
-            : base(name, triggers, includeExclamation: true, wildcards: false)
+            : base(name, CommandTypeEnum.PreMade, triggers, includeExclamation: true, wildcards: false)
         {
             this.Requirements.Requirements.Add(new RoleRequirementModel(role));
             this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));

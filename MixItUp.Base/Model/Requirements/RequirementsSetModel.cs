@@ -14,11 +14,51 @@ namespace MixItUp.Base.Model.Requirements
 
         public RequirementsSetModel() { }
 
+        internal RequirementsSetModel(MixItUp.Base.ViewModel.Requirement.RequirementViewModel requirements)
+            : this()
+        {
+            if (requirements.Role != null)
+            {
+                this.Requirements.Add(new RoleRequirementModel(requirements.Role));
+            }
+            if (requirements.Cooldown != null)
+            {
+                this.Requirements.Add(new CooldownRequirementModel(requirements.Cooldown));
+            }
+            if (requirements.Currency != null && requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
+            {
+                this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
+            }
+            if (requirements.Rank != null)
+            {
+                this.Requirements.Add(new RankRequirementModel(requirements.Rank));
+            }
+            if (requirements.Inventory != null)
+            {
+                this.Requirements.Add(new InventoryRequirementModel(requirements.Inventory));
+            }
+            if (requirements.Threshold != null)
+            {
+                this.Requirements.Add(new ThresholdRequirementModel(requirements.Threshold));
+            }
+            if (requirements.Settings != null)
+            {
+                this.Requirements.Add(new SettingsRequirementModel(requirements.Settings));
+                RoleRequirementModel role = this.Role;
+                if (role != null)
+                {
+                    role.PatreonBenefitID = requirements.Settings.PatreonBenefitIDRequirement;
+                }
+            }
+        }
+
         public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
 
         public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
         public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
+
+        public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
 
         public async Task<bool> Validate(UserViewModel user)
         {
