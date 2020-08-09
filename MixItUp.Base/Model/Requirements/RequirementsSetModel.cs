@@ -21,26 +21,44 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.Requirements.Add(new RoleRequirementModel(requirements.Role));
             }
+            else
+            {
+                this.Requirements.Add(new RoleRequirementModel());
+            }
+
             if (requirements.Cooldown != null)
             {
                 this.Requirements.Add(new CooldownRequirementModel(requirements.Cooldown));
             }
+            else
+            {
+                this.Requirements.Add(new CooldownRequirementModel());
+            }
+
             if (requirements.Currency != null && requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
             {
                 this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
             }
+
             if (requirements.Rank != null)
             {
                 this.Requirements.Add(new RankRequirementModel(requirements.Rank));
             }
+
             if (requirements.Inventory != null)
             {
                 this.Requirements.Add(new InventoryRequirementModel(requirements.Inventory));
             }
+
             if (requirements.Threshold != null)
             {
                 this.Requirements.Add(new ThresholdRequirementModel(requirements.Threshold));
             }
+            else
+            {
+                this.Requirements.Add(new ThresholdRequirementModel());
+            }
+
             if (requirements.Settings != null)
             {
                 this.Requirements.Add(new SettingsRequirementModel(requirements.Settings));
@@ -49,6 +67,10 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     role.PatreonBenefitID = requirements.Settings.PatreonBenefitIDRequirement;
                 }
+            }
+            else
+            {
+                this.Requirements.Add(new SettingsRequirementModel());
             }
         }
 
