@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -47,7 +48,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             get
             {
-                if (ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
+                if (this.CurrencyID != Guid.Empty && ChannelSession.Settings.Currency.ContainsKey(this.CurrencyID))
                 {
                     return ChannelSession.Settings.Currency[this.CurrencyID];
                 }
@@ -55,24 +56,17 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CurrencyModel currency = this.Currency;
             if (currency == null)
             {
-                return false;
+                return true;
             }
-
-            if (!user.Data.IsCurrencyRankExempt && !currency.HasAmount(user.Data, this.Amount))
-            {
-                await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, currency.Name));
-                return false;
-            }
-
-            return true;
+            return await this.ValidateAmount(user, platform, arguments, specialIdentifiers, currency, this.Amount);
         }
 
-        public override Task Perform(UserViewModel user)
+        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !user.Data.IsCurrencyRankExempt)
@@ -82,7 +76,7 @@ namespace MixItUp.Base.Model.Requirements
             return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user)
+        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !user.Data.IsCurrencyRankExempt)
@@ -90,6 +84,16 @@ namespace MixItUp.Base.Model.Requirements
                 currency.AddAmount(user.Data, this.Amount);
             }
             return Task.FromResult(0);
+        }
+
+        protected async Task<bool> ValidateAmount(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, CurrencyModel currency, int amount)
+        {
+            if (!user.Data.IsCurrencyRankExempt && !currency.HasAmount(user.Data, amount))
+            {
+                await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", amount, currency.Name));
+                return false;
+            }
+            return true;
         }
     }
 }

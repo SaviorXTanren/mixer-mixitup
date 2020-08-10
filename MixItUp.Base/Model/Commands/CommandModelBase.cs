@@ -286,17 +286,11 @@ namespace MixItUp.Base.Model.Commands
 
                     await this.CommandLockSemaphore.WaitAsync();
 
-                    List<UserViewModel> users = new List<UserViewModel>() { user };
-                    if (this.Requirements != null)
+                    if (!await this.ValidateRequirements(user, platform, arguments, specialIdentifiers))
                     {
-                        if (!await this.Requirements.Validate(user))
-                        {
-                            return;
-                        }
-                        await this.Requirements.Perform(user);
-
-                        users = new List<UserViewModel>(this.Requirements.GetPerformingUsers(user));
+                        return;
                     }
+                    IEnumerable<UserViewModel> users = await this.PerformRequirements(user, platform, arguments, specialIdentifiers);
 
                     if (this.IsUnlocked)
                     {
@@ -355,6 +349,29 @@ namespace MixItUp.Base.Model.Commands
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
         public virtual bool DoesCommandHaveWork { get { return this.Actions.Count > 0; } }
+
+        protected virtual async Task<bool> ValidateRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (this.Requirements != null)
+            {
+                if (!await this.Requirements.Validate(user, platform, arguments, specialIdentifiers))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected virtual async Task<IEnumerable<UserViewModel>> PerformRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            List<UserViewModel> users = new List<UserViewModel>() { user };
+            if (this.Requirements != null)
+            {
+                await this.Requirements.Perform(user, platform, arguments, specialIdentifiers);
+                users = new List<UserViewModel>(this.Requirements.GetPerformingUsers(user, platform, arguments, specialIdentifiers));
+            }
+            return users;
+        }
 
         protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {

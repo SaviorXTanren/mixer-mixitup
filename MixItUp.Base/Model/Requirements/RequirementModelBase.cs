@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -7,17 +8,17 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public abstract class RequirementModelBase
     {
-        public virtual Task<bool> Validate(UserViewModel user)
+        public virtual Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             return Task.FromResult(true);
         }
 
-        public virtual Task Perform(UserViewModel user)
+        public virtual Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             return Task.FromResult(0);
         }
 
-        public virtual Task Refund(UserViewModel user)
+        public virtual Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             return Task.FromResult(0);
         }

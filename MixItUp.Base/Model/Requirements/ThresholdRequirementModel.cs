@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Requirements
             return users;
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.IsEnabled)
             {
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user)
+        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             this.performs.Clear();
             return Task.FromResult(0);

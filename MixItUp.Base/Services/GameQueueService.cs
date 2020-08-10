@@ -134,7 +134,7 @@ namespace MixItUp.Base.Services
         {
             foreach (UserViewModel user in this.queue.ToList())
             {
-                if (await roleRequirement.Validate(user))
+                if (await roleRequirement.Validate(user, user.Platform, new List<string>(), new Dictionary<string, string>()))
                 {
                     this.queue.Remove(user);
                     await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);

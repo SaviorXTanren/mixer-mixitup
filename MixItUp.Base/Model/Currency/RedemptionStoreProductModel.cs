@@ -139,10 +139,10 @@ namespace MixItUp.Base.Model.Currency
                     }
                 }
 
-                if (await product.Requirements.Validate(user))
+                if (await product.Requirements.Validate(user, user.Platform, arguments, new Dictionary<string, string>()))
                 {
-                    await product.Requirements.Perform(user);
-                    foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user))
+                    await product.Requirements.Perform(user, user.Platform, arguments, new Dictionary<string, string>());
+                    foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user, user.Platform, arguments, new Dictionary<string, string>()))
                     {
                         if (!product.IsInfinite)
                         {
@@ -316,7 +316,7 @@ namespace MixItUp.Base.Model.Currency
             UserViewModel user = this.User;
             if (product != null && user != null)
             {
-                await product.Requirements.Refund(user);
+                await product.Requirements.Refund(user, user.Platform, new List<string>(), new Dictionary<string, string>());
                 if (!product.IsInfinite)
                 {
                     product.CurrentAmount++;

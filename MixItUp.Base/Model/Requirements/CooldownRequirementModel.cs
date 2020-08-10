@@ -75,7 +75,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
             if (this.Type == CooldownTypeEnum.Standard)
@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user)
+        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.Type == CooldownTypeEnum.Standard)
             {
@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Requirements
             return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user)
+        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.Type == CooldownTypeEnum.Standard)
             {

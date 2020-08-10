@@ -2,6 +2,7 @@
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace MixItUp.Base.Model.Requirements
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (!user.HasPermissionsTo(this.Role))
             {

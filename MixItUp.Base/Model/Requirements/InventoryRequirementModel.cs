@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -61,7 +62,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory == null)
@@ -84,7 +85,7 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user)
+        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !user.Data.IsCurrencyRankExempt)
@@ -94,7 +95,7 @@ namespace MixItUp.Base.Model.Requirements
             return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user)
+        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !user.Data.IsCurrencyRankExempt)
