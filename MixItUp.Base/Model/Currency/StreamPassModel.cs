@@ -178,13 +178,18 @@ namespace MixItUp.Base.Model.Currency
                 {
                     for (int level = (currentLevel + 1); level <= newLevel; level++)
                     {
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        {
+                            { this.UserLevelSpecialIdentifier, level.ToString() }
+                        };
+
                         if (this.CustomLevelUpCommands.ContainsKey(level) && ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]) != null)
                         {
-                            ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]).Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                            ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]).Perform(ChannelSession.Services.User.GetUserByID(user.ID), extraSpecialIdentifiers: specialIdentifiers).Wait();
                         }
                         else if (this.DefaultLevelUpCommand != null)
                         {
-                            this.DefaultLevelUpCommand.Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                            this.DefaultLevelUpCommand.Perform(ChannelSession.Services.User.GetUserByID(user.ID), extraSpecialIdentifiers: specialIdentifiers).Wait();
                         }
                     }
                 }
