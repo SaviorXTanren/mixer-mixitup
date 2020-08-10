@@ -63,6 +63,8 @@ namespace MixItUp.Base.ViewModel.User
 
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
+        public const string UserDefaultColor = "MaterialDesignBody";
+
         public UserDataModel Data { get; private set; }
 
         public UserViewModel(string username)
@@ -289,7 +291,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (string.IsNullOrEmpty(this.Data.Color))
                     {
-                        this.Data.Color = "MaterialDesignBody";
+                        this.Data.Color = UserViewModel.UserDefaultColor;
                     }
 
                     return this.Data.Color;
