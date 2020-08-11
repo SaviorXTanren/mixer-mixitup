@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,12 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class GameCommandModelBase : ChatCommandModel
     {
+        public const string GameBetSpecialIdentifier = "gamebet";
+
+        public const string GamePayoutSpecialIdentifier = "gamepayout";
+
+        public const string GameWinnersSpecialIdentifier = "gamewinners";
+
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         public GameCommandModelBase(string name, HashSet<string> triggers) : base(name, CommandTypeEnum.Game, triggers, includeExclamation: true, wildcards: false) { }
@@ -21,10 +29,61 @@ namespace MixItUp.Base.Model.Commands
 
         public override bool DoesCommandHaveWork { get { return true; } }
 
+        public GameCurrencyRequirementModel GameCurrencyRequirement { get { return (GameCurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
+
+        public int GetBetAmount(IEnumerable<string> arguments)
+        {
+            GameCurrencyRequirementModel gameCurrencyRequirement = this.GameCurrencyRequirement;
+            return (gameCurrencyRequirement != null) ? gameCurrencyRequirement.GetAmountFromArguments(arguments) : 0;
+        }
+
+        protected override Task<bool> ValidateRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            return base.ValidateRequirements(user, platform, arguments, specialIdentifiers);
+        }
+
+        protected override Task<IEnumerable<UserViewModel>> PerformRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            return base.PerformRequirements(user, platform, arguments, specialIdentifiers);
+        }
+
         protected override Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            throw new NotImplementedException();
+            return base.PerformInternal(user, platform, arguments, specialIdentifiers);
         }
+
+        protected async Task PerformOutcome(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, GameOutcomeModel outcome, int betAmount)
+        {
+            int payout = outcome.GetPayout(user, this.GetBetAmount(arguments));
+            specialIdentifiers[GameCommandBase.GameBetSpecialIdentifier] = betAmount.ToString();
+            specialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = payout.ToString();
+
+            if (outcome.Command != null)
+            {
+                await outcome.Command.Perform(user, platform, arguments, specialIdentifiers);
+            }
+        }
+
+        protected GameOutcomeModel SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcomeModel> outcomes)
+        {
+            int randomNumber = this.GenerateProbability();
+            int cumulativeOutcomeProbability = 0;
+            foreach (GameOutcomeModel outcome in outcomes)
+            {
+                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user)))
+                {
+                    return outcome;
+                }
+                cumulativeOutcomeProbability += outcome.GetRoleProbability(user);
+            }
+            return outcomes.Last();
+        }
+
+        protected int GenerateProbability() { return RandomHelper.GenerateProbability(); }
+
+        protected int GenerateRandomNumber(int maxValue) { return RandomHelper.GenerateRandomNumber(maxValue); }
+
+        protected int GenerateRandomNumber(int minValue, int maxValue) { return RandomHelper.GenerateRandomNumber(minValue, maxValue); }
     }
 
     [DataContract]
@@ -40,15 +99,15 @@ namespace MixItUp.Base.Model.Commands
         public Dictionary<UserRoleEnum, int> RoleProbabilities { get; set; }
 
         [DataMember]
-        public CustomCommand Command { get; set; }
+        public CustomCommandModel Command { get; set; }
 
         public GameOutcomeModel() { }
 
-        public GameOutcomeModel(string name, double payout, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommand command)
+        public GameOutcomeModel(string name, double payout, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommandModel command)
             : this(name, new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, payout } }, roleProbabilities, command)
         { }
 
-        public GameOutcomeModel(string name, Dictionary<UserRoleEnum, double> rolePayouts, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommand command)
+        public GameOutcomeModel(string name, Dictionary<UserRoleEnum, double> rolePayouts, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommandModel command)
         {
             this.Name = name;
             this.RolePayouts = rolePayouts;
@@ -93,9 +152,9 @@ namespace MixItUp.Base.Model.Commands
             this.Outcomes = new List<GameOutcomeModel>(outcomes);
         }
 
-        protected override Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            throw new NotImplementedException();
+            await this.PerformOutcome(user, platform, arguments, specialIdentifiers, this.SelectRandomOutcome(user, this.Outcomes), this.GetBetAmount(arguments));
         }
     }
 

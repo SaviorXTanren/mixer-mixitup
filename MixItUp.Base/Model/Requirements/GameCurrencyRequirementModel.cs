@@ -9,6 +9,7 @@ namespace MixItUp.Base.Model.Requirements
 {
     public enum GameCurrencyRequirementTypeEnum
     {
+        NoCost,
         RequiredAmount,
         MinimumOnly,
         MinimumAndMaximum
@@ -18,7 +19,7 @@ namespace MixItUp.Base.Model.Requirements
     public class GameCurrencyRequirementModel : CurrencyRequirementModel
     {
         [DataMember]
-        public GameCurrencyRequirementTypeEnum GameCurrencyRequirementType { get; set; }
+        public GameCurrencyRequirementTypeEnum GameCurrencyRequirementType { get; set; } = GameCurrencyRequirementTypeEnum.NoCost;
 
         [DataMember]
         public int MaxAmount { get; set; }
@@ -34,6 +35,11 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
+            if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
+            {
+                return true;
+            }
+
             CurrencyModel currency = this.Currency;
             if (currency == null)
             {
@@ -71,47 +77,65 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            CurrencyModel currency = this.Currency;
-            if (currency != null && !user.Data.IsCurrencyRankExempt)
+            if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
-                if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
+                await base.Perform(user, platform, arguments, specialIdentifiers);
+            }
+            else
+            {
+                CurrencyModel currency = this.Currency;
+                if (currency != null && !user.Data.IsCurrencyRankExempt)
                 {
-                    await base.Perform(user, platform, arguments, specialIdentifiers);
-                }
-                else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
-                {
-                    currency.SubtractAmount(user.Data, this.GetAmountFromArguments(arguments));
-                }
-                else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
-                {
-                    currency.SubtractAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
+                    {
+                        await base.Perform(user, platform, arguments, specialIdentifiers);
+                    }
+                    else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
+                    {
+                        currency.SubtractAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    }
+                    else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
+                    {
+                        currency.SubtractAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    }
                 }
             }
         }
 
         public override async Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            CurrencyModel currency = this.Currency;
-            if (currency != null && !user.Data.IsCurrencyRankExempt)
+            if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
-                if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
+                await base.Perform(user, platform, arguments, specialIdentifiers);
+            }
+            else
+            {
+                CurrencyModel currency = this.Currency;
+                if (currency != null && !user.Data.IsCurrencyRankExempt)
                 {
-                    await base.Refund(user, platform, arguments, specialIdentifiers);
-                }
-                else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
-                {
-                    currency.AddAmount(user.Data, this.GetAmountFromArguments(arguments));
-                }
-                else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
-                {
-                    currency.AddAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
+                    {
+                        await base.Refund(user, platform, arguments, specialIdentifiers);
+                    }
+                    else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
+                    {
+                        currency.AddAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    }
+                    else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
+                    {
+                        currency.AddAmount(user.Data, this.GetAmountFromArguments(arguments));
+                    }
                 }
             }
         }
 
         public int GetAmountFromArguments(IEnumerable<string> arguments)
         {
-            if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
+            {
+                return 0;
+            }
+            else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
             {
                 return this.Amount;
             }
