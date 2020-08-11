@@ -338,6 +338,10 @@ namespace MixItUp.Base.Services
                 {
                     reason = "accounts older than 1 week";
                 }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountMonth)
+                {
+                    reason = "accounts older than 1 month";
+                }
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes)
                 {
                     reason = "viewers who have watched for 10 minutes";
