@@ -141,32 +141,11 @@ namespace MixItUp.WPF
         private async Task CheckForUpdates()
         {
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
-            if (this.currentUpdate != null)
+            if (this.currentUpdate != null && this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
             {
-                if (ChannelSession.AppSettings.PreviewProgram)
-                {
-                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
-                    if (previewUpdate != null && previewUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
-                    {
-                        this.currentUpdate = previewUpdate;
-                    }
-                }
-
-                if (ChannelSession.AppSettings.TestBuild)
-                {
-                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
-                    if (testUpdate != null && testUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
-                    {
-                        this.currentUpdate = testUpdate;
-                    }
-                }
-
-                if (this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
-                {
-                    updateFound = true;
-                    UpdateWindow window = new UpdateWindow(this.currentUpdate);
-                    window.Show();
-                }
+                updateFound = true;
+                UpdateWindow window = new UpdateWindow(this.currentUpdate);
+                window.Show();
             }
         }
 

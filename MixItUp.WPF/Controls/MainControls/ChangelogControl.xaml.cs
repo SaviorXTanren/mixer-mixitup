@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Util;
-using System.IO;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.API;
+using MixItUp.Base.Util;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,10 +19,18 @@ namespace MixItUp.WPF.Controls.MainControls
             GlobalEvents.OnMainMenuStateChanged += GlobalEvents_OnMainMenuStateChanged;
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.ChangelogWebBrowser.Navigate("file:///" + Path.GetFullPath("Changelog.html"));
-            return base.InitializeInternal();
+            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+            if (update != null)
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string changelogHTML = await client.GetStringAsync(update.ChangelogLink);
+                    this.ChangelogWebBrowser.NavigateToString(changelogHTML);
+                }
+            }
+            await base.InitializeInternal();
         }
 
         private void GlobalEvents_OnMainMenuStateChanged(object sender, bool state)
