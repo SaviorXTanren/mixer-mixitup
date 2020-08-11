@@ -79,16 +79,27 @@ namespace MixItUp.Base.Util
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
-        private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
+        private static Dictionary<string, string> GlobalSpecialIdentifiers = new Dictionary<string, string>();
 
-        public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
+        public static async Task<string> ProcessSpecialIdentifiers(string str, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, bool encode = false)
         {
-            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers[specialIdentifier] = replacement;
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, platform, encode);
+            foreach (var kvp in specialIdentifiers)
+            {
+                siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+            }
+            await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            return siString.ToString();
         }
 
-        public static void RemoveCustomSpecialIdentifier(string specialIdentifier)
+        public static void AddGlobalSpecialIdentifier(string specialIdentifier, string replacement)
         {
-            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers.Remove(specialIdentifier);
+            SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers[specialIdentifier] = replacement;
+        }
+
+        public static void RemoveGlobalSpecialIdentifier(string specialIdentifier)
+        {
+            SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers.Remove(specialIdentifier);
         }
 
         public static string ConvertScorpBotText(string text)
@@ -268,7 +279,7 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            foreach (var kvp in SpecialIdentifierStringBuilder.CustomSpecialIdentifiers)
+            foreach (var kvp in SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers)
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }

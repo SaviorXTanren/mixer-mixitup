@@ -82,7 +82,7 @@ namespace MixItUp.Base.Actions
 
             if (this.MakeGloballyUsable)
             {
-                SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                SpecialIdentifierStringBuilder.AddGlobalSpecialIdentifier(this.SpecialIdentifierName, replacementText);
             }
             else
             {

@@ -17,11 +17,11 @@ namespace MixItUp.Base.Model.Requirements
         public Guid ItemID { get; set; }
 
         [DataMember]
-        public int Amount { get; set; }
+        public string Amount { get; set; }
 
         public InventoryRequirementModel() { }
 
-        public InventoryRequirementModel(InventoryModel inventory, InventoryItemModel item, int amount)
+        public InventoryRequirementModel(InventoryModel inventory, InventoryItemModel item, string amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemID = item.ID;
@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             this.InventoryID = requirement.InventoryID;
             this.ItemID = requirement.ItemID;
-            this.Amount = requirement.Amount;
+            this.Amount = requirement.Amount.ToString();
         }
 
         [JsonIgnore]
@@ -76,7 +76,7 @@ namespace MixItUp.Base.Model.Requirements
                 return false;
             }
 
-            if (!user.Data.IsCurrencyRankExempt && !inventory.HasAmount(user.Data, item, this.Amount))
+            if (!user.Data.IsCurrencyRankExempt && !inventory.HasAmount(user.Data, item.ID, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers)))
             {
                 await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, item.Name));
                 return false;
@@ -85,24 +85,22 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !user.Data.IsCurrencyRankExempt)
             {
-                inventory.SubtractAmount(user.Data, this.ItemID, this.Amount);
+                inventory.SubtractAmount(user.Data, this.ItemID, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers));
             }
-            return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !user.Data.IsCurrencyRankExempt)
             {
-                inventory.AddAmount(user.Data, this.ItemID, this.Amount);
+                inventory.AddAmount(user.Data, this.ItemID, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers));
             }
-            return Task.FromResult(0);
         }
     }
 }

@@ -92,13 +92,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, platform, encode);
-            foreach (var kvp in specialIdentifiers)
-            {
-                siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
-            }
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            return siString.ToString();
+            return await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(str, user, platform, arguments, specialIdentifiers, encode);
         }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }

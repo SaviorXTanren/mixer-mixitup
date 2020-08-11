@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public bool IsGroupSelected { get { return this.SelectedType == CooldownTypeEnum.Group; } }
 
-        public IEnumerable<string> GroupNames { get { return ChannelSession.Settings.CooldownGroups.Keys.ToList(); } }
+        public IEnumerable<string> GroupNames { get { return ChannelSession.Settings.CooldownGroupAmounts.Keys.ToList(); } }
 
         public string SelectedGroupName
         {
@@ -37,27 +37,24 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.selectedGroupName = value;
                 this.NotifyPropertyChanged();
 
-                if (!string.IsNullOrEmpty(this.SelectedGroupName) && ChannelSession.Settings.CooldownGroups.ContainsKey(this.SelectedGroupName))
+                if (!string.IsNullOrEmpty(this.SelectedGroupName) && ChannelSession.Settings.CooldownGroupAmounts.ContainsKey(this.SelectedGroupName))
                 {
-                    this.Amount = ChannelSession.Settings.CooldownGroups[this.SelectedGroupName];
+                    this.Amount = ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName];
                 }
             }
         }
         private string selectedGroupName;
 
-        public int Amount
+        public string Amount
         {
             get { return this.amount; }
             set
             {
-                if (this.amount >= 0)
-                {
-                    this.amount = value;
-                }
+                this.amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int amount = 0;
+        private string amount = "0";
 
         public CooldownRequirementViewModel() { }
 
@@ -70,13 +67,13 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
             else
             {
-                this.Amount = requirement.CooldownAmount;
+                this.Amount = requirement.Amount;
             }
         }
 
         public override async Task<bool> Validate()
         {
-            if (this.Amount < 0)
+            if (!this.ValidateStringAmount(this.Amount, canBeZero: true))
             {
                 await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified);
                 return false;
@@ -95,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             if (this.SelectedType == CooldownTypeEnum.Group)
             {
-                ChannelSession.Settings.CooldownGroups[this.SelectedGroupName] = this.Amount;
+                ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName] = this.Amount.ToString();
             }
             return new CooldownRequirementModel(this.SelectedType, this.Amount, this.SelectedGroupName);
         }

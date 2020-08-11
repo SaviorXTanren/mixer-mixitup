@@ -377,6 +377,13 @@ namespace MixItUp.Base.Services
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             await settings.Initialize();
 
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (var kvp in settings.CooldownGroups)
+            {
+                settings.CooldownGroupAmounts[kvp.Key] = kvp.Value.ToString();
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             await ChannelSession.Services.Settings.Save(settings);
         }
 

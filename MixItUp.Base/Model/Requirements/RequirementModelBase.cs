@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -31,6 +32,23 @@ namespace MixItUp.Base.Model.Requirements
             {
                 await ChannelSession.Services.Chat.SendMessage(message);
             }
+        }
+
+        protected async Task<int> GetAmount(string amount, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(amount))
+            {
+                if (amount.StartsWith(SpecialIdentifierStringBuilder.SpecialIdentifierHeader))
+                {
+                    amount = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(amount, user, platform, arguments, specialIdentifiers);
+                }
+
+                if (int.TryParse(amount, out int iAmount) && iAmount >= 0)
+                {
+                    return iAmount;
+                }
+            }
+            return 0;
         }
     }
 }

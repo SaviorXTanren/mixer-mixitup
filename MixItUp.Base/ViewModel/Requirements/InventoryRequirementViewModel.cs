@@ -78,19 +78,16 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private InventoryItemModel selectedItem;
 
-        public int Amount
+        public string Amount
         {
             get { return this.amount; }
             set
             {
-                if (this.amount >= 0)
-                {
-                    this.amount = value;
-                }
+                this.amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int amount = 0;
+        private string amount = "0";
 
         public ICommand DeleteCommand { get; private set; }
 
@@ -129,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 return false;
             }
 
-            if (this.Amount <= 0)
+            if (!this.ValidateStringAmount(this.Amount))
             {
                 await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryItemAmountMustSpecified);
                 return false;

@@ -65,11 +65,13 @@ namespace MixItUp.WPF.Controls.Requirement
             if (cooldown != null)
             {
                 this.CooldownTypeComboBox.SelectedItem = cooldown.Type;
+#pragma warning disable CS0612 // Type or member is obsolete
                 if (cooldown.IsGroup && ChannelSession.Settings.CooldownGroups.ContainsKey(cooldown.GroupName))
                 {
                     this.CooldownGroupsComboBox.Text = cooldown.GroupName;
                     this.CooldownAmountTextBox.Text = ChannelSession.Settings.CooldownGroups[cooldown.GroupName].ToString();
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
                 else
                 {
                     this.CooldownAmountTextBox.Text = cooldown.Amount.ToString();
@@ -109,10 +111,12 @@ namespace MixItUp.WPF.Controls.Requirement
             if (this.CooldownGroupsComboBox.SelectedIndex >= 0)
             {
                 string cooldownGroup = (string)this.CooldownGroupsComboBox.SelectedItem;
+#pragma warning disable CS0612 // Type or member is obsolete
                 if (ChannelSession.Settings.CooldownGroups.ContainsKey(cooldownGroup))
                 {
                     this.CooldownAmountTextBox.Text = ChannelSession.Settings.CooldownGroups[cooldownGroup].ToString();
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
                 else
                 {
                     this.CooldownAmountTextBox.Text = "0";

@@ -37,7 +37,7 @@ namespace MixItUp.Base.Model.Commands
             this.Name = command.Name;
             this.IsEnabled = command.IsEnabled;
             this.Role = command.Requirements.Role.Role;
-            this.Cooldown = command.Requirements.Cooldown.Amount;
+            this.Cooldown = int.Parse(command.Requirements.Cooldown.IndividualAmount);
         }
     }
 
@@ -49,14 +49,14 @@ namespace MixItUp.Base.Model.Commands
             : base(name, CommandTypeEnum.PreMade, triggers, includeExclamation: true, wildcards: false)
         {
             this.Requirements.Requirements.Add(new RoleRequirementModel(role));
-            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));
+            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown.ToString()));
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettings settings)
         {
             this.IsEnabled = settings.IsEnabled;
             this.Requirements.Role.Role = settings.Role;
-            this.Requirements.Cooldown.Amount = settings.Cooldown;
+            this.Requirements.Cooldown.IndividualAmount = settings.Cooldown.ToString();
         }
 
         protected override Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)

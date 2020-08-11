@@ -121,7 +121,7 @@ namespace MixItUp.Base.Actions
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
                         {
                             string replacementText = await this.ReplaceStringWithSpecialModifiers(translationResult, user, arguments);
-                            SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                            SpecialIdentifierStringBuilder.AddGlobalSpecialIdentifier(this.SpecialIdentifierName, replacementText);
                         }
                     }
                 }

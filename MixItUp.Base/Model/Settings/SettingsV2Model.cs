@@ -496,8 +496,11 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Currency
 
+        [Obsolete]
         [DataMember]
         public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
+        [DataMember]
+        public Dictionary<string, string> CooldownGroupAmounts { get; set; } = new Dictionary<string, string>();
 
         [DataMember]
         public List<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; } = new List<PreMadeChatCommandSettings>();
@@ -803,10 +806,10 @@ namespace MixItUp.Base.Model.Settings
                 this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
-            var allUnusedCooldownGroupNames = this.CooldownGroups.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach (var unused in allUnusedCooldownGroupNames)
             {
-                this.CooldownGroups.Remove(unused.Key);
+                this.CooldownGroupAmounts.Remove(unused.Key);
             }
 
             var allUsedCommandGroupNames =

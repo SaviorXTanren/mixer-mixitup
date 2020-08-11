@@ -15,11 +15,11 @@ namespace MixItUp.Base.Model.Requirements
         public Guid CurrencyID { get; set; }
 
         [DataMember]
-        public int Amount { get; set; }
+        public string Amount { get; set; }
 
         public CurrencyRequirementModel() { }
 
-        public CurrencyRequirementModel(CurrencyModel currency, int amount)
+        public CurrencyRequirementModel(CurrencyModel currency, string amount)
         {
             this.CurrencyID = currency.ID;
             this.Amount = amount;
@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.Requirements
             if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 this.CurrencyID = requirement.CurrencyID;
-                this.Amount = requirement.RequiredAmount;
+                this.Amount = requirement.RequiredAmount.ToString();
             }
             else if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly)
             {
@@ -63,27 +63,25 @@ namespace MixItUp.Base.Model.Requirements
             {
                 return true;
             }
-            return await this.ValidateAmount(user, platform, arguments, specialIdentifiers, currency, this.Amount);
+            return await this.ValidateAmount(user, platform, arguments, specialIdentifiers, currency, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers));
         }
 
-        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !user.Data.IsCurrencyRankExempt)
             {
-                currency.SubtractAmount(user.Data, this.Amount);
+                currency.SubtractAmount(user.Data, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers));
             }
-            return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !user.Data.IsCurrencyRankExempt)
             {
-                currency.AddAmount(user.Data, this.Amount);
+                currency.AddAmount(user.Data, await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers));
             }
-            return Task.FromResult(0);
         }
 
         protected async Task<bool> ValidateAmount(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, CurrencyModel currency, int amount)

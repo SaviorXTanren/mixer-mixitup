@@ -31,10 +31,10 @@ namespace MixItUp.Base.Model.Commands
 
         public GameCurrencyRequirementModel GameCurrencyRequirement { get { return (GameCurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
 
-        public int GetBetAmount(IEnumerable<string> arguments)
+        public async Task<int> GetBetAmount(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             GameCurrencyRequirementModel gameCurrencyRequirement = this.GameCurrencyRequirement;
-            return (gameCurrencyRequirement != null) ? gameCurrencyRequirement.GetAmountFromArguments(arguments) : 0;
+            return (gameCurrencyRequirement != null) ? await gameCurrencyRequirement.GetGameAmount(user, platform, arguments, specialIdentifiers) : 0;
         }
 
         protected override Task<bool> ValidateRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected async Task PerformOutcome(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, GameOutcomeModel outcome, int betAmount)
         {
-            int payout = outcome.GetPayout(user, this.GetBetAmount(arguments));
+            int payout = outcome.GetPayout(user, betAmount);
             specialIdentifiers[GameCommandBase.GameBetSpecialIdentifier] = betAmount.ToString();
             specialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            await this.PerformOutcome(user, platform, arguments, specialIdentifiers, this.SelectRandomOutcome(user, this.Outcomes), this.GetBetAmount(arguments));
+            await this.PerformOutcome(user, platform, arguments, specialIdentifiers, this.SelectRandomOutcome(user, this.Outcomes), await this.GetBetAmount(user, platform, arguments, specialIdentifiers));
         }
     }
 

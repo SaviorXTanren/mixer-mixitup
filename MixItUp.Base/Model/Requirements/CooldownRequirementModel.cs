@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Requirements
         public CooldownTypeEnum Type { get; set; }
 
         [DataMember]
-        public int Amount { get; set; }
+        public string IndividualAmount { get; set; }
 
         [DataMember]
         public string GroupName { get; set; }
@@ -41,14 +41,14 @@ namespace MixItUp.Base.Model.Requirements
             : this()
         {
             this.Type = (CooldownTypeEnum)(int)requirement.Type;
-            this.Amount = requirement.Amount;
+            this.IndividualAmount = requirement.Amount.ToString();
             this.GroupName = requirement.GroupName;
         }
 
-        public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
+        public CooldownRequirementModel(CooldownTypeEnum type, string amount, string groupName = null)
         {
             this.Type = type;
-            this.Amount = amount;
+            this.IndividualAmount = amount;
             this.GroupName = groupName;
         }
 
@@ -56,44 +56,46 @@ namespace MixItUp.Base.Model.Requirements
         public bool IsGroup { get { return this.Type == CooldownTypeEnum.Group && !string.IsNullOrEmpty(this.GroupName); } }
 
         [JsonIgnore]
-        public int CooldownAmount
+        public string Amount
         {
             get
             {
+                string amount = null;
                 if (this.IsGroup)
                 {
-                    if (ChannelSession.Settings.CooldownGroups.ContainsKey(this.GroupName))
+                    if (ChannelSession.Settings.CooldownGroupAmounts.ContainsKey(this.GroupName))
                     {
-                        return ChannelSession.Settings.CooldownGroups[this.GroupName];
+                        amount = ChannelSession.Settings.CooldownGroupAmounts[this.GroupName];
                     }
-                    return 0;
                 }
                 else
                 {
-                    return this.Amount;
+                    amount = this.IndividualAmount;
                 }
+                return amount;
             }
         }
 
         public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
+            int amount = await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers);
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
             if (this.Type == CooldownTypeEnum.Standard)
             {
-                timeLeft = this.globalCooldown.AddSeconds(this.Amount) - DateTimeOffset.Now;
+                timeLeft = this.globalCooldown.AddSeconds(amount) - DateTimeOffset.Now;
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
                 if (CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
                 {
-                    timeLeft = CooldownRequirementModel.groupCooldowns[this.GroupName].AddSeconds(this.Amount) - DateTimeOffset.Now;
+                    timeLeft = CooldownRequirementModel.groupCooldowns[this.GroupName].AddSeconds(amount) - DateTimeOffset.Now;
                 }
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 if (this.individualCooldowns.ContainsKey(user.ID))
                 {
-                    timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.Amount) - DateTimeOffset.Now;
+                    timeLeft = this.individualCooldowns[user.ID].AddSeconds(amount) - DateTimeOffset.Now;
                 }
             }
 
