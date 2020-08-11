@@ -156,7 +156,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
 
                     DateTimeOffset? subDate = TwitchPlatformService.GetTwitchDateTime(subscriber.created_at);
-                    if (subDate.HasValue)
+                    if (subDate.HasValue && this.ShouldIncludeUser(user))
                     {
                         this.userSubDates[user.ID] = subDate.GetValueOrDefault();
                     }
@@ -355,6 +355,26 @@ namespace MixItUp.Base.Model.Overlay
 
                 this.lastItems = new List<OverlayListIndividualItemModel>(updatedList);
             }));
+        }
+
+        private bool ShouldIncludeUser(UserViewModel user)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.ID.Equals(ChannelSession.GetCurrentUser()?.ID))
+            {
+                return false;
+            }
+
+            if (ChannelSession.TwitchBotConnection != null && string.Equals(user.TwitchID, ChannelSession.TwitchBotNewAPI?.id))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

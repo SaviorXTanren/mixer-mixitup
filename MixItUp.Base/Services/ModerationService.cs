@@ -340,6 +340,10 @@ namespace MixItUp.Base.Services
                 {
                     reason = "accounts older than 1 week";
                 }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountMonth)
+                {
+                    reason = "accounts older than 1 month";
+                }
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes)
                 {
                     reason = "viewers who have watched for 10 minutes";
@@ -363,7 +367,7 @@ namespace MixItUp.Base.Services
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format("@{0}: Your message has been deleted because only {1} can participate currently.", user.Username, reason), platform: user.Platform);
                 }
             }
         }
