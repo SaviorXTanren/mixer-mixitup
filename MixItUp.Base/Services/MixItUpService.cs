@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services
     public interface IMixItUpService
     {
         Task<MixItUpUpdateModel> GetLatestUpdate();
+        Task<MixItUpUpdateModel> GetLatestPublicUpdate();
         Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
         Task<MixItUpUpdateModel> GetLatestTestUpdate();
 
@@ -30,7 +31,32 @@ namespace MixItUp.Base.Services
 
         public MixItUpService() { }
 
-        public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
+        public async Task<MixItUpUpdateModel> GetLatestUpdate()
+        {
+            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestPublicUpdate();
+            if (update != null)
+            {
+                if (ChannelSession.AppSettings.PreviewProgram)
+                {
+                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
+                    if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
+                    {
+                        update = previewUpdate;
+                    }
+                }
+
+                if (ChannelSession.AppSettings.TestBuild)
+                {
+                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
+                    if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
+                    {
+                        update = testUpdate;
+                    }
+                }
+            }
+            return update;
+        }
+        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
         public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
 
