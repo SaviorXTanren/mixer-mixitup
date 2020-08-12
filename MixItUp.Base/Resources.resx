@@ -3158,4 +3158,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ClearMixerUserDataHeader" xml:space="preserve">
     <value>Clear all Mixer User data</value>
   </data>
+  <data name="ChatParticipation" xml:space="preserve">
+    <value>Chat Participation</value>
+  </data>
 </root>

@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.FilteredWordsExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
             this.ChatTextModerationExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
             this.BlockLinksExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
-            this.ChatInteractiveParticipationExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
+            this.ChatParticipationExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
             this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);
@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ChatInteractiveParticipationComboBox.ItemsSource = Enum.GetValues(typeof(ModerationChatInteractiveParticipationEnum));
             this.ChatInteractiveParticipationComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipation;
-            this.ChatInteractiveParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
+            this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
 
             this.ResetStrikesOnLaunchToggleButton.IsChecked = ChannelSession.Settings.ModerationResetStrikesOnLaunch;
             this.Strike1Command.DataContext = ChannelSession.Settings.ModerationStrike1Command;
@@ -93,7 +93,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.ModerationBlockLinksApplyStrikes = this.BlockLinksApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationChatInteractiveParticipation = (ModerationChatInteractiveParticipationEnum)this.ChatInteractiveParticipationComboBox.SelectedItem;
-                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (UserRoleEnum)this.ChatInteractiveParticipationExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (UserRoleEnum)this.ChatParticipationExemptComboBox.SelectedItem;
 
                     ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
