@@ -253,7 +253,7 @@
 
                     <GroupBox Grid.Column="2">
                         <GroupBox.Header>
-                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatMixPlayParticipation}"/>
+                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatParticipation}"/>
                         </GroupBox.Header>
 
                         <Grid HorizontalAlignment="Center" Margin="5">
@@ -271,7 +271,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <ComboBox x:Name="ChatInteractiveParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

@@ -78,7 +78,7 @@
 
             <WebBrowser Grid.Row="4" x:Name="UpdateChangelogWebBrowser" Margin="20,0" ScrollViewer.VerticalScrollBarVisibility="Visible" />
 
-            <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500">If you are running the Mix It Up Auto-Hoster, please close it before updating. If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</TextBlock>
+            <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500">If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</TextBlock>
             
             <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>

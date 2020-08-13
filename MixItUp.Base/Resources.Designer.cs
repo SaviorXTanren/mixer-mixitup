@@ -1321,6 +1321,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat Participation.
+        /// </summary>
+        public static string ChatParticipation {
+            get {
+                return ResourceManager.GetString("ChatParticipation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Purchase Command.
         /// </summary>
         public static string ChatPurchaseCommand {

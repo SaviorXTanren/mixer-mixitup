@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!ChannelSession.Services.Moderation.DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
-                    await this.Delete(reason: "Chat/MixPlay Participation");
+                    await this.Delete(reason: "Chat Participation");
                     await ChannelSession.Services.Moderation.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
