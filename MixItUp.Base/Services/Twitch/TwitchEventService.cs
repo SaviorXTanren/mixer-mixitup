@@ -233,12 +233,6 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers((UserModel)ChannelSession.TwitchUserNewAPI, maxResult: 100);
-                        foreach (UserFollowModel follow in followers)
-                        {
-                            follows.Add(follow.from_id);
-                        }
-
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundEventChecks);
 
                         this.IsConnected = true;
@@ -380,36 +374,47 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                foreach (UserFollowModel follow in await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100))
+                IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100);
+                if (followers.Count() > 0)
                 {
-                    if (!follows.Contains(follow.from_id))
+                    foreach (UserFollowModel follow in followers)
                     {
-                        follows.Add(follow.from_id);
-
-                        UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
-                        if (user == null)
+                        if (!follows.Contains(follow.from_id))
                         {
-                            user = new UserViewModel(follow);
-                        }
+                            follows.Add(follow.from_id);
 
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
-                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
-                        {
-                            user.FollowDate = DateTimeOffset.Now;
-
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
-
-                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
+                            if (user == null)
                             {
-                                currency.AddAmount(user.Data, currency.OnFollowBonus);
+                                user = new UserViewModel(follow);
                             }
 
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
+                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                            {
+                                user.FollowDate = DateTimeOffset.Now;
 
-                            GlobalEvents.FollowOccurred(user);
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
-                            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.Username), ChannelSession.Settings.AlertFollowColor));
+                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                                {
+                                    currency.AddAmount(user.Data, currency.OnFollowBonus);
+                                }
+
+                                await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                                GlobalEvents.FollowOccurred(user);
+
+                                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Followed", user.Username), ChannelSession.Settings.AlertFollowColor));
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    foreach (UserFollowModel follow in followers)
+                    {
+                        follows.Add(follow.from_id);
                     }
                 }
             }
