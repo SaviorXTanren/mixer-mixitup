@@ -375,13 +375,13 @@ namespace MixItUp.Base.Services.Twitch
                 }
 
                 IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100);
-                if (followers.Count() > 0)
+                if (this.follows.Count() > 0)
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        if (!follows.Contains(follow.from_id))
+                        if (!this.follows.Contains(follow.from_id))
                         {
-                            follows.Add(follow.from_id);
+                            this.follows.Add(follow.from_id);
 
                             UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
                             if (user == null)
@@ -414,7 +414,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     foreach (UserFollowModel follow in followers)
                     {
-                        follows.Add(follow.from_id);
+                        this.follows.Add(follow.from_id);
                     }
                 }
             }
