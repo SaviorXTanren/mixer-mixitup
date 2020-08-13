@@ -626,6 +626,7 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         TwitchGiftedSubEventModel giftedSub = giftedSubs[gifterID][0];
                         giftedSubs[gifterID].Remove(giftedSub);
+                        await ProcessGiftedSub(giftedSub, fireEventCommand: false);
                     }
                 }
                 await ProcessMassGiftedSub(massGiftedSub);
@@ -637,7 +638,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task ProcessGiftedSub(TwitchGiftedSubEventModel giftedSubEvent)
+        private async Task ProcessGiftedSub(TwitchGiftedSubEventModel giftedSubEvent, bool fireEventCommand = true)
         {
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftedSubEvent.Receiver.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
@@ -654,15 +655,18 @@ namespace MixItUp.Base.Services.Twitch
             giftedSubEvent.Receiver.Data.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
             giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, giftedSubEvent.Gifter);
-            trigger.SpecialIdentifiers["usersubplanname"] = giftedSubEvent.PlanName;
-            trigger.SpecialIdentifiers["usersubplan"] = giftedSubEvent.PlanTier;
-            trigger.SpecialIdentifiers["usersubmonthsgifted"] = giftedSubEvent.MonthsGifted.ToString();
-            trigger.SpecialIdentifiers["isanonymous"] = giftedSubEvent.IsAnonymous.ToString();
-            trigger.Arguments.Add(giftedSubEvent.Receiver.Username);
-            await ChannelSession.Services.Events.PerformEvent(trigger);
+            if (fireEventCommand)
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, giftedSubEvent.Gifter);
+                trigger.SpecialIdentifiers["usersubplanname"] = giftedSubEvent.PlanName;
+                trigger.SpecialIdentifiers["usersubplan"] = giftedSubEvent.PlanTier;
+                trigger.SpecialIdentifiers["usersubmonthsgifted"] = giftedSubEvent.MonthsGifted.ToString();
+                trigger.SpecialIdentifiers["isanonymous"] = giftedSubEvent.IsAnonymous.ToString();
+                trigger.Arguments.Add(giftedSubEvent.Receiver.Username);
+                await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Gifter, string.Format("{0} Gifted A {1} Subscription To {2}", giftedSubEvent.Gifter.Username, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.Username), ChannelSession.Settings.AlertGiftedSubColor));
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Gifter, string.Format("{0} Gifted A {1} Subscription To {2}", giftedSubEvent.Gifter.Username, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.Username), ChannelSession.Settings.AlertGiftedSubColor));
+            }
 
             GlobalEvents.SubscriptionGiftedOccurred(giftedSubEvent.Gifter, giftedSubEvent.Receiver);
         }
