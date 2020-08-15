@@ -55,6 +55,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.width = 1920;
             this.height = 40;
 
+            this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+
             this.HTML = OverlayTickerTapeListItemModel.HTMLTemplate;
         }
 
@@ -63,6 +66,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             this.tickerTapeType = item.TickerTapeType;
             this.minimumAmountRequiredToShow = item.MinimumAmountRequiredToShow;
+
+            this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
+            this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.First().Key;
         }
 
         public override OverlayItemModelBase GetOverlayItem()
