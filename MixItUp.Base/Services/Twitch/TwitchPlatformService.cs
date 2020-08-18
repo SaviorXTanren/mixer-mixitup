@@ -253,6 +253,16 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<bool> GetStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await this.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 
+        public async Task<NewAPI.Streams.StreamModel> GetStream(NewAPI.Users.UserModel user)
+        {
+            IEnumerable<NewAPI.Streams.StreamModel> results = await this.RunAsync(this.Connection.NewAPI.Streams.GetStreamsByUserIDs(userIDs: new List<string>() { user.id }));
+            if (results != null)
+            {
+                return results.FirstOrDefault();
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<NewAPI.Streams.StreamModel>> GetGameStreams(string gameID, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreams(gameIDs: new List<string>() { gameID }, maxResults: maxResults)); }
 
         public async Task<IEnumerable<NewAPI.Streams.StreamModel>> GetLanguageStreams(string language, int maxResults) { return await this.RunAsync(this.Connection.NewAPI.Streams.GetStreams(languages: new List<string>() { language }, maxResults: maxResults)); }

@@ -30,6 +30,7 @@ namespace MixItUp.Base
         public static HashSet<string> TwitchChannelEditorsV5 { get; private set; } = new HashSet<string>();
         public static TwitchNewAPI.Users.UserModel TwitchUserNewAPI { get; set; }
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
+        public static TwitchNewAPI.Streams.StreamModel TwitchStreamNewAPI { get; set; }
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
@@ -271,6 +272,11 @@ namespace MixItUp.Base
                     ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
                 }
             }
+
+            if (ChannelSession.TwitchUserNewAPI != null)
+            {
+                ChannelSession.TwitchStreamNewAPI = await ChannelSession.TwitchUserConnection.GetStream(ChannelSession.TwitchUserNewAPI);
+            }
         }
 
         public static UserViewModel GetCurrentUser()
@@ -315,6 +321,7 @@ namespace MixItUp.Base
                     {
                         ChannelSession.TwitchUserNewAPI = twitchChannelNew;
                         ChannelSession.TwitchChannelV5 = twitchChannelv5;
+                        ChannelSession.TwitchStreamNewAPI = await ChannelSession.TwitchUserConnection.GetStream(ChannelSession.TwitchUserNewAPI);
                         ChannelSession.TwitchStreamV5 = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
 
                         IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await ChannelSession.TwitchUserConnection.GetV5APIChannelEditors(ChannelSession.TwitchChannelV5);
