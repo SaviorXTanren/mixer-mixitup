@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services;
@@ -201,7 +202,7 @@ namespace MixItUp.WPF
                 }
                 catch (Exception) { }
 
-                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", 0, FileLoggerHandler.CurrentLogFilePath));
+                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1} {2} {3}", FileLoggerHandler.CurrentLogFilePath, StreamingPlatformTypeEnum.Twitch, ChannelSession.TwitchUserNewAPI?.id, ChannelSession.TwitchUserNewAPI?.login));
 
                 Task.Delay(3000).Wait();
             }
