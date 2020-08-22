@@ -685,7 +685,7 @@ namespace MixItUp.Base.Services.External
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
             IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
-            if (pledges.Count() > 0)
+            if (pledges != null && pledges.Count() > 0)
             {
                 this.members = pledges.ToList();
                 foreach (PatreonCampaignMember member in this.members)

@@ -143,7 +143,13 @@ namespace MixItUp.Base.Util
                     try
                     {
                         await backgroundTask(token);
+                    }
+                    catch (ThreadAbortException) { return; }
+                    catch (OperationCanceledException) { return; }
+                    catch (Exception ex) { Logger.Log(ex); }
 
+                    try
+                    {
                         if (delayInMilliseconds > 0 && !token.IsCancellationRequested)
                         {
                             await Task.Delay(delayInMilliseconds, token);

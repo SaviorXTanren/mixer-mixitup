@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.ManualRedeemCommand = this.CreateCommand(async (parameter) =>
             {
                 await this.Purchase.Redeem();
-                this.viewModel.Refresh();
+                await this.viewModel.Refresh();
             });
 
             this.RefundCommand = this.CreateCommand(async (parameter) =>
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmRefundRedemptionStorePurchase))
                 {
                     await this.Purchase.Refund();
-                    this.viewModel.Refresh();
+                    await this.viewModel.Refresh();
                 }
             });
 
@@ -81,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteRedemptionStorePurchase))
                 {
                     this.Purchase.Remove();
-                    this.viewModel.Refresh();
+                    await this.viewModel.Refresh();
                 }
             });
         }
@@ -103,28 +103,32 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public RedemptionStoreMainControlViewModel(WindowViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
 
-        public void Refresh()
+        public async Task Refresh()
         {
             List<RedemptionStorePurchaseViewModel> purchases = new List<RedemptionStorePurchaseViewModel>(ChannelSession.Settings.RedemptionStorePurchases.ToList().Select(p => new RedemptionStorePurchaseViewModel(this, p)));
-            this.Purchases.Clear();
-            foreach (RedemptionStorePurchaseViewModel purchase in purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate))
+            await DispatcherHelper.InvokeDispatcher(() =>
             {
-                this.Purchases.Add(purchase);
-            }
+                this.Purchases.Clear();
+                foreach (RedemptionStorePurchaseViewModel purchase in purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate))
+                {
+                    this.Purchases.Add(purchase);
+                }
+                return Task.FromResult(0);
+            });
         }
 
-        protected override Task OnLoadedInternal()
+        protected override async Task OnLoadedInternal()
         {
-            this.Refresh();
-            return base.OnVisibleInternal();
+            await this.Refresh();
+            await base.OnVisibleInternal();
         }
 
-        protected override Task OnVisibleInternal()
+        protected override async Task OnVisibleInternal()
         {
-            this.Refresh();
-            return base.OnVisibleInternal();
+            await this.Refresh();
+            await base.OnVisibleInternal();
         }
 
-        private void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { this.Refresh(); }
+        private async void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { await this.Refresh(); }
     }
 }
