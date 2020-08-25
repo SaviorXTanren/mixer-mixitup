@@ -10,7 +10,7 @@ namespace MixItUp.WPF.Windows
 {
     public class LoadingWindowBase : Window
     {
-        public WindowViewModelBase ViewModel { get; private set; }
+        public WindowViewModelBase ViewModel { get; protected set; }
 
         private int asyncOperationCount = 0;
 

@@ -241,6 +241,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A command name must be specified.
+        /// </summary>
+        public static string ACommandNameMustBeSpecified {
+            get {
+                return ResourceManager.GetString("ACommandNameMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acquire Rate.
         /// </summary>
         public static string AcquireRate {
@@ -1245,6 +1254,15 @@ namespace MixItUp.Base {
         public static string Chat {
             get {
                 return ResourceManager.GetString("Chat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat Action: Missing chat text.
+        /// </summary>
+        public static string ChatActionMissingChatText {
+            get {
+                return ResourceManager.GetString("ChatActionMissingChatText", resourceCulture);
             }
         }
         
@@ -7369,6 +7387,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stop Command.
+        /// </summary>
+        public static string StopCommand {
+            get {
+                return ResourceManager.GetString("StopCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream Boss.
         /// </summary>
         public static string StreamBoss {
@@ -7815,6 +7842,15 @@ namespace MixItUp.Base {
         public static string TextToTranslate {
             get {
                 return ResourceManager.GetString("TextToTranslate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Following Errors Must Be Fixed:.
+        /// </summary>
+        public static string TheFollowingErrorsMustBeFixed {
+            get {
+                return ResourceManager.GetString("TheFollowingErrorsMustBeFixed", resourceCulture);
             }
         }
         

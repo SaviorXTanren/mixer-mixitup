@@ -3161,4 +3161,16 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ChatParticipation" xml:space="preserve">
     <value>Chat Participation</value>
   </data>
+  <data name="StopCommand" xml:space="preserve">
+    <value>Stop Command</value>
+  </data>
+  <data name="TheFollowingErrorsMustBeFixed" xml:space="preserve">
+    <value>The Following Errors Must Be Fixed:</value>
+  </data>
+  <data name="ACommandNameMustBeSpecified" xml:space="preserve">
+    <value>A command name must be specified</value>
+  </data>
+  <data name="ChatActionMissingChatText" xml:space="preserve">
+    <value>Chat Action: Missing chat text</value>
+  </data>
 </root>

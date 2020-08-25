@@ -359,90 +359,97 @@
     <Compile Include="Controls\Accounts\StreamingPlatformAccountControl.xaml.cs">
       <DependentUpon>StreamingPlatformAccountControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ActionContentContainerControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ActionContentContainerControl.xaml.cs">
       <DependentUpon>ActionContentContainerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ActionControlBase.cs" />
-    <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ActionControlBase.cs" />
+    <Compile Include="Controls\Actions %28OLD%29\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ClipsAction.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ClipsAction.xaml.cs">
       <DependentUpon>ClipsAction.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ConditionalActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ConditionalActionControl.xaml.cs">
       <DependentUpon>ConditionalActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\CounterActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\CounterActionControl.xaml.cs">
       <DependentUpon>CounterActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\IFTTTActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\IFTTTActionControl.xaml.cs">
       <DependentUpon>IFTTTActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\OvrStreamActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\OvrStreamActionControl.xaml.cs">
       <DependentUpon>OvrStreamActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\CommandActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\CommandActionControl.xaml.cs">
       <DependentUpon>CommandActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ModerationActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ModerationActionControl.xaml.cs">
       <DependentUpon>ModerationActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\SerialActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\SerialActionControl.xaml.cs">
       <DependentUpon>SerialActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\StreamingPlatformActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\StreamingPlatformActionControl.xaml.cs">
       <DependentUpon>StreamingPlatformActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\StreamlabsActionControl.xaml.cs">
       <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\DiscordActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\DiscordActionControl.xaml.cs">
       <DependentUpon>DiscordActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\ExternalProgramActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\ExternalProgramActionControl.xaml.cs">
       <DependentUpon>ExternalProgramActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\FileActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\FileActionControl.xaml.cs">
       <DependentUpon>FileActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\GameQueueActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\GameQueueActionControl.xaml.cs">
       <DependentUpon>GameQueueActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\InputActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\InputActionControl.xaml.cs">
       <DependentUpon>InputActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\SoundActionControl.xaml.cs">
       <DependentUpon>SoundActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\SpecialIdentifierActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\SpecialIdentifierActionControl.xaml.cs">
       <DependentUpon>SpecialIdentifierActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\StreamingSoftwareActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\StreamingSoftwareActionControl.xaml.cs">
       <DependentUpon>StreamingSoftwareActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\TranslationActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\TranslationActionControl.xaml.cs">
       <DependentUpon>TranslationActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\TwitterActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\TwitterActionControl.xaml.cs">
       <DependentUpon>TwitterActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\WaitActionControl.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\WaitActionControl.xaml.cs">
       <DependentUpon>WaitActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\WebRequestAction.xaml.cs">
+    <Compile Include="Controls\Actions %28OLD%29\WebRequestAction.xaml.cs">
       <DependentUpon>WebRequestAction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ActionEditorContainerControl.xaml.cs">
+      <DependentUpon>ActionEditorContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ActionEditorControlBase.cs" />
+    <Compile Include="Controls\Actions\ChatActionEditorControl.xaml.cs">
+      <DependentUpon>ChatActionEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
@@ -454,33 +461,37 @@
     <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
       <DependentUpon>ChatImageControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\AdvancedCommandEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\AdvancedCommandEditorControl.xaml.cs">
       <DependentUpon>AdvancedCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicChatCommandEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\BasicChatCommandEditorControl.xaml.cs">
       <DependentUpon>BasicChatCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\BasicEventCommandEditorControl.xaml.cs">
       <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\BasicTimerCommandEditorControl.xaml.cs">
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\CommandEditorControlBase.cs" />
-    <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\CommandEditorControlBase.cs" />
+    <Compile Include="Controls\Command %28OLD%29\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\EmptyCommandEditorControl.xaml.cs">
       <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\TwitchChannelPointsCommandDetailsControl.xaml.cs">
       <DependentUpon>TwitchChannelPointsCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\CommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
@@ -747,14 +758,14 @@
     <Compile Include="Controls\MainControls\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\ChatCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\ChatCommandDetailsControl.xaml.cs">
       <DependentUpon>ChatCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\CommandDetailsControlBase.cs" />
-    <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\CommandDetailsControlBase.cs" />
+    <Compile Include="Controls\Command %28OLD%29\EventCommandDetailsControl.xaml.cs">
       <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GiveawayControl.xaml.cs">
@@ -773,7 +784,7 @@
     <Compile Include="Controls\MainControls\QuoteControl.xaml.cs">
       <DependentUpon>QuoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement %28Old%29\InventoryRequirementControl.xaml.cs">
@@ -993,6 +1004,9 @@
     <Compile Include="Util\ColorBrushConverter.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Util\WPFDialogShower.cs" />
+    <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
+      <DependentUpon>CommandEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>
@@ -1044,115 +1058,123 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ActionContainerControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ActionContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ActionContentContainerControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ActionContentContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ChatActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ChatActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ClipsAction.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ClipsAction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ConditionalActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ConditionalActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\CounterActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\CounterActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\CurrencyActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\CurrencyActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\IFTTTActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\IFTTTActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\OvrStreamActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\OvrStreamActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Actions\CommandActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\CommandActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Actions\ModerationActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ModerationActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\SerialActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\SerialActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\StreamingPlatformActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\StreamingPlatformActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\StreamlabsActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\StreamlabsActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Actions\DiscordActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\DiscordActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ExternalProgramActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\ExternalProgramActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\FileActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\FileActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\GameQueueActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\GameQueueActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\InputActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\InputActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\OverlayActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\OverlayActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\SoundActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\SoundActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\SpecialIdentifierActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\SpecialIdentifierActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\StreamingSoftwareActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\StreamingSoftwareActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\TextToSpeechActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\TextToSpeechActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\TranslationActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\TranslationActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\TwitterActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\TwitterActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\WaitActionControl.xaml">
+    <Page Include="Controls\Actions %28OLD%29\WaitActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\WebRequestAction.xaml">
+    <Page Include="Controls\Actions %28OLD%29\WebRequestAction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ActionEditorContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ChatActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1168,39 +1190,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\AdvancedCommandEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\AdvancedCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicChatCommandEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\BasicChatCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicEventCommandEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\BasicEventCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\BasicTimerCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\CustomCommandDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Command\EmptyCommandEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\EmptyCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\TwitchChannelPointsCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\TwitchChannelPointsCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\UnlockedCommandControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\UnlockedCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1556,15 +1582,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\ChatCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\ChatCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\EventCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\EventCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\TimerCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\TimerCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1584,7 +1610,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\CommandButtonsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\CommandButtonsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1911,6 +1937,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UpdateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\CommandEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

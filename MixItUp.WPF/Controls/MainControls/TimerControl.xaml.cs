@@ -66,8 +66,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new TimerCommandDetailsControl());
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            //CommandWindow window = new CommandWindow(new TimerCommandDetailsControl());
+            //window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            //window.Show();
+
+            Windows.Commands.CommandEditorWindow window = new Windows.Commands.CommandEditorWindow(Base.Model.Commands.CommandTypeEnum.Timer);
             window.Show();
         }
 
