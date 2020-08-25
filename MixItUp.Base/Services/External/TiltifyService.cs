@@ -372,6 +372,16 @@ namespace MixItUp.Base.Services.External
 
                 IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
                 campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
+                if (campaign == null)
+                {
+                    List<TiltifyCampaign> teamCampaigns = new List<TiltifyCampaign>();
+                    foreach (TiltifyTeam team in await ChannelSession.Services.Tiltify.GetUserTeams(user))
+                    {
+                        teamCampaigns.AddRange(await ChannelSession.Services.Tiltify.GetTeamCampaigns(team));
+                    }
+                    campaign = teamCampaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
+                }
+
                 if (campaign != null)
                 {
                     foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
