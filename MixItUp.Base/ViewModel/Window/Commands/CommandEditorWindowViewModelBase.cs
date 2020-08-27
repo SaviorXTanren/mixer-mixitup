@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Actions;
+using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,6 +25,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             }
         }
         private string name;
+
+        public RequirementsSetViewModel Requirements { get; set; } = new RequirementsSetViewModel();
 
         public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
 
@@ -90,6 +93,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 List<Result> results = new List<Result>();
 
                 results.Add(await this.Validate());
+                results.AddRange(await this.Requirements.Validate());
                 foreach (ActionEditorControlViewModelBase action in this.Actions)
                 {
                     results.Add(await action.Validate());

@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -258,9 +259,10 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     return;
                 }
 
-                if (!await this.ProductRequirements.Validate())
+                IEnumerable<Result> requirementResults = await this.ProductRequirements.Validate();
+                if (requirementResults.Any(r => !r.Success))
                 {
-                    return;
+                    await DialogHelper.ShowMessage(string.Join(Environment.NewLine, requirementResults.Where(r => !r.Success).Select(r => r.Message)));
                 }
 
                 RedemptionStoreProductModel product = this.SelectedProduct;

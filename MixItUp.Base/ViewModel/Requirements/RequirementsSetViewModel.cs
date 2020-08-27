@@ -79,16 +79,14 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
         }
 
-        public async Task<bool> Validate()
+        public async Task<IEnumerable<Result>> Validate()
         {
+            List<Result> results = new List<Result>();
             foreach (RequirementViewModelBase requirement in this.Requirements)
             {
-                if (!await requirement.Validate())
-                {
-                    return false;
-                }
+                results.Add(await requirement.Validate());
             }
-            return true;
+            return results;
         }
 
         public RequirementsSetModel GetRequirements()

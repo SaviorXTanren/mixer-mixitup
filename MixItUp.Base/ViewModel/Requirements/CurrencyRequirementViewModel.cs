@@ -82,21 +82,19 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.Amount = requirement.Amount;
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.SelectedCurrency == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCurrencyMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyMustBeSelected));
             }
 
             if (!this.ValidateStringAmount(this.Amount))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()

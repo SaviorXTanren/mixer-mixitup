@@ -7,9 +7,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public abstract class RequirementViewModelBase : UIViewModelBase
     {
-        public virtual Task<bool> Validate()
+        public virtual Task<Result> Validate()
         {
-            return Task.FromResult(true);
+            return Task.FromResult(new Result());
         }
 
         public abstract RequirementModelBase GetRequirement();

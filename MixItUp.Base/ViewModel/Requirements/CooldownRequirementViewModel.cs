@@ -71,21 +71,19 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (!this.ValidateStringAmount(this.Amount, canBeZero: true))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified));
             }
 
             if (this.SelectedType == CooldownTypeEnum.Group && string.IsNullOrEmpty(this.SelectedGroupName))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCooldownGroupMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCooldownGroupMustBeSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()

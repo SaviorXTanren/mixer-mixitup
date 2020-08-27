@@ -112,27 +112,24 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.Amount = requirement.Amount;
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.SelectedInventory == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryMustBeSelected));
             }
 
             if (this.SelectedItem == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryItemMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryItemMustBeSelected));
             }
 
             if (!this.ValidateStringAmount(this.Amount))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryItemAmountMustSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryItemAmountMustSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()
