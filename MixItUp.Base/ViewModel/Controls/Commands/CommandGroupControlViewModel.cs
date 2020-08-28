@@ -91,10 +91,11 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
             var matchedCommands = this.allCommands;
             if (!string.IsNullOrEmpty(filter))
             {
-                matchedCommands  = this.allCommands
+                matchedCommands = this.allCommands
                     .Where(
-                        c => c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)
-                        || c.CommandTriggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)))
+                        c => c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                        c.CommandTriggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) ||
+                        (!string.IsNullOrEmpty(c.GroupName) && c.GroupName.Contains(filter, StringComparison.OrdinalIgnoreCase)))
                     .ToList();
             }
 
