@@ -164,7 +164,7 @@ namespace MixItUp.Base.Util
         public static event EventHandler<TwitchUserBitsCheeredModel> OnBitsOccurred;
         public static void BitsOccurred(TwitchUserBitsCheeredModel bitsCheer)
         {
-            if (GlobalEvents.OnDonationOccurred != null)
+            if (GlobalEvents.OnBitsOccurred != null)
             {
                 GlobalEvents.OnBitsOccurred(null, bitsCheer);
             }
