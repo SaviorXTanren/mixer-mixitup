@@ -50,6 +50,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int volume;
 
+        public bool Loop
+        {
+            get { return this.loop; }
+            set
+            {
+                this.loop = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool loop;
+
         public override bool SupportsRefreshUpdating { get { return true; } }
 
         public ICommand BrowseFilePathCommand { get; set; }
@@ -78,13 +89,14 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = item.Volume;
+            this.Loop = item.Loop;
         }
 
         public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.FilePath) && this.width > 0 && this.height > 0)
             {
-                return new OverlayVideoItemModel(this.FilePath, this.width, this.height, this.volume);
+                return new OverlayVideoItemModel(this.FilePath, this.width, this.height, this.Volume, this.Loop);
             }
             return null;
         }

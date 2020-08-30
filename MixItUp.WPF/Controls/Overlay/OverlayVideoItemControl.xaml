@@ -9,28 +9,47 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="15" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="0" Text="{Binding FilePath}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}"/>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="4" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+            <TextBox Grid.Column="0" Text="{Binding FilePath}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}"/>
+        </Grid>
 
-        <TextBox Grid.Column="6" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,20,0,0">Volume:</TextBlock>
-        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+            <TextBox Grid.Column="0" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+
+            <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">Volume:</TextBlock>
+            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center">Loop:</TextBlock>
+            <ToggleButton Grid.Column="10" IsChecked="{Binding Loop}" />
+        </Grid>
     </Grid>
 </local:OverlayItemControl>

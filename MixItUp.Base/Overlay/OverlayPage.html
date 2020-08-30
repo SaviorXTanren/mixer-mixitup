@@ -433,6 +433,10 @@
                 addedElement.setAttribute('autoplay', '');
                 addedElement.volume = data.VolumeDecimal;
 
+                if (data.Loop) {
+                    addedElement.setAttribute('loop', '');
+                }
+
                 sourceElement = document.createElement('source');
                 sourceElement.src = data.FullLink;
 

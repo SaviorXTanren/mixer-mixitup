@@ -12,6 +12,9 @@ namespace MixItUp.Base.Model.Overlay
         public int Volume { get; set; }
 
         [DataMember]
+        public bool Loop { get; set; }
+
+        [DataMember]
         public override string FileType { get { return "video"; } set { } }
 
         [DataMember]
@@ -22,10 +25,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayVideoItemModel() : base() { }
 
-        public OverlayVideoItemModel(string filepath, int width, int height, int volume)
+        public OverlayVideoItemModel(string filepath, int width, int height, int volume, bool loop)
             : base(OverlayItemModelTypeEnum.Video, filepath, width, height)
         {
             this.Volume = volume;
+            this.Loop = loop;
         }
 
         [JsonIgnore]
