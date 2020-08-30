@@ -98,121 +98,128 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            using (HttpClient httpClient = new HttpClient())
+            try
             {
-                httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
-                httpClient.DefaultRequestHeaders.Add("Twitch-UserID", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.id : string.Empty);
-                httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.login : string.Empty);
-
-                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments, encode: true)))
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string webRequestResult = await response.Content.ReadAsStringAsync();
-                        if (!string.IsNullOrEmpty(webRequestResult))
-                        {
-                            string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
-                            if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
-                            {
-                                if (ChannelSession.Services.Chat != null)
-                                {
-                                    await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
-                                }
-                            }
-                            else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
-                            {
-                                CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserID", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.id : string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.login : string.Empty);
 
-#pragma warning disable CS0612 // Type or member is obsolete
-                                if (command == null && !string.IsNullOrEmpty(this.ResponseCommandName))
+                    using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments, encode: true)))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string webRequestResult = await response.Content.ReadAsStringAsync();
+                            if (!string.IsNullOrEmpty(webRequestResult))
+                            {
+                                string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
+                                if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
                                 {
-                                    command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Name.Equals(this.ResponseCommandName));
-                                    if (command != null)
+                                    if (ChannelSession.Services.Chat != null)
                                     {
-                                        this.ResponseCommandID = command.ID;
+                                        await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
                                     }
                                 }
-                                this.ResponseCommandName = null;
+                                else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
+                                {
+                                    CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                                    if (command == null && !string.IsNullOrEmpty(this.ResponseCommandName))
+                                    {
+                                        command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Name.Equals(this.ResponseCommandName));
+                                        if (command != null)
+                                        {
+                                            this.ResponseCommandID = command.ID;
+                                        }
+                                    }
+                                    this.ResponseCommandName = null;
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                                if (command != null)
-                                {
-                                    string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                    string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, decodedWebRequestResult);
-
-                                    await command.Perform(user, this.platform, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
-                                }
-                            }
-                            else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
-                            {
-                                string replacementText = await this.ReplaceStringWithSpecialModifiers(decodedWebRequestResult, user, arguments);
-                                this.extraSpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
-                            }
-                            else if (this.ResponseAction == WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
-                            {
-                                try
-                                {
-                                    JToken jToken = JToken.Parse(webRequestResult);
-                                    if (this.JSONToSpecialIdentifiers != null)
+                                    if (command != null)
                                     {
-                                        foreach (var kvp in this.JSONToSpecialIdentifiers)
-                                        {
-                                            string[] splits = kvp.Key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                                            if (splits.Count() > 0)
-                                            {
-                                                JToken currentToken = jToken;
-                                                for (int i = 0; i < splits.Count(); i++)
-                                                {
-                                                    if (currentToken is JObject)
-                                                    {
-                                                        JObject jobjToken = (JObject)currentToken;
-                                                        if (jobjToken.ContainsKey(splits[i]))
-                                                        {
-                                                            currentToken = jobjToken[splits[i]];
-                                                        }
-                                                        else
-                                                        {
-                                                            currentToken = null;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else if (currentToken is JArray)
-                                                    {
-                                                        JArray jarrayToken = (JArray)currentToken;
-                                                        if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
-                                                        {
-                                                            currentToken = jarrayToken[index];
-                                                        }
-                                                        else
-                                                        {
-                                                            currentToken = null;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        currentToken = null;
-                                                        break;
-                                                    }
-                                                }
+                                        string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
+                                        string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, decodedWebRequestResult);
 
-                                                if (currentToken != null)
+                                        await command.Perform(user, this.platform, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
+                                    }
+                                }
+                                else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
+                                {
+                                    string replacementText = await this.ReplaceStringWithSpecialModifiers(decodedWebRequestResult, user, arguments);
+                                    this.extraSpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
+                                }
+                                else if (this.ResponseAction == WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
+                                {
+                                    try
+                                    {
+                                        JToken jToken = JToken.Parse(webRequestResult);
+                                        if (this.JSONToSpecialIdentifiers != null)
+                                        {
+                                            foreach (var kvp in this.JSONToSpecialIdentifiers)
+                                            {
+                                                string[] splits = kvp.Key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                                                if (splits.Count() > 0)
                                                 {
-                                                    string replacementText = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), user, arguments);
-                                                    this.extraSpecialIdentifiers[kvp.Value] = replacementText;
+                                                    JToken currentToken = jToken;
+                                                    for (int i = 0; i < splits.Count(); i++)
+                                                    {
+                                                        if (currentToken is JObject)
+                                                        {
+                                                            JObject jobjToken = (JObject)currentToken;
+                                                            if (jobjToken.ContainsKey(splits[i]))
+                                                            {
+                                                                currentToken = jobjToken[splits[i]];
+                                                            }
+                                                            else
+                                                            {
+                                                                currentToken = null;
+                                                                break;
+                                                            }
+                                                        }
+                                                        else if (currentToken is JArray)
+                                                        {
+                                                            JArray jarrayToken = (JArray)currentToken;
+                                                            if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
+                                                            {
+                                                                currentToken = jarrayToken[index];
+                                                            }
+                                                            else
+                                                            {
+                                                                currentToken = null;
+                                                                break;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            currentToken = null;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (currentToken != null)
+                                                    {
+                                                        string replacementText = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), user, arguments);
+                                                        this.extraSpecialIdentifiers[kvp.Value] = replacementText;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Log(ex);
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log(ex);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
