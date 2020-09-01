@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Actions
         public string Arguments { get; set; }
 
         [DataMember]
-        public string GroupName { get; set; }
+        public string CommandGroupName { get; set; }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments)
             : base(ActionTypeEnum.Command)
@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.Command)
         {
             this.ActionType = commandActionType;
-            this.GroupName = groupName;
+            this.CommandGroupName = groupName;
         }
 
         internal CommandActionModel(MixItUp.Base.Actions.CommandAction action)
@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Actions
             this.CommandID = action.CommandID;
             this.PreMadeType = action.PreMadeType;
             this.Arguments = action.CommandArguments;
-            this.GroupName = action.GroupName;
+            this.CommandGroupName = action.GroupName;
         }
 
         public CommandModelBase Command

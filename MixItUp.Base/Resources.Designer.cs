@@ -1618,6 +1618,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid command must be selected.
+        /// </summary>
+        public static string CommandActionSelectCommand {
+            get {
+                return ResourceManager.GetString("CommandActionSelectCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid command group must be selected.
+        /// </summary>
+        public static string CommandActionSelectCommandGroup {
+            get {
+                return ResourceManager.GetString("CommandActionSelectCommandGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Group.
         /// </summary>
         public static string CommandGroup {
@@ -1650,6 +1668,15 @@ namespace MixItUp.Base {
         public static string CommandsRun {
             get {
                 return ResourceManager.GetString("CommandsRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command Type.
+        /// </summary>
+        public static string CommandType {
+            get {
+                return ResourceManager.GetString("CommandType", resourceCulture);
             }
         }
         

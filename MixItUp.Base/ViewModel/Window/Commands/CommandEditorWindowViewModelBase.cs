@@ -58,6 +58,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 switch (action.Type)
                 {
                     case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel((ChatActionModel)action)); break;
+                    case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel((CommandActionModel)action)); break;
                 }
             }
         }
@@ -83,6 +84,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     switch (this.SelectedActionType)
                     {
                         case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel()); break;
+                        case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel()); break;
                     }
                 }
                 return Task.FromResult(0);

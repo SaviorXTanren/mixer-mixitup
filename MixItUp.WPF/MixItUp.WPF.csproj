@@ -451,6 +451,9 @@
     <Compile Include="Controls\Actions\ChatActionEditorControl.xaml.cs">
       <DependentUpon>ChatActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\CommandActionEditorControl.xaml.cs">
+      <DependentUpon>CommandActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
     </Compile>
@@ -1175,6 +1178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ChatActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\CommandActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

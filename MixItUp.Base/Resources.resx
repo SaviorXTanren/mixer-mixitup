@@ -3173,4 +3173,13 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ChatActionMissingChatText" xml:space="preserve">
     <value>Chat Action: Missing chat text</value>
   </data>
+  <data name="CommandType" xml:space="preserve">
+    <value>Command Type</value>
+  </data>
+  <data name="CommandActionSelectCommand" xml:space="preserve">
+    <value>A valid command must be selected</value>
+  </data>
+  <data name="CommandActionSelectCommandGroup" xml:space="preserve">
+    <value>A valid command group must be selected</value>
+  </data>
 </root>

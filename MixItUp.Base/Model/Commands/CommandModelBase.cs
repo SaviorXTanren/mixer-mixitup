@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.Commands
                         this.Actions.Add(new ChatActionModel((MixItUp.Base.Actions.ChatAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.Clips:
-                        this.Actions.Add(new ClipsActionModel((MixItUp.Base.Actions.ClipsAction)action));
+                        this.Actions.Add(new TwitchActionModel((MixItUp.Base.Actions.ClipsAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.Command:
                         this.Actions.Add(new CommandActionModel((MixItUp.Base.Actions.CommandAction)action));

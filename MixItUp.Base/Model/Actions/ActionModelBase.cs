@@ -44,7 +44,6 @@ namespace MixItUp.Base.Model.Actions
         Moderation,
         OvrStream,
         IFTTT,
-        Clips,
         Twitch,
     }
 

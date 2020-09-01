@@ -2,7 +2,6 @@
 using MixItUp.Base.ViewModel.Controls.Actions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -36,6 +35,7 @@ namespace MixItUp.WPF.Controls.Actions
                 switch (this.ViewModel.Type)
                 {
                     case ActionTypeEnum.Chat: this.Control = new ChatActionEditorControl(); break;
+                    case ActionTypeEnum.Command: this.Control = new CommandActionEditorControl(); break;
                 }
 
                 if (this.IsLoaded)
