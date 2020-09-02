@@ -36,6 +36,29 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     case ActionTypeEnum.Chat: this.Control = new ChatActionEditorControl(); break;
                     case ActionTypeEnum.Command: this.Control = new CommandActionEditorControl(); break;
+                    case ActionTypeEnum.Conditional: break;
+                    case ActionTypeEnum.Counter: this.Content = new CounterActionEditorControl(); break;
+                    case ActionTypeEnum.Currency: break;
+                    case ActionTypeEnum.Discord: break;
+                    case ActionTypeEnum.ExternalProgram: break;
+                    case ActionTypeEnum.File: break;
+                    case ActionTypeEnum.GameQueue: break;
+                    case ActionTypeEnum.IFTTT: break;
+                    case ActionTypeEnum.Input: break;
+                    case ActionTypeEnum.Moderation: break;
+                    case ActionTypeEnum.Overlay: break;
+                    case ActionTypeEnum.OvrStream: break;
+                    case ActionTypeEnum.Serial: break;
+                    case ActionTypeEnum.Sound: break;
+                    case ActionTypeEnum.SpecialIdentifier: break;
+                    case ActionTypeEnum.StreamingSoftware: break;
+                    case ActionTypeEnum.Streamlabs: break;
+                    case ActionTypeEnum.TextToSpeech: break;
+                    case ActionTypeEnum.Translation: break;
+                    case ActionTypeEnum.Twitch: break;
+                    case ActionTypeEnum.Twitter: break;
+                    case ActionTypeEnum.Wait: break;
+                    case ActionTypeEnum.WebRequest: break;
                 }
 
                 if (this.IsLoaded)

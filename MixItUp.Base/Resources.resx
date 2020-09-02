@@ -3177,9 +3177,15 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Command Type</value>
   </data>
   <data name="CommandActionSelectCommand" xml:space="preserve">
-    <value>A valid command must be selected</value>
+    <value>Command Action: A valid command must be selected</value>
   </data>
   <data name="CommandActionSelectCommandGroup" xml:space="preserve">
-    <value>A valid command group must be selected</value>
+    <value>Command Action: A valid command group must be selected</value>
+  </data>
+  <data name="CounterActionMissingName" xml:space="preserve">
+    <value>Counter Action: Missing counter name</value>
+  </data>
+  <data name="CounterActionMissingAmount" xml:space="preserve">
+    <value>Counter Action: Missing amount</value>
   </data>
 </root>

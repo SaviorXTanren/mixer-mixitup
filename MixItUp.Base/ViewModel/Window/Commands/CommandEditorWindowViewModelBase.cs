@@ -59,6 +59,29 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 {
                     case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel((ChatActionModel)action)); break;
                     case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel((CommandActionModel)action)); break;
+                    case ActionTypeEnum.Conditional: break;
+                    case ActionTypeEnum.Counter: this.Actions.Add(new CounterActionEditorControlViewModel((CounterActionModel)action)); break;
+                    case ActionTypeEnum.Currency: break;
+                    case ActionTypeEnum.Discord: break;
+                    case ActionTypeEnum.ExternalProgram: break;
+                    case ActionTypeEnum.File: break;
+                    case ActionTypeEnum.GameQueue: break;
+                    case ActionTypeEnum.IFTTT: break;
+                    case ActionTypeEnum.Input: break;
+                    case ActionTypeEnum.Moderation: break;
+                    case ActionTypeEnum.Overlay: break;
+                    case ActionTypeEnum.OvrStream: break;
+                    case ActionTypeEnum.Serial: break;
+                    case ActionTypeEnum.Sound: break;
+                    case ActionTypeEnum.SpecialIdentifier: break;
+                    case ActionTypeEnum.StreamingSoftware: break;
+                    case ActionTypeEnum.Streamlabs: break;
+                    case ActionTypeEnum.TextToSpeech: break;
+                    case ActionTypeEnum.Translation: break;
+                    case ActionTypeEnum.Twitch: break;
+                    case ActionTypeEnum.Twitter: break;
+                    case ActionTypeEnum.Wait: break;
+                    case ActionTypeEnum.WebRequest: break;
                 }
             }
         }
@@ -85,6 +108,29 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     {
                         case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel()); break;
                         case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel()); break;
+                        case ActionTypeEnum.Conditional: break;
+                        case ActionTypeEnum.Counter: this.Actions.Add(new CounterActionEditorControlViewModel()); break;
+                        case ActionTypeEnum.Currency: break;
+                        case ActionTypeEnum.Discord: break;
+                        case ActionTypeEnum.ExternalProgram: break;
+                        case ActionTypeEnum.File: break;
+                        case ActionTypeEnum.GameQueue: break;
+                        case ActionTypeEnum.IFTTT: break;
+                        case ActionTypeEnum.Input: break;
+                        case ActionTypeEnum.Moderation: break;
+                        case ActionTypeEnum.Overlay: break;
+                        case ActionTypeEnum.OvrStream: break;
+                        case ActionTypeEnum.Serial: break;
+                        case ActionTypeEnum.Sound: break;
+                        case ActionTypeEnum.SpecialIdentifier: break;
+                        case ActionTypeEnum.StreamingSoftware: break;
+                        case ActionTypeEnum.Streamlabs: break;
+                        case ActionTypeEnum.TextToSpeech: break;
+                        case ActionTypeEnum.Translation: break;
+                        case ActionTypeEnum.Twitch: break;
+                        case ActionTypeEnum.Twitter: break;
+                        case ActionTypeEnum.Wait: break;
+                        case ActionTypeEnum.WebRequest: break;
                     }
                 }
                 return Task.FromResult(0);

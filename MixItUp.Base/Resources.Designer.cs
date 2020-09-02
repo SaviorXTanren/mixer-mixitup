@@ -1618,7 +1618,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A valid command must be selected.
+        ///   Looks up a localized string similar to Command Action: A valid command must be selected.
         /// </summary>
         public static string CommandActionSelectCommand {
             get {
@@ -1627,7 +1627,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A valid command group must be selected.
+        ///   Looks up a localized string similar to Command Action: A valid command group must be selected.
         /// </summary>
         public static string CommandActionSelectCommandGroup {
             get {
@@ -1857,6 +1857,24 @@ namespace MixItUp.Base {
         public static string Costream {
             get {
                 return ResourceManager.GetString("Costream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Action: Missing amount.
+        /// </summary>
+        public static string CounterActionMissingAmount {
+            get {
+                return ResourceManager.GetString("CounterActionMissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Action: Missing counter name.
+        /// </summary>
+        public static string CounterActionMissingName {
+            get {
+                return ResourceManager.GetString("CounterActionMissingName", resourceCulture);
             }
         }
         
