@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -213,8 +214,10 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public Guid ID { get { return this.Data.ID; } }
 
+        [JsonIgnore]
         public StreamingPlatformTypeEnum Platform
         {
             get
@@ -224,6 +227,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string PlatformID
         {
             get
@@ -233,6 +237,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string Username
         {
             get
@@ -242,8 +247,10 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public HashSet<UserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
 
+        [JsonIgnore]
         public string AvatarLink
         {
             get
@@ -252,6 +259,7 @@ namespace MixItUp.Base.ViewModel.User
                 return string.Empty;
             }
         }
+        [JsonIgnore]
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
         public string Color
@@ -307,6 +315,7 @@ namespace MixItUp.Base.ViewModel.User
         }
         private object colorLock = new object();
 
+        [JsonIgnore]
         public string ChannelLink
         {
             get
@@ -364,6 +373,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public int SubscribeTier
         {
             get
@@ -376,6 +386,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string SubscribeTierString
         {
             get
@@ -385,6 +396,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string PlatformBadgeLink
         {
             get
@@ -394,6 +406,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string SubscriberBadgeLink
         {
             get
@@ -406,6 +419,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public bool IsAnonymous
         {
             get
@@ -482,6 +496,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
+        [JsonIgnore]
         public string SortableID
         {
             get
@@ -574,14 +589,22 @@ namespace MixItUp.Base.ViewModel.User
         }
         private object rolesDisplayStringLock = new object();
 
+        [JsonIgnore]
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
+        [JsonIgnore]
         public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
+        [JsonIgnore]
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
+        [JsonIgnore]
         public bool ShowSubscriberBadge { get { return !ChannelSession.Settings.HideUserSubscriberBadge && this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
+        [JsonIgnore]
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+        [JsonIgnore]
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
+        [JsonIgnore]
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
+        [JsonIgnore]
         public int SubscribeMonths
         {
             get
@@ -593,11 +616,14 @@ namespace MixItUp.Base.ViewModel.User
                 return 0;
             }
         }
+        [JsonIgnore]
         public string LastSeenString { get { return (this.LastSeen != DateTimeOffset.MinValue) ? this.LastSeen.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
+        [JsonIgnore]
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
+        [JsonIgnore]
         public PatreonTier PatreonTier
         {
             get
@@ -610,6 +636,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public bool IsSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)

@@ -101,8 +101,7 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public CustomCommand NewStreamBossCommand { get; set; }
-
-        [DataMember]
+        [JsonIgnore]
         public UserViewModel CurrentBoss { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
