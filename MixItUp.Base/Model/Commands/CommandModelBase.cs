@@ -105,7 +105,7 @@ namespace MixItUp.Base.Model.Commands
                         this.Actions.Add(new CounterActionModel((MixItUp.Base.Actions.CounterAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.Currency:
-                        this.Actions.Add(new CurrencyActionModel((MixItUp.Base.Actions.CurrencyAction)action));
+                        this.Actions.Add(new ConsumablesActionModel((MixItUp.Base.Actions.CurrencyAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.Discord:
                         this.Actions.Add(new DiscordActionModel((MixItUp.Base.Actions.DiscordAction)action));

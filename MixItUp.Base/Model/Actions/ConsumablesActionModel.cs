@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
 {
-    public enum CurrencyActionTypeEnum
+    public enum ConsumablesActionTypeEnum
     {
         AddToUser,
         SubtractFromUser,
@@ -25,11 +25,11 @@ namespace MixItUp.Base.Model.Actions
     }
 
     [DataContract]
-    public class CurrencyActionModel : ActionModelBase
+    public class ConsumablesActionModel : ActionModelBase
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return CurrencyActionModel.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return ConsumablesActionModel.asyncSemaphore; } }
 
         [DataMember]
         public Guid CurrencyID { get; set; }
@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Actions
         public Guid StreamPassID { get; set; }
 
         [DataMember]
-        public CurrencyActionTypeEnum ActionType { get; set; }
+        public ConsumablesActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string Username { get; set; }
@@ -51,53 +51,53 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool DeductFromUser { get; set; }
         [DataMember]
-        public UserRoleEnum MinimumRole { get; set; }
+        public UserRoleEnum UsersToApplyTo { get; set; }
 
-        public CurrencyActionModel(CurrencyModel currency, CurrencyActionTypeEnum actionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Currency)
+        public ConsumablesActionModel(CurrencyModel currency, ConsumablesActionTypeEnum actionType, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : base(ActionTypeEnum.Consumables)
         {
             this.CurrencyID = currency.ID;
             this.ActionType = actionType;
             this.Amount = amount;
             this.Username = username;
-            this.MinimumRole = minimumRole;
+            this.UsersToApplyTo = usersToApplyTo;
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyActionModel(InventoryModel inventory, CurrencyActionTypeEnum actionType, string itemName = null, string amount = null, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Currency)
+        public ConsumablesActionModel(InventoryModel inventory, ConsumablesActionTypeEnum actionType, string itemName = null, string amount = null, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : base(ActionTypeEnum.Consumables)
         {
             this.InventoryID = inventory.ID;
             this.ActionType = actionType;
             this.ItemName = itemName;
             this.Amount = amount;
             this.Username = username;
-            this.MinimumRole = minimumRole;
+            this.UsersToApplyTo = usersToApplyTo;
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyActionModel(StreamPassModel streamPass, CurrencyActionTypeEnum actionType, string amount, string username = null, UserRoleEnum minimumRole = UserRoleEnum.User, bool deductFromUser = false)
-            : base(ActionTypeEnum.Currency)
+        public ConsumablesActionModel(StreamPassModel streamPass, ConsumablesActionTypeEnum actionType, string amount, string username = null, UserRoleEnum usersToApplyTo = UserRoleEnum.User, bool deductFromUser = false)
+            : base(ActionTypeEnum.Consumables)
         {
             this.StreamPassID = streamPass.ID;
             this.ActionType = actionType;
             this.Amount = amount;
             this.Username = username;
-            this.MinimumRole = minimumRole;
+            this.UsersToApplyTo = usersToApplyTo;
             this.DeductFromUser = deductFromUser;
         }
 
-        internal CurrencyActionModel(MixItUp.Base.Actions.CurrencyAction action)
-            : base(ActionTypeEnum.Currency)
+        internal ConsumablesActionModel(MixItUp.Base.Actions.CurrencyAction action)
+            : base(ActionTypeEnum.Consumables)
         {
             this.CurrencyID = action.CurrencyID;
             this.InventoryID = action.InventoryID;
             this.ItemName = action.ItemName;
             this.StreamPassID = action.StreamPassID;
-            this.ActionType = (CurrencyActionTypeEnum)(int)action.CurrencyActionType;
+            this.ActionType = (ConsumablesActionTypeEnum)(int)action.CurrencyActionType;
             this.Amount = action.Amount;
             this.Username = action.Username;
-            this.MinimumRole = action.RoleRequirement;
+            this.UsersToApplyTo = action.RoleRequirement;
             this.DeductFromUser = action.DeductFromUser;
         }
 
@@ -152,7 +152,7 @@ namespace MixItUp.Base.Model.Actions
                 systemName = streamPass.Name;
             }
 
-            if (this.ActionType == CurrencyActionTypeEnum.ResetForAllUsers)
+            if (this.ActionType == ConsumablesActionTypeEnum.ResetForAllUsers)
             {
                 if (currency != null)
                 {
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Actions
                     await streamPass.Reset();
                 }
             }
-            else if (this.ActionType == CurrencyActionTypeEnum.ResetForUser)
+            else if (this.ActionType == ConsumablesActionTypeEnum.ResetForUser)
             {
                 if (currency != null)
                 {
@@ -199,11 +199,11 @@ namespace MixItUp.Base.Model.Actions
                 }
 
                 HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
-                if (this.ActionType == CurrencyActionTypeEnum.AddToUser)
+                if (this.ActionType == ConsumablesActionTypeEnum.AddToUser)
                 {
                     receiverUserData.Add(user.Data);
                 }
-                else if (this.ActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
+                else if (this.ActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser)
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
@@ -220,11 +220,11 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
                 }
-                else if (this.ActionType == CurrencyActionTypeEnum.AddToAllChatUsers || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                else if (this.ActionType == ConsumablesActionTypeEnum.AddToAllChatUsers || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                 {
                     foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllWorkableUsers())
                     {
-                        if (chatUser.HasPermissionsTo(this.MinimumRole))
+                        if (chatUser.HasPermissionsTo(this.UsersToApplyTo))
                         {
                             receiverUserData.Add(chatUser.Data);
                         }
@@ -232,7 +232,7 @@ namespace MixItUp.Base.Model.Actions
                     receiverUserData.Add(ChannelSession.GetCurrentUser().Data);
                 }
 
-                if ((this.DeductFromUser && receiverUserData.Count > 0) || this.ActionType == CurrencyActionTypeEnum.SubtractFromUser)
+                if ((this.DeductFromUser && receiverUserData.Count > 0) || this.ActionType == ConsumablesActionTypeEnum.SubtractFromUser)
                 {
                     if (currency != null)
                     {
@@ -269,7 +269,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (currency != null)
                         {
-                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 currency.SubtractAmount(receiverUser, amountValue);
                             }
@@ -280,7 +280,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else if (inventory != null)
                         {
-                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 inventory.SubtractAmount(receiverUser, item, amountValue);
                             }
@@ -291,7 +291,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else if (streamPass != null)
                         {
-                            if (this.ActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.ActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromAllChatUsers)
                             {
                                 streamPass.SubtractAmount(receiverUser, amountValue);
                             }

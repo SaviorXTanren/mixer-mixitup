@@ -3188,4 +3188,22 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="CounterActionMissingAmount" xml:space="preserve">
     <value>Counter Action: Missing amount</value>
   </data>
+  <data name="Consumables" xml:space="preserve">
+    <value>Consumables</value>
+  </data>
+  <data name="ConsumablesCurrencyRankEtc" xml:space="preserve">
+    <value>Consumables (Currency/Rank/Inventory)</value>
+  </data>
+  <data name="Item" xml:space="preserve">
+    <value>Item</value>
+  </data>
+  <data name="ConsumableActionMissingAmount" xml:space="preserve">
+    <value>Consumable Action: Missing amount</value>
+  </data>
+  <data name="ConsumableActionSelectConsumable" xml:space="preserve">
+    <value>Consumable Action: A valid consumable must be selected</value>
+  </data>
+  <data name="ConsumableActionSelectInventoryItem" xml:space="preserve">
+    <value>Consumable Action: A valid inventory item must be selected</value>
+  </data>
 </root>

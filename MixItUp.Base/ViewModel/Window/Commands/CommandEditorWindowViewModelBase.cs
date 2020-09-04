@@ -55,13 +55,14 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             
             foreach (ActionModelBase action in this.existingCommand.Actions)
             {
+                ActionEditorControlViewModelBase editorViewModel = null;
                 switch (action.Type)
                 {
-                    case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel((ChatActionModel)action)); break;
-                    case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel((CommandActionModel)action)); break;
+                    case ActionTypeEnum.Chat: editorViewModel = new ChatActionEditorControlViewModel((ChatActionModel)action); break;
+                    case ActionTypeEnum.Command: editorViewModel = new CommandActionEditorControlViewModel((CommandActionModel)action); break;
                     case ActionTypeEnum.Conditional: break;
-                    case ActionTypeEnum.Counter: this.Actions.Add(new CounterActionEditorControlViewModel((CounterActionModel)action)); break;
-                    case ActionTypeEnum.Currency: break;
+                    case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel((ConsumablesActionModel)action); break;
+                    case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel((CounterActionModel)action); break;
                     case ActionTypeEnum.Discord: break;
                     case ActionTypeEnum.ExternalProgram: break;
                     case ActionTypeEnum.File: break;
@@ -82,6 +83,11 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.Twitter: break;
                     case ActionTypeEnum.Wait: break;
                     case ActionTypeEnum.WebRequest: break;
+                }
+
+                if (editorViewModel != null)
+                {
+                    this.Actions.Add(editorViewModel);
                 }
             }
         }
@@ -104,13 +110,14 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             {
                 if (this.ActionTypes.Contains(this.SelectedActionType))
                 {
+                    ActionEditorControlViewModelBase editorViewModel = null;
                     switch (this.SelectedActionType)
                     {
-                        case ActionTypeEnum.Chat: this.Actions.Add(new ChatActionEditorControlViewModel()); break;
-                        case ActionTypeEnum.Command: this.Actions.Add(new CommandActionEditorControlViewModel()); break;
+                        case ActionTypeEnum.Chat: editorViewModel = new ChatActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Command: editorViewModel = new CommandActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Conditional: break;
-                        case ActionTypeEnum.Counter: this.Actions.Add(new CounterActionEditorControlViewModel()); break;
-                        case ActionTypeEnum.Currency: break;
+                        case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel(); break;
+                        case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Discord: break;
                         case ActionTypeEnum.ExternalProgram: break;
                         case ActionTypeEnum.File: break;
@@ -131,6 +138,11 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Twitter: break;
                         case ActionTypeEnum.Wait: break;
                         case ActionTypeEnum.WebRequest: break;
+                    }
+
+                    if (editorViewModel != null)
+                    {
+                        this.Actions.Add(editorViewModel);
                     }
                 }
                 return Task.FromResult(0);

@@ -1771,6 +1771,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Consumable Action: Missing amount.
+        /// </summary>
+        public static string ConsumableActionMissingAmount {
+            get {
+                return ResourceManager.GetString("ConsumableActionMissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consumable Action: A valid consumable must be selected.
+        /// </summary>
+        public static string ConsumableActionSelectConsumable {
+            get {
+                return ResourceManager.GetString("ConsumableActionSelectConsumable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consumable Action: A valid inventory item must be selected.
+        /// </summary>
+        public static string ConsumableActionSelectInventoryItem {
+            get {
+                return ResourceManager.GetString("ConsumableActionSelectInventoryItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consumables.
+        /// </summary>
+        public static string Consumables {
+            get {
+                return ResourceManager.GetString("Consumables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consumables (Currency/Rank/Inventory).
+        /// </summary>
+        public static string ConsumablesCurrencyRankEtc {
+            get {
+                return ResourceManager.GetString("ConsumablesCurrencyRankEtc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Contact &amp; Resources.
         /// </summary>
         public static string ContactAndResources {
@@ -3882,6 +3927,15 @@ namespace MixItUp.Base {
         public static string IsRankSystem {
             get {
                 return ResourceManager.GetString("IsRankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item.
+        /// </summary>
+        public static string Item {
+            get {
+                return ResourceManager.GetString("Item", resourceCulture);
             }
         }
         

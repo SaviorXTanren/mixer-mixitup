@@ -16,8 +16,8 @@ namespace MixItUp.Base.Model.Actions
         Custom = 0,
         [Name("ChatMessage")]
         Chat,
-        [Name("CurrencyRankInventory")]
-        Currency,
+        [Name("ConsumablesCurrencyRankEtc")]
+        Consumables,
         ExternalProgram,
         [Name("InputKeyboardAndMouse")]
         Input,
