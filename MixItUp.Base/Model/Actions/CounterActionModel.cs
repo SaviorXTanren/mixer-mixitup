@@ -49,22 +49,25 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            if (this.ActionType == CounterActionTypeEnum.Reset)
+            if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                await ChannelSession.Settings.Counters[this.CounterName].ResetAmount();
-            }
-            else
-            {
-                string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, platform, arguments, specialIdentifiers);
-                if (double.TryParse(amountText, out double amount))
+                if (this.ActionType == CounterActionTypeEnum.Reset)
                 {
-                    if (this.ActionType == CounterActionTypeEnum.Update)
+                    await ChannelSession.Settings.Counters[this.CounterName].ResetAmount();
+                }
+                else
+                {
+                    string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, platform, arguments, specialIdentifiers);
+                    if (double.TryParse(amountText, out double amount))
                     {
-                        await ChannelSession.Settings.Counters[this.CounterName].UpdateAmount(amount);
-                    }
-                    else if (this.ActionType == CounterActionTypeEnum.Set)
-                    {
-                        await ChannelSession.Settings.Counters[this.CounterName].SetAmount(amount);
+                        if (this.ActionType == CounterActionTypeEnum.Update)
+                        {
+                            await ChannelSession.Settings.Counters[this.CounterName].UpdateAmount(amount);
+                        }
+                        else if (this.ActionType == CounterActionTypeEnum.Set)
+                        {
+                            await ChannelSession.Settings.Counters[this.CounterName].SetAmount(amount);
+                        }
                     }
                 }
             }
