@@ -2536,6 +2536,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discord Action: Missing channel.
+        /// </summary>
+        public static string DiscordActionMissingChannel {
+            get {
+                return ResourceManager.GetString("DiscordActionMissingChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord Action: Missing chat message.
+        /// </summary>
+        public static string DiscordActionMissingChatMessage {
+            get {
+                return ResourceManager.GetString("DiscordActionMissingChatMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display Image (Optional).
         /// </summary>
         public static string DisplayImage {

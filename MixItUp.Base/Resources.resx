@@ -3206,4 +3206,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ConsumableActionSelectInventoryItem" xml:space="preserve">
     <value>Consumable Action: A valid inventory item must be selected</value>
   </data>
+  <data name="DiscordActionMissingChannel" xml:space="preserve">
+    <value>Discord Action: Missing channel</value>
+  </data>
+  <data name="DiscordActionMissingChatMessage" xml:space="preserve">
+    <value>Discord Action: Missing chat message</value>
+  </data>
 </root>

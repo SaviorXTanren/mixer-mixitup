@@ -48,6 +48,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         private CommandModelBase existingCommand;
 
         public CommandEditorWindowViewModelBase(CommandModelBase existingCommand)
+            : this()
         {
             this.existingCommand = existingCommand;
 
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.Conditional: break;
                     case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel((ConsumablesActionModel)action); break;
                     case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel((CounterActionModel)action); break;
-                    case ActionTypeEnum.Discord: break;
+                    case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel((DiscordActionModel)action); break;
                     case ActionTypeEnum.ExternalProgram: break;
                     case ActionTypeEnum.File: break;
                     case ActionTypeEnum.GameQueue: break;
@@ -106,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 this.ActionTypes.Add(actionType);
             }
 
-            this.AddCommand = this.CreateCommand((parameter) =>
+            this.AddCommand = this.CreateCommand(async (parameter) =>
             {
                 if (this.ActionTypes.Contains(this.SelectedActionType))
                 {
@@ -118,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Conditional: break;
                         case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Discord: break;
+                        case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel(); break;
                         case ActionTypeEnum.ExternalProgram: break;
                         case ActionTypeEnum.File: break;
                         case ActionTypeEnum.GameQueue: break;
@@ -142,10 +143,10 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
                     if (editorViewModel != null)
                     {
+                        await editorViewModel.OnLoaded();
                         this.Actions.Add(editorViewModel);
                     }
                 }
-                return Task.FromResult(0);
             });
 
             this.SaveCommand = this.CreateCommand(async (parameter) =>
@@ -182,5 +183,13 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         public abstract Task<Result> Validate();
 
         public abstract Task Save();
+
+        protected override async Task OnLoadedInternal()
+        {
+            foreach (ActionEditorControlViewModelBase actionEditor in this.Actions)
+            {
+                await actionEditor.OnLoaded();
+            }
+        }
     }
 }
