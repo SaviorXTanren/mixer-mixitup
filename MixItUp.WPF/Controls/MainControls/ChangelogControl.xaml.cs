@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,14 +23,21 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
-            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
-            if (update != null)
+            try
             {
-                using (HttpClient client = new HttpClient())
+                MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+                if (update != null)
                 {
-                    string changelogHTML = await client.GetStringAsync(update.ChangelogLink);
-                    this.ChangelogWebBrowser.NavigateToString(changelogHTML);
+                    using (HttpClient client = new HttpClient())
+                    {
+                        string changelogHTML = await client.GetStringAsync(update.ChangelogLink);
+                        this.ChangelogWebBrowser.NavigateToString(changelogHTML);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             await base.InitializeInternal();
         }
