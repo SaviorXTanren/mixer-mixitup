@@ -3139,6 +3139,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to External Program Action: Missing file path.
+        /// </summary>
+        public static string ExternalProgramActionMissingFilePath {
+            get {
+                return ResourceManager.GetString("ExternalProgramActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra Life Donation.
         /// </summary>
         public static string ExtraLifeDonation {
