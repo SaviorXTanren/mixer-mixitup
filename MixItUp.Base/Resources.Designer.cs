@@ -3814,6 +3814,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IFTTT Action: Missing event name.
+        /// </summary>
+        public static string IFTTTActionMissingEventName {
+            get {
+                return ResourceManager.GetString("IFTTTActionMissingEventName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore Your Bot Account for Commands.
         /// </summary>
         public static string IgnoreYourBotAccountForCommands {

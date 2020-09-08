@@ -472,6 +472,9 @@
     <Compile Include="Controls\Actions\GameQueueActionEditorControl.xaml.cs">
       <DependentUpon>GameQueueActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\IFTTTActionEditorControl.xaml.cs">
+      <DependentUpon>IFTTTActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
     </Compile>
@@ -1224,6 +1227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\GameQueueActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\IFTTTActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

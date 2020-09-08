@@ -3227,4 +3227,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="FileActionMissingTextToSave" xml:space="preserve">
     <value>File Action: Missing text to save</value>
   </data>
+  <data name="IFTTTActionMissingEventName" xml:space="preserve">
+    <value>IFTTT Action: Missing event name</value>
+  </data>
 </root>
