@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ProgramFileBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("");
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(filePath) && this.DataContext is ExternalProgramActionEditorControlViewModel)
             {
                 ((ExternalProgramActionEditorControlViewModel)this.DataContext).FilePath = filePath;

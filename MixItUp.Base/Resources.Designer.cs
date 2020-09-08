@@ -3229,6 +3229,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Action: Invalid Special Identifier specified.
+        /// </summary>
+        public static string FileActionInvalidSpecialIdentifier {
+            get {
+                return ResourceManager.GetString("FileActionInvalidSpecialIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Action: Missing file path.
+        /// </summary>
+        public static string FileActionMissingFilePath {
+            get {
+                return ResourceManager.GetString("FileActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Action: Missing line to read.
+        /// </summary>
+        public static string FileActionMissingLineToRead {
+            get {
+                return ResourceManager.GetString("FileActionMissingLineToRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Action: Missing text to save.
+        /// </summary>
+        public static string FileActionMissingTextToSave {
+            get {
+                return ResourceManager.GetString("FileActionMissingTextToSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Path.
         /// </summary>
         public static string FilePath {

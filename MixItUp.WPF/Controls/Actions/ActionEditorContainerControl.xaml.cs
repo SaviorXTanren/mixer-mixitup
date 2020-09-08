@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Counter: this.Content = new CounterActionEditorControl(); break;
                     case ActionTypeEnum.Discord: this.Content = new DiscordActionEditorControl(); break;
                     case ActionTypeEnum.ExternalProgram: this.Content = new ExternalProgramActionEditorControl(); break;
-                    case ActionTypeEnum.File: break;
+                    case ActionTypeEnum.File: this.Content = new FileActionEditorControl(); break;
                     case ActionTypeEnum.GameQueue: break;
                     case ActionTypeEnum.IFTTT: break;
                     case ActionTypeEnum.Input: break;

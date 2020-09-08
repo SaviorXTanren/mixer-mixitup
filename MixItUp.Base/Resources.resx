@@ -3215,4 +3215,16 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ExternalProgramActionMissingFilePath" xml:space="preserve">
     <value>External Program Action: Missing file path</value>
   </data>
+  <data name="FileActionInvalidSpecialIdentifier" xml:space="preserve">
+    <value>File Action: Invalid Special Identifier specified</value>
+  </data>
+  <data name="FileActionMissingFilePath" xml:space="preserve">
+    <value>File Action: Missing file path</value>
+  </data>
+  <data name="FileActionMissingLineToRead" xml:space="preserve">
+    <value>File Action: Missing line to read</value>
+  </data>
+  <data name="FileActionMissingTextToSave" xml:space="preserve">
+    <value>File Action: Missing text to save</value>
+  </data>
 </root>

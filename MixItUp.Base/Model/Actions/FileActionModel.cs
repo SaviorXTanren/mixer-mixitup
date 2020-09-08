@@ -37,14 +37,15 @@ namespace MixItUp.Base.Model.Actions
         public string TransferText { get; set; }
 
         [DataMember]
-        public string LineIndexToRead { get; set; }
+        public string LineIndex { get; set; }
 
-        public FileActionModel(FileActionTypeEnum actionType, string filePath, string transferText)
+        public FileActionModel(FileActionTypeEnum actionType, string filePath, string transferText, string lineIndex = null)
             : base(ActionTypeEnum.File)
         {
             this.ActionType = actionType;
             this.FilePath = filePath;
             this.TransferText = transferText;
+            this.LineIndex = lineIndex;
         }
 
         internal FileActionModel(MixItUp.Base.Actions.FileAction action)
@@ -52,7 +53,7 @@ namespace MixItUp.Base.Model.Actions
         {
             this.ActionType = (FileActionTypeEnum)(int)action.FileActionType;
             this.TransferText = action.TransferText;
-            this.LineIndexToRead = action.LineIndexToRead;
+            this.LineIndex = action.LineIndexToRead;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -94,9 +95,9 @@ namespace MixItUp.Base.Model.Actions
                             int lineIndex = -1;
                             if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                             {
-                                if (!string.IsNullOrEmpty(this.LineIndexToRead))
+                                if (!string.IsNullOrEmpty(this.LineIndex))
                                 {
-                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndexToRead, user, platform, arguments, specialIdentifiers);
+                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, user, platform, arguments, specialIdentifiers);
                                     if (int.TryParse(lineToRead, out lineIndex))
                                     {
                                         lineIndex = lineIndex - 1;
