@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel((DiscordActionModel)action); break;
                     case ActionTypeEnum.ExternalProgram: new ExternalProgramActionEditorControlViewModel((ExternalProgramActionModel)action); break;
                     case ActionTypeEnum.File: new FileActionEditorControlViewModel((FileActionModel)action); break;
-                    case ActionTypeEnum.GameQueue: break;
+                    case ActionTypeEnum.GameQueue: new GameQueueActionEditorControlViewModel((GameQueueActionModel)action); break;
                     case ActionTypeEnum.IFTTT: break;
                     case ActionTypeEnum.Input: break;
                     case ActionTypeEnum.Moderation: break;
@@ -122,7 +122,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel(); break;
                         case ActionTypeEnum.ExternalProgram: new ExternalProgramActionEditorControlViewModel(); break;
                         case ActionTypeEnum.File: new FileActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.GameQueue: break;
+                        case ActionTypeEnum.GameQueue: new GameQueueActionEditorControlViewModel(); break;
                         case ActionTypeEnum.IFTTT: break;
                         case ActionTypeEnum.Input: break;
                         case ActionTypeEnum.Moderation: break;
