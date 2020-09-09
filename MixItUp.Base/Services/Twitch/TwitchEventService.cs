@@ -53,7 +53,16 @@ namespace MixItUp.Base.Services.Twitch
                 this.User = new UserViewModel(userNotice);
             }
             this.User.SetTwitchChatDetails(userNotice);
-            this.PlanTier = this.PlanName = MixItUp.Base.Resources.Tier1;
+
+            if (this.User.IsPlatformSubscriber)
+            {
+                this.PlanTier = this.PlanName = this.User.SubscribeTierString;
+            }
+            else
+            {
+                this.PlanTier = this.PlanName = MixItUp.Base.Resources.Tier1;
+            }
+
             this.IsGiftedUpgrade = true;
         }
     }
