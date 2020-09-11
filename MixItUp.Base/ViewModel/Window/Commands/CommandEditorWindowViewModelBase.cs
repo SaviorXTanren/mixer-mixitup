@@ -70,7 +70,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.GameQueue: new GameQueueActionEditorControlViewModel((GameQueueActionModel)action); break;
                     case ActionTypeEnum.IFTTT: new IFTTTActionEditorControlViewModel((IFTTTActionModel)action); break;
                     case ActionTypeEnum.Input: new InputActionEditorControlViewModel((InputActionModel)action); break;
-                    case ActionTypeEnum.Moderation: break;
+                    case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel((ModerationActionModel)action); break;
                     case ActionTypeEnum.Overlay: break;
                     case ActionTypeEnum.OvrStream: break;
                     case ActionTypeEnum.Serial: break;
@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.GameQueue: new GameQueueActionEditorControlViewModel(); break;
                         case ActionTypeEnum.IFTTT: new IFTTTActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Input: new InputActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Moderation: break;
+                        case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Overlay: break;
                         case ActionTypeEnum.OvrStream: break;
                         case ActionTypeEnum.Serial: break;

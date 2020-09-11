@@ -3230,4 +3230,31 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="IFTTTActionMissingEventName" xml:space="preserve">
     <value>IFTTT Action: Missing event name</value>
   </data>
+  <data name="AddModerationStrike" xml:space="preserve">
+    <value>Add Moderation Strike</value>
+  </data>
+  <data name="BanUser" xml:space="preserve">
+    <value>Ban User</value>
+  </data>
+  <data name="ModUser" xml:space="preserve">
+    <value>Mod User</value>
+  </data>
+  <data name="PurgeUser" xml:space="preserve">
+    <value>Purge User</value>
+  </data>
+  <data name="RemoveModerationStrike" xml:space="preserve">
+    <value>Remove Moderation Strike</value>
+  </data>
+  <data name="TimeoutUser" xml:space="preserve">
+    <value>Timeout User</value>
+  </data>
+  <data name="UnbanUser" xml:space="preserve">
+    <value>Unban User</value>
+  </data>
+  <data name="UnmodUser" xml:space="preserve">
+    <value>Unmod User</value>
+  </data>
+  <data name="ModerationActionMissingTimeoutAmount" xml:space="preserve">
+    <value>Moderation Action: Missing timeout amount</value>
+  </data>
 </root>

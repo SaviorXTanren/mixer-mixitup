@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -10,27 +8,15 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum ModerationActionTypeEnum
     {
-        [Name("Chat Timeout")]
-        ChatTimeout,
-        [Name("Purge User")]
+        TimeoutUser,
         PurgeUser,
-        [Obsolete]
-        [Name("MixPlay Timeout")]
-        InteractiveTimeout,
-        [Name("Ban User")]
-        BanUser,
-        [Name("Clear Chat")]
         ClearChat,
-        [Name("Add Moderation Strike")]
-        AddModerationStrike,
-        [Name("Remove Moderation Strike")]
-        RemoveModerationStrike,
-        [Name("Unban User")]
+        BanUser,
         UnbanUser,
-        [Name("Mod User")]
         ModUser,
-        [Name("Unmod User")]
-        UnmodUser
+        UnmodUser,
+        AddModerationStrike,
+        RemoveModerationStrike,
     }
 
     [DataContract]
@@ -44,19 +30,20 @@ namespace MixItUp.Base.Model.Actions
         public ModerationActionTypeEnum ActionType { get; set; }
 
         [DataMember]
-        public string UserName { get; set; }
+        public string TargetUsername { get; set; }
+
         [DataMember]
-        public string TimeAmount { get; set; }
+        public string TimeoutAmount { get; set; }
 
         [DataMember]
         public string ModerationReason { get; set; }
 
-        public ModerationActionModel(ModerationActionTypeEnum actionType, string username, string timeAmount, string moderationReason)
+        public ModerationActionModel(ModerationActionTypeEnum actionType, string targetUsername = null, string timeoutAmount = null, string moderationReason = null)
             : base(ActionTypeEnum.Moderation)
         {
             this.ActionType = actionType;
-            this.UserName = username;
-            this.TimeAmount = timeAmount;
+            this.TargetUsername = targetUsername;
+            this.TimeoutAmount = timeoutAmount;
             this.ModerationReason = moderationReason;
         }
 
@@ -65,73 +52,87 @@ namespace MixItUp.Base.Model.Actions
         {
             if (action.ModerationType != Base.Actions.ModerationActionTypeEnum.VIPUser && action.ModerationType != Base.Actions.ModerationActionTypeEnum.UnVIPUser)
             {
-                this.ActionType = (ModerationActionTypeEnum)(int)action.ModerationType;
-                this.UserName = action.UserName;
-                this.TimeAmount = action.TimeAmount;
+                switch (action.ModerationType)
+                {
+                    case Base.Actions.ModerationActionTypeEnum.ChatTimeout: this.ActionType = ModerationActionTypeEnum.TimeoutUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.PurgeUser: this.ActionType = ModerationActionTypeEnum.PurgeUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.ClearChat: this.ActionType = ModerationActionTypeEnum.ClearChat; break;
+                    case Base.Actions.ModerationActionTypeEnum.BanUser: this.ActionType = ModerationActionTypeEnum.BanUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.UnbanUser: this.ActionType = ModerationActionTypeEnum.UnbanUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.ModUser: this.ActionType = ModerationActionTypeEnum.ModUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.UnmodUser: this.ActionType = ModerationActionTypeEnum.UnmodUser; break;
+                    case Base.Actions.ModerationActionTypeEnum.AddModerationStrike: this.ActionType = ModerationActionTypeEnum.AddModerationStrike; break;
+                    case Base.Actions.ModerationActionTypeEnum.RemoveModerationStrike: this.ActionType = ModerationActionTypeEnum.RemoveModerationStrike; break;
+                }
+                this.TargetUsername = action.UserName;
+                this.TimeoutAmount = action.TimeAmount;
                 this.ModerationReason = action.ModerationReason;
             }
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            UserViewModel targetUser = null;
-            if (!string.IsNullOrEmpty(this.UserName))
-            {
-                string username = await this.ReplaceStringWithSpecialModifiers(this.UserName, user, platform, arguments, specialIdentifiers);
-                targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
-            }
-            else
-            {
-                targetUser = user;
-            }
-
             if (this.ActionType == ModerationActionTypeEnum.ClearChat)
             {
                 await ChannelSession.Services.Chat.ClearMessages();
             }
-            else if (targetUser != null)
+            else
             {
-                if (this.ActionType == ModerationActionTypeEnum.PurgeUser)
+                UserViewModel targetUser = null;
+                if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
-                    await ChannelSession.Services.Chat.PurgeUser(targetUser);
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, user, platform, arguments, specialIdentifiers);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
                 }
-                else if (this.ActionType == ModerationActionTypeEnum.BanUser)
+                else
                 {
-                    await ChannelSession.Services.Chat.BanUser(targetUser);
+                    targetUser = user;
                 }
-                else if (this.ActionType == ModerationActionTypeEnum.UnbanUser)
+
+                if (targetUser != null)
                 {
-                    await ChannelSession.Services.Chat.UnbanUser(targetUser);
-                }
-                else if (this.ActionType == ModerationActionTypeEnum.ModUser)
-                {
-                    await ChannelSession.Services.Chat.ModUser(targetUser);
-                }
-                else if (this.ActionType == ModerationActionTypeEnum.UnmodUser)
-                {
-                    await ChannelSession.Services.Chat.UnmodUser(targetUser);
-                }
-                else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
-                {
-                    string moderationReason = "Manual Moderation Strike";
-                    if (!string.IsNullOrEmpty(this.ModerationReason))
+                    if (this.ActionType == ModerationActionTypeEnum.PurgeUser)
                     {
-                        moderationReason = await this.ReplaceStringWithSpecialModifiers(this.ModerationReason, user, platform, arguments, specialIdentifiers);
+                        await ChannelSession.Services.Chat.PurgeUser(targetUser);
                     }
-                    await targetUser.AddModerationStrike(moderationReason);
-                }
-                else if (this.ActionType == ModerationActionTypeEnum.RemoveModerationStrike)
-                {
-                    await targetUser.RemoveModerationStrike();
-                }
-                else if (!string.IsNullOrEmpty(this.TimeAmount))
-                {
-                    string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, user, platform, arguments, specialIdentifiers);
-                    if (uint.TryParse(timeAmountString, out uint timeAmount))
+                    else if (this.ActionType == ModerationActionTypeEnum.BanUser)
                     {
-                        if (this.ActionType == ModerationActionTypeEnum.ChatTimeout)
+                        await ChannelSession.Services.Chat.BanUser(targetUser);
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.UnbanUser)
+                    {
+                        await ChannelSession.Services.Chat.UnbanUser(targetUser);
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.ModUser)
+                    {
+                        await ChannelSession.Services.Chat.ModUser(targetUser);
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.UnmodUser)
+                    {
+                        await ChannelSession.Services.Chat.UnmodUser(targetUser);
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
+                    {
+                        string moderationReason = "Manual Moderation Strike";
+                        if (!string.IsNullOrEmpty(this.ModerationReason))
                         {
-                            await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
+                            moderationReason = await this.ReplaceStringWithSpecialModifiers(this.ModerationReason, user, platform, arguments, specialIdentifiers);
+                        }
+                        await targetUser.AddModerationStrike(moderationReason);
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.RemoveModerationStrike)
+                    {
+                        await targetUser.RemoveModerationStrike();
+                    }
+                    else if (this.ActionType == ModerationActionTypeEnum.TimeoutUser)
+                    {
+                        if (!string.IsNullOrEmpty(this.TimeoutAmount))
+                        {
+                            string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeoutAmount, user, platform, arguments, specialIdentifiers);
+                            if (uint.TryParse(timeAmountString, out uint timeAmount))
+                            {
+                                await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
+                            }
                         }
                     }
                 }

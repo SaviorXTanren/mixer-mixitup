@@ -430,6 +430,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Moderation Strike.
+        /// </summary>
+        public static string AddModerationStrike {
+            get {
+                return ResourceManager.GetString("AddModerationStrike", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Pair.
         /// </summary>
         public static string AddNewPair {
@@ -966,6 +975,15 @@ namespace MixItUp.Base {
         public static string BannedWords {
             get {
                 return ResourceManager.GetString("BannedWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ban User.
+        /// </summary>
+        public static string BanUser {
+            get {
+                return ResourceManager.GetString("BanUser", resourceCulture);
             }
         }
         
@@ -5029,6 +5047,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Moderation Action: Missing timeout amount.
+        /// </summary>
+        public static string ModerationActionMissingTimeoutAmount {
+            get {
+                return ResourceManager.GetString("ModerationActionMissingTimeoutAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moderation Reason (Optional).
         /// </summary>
         public static string ModerationReasonOptional {
@@ -5061,6 +5088,15 @@ namespace MixItUp.Base {
         public static string ModRedeemCommand {
             get {
                 return ResourceManager.GetString("ModRedeemCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod User.
+        /// </summary>
+        public static string ModUser {
+            get {
+                return ResourceManager.GetString("ModUser", resourceCulture);
             }
         }
         
@@ -6019,6 +6055,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Purge User.
+        /// </summary>
+        public static string PurgeUser {
+            get {
+                return ResourceManager.GetString("PurgeUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Purple.
         /// </summary>
         public static string Purple {
@@ -6348,6 +6393,15 @@ namespace MixItUp.Base {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Moderation Strike.
+        /// </summary>
+        public static string RemoveModerationStrike {
+            get {
+                return ResourceManager.GetString("RemoveModerationStrike", resourceCulture);
             }
         }
         
@@ -8143,6 +8197,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timeout User.
+        /// </summary>
+        public static string TimeoutUser {
+            get {
+                return ResourceManager.GetString("TimeoutUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timer.
         /// </summary>
         public static string Timer {
@@ -8433,6 +8496,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unban User.
+        /// </summary>
+        public static string UnbanUser {
+            get {
+                return ResourceManager.GetString("UnbanUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ungrouped.
         /// </summary>
         public static string Ungrouped {
@@ -8474,6 +8546,15 @@ namespace MixItUp.Base {
         public static string UnlockCommand {
             get {
                 return ResourceManager.GetString("UnlockCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unmod User.
+        /// </summary>
+        public static string UnmodUser {
+            get {
+                return ResourceManager.GetString("UnmodUser", resourceCulture);
             }
         }
         
