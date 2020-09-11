@@ -3275,4 +3275,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="UpdateVariables" xml:space="preserve">
     <value>Update Variables</value>
   </data>
+  <data name="SerialActionMissingDevice" xml:space="preserve">
+    <value>Serial Action: Missing device</value>
+  </data>
+  <data name="SerialActionMissingMessage" xml:space="preserve">
+    <value>Serial Action: Missing message</value>
+  </data>
 </root>

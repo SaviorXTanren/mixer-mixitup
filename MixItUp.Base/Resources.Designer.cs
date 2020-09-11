@@ -7018,6 +7018,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Serial Action: Missing device.
+        /// </summary>
+        public static string SerialActionMissingDevice {
+            get {
+                return ResourceManager.GetString("SerialActionMissingDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Serial Action: Missing message.
+        /// </summary>
+        public static string SerialActionMissingMessage {
+            get {
+                return ResourceManager.GetString("SerialActionMissingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Serial Device.
         /// </summary>
         public static string SerialDevice {

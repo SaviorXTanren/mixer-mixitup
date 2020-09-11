@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel((ModerationActionModel)action); break;
                     case ActionTypeEnum.Overlay: break;
                     case ActionTypeEnum.OvrStream: new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
-                    case ActionTypeEnum.Serial: break;
+                    case ActionTypeEnum.Serial: new SerialActionEditorControlViewModel((SerialActionModel)action); break;
                     case ActionTypeEnum.Sound: break;
                     case ActionTypeEnum.SpecialIdentifier: break;
                     case ActionTypeEnum.StreamingSoftware: break;
@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Overlay: break;
                         case ActionTypeEnum.OvrStream: new OvrStreamActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Serial: break;
+                        case ActionTypeEnum.Serial: new SerialActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Sound: break;
                         case ActionTypeEnum.SpecialIdentifier: break;
                         case ActionTypeEnum.StreamingSoftware: break;

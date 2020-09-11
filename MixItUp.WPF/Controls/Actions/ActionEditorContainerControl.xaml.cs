@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Moderation: this.Content = new ModerationActionEditorControl(); break;
                     case ActionTypeEnum.Overlay: 
                     case ActionTypeEnum.OvrStream: this.Content = new OvrStreamActionEditorControl(); break;
-                    case ActionTypeEnum.Serial: break;
+                    case ActionTypeEnum.Serial: this.Content = new SerialActionEditorControl(); break;
                     case ActionTypeEnum.Sound: break;
                     case ActionTypeEnum.SpecialIdentifier: break;
                     case ActionTypeEnum.StreamingSoftware: break;
