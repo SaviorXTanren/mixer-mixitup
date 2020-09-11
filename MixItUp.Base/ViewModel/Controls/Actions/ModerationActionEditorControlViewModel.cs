@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +19,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             {
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowTargetUserGrid");
+                this.NotifyPropertyChanged("ShowTimeoutGrid");
+                this.NotifyPropertyChanged("ShowModerationReasonGrid");
             }
         }
         private ModerationActionTypeEnum selectedActionType;
