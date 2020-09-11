@@ -2536,6 +2536,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Title.
+        /// </summary>
+        public static string DisableTitle {
+            get {
+                return ResourceManager.GetString("DisableTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnect.
         /// </summary>
         public static string Disconnect {
@@ -2955,6 +2964,15 @@ namespace MixItUp.Base {
         public static string EnableStreamlabsOBS {
             get {
                 return ResourceManager.GetString("EnableStreamlabsOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Title.
+        /// </summary>
+        public static string EnableTitle {
+            get {
+                return ResourceManager.GetString("EnableTitle", resourceCulture);
             }
         }
         
@@ -3711,6 +3729,15 @@ namespace MixItUp.Base {
         public static string HideDeletedMessages {
             get {
                 return ResourceManager.GetString("HideDeletedMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Title.
+        /// </summary>
+        public static string HideTitle {
+            get {
+                return ResourceManager.GetString("HideTitle", resourceCulture);
             }
         }
         
@@ -5677,6 +5704,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OvrStream Action: Missing variable name.
+        /// </summary>
+        public static string OvrStreamActionMissingVariableName {
+            get {
+                return ResourceManager.GetString("OvrStreamActionMissingVariableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OvrStream Title Name.
         /// </summary>
         public static string OvrStreamTitleName {
@@ -5826,6 +5862,15 @@ namespace MixItUp.Base {
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play Title.
+        /// </summary>
+        public static string PlayTitle {
+            get {
+                return ResourceManager.GetString("PlayTitle", resourceCulture);
             }
         }
         
@@ -8618,6 +8663,15 @@ namespace MixItUp.Base {
         public static string UpdatePreviewProgramTooltip {
             get {
                 return ResourceManager.GetString("UpdatePreviewProgramTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Variables.
+        /// </summary>
+        public static string UpdateVariables {
+            get {
+                return ResourceManager.GetString("UpdateVariables", resourceCulture);
             }
         }
         

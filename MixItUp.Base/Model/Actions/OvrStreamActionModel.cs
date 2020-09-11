@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -10,16 +9,11 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum OvrStreamActionTypeEnum
     {
-        [Name("Hide Title")]
-        HideTitle,
-        [Name("Play Title")]
         PlayTitle,
-        [Name("Update Variables")]
-        UpdateVariables,
-        [Name("Enable Title")]
+        HideTitle,
         EnableTitle,
-        [Name("Disable Title")]
         DisableTitle,
+        UpdateVariables,
     }
 
     [DataContract]
@@ -38,7 +32,7 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public Dictionary<string, string> Variables { get; set; } = new Dictionary<string, string>();
 
-        public OvrStreamActionModel(OvrStreamActionTypeEnum actionType, string titleName = null, Dictionary<string, string> variables = null)
+        public OvrStreamActionModel(OvrStreamActionTypeEnum actionType, string titleName, Dictionary<string, string> variables = null)
             : base(ActionTypeEnum.OvrStream)
         {
             this.ActionType = actionType;
@@ -49,7 +43,14 @@ namespace MixItUp.Base.Model.Actions
         internal OvrStreamActionModel(MixItUp.Base.Actions.OvrStreamAction action)
             : base(ActionTypeEnum.OvrStream)
         {
-            this.ActionType = (OvrStreamActionTypeEnum)(int)action.OvrStreamActionType;
+            switch (action.OvrStreamActionType)
+            {
+                case Base.Actions.OvrStreamActionTypeEnum.PlayTitle: this.ActionType = OvrStreamActionTypeEnum.PlayTitle; break;
+                case Base.Actions.OvrStreamActionTypeEnum.HideTitle: this.ActionType = OvrStreamActionTypeEnum.HideTitle; break;
+                case Base.Actions.OvrStreamActionTypeEnum.EnableTitle: this.ActionType = OvrStreamActionTypeEnum.EnableTitle; break;
+                case Base.Actions.OvrStreamActionTypeEnum.DisableTitle: this.ActionType = OvrStreamActionTypeEnum.DisableTitle; break;
+                case Base.Actions.OvrStreamActionTypeEnum.UpdateVariables: this.ActionType = OvrStreamActionTypeEnum.UpdateVariables; break;
+            }
             this.TitleName = action.TitleName;
             this.Variables = action.Variables;
         }

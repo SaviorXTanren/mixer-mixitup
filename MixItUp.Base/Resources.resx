@@ -3257,4 +3257,22 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ModerationActionMissingTimeoutAmount" xml:space="preserve">
     <value>Moderation Action: Missing timeout amount</value>
   </data>
+  <data name="OvrStreamActionMissingVariableName" xml:space="preserve">
+    <value>OvrStream Action: Missing variable name</value>
+  </data>
+  <data name="DisableTitle" xml:space="preserve">
+    <value>Disable Title</value>
+  </data>
+  <data name="EnableTitle" xml:space="preserve">
+    <value>Enable Title</value>
+  </data>
+  <data name="HideTitle" xml:space="preserve">
+    <value>Hide Title</value>
+  </data>
+  <data name="PlayTitle" xml:space="preserve">
+    <value>Play Title</value>
+  </data>
+  <data name="UpdateVariables" xml:space="preserve">
+    <value>Update Variables</value>
+  </data>
 </root>
