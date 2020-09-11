@@ -46,8 +46,8 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.IFTTT: this.Content = new IFTTTActionEditorControl(); break;
                     case ActionTypeEnum.Input: this.Content = new InputActionEditorControl(); break;
                     case ActionTypeEnum.Moderation: this.Content = new ModerationActionEditorControl(); break;
-                    case ActionTypeEnum.Overlay: this.Content = new OvrStreamActionEditorControl(); break;
-                    case ActionTypeEnum.OvrStream: break;
+                    case ActionTypeEnum.Overlay: 
+                    case ActionTypeEnum.OvrStream: this.Content = new OvrStreamActionEditorControl(); break;
                     case ActionTypeEnum.Serial: break;
                     case ActionTypeEnum.Sound: break;
                     case ActionTypeEnum.SpecialIdentifier: break;
