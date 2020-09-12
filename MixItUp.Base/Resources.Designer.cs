@@ -7459,6 +7459,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sound Action: Missing file path.
+        /// </summary>
+        public static string SoundActionMissingFilePath {
+            get {
+                return ResourceManager.GetString("SoundActionMissingFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sound File Path.
         /// </summary>
         public static string SoundFilePath {

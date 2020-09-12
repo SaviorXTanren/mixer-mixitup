@@ -3281,4 +3281,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="SerialActionMissingMessage" xml:space="preserve">
     <value>Serial Action: Missing message</value>
   </data>
+  <data name="SoundActionMissingFilePath" xml:space="preserve">
+    <value>Sound Action: Missing file path</value>
+  </data>
 </root>
