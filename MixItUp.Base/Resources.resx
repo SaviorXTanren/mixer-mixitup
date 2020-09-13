@@ -3284,4 +3284,13 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="SoundActionMissingFilePath" xml:space="preserve">
     <value>Sound Action: Missing file path</value>
   </data>
+  <data name="SpecialIdentifierActionInvalidSpecialIdentifierName" xml:space="preserve">
+    <value>Special Identifier Action: Special Identifier name can only contain alpha-numeric characters</value>
+  </data>
+  <data name="SpecialIdentifierActionMissingReplacementText" xml:space="preserve">
+    <value>Special Identifier Action: Missing replacement text</value>
+  </data>
+  <data name="SpecialIdentifierActionMissingSpecialIdentifierName" xml:space="preserve">
+    <value>Special Identifier Action: Missing Special Identifier name</value>
+  </data>
 </root>

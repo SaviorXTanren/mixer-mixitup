@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Actions
         public string SpecialIdentifierName { get; set; }
 
         [DataMember]
-        public string SpecialIdentifierReplacement { get; set; }
+        public string ReplacementText { get; set; }
 
         [DataMember]
         public bool MakeGloballyUsable { get; set; }
@@ -32,11 +32,11 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public bool ShouldProcessMath { get; set; }
 
-        public SpecialIdentifierActionModel(string specialIdentifierName, string specialIdentifierReplacement, bool makeGloballyUsable, bool shouldProcessMath)
+        public SpecialIdentifierActionModel(string specialIdentifierName, string replacementText, bool makeGloballyUsable, bool shouldProcessMath)
             : base(ActionTypeEnum.SpecialIdentifier)
         {
             this.SpecialIdentifierName = specialIdentifierName;
-            this.SpecialIdentifierReplacement = specialIdentifierReplacement;
+            this.ReplacementText = replacementText;
             this.MakeGloballyUsable = makeGloballyUsable;
             this.ShouldProcessMath = shouldProcessMath;
         }
@@ -45,14 +45,14 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.SpecialIdentifier)
         {
             this.SpecialIdentifierName = action.SpecialIdentifierName;
-            this.SpecialIdentifierReplacement = action.SpecialIdentifierReplacement;
+            this.ReplacementText = action.SpecialIdentifierReplacement;
             this.MakeGloballyUsable = action.MakeGloballyUsable;
             this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.SpecialIdentifierReplacement, user, platform, arguments, specialIdentifiers);
+            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, user, platform, arguments, specialIdentifiers);
 
             replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
             replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });

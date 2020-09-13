@@ -7576,6 +7576,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Special Identifier Action: Special Identifier name can only contain alpha-numeric characters.
+        /// </summary>
+        public static string SpecialIdentifierActionInvalidSpecialIdentifierName {
+            get {
+                return ResourceManager.GetString("SpecialIdentifierActionInvalidSpecialIdentifierName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special Identifier Action: Missing replacement text.
+        /// </summary>
+        public static string SpecialIdentifierActionMissingReplacementText {
+            get {
+                return ResourceManager.GetString("SpecialIdentifierActionMissingReplacementText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special Identifier Action: Missing Special Identifier name.
+        /// </summary>
+        public static string SpecialIdentifierActionMissingSpecialIdentifierName {
+            get {
+                return ResourceManager.GetString("SpecialIdentifierActionMissingSpecialIdentifierName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Special Identifier Name (Letters &amp; Numbers Only, no $).
         /// </summary>
         public static string SpecialIdentifierHint {

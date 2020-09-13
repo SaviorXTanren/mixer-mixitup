@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.OvrStream: this.Content = new OvrStreamActionEditorControl(); break;
                     case ActionTypeEnum.Serial: this.Content = new SerialActionEditorControl(); break;
                     case ActionTypeEnum.Sound: this.Content = new SoundActionEditorControl(); break;
-                    case ActionTypeEnum.SpecialIdentifier: break;
+                    case ActionTypeEnum.SpecialIdentifier: this.Content = new SpecialIdentifierActionEditorControl(); break;
                     case ActionTypeEnum.StreamingSoftware: break;
                     case ActionTypeEnum.Streamlabs: break;
                     case ActionTypeEnum.TextToSpeech: break;
