@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -13,18 +12,41 @@ namespace MixItUp.Base.Model.Actions
     public enum TwitchActionType
     {
         Host,
-        [Name("Run Ad")]
-        RunAd,
         Raid,
         VIPUser,
         UnVIPUser,
-        Clip
+        RunAd,
+        Clip,
     }
 
     [DataContract]
     public class TwitchActionModel : ActionModelBase
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
+
+        public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
+
+        public static TwitchActionModel CreateUserAction(TwitchActionType type, string username)
+        {
+            TwitchActionModel action = new TwitchActionModel(type);
+            action.Username = username;
+            return action;
+        }
+
+        public static TwitchActionModel CreateAdAction(int adLength)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.RunAd);
+            action.AdLength = adLength;
+            return action;
+        }
+
+        public static TwitchActionModel CreateClipAction(bool includeDelay, bool showInfoInChat)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.Clip);
+            action.ClipIncludeDelay = includeDelay;
+            action.ClipShowInfoInChat = showInfoInChat;
+            return action;
+        }
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
@@ -34,27 +56,20 @@ namespace MixItUp.Base.Model.Actions
         public TwitchActionType ActionType { get; set; }
 
         [DataMember]
-        public string ChannelName { get; set; }
+        public string Username { get; set; }
 
         [DataMember]
         public int AdLength { get; set; } = 60;
 
         [DataMember]
-        public string Username { get; set; }
-
-        [DataMember]
         public bool ClipIncludeDelay { get; set; }
-
         [DataMember]
         public bool ClipShowInfoInChat { get; set; }
 
-        public TwitchActionModel(TwitchActionType type, string channelName = null, int adLength = 0, string username = null)
+        private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
         {
             this.ActionType = type;
-            this.ChannelName = channelName;
-            this.AdLength = adLength;
-            this.Username = username;
         }
 
         internal TwitchActionModel(MixItUp.Base.Actions.StreamingPlatformAction action)
@@ -63,12 +78,12 @@ namespace MixItUp.Base.Model.Actions
             if (action.ActionType == Base.Actions.StreamingPlatformActionType.Host)
             {
                 this.ActionType = TwitchActionType.Host;
-                this.ChannelName = action.HostChannelName;
+                this.Username = action.HostChannelName;
             }
             else if (action.ActionType == Base.Actions.StreamingPlatformActionType.Raid)
             {
                 this.ActionType = TwitchActionType.Raid;
-                this.ChannelName = action.HostChannelName;
+                this.Username = action.HostChannelName;
             }
             else if (action.ActionType == Base.Actions.StreamingPlatformActionType.RunAd)
             {
@@ -85,16 +100,31 @@ namespace MixItUp.Base.Model.Actions
             this.ClipShowInfoInChat = action.ShowClipInfoInChat;
         }
 
+        internal TwitchActionModel(MixItUp.Base.Actions.ModerationAction action)
+            : base(ActionTypeEnum.Twitch)
+        {
+            if (action.ModerationType == Base.Actions.ModerationActionTypeEnum.VIPUser)
+            {
+                this.ActionType = TwitchActionType.VIPUser;
+                this.Username = action.UserName;
+            }
+            else if (action.ModerationType == Base.Actions.ModerationActionTypeEnum.UnVIPUser)
+            {
+                this.ActionType = TwitchActionType.UnVIPUser;
+                this.Username = action.UserName;
+            }
+        }
+
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (this.ActionType == TwitchActionType.Host)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.ChannelName, user, platform, arguments, specialIdentifiers);
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
                 await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.Raid)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.ChannelName, user, platform, arguments, specialIdentifiers);
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
                 await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.RunAd)

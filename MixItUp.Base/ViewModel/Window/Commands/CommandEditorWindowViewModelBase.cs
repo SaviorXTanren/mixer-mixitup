@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.Streamlabs: break;
                     case ActionTypeEnum.TextToSpeech: break;
                     case ActionTypeEnum.Translation: break;
-                    case ActionTypeEnum.Twitch: break;
+                    case ActionTypeEnum.Twitch: new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
                     case ActionTypeEnum.Twitter: break;
                     case ActionTypeEnum.Wait: break;
                     case ActionTypeEnum.WebRequest: break;
@@ -135,7 +135,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Streamlabs: break;
                         case ActionTypeEnum.TextToSpeech: break;
                         case ActionTypeEnum.Translation: break;
-                        case ActionTypeEnum.Twitch: break;
+                        case ActionTypeEnum.Twitch: new TwitchActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitter: break;
                         case ActionTypeEnum.Wait: break;
                         case ActionTypeEnum.WebRequest: break;

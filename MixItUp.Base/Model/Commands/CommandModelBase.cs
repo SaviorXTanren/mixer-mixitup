@@ -127,13 +127,9 @@ namespace MixItUp.Base.Model.Commands
                         break;
                     case Base.Actions.ActionTypeEnum.Moderation:
                         MixItUp.Base.Actions.ModerationAction mAction = (MixItUp.Base.Actions.ModerationAction)action;
-                        if (mAction.ModerationType == Base.Actions.ModerationActionTypeEnum.VIPUser)
+                        if (mAction.ModerationType == Base.Actions.ModerationActionTypeEnum.VIPUser || mAction.ModerationType == Base.Actions.ModerationActionTypeEnum.UnVIPUser)
                         {
-                            this.Actions.Add(new TwitchActionModel(TwitchActionType.VIPUser, username: mAction.UserName));
-                        }
-                        else if (mAction.ModerationType == Base.Actions.ModerationActionTypeEnum.UnVIPUser)
-                        {
-                            this.Actions.Add(new TwitchActionModel(TwitchActionType.UnVIPUser, username: mAction.UserName));
+                            this.Actions.Add(new TwitchActionModel(mAction));
                         }
                         else
                         {
@@ -156,19 +152,7 @@ namespace MixItUp.Base.Model.Commands
                         this.Actions.Add(new SpecialIdentifierActionModel((MixItUp.Base.Actions.SpecialIdentifierAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.StreamingPlatform:
-                        MixItUp.Base.Actions.StreamingPlatformAction spAction = (MixItUp.Base.Actions.StreamingPlatformAction)action;
-                        if (spAction.ActionType == Base.Actions.StreamingPlatformActionType.Host)
-                        {
-                            this.Actions.Add(new TwitchActionModel(TwitchActionType.Host, channelName: spAction.HostChannelName));
-                        }
-                        else if (spAction.ActionType == Base.Actions.StreamingPlatformActionType.Raid)
-                        {
-                            this.Actions.Add(new TwitchActionModel(TwitchActionType.Raid, channelName: spAction.HostChannelName));
-                        }
-                        else if (spAction.ActionType == Base.Actions.StreamingPlatformActionType.RunAd)
-                        {
-                            this.Actions.Add(new TwitchActionModel(TwitchActionType.RunAd, adLength: spAction.AdLength));
-                        }
+                        this.Actions.Add(new TwitchActionModel((MixItUp.Base.Actions.StreamingPlatformAction)action));
                         break;
                     case Base.Actions.ActionTypeEnum.StreamingSoftware:
                         this.Actions.Add(new StreamingSoftwareActionModel((MixItUp.Base.Actions.StreamingSoftwareAction)action));
