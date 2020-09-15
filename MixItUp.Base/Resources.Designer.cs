@@ -8161,6 +8161,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Text to Speech Action: Pitch must be between 0 - 200.
+        /// </summary>
+        public static string TextToSpeechActionInvalidPitch {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionInvalidPitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text to Speech Action: Rate must be between 0 - 150.
+        /// </summary>
+        public static string TextToSpeechActionInvalidRate {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionInvalidRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text to Speech Action: Volume must be between 0 - 100.
+        /// </summary>
+        public static string TextToSpeechActionInvalidVolume {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionInvalidVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text to Speech Action: Missing text.
+        /// </summary>
+        public static string TextToSpeechActionMissingText {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionMissingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text to Speech Action: Missing voice.
+        /// </summary>
+        public static string TextToSpeechActionMissingVoice {
+            get {
+                return ResourceManager.GetString("TextToSpeechActionMissingVoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text To Translate.
         /// </summary>
         public static string TextToTranslate {

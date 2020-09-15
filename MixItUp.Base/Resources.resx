@@ -3293,4 +3293,19 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="SpecialIdentifierActionMissingSpecialIdentifierName" xml:space="preserve">
     <value>Special Identifier Action: Missing Special Identifier name</value>
   </data>
+  <data name="TextToSpeechActionInvalidPitch" xml:space="preserve">
+    <value>Text to Speech Action: Pitch must be between 0 - 200</value>
+  </data>
+  <data name="TextToSpeechActionInvalidRate" xml:space="preserve">
+    <value>Text to Speech Action: Rate must be between 0 - 150</value>
+  </data>
+  <data name="TextToSpeechActionInvalidVolume" xml:space="preserve">
+    <value>Text to Speech Action: Volume must be between 0 - 100</value>
+  </data>
+  <data name="TextToSpeechActionMissingText" xml:space="preserve">
+    <value>Text to Speech Action: Missing text</value>
+  </data>
+  <data name="TextToSpeechActionMissingVoice" xml:space="preserve">
+    <value>Text to Speech Action: Missing voice</value>
+  </data>
 </root>

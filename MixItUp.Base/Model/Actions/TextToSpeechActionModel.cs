@@ -106,22 +106,22 @@ namespace MixItUp.Base.Model.Actions
         };
 
         [DataMember]
-        public string SpeechText { get; set; }
+        public string Text { get; set; }
 
         [DataMember]
         public string Voice { get; set; }
 
         [DataMember]
-        public double Volume { get; set; }
+        public int Volume { get; set; }
         [DataMember]
-        public double Pitch { get; set; }
+        public int Pitch { get; set; }
         [DataMember]
-        public double Rate { get; set; }
+        public int Rate { get; set; }
 
-        public TextToSpeechActionModel(string speechText, string voice, double volume, double pitch, double rate)
+        public TextToSpeechActionModel(string text, string voice, int volume, int pitch, int rate)
             : base(ActionTypeEnum.TextToSpeech)
         {
-            this.SpeechText = speechText;
+            this.Text = text;
             this.Voice = voice;
             this.Volume = volume;
             this.Pitch = pitch;
@@ -131,11 +131,11 @@ namespace MixItUp.Base.Model.Actions
         internal TextToSpeechActionModel(MixItUp.Base.Actions.TextToSpeechAction action)
             : base(ActionTypeEnum.TextToSpeech)
         {
-            this.SpeechText = action.SpeechText;
+            this.Text = action.SpeechText;
             this.Voice = action.Voice;
-            this.Volume = action.Volume;
-            this.Pitch = action.Pitch;
-            this.Rate = action.Rate;
+            this.Volume = (int)(action.Volume * 100);
+            this.Pitch = (int)(action.Pitch * 100);
+            this.Rate = (int)(action.Rate * 100);
         }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -143,8 +143,8 @@ namespace MixItUp.Base.Model.Actions
             IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
             if (overlay != null)
             {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, platform, arguments, specialIdentifiers);
-                await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume, Pitch = this.Pitch, Rate = this.Rate });
+                string message = await this.ReplaceStringWithSpecialModifiers(this.Text, user, platform, arguments, specialIdentifiers);
+                await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume / 100.0, Pitch = this.Pitch / 100.0, Rate = this.Rate / 100.0 });
             }
         }
     }
