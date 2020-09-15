@@ -52,7 +52,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Sound: this.Content = new SoundActionEditorControl(); break;
                     case ActionTypeEnum.SpecialIdentifier: this.Content = new SpecialIdentifierActionEditorControl(); break;
                     case ActionTypeEnum.StreamingSoftware: break;
-                    case ActionTypeEnum.Streamlabs: break;
+                    case ActionTypeEnum.Streamlabs: this.Content = new StreamlabsActionEditorControl(); break;
                     case ActionTypeEnum.TextToSpeech: break;
                     case ActionTypeEnum.Translation: break;
                     case ActionTypeEnum.Twitch: this.Content = new TwitchActionEditorControl(); break;
