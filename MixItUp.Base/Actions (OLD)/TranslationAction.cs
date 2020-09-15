@@ -87,10 +87,10 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.TranslationService != null)
+            if (ChannelSession.Services.Translation != null)
             {
                 string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                string translationResult = await ChannelSession.Services.TranslationService.Translate(this.Culture, text, this.AllowProfanity);
+                string translationResult = await ChannelSession.Services.Translation.Translate(this.Culture, text, this.AllowProfanity);
                 if (string.IsNullOrEmpty(translationResult))
                 {
                     translationResult = this.Text;

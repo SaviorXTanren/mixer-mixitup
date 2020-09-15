@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override async Task OnLoaded()
         {
-            this.TranslationLanguageComboBox.ItemsSource = await ChannelSession.Services.TranslationService.GetAvailableLanguages();
+            this.TranslationLanguageComboBox.ItemsSource = await ChannelSession.Services.Translation.GetAvailableLanguages();
             this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<TranslationResponseActionTypeEnum>();
             this.CommandResponseComboBox.ItemsSource = ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name);
 

@@ -3308,4 +3308,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="TextToSpeechActionMissingVoice" xml:space="preserve">
     <value>Text to Speech Action: Missing voice</value>
   </data>
+  <data name="TranslationActionMissingLanguage" xml:space="preserve">
+    <value>Translation Action: Missing language</value>
+  </data>
+  <data name="TranslationActionMissingText" xml:space="preserve">
+    <value>Translation Action: Missing text</value>
+  </data>
 </root>

@@ -8494,6 +8494,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translation Action: Missing language.
+        /// </summary>
+        public static string TranslationActionMissingLanguage {
+            get {
+                return ResourceManager.GetString("TranslationActionMissingLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translation Action: Missing text.
+        /// </summary>
+        public static string TranslationActionMissingText {
+            get {
+                return ResourceManager.GetString("TranslationActionMissingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string TranslationBy {
