@@ -123,7 +123,7 @@ namespace MixItUp.Base.Util
                 return 0;
             }
 
-            int subMonths = 1;
+            int subMonths = 0;
             DateTime currentDateTime = DateTimeOffset.Now.Date;
             DateTime startDateTime = dt.Date;
             DateTime tempDateTime = dt.Date;
