@@ -6586,6 +6586,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Response Processing Type.
+        /// </summary>
+        public static string ResponseProcessingType {
+            get {
+                return ResourceManager.GetString("ResponseProcessingType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restore a Settings Backup.
         /// </summary>
         public static string RestoreASettingsBackup {
@@ -9455,6 +9464,33 @@ namespace MixItUp.Base {
         public static string WebRequest {
             get {
                 return ResourceManager.GetString("WebRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Request Action: Invalid JSON Special Identifier.
+        /// </summary>
+        public static string WebRequestActionInvalidJSONSpecialIdentifier {
+            get {
+                return ResourceManager.GetString("WebRequestActionInvalidJSONSpecialIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Request Action: Missing JSON Parameter.
+        /// </summary>
+        public static string WebRequestActionMissingJSONParameter {
+            get {
+                return ResourceManager.GetString("WebRequestActionMissingJSONParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Request Action: Missing URL.
+        /// </summary>
+        public static string WebRequestActionMissingURL {
+            get {
+                return ResourceManager.GetString("WebRequestActionMissingURL", resourceCulture);
             }
         }
         

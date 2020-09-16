@@ -3326,4 +3326,16 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="WaitActionMissingAmount" xml:space="preserve">
     <value>Wait Action: Missing amount</value>
   </data>
+  <data name="WebRequestActionMissingJSONParameter" xml:space="preserve">
+    <value>Web Request Action: Missing JSON Parameter</value>
+  </data>
+  <data name="WebRequestActionMissingURL" xml:space="preserve">
+    <value>Web Request Action: Missing URL</value>
+  </data>
+  <data name="WebRequestActionInvalidJSONSpecialIdentifier" xml:space="preserve">
+    <value>Web Request Action: Invalid JSON Special Identifier</value>
+  </data>
+  <data name="ResponseProcessingType" xml:space="preserve">
+    <value>Response Processing Type</value>
+  </data>
 </root>

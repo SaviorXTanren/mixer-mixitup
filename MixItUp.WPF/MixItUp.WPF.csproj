@@ -511,6 +511,9 @@
     <Compile Include="Controls\Actions\WaitActionEditorControl.xaml.cs">
       <DependentUpon>WaitActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\WebRequestActionEditorControl.xaml.cs">
+      <DependentUpon>WebRequestActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
     </Compile>
@@ -1315,6 +1318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\WaitActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\WebRequestActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
