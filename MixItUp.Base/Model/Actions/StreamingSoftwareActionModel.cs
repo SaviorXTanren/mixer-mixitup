@@ -13,42 +13,31 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum StreamingSoftwareTypeEnum
     {
-        [Name("Default Setting")]
         DefaultSetting,
 
-        [Name("OBS Studio")]
         OBSStudio,
-        [Name("XSplit")]
         XSplit,
-        [Name("Streamlabs OBS")]
         StreamlabsOBS,
     }
 
-    public enum StreamingActionTypeEnum
+    public enum StreamingSoftwareActionTypeEnum
     {
         Scene,
 
-        [Name("Source Visibility")]
         SourceVisibility,
-        [Name("Text Source")]
         TextSource,
-        [Name("Web Browser Source")]
         WebBrowserSource,
-        [Name("Source Dimensions")]
         SourceDimensions,
 
-        [Name("Start/Stop Stream")]
         StartStopStream,
 
-        [Name("Save Replay Buffer")]
         SaveReplayBuffer,
 
-        [Name("Set Scene Collection")]
         SceneCollection,
     }
 
     [DataContract]
-    public class StreamingSourceDimensionsModel
+    public class StreamingSoftwareSourceDimensionsModel
     {
         [DataMember]
         public int X { get; set; }
@@ -60,6 +49,17 @@ namespace MixItUp.Base.Model.Actions
         public float XScale { get; set; }
         [DataMember]
         public float YScale { get; set; }
+
+        public StreamingSoftwareSourceDimensionsModel(int x, int y, int rotation, float xScale, float yScale)
+        {
+            this.X = x;
+            this.Y = y;
+            this.Rotation = rotation;
+            this.XScale = xScale;
+            this.YScale = yScale;
+        }
+
+        public StreamingSoftwareSourceDimensionsModel() { }
     }
 
     [DataContract]
@@ -71,16 +71,45 @@ namespace MixItUp.Base.Model.Actions
 
         public const string SourceTextFilesDirectoryName = "SourceTextFiles";
 
+        public static async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName)
+        {
+            StreamingSoftwareSourceDimensionsModel dimensions = null;
+
+            if (softwareType == StreamingSoftwareTypeEnum.DefaultSetting)
+            {
+                // TODO
+            }
+
+            if (softwareType == StreamingSoftwareTypeEnum.OBSStudio)
+            {
+                if (ChannelSession.Services.OBSStudio.IsConnected || (await ChannelSession.Services.OBSStudio.Connect()).Success)
+                {
+                    // TODO
+                    //dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(sceneName, sourceName);
+                }
+            }
+            else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            {
+                if (ChannelSession.Services.StreamlabsOBS.IsConnected || (await ChannelSession.Services.StreamlabsOBS.Connect()).Success)
+                {
+                    // TODO
+                    //dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(sceneName, sourceName);
+                }
+            }
+
+            return dimensions;
+        }
+
         public static StreamingSoftwareActionModel CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
         {
-            StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.Scene);
+            StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.Scene);
             action.ItemName = sceneName;
             return action;
         }
 
         public static StreamingSoftwareActionModel CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible)
         {
-            StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.SourceVisibility);
+            StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SourceVisibility);
             action.ParentName = sceneName;
             action.ItemName = sourceName;
             action.Visible = sourceVisible;
@@ -90,7 +119,7 @@ namespace MixItUp.Base.Model.Actions
         public static StreamingSoftwareActionModel CreateTextSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
         {
             StreamingSoftwareActionModel action = StreamingSoftwareActionModel.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
-            action.ActionType = StreamingActionTypeEnum.TextSource;
+            action.ActionType = StreamingSoftwareActionTypeEnum.TextSource;
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
             return action;
@@ -99,7 +128,7 @@ namespace MixItUp.Base.Model.Actions
         public static StreamingSoftwareActionModel CreateWebBrowserSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceURL)
         {
             StreamingSoftwareActionModel action = StreamingSoftwareActionModel.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
-            action.ActionType = StreamingActionTypeEnum.WebBrowserSource;
+            action.ActionType = StreamingSoftwareActionTypeEnum.WebBrowserSource;
             action.SourceURL = sourceURL;
             if (softwareType == StreamingSoftwareTypeEnum.XSplit)
             {
@@ -111,36 +140,36 @@ namespace MixItUp.Base.Model.Actions
             return action;
         }
 
-        public static StreamingSoftwareActionModel CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, StreamingSourceDimensionsModel sourceDimensions)
+        public static StreamingSoftwareActionModel CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, StreamingSoftwareSourceDimensionsModel sourceDimensions)
         {
             StreamingSoftwareActionModel action = StreamingSoftwareActionModel.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
-            action.ActionType = StreamingActionTypeEnum.SourceDimensions;
+            action.ActionType = StreamingSoftwareActionTypeEnum.SourceDimensions;
             action.SourceDimensions = sourceDimensions;
             return action;
         }
 
         public static StreamingSoftwareActionModel CreateStartStopStreamAction(StreamingSoftwareTypeEnum softwareType)
         {
-            return new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.StartStopStream);
+            return new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.StartStopStream);
         }
 
         public static StreamingSoftwareActionModel CreateSaveReplayBufferAction(StreamingSoftwareTypeEnum softwareType)
         {
-            return new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.SaveReplayBuffer);
+            return new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SaveReplayBuffer);
         }
 
         public static StreamingSoftwareActionModel CreateSceneCollectionAction(StreamingSoftwareTypeEnum softwareType, string sceneCollectionName)
         {
-            return new StreamingSoftwareActionModel(softwareType, StreamingActionTypeEnum.SceneCollection)
+            return new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SceneCollection)
             {
                 ItemName = sceneCollectionName
             };
         }
 
         [DataMember]
-        public StreamingSoftwareTypeEnum SoftwareType { get; set; }
+        public StreamingSoftwareTypeEnum StreamingSoftwareType { get; set; }
         [DataMember]
-        public StreamingActionTypeEnum ActionType { get; set; }
+        public StreamingSoftwareActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string ItemName { get; set; }
@@ -159,30 +188,30 @@ namespace MixItUp.Base.Model.Actions
         public string SourceURL { get; set; }
 
         [DataMember]
-        public StreamingSourceDimensionsModel SourceDimensions { get; set; }
+        public StreamingSoftwareSourceDimensionsModel SourceDimensions { get; set; }
 
-        public StreamingSoftwareActionModel(StreamingSoftwareTypeEnum softwareType, StreamingActionTypeEnum actionType)
+        public StreamingSoftwareActionModel(StreamingSoftwareTypeEnum softwareType, StreamingSoftwareActionTypeEnum actionType)
             : base(ActionTypeEnum.StreamingSoftware)
         {
-            this.SoftwareType = softwareType;
+            this.StreamingSoftwareType = softwareType;
             this.ActionType = actionType;
         }
 
         internal StreamingSoftwareActionModel(MixItUp.Base.Actions.StreamingSoftwareAction action)
             : base(ActionTypeEnum.StreamingSoftware)
         {
-            this.SoftwareType = (StreamingSoftwareTypeEnum)(int)action.SoftwareType;
-            this.ActionType = (StreamingActionTypeEnum)(int)action.ActionType;
-            if (this.ActionType == StreamingActionTypeEnum.SceneCollection)
+            this.StreamingSoftwareType = (StreamingSoftwareTypeEnum)(int)action.SoftwareType;
+            this.ActionType = (StreamingSoftwareActionTypeEnum)(int)action.ActionType;
+            if (this.ActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
             {
                 this.ItemName = action.SceneCollectionName;
             }
-            else if (this.ActionType == StreamingActionTypeEnum.Scene)
+            else if (this.ActionType == StreamingSoftwareActionTypeEnum.Scene)
             {
                 this.ItemName = action.SceneName;
             }
-            else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions || this.ActionType == StreamingActionTypeEnum.SourceVisibility ||
-                this.ActionType == StreamingActionTypeEnum.TextSource || this.ActionType == StreamingActionTypeEnum.WebBrowserSource)
+            else if (this.ActionType == StreamingSoftwareActionTypeEnum.SourceDimensions || this.ActionType == StreamingSoftwareActionTypeEnum.SourceVisibility ||
+                this.ActionType == StreamingSoftwareActionTypeEnum.TextSource || this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource)
             {
                 this.ItemName = action.SourceName;
                 this.ParentName = action.SceneName;
@@ -193,10 +222,7 @@ namespace MixItUp.Base.Model.Actions
             this.SourceURL = action.SourceURL;
             if (action.SourceDimensions != null)
             {
-                this.SourceDimensions = new StreamingSourceDimensionsModel()
-                {
-                    X = action.SourceDimensions.X, Y = action.SourceDimensions.Y, XScale = action.SourceDimensions.XScale, YScale = action.SourceDimensions.YScale, Rotation = action.SourceDimensions.Rotation
-                };
+                this.SourceDimensions = new StreamingSoftwareSourceDimensionsModel(action.SourceDimensions.X, action.SourceDimensions.Y, action.SourceDimensions.Rotation, action.SourceDimensions.XScale, action.SourceDimensions.YScale);
             }
         }
 
@@ -249,25 +275,25 @@ namespace MixItUp.Base.Model.Actions
                         parentName = await this.ReplaceStringWithSpecialModifiers(this.ParentName, user, platform, arguments, specialIdentifiers);
                     }
 
-                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    if (this.ActionType == StreamingSoftwareActionTypeEnum.StartStopStream)
                     {
                         await ssService.StartStopStream();
                     }
-                    else if (this.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
                     {
                         await ssService.SaveReplayBuffer();
                     }
-                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(name))
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.Scene && !string.IsNullOrEmpty(name))
                     {
                         await ssService.ShowScene(name);
                     }
                     else if (!string.IsNullOrEmpty(name))
                     {
-                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
+                        if (this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
                             await ssService.SetWebBrowserSourceURL(parentName, name, await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, platform, arguments, specialIdentifiers));
                         }
-                        else if (this.ActionType == StreamingActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
+                        else if (this.ActionType == StreamingSoftwareActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
                         {
                             try
                             {
@@ -284,14 +310,14 @@ namespace MixItUp.Base.Model.Actions
                             }
                             catch (Exception ex) { Logger.Log(ex); }
                         }
-                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
+                        else if (this.ActionType == StreamingSoftwareActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                         {
                             // TODO
                             //await ssService.SetSourceDimensions(parentName, name, this.SourceDimensions);
                         }
                         await ssService.SetSourceVisibility(parentName, name, this.Visible);
                     }
-                    else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(name))
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(name))
                     {
                         await ssService.SetSceneCollection(name);
                     }

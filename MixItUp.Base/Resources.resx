@@ -3338,4 +3338,52 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ResponseProcessingType" xml:space="preserve">
     <value>Response Processing Type</value>
   </data>
+  <data name="DefaultSetting" xml:space="preserve">
+    <value>Default Setting</value>
+  </data>
+  <data name="OBSStudio" xml:space="preserve">
+    <value>OBS Studio</value>
+  </data>
+  <data name="SaveReplayBuffer" xml:space="preserve">
+    <value>Save Replay Buffer</value>
+  </data>
+  <data name="SceneCollection" xml:space="preserve">
+    <value>Scene Collection</value>
+  </data>
+  <data name="SourceDimensions" xml:space="preserve">
+    <value>Source Dimensions</value>
+  </data>
+  <data name="SourceVisibility" xml:space="preserve">
+    <value>Source Visibility</value>
+  </data>
+  <data name="StartStopStream" xml:space="preserve">
+    <value>Start/Stop Stream</value>
+  </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+  </data>
+  <data name="TextSource" xml:space="preserve">
+    <value>Text Source</value>
+  </data>
+  <data name="WebBrowserSource" xml:space="preserve">
+    <value>Web Browser Source</value>
+  </data>
+  <data name="XSplit" xml:space="preserve">
+    <value>XSplit</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingScene" xml:space="preserve">
+    <value>Streaming Software Action: Missing scene</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingSceneCollection" xml:space="preserve">
+    <value>Streaming Software Action: Missing scene collection</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingSource" xml:space="preserve">
+    <value>Streaming Software Action: Missing source</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingTextSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing text source file path</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingWebBrowserSourceFilePath" xml:space="preserve">
+    <value>Streaming Software Action: Missing web browser source file path</value>
+  </data>
 </root>

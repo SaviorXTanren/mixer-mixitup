@@ -493,6 +493,9 @@
     <Compile Include="Controls\Actions\SpecialIdentifierActionEditorControl.xaml.cs">
       <DependentUpon>SpecialIdentifierActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\StreamingSoftwareActionEditorControl.xaml.cs">
+      <DependentUpon>StreamingSoftwareActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionEditorControl.xaml.cs">
       <DependentUpon>StreamlabsActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1294,6 +1297,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SpecialIdentifierActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamingSoftwareActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

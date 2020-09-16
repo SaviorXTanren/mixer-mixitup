@@ -2356,6 +2356,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Setting.
+        /// </summary>
+        public static string DefaultSetting {
+            get {
+                return ResourceManager.GetString("DefaultSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Streaming Software.
         /// </summary>
         public static string DefaultStreamingSoftware {
@@ -5425,6 +5434,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OBS Studio.
+        /// </summary>
+        public static string OBSStudio {
+            get {
+                return ResourceManager.GetString("OBSStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Offline Rate.
         /// </summary>
         public static string OfflineRate {
@@ -6829,6 +6847,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save Replay Buffer.
+        /// </summary>
+        public static string SaveReplayBuffer {
+            get {
+                return ResourceManager.GetString("SaveReplayBuffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save To File.
         /// </summary>
         public static string SaveToFile {
@@ -6843,6 +6870,15 @@ namespace MixItUp.Base {
         public static string Scene {
             get {
                 return ResourceManager.GetString("Scene", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scene Collection.
+        /// </summary>
+        public static string SceneCollection {
+            get {
+                return ResourceManager.GetString("SceneCollection", resourceCulture);
             }
         }
         
@@ -7495,6 +7531,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source Dimensions.
+        /// </summary>
+        public static string SourceDimensions {
+            get {
+                return ResourceManager.GetString("SourceDimensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source Name.
         /// </summary>
         public static string SourceName {
@@ -7509,6 +7554,15 @@ namespace MixItUp.Base {
         public static string SourceText {
             get {
                 return ResourceManager.GetString("SourceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Visibility.
+        /// </summary>
+        public static string SourceVisibility {
+            get {
+                return ResourceManager.GetString("SourceVisibility", resourceCulture);
             }
         }
         
@@ -7693,6 +7747,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start/Stop Stream.
+        /// </summary>
+        public static string StartStopStream {
+            get {
+                return ResourceManager.GetString("StartStopStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string State {
@@ -7801,6 +7864,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing scene.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingScene {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingScene", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing scene collection.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingSceneCollection {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingSceneCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing source.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingSource {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing text source file path.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingTextSourceFilePath {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingTextSourceFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Action: Missing web browser source file path.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingWebBrowserSourceFilePath {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingWebBrowserSourceFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StreamJar Donation.
         /// </summary>
         public static string StreamJarDonation {
@@ -7824,6 +7932,15 @@ namespace MixItUp.Base {
         public static string StreamlabsDonation {
             get {
                 return ResourceManager.GetString("StreamlabsDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS.
+        /// </summary>
+        public static string StreamlabsOBS {
+            get {
+                return ResourceManager.GetString("StreamlabsOBS", resourceCulture);
             }
         }
         
@@ -8148,6 +8265,15 @@ namespace MixItUp.Base {
         public static string TextColor {
             get {
                 return ResourceManager.GetString("TextColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Source.
+        /// </summary>
+        public static string TextSource {
+            get {
+                return ResourceManager.GetString("TextSource", resourceCulture);
             }
         }
         
@@ -9432,6 +9558,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Web Browser Source.
+        /// </summary>
+        public static string WebBrowserSource {
+            get {
+                return ResourceManager.GetString("WebBrowserSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Web Hook Event Name.
         /// </summary>
         public static string WebHookEventName {
@@ -9653,6 +9788,15 @@ namespace MixItUp.Base {
         public static string XScale {
             get {
                 return ResourceManager.GetString("XScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSplit.
+        /// </summary>
+        public static string XSplit {
+            get {
+                return ResourceManager.GetString("XSplit", resourceCulture);
             }
         }
         
