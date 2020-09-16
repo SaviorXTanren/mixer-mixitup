@@ -81,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.TextToSpeech: new TextToSpeechActionEditorControlViewModel((TextToSpeechActionModel)action); break;
                     case ActionTypeEnum.Translation: new TranslationActionEditorControlViewModel((TranslationActionModel)action); break;
                     case ActionTypeEnum.Twitch: new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
-                    case ActionTypeEnum.Twitter: break;
+                    case ActionTypeEnum.Twitter: new TwitterActionEditorControlViewModel((TwitterActionModel)action); break;
                     case ActionTypeEnum.Wait: break;
                     case ActionTypeEnum.WebRequest: break;
                 }
@@ -136,7 +136,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.TextToSpeech: new TextToSpeechActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Translation: new TranslationActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitch: new TwitchActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Twitter: break;
+                        case ActionTypeEnum.Twitter: new TwitterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: break;
                         case ActionTypeEnum.WebRequest: break;
                     }

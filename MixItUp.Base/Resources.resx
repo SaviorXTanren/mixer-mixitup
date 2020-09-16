@@ -3314,4 +3314,13 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="TranslationActionMissingText" xml:space="preserve">
     <value>Translation Action: Missing text</value>
   </data>
+  <data name="TwitterActionInvalidTweet" xml:space="preserve">
+    <value>Twitter Action: Tweet can not contain any "@" tags</value>
+  </data>
+  <data name="TwitterActionMissingNameUpdate" xml:space="preserve">
+    <value>Twitter Action: Missing name update</value>
+  </data>
+  <data name="TwitterActionMissingTweet" xml:space="preserve">
+    <value>Twitter Action: Missing tweet</value>
+  </data>
 </root>

@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class TwitterActionModel : ActionModelBase
     {
+        public static bool CheckIfTweetContainsTooManyTags(string tweet) { return !string.IsNullOrEmpty(tweet) && tweet.Count(c => c == '@') > 0; }
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return TwitterActionModel.asyncSemaphore; } }
@@ -75,7 +77,7 @@ namespace MixItUp.Base.Model.Actions
 
                     if (!string.IsNullOrEmpty(tweet))
                     {
-                        if (tweet.Any(c => c == '@'))
+                        if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))
                         {
                             await ChannelSession.Services.Chat.SendMessage("The tweet you specified can not be sent because it contains an @mention");
                             return;

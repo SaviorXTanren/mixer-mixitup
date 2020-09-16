@@ -505,6 +505,9 @@
     <Compile Include="Controls\Actions\TwitchActionEditorControl.xaml.cs">
       <DependentUpon>TwitchActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\TwitterActionEditorControl.xaml.cs">
+      <DependentUpon>TwitterActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
       <DependentUpon>ChatListControl.xaml</DependentUpon>
     </Compile>
@@ -1301,6 +1304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TwitchActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TwitterActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

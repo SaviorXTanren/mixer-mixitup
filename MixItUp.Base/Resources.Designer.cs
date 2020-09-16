@@ -8595,6 +8595,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitter Action: Tweet can not contain any &quot;@&quot; tags.
+        /// </summary>
+        public static string TwitterActionInvalidTweet {
+            get {
+                return ResourceManager.GetString("TwitterActionInvalidTweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitter Action: Missing name update.
+        /// </summary>
+        public static string TwitterActionMissingNameUpdate {
+            get {
+                return ResourceManager.GetString("TwitterActionMissingNameUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitter Action: Missing tweet.
+        /// </summary>
+        public static string TwitterActionMissingTweet {
+            get {
+                return ResourceManager.GetString("TwitterActionMissingTweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Two.
         /// </summary>
         public static string Two {
