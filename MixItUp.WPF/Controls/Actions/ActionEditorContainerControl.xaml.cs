@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Translation: this.Content = new TranslationActionEditorControl(); break;
                     case ActionTypeEnum.Twitch: this.Content = new TwitchActionEditorControl(); break;
                     case ActionTypeEnum.Twitter: this.Content = new TwitterActionEditorControl(); break;
-                    case ActionTypeEnum.Wait: break;
+                    case ActionTypeEnum.Wait: this.Content = new WaitActionEditorControl(); break;
                     case ActionTypeEnum.WebRequest: break;
                 }
 

@@ -3323,4 +3323,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="TwitterActionMissingTweet" xml:space="preserve">
     <value>Twitter Action: Missing tweet</value>
   </data>
+  <data name="WaitActionMissingAmount" xml:space="preserve">
+    <value>Wait Action: Missing amount</value>
+  </data>
 </root>

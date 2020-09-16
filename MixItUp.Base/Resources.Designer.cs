@@ -9396,6 +9396,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wait Action: Missing amount.
+        /// </summary>
+        public static string WaitActionMissingAmount {
+            get {
+                return ResourceManager.GetString("WaitActionMissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wait For Finish.
         /// </summary>
         public static string WaitForFinish {
