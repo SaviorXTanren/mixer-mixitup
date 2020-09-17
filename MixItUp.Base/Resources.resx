@@ -3386,4 +3386,16 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="StreamingSoftwareActionMissingWebBrowserSourceFilePath" xml:space="preserve">
     <value>Streaming Software Action: Missing web browser source file path</value>
   </data>
+  <data name="SuccessTriggerType" xml:space="preserve">
+    <value>Success Trigger Type</value>
+  </data>
+  <data name="ConditionalActionClauseMissingValue" xml:space="preserve">
+    <value>Conditional Action: Clause missing value</value>
+  </data>
+  <data name="ConditionalActionMissingSuccessTrigger" xml:space="preserve">
+    <value>Conditional Action: Missing success trigger</value>
+  </data>
+  <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
+    <value>Conditional Action: Success trigger action has errors</value>
+  </data>
 </root>

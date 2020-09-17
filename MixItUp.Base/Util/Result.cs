@@ -36,8 +36,30 @@ namespace MixItUp.Base.Util
             stringBuilder.AppendLine(message);
             stringBuilder.AppendLine();
             stringBuilder.Append(exception.Message);
-
+            this.Message = stringBuilder.ToString();
             this.Exception = exception;
+        }
+
+        public void Combine(Result other)
+        {
+            this.Success = this.Success && other.Success;
+
+            if (this.Exception == null)
+            {
+                this.Exception = other.Exception;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(this.Message))
+            {
+                stringBuilder.AppendLine(this.Message);
+                stringBuilder.AppendLine();
+            }
+            if (!string.IsNullOrEmpty(other.Message))
+            {
+                stringBuilder.Append(other.Message);
+            }
+            this.Message = stringBuilder.ToString();
         }
     }
 

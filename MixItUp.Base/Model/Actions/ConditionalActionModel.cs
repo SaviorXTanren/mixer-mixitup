@@ -49,6 +49,8 @@ namespace MixItUp.Base.Model.Actions
         [DataMember]
         public string Value3 { get; set; }
 
+        public ConditionalClauseModel() : this(ConditionalComparisionTypeEnum.Equals, null, null, null) { }
+
         public ConditionalClauseModel(ConditionalComparisionTypeEnum comparisionType, string value1, string value2, string value3)
         {
             this.ComparisionType = comparisionType;
@@ -64,7 +66,7 @@ namespace MixItUp.Base.Model.Actions
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
-        public bool IgnoreCase { get; set; }
+        public bool CaseSensitive { get; set; }
         [DataMember]
         public ConditionalOperatorTypeEnum Operator { get; set; }
 
@@ -79,22 +81,22 @@ namespace MixItUp.Base.Model.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ConditionalActionModel.asyncSemaphore; } }
 
-        public ConditionalActionModel(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, CommandModelBase command)
-            : this(ignoreCase, op, clauses)
+        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, CommandModelBase command)
+            : this(caseSensitive, op, clauses)
         {
             this.CommandID = command.ID;
         }
 
-        public ConditionalActionModel(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, ActionModelBase action)
-            : this(ignoreCase, op, clauses)
+        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, ActionModelBase action)
+            : this(caseSensitive, op, clauses)
         {
             this.Action = action;
         }
 
-        private ConditionalActionModel(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses)
+        private ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses)
             : base(ActionTypeEnum.Conditional)
         {
-            this.IgnoreCase = ignoreCase;
+            this.CaseSensitive = caseSensitive;
             this.Operator = op;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
         }
@@ -102,7 +104,7 @@ namespace MixItUp.Base.Model.Actions
         internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action)
             : base(ActionTypeEnum.Conditional)
         {
-            this.IgnoreCase = action.IgnoreCase;
+            this.CaseSensitive = !action.IgnoreCase;
             this.Operator = (ConditionalOperatorTypeEnum)(int)action.Operator;
             this.CommandID = action.CommandID;
             foreach (var clause in action.Clauses)
@@ -160,7 +162,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
-                bool contains = v1.IndexOf(v2, this.IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture) >= 0;
+                bool contains = v1.IndexOf(v2, this.CaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase) >= 0;
                 return ((clause.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) || (clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
             }
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Between)
@@ -195,7 +197,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else
                 {
-                    compareResult = string.Compare(v1, v2, this.IgnoreCase);
+                    compareResult = string.Compare(v1, v2, !this.CaseSensitive);
                 }
 
                 if (compareResult == 0 && (clause.ComparisionType == ConditionalComparisionTypeEnum.Equals || clause.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual ||

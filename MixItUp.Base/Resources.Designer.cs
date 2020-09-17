@@ -1717,6 +1717,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conditional Action: Clause missing value.
+        /// </summary>
+        public static string ConditionalActionClauseMissingValue {
+            get {
+                return ResourceManager.GetString("ConditionalActionClauseMissingValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conditional Action: Missing success trigger.
+        /// </summary>
+        public static string ConditionalActionMissingSuccessTrigger {
+            get {
+                return ResourceManager.GetString("ConditionalActionMissingSuccessTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conditional Action: Success trigger action has errors.
+        /// </summary>
+        public static string ConditionalActionSuccessTriggerActionHasErrors {
+            get {
+                return ResourceManager.GetString("ConditionalActionSuccessTriggerActionHasErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this command?.
         /// </summary>
         public static string ConfirmDeleteCommand {
@@ -8139,6 +8166,15 @@ namespace MixItUp.Base {
         public static string SubtractFromUser {
             get {
                 return ResourceManager.GetString("SubtractFromUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success Trigger Type.
+        /// </summary>
+        public static string SuccessTriggerType {
+            get {
+                return ResourceManager.GetString("SuccessTriggerType", resourceCulture);
             }
         }
         

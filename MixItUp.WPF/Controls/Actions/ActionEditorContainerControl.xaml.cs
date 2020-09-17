@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     case ActionTypeEnum.Chat: this.Control = new ChatActionEditorControl(); break;
                     case ActionTypeEnum.Command: this.Control = new CommandActionEditorControl(); break;
-                    case ActionTypeEnum.Conditional: break;
+                    case ActionTypeEnum.Conditional: this.Content = new ConditionalActionEditorControl(); break;
                     case ActionTypeEnum.Consumables: this.Content = new ConsumablesActionEditorControl(); break;
                     case ActionTypeEnum.Counter: this.Content = new CounterActionEditorControl(); break;
                     case ActionTypeEnum.Discord: this.Content = new DiscordActionEditorControl(); break;

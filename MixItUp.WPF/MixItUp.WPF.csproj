@@ -454,6 +454,9 @@
     <Compile Include="Controls\Actions\CommandActionEditorControl.xaml.cs">
       <DependentUpon>CommandActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ConditionalActionEditorControl.xaml.cs">
+      <DependentUpon>ConditionalActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ConsumablesActionEditorControl.xaml.cs">
       <DependentUpon>ConsumablesActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1245,6 +1248,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\CommandActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ConditionalActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

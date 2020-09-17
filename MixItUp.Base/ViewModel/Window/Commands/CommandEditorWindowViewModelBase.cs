@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 {
                     case ActionTypeEnum.Chat: editorViewModel = new ChatActionEditorControlViewModel((ChatActionModel)action); break;
                     case ActionTypeEnum.Command: editorViewModel = new CommandActionEditorControlViewModel((CommandActionModel)action); break;
-                    case ActionTypeEnum.Conditional: break;
+                    case ActionTypeEnum.Conditional: editorViewModel = new ConditionalActionEditorControlViewModel((ConditionalActionModel)action); break;
                     case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel((ConsumablesActionModel)action); break;
                     case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel((CounterActionModel)action); break;
                     case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel((DiscordActionModel)action); break;
@@ -116,7 +116,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     {
                         case ActionTypeEnum.Chat: editorViewModel = new ChatActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Command: editorViewModel = new CommandActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Conditional: break;
+                        case ActionTypeEnum.Conditional: editorViewModel = new ConditionalActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Consumables: editorViewModel = new ConsumablesActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Counter: editorViewModel = new CounterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Discord: new DiscordActionEditorControlViewModel(); break;
