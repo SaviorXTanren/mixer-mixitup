@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     case ActionTypeEnum.IFTTT: new IFTTTActionEditorControlViewModel((IFTTTActionModel)action); break;
                     case ActionTypeEnum.Input: new InputActionEditorControlViewModel((InputActionModel)action); break;
                     case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel((ModerationActionModel)action); break;
-                    case ActionTypeEnum.Overlay: break;
+                    case ActionTypeEnum.Overlay: new OverlayActionEditorControlViewModel((OverlayActionModel)action); break;
                     case ActionTypeEnum.OvrStream: new OvrStreamActionEditorControlViewModel((OvrStreamActionModel)action); break;
                     case ActionTypeEnum.Serial: new SerialActionEditorControlViewModel((SerialActionModel)action); break;
                     case ActionTypeEnum.Sound: new SoundActionEditorControlViewModel((SoundActionModel)action); break;
@@ -126,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.IFTTT: new IFTTTActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Input: new InputActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Moderation: new ModerationActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Overlay: break;
+                        case ActionTypeEnum.Overlay: new OverlayActionEditorControlViewModel(); break;
                         case ActionTypeEnum.OvrStream: new OvrStreamActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Serial: new SerialActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Sound: new SoundActionEditorControlViewModel(); break;

@@ -7342,6 +7342,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show/Hide Widget.
+        /// </summary>
+        public static string ShowHideWidget {
+            get {
+                return ResourceManager.GetString("ShowHideWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Hosts.
         /// </summary>
         public static string ShowHosts {
@@ -9878,6 +9887,15 @@ namespace MixItUp.Base {
         public static string YouDoNotHavePermissions {
             get {
                 return ResourceManager.GetString("YouDoNotHavePermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube.
+        /// </summary>
+        public static string YouTube {
+            get {
+                return ResourceManager.GetString("YouTube", resourceCulture);
             }
         }
         

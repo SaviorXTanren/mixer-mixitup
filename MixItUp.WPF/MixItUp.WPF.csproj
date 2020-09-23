@@ -484,6 +484,9 @@
     <Compile Include="Controls\Actions\ModerationActionEditorControl.xaml.cs">
       <DependentUpon>ModerationActionEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\OverlayActionEditorControl.xaml.cs">
+      <DependentUpon>OverlayActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\OvrStreamActionEditorControl.xaml.cs">
       <DependentUpon>OvrStreamActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1288,6 +1291,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ModerationActionEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OverlayActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

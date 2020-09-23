@@ -3398,4 +3398,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
     <value>Conditional Action: Success trigger action has errors</value>
   </data>
+  <data name="ShowHideWidget" xml:space="preserve">
+    <value>Show/Hide Widget</value>
+  </data>
+  <data name="YouTube" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
 </root>
