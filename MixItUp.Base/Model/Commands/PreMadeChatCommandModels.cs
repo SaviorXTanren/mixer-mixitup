@@ -5,6 +5,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
@@ -426,36 +427,42 @@ namespace MixItUp.Base.Model.Commands
     {
         public static async Task<GameInformation> GetXboxGameInfo(string gameName)
         {
-            gameName = gameName.ToLower();
-
-            string cv = Convert.ToBase64String(Guid.NewGuid().ToByteArray(), 0, 12);
-
-            using (AdvancedHttpClient client = new AdvancedHttpClient("https://displaycatalog.mp.microsoft.com"))
+            try
             {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("MixItUp");
-                client.DefaultRequestHeaders.Add("MS-CV", cv);
+                gameName = gameName.ToLower();
 
-                HttpResponseMessage response = await client.GetAsync($"v7.0/productFamilies/Games/products?query={HttpUtility.UrlEncode(gameName)}&$top=1&market=US&languages=en-US&fieldsTemplate=StoreSDK&isAddon=False&isDemo=False&actionFilter=Browse");
-                if (response.StatusCode == HttpStatusCode.OK)
+                string cv = Convert.ToBase64String(Guid.NewGuid().ToByteArray(), 0, 12);
+
+                using (AdvancedHttpClient client = new AdvancedHttpClient("https://displaycatalog.mp.microsoft.com"))
                 {
-                    string result = await response.Content.ReadAsStringAsync();
-                    JObject jobj = JObject.Parse(result);
-                    JArray products = jobj["Products"] as JArray;
-                    if (products?.FirstOrDefault() is JObject product)
-                    {
-                        string productId = product["ProductId"]?.Value<string>();
-                        string name = product["LocalizedProperties"]?.First()?["ProductTitle"]?.Value<string>();
-                        double price = product["DisplaySkuAvailabilities"]?.First()?["Availabilities"]?.First()?["OrderManagementData"]?["Price"]?["ListPrice"]?.Value<double>() ?? 0.0;
-                        string uri = $"https://www.microsoft.com/store/apps/{productId}";
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("MixItUp");
+                    client.DefaultRequestHeaders.Add("MS-CV", cv);
 
-                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId) && name.ToLower().Contains(gameName))
+                    HttpResponseMessage response = await client.GetAsync($"v7.0/productFamilies/Games/products?query={HttpUtility.UrlEncode(gameName)}&$top=1&market=US&languages=en-US&fieldsTemplate=StoreSDK&isAddon=False&isDemo=False&actionFilter=Browse");
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        JObject jobj = JObject.Parse(result);
+                        JArray products = jobj["Products"] as JArray;
+                        if (products?.FirstOrDefault() is JObject product)
                         {
-                            return new GameInformation { Name = name, Price = price, Uri = uri };
+                            string productId = product["ProductId"]?.Value<string>();
+                            string name = product["LocalizedProperties"]?.First()?["ProductTitle"]?.Value<string>();
+                            double price = product["DisplaySkuAvailabilities"]?.First()?["Availabilities"]?.First()?["OrderManagementData"]?["Price"]?["ListPrice"]?.Value<double>() ?? 0.0;
+                            string uri = $"https://www.microsoft.com/store/apps/{productId}";
+
+                            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId) && name.ToLower().Contains(gameName))
+                            {
+                                return new GameInformation { Name = name, Price = price, Uri = uri };
+                            }
                         }
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             return null;
         }
 
