@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.WPF.Controls.Commands;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.TwitchChannelPoints:
                     break;
                 case CommandTypeEnum.ActionGroup:
+                    this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
+                    this.viewModel = new ActionGroupCommandEditorWindowViewModel((ActionGroupCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.Game:
                     break;
@@ -49,10 +52,6 @@ namespace MixItUp.WPF.Windows.Commands
             {
                 case CommandTypeEnum.Chat:
                     break;
-                case CommandTypeEnum.Event:
-                    this.editorDetailsControl = new EventCommandEditorDetailsControl();
-                    this.viewModel = new EventCommandEditorWindowViewModel();
-                    break;
                 case CommandTypeEnum.Timer:
                     this.editorDetailsControl = new TimerCommandEditorDetailsControl();
                     this.viewModel = new TimerCommandEditorWindowViewModel();
@@ -60,11 +59,23 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.TwitchChannelPoints:
                     break;
                 case CommandTypeEnum.ActionGroup:
+                    this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
+                    this.viewModel = new ActionGroupCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Game:
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
+
+            this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+        }
+
+        public CommandEditorWindow(EventTypeEnum eventType)
+            : this()
+        {
+            this.editorDetailsControl = new EventCommandEditorDetailsControl();
+            this.DataContext = this.ViewModel = new EventCommandEditorWindowViewModel(eventType);
 
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
