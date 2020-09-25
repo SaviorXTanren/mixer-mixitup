@@ -571,6 +571,9 @@
     <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\TwitchChannelPointsCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TwitchChannelPointsCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1409,6 +1412,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\TwitchChannelPointsCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -31,6 +31,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new TimerCommandEditorWindowViewModel((TimerCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.TwitchChannelPoints:
+                    this.editorDetailsControl = new TwitchChannelPointsCommandEditorDetailsControl();
+                    this.viewModel = new TwitchChannelPointsCommandEditorWindowViewModel((TwitchChannelPointsCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.ActionGroup:
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
@@ -57,6 +59,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new TimerCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.TwitchChannelPoints:
+                    this.editorDetailsControl = new TwitchChannelPointsCommandEditorDetailsControl();
+                    this.viewModel = new TwitchChannelPointsCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.ActionGroup:
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
