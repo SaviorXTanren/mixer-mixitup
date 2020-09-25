@@ -19,9 +19,21 @@ namespace MixItUp.WPF.Windows.Commands
         {
             switch (existingCommand.Type)
             {
+                case CommandTypeEnum.Chat:
+                    break;
+                case CommandTypeEnum.Event:
+                    this.editorDetailsControl = new EventCommandEditorDetailsControl();
+                    this.viewModel = new EventCommandEditorWindowViewModel((EventCommandModel)existingCommand);
+                    break;
                 case CommandTypeEnum.Timer:
                     this.editorDetailsControl = new TimerCommandEditorDetailsControl();
                     this.viewModel = new TimerCommandEditorWindowViewModel((TimerCommandModel)existingCommand);
+                    break;
+                case CommandTypeEnum.TwitchChannelPoints:
+                    break;
+                case CommandTypeEnum.ActionGroup:
+                    break;
+                case CommandTypeEnum.Game:
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
@@ -35,9 +47,21 @@ namespace MixItUp.WPF.Windows.Commands
         {
             switch (commandType)
             {
+                case CommandTypeEnum.Chat:
+                    break;
+                case CommandTypeEnum.Event:
+                    this.editorDetailsControl = new EventCommandEditorDetailsControl();
+                    this.viewModel = new EventCommandEditorWindowViewModel();
+                    break;
                 case CommandTypeEnum.Timer:
                     this.editorDetailsControl = new TimerCommandEditorDetailsControl();
                     this.viewModel = new TimerCommandEditorWindowViewModel();
+                    break;
+                case CommandTypeEnum.TwitchChannelPoints:
+                    break;
+                case CommandTypeEnum.ActionGroup:
+                    break;
+                case CommandTypeEnum.Game:
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
