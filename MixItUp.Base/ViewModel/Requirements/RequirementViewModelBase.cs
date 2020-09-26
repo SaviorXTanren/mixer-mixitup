@@ -24,11 +24,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             {
                 if (canBeZero)
                 {
-                    return iAmount < 0;
+                    return iAmount >= 0;
                 }
                 else
                 {
-                    return iAmount <= 0;
+                    return iAmount > 0;
                 }
             }
             return false;
