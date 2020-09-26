@@ -23,11 +23,12 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private StreamlabsActionTypeEnum selectedActionType;
 
         public StreamlabsActionEditorControlViewModel(StreamlabsActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
         }
 
-        public StreamlabsActionEditorControlViewModel() { }
+        public StreamlabsActionEditorControlViewModel() : base() { }
 
         public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new StreamlabsActionModel(this.SelectedActionType)); }
     }

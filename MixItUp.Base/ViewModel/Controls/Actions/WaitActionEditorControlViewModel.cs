@@ -20,11 +20,12 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string amount;
 
         public WaitActionEditorControlViewModel(WaitActionModel action)
+            : base(action)
         {
             this.Amount = action.Amount;
         }
 
-        public WaitActionEditorControlViewModel() { }
+        public WaitActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

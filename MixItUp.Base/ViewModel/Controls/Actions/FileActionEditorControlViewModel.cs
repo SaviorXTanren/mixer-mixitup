@@ -77,6 +77,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string specialIdentifier;
 
         public FileActionEditorControlViewModel(FileActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             this.FilePath = action.FilePath;
@@ -94,7 +95,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public FileActionEditorControlViewModel() { }
+        public FileActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

@@ -208,7 +208,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public ICommand SourceGetCurrentDimensionsCommand { get; private set; }
 
         public StreamingSoftwareActionEditorControlViewModel(StreamingSoftwareActionModel action)
-            : this()
+            : base(action)
         {
             this.SelectedStreamingSoftware = action.StreamingSoftwareType;
             this.SelectedActionType = action.ActionType;
@@ -245,7 +245,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public StreamingSoftwareActionEditorControlViewModel()
+        public StreamingSoftwareActionEditorControlViewModel() : base() { }
+
+        protected override async Task OnLoadedInternal()
         {
             this.SourceGetCurrentDimensionsCommand = this.CreateCommand(async (parameter) =>
             {
@@ -262,6 +264,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                     }
                 }
             });
+            await base.OnLoadedInternal();
         }
 
         public override Task<Result> Validate()

@@ -69,6 +69,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string text;
 
         public TextToSpeechActionEditorControlViewModel(TextToSpeechActionModel action)
+            : base(action)
         {
             this.SelectedVoice = action.Voice;
             this.Text = action.Text;
@@ -77,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.Rate = action.Rate;
         }
 
-        public TextToSpeechActionEditorControlViewModel() { }
+        public TextToSpeechActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

@@ -53,6 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private bool shouldProcessMath;
 
         public SpecialIdentifierActionEditorControlViewModel(SpecialIdentifierActionModel action)
+            : base(action)
         {
             this.SpecialIdentifierName = action.SpecialIdentifierName;
             this.ReplacementText = action.ReplacementText;
@@ -60,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.ShouldProcessMath = action.ShouldProcessMath;
         }
 
-        public SpecialIdentifierActionEditorControlViewModel() { }
+        public SpecialIdentifierActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

@@ -95,6 +95,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string existingSelectedChannel;
 
         public DiscordActionEditorControlViewModel(DiscordActionModel action)
+            : base(action)
         {
             if (action.ActionType == DiscordActionTypeEnum.SendMessage)
             {
@@ -112,7 +113,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public DiscordActionEditorControlViewModel() { }
+        public DiscordActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

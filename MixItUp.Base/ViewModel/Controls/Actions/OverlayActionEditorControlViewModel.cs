@@ -161,11 +161,12 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private OverlayItemEffectVisibleAnimationTypeEnum selectedVisibleAnimation;
 
         public OverlayActionEditorControlViewModel(OverlayActionModel action)
+            : base(action)
         {
             // TODO
         }
 
-        public OverlayActionEditorControlViewModel() { }
+        public OverlayActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

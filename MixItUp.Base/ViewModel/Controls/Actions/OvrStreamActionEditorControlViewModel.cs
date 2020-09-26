@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public ObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ObservableCollection<OvrStreamVariableViewModel>();
 
         public OvrStreamActionEditorControlViewModel(OvrStreamActionModel action)
-            : this()
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             this.TitleName = action.TitleName;
@@ -133,17 +133,16 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public OvrStreamActionEditorControlViewModel()
+        public OvrStreamActionEditorControlViewModel() : base() { }
+
+        protected override async Task OnLoadedInternal()
         {
             this.AddVariableCommand = this.CreateCommand((parameter) =>
             {
                 this.Variables.Add(new OvrStreamVariableViewModel(this));
                 return Task.FromResult(0);
             });
-        }
 
-        protected override async Task OnLoadedInternal()
-        {
             if (ChannelSession.Services.OvrStream.IsConnected)
             {
                 IEnumerable<OvrStreamTitle> titles = await ChannelSession.Services.OvrStream.GetTitles();

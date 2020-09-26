@@ -62,6 +62,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public bool ShowUserRoles { get { return this.SelectedActionType == GameQueueActionType.SelectFirstType; } }
 
         public GameQueueActionEditorControlViewModel(GameQueueActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             if (this.ShowTargetUsername)
@@ -74,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public GameQueueActionEditorControlViewModel() { }
+        public GameQueueActionEditorControlViewModel() : base() { }
 
         public override Task<ActionModelBase> GetAction()
         {

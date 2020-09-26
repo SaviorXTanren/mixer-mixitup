@@ -87,6 +87,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private bool clipShowInfoInChat;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             if (this.ShowUsernameGrid)
@@ -104,7 +105,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public TwitchActionEditorControlViewModel() { }
+        public TwitchActionEditorControlViewModel() : base() { }
 
         public override Task<ActionModelBase> GetAction()
         {

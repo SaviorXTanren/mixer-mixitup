@@ -91,6 +91,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string selectedCommandGroup;
 
         public CommandActionEditorControlViewModel(CommandActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             if (this.ShowCommandsSection)
@@ -103,7 +104,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public CommandActionEditorControlViewModel() { }
+        public CommandActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

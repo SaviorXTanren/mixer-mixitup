@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel> JSONParameters { get; set; } = new ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel>();
 
         public WebRequestActionEditorControlViewModel(WebRequestActionModel action)
-            : this()
+            : base(action)
         {
             this.RequestURL = action.Url;
             this.SelectedResponseParseType = action.ResponseType;
@@ -87,12 +87,19 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         }
 
         public WebRequestActionEditorControlViewModel()
+            : base()
+        {
+
+        }
+
+        protected override async Task OnLoadedInternal()
         {
             this.AddJSONParameterCommand = this.CreateCommand((parameter) =>
             {
                 this.JSONParameters.Add(new WebRequestActionJSONToSpecialIdentifierViewModel(this));
                 return Task.FromResult(0);
             });
+            await base.OnLoadedInternal();
         }
 
         public override Task<Result> Validate()

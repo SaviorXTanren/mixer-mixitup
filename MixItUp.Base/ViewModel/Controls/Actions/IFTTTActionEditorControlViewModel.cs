@@ -55,6 +55,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string value3;
 
         public IFTTTActionEditorControlViewModel(IFTTTActionModel action)
+            : base(action)
         {
             this.EventName = action.EventName;
             this.Value1 = action.EventValue1;
@@ -62,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.Value3 = action.EventValue3;
         }
 
-        public IFTTTActionEditorControlViewModel() { }
+        public IFTTTActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

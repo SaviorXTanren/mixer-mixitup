@@ -53,6 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string whisperUserName;
 
         public ChatActionEditorControlViewModel(ChatActionModel action)
+            : base(action)
         {
             this.ChatText = action.ChatText;
             this.SendAsStreamer = action.SendAsStreamer;
@@ -60,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.WhisperUserName = action.WhisperUserName;
         }
 
-        public ChatActionEditorControlViewModel() { }
+        public ChatActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

@@ -46,13 +46,14 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string text;
 
         public TranslationActionEditorControlViewModel(TranslationActionModel action)
+            : base(action)
         {
             this.SelectedLanguage = action.Culture;
             this.AllowProfanity = action.AllowProfanity;
             this.Text = action.Text;
         }
 
-        public TranslationActionEditorControlViewModel() { }
+        public TranslationActionEditorControlViewModel() : base() { }
 
         protected override async Task OnLoadedInternal()
         {

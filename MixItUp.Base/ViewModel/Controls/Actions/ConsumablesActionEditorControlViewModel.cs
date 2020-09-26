@@ -177,7 +177,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public bool CanEnterTargetUsername { get { return this.SelectedActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.SelectedActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser; } }
 
         public ConsumablesActionEditorControlViewModel(ConsumablesActionModel action)
-            : this()
+            : base(action)
         {
             if (action.CurrencyID != Guid.Empty)
             {
@@ -200,7 +200,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.TargetUsername = action.Username;
         }
 
-        public ConsumablesActionEditorControlViewModel()
+        public ConsumablesActionEditorControlViewModel() : base() { }
+
+        protected override async Task OnLoadedInternal()
         {
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
             {
@@ -216,6 +218,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             {
                 this.Consumables.Add(new ConsumableViewModel(streamPass));
             }
+            await base.OnLoadedInternal();
         }
 
         public override Task<Result> Validate()

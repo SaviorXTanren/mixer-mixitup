@@ -53,6 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private bool waitForFinish;
 
         public ExternalProgramActionEditorControlViewModel(ExternalProgramActionModel action)
+            : base(action)
         {
             this.FilePath = action.FilePath;
             this.Arguments = action.Arguments;
@@ -60,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.WaitForFinish = action.WaitForFinish;
         }
 
-        public ExternalProgramActionEditorControlViewModel() { }
+        public ExternalProgramActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

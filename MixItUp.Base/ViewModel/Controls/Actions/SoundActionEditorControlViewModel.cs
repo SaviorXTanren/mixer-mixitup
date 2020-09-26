@@ -55,13 +55,14 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private int volume;
 
         public SoundActionEditorControlViewModel(SoundActionModel action)
+            : base(action)
         {
             this.FilePath = action.FilePath;
             this.SelectedAudioDevice = action.OutputDevice;
             this.Volume = action.VolumeScale;
         }
 
-        public SoundActionEditorControlViewModel() { }
+        public SoundActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

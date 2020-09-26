@@ -66,6 +66,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string moderationReason;
 
         public ModerationActionEditorControlViewModel(ModerationActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             this.TargetUsername = action.TargetUsername;
@@ -73,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.ModerationReason = action.ModerationReason;
         }
 
-        public ModerationActionEditorControlViewModel() { }
+        public ModerationActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

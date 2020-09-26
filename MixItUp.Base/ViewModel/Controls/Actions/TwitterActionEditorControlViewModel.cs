@@ -63,6 +63,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string updateNameText;
 
         public TwitterActionEditorControlViewModel(TwitterActionModel action)
+            : base(action)
         {
             this.SelectedActionType = action.ActionType;
             if (this.ShowTweetGrid)
@@ -76,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public TwitterActionEditorControlViewModel() { }
+        public TwitterActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

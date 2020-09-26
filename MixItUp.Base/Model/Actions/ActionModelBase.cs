@@ -60,13 +60,14 @@ namespace MixItUp.Base.Model.Actions
         public ActionTypeEnum Type { get; set; }
 
         [DataMember]
-        public bool IsEnabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         public ActionModelBase(ActionTypeEnum type)
         {
             this.ID = Guid.NewGuid();
             this.Type = type;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
+            this.Enabled = true;
         }
 
         [JsonIgnore]
@@ -74,7 +75,7 @@ namespace MixItUp.Base.Model.Actions
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            if (this.IsEnabled)
+            if (this.Enabled)
             {
                 await this.AsyncSemaphore.WaitAndRelease(async () =>
                 {

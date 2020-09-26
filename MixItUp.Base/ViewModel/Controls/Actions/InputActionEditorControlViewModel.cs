@@ -110,6 +110,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private bool alt;
 
         public InputActionEditorControlViewModel(InputActionModel action)
+            : base(action)
         {
             if (action.Key != null)
             {
@@ -127,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.Alt = action.Alt;
         }
 
-        public InputActionEditorControlViewModel() { }
+        public InputActionEditorControlViewModel() : base() { }
 
         public override Task<ActionModelBase> GetAction()
         {

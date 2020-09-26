@@ -72,6 +72,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public bool CanSetAmount { get { return this.SelectedActionType == CounterActionTypeEnum.Set || this.SelectedActionType == CounterActionTypeEnum.Update; } }
 
         public CounterActionEditorControlViewModel(CounterActionModel action)
+            : base(action)
         {
             this.Name = action.Name;
             this.SelectedActionType = action.ActionType;
@@ -85,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public CounterActionEditorControlViewModel() { }
+        public CounterActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

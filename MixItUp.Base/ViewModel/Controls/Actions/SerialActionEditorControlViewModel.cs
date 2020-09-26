@@ -37,12 +37,13 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private string message;
 
         public SerialActionEditorControlViewModel(SerialActionModel action)
+            : base(action)
         {
             this.SelectedDevice = this.Devices.FirstOrDefault(d => d.PortName.Equals(action.PortName));
             this.Message = action.Message;
         }
 
-        public SerialActionEditorControlViewModel() { }
+        public SerialActionEditorControlViewModel() : base() { }
 
         public override Task<Result> Validate()
         {

@@ -240,7 +240,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         private ActionTypeEnum selectedAction;
 
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
-            : this()
+            : base(action)
         {
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
@@ -261,13 +261,16 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public ConditionalActionEditorControlViewModel()
+        public ConditionalActionEditorControlViewModel() : base() { }
+
+        protected override async Task OnLoadedInternal()
         {
             this.AddClauseCommand = this.CreateCommand((parameter) =>
             {
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
                 return Task.FromResult(0);
             });
+            await base.OnLoadedInternal();
         }
 
         public override Task<Result> Validate()
