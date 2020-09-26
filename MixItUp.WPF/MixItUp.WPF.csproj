@@ -561,8 +561,11 @@
     <Compile Include="Controls\Command %28OLD%29\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Commands\ActionGroupEditorDetailsControl.xaml.cs">
-      <DependentUpon>ActionGroupEditorDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>ActionGroupCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Commands\ChatCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>ChatCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\CommandEditorDetailsControlBase.cs" />
     <Compile Include="Controls\Commands\EventCommandEditorDetailsControl.xaml.cs">
@@ -1403,7 +1406,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Commands\ActionGroupEditorDetailsControl.xaml">
+    <Page Include="Controls\Commands\ActionGroupCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\ChatCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

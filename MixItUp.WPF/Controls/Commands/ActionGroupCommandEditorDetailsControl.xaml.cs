@@ -3,9 +3,9 @@
     /// <summary>
     /// Interaction logic for ActionGroupEditorDetailsControl.xaml
     /// </summary>
-    public partial class ActionGroupEditorDetailsControl : CommandEditorDetailsControlBase
+    public partial class ActionGroupCommandEditorDetailsControl : CommandEditorDetailsControlBase
     {
-        public ActionGroupEditorDetailsControl()
+        public ActionGroupCommandEditorDetailsControl()
         {
             InitializeComponent();
         }

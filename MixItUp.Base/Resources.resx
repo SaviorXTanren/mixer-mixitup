@@ -3404,4 +3404,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="YouTube" xml:space="preserve">
     <value>YouTube</value>
   </data>
+  <data name="ChatCommandInvalidTriggers" xml:space="preserve">
+    <value>Chat triggers can only contain letters, numbers, spaces, symbols, and punctuation</value>
+  </data>
+  <data name="ChatCommandMissingTriggers" xml:space="preserve">
+    <value>Missing chat triggers</value>
+  </data>
 </root>

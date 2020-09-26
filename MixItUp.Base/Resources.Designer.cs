@@ -1285,6 +1285,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat triggers can only contain letters, numbers, spaces, symbols, and punctuation.
+        /// </summary>
+        public static string ChatCommandInvalidTriggers {
+            get {
+                return ResourceManager.GetString("ChatCommandInvalidTriggers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing chat triggers.
+        /// </summary>
+        public static string ChatCommandMissingTriggers {
+            get {
+                return ResourceManager.GetString("ChatCommandMissingTriggers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Message.
         /// </summary>
         public static string ChatMessage {
