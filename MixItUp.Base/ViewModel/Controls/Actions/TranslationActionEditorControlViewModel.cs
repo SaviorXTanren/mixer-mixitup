@@ -80,6 +80,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new TranslationActionModel(this.SelectedLanguage, this.AllowProfanity, this.Text)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new TranslationActionModel(this.SelectedLanguage, this.AllowProfanity, this.Text)); }
     }
 }

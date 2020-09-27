@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
     public abstract class ActionEditorControlViewModelBase : UIViewModelBase
     {
         public abstract ActionTypeEnum Type { get; }
+
+        public virtual string HelpLinkIdentifier { get { return this.Type.ToString(); } }
 
         public string Name
         {
@@ -39,6 +42,8 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         }
         private bool enabled = true;
 
+        private CommandEditorWindowViewModelBase commandEditorViewModel;
+
         public ActionEditorControlViewModelBase(ActionModelBase action)
         {
             this.Name = action.Name;
@@ -49,37 +54,51 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         protected override Task OnLoadedInternal()
         {
-            this.PlayCommand = this.CreateCommand((parameter) =>
+            this.PlayCommand = this.CreateCommand(async (parameter) =>
             {
-                return Task.FromResult(0);
+                ActionModelBase action = await this.ValidateAndGetAction();
+                if (action != null)
+                {
+                    // TODO
+                    //await action.Perform();
+                }
             });
 
             this.MoveUpCommand = this.CreateCommand((parameter) =>
             {
+                this.commandEditorViewModel.MoveActionUp(this);
                 return Task.FromResult(0);
             });
 
             this.MoveDownCommand = this.CreateCommand((parameter) =>
             {
+                this.commandEditorViewModel.MoveActionDown(this);
                 return Task.FromResult(0);
             });
 
-            this.CopyCommand = this.CreateCommand((parameter) =>
+            this.CopyCommand = this.CreateCommand(async (parameter) =>
             {
-                return Task.FromResult(0);
+                await this.commandEditorViewModel.DuplicateAction(this);
             });
 
             this.HelpCommand = this.CreateCommand((parameter) =>
             {
+                ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + this.HelpLinkIdentifier);
                 return Task.FromResult(0);
             });
 
             this.DeleteCommand = this.CreateCommand((parameter) =>
             {
+                this.commandEditorViewModel.DeleteAction(this);
                 return Task.FromResult(0);
             });
 
             return Task.FromResult(0);
+        }
+
+        public void Initialize(CommandEditorWindowViewModelBase commandEditorViewModel)
+        {
+            this.commandEditorViewModel = commandEditorViewModel;
         }
 
         public virtual Task<Result> Validate()
@@ -87,6 +106,28 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public abstract Task<ActionModelBase> GetAction();
+        public async Task<ActionModelBase> GetAction()
+        {
+            ActionModelBase action = await this.GetActionInternal();
+            if (action != null)
+            {
+                action.Name = this.Name;
+                action.Enabled = this.Enabled;
+            }
+            return action;
+        }
+
+        public async Task<ActionModelBase> ValidateAndGetAction()
+        {
+            Result result = await this.Validate();
+            if (!result.Success)
+            {
+                await DialogHelper.ShowMessage(result.ToString());
+                return null;
+            }
+            return await this.GetAction();
+        }
+
+        protected abstract Task<ActionModelBase> GetActionInternal();
     }
 }

@@ -110,6 +110,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(this.Text, this.SelectedVoice, this.Volume, this.Pitch, this.Rate)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new TextToSpeechActionModel(this.Text, this.SelectedVoice, this.Volume, this.Pitch, this.Rate)); }
     }
 }

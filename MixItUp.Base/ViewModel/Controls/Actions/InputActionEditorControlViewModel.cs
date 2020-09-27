@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public InputActionEditorControlViewModel() : base() { }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             if (this.SelectedDeviceType == InputActionDeviceTypeEnum.Keyboard)
             {

@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             if (!string.Equals(this.SelectedAudioDevice, SoundActionModel.DefaultAudioDevice))
             {

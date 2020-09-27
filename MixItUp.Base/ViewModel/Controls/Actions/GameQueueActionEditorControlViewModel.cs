@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public GameQueueActionEditorControlViewModel() : base() { }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             if (this.ShowTargetUsername)
             {

@@ -74,6 +74,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new IFTTTActionModel(this.EventName, this.Value1, this.Value2, this.Value3)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new IFTTTActionModel(this.EventName, this.Value1, this.Value2, this.Value3)); }
     }
 }

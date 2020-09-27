@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public TwitchActionEditorControlViewModel() : base() { }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             if (this.ShowUsernameGrid)
             {

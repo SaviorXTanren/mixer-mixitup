@@ -84,6 +84,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new SpecialIdentifierActionModel(this.SpecialIdentifierName, this.ReplacementText, this.MakeGloballyUsable, this.ShouldProcessMath)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new SpecialIdentifierActionModel(this.SpecialIdentifierName, this.ReplacementText, this.MakeGloballyUsable, this.ShouldProcessMath)); }
     }
 }

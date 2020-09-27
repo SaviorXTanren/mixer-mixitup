@@ -88,7 +88,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             return Task.FromResult<ActionModelBase>(new ModerationActionModel(this.SelectedActionType, this.TargetUsername, this.TimeoutAmount, this.ModerationReason));
         }

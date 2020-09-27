@@ -174,7 +174,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return base.Validate();
         }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             // TODO
             throw new NotImplementedException();

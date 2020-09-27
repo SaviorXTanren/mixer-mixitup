@@ -30,6 +30,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public StreamlabsActionEditorControlViewModel() : base() { }
 
-        public override Task<ActionModelBase> GetAction() { return Task.FromResult<ActionModelBase>(new StreamlabsActionModel(this.SelectedActionType)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new StreamlabsActionModel(this.SelectedActionType)); }
     }
 }

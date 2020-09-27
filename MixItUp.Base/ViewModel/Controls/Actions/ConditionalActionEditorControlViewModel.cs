@@ -261,7 +261,11 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             }
         }
 
-        public ConditionalActionEditorControlViewModel() : base() { }
+        public ConditionalActionEditorControlViewModel()
+            : base()
+        {
+            this.Clauses.Add(new ConditionalClauseViewModel(this));
+        }
 
         protected override async Task OnLoadedInternal()
         {
@@ -301,7 +305,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        public override Task<ActionModelBase> GetAction()
+        protected override Task<ActionModelBase> GetActionInternal()
         {
             if (this.ShowCommands)
             {
