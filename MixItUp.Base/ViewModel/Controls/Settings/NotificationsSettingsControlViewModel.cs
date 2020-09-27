@@ -88,10 +88,14 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
                     if (string.Format(SoundFilePathFormat, availableSound).Equals(soundPath))
                     {
                         this.sound = availableSound;
-                        return;
+                        break;
                     }
                 }
-                this.sound = CustomSoundName;
+
+                if (string.IsNullOrEmpty(this.sound))
+                {
+                    this.sound = CustomSoundName;
+                }
             }
 
             this.volume = initialVolume;
