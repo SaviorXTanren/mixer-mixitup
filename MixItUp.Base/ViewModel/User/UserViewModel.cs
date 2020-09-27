@@ -370,6 +370,15 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
+
+                if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
+                {
+                    this.UserRoles.Remove(UserRoleEnum.Subscriber);
+                }
+                else
+                {
+                    this.UserRoles.Add(UserRoleEnum.Subscriber);
+                }
             }
         }
 
