@@ -162,7 +162,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 return subPlanNumber / 1000;
             }
-            return 0;
+            return 1;
         }
 
         public static string GetSubTierNameFromText(string subPlan)
