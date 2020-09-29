@@ -26,6 +26,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public string PlanTier { get; set; }
 
+        public int PlanTierNumber { get; set; }
+
         public string PlanName { get; set; }
 
         public string Message { get; set; } = string.Empty;
@@ -38,6 +40,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             this.User = user;
             this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+            this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
             this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
             if (packet.sub_message.ContainsKey("message"))
             {
@@ -79,6 +82,8 @@ namespace MixItUp.Base.Services.Twitch
 
         public string PlanTier { get; set; }
 
+        public int PlanTierNumber { get; set; }
+
         public bool IsAnonymous { get; set; }
 
         public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
@@ -101,6 +106,7 @@ namespace MixItUp.Base.Services.Twitch
             this.TotalGifted = userNotice.SubTotalGifted;
             this.LifetimeGifted = userNotice.SubTotalGiftedLifetime;
             this.PlanTier = TwitchEventService.GetSubTierNameFromText(userNotice.SubPlan);
+            this.PlanTierNumber = 1;
         }
     }
 
@@ -128,6 +134,8 @@ namespace MixItUp.Base.Services.Twitch
 
             public int MonthsGifted { get; set; }
 
+            public int PlanTierNumber { get; set; }
+
             public string PlanTier { get; set; }
 
             public string PlanName { get; set; }
@@ -140,6 +148,7 @@ namespace MixItUp.Base.Services.Twitch
                 this.Receiver = receiver;
                 this.IsAnonymous = packet.IsAnonymousGiftedSubscription;
                 this.MonthsGifted = packet.IsMultiMonth ? packet.multi_month_duration : 1;
+                this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
                 this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
                 this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
             }
@@ -322,6 +331,7 @@ namespace MixItUp.Base.Services.Twitch
                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                 subEvent.User.Data.TwitchSubscribeDate = DateTimeOffset.Now;
+                subEvent.User.Data.TwitchSubscriberTier = subEvent.PlanTierNumber;
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
                     currency.AddAmount(subEvent.User.Data, currency.OnSubscribeBonus);
@@ -538,6 +548,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
+                    user.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
@@ -658,6 +669,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
 
             giftedSubEvent.Receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
+            giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 for (int i = 0; i < giftedSubEvent.MonthsGifted; i++)
