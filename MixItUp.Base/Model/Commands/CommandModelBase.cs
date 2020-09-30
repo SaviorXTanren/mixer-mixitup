@@ -217,19 +217,6 @@ namespace MixItUp.Base.Model.Commands
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
-        public void PerformBackground() { this.PerformBackground(ChannelSession.GetCurrentUser()); }
-
-        public void PerformBackground(UserViewModel user) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, null, null); }
-
-        public void PerformBackground(UserViewModel user, IEnumerable<string> arguments) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, arguments, null); }
-
-        public void PerformBackground(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) { this.PerformBackground(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers); }
-
-        public void PerformBackground(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
-        {
-            Task.Run(() => this.Perform(user, platform, arguments, specialIdentifiers));
-        }
-
         public async Task Perform() { await this.Perform(ChannelSession.GetCurrentUser()); }
 
         public async Task Perform(UserViewModel user) { await this.Perform(user, StreamingPlatformTypeEnum.None, null, null); }
@@ -363,20 +350,20 @@ namespace MixItUp.Base.Model.Commands
             for (int i = 0; i < actionsToRun.Count; i++)
             {
                 ActionModelBase action = actionsToRun[i];
-                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
-                //{
-                //    ChannelSession.Services.Overlay.StartBatching();
-                //}
+                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                {
+                    ChannelSession.Services.Overlay.StartBatching();
+                }
 
                 await action.Perform(user, platform, arguments, specialIdentifiers);
 
-                //if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
-                //{
-                //    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
-                //    {
-                //        await ChannelSession.Services.Overlay.EndBatching();
-                //    }
-                //}
+                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                {
+                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayActionModel))
+                    {
+                        await ChannelSession.Services.Overlay.EndBatching();
+                    }
+                }
             }
         }
 

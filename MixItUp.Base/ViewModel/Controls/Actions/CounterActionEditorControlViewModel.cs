@@ -33,16 +33,16 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         }
         private bool resetOnLoad;
 
-        public string Name
+        public string CounterName
         {
-            get { return this.name; }
+            get { return this.counterName; }
             set
             {
-                this.name = value;
+                this.counterName = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string name;
+        private string counterName;
 
         public IEnumerable<CounterActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<CounterActionTypeEnum>(); } }
 
@@ -74,13 +74,13 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public CounterActionEditorControlViewModel(CounterActionModel action)
             : base(action)
         {
-            this.Name = action.Name;
+            this.CounterName = action.Name;
             this.SelectedActionType = action.ActionType;
             this.Amount = action.Amount;
 
-            if (ChannelSession.Settings.Counters.ContainsKey(this.Name))
+            if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                CounterModel counter = ChannelSession.Settings.Counters[this.Name];
+                CounterModel counter = ChannelSession.Settings.Counters[this.CounterName];
                 this.SaveToFile = counter.SaveToFile;
                 this.ResetOnLoad = counter.ResetOnLoad;
             }
@@ -90,7 +90,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrEmpty(this.Name))
+            if (string.IsNullOrEmpty(this.CounterName))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.CounterActionMissingName));
             }
@@ -105,15 +105,15 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (!ChannelSession.Settings.Counters.ContainsKey(this.Name))
+            if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                ChannelSession.Settings.Counters[this.Name] = new CounterModel(this.Name);
+                ChannelSession.Settings.Counters[this.CounterName] = new CounterModel(this.CounterName);
             }
-            CounterModel counter = ChannelSession.Settings.Counters[this.Name];
+            CounterModel counter = ChannelSession.Settings.Counters[this.CounterName];
             this.SaveToFile = counter.SaveToFile;
             this.ResetOnLoad = counter.ResetOnLoad;
 
-            return Task.FromResult<ActionModelBase>(new CounterActionModel(this.Name, this.SelectedActionType, this.Amount));
+            return Task.FromResult<ActionModelBase>(new CounterActionModel(this.CounterName, this.SelectedActionType, this.Amount));
         }
     }
 }
