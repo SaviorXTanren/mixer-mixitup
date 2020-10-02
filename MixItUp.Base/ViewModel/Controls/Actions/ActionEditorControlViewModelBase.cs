@@ -1,7 +1,9 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -59,8 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 ActionModelBase action = await this.ValidateAndGetAction();
                 if (action != null)
                 {
-                    // TODO
-                    //await action.Perform();
+                    await action.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
                 }
             });
 

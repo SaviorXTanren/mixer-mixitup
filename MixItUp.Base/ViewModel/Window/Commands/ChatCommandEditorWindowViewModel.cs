@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task Save()
+        public override Task<CommandModelBase> GetCommand()
         {
             char[] triggerSeparator = new char[] { ' ' };
             if (this.Triggers.Contains(';'))
@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             }
             HashSet<string> triggers = new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
 
-            return Task.FromResult(0);
+            return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, triggers, this.IncludeExclamation, this.Wildcards));
         }
     }
 }

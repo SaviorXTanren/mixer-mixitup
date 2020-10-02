@@ -123,9 +123,9 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
                 results.Add(await this.Validate());
                 results.AddRange(await this.Requirements.Validate());
-                foreach (ActionEditorControlViewModelBase action in this.Actions)
+                foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
                 {
-                    results.Add(await action.Validate());
+                    results.Add(await actionViewModel.Validate());
                 }
 
                 if (results.Any(r => !r.Success))
@@ -144,13 +144,27 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     return;
                 }
 
-                await this.Save();
+                CommandModelBase command = await this.GetCommand();
+                if (command == null)
+                {
+                    return;
+                }
+
+                foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
+                {
+                    ActionModelBase action = await actionViewModel.GetAction();
+                    if (action == null)
+                    {
+                        return;
+                    }
+                    command.Actions.Add(action);
+                }
             });
         }
 
         public abstract Task<Result> Validate();
 
-        public abstract Task Save();
+        public abstract Task<CommandModelBase> GetCommand();
 
         public void MoveActionUp(ActionEditorControlViewModelBase actionViewModel)
         {

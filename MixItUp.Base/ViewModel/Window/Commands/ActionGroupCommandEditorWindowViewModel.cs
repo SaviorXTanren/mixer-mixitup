@@ -23,9 +23,6 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task Save()
-        {
-            return Task.FromResult(0);
-        }
+        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new ActionGroupCommandModel(this.Name)); }
     }
 }
