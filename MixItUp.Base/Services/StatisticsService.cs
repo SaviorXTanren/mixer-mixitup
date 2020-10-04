@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
 
         private void GlobalEvents_OnRaidOccurred(object sender, Tuple<UserViewModel, int> e)
         {
-            this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
+            this.RaidsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
         private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
