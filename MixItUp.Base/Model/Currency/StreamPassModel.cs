@@ -214,7 +214,7 @@ namespace MixItUp.Base.Model.Currency
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                 {
-                    if (!user.Data.IsCurrencyRankExempt && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
+                    if (!user.Data.IsCurrencyRankExempt && user.HasPermissionsTo(this.Permission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
                     {
                         if (user.Data.ViewingMinutes % this.ViewingRateMinutes == 0)
                         {
