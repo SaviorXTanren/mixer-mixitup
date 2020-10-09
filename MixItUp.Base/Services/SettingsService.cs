@@ -1,8 +1,11 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Window.Currency;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -27,40 +30,66 @@ namespace MixItUp.Base.Services
     {
         void Initialize();
 
-        Task<IEnumerable<SettingsV2Model>> GetAllSettings();
+        Task<IEnumerable<SettingsV3Model>> GetAllSettings();
 
-        Task<SettingsV2Model> Create(string name, bool isStreamer);
+        Task<SettingsV3Model> Create(string name, bool isStreamer);
 
-        Task Initialize(SettingsV2Model settings);
+        Task Initialize(SettingsV3Model settings);
 
+#pragma warning disable CS0612 // Type or member is obsolete
         Task Save(SettingsV2Model settings);
+#pragma warning restore CS0612 // Type or member is obsolete
 
-        Task SaveLocalBackup(SettingsV2Model settings);
+        Task Save(SettingsV3Model settings);
 
-        Task SavePackagedBackup(SettingsV2Model settings, string filePath);
+        Task SaveLocalBackup(SettingsV3Model settings);
 
-        Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath);
+        Task SavePackagedBackup(SettingsV3Model settings, string filePath);
 
-        Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings);
+        Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath);
+
+        Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
     }
 
     public class SettingsService : ISettingsService
     {
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        public void Initialize() { Directory.CreateDirectory(SettingsV2Model.SettingsDirectoryName); }
+        public void Initialize() { Directory.CreateDirectory(SettingsV3Model.SettingsDirectoryName); }
 
-        public async Task<IEnumerable<SettingsV2Model>> GetAllSettings()
+        public async Task<IEnumerable<SettingsV3Model>> GetAllSettings()
         {
             bool backupSettingsLoaded = false;
             bool settingsLoadFailure = false;
 
-            List<SettingsV2Model> allSettings = new List<SettingsV2Model>();
+#pragma warning disable CS0612 // Type or member is obsolete
             foreach (string filePath in Directory.GetFiles(SettingsV2Model.SettingsDirectoryName))
             {
                 if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
                 {
                     SettingsV2Model setting = null;
+                    try
+                    {
+                        setting = await SettingsV2Upgrader.UpgradeSettingsToLatest(filePath);
+                        if (setting != null)
+                        {
+                            await SettingsV3Upgrader.UpgradeV2ToV3(filePath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            List<SettingsV3Model> allSettings = new List<SettingsV3Model>();
+            foreach (string filePath in Directory.GetFiles(SettingsV3Model.SettingsDirectoryName))
+            {
+                if (filePath.EndsWith(SettingsV3Model.SettingsFileExtension))
+                {
+                    SettingsV3Model setting = null;
                     try
                     {
                         setting = await this.LoadSettings(filePath);
@@ -76,7 +105,7 @@ namespace MixItUp.Base.Services
 
                     if (setting == null)
                     {
-                        string localBackupFilePath = string.Format($"{filePath}.{SettingsV2Model.SettingsLocalBackupFileExtension}");
+                        string localBackupFilePath = string.Format($"{filePath}.{SettingsV3Model.SettingsLocalBackupFileExtension}");
                         if (File.Exists(localBackupFilePath))
                         {
                             try
@@ -106,7 +135,7 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
 
-                SettingsV2Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
+                SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.BackupSettingsToReplace));
                 if (settings != null)
                 {
                     File.Delete(settings.SettingsFilePath);
@@ -114,7 +143,7 @@ namespace MixItUp.Base.Services
 
                     using (ZipArchive zipFile = ZipFile.Open(ChannelSession.AppSettings.BackupSettingsFilePath, ZipArchiveMode.Read))
                     {
-                        zipFile.ExtractToDirectory(SettingsV2Model.SettingsDirectoryName);
+                        zipFile.ExtractToDirectory(SettingsV3Model.SettingsDirectoryName);
                     }
 
                     ChannelSession.AppSettings.BackupSettingsFilePath = null;
@@ -127,7 +156,7 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(LogLevel.Debug, "Settings deletion detected, starting deletion process");
 
-                SettingsV2Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
+                SettingsV3Model settings = allSettings.FirstOrDefault(s => s.ID.Equals(ChannelSession.AppSettings.SettingsToDelete));
                 if (settings != null)
                 {
                     File.Delete(settings.SettingsFilePath);
@@ -151,16 +180,17 @@ namespace MixItUp.Base.Services
             return allSettings;
         }
 
-        public Task<SettingsV2Model> Create(string name, bool isStreamer)
+        public Task<SettingsV3Model> Create(string name, bool isStreamer)
         {
-            return Task.FromResult(new SettingsV2Model(name, isStreamer));
+            return Task.FromResult(new SettingsV3Model(name, isStreamer));
         }
 
-        public async Task Initialize(SettingsV2Model settings)
+        public async Task Initialize(SettingsV3Model settings)
         {
             await settings.Initialize();
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         public async Task Save(SettingsV2Model settings)
         {
             Logger.Log(LogLevel.Debug, "Settings save operation started");
@@ -174,8 +204,23 @@ namespace MixItUp.Base.Services
 
             Logger.Log(LogLevel.Debug, "Settings save operation finished");
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
-        public async Task SaveLocalBackup(SettingsV2Model settings)
+        public async Task Save(SettingsV3Model settings)
+        {
+            Logger.Log(LogLevel.Debug, "Settings save operation started");
+
+            await semaphore.WaitAndRelease(async () =>
+            {
+                settings.CopyLatestValues();
+                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
+                await settings.SaveDatabaseData();
+            });
+
+            Logger.Log(LogLevel.Debug, "Settings save operation finished");
+        }
+
+        public async Task SaveLocalBackup(SettingsV3Model settings)
         {
             Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
 
@@ -187,7 +232,7 @@ namespace MixItUp.Base.Services
             Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
         }
 
-        public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
+        public async Task SavePackagedBackup(SettingsV3Model settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
 
@@ -220,7 +265,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath)
+        public async Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath)
         {
             try
             {
@@ -242,11 +287,11 @@ namespace MixItUp.Base.Services
                                 File.Delete(extractedFilePath);
                             }
 
-                            if (extractedFilePath.EndsWith(SettingsV2Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
+                            if (extractedFilePath.EndsWith(SettingsV3Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 settingsFile = extractedFilePath;
                             }
-                            else if (extractedFilePath.EndsWith(SettingsV2Model.DatabaseFileExtension, StringComparison.InvariantCultureIgnoreCase))
+                            else if (extractedFilePath.EndsWith(SettingsV3Model.DatabaseFileExtension, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 databaseFile = extractedFilePath;
                             }
@@ -264,25 +309,25 @@ namespace MixItUp.Base.Services
 
                 if (currentVersion == -1)
                 {
-                    return new Result<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
+                    return new Result<SettingsV3Model>("The backup file selected does not appear to contain Mix It Up settings.");
                 }
 
-                if (currentVersion > SettingsV2Model.LatestVersion)
+                if (currentVersion > SettingsV3Model.LatestVersion)
                 {
-                    return new Result<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                    return new Result<SettingsV3Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
                         Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
                 }
 
-                return new Result<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                return new Result<SettingsV3Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(settingsFile));
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new Result<SettingsV2Model>(ex);
+                return new Result<SettingsV3Model>(ex);
             }
         }
 
-        public async Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings)
+        public async Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings)
         {
             if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
             {
@@ -296,7 +341,7 @@ namespace MixItUp.Base.Services
 
                 if (newResetDate < DateTimeOffset.Now)
                 {
-                    string backupPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, SettingsV2Model.DefaultAutomaticBackupSettingsDirectoryName);
+                    string backupPath = Path.Combine(SettingsV3Model.SettingsDirectoryName, SettingsV3Model.DefaultAutomaticBackupSettingsDirectoryName);
                     if (!string.IsNullOrEmpty(settings.SettingsBackupLocation))
                     {
                         backupPath = settings.SettingsBackupLocation;
@@ -316,7 +361,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    string filePath = Path.Combine(backupPath, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
+                    string filePath = Path.Combine(backupPath, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
 
                     await this.SavePackagedBackup(settings, filePath);
 
@@ -325,12 +370,82 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task<SettingsV2Model> LoadSettings(string filePath)
+        private async Task<SettingsV3Model> LoadSettings(string filePath)
         {
-            return await SettingsV2Upgrader.UpgradeSettingsToLatest(filePath);
+            return await SettingsV3Upgrader.UpgradeSettingsToLatest(filePath);
         }
     }
 
+    public static class SettingsV3Upgrader
+    {
+#pragma warning disable CS0612 // Type or member is obsolete
+        public static async Task UpgradeV2ToV3(string filePath)
+        {
+            SettingsV2Model oldSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            SettingsV3Model newSettings = new SettingsV3Model();
+
+            await oldSettings.Initialize();
+
+
+
+
+
+
+
+
+            foreach (var kvp in oldSettings.CooldownGroups)
+            {
+                newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value.ToString();
+            }
+
+
+
+
+
+
+
+            await ChannelSession.Services.Settings.Save(newSettings);
+
+            await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
+            await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsFilePath);
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        public static async Task<SettingsV3Model> UpgradeSettingsToLatest(string filePath)
+        {
+            int currentVersion = await GetSettingsVersion(filePath);
+            if (currentVersion < 0)
+            {
+                // Settings file is invalid, we can't use this
+                return null;
+            }
+            else if (currentVersion > SettingsV3Model.LatestVersion)
+            {
+                // Future build, like a preview build, we can't load this
+                return null;
+            }
+            else if (currentVersion < SettingsV3Model.LatestVersion)
+            {
+                // Perform upgrade of settings
+            }
+            SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+            settings.Version = SettingsV3Model.LatestVersion;
+            return settings;
+        }
+
+        public static async Task<int> GetSettingsVersion(string filePath)
+        {
+            string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
+            if (string.IsNullOrEmpty(fileData))
+            {
+                return -1;
+            }
+            JObject settingsJObj = JObject.Parse(fileData);
+            return (int)settingsJObj["Version"];
+        }
+    }
+
+#pragma warning disable CS0612 // Type or member is obsolete
     public static class SettingsV2Upgrader
     {
         public static async Task<SettingsV2Model> UpgradeSettingsToLatest(string filePath)
@@ -348,10 +463,13 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV2Model.LatestVersion)
             {
-                // Perform upgrade of settings
-                if (currentVersion < 45)
+                if (currentVersion < 43)
                 {
-                    await SettingsV2Upgrader.Version45Upgrade(filePath);
+                    await SettingsV2Upgrader.Version43Upgrade(filePath);
+                }
+                if (currentVersion < 44)
+                {
+                    await SettingsV2Upgrader.Version44Upgrade(filePath);
                 }
             }
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
@@ -370,19 +488,101 @@ namespace MixItUp.Base.Services
             return (int)settingsJObj["Version"];
         }
 
-        public static async Task Version45Upgrade(string filePath)
+        public static async Task Version44Upgrade(string filePath)
         {
-
-
             SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             await settings.Initialize();
 
-#pragma warning disable CS0612 // Type or member is obsolete
-            foreach (var kvp in settings.CooldownGroups)
+            if (settings.ChatShowUserJoinLeave)
             {
-                settings.CooldownGroupAmounts[kvp.Key] = kvp.Value.ToString();
+                settings.AlertUserJoinLeaveColor = settings.ChatUserJoinLeaveColorScheme;
             }
-#pragma warning restore CS0612 // Type or member is obsolete
+
+            if (settings.ChatShowEventAlerts)
+            {
+                settings.AlertBitsCheeredColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertChannelPointsColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertFollowColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertGiftedSubColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertHostColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertMassGiftedSubColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertModerationColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertRaidColor = settings.ChatEventAlertsColorScheme;
+                settings.AlertSubColor = settings.ChatEventAlertsColorScheme;
+            }
+
+            await ChannelSession.Services.Settings.Save(settings);
+        }
+
+        public static async Task Version43Upgrade(string filePath)
+        {
+            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            await settings.Initialize();
+
+            if (settings.IsStreamer)
+            {
+                List<EventCommand> eventCommandsToAdd = new List<EventCommand>();
+                List<EventCommand> eventCommandsToRemove = new List<EventCommand>();
+                foreach (EventCommand command in settings.EventCommands)
+                {
+                    EventCommand newCommand = null;
+                    switch (command.EventCommandType)
+                    {
+                        case EventTypeEnum.MixerChannelEmbersUsed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelBitsCheered);
+                            break;
+                        case EventTypeEnum.MixerChannelFollowed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelFollowed);
+                            break;
+                        case EventTypeEnum.MixerChannelHosted:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelRaided);
+                            break;
+                        case EventTypeEnum.MixerChannelResubscribed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelResubscribed);
+                            break;
+                        case EventTypeEnum.MixerChannelStreamStart:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStart);
+                            break;
+                        case EventTypeEnum.MixerChannelStreamStop:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStop);
+                            break;
+                        case EventTypeEnum.MixerChannelSubscribed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscribed);
+                            break;
+                        case EventTypeEnum.MixerChannelSubscriptionGifted:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted);
+                            break;
+                        case EventTypeEnum.MixerChannelUnfollowed:
+                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelUnfollowed);
+                            break;
+                    }
+
+                    if (newCommand != null)
+                    {
+                        eventCommandsToAdd.Add(newCommand);
+                        eventCommandsToRemove.Add(command);
+
+                        newCommand.Actions.AddRange(command.Actions);
+                        newCommand.Unlocked = command.Unlocked;
+                        newCommand.IsEnabled = command.IsEnabled;
+                    }
+                }
+
+                foreach (EventCommand command in eventCommandsToRemove)
+                {
+                    settings.EventCommands.Remove(command);
+                }
+                foreach (EventCommand command in eventCommandsToAdd)
+                {
+                    settings.EventCommands.Add(command);
+                }
+
+                settings.StreamElementsOAuthToken = null;
+                settings.StreamJarOAuthToken = null;
+                settings.StreamlabsOAuthToken = null;
+                settings.TipeeeStreamOAuthToken = null;
+                settings.TreatStreamOAuthToken = null;
+            }
 
             await ChannelSession.Services.Settings.Save(settings);
         }
@@ -453,4 +653,5 @@ namespace MixItUp.Base.Services
             return commands.Where(c => c != null);
         }
     }
+#pragma warning restore CS0612 // Type or member is obsolete
 }

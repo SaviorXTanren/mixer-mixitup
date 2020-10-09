@@ -25,23 +25,23 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Settings
 {
     [DataContract]
-    public class SettingsV2Model
+    public class SettingsV3Model
     {
-        public const int LatestVersion = 45;
+        public const int LatestVersion = 1;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
 
         public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 
-        public const string SettingsFileExtension = "miu";
-        public const string DatabaseFileExtension = "db";
+        public const string SettingsFileExtension = "miu3";
+        public const string DatabaseFileExtension = "db3";
         public const string SettingsLocalBackupFileExtension = "backup";
 
         public const string SettingsBackupFileExtension = "miubackup";
 
         [DataMember]
-        public int Version { get; set; } = SettingsV2Model.LatestVersion;
+        public int Version { get; set; } = SettingsV3Model.LatestVersion;
 
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -462,10 +462,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool ReRunWizard { get; set; }
 
-        [DataMember]
-        [Obsolete]
-        public bool DiagnosticLogging { get; set; }
-
         #endregion Advanced
 
         #region Currency
@@ -497,7 +493,7 @@ namespace MixItUp.Base.Model.Settings
         #endregion Currency
 
         [DataMember]
-        public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, string> CooldownGroupAmounts { get; set; } = new Dictionary<string, string>();
 
         [DataMember]
         public List<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; } = new List<PreMadeChatCommandSettings>();
@@ -549,41 +545,24 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Database Data
 
-        #region Obsolete
-
-        [DataMember]
-        [Obsolete]
-        public bool ChatShowUserJoinLeave { get; set; }
-        [DataMember]
-        [Obsolete]
-        public string ChatUserJoinLeaveColorScheme { get; set; } = null;
-        [DataMember]
-        [Obsolete]
-        public bool ChatShowEventAlerts { get; set; }
-        [DataMember]
-        [Obsolete]
-        public string ChatEventAlertsColorScheme { get; set; } = null;
-
-        #endregion Obsolete
+        [JsonIgnore]
+        public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV3Model.SettingsFileExtension); } }
+        [JsonIgnore]
+        public string SettingsFilePath { get { return Path.Combine(SettingsV3Model.SettingsDirectoryName, this.SettingsFileName); } }
 
         [JsonIgnore]
-        public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.SettingsFileExtension); } }
+        public string DatabaseFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV3Model.DatabaseFileExtension); } }
         [JsonIgnore]
-        public string SettingsFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.SettingsFileName); } }
+        public string DatabaseFilePath { get { return Path.Combine(SettingsV3Model.SettingsDirectoryName, this.DatabaseFileName); } }
 
         [JsonIgnore]
-        public string DatabaseFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.DatabaseFileExtension); } }
+        public string SettingsLocalBackupFileName { get { return string.Format("{0}.{1}.{2}", this.ID, SettingsV3Model.SettingsFileExtension, SettingsV3Model.SettingsLocalBackupFileExtension); } }
         [JsonIgnore]
-        public string DatabaseFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.DatabaseFileName); } }
+        public string SettingsLocalBackupFilePath { get { return Path.Combine(SettingsV3Model.SettingsDirectoryName, this.SettingsLocalBackupFileName); } }
 
-        [JsonIgnore]
-        public string SettingsLocalBackupFileName { get { return string.Format("{0}.{1}.{2}", this.ID, SettingsV2Model.SettingsFileExtension, SettingsV2Model.SettingsLocalBackupFileExtension); } }
-        [JsonIgnore]
-        public string SettingsLocalBackupFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.SettingsLocalBackupFileName); } }
+        public SettingsV3Model() { }
 
-        public SettingsV2Model() { }
-
-        public SettingsV2Model(string name, bool isStreamer = true)
+        public SettingsV3Model(string name, bool isStreamer = true)
             : this()
         {
             this.Name = name;
@@ -598,7 +577,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
                 {
-                    await ChannelSession.Services.FileService.CopyFile(SettingsV2Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
+                    await ChannelSession.Services.FileService.CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
                 }
 
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
@@ -727,6 +706,24 @@ namespace MixItUp.Base.Model.Settings
             this.InitializeMissingData();
         }
 
+        public void ClearMixerUserData()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            foreach (Guid id in this.UsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
+            {
+                this.UserData.Remove(id);
+            }
+
+            foreach (UserDataModel userData in this.UserData.Values.ToList())
+            {
+                if (userData.MixerID > 0)
+                {
+                    this.UserData.Remove(userData.ID);
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+        }
+
         public async Task ClearAllUserData()
         {
             this.UserData.Clear();
@@ -737,7 +734,7 @@ namespace MixItUp.Base.Model.Settings
         {
             Logger.Log(LogLevel.Debug, "Copying over latest values into Settings object");
 
-            this.Version = SettingsV2Model.LatestVersion;
+            this.Version = SettingsV3Model.LatestVersion;
 
             if (ChannelSession.TwitchUserConnection != null)
             {
@@ -802,10 +799,10 @@ namespace MixItUp.Base.Model.Settings
                 this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
-            var allUnusedCooldownGroupNames = this.CooldownGroups.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach (var unused in allUnusedCooldownGroupNames)
             {
-                this.CooldownGroups.Remove(unused.Key);
+                this.CooldownGroupAmounts.Remove(unused.Key);
             }
 
             var allUsedCommandGroupNames =

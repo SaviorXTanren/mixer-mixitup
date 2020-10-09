@@ -25,7 +25,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         {
             this.BackupSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.BackupYourCurrentSettings, MixItUp.Base.Resources.BackupSettings, this.CreateCommand(async (parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV2Model.SettingsBackupFileExtension);
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV3Model.SettingsBackupFileExtension);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await ChannelSession.Services.Settings.SavePackagedBackup(ChannelSession.Settings, filePath);
@@ -34,10 +34,10 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
 
             this.RestoreSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.RestoreASettingsBackup, MixItUp.Base.Resources.RestoreSettings, this.CreateCommand(async (parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV2Model.SettingsBackupFileExtension));
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
+                    Result<SettingsV3Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
                     if (result.Success)
                     {
                         ChannelSession.AppSettings.BackupSettingsFilePath = filePath;

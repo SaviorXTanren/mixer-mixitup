@@ -51,9 +51,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
             if (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings != null)
             {
-#pragma warning disable CS0612 // Type or member is obsolete
-                ChannelSession.Settings.CooldownGroups[this.GroupName] = amount;
-#pragma warning restore CS0612 // Type or member is obsolete
+
             }
         }
 
@@ -67,12 +65,6 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 if (this.IsGroup)
                 {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (ChannelSession.Settings.CooldownGroups.ContainsKey(this.GroupName))
-                    {
-                        return ChannelSession.Settings.CooldownGroups[this.GroupName];
-                    }
-#pragma warning restore CS0612 // Type or member is obsolete
                     return 0;
                 }
                 else

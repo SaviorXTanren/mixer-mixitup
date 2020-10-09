@@ -34,7 +34,7 @@ namespace MixItUp.Base
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
-        public static SettingsV2Model Settings { get; private set; }
+        public static SettingsV3Model Settings { get; private set; }
 
         public static ServicesManagerBase Services { get; private set; }
 
@@ -158,7 +158,7 @@ namespace MixItUp.Base
             return result;
         }
 
-        public static async Task<Result> ConnectUser(SettingsV2Model settings)
+        public static async Task<Result> ConnectUser(SettingsV3Model settings)
         {
             Result userResult = null;
             ChannelSession.Settings = settings;
@@ -335,7 +335,7 @@ namespace MixItUp.Base
 
                         if (ChannelSession.Settings == null)
                         {
-                            IEnumerable<SettingsV2Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
+                            IEnumerable<SettingsV3Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
 
                             if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id)))
                             {
