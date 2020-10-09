@@ -693,6 +693,14 @@ namespace MixItUp.Base.Services.Twitch
                             currency.AddAmount(user.Data, currency.OnHostBonus);
                         }
 
+                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                        {
+                            if (user.HasPermissionsTo(streamPass.Permission))
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                            }
+                        }
+
                         GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
 
                         trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();

@@ -323,11 +323,20 @@ namespace MixItUp.Base.Services.Twitch
 
                 subEvent.User.Data.TwitchSubscribeDate = DateTimeOffset.Now;
                 subEvent.User.Data.TwitchSubscriberTier = subEvent.PlanTierNumber;
+                subEvent.User.Data.TotalMonthsSubbed++;
+
                 foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                 {
                     currency.AddAmount(subEvent.User.Data, currency.OnSubscribeBonus);
                 }
-                subEvent.User.Data.TotalMonthsSubbed++;
+
+                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                {
+                    if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                    {
+                        streamPass.AddAmount(subEvent.User.Data, streamPass.SubscribeBonus);
+                    }
+                }
 
                 await ChannelSession.Services.Events.PerformEvent(trigger);
             }
@@ -411,6 +420,14 @@ namespace MixItUp.Base.Services.Twitch
                                     currency.AddAmount(user.Data, currency.OnFollowBonus);
                                 }
 
+                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                                {
+                                    if (user.HasPermissionsTo(streamPass.Permission))
+                                    {
+                                        streamPass.AddAmount(user.Data, streamPass.FollowBonus);
+                                    }
+                                }
+
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                                 GlobalEvents.FollowOccurred(user);
@@ -491,7 +508,10 @@ namespace MixItUp.Base.Services.Twitch
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                if (user.HasPermissionsTo(streamPass.Permission))
+                {
+                    streamPass.AddAmount(user.Data, (int)Math.Ceiling(streamPass.BitsBonus * bitsCheered.Amount));
+                }
             }
 
             user.Data.TotalBitsCheered += (uint)bitsCheered.Amount;
@@ -540,11 +560,20 @@ namespace MixItUp.Base.Services.Twitch
 
                     user.Data.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
                     user.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
+                    user.Data.TotalMonthsSubbed++;
+
                     foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                     }
-                    user.Data.TotalMonthsSubbed++;
+
+                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                    {
+                        if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                        {
+                            streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                        }
+                    }
 
                     await ChannelSession.Services.Events.PerformEvent(trigger);
                 }
@@ -661,6 +690,10 @@ namespace MixItUp.Base.Services.Twitch
 
             giftedSubEvent.Receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
             giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
+            giftedSubEvent.Gifter.Data.TotalSubsGifted += (uint)giftedSubEvent.MonthsGifted;
+            giftedSubEvent.Receiver.Data.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
+            giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
+
             foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
             {
                 for (int i = 0; i < giftedSubEvent.MonthsGifted; i++)
@@ -668,9 +701,14 @@ namespace MixItUp.Base.Services.Twitch
                     currency.AddAmount(giftedSubEvent.Gifter.Data, currency.OnSubscribeBonus);
                 }
             }
-            giftedSubEvent.Gifter.Data.TotalSubsGifted += (uint)giftedSubEvent.MonthsGifted;
-            giftedSubEvent.Receiver.Data.TotalSubsReceived += (uint)giftedSubEvent.MonthsGifted;
-            giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
+
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                if (giftedSubEvent.Gifter.HasPermissionsTo(streamPass.Permission))
+                {
+                    streamPass.AddAmount(giftedSubEvent.Gifter.Data, streamPass.SubscribeBonus);
+                }
+            }
 
             if (fireEventCommand)
             {

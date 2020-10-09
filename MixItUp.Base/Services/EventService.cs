@@ -280,7 +280,10 @@ namespace MixItUp.Base.Services
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
-                streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+                if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                {
+                    streamPass.AddAmount(donation.User.Data, (int)Math.Ceiling(streamPass.DonationBonus * donation.Amount));
+                }
             }
 
             try
