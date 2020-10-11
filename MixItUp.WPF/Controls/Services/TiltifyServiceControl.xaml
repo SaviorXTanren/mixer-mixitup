@@ -34,7 +34,7 @@
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button x:Name="LogInButton" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
+                <Button Command="{Binding LogInCommand}" HorizontalAlignment="Center" Width="90">Log In</Button>
             </Grid>
         </Grid>
     </Grid>
