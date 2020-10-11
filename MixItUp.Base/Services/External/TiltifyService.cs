@@ -190,8 +190,6 @@ namespace MixItUp.Base.Services.External
 
     public interface ITiltifyService : IOAuthExternalService
     {
-        Task<Result> Connect(string authorizationToken);
-
         Task<TiltifyUser> GetUser();
 
         Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
@@ -209,7 +207,6 @@ namespace MixItUp.Base.Services.External
 
         public const string ClientID = "aa6b19e3f472808a632fe5a1b26b8ab37e852c123f60fb431c8a15c40df07f25";
 
-        public const string ListeningURL = "https://localhost:8919/";
         public const string AuthorizationURL = "https://tiltify.com/oauth/authorize?client_id={0}&redirect_uri={1}&response_type=code";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -224,28 +221,24 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Tiltify"; } }
 
-        public override Task<Result> Connect()
-        {
-            return Task.FromResult(new Result(false));
-        }
-
-        public async Task<Result> Connect(string authorizationToken)
+        public override async Task<Result> Connect()
         {
             try
             {
-                if (!string.IsNullOrEmpty(authorizationToken))
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TiltifySecret");
-                    payload["code"] = authorizationToken;
-                    payload["redirect_uri"] = TiltifyService.ListeningURL;
+                    payload["code"] = authorizationCode;
+                    payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
-                        token.authorizationCode = authorizationToken;
+                        token.authorizationCode = authorizationCode;
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 

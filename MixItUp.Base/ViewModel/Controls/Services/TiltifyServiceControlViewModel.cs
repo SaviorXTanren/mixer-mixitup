@@ -33,11 +33,26 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         }
         private TiltifyCampaign selectedCampaign;
 
+        public ICommand LogInCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
         public TiltifyServiceControlViewModel()
             : base("Tiltify")
         {
+            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            {
+                Result result = await ChannelSession.Services.Tiltify.Connect();
+                if (result.Success)
+                {
+                    this.IsConnected = true;
+                    await this.RefreshCampaigns();
+                }
+                else
+                {
+                    await this.ShowConnectFailureMessage(result);
+                }
+            });
+
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Tiltify.Disconnect();
@@ -57,20 +72,6 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             {
                 await this.RefreshCampaigns();
                 this.SelectedCampaign = this.Campaigns.FirstOrDefault(c => c.ID == ChannelSession.Settings.TiltifyCampaign);
-            }
-        }
-
-        public async Task LogIn(string authorizationToken)
-        {
-            Result result = await ChannelSession.Services.Tiltify.Connect(authorizationToken);
-            if (result.Success)
-            {
-                this.IsConnected = true;
-                await this.RefreshCampaigns();
-            }
-            else
-            {
-                await this.ShowConnectFailureMessage(result);
             }
         }
 
