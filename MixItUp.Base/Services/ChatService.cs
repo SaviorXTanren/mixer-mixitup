@@ -326,7 +326,7 @@ namespace MixItUp.Base.Services
 
             // Add message to chat list
             bool showMessage = true;
-            if (ChannelSession.Settings.HideBotMessages && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+            if (ChannelSession.Settings.HideBotMessages && message.User != null && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
             {
                 showMessage = false;
             }
@@ -361,7 +361,7 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is UserChatMessageViewModel)
+            if (message is UserChatMessageViewModel && message.User != null)
             {
                 if (message.IsWhisper && !message.IsStreamerOrBot)
                 {
@@ -401,7 +401,7 @@ namespace MixItUp.Base.Services
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                     }
 
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
                     {
                         this.userEntranceCommands.Add(message.User.ID);
                         if (message.User.Data.EntranceCommand != null)
