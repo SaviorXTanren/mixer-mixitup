@@ -8,9 +8,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
     {
         public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand)
             : base(existingCommand)
-        {
-
-        }
+        { }
 
         public TwitchChannelPointsCommandEditorWindowViewModel() : base() { }
 
@@ -24,5 +22,15 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         }
 
         public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            TwitchChannelPointsCommandModel c = (TwitchChannelPointsCommandModel)command;
+            if (!ChannelSession.TwitchChannelPointsCommands.Contains(c))
+            {
+                ChannelSession.TwitchChannelPointsCommands.Add(c);
+            }
+            return Task.FromResult(0);
+        }
     }
 }

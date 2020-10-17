@@ -28,5 +28,15 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         }
 
         public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new EventCommandModel(this.EventType)); }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            EventCommandModel c = (EventCommandModel)command;
+            if (!ChannelSession.EventCommands.Contains(c))
+            {
+                ChannelSession.EventCommands.Add(c);
+            }
+            return Task.FromResult(0);
+        }
     }
 }

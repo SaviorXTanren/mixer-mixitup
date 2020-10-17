@@ -159,12 +159,19 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     }
                     command.Actions.Add(action);
                 }
+
+                ChannelSession.Settings.SetCommand(command);
+                await ChannelSession.SaveSettings();
+
+                await this.SaveCommandToSettings(command);
             });
         }
 
         public abstract Task<Result> Validate();
 
         public abstract Task<CommandModelBase> GetCommand();
+
+        public abstract Task SaveCommandToSettings(CommandModelBase command);
 
         public void MoveActionUp(ActionEditorControlViewModelBase actionViewModel)
         {

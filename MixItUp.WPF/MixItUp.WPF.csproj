@@ -1094,10 +1094,10 @@
     <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
       <DependentUpon>CommandEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Command\CommandWindow.xaml.cs">
+    <Compile Include="Windows\Command %28OLD%29\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Command\GameCommandWindow.xaml.cs">
+    <Compile Include="Windows\Command %28OLD%29\GameCommandWindow.xaml.cs">
       <DependentUpon>GameCommandWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
@@ -2147,11 +2147,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Command\CommandWindow.xaml">
+    <Page Include="Windows\Command %28OLD%29\CommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Command\GameCommandWindow.xaml">
+    <Page Include="Windows\Command %28OLD%29\GameCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

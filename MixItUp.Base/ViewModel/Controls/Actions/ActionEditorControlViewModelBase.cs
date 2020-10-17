@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;

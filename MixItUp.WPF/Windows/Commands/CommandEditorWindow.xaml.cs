@@ -21,6 +21,8 @@ namespace MixItUp.WPF.Windows.Commands
             switch (existingCommand.Type)
             {
                 case CommandTypeEnum.Chat:
+                    this.editorDetailsControl = new ChatCommandEditorDetailsControl();
+                    this.viewModel = new ChatCommandEditorWindowViewModel((ChatCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.Event:
                     this.editorDetailsControl = new EventCommandEditorDetailsControl();
@@ -53,6 +55,8 @@ namespace MixItUp.WPF.Windows.Commands
             switch (commandType)
             {
                 case CommandTypeEnum.Chat:
+                    this.editorDetailsControl = new ChatCommandEditorDetailsControl();
+                    this.viewModel = new ChatCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Timer:
                     this.editorDetailsControl = new TimerCommandEditorDetailsControl();

@@ -24,5 +24,15 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         }
 
         public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TimerCommandModel(this.Name)); }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            TimerCommandModel c = (TimerCommandModel)command;
+            if (!ChannelSession.TimerCommands.Contains(c))
+            {
+                ChannelSession.TimerCommands.Add(c);
+            }
+            return Task.FromResult(0);
+        }
     }
 }

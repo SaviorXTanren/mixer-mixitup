@@ -119,5 +119,16 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
             return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, triggers, this.IncludeExclamation, this.Wildcards));
         }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            ChatCommandModel c = (ChatCommandModel)command;
+            if (!ChannelSession.ChatCommands.Contains(c))
+            {
+                ChannelSession.ChatCommands.Add(c);
+            }
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            return Task.FromResult(0);
+        }
     }
 }
