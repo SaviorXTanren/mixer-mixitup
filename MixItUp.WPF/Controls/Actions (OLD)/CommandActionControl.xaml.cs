@@ -2,7 +2,6 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,19 +106,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.CommandTypeComboBox.SelectedIndex >= 0)
             {
-                string typeString = (string)this.CommandTypeComboBox.SelectedItem;
-                if (typeString.Equals(PreMadeCommandType))
-                {
-                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => c is PreMadeChatCommand && c.Type == CommandTypeEnum.Chat).OrderBy(c => c.Name);
-                }
-                else if (typeString.Equals(EnumLocalizationHelper.GetLocalizedName(CommandTypeEnum.Chat)))
-                {
-                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => !(c is PreMadeChatCommand) && c.Type == CommandTypeEnum.Chat).OrderBy(c => c.Name);
-                }
-                else
-                {
-                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => typeString.Equals(EnumLocalizationHelper.GetLocalizedName(c.Type))).OrderBy(c => c.Name);
-                }
+
             }
         }
     }

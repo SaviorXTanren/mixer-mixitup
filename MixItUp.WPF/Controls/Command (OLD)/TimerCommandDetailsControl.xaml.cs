@@ -63,8 +63,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.command == null)
                 {
-                    this.command = new TimerCommand(this.NameTextBox.Text);
-                    ChannelSession.Settings.TimerCommands.Add(this.command);
+
                 }
                 else
                 {
@@ -75,10 +74,6 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.GroupName = !string.IsNullOrEmpty(this.CommandGroupComboBox.Text) ? this.CommandGroupComboBox.Text : null;
                 if (!string.IsNullOrEmpty(this.CommandGroupComboBox.Text))
                 {
-                    if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
-                    {
-                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings(this.CommandGroupComboBox.Text);
-                    }
 
                     ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].Name = this.CommandGroupComboBox.Text;
                     if (!string.IsNullOrEmpty(this.GroupTimerTextBox.Text) && int.TryParse(this.GroupTimerTextBox.Text, out int timerInterval))
@@ -114,11 +109,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.GroupTimerTextBox.IsEnabled = true;
                 if (ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
                 {
-                    CommandGroupSettings settings = ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text];
-                    if (settings.TimerInterval > 0)
-                    {
-                        this.GroupTimerTextBox.Text = settings.TimerInterval.ToString();
-                    }
+
                 }
             }
         }

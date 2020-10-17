@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -57,19 +57,19 @@ namespace MixItUp.Base.Model.Currency
         public bool IsInfinite { get { return this.MaxAmount < 0; } }
 
         [JsonIgnore]
-        public CustomCommand Command
+        public CommandModelBase Command
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.CommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.CommandID); }
             set
             {
                 if (value != null)
                 {
                     this.CommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.CommandID);
+                    ChannelSession.Settings.RemoveCommand(this.CommandID);
                     this.CommandID = Guid.Empty;
                 }
             }
@@ -163,7 +163,11 @@ namespace MixItUp.Base.Model.Currency
                             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                             extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                            await ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID).Perform(u, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                            CommandModelBase command = ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
+                            if (command != null)
+                            {
+                                await command.Perform(u, arguments: null, specialIdentifiers: extraSpecialIdentifiers);
+                            }
 
                             GlobalEvents.RedemptionStorePurchasesUpdated();
                         }
@@ -284,10 +288,10 @@ namespace MixItUp.Base.Model.Currency
             UserViewModel user = this.User;
             if (product != null && user != null)
             {
-                CustomCommand command = product.Command;
+                CommandModelBase command = product.Command;
                 if (command == null)
                 {
-                    command = ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
+                    command = ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
                 }
 
                 if (command != null)
@@ -295,7 +299,7 @@ namespace MixItUp.Base.Model.Currency
                     Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                     extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                    await command.Perform(user, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    await command.Perform(user, arguments: null, specialIdentifiers: extraSpecialIdentifiers);
                 }
 
                 if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)

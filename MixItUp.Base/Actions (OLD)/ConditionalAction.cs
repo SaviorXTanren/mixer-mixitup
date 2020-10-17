@@ -122,7 +122,7 @@ namespace MixItUp.Base.Actions
             this.Clauses = new List<ConditionalClauseModel>(clauses);
         }
 
-        public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
+        public CommandBase GetCommand() { return null; }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {

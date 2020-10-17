@@ -33,7 +33,6 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<WebRequestResponseActionTypeEnum>();           
-            this.CommandResponseComboBox.ItemsSource = ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name);
 
             this.JSONToSpecialIdentifiersItemsControl.ItemsSource = this.jsonToSpecialIdentifierPairs;
             this.jsonToSpecialIdentifierPairs.Add(new JSONToSpecialIdentifierPair());
@@ -48,7 +47,6 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                 {
-                    this.CommandResponseComboBox.SelectedItem = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.action.ResponseCommandID));
                     this.CommandResponseArgumentsTextBox.Text = this.action.ResponseCommandArgumentsText;
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)

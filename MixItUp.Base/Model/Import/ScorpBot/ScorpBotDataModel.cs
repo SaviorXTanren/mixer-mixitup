@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -268,22 +268,22 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     rankUpCommand = rankUpCommand.Replace("$currencyname", rankCurrency.Name);
 
                     ScorpBotCommandModel scorpCommand = new ScorpBotCommandModel("rankup", rankUpCommand);
-                    ChatCommand chatCommand = new ChatCommand(scorpCommand);
+                    //ChatCommand chatCommand = new ChatCommand(scorpCommand);
 
-                    rankCurrency.RankChangedCommand = new CustomCommand("User Rank Changed");
-                    rankCurrency.RankChangedCommand.Actions.AddRange(chatCommand.Actions);
+                    rankCurrency.RankChangedCommand = new CustomCommandModel("User Rank Changed");
+                    //rankCurrency.RankChangedCommand.Actions.AddRange(chatCommand.Actions);
                 }
             }
 
             foreach (ScorpBotCommandModel command in this.Commands)
             {
                 command.ProcessData(currency, rankCurrency);
-                ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                //ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
             }
 
             foreach (ScorpBotTimerModel timer in this.Timers)
             {
-                ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
+                //ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
             }
 
             foreach (string quote in this.Quotes)

@@ -268,13 +268,6 @@ namespace MixItUp.WPF.Controls.Actions
                     this.ActionControlContentControl.Content = this.actionContentContainerControl = null;
 
                     CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>((string)this.CommandTypeComboBox.SelectedItem);
-                    IEnumerable<CommandBase> commands = ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType);
-                    if (commandType == CommandTypeEnum.Chat)
-                    {
-                        commands = commands.Where(c => !(c is PreMadeChatCommand));
-                    }
-                    this.CommandNameComboBox.ItemsSource = commands.OrderBy(c => c.Name);
-                    this.CommandNameComboBox.Visibility = Visibility.Visible;
                 }
             }
         }

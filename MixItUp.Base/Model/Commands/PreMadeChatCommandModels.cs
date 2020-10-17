@@ -20,7 +20,7 @@ using System.Web;
 namespace MixItUp.Base.Model.Commands
 {
     [DataContract]
-    public class PreMadeChatCommandSettings
+    public class PreMadeChatCommandSettingsModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -31,9 +31,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public int Cooldown { get; set; }
 
-        public PreMadeChatCommandSettings() { }
+        public PreMadeChatCommandSettingsModel() { }
 
-        public PreMadeChatCommandSettings(PreMadeChatCommandModelBase command)
+        public PreMadeChatCommandSettingsModel(PreMadeChatCommandModelBase command)
         {
             this.Name = command.Name;
             this.IsEnabled = command.IsEnabled;
@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Commands
             this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown.ToString()));
         }
 
-        public void UpdateFromSettings(PreMadeChatCommandSettings settings)
+        public void UpdateFromSettings(PreMadeChatCommandSettingsModel settings)
         {
             this.IsEnabled = settings.IsEnabled;
             this.Requirements.Role.Role = settings.Role;
@@ -120,12 +120,13 @@ namespace MixItUp.Base.Model.Commands
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             List<string> commandTriggers = new List<string>();
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+            foreach (GameCommandModelBase command in ChannelSession.GameCommands)
             {
-                if (command.IsEnabled && await command.Requirements.DoesMeetUserRoleRequirement(user))
-                {
-                    commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
-                }
+                // TODO
+                //if (command.IsEnabled && await command.Requirements.DoesMeetUserRoleRequirement(user))
+                //{
+                //    commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
+                //}
             }
 
             if (commandTriggers.Count > 0)
@@ -696,11 +697,11 @@ namespace MixItUp.Base.Model.Commands
                     return;
                 }
 
-                foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
+                foreach (CommandModelBase command in ChannelSession.AllChatAccessibleCommands)
                 {
                     if (command.IsEnabled)
                     {
-                        if (command.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
+                        if (command.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
                         {
                             await ChannelSession.Services.Chat.SendMessage("ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
                             return;
@@ -753,7 +754,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");
@@ -766,7 +767,10 @@ namespace MixItUp.Base.Model.Commands
                     return;
                 }
 
-                command.Requirements.Cooldown.Amount = cooldown;
+                if (command.Requirements.Cooldown != null)
+                {
+                    command.Requirements.Cooldown.IndividualAmount = cooldown.ToString();
+                }
 
                 if (arguments.Count() > 2)
                 {
@@ -808,7 +812,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");

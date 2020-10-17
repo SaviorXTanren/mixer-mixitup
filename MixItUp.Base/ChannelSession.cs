@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
@@ -38,8 +39,6 @@ namespace MixItUp.Base
 
         public static ServicesManagerBase Services { get; private set; }
 
-        public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
-
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
 
@@ -54,44 +53,42 @@ namespace MixItUp.Base
 
         public static bool IsElevated { get; set; }
 
-        public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
-        {
-            get
-            {
-                return ChannelSession.AllChatCommands.Where(c => c.IsEnabled);
-            }
-        }
+        public static List<PreMadeChatCommandModelBase> PreMadeChatCommands { get; private set; } = new List<PreMadeChatCommandModelBase>();
 
-        public static IEnumerable<PermissionsCommandBase> AllChatCommands
+        public static List<ChatCommandModel> ChatCommands { get; set; } = new List<ChatCommandModel>();
+
+        public static List<EventCommandModel> EventCommands { get; set; } = new List<EventCommandModel>();
+
+        public static List<TimerCommandModel> TimerCommands { get; set; } = new List<TimerCommandModel>();
+
+        public static List<ActionGroupCommandModel> ActionGroupCommands { get; set; } = new List<ActionGroupCommandModel>();
+
+        public static List<GameCommandModelBase> GameCommands { get; set; } = new List<GameCommandModelBase>();
+
+        public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
+
+        public static IEnumerable<CommandModelBase> AllChatAccessibleCommands
         {
             get
             {
-                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands);
-                commands.AddRange(ChannelSession.Settings.ChatCommands);
-                commands.AddRange(ChannelSession.Settings.GameCommands);
+                List<CommandModelBase> commands = new List<CommandModelBase>();
+                commands.AddRange(ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.ChatCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.GameCommands.Where(c => c.IsEnabled));
                 return commands;
             }
         }
 
-        public static IEnumerable<CommandBase> AllEnabledCommands
+        public static IEnumerable<CommandModelBase> AllCommands
         {
             get
             {
-                return ChannelSession.AllCommands.Where(c => c.IsEnabled);
-            }
-        }
-
-        public static IEnumerable<CommandBase> AllCommands
-        {
-            get
-            {
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(ChannelSession.AllChatCommands);
-                commands.AddRange(ChannelSession.Settings.EventCommands);
-                commands.AddRange(ChannelSession.Settings.TimerCommands);
-                commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
-                commands.AddRange(ChannelSession.Settings.TwitchChannelPointsCommands);
+                List<CommandModelBase> commands = new List<CommandModelBase>();
+                commands.AddRange(ChannelSession.AllChatAccessibleCommands);
+                commands.AddRange(ChannelSession.EventCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.TimerCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.ActionGroupCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.TwitchChannelPointsCommands.Where(c => c.IsEnabled));
                 return commands;
             }
         }
@@ -111,8 +108,6 @@ namespace MixItUp.Base
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-
-            ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
 
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
@@ -549,19 +544,14 @@ namespace MixItUp.Base
                             }
 
                             ChannelSession.PreMadeChatCommands.Clear();
-                            foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
+                            foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
                             {
-#pragma warning disable CS0612 // Type or member is obsolete
-                                if (!(command is ObsoletePreMadeCommand))
-                                {
-                                    ChannelSession.PreMadeChatCommands.Add(command);
-                                }
-#pragma warning restore CS0612 // Type or member is obsolete
+                                ChannelSession.PreMadeChatCommands.Add(command);
                             }
 
-                            foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                            foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
                             {
-                                PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                                PreMadeChatCommandModelBase command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
                                 if (command != null)
                                 {
                                     command.UpdateFromSettings(commandSetting);
@@ -690,7 +680,7 @@ namespace MixItUp.Base
             if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
             {
                 HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
-                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(hotKeyConfiguration.CommandID));
+                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKeyConfiguration.CommandID);
                 if (command != null)
                 {
                     await command.Perform();

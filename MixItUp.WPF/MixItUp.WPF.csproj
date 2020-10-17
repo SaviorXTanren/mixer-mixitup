@@ -568,6 +568,9 @@
       <DependentUpon>ChatCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\CommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\CommandListingButtonsControl.xaml.cs">
+      <DependentUpon>CommandListingButtonsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\EventCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>EventCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -1411,6 +1414,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Commands\ChatCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\CommandListingButtonsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

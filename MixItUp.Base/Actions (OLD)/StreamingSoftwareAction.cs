@@ -167,7 +167,7 @@ namespace MixItUp.Base.Actions
             this.ActionType = actionType;
         }
 
-        public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.SoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.SoftwareType; } }
+        public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return this.SoftwareType; } }
 
         public void UpdateReferenceTextFile(string textToWrite)
         {

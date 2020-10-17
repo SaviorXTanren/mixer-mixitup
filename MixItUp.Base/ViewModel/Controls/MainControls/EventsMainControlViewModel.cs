@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
@@ -10,12 +10,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public EventTypeEnum EventType { get; set; }
 
-        public EventCommand Command { get; set; }
+        public EventCommandModel Command { get; set; }
 
-        public EventCommandItemViewModel(EventCommand command)
+        public EventCommandItemViewModel(EventCommandModel command)
         {
             this.Command = command;
-            this.EventType = this.Command.EventCommandType;
+            this.EventType = this.Command.EventType;
         }
 
         public EventCommandItemViewModel(EventTypeEnum eventType) { this.EventType = eventType; }
@@ -140,7 +140,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         private EventCommandItemViewModel GetEventCommand(EventTypeEnum eventType)
         {
-            EventCommand command = ChannelSession.Services.Events.GetEventCommand(eventType);
+            EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(eventType);
             if (command != null)
             {
                 return new EventCommandItemViewModel(command);

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Controls.Chat;
 using MixItUp.Base.ViewModel.Window;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             await base.OnLoadedInternal();
 
-            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name))
+            foreach (PreMadeChatCommandModelBase command in ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name))
             {
                 this.allPreMadeChatCommands.Add(new PreMadeChatCommandControlViewModel(command));
             }
@@ -69,16 +69,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         protected override async Task OnVisibleInternal()
         {
-            if (ChannelSession.Settings.ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
+            if (ChannelSession.ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
             {
                 this.FullRefresh();
             }
             await base.OnVisibleInternal();
         }
 
-        protected override IEnumerable<CommandBase> GetCommands()
+        protected override IEnumerable<CommandModelBase> GetCommands()
         {
-            return ChannelSession.Settings.ChatCommands.ToList();
+            return ChannelSession.ChatCommands.ToList();
         }
 
         protected override void FilterCommands()

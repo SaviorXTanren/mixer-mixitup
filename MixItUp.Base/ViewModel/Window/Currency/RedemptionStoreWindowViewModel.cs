@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirements;
@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
 
-        public CustomCommand Command
+        public CommandModelBase Command
         {
             get { return this.Product.Command; }
             set
@@ -209,7 +209,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private string modRedeemCommand;
 
-        public CustomCommand ManualRedeemNeededCommand
+        public CustomCommandModel ManualRedeemNeededCommand
         {
             get { return this.manualRedeemNeededCommand; }
             set
@@ -218,9 +218,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private CustomCommand manualRedeemNeededCommand;
+        private CustomCommandModel manualRedeemNeededCommand;
 
-        public CustomCommand DefaultRedemptionCommand
+        public CustomCommandModel DefaultRedemptionCommand
         {
             get { return this.defaultRedemptionCommand; }
             set
@@ -229,7 +229,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private CustomCommand defaultRedemptionCommand;
+        private CustomCommandModel defaultRedemptionCommand;
 
         public RedemptionStoreWindowViewModel()
         {
@@ -241,8 +241,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.ChatPurchaseCommand = ChannelSession.Settings.RedemptionStoreChatPurchaseCommand;
             this.ModRedeemCommand = ChannelSession.Settings.RedemptionStoreModRedeemCommand;
 
-            this.ManualRedeemNeededCommand = ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
-            this.DefaultRedemptionCommand = ChannelSession.Settings.GetCustomCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
+            this.ManualRedeemNeededCommand = (CustomCommandModel)ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
+            this.DefaultRedemptionCommand = (CustomCommandModel)ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
 
             this.SaveProductCommand = this.CreateCommand(async (parameter) =>
             {
@@ -330,8 +330,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             ChannelSession.Settings.RedemptionStoreChatPurchaseCommand = this.ChatPurchaseCommand;
             ChannelSession.Settings.RedemptionStoreModRedeemCommand = this.ModRedeemCommand;
 
-            ChannelSession.Settings.SetCustomCommand(this.ManualRedeemNeededCommand);
-            ChannelSession.Settings.SetCustomCommand(this.DefaultRedemptionCommand);
+            ChannelSession.Settings.SetCommand(this.ManualRedeemNeededCommand);
+            ChannelSession.Settings.SetCommand(this.DefaultRedemptionCommand);
 
             await ChannelSession.SaveSettings();
         }

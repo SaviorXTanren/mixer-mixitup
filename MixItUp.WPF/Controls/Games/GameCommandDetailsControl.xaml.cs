@@ -204,17 +204,18 @@ namespace MixItUp.WPF.Controls.Games
                 }
             }
 
-            foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
-            {
-                if (command.IsEnabled && this.existingCommand != command)
-                {
-                    if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
-                    {
-                        await DialogHelper.ShowMessage("There already exists a command that uses one of the chat triggers you have specified");
-                        return false;
-                    }
-                }
-            }
+            // TODO
+            //foreach (PermissionsCommandBase command in ChannelSession.AllChatAccessibleCommands)
+            //{
+            //    if (command.IsEnabled && this.existingCommand != command)
+            //    {
+            //        if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
+            //        {
+            //            await DialogHelper.ShowMessage("There already exists a command that uses one of the chat triggers you have specified");
+            //            return false;
+            //        }
+            //    }
+            //}
 
             return true;
         }

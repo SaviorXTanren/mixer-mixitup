@@ -327,7 +327,7 @@ namespace MixItUp.WPF.Controls.Actions
             StreamingSoftwareTypeEnum software = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.StreamingSoftwareComboBox.SelectedItem);
             if (software == StreamingSoftwareTypeEnum.DefaultSetting)
             {
-                software = ChannelSession.Settings.DefaultStreamingSoftware;
+
             }
             return software;
         }

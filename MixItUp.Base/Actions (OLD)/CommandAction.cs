@@ -70,14 +70,7 @@ namespace MixItUp.Base.Actions
         {
             get
             {
-                if (this.PreMadeType != null)
-                {
-                    return ChannelSession.AllCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
-                }
-                else
-                {
-                    return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
-                }
+                return null;
             }
         }
 
@@ -85,7 +78,7 @@ namespace MixItUp.Base.Actions
         {
             get
             {
-                return ChannelSession.AllCommands.Where(c =>  !string.IsNullOrEmpty(c.GroupName) && c.GroupName.Equals(this.GroupName));
+                return null;
             }
         }
 
@@ -150,14 +143,9 @@ namespace MixItUp.Base.Actions
         public ActionGroupAction() : base(ActionTypeEnum.ActionGroup) { }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            ActionGroupCommand command = ChannelSession.Settings.ActionGroupCommands.FirstOrDefault(c => c.ID.Equals(this.ActionGroupID));
-            if (command != null)
-            {
-                this.ActionGroupID = command.ID;
-                await command.Perform(user, this.platform, arguments, this.GetExtraSpecialIdentifiers());
-            }
+            return Task.FromResult(0);
         }
     }
 

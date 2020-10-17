@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -17,9 +17,9 @@ namespace MixItUp.WPF.Controls.Settings
     {
         public HotKeyConfiguration HotKey { get; set; }
 
-        public CommandBase Command { get; set; }
+        public CommandModelBase Command { get; set; }
 
-        public HotKeyUI(HotKeyConfiguration hotKey, CommandBase command)
+        public HotKeyUI(HotKeyConfiguration hotKey, CommandModelBase command)
         {
             this.HotKey = hotKey;
             this.Command = command;
@@ -94,16 +94,16 @@ namespace MixItUp.WPF.Controls.Settings
                     type = CommandTypeEnum.Chat;
                 }
 
-                IEnumerable<CommandBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
+                IEnumerable<CommandModelBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
                 if (type == CommandTypeEnum.Chat)
                 {
                     if (typeString.Equals(PreMadeCommandType))
                     {
-                        commands = commands.Where(c => c is PreMadeChatCommand);
+                        commands = commands.Where(c => c is PreMadeChatCommandModelBase);
                     }
                     else
                     {
-                        commands = commands.Where(c => !(c is PreMadeChatCommand));
+                        commands = commands.Where(c => !(c is PreMadeChatCommandModelBase));
                     }
                 }
                 this.CommandNameComboBox.ItemsSource = commands;
@@ -124,7 +124,7 @@ namespace MixItUp.WPF.Controls.Settings
                     return;
                 }
 
-                CommandBase command = (CommandBase)this.CommandNameComboBox.SelectedItem;
+                CommandModelBase command = (CommandModelBase)this.CommandNameComboBox.SelectedItem;
 
                 if (this.KeyComboBox.SelectedIndex < 0)
                 {
@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.hotKeys.Clear();
             foreach (HotKeyConfiguration hotKey in ChannelSession.Settings.HotKeys.Values.OrderBy(hotKey => hotKey.Key))
             {
-                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(hotKey.CommandID));
+                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKey.CommandID);
                 if (command != null)
                 {
                     this.hotKeys.Add(new HotKeyUI(hotKey, command));

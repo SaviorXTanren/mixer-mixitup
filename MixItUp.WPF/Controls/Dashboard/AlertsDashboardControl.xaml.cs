@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Controls.Dashboard;
@@ -79,7 +80,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                 if (viewModel.ContextMenuChatCommands.Count() > 0)
                 {
                     this.AlertsListView.ContextMenu.Items.Add(new Separator());
-                    foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                    foreach (CommandModelBase command in viewModel.ContextMenuChatCommands)
                     {
                         MenuItem menuItem = new MenuItem();
                         menuItem.Header = command.Name;

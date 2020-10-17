@@ -1,8 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -14,7 +13,7 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class CommandSelectorDialogControl : UserControl
     {
-        public CommandBase Command { get; private set; }
+        public CommandModelBase Command { get; private set; }
 
         public CommandSelectorDialogControl()
         {
@@ -34,7 +33,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 CommandTypeEnum type = (CommandTypeEnum)this.TypeComboBox.SelectedItem;
-                IEnumerable<CommandBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type && !(c is PreMadeChatCommand)).OrderBy(c => c.Name);
+                IEnumerable<CommandModelBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type && !(c is PreMadeChatCommandModelBase)).OrderBy(c => c.Name);
                 this.CommandComboBox.ItemsSource = commands;
             }
         }
@@ -43,7 +42,7 @@ namespace MixItUp.WPF.Controls.Dialogs
         {
             if (this.CommandComboBox.SelectedIndex >= 0)
             {
-                this.Command = (CommandBase)this.CommandComboBox.SelectedItem;
+                this.Command = (CommandModelBase)this.CommandComboBox.SelectedItem;
                 DialogHost.CloseDialogCommand.Execute(this, this);
             }
         }

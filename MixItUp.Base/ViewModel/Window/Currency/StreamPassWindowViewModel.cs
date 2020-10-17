@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -20,19 +19,19 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 
         public Guid CommandID { get; set; }
 
-        public CustomCommand Command
+        public CommandModelBase Command
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.CommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.CommandID); }
             set
             {
                 if (value != null)
                 {
                     this.CommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.CommandID);
+                    ChannelSession.Settings.RemoveCommand(this.CommandID);
                     this.CommandID = Guid.Empty;
                 }
             }
@@ -44,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.CommandID = id;
         }
 
-        public StreamPassCustomLevelUpCommandViewModel(int level, CustomCommand command)
+        public StreamPassCustomLevelUpCommandViewModel(int level, CustomCommandModel command)
         {
             this.Level = level;
             this.Command = command;
@@ -55,9 +54,9 @@ namespace MixItUp.Base.ViewModel.Window.Currency
     {
         public bool AddCommand { get; set; }
         public string Description { get; set; }
-        public ChatCommand Command { get; set; }
+        public CommandModelBase Command { get; set; }
 
-        public NewStreamPassCommand(string description, ChatCommand command)
+        public NewStreamPassCommand(string description, CommandModelBase command)
         {
             this.AddCommand = true;
             this.Description = description;
@@ -244,7 +243,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private int customLevelUpNumber;
 
-        public CustomCommand DefaultLevelUpCommand
+        public CommandModelBase DefaultLevelUpCommand
         {
             get { return this.defaultLevelUpCommand; }
             set
@@ -255,7 +254,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged("DefaultLevelUpCommandNotSet");
             }
         }
-        private CustomCommand defaultLevelUpCommand;
+        private CommandModelBase defaultLevelUpCommand;
 
         public bool DefaultLevelUpCommandSet { get { return this.DefaultLevelUpCommand != null; } }
         public bool DefaultLevelUpCommandNotSet { get { return !this.DefaultLevelUpCommandSet; } }
@@ -330,7 +329,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             return true;
         }
 
-        public void AddCustomLevelUpCommand(CustomCommand command)
+        public void AddCustomLevelUpCommand(CustomCommandModel command)
         {
             List<StreamPassCustomLevelUpCommandViewModel> commands = this.CustomLevelUpCommands.ToList();
             commands.Add(new StreamPassCustomLevelUpCommandViewModel(this.savedCustomLevelUpNumber, command));
@@ -493,26 +492,27 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             await ChannelSession.SaveSettings();
         }
 
-        public IEnumerable<NewAutoChatCommand> GetNewAutoChatCommands()
-        {
-            List<NewAutoChatCommand> commandsToAdd = new List<NewAutoChatCommand>();
-            if (this.StreamPass != null)
-            {
-                ChatCommand statusCommand = new ChatCommand("User " + this.StreamPass.Name, this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
-                statusCommand.Actions.Add(new ChatAction(string.Format("@$username is level ${0} with ${1} points!", this.StreamPass.UserLevelSpecialIdentifier, this.StreamPass.UserAmountSpecialIdentifier)));
-                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
+        // TODO
+        //public IEnumerable<NewAutoChatCommand> GetNewAutoChatCommands()
+        //{
+        //    List<NewAutoChatCommand> commandsToAdd = new List<NewAutoChatCommand>();
+        //    if (this.StreamPass != null)
+        //    {
+        //        ChatCommand statusCommand = new ChatCommand("User " + this.StreamPass.Name, this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
+        //        statusCommand.Actions.Add(new ChatAction(string.Format("@$username is level ${0} with ${1} points!", this.StreamPass.UserLevelSpecialIdentifier, this.StreamPass.UserAmountSpecialIdentifier)));
+        //        commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
 
-                ChatCommand addCommand = new ChatCommand("Add " + this.StreamPass.Name, "add" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
-                addCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
-                addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text points for {0}!", this.StreamPass.Name)));
-                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
+        //        ChatCommand addCommand = new ChatCommand("Add " + this.StreamPass.Name, "add" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
+        //        addCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
+        //        addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text points for {0}!", this.StreamPass.Name)));
+        //        commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
 
-                ChatCommand addAllCommand = new ChatCommand("Add All " + this.StreamPass.Name, "addall" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
-                addAllCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
-                addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text points for {0}!", this.StreamPass.Name)));
-                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
-            }
-            return commandsToAdd;
-        }
+        //        ChatCommand addAllCommand = new ChatCommand("Add All " + this.StreamPass.Name, "addall" + this.StreamPass.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
+        //        addAllCommand.Actions.Add(new CurrencyAction(this.StreamPass, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+        //        addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text points for {0}!", this.StreamPass.Name)));
+        //        commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
+        //    }
+        //    return commandsToAdd;
+        //}
     }
 }

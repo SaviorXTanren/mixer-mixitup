@@ -38,13 +38,6 @@ namespace MixItUp.WPF.Controls.Command
                 await DialogHelper.ShowMessage("Reward Name is missing");
                 return false;
             }
-
-            if (ChannelSession.Settings.TwitchChannelPointsCommands.Any(c => c.Name.Equals(this.NameTextBox.Text) && c != this.command))
-            {
-                await DialogHelper.ShowMessage("There already exists a Twitch Channel Points command with the same reward name");
-                return false;
-            }
-
             return true;
         }
 
@@ -57,7 +50,6 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command == null || string.IsNullOrEmpty(this.command.Name))
                 {
                     this.command = new TwitchChannelPointsCommand(this.NameTextBox.Text);
-                    ChannelSession.Settings.TwitchChannelPointsCommands.Add(this.command);
                 }
                 else
                 {

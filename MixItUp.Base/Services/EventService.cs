@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services
 
         Task Initialize(ITwitchEventService twitchEventService);
 
-        EventCommand GetEventCommand(EventTypeEnum type);
+        EventCommandModel GetEventCommand(EventTypeEnum type);
 
         bool CanPerformEvent(EventTrigger trigger);
 
@@ -304,11 +304,11 @@ namespace MixItUp.Base.Services
             return Task.FromResult(0);
         }
 
-        public EventCommand GetEventCommand(EventTypeEnum type)
+        public EventCommandModel GetEventCommand(EventTypeEnum type)
         {
-            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+            foreach (EventCommandModel command in ChannelSession.EventCommands)
             {
-                if (command.EventCommandType == type)
+                if (command.EventType == type)
                 {
                     return command;
                 }
@@ -341,12 +341,12 @@ namespace MixItUp.Base.Services
                     this.userEventTracking[trigger.Type].Add(user.ID);
                 }
 
-                EventCommand command = this.GetEventCommand(trigger.Type);
+                EventCommandModel command = this.GetEventCommand(trigger.Type);
                 if (command != null)
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
 
-                    await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                    await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -190,57 +190,57 @@ namespace MixItUp.Base.Model.Currency
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
         [JsonIgnore]
-        public CustomCommand ItemsBoughtCommand
+        public CommandModelBase ItemsBoughtCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsBoughtCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsBoughtCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsBoughtCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsBoughtCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsBoughtCommandID);
                     this.ItemsBoughtCommandID = Guid.Empty;
                 }
             }
         }
 
         [JsonIgnore]
-        public CustomCommand ItemsSoldCommand
+        public CommandModelBase ItemsSoldCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsSoldCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsSoldCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsSoldCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsSoldCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsSoldCommandID);
                     this.ItemsSoldCommandID = Guid.Empty;
                 }
             }
         }
 
         [JsonIgnore]
-        public CustomCommand ItemsTradedCommand
+        public CommandModelBase ItemsTradedCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsTradedCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsTradedCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsTradedCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsTradedCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsTradedCommandID);
                     this.ItemsTradedCommandID = Guid.Empty;
                 }
             }
@@ -428,7 +428,7 @@ namespace MixItUp.Base.Model.Currency
                             }
 
                             int totalcost = 0;
-                            CustomCommand command = null;
+                            CommandModelBase command = null;
                             if (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (item.HasBuyAmount)
@@ -491,7 +491,7 @@ namespace MixItUp.Base.Model.Currency
                                 specialIdentifiers["itemname"] = item.Name;
                                 specialIdentifiers["itemcost"] = totalcost.ToString();
                                 specialIdentifiers["currencyname"] = currency.Name;
-                                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                                await command.Perform(user, arguments: arguments, specialIdentifiers: specialIdentifiers);
                             }
                             return;
                         }
@@ -685,7 +685,7 @@ namespace MixItUp.Base.Model.Currency
                             specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
                             specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
                             specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
-                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.Username }, extraSpecialIdentifiers: specialIdentifiers);
+                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers);
                         }
 
                         this.tradeSender = null;

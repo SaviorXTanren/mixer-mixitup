@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -80,7 +81,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
 
-        public IEnumerable<ChatCommand> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
+        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
 
         public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };

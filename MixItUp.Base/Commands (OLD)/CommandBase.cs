@@ -268,10 +268,6 @@ namespace MixItUp.Base.Commands
 
         public CommandGroupSettings GetGroupSettings()
         {
-            if (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(this.GroupName))
-            {
-                return ChannelSession.Settings.CommandGroups[this.GroupName];
-            }
             return null;
         }
 

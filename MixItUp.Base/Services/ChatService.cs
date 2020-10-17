@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
@@ -34,7 +35,7 @@ namespace MixItUp.Base.Services
         event EventHandler DisplayUsersUpdated;
 
         event EventHandler ChatCommandsReprocessed;
-        IEnumerable<ChatCommand> ChatMenuCommands { get; }
+        IEnumerable<CommandModelBase> ChatMenuCommands { get; }
 
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
@@ -91,12 +92,12 @@ namespace MixItUp.Base.Services
         private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
-        public IEnumerable<ChatCommand> ChatMenuCommands { get { return this.chatMenuCommands; } }
-        private List<ChatCommand> chatMenuCommands = new List<ChatCommand>();
+        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        private List<CommandModelBase> chatMenuCommands = new List<CommandModelBase>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private LockedList<PermissionsCommandBase> chatCommands = new LockedList<PermissionsCommandBase>();
+        private LockedList<CommandModelBase> commands = new LockedList<CommandModelBase>();
 
         private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
 
@@ -265,25 +266,16 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.chatCommands.Clear();
+            this.commands.Clear();
             this.chatMenuCommands.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
+            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
-                this.chatCommands.Add(command);
-                if (command.Requirements.Settings.ShowOnChatMenu)
-                {
-                    this.chatMenuCommands.Add(command);
-                }
-            }
-
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
-            {
-                this.chatCommands.Add(command);
-            }
-
-            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
-            {
-                this.chatCommands.Add(command);
+                this.commands.Add(command);
+                // TODO
+                //if (command.Requirements.Settings.ShowOnChatMenu)
+                //{
+                //    this.chatMenuCommands.Add(command);
+                //}
             }
 
             this.ChatCommandsReprocessed(this, new EventArgs());
@@ -457,28 +449,29 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
-                    List<PermissionsCommandBase> commands = this.chatCommands.ToList();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
-                    {
-                        commands.Add(command);
-                    }
+                    // TODO
+                    //List<CommandModelBase> commands = this.commands.ToList();
+                    //foreach (CommandModelBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
+                    //{
+                    //    commands.Add(command);
+                    //}
 
-                    foreach (PermissionsCommandBase command in commands)
-                    {
-                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out arguments))
-                        {
-                            if (command.IsEnabled)
-                            {
-                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-                                await command.Perform(message.User, message.Platform, arguments: arguments);
-                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
-                                {
-                                    await this.DeleteMessage(message);
-                                }
-                            }
-                            break;
-                        }
-                    }
+                    //foreach (CommandModelBase command in commands)
+                    //{
+                    //    if (command.DoesTextMatchCommand(message.PlainTextMessage, out arguments))
+                    //    {
+                    //        if (command.IsEnabled)
+                    //        {
+                    //            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+                    //            await command.Perform(message.User, message.Platform, arguments: arguments);
+                    //            if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                    //            {
+                    //                await this.DeleteMessage(message);
+                    //            }
+                    //        }
+                    //        break;
+                    //    }
+                    //}
                 }
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())

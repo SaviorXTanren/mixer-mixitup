@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -213,19 +213,19 @@ namespace MixItUp.Base.Model.Currency
         public string TopUserSpecialIdentifier { get { return string.Format("{0}{1}", this.TopSpecialIdentifier, SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader); } }
 
         [JsonIgnore]
-        public CustomCommand RankChangedCommand
+        public CommandModelBase RankChangedCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.RankChangedCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.RankChangedCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.RankChangedCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.RankChangedCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.RankChangedCommandID);
                     this.RankChangedCommandID = Guid.Empty;
                 }
             }

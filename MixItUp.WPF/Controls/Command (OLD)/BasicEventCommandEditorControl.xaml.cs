@@ -111,11 +111,6 @@ namespace MixItUp.WPF.Controls.Command
                 newCommand.IsBasic = isBasic;
                 newCommand.Actions.Add(action);
 
-                if (this.command != null)
-                {
-                    ChannelSession.Settings.EventCommands.Remove(this.command);
-                }
-                ChannelSession.Settings.EventCommands.Add(newCommand);
 
                 await ChannelSession.SaveSettings();
 

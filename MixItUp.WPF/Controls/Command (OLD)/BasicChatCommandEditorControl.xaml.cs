@@ -136,17 +136,6 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
-                {
-                    if (command.IsEnabled && this.GetExistingCommand() != command)
-                    {
-                        if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
-                        {
-                            await DialogHelper.ShowMessage("There already exists an enabled, chat command that uses one of the command strings you have specified");
-                            return;
-                        }
-                    }
-                }
 
                 ActionBase action = this.actionControl.GetAction();
                 if (action == null)
@@ -170,12 +159,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.autoAddToChatCommands)
                 {
-                    if (this.command != null)
-                    {
-                        newCommand.ID = this.command.ID;
-                        ChannelSession.Settings.ChatCommands.Remove(this.command);
-                    }
-                    ChannelSession.Settings.ChatCommands.Add(newCommand);
+
                 }
 
                 this.CommandSavedSuccessfully(newCommand);

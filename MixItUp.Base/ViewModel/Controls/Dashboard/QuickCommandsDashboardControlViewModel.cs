@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using System;
@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
 {
     public class QuickCommandsDashboardControlViewModel : WindowControlViewModelBase
     {
-        public CommandBase CommandOne
+        public CommandModelBase CommandOne
         {
             get { return commandOne; }
             set
@@ -20,11 +20,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 this.NotifyPropertiesChanged();
             }
         }
-        private CommandBase commandOne;
+        private CommandModelBase commandOne;
         public string CommandOneName { get { return this.GetCommandName(this.CommandOne); } }
         public ICommand CommandOneCommand { get; set; }
 
-        public CommandBase CommandTwo
+        public CommandModelBase CommandTwo
         {
             get { return commandTwo; }
             set
@@ -34,11 +34,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 this.NotifyPropertiesChanged();
             }
         }
-        private CommandBase commandTwo;
+        private CommandModelBase commandTwo;
         public string CommandTwoName { get { return this.GetCommandName(this.CommandTwo); } }
         public ICommand CommandTwoCommand { get; set; }
 
-        public CommandBase CommandThree
+        public CommandModelBase CommandThree
         {
             get { return commandThree; }
             set
@@ -48,11 +48,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 this.NotifyPropertiesChanged();
             }
         }
-        private CommandBase commandThree;
+        private CommandModelBase commandThree;
         public string CommandThreeName { get { return this.GetCommandName(this.CommandThree); } }
         public ICommand CommandThreeCommand { get; set; }
 
-        public CommandBase CommandFour
+        public CommandModelBase CommandFour
         {
             get { return commandFour; }
             set
@@ -62,11 +62,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 this.NotifyPropertiesChanged();
             }
         }
-        private CommandBase commandFour;
+        private CommandModelBase commandFour;
         public string CommandFourName { get { return this.GetCommandName(this.CommandFour); } }
         public ICommand CommandFourCommand { get; set; }
 
-        public CommandBase CommandFive
+        public CommandModelBase CommandFive
         {
             get { return commandFive; }
             set
@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 this.NotifyPropertiesChanged();
             }
         }
-        private CommandBase commandFive;
+        private CommandModelBase commandFive;
         public string CommandFiveName { get { return this.GetCommandName(this.CommandFive); } }
         public ICommand CommandFiveCommand { get; set; }
 
@@ -100,7 +100,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
 
         public async Task<bool> CanSelectCommands()
         {
-            if (!ChannelSession.AllCommands.Any(c => !(c is PreMadeChatCommand)))
+            if (!ChannelSession.AllCommands.Any(c => !(c is PreMadeChatCommandModelBase)))
             {
                 await DialogHelper.ShowMessage(MixItUp.Base.Resources.QuickCommandSelectFail);
                 return false;
@@ -108,17 +108,17 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             return true;
         }
 
-        private CommandBase GetCommand(int index)
+        private CommandModelBase GetCommand(int index)
         {
             Guid id = ChannelSession.Settings.DashboardQuickCommands[index];
             if (id != Guid.Empty)
             {
-                return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(id));
+                return ChannelSession.Settings.GetCommand(id);
             }
             return null;
         }
 
-        private void AssignCommand(int index, CommandBase command)
+        private void AssignCommand(int index, CommandModelBase command)
         {
             if (command != null)
             {
@@ -130,9 +130,9 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             }
         }
 
-        private string GetCommandName(CommandBase command) { return (command != null) ? command.Name : MixItUp.Base.Resources.Unassigned; }
+        private string GetCommandName(CommandModelBase command) { return (command != null) ? command.Name : MixItUp.Base.Resources.Unassigned; }
 
-        private async Task RunCommand(CommandBase command)
+        private async Task RunCommand(CommandModelBase command)
         {
             if (command != null)
             {

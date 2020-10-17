@@ -123,27 +123,7 @@ namespace MixItUp.Base.Actions
                                 }
                                 else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                                 {
-                                    CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
 
-#pragma warning disable CS0612 // Type or member is obsolete
-                                    if (command == null && !string.IsNullOrEmpty(this.ResponseCommandName))
-                                    {
-                                        command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Name.Equals(this.ResponseCommandName));
-                                        if (command != null)
-                                        {
-                                            this.ResponseCommandID = command.ID;
-                                        }
-                                    }
-                                    this.ResponseCommandName = null;
-#pragma warning restore CS0612 // Type or member is obsolete
-
-                                    if (command != null)
-                                    {
-                                        string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                        string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, decodedWebRequestResult);
-
-                                        await command.Perform(user, this.platform, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
-                                    }
                                 }
                                 else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
                                 {

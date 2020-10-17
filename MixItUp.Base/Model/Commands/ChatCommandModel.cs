@@ -57,9 +57,6 @@ namespace MixItUp.Base.Model.Commands
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
-        public HashSet<string> Triggers { get; set; } = new HashSet<string>();
-
-        [DataMember]
         public bool IncludeExclamation { get; set; }
 
         [DataMember]
@@ -86,6 +83,8 @@ namespace MixItUp.Base.Model.Commands
         }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
+
+        public string TriggersString { get { return string.Join(" ", this.Triggers); } }
 
         public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
         {

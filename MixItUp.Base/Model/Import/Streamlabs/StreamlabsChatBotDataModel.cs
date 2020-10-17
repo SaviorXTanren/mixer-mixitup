@@ -164,18 +164,18 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             foreach (StreamlabsChatBotCommandModel command in this.Commands)
             {
                 command.ProcessData(currency, rank);
-                ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                //ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
             }
 
             foreach (StreamlabsChatBotTimerModel timer in this.Timers)
             {
                 StreamlabsChatBotCommandModel command = new StreamlabsChatBotCommandModel() { Command = timer.Name, Response = timer.Response, Enabled = timer.Enabled };
                 command.ProcessData(currency, rank);
-                ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                //ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
 
                 timer.Actions = command.Actions;
 
-                ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
+                //ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
             }
 
             foreach (string quote in this.Quotes)
@@ -252,24 +252,24 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                 statusChatText = string.Format("@$username has ${0} {1}!", currency.UserAmountSpecialIdentifier, currency.Name);
             }
             statusCommand.Actions.Add(new ChatAction(statusChatText));
-            ChannelSession.Settings.ChatCommands.Add(statusCommand);
+            //ChannelSession.Settings.ChatCommands.Add(statusCommand);
 
             ChatCommand addCommand = new ChatCommand("Add " + currency.Name, "add" + currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
             addCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
             addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", currency.Name)));
-            ChannelSession.Settings.ChatCommands.Add(addCommand);
+            //ChannelSession.Settings.ChatCommands.Add(addCommand);
 
             ChatCommand addAllCommand = new ChatCommand("Add All " + currency.Name, "addall" + currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
             addAllCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
             addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", currency.Name)));
-            ChannelSession.Settings.ChatCommands.Add(addAllCommand);
+            //ChannelSession.Settings.ChatCommands.Add(addAllCommand);
 
             if (!currency.IsRank)
             {
                 ChatCommand giveCommand = new ChatCommand("Give " + currency.Name, "give" + currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
                 giveCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
                 giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", currency.Name)));
-                ChannelSession.Settings.ChatCommands.Add(giveCommand);
+                //ChannelSession.Settings.ChatCommands.Add(giveCommand);
             }
         }
     }

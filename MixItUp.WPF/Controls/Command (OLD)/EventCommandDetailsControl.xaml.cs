@@ -58,13 +58,6 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.command == null)
                 {
-                    this.command = new EventCommand(this.EventType);
-                    if (ChannelSession.Settings.EventCommands.Any(se => se.EventCommandType.Equals(this.command.EventCommandType)))
-                    {
-                        await DialogHelper.ShowMessage("This event already exists");
-                        return null;
-                    }
-                    ChannelSession.Settings.EventCommands.Add(this.command);
                 }
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;

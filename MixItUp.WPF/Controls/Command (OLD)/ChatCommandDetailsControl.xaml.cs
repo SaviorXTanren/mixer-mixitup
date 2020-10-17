@@ -76,32 +76,12 @@ namespace MixItUp.WPF.Controls.Command
                 }
             }
 
-            foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
-            {
-                if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
-                {
-                    await DialogHelper.ShowMessage("There already exists a command with the same name");
-                    return false;
-                }
-            }
 
             IEnumerable<string> commandStrings = this.GetCommandStrings();
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
                 await DialogHelper.ShowMessage("Each chat triggers must be unique");
                 return false;
-            }
-
-            foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
-            {
-                if (command.IsEnabled && this.GetExistingCommand() != command)
-                {
-                    if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
-                    {
-                        await DialogHelper.ShowMessage("There already exists a command that uses one of the chat triggers you have specified");
-                        return false;
-                    }
-                }
             }
 
             return true;
@@ -125,11 +105,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
-                    if (this.AutoAddToChatCommands && !ChannelSession.Settings.ChatCommands.Contains(this.command))
-                    {
-                        ChannelSession.Settings.ChatCommands.Add(this.command);
-                    }
+
                 }
 
                 this.command.IncludeExclamationInCommands = this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault();
@@ -139,11 +115,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.GroupName = !string.IsNullOrEmpty(this.CommandGroupComboBox.Text) ? this.CommandGroupComboBox.Text : null;
                 if (!string.IsNullOrEmpty(this.CommandGroupComboBox.Text))
                 {
-                    if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
-                    {
-                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings(this.CommandGroupComboBox.Text);
-                    }
-                    ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].Name = this.CommandGroupComboBox.Text;
+
                 }
 
                 return this.command;

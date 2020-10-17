@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System;
@@ -53,14 +53,14 @@ namespace MixItUp.Base.Services
         {
             if (!ChannelSession.Settings.DisableAllTimers)
             {
-                Dictionary<string, List<TimerCommand>> commandGroups = new Dictionary<string, List<TimerCommand>>();
-                commandGroups[string.Empty] = new List<TimerCommand>();
+                Dictionary<string, List<TimerCommandModel>> commandGroups = new Dictionary<string, List<TimerCommandModel>>();
+                commandGroups[string.Empty] = new List<TimerCommandModel>();
                 foreach (var kvp in ChannelSession.Settings.CommandGroups)
                 {
-                    commandGroups[kvp.Key] = new List<TimerCommand>();
+                    commandGroups[kvp.Key] = new List<TimerCommandModel>();
                 }
 
-                foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
+                foreach (TimerCommandModel command in ChannelSession.TimerCommands)
                 {
                     if (command.IsEnabled)
                     {
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task RunTimerFromGroup(string groupName, IEnumerable<TimerCommand> timers)
+        private async Task RunTimerFromGroup(string groupName, IEnumerable<TimerCommandModel> timers)
         {
             if (timers != null && timers.Count() > 0)
             {

@@ -108,12 +108,6 @@ namespace MixItUp.WPF.Controls.Command
                 newCommand.IsBasic = isBasic;
                 newCommand.Actions.Add(action);
 
-                if (this.command != null)
-                {
-                    ChannelSession.Settings.TimerCommands.Remove(this.command);
-                    newCommand.ID = this.command.ID;
-                }
-                ChannelSession.Settings.TimerCommands.Add(newCommand);
                 this.CommandSavedSuccessfully(newCommand);
 
                 await ChannelSession.SaveSettings();

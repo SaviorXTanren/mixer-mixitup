@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -144,7 +143,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private string shopCommandText;
-        public CustomCommand ShopBuyCommand
+        public CommandModelBase ShopBuyCommand
         {
             get { return this.shopBuyCommand; }
             set
@@ -153,8 +152,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private CustomCommand shopBuyCommand;
-        public CustomCommand ShopSellCommand
+        private CommandModelBase shopBuyCommand;
+        public CommandModelBase ShopSellCommand
         {
             get { return this.shopSellCommand; }
             set
@@ -163,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private CustomCommand shopSellCommand;
+        private CommandModelBase shopSellCommand;
 
         public bool TradeEnabled
         {
@@ -185,7 +184,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             }
         }
         private string tradeCommandText;
-        public CustomCommand TradeCommand
+        public CommandModelBase TradeCommand
         {
             get { return this.tradeCommand; }
             set
@@ -194,7 +193,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private CustomCommand tradeCommand;
+        private CommandModelBase tradeCommand;
 
         public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values; } }
         public CurrencyModel SelectedShopCurrency
@@ -240,18 +239,19 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         {
             this.DefaultItemMaxAmount = 99;
 
-            this.ShopCommandText = "!shop";
-            CustomCommand buyCommand = new CustomCommand(InventoryWindowViewModel.ItemsBoughtCommandName);
-            buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
-            this.ShopBuyCommand = buyCommand;
-            CustomCommand sellCommand = new CustomCommand(InventoryWindowViewModel.ItemsSoldCommandName);
-            sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
-            this.ShopSellCommand = sellCommand;
+            // TODO
+            //this.ShopCommandText = "!shop";
+            //CustomCommand buyCommand = new CustomCommand(InventoryWindowViewModel.ItemsBoughtCommandName);
+            //buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            //this.ShopBuyCommand = buyCommand;
+            //CustomCommand sellCommand = new CustomCommand(InventoryWindowViewModel.ItemsSoldCommandName);
+            //sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            //this.ShopSellCommand = sellCommand;
 
-            this.TradeCommandText = "!trade";
-            CustomCommand tradeCommand = new CustomCommand(InventoryWindowViewModel.ItemsTradedCommandName);
-            tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
-            this.TradeCommand = tradeCommand;
+            //this.TradeCommandText = "!trade";
+            //CustomCommand tradeCommand = new CustomCommand(InventoryWindowViewModel.ItemsTradedCommandName);
+            //tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+            //this.TradeCommand = tradeCommand;
 
             this.SaveItemCommand = this.CreateCommand(async (parameter) =>
             {

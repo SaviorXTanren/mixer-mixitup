@@ -98,7 +98,7 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding TriggersString}" VerticalAlignment="Center" />
 
                                 <ComboBox Grid.Column="2" ItemsSource="{Binding PermissionsValues}" SelectedItem="{Binding SelectedPermission}" VerticalAlignment="Center">
                                     <ComboBox.ItemTemplate>
@@ -108,7 +108,7 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
-                                <TextBox Grid.Column="3" Text="{Binding CooldownString}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" />
+                                <TextBox Grid.Column="3" Text="{Binding Cooldown}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" />
 
                                 <Button Grid.Column="4" Command="{Binding TestCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
                                     <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

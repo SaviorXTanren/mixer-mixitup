@@ -109,14 +109,6 @@ namespace MixItUp.Base.Actions
                         }
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)
                         {
-                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
-                            if (command != null)
-                            {
-                                string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
-
-                                await command.Perform(user, this.platform, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
-                            }
                         }
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
                         {

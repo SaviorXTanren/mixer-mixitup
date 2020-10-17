@@ -15,12 +15,13 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         protected void SaveGameCommand(GameCommandBase newCommand, GameCommandBase existingCommand)
         {
-            if (existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(existingCommand);
-                newCommand.ID = existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            // TODO
+            //if (existingCommand != null)
+            //{
+            //    ChannelSession.Settings.GameCommands.Remove(existingCommand);
+            //    newCommand.ID = existingCommand.ID;
+            //}
+            //ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected CustomCommand CreateBasicChatCommand() { return new CustomCommand("Game Sub-Command"); }

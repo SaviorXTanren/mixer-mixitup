@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Window;
 using System;
@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
     {
         public ObservableCollection<AlertChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<AlertChatMessageViewModel>();
 
-        public IEnumerable<ChatCommand> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
+        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
 
         public event EventHandler ContextMenuCommandsChanged = delegate { };
 

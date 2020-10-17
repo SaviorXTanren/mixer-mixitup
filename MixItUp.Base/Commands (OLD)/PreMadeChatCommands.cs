@@ -103,20 +103,6 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     List<string> commandTriggers = new List<string>();
-                    foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
-                    {
-                        if (await command.Requirements.DoesMeetUserRoleRequirement(user))
-                        {
-                            if (command is ChatCommand && !((ChatCommand)command).IncludeExclamationInCommands)
-                            {
-                                commandTriggers.AddRange(command.Commands);
-                            }
-                            else
-                            {
-                                commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
-                            }
-                        }
-                    }
 
                     if (commandTriggers.Count > 0)
                     {
@@ -142,13 +128,6 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     List<string> commandTriggers = new List<string>();
-                    foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
-                    {
-                        if (command.IsEnabled && await command.Requirements.DoesMeetUserRoleRequirement(user))
-                        {
-                            commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
-                        }
-                    }
 
                     if (commandTriggers.Count > 0)
                     {
@@ -795,18 +774,6 @@ namespace MixItUp.Base.Commands
                         return;
                     }
 
-                    foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
-                    {
-                        if (command.IsEnabled)
-                        {
-                            if (command.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
-                            {
-                                await ChannelSession.Services.Chat.SendMessage("ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
-                                return;
-                            }
-                        }
-                    }
-
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
                         await ChannelSession.Services.Chat.SendMessage("ERROR: Cooldown must be 0 or greater");
@@ -821,11 +788,6 @@ namespace MixItUp.Base.Commands
 
                     string commandText = commandTextBuilder.ToString();
                     commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
-
-                    ChatCommand newCommand = new ChatCommand(commandTrigger, commandTrigger, new RequirementViewModel());
-                    newCommand.Requirements.Cooldown.Amount = cooldown;
-                    newCommand.Actions.Add(new ChatAction(commandText));
-                    ChannelSession.Settings.ChatCommands.Add(newCommand);
 
                     if (ChannelSession.Services.Chat != null)
                     {
@@ -853,12 +815,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
-                    if (command == null)
-                    {
-                        await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");
-                        return;
-                    }
+                    PermissionsCommandBase command = null;
 
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
@@ -909,12 +866,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
-                    if (command == null)
-                    {
-                        await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");
-                        return;
-                    }
+                    PermissionsCommandBase command = null;
 
                     command.IsEnabled = false;
 
@@ -1025,23 +977,4 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
-
-    #region Obsolete Pre-Made Commands
-
-    [Obsolete]
-    public class ObsoletePreMadeCommand : PreMadeChatCommand { public ObsoletePreMadeCommand() : base(string.Empty, string.Empty, 0, UserRoleEnum.User) { } }
-
-    [Obsolete]
-    public class Timeout1ChatCommand : ObsoletePreMadeCommand {  }
-
-    [Obsolete]
-    public class Timeout5ChatCommand : ObsoletePreMadeCommand { }
-
-    [Obsolete]
-    public class PurgeChatCommand : ObsoletePreMadeCommand { }
-
-    [Obsolete]
-    public class BanChatCommand : ObsoletePreMadeCommand { }
-
-    #endregion Obsolete Pre-Made Commands
 }

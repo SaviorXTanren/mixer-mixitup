@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Settings.Generic;
 using MixItUp.Base.ViewModels;

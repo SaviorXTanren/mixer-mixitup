@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
 {
     public class CommandGroupControlViewModel : ControlViewModelBase
     {
-        public CommandGroupSettings GroupSettings { get; set; }
+        public CommandGroupSettingsModel GroupSettings { get; set; }
 
         public string GroupName { get { return (this.GroupSettings != null) ? this.GroupSettings.Name : null; } }
         public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : MixItUp.Base.Resources.Ungrouped; } }
@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
             {
                 bool newIsEnabledState = !this.IsEnabled;
 
-                foreach (CommandBase command in ChannelSession.AllCommands)
+                foreach (CommandModelBase command in ChannelSession.AllCommands)
                 {
                     if (this.GroupName.Equals(command.GroupName))
                     {
@@ -50,7 +50,7 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
-        public SortableObservableCollection<CommandBase> Commands
+        public SortableObservableCollection<CommandModelBase> Commands
         {
             get { return this.commands; }
             set
@@ -59,25 +59,25 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
                 this.NotifyPropertyChanged();
             }
         }
-        private SortableObservableCollection<CommandBase> commands = new SortableObservableCollection<CommandBase>();
+        private SortableObservableCollection<CommandModelBase> commands = new SortableObservableCollection<CommandModelBase>();
 
-        private List<CommandBase> allCommands = new List<CommandBase>();
+        private List<CommandModelBase> allCommands = new List<CommandModelBase>();
 
-        public CommandGroupControlViewModel(CommandGroupSettings groupSettings, IEnumerable<CommandBase> commands)
+        public CommandGroupControlViewModel(CommandGroupSettingsModel groupSettings, IEnumerable<CommandModelBase> commands)
         {
             this.GroupSettings = groupSettings;
             this.allCommands.AddRange(commands);
             this.RefreshCommands();
         }
 
-        public void AddCommand(CommandBase command)
+        public void AddCommand(CommandModelBase command)
         {
             this.allCommands.Add(command);
             this.Commands.SortedInsert(command);
             this.NotifyPropertyChanged("HasCommands");
         }
 
-        public void RemoveCommand(CommandBase command)
+        public void RemoveCommand(CommandModelBase command)
         {
             this.allCommands.Remove(command);
             this.Commands.Remove(command);
@@ -94,12 +94,12 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
                 matchedCommands = this.allCommands
                     .Where(
                         c => c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                        c.CommandTriggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) ||
+                        c.Triggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) ||
                         (!string.IsNullOrEmpty(c.GroupName) && c.GroupName.Contains(filter, StringComparison.OrdinalIgnoreCase)))
                     .ToList();
             }
 
-            foreach (CommandBase command in matchedCommands)
+            foreach (CommandModelBase command in matchedCommands)
             {
                 this.Commands.SortedInsert(command);
             }

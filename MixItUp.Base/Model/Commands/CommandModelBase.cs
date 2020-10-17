@@ -41,7 +41,7 @@ namespace MixItUp.Base.Model.Commands
     }
 
     [DataContract]
-    public abstract class CommandModelBase
+    public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -57,6 +57,12 @@ namespace MixItUp.Base.Model.Commands
 
         [DataMember]
         public bool Unlocked { get; set; }
+
+        [DataMember]
+        public string GroupName { get; set; }
+
+        [DataMember]
+        public HashSet<string> Triggers { get; set; } = new HashSet<string>();
 
         [DataMember]
         public RequirementsSetModel Requirements { get; set; } = new RequirementsSetModel();

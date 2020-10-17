@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote.Items;
 using StreamingClient.Base.Util;
@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Controls.Remote.Items
         public RemoteCommandItemControlViewModel(RemoteCommandItemViewModel item)
             : base(item)
         {
-            CommandBase command = this.Command;
+            CommandModelBase command = this.Command;
             if (command != null)
             {
                 this.CommandType = EnumHelper.GetEnumName(command.Type);
@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Controls.Remote.Items
 
         public ICommand CommandSelectedCommand { get; private set; }
 
-        public IEnumerable<string> CommandTypes { get { return EnumHelper.GetEnumNames(ChannelSession.AllEnabledCommands.Select(c => c.Type).Distinct()); } }
+        public IEnumerable<string> CommandTypes { get { return EnumHelper.GetEnumNames(ChannelSession.AllCommands.Select(c => c.Type).Distinct()); } }
         public string CommandType
         {
             get { return this.commandType; }
@@ -46,22 +46,22 @@ namespace MixItUp.Base.ViewModel.Controls.Remote.Items
         }
         private string commandType;
 
-        public IEnumerable<CommandBase> Commands
+        public IEnumerable<CommandModelBase> Commands
         {
             get
             {
                 if (!string.IsNullOrEmpty(this.CommandType))
                 {
                     CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(this.CommandType);
-                    return ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType && !(c is PreMadeChatCommand)).OrderBy(c => c.Name);
+                    return ChannelSession.AllCommands.Where(c => c.Type == commandType && !(c is PreMadeChatCommandModelBase)).OrderBy(c => c.Name);
                 }
                 return null;
             }
         }
 
-        public CommandBase Command
+        public CommandModelBase Command
         {
-            get { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.GetTypedItem<RemoteCommandItemViewModel>().CommandID)); }
+            get { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.GetTypedItem<RemoteCommandItemViewModel>().CommandID)); }
             set
             {
                 if (value != null)

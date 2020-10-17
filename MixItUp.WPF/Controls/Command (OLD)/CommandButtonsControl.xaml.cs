@@ -79,8 +79,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else if (commandButtonsControl.DataContext is EventCommandItemViewModel)
                 {
-                    EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandButtonsControl.DataContext;
-                    return (T)((CommandBase)commandItem.Command);
+
                 }
             }
             return null;

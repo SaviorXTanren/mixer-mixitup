@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
@@ -771,10 +772,10 @@ namespace MixItUp.Base.Services.Twitch
             trigger.Arguments = arguments;
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
-            TwitchChannelPointsCommand command = ChannelSession.Settings.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
+            TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
             if (command != null)
             {
-                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                await command.Perform(user, arguments: arguments, specialIdentifiers: specialIdentifiers);
             }
 
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));

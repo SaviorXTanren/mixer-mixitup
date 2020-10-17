@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.TranslationLanguageComboBox.ItemsSource = await ChannelSession.Services.Translation.GetAvailableLanguages();
             this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<TranslationResponseActionTypeEnum>();
-            this.CommandResponseComboBox.ItemsSource = ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name);
+
 
             if (this.action != null)
             {
@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (this.action.ResponseAction == TranslationResponseActionTypeEnum.Command)
                 {
-                    this.CommandResponseComboBox.SelectedItem = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.action.ResponseCommandID));
+
                     this.CommandResponseArgumentsTextBox.Text = this.action.ResponseCommandArgumentsText;
                 }
                 else if (this.action.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)

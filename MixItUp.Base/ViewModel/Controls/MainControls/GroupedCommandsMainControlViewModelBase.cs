@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Controls.Commands;
 using MixItUp.Base.ViewModel.Window;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public GroupedCommandsMainControlViewModelBase(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
-        public void AddCommand(CommandBase command)
+        public void AddCommand(CommandModelBase command)
         {
             foreach (CommandGroupControlViewModel group in this.CommandGroups)
             {
@@ -37,15 +37,15 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             }
 
-            CommandGroupSettings groupSettings = null;
+            CommandGroupSettingsModel groupSettings = null;
             if (!string.IsNullOrEmpty(command.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
             {
                 groupSettings = ChannelSession.Settings.CommandGroups[command.GroupName];
             }
-            this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, new List<CommandBase>() { command }));
+            this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command }));
         }
 
-        public void RemoveCommand(CommandBase command)
+        public void RemoveCommand(CommandModelBase command)
         {
             foreach (CommandGroupControlViewModel group in this.CommandGroups)
             {
@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        protected abstract IEnumerable<CommandBase> GetCommands();
+        protected abstract IEnumerable<CommandModelBase> GetCommands();
 
         protected virtual void FilterCommands()
         {
@@ -72,10 +72,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         protected void FullRefresh()
         {
             this.CommandGroups.Clear();
-            IEnumerable<CommandBase> commands = this.GetCommands();
+            IEnumerable<CommandModelBase> commands = this.GetCommands();
             foreach (var group in commands.GroupBy(c => c.GroupName ?? "ZZZZZZZZZZZZZZZZZZZZZZZ").OrderBy(g => g.Key))
             {
-                CommandGroupSettings groupSettings = null;
+                CommandGroupSettingsModel groupSettings = null;
                 string groupName = group.First().GroupName;
                 if (!string.IsNullOrEmpty(groupName) && ChannelSession.Settings.CommandGroups.ContainsKey(groupName))
                 {

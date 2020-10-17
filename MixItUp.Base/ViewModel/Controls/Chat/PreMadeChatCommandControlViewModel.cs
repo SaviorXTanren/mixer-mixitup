@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
@@ -13,26 +13,26 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
     {
         public string Name { get { return this.command.Name; } }
 
-        public string CommandsString { get { return this.command.CommandsString; } }
+        public string TriggersString { get { return this.command.TriggersString; } }
 
         public IEnumerable<UserRoleEnum> PermissionsValues { get { return RoleRequirementViewModel.SelectableUserRoles(); } }
         public UserRoleEnum SelectedPermission
         {
-            get { return this.command.Requirements.Role.MixerRole; }
+            get { return this.command.Requirements.Role.Role; }
             set
             {
-                this.command.Requirements.Role.MixerRole = value;
+                this.command.Requirements.Role.Role = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }
         }
 
-        public string CooldownString
+        public int CooldownString
         {
-            get { return this.command.Requirements.Cooldown.Amount.ToString(); }
+            get { return int.Parse(this.command.Requirements.Cooldown.IndividualAmount); }
             set
             {
-                this.command.Requirements.Cooldown.Amount = this.GetPositiveIntFromString(value);
+                this.command.Requirements.Cooldown.IndividualAmount = value.ToString();
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }
@@ -52,17 +52,17 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public ICommand TestCommand { get; set; }
 
-        private PreMadeChatCommand command;
-        private PreMadeChatCommandSettings setting;
+        private PreMadeChatCommandModelBase command;
+        private PreMadeChatCommandSettingsModel setting;
 
-        public PreMadeChatCommandControlViewModel(PreMadeChatCommand command)
+        public PreMadeChatCommandControlViewModel(PreMadeChatCommandModelBase command)
         {
             this.command = command;
 
             this.setting = ChannelSession.Settings.PreMadeChatCommandSettings.FirstOrDefault(c => c.Name.Equals(this.command.Name));
             if (this.setting == null)
             {
-                this.setting = new PreMadeChatCommandSettings(this.command);
+                this.setting = new PreMadeChatCommandSettingsModel(this.command);
                 ChannelSession.Settings.PreMadeChatCommandSettings.Add(this.setting);
             }
 
@@ -77,8 +77,8 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
         {
             if (this.setting != null)
             {
-                this.setting.Permissions = this.command.Requirements.Role.MixerRole;
-                this.setting.Cooldown = this.command.Requirements.Cooldown.Amount;
+                this.setting.Role = this.command.Requirements.Role.Role;
+                this.setting.Cooldown = int.Parse(this.command.Requirements.Cooldown.Amount);
                 this.setting.IsEnabled = this.command.IsEnabled;
             }
         }
