@@ -71,11 +71,11 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.ChatCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.RemoveCommand(command);
-
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    // TODO
+                    //ChannelSession.Settings.ChatCommands.Remove(command);
+                    //await ChannelSession.SaveSettings();
+                    //this.viewModel.RemoveCommand(command);
+                    //ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             });
         }

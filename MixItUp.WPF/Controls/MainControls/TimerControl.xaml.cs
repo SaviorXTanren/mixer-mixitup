@@ -57,9 +57,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 TimerCommand command = commandButtonsControl.GetCommandFromCommandButtons<TimerCommand>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.TimerCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.RemoveCommand(command);
+                    // TODO
+                    //ChannelSession.Settings.TimerCommands.Remove(command);
+                    //await ChannelSession.SaveSettings();
+                    //this.viewModel.RemoveCommand(command);
                 }
             });
         }

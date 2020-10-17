@@ -16,8 +16,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected virtual void Window_CommandSaveSuccessfully(object sender, CommandBase command)
         {
-            this.viewModel.RemoveCommand(command);
-            this.viewModel.AddCommand(command);
+            // TODO
+            //this.viewModel.RemoveCommand(command);
+            //this.viewModel.AddCommand(command);
         }
 
         protected void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)

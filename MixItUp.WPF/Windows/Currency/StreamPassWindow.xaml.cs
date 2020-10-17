@@ -79,10 +79,11 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandButtonsControl button = (CommandButtonsControl)sender;
-            StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command.Command));
-            window.Show();
+            // TODO
+            //CommandButtonsControl button = (CommandButtonsControl)sender;
+            //StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command.Command));
+            //window.Show();
         }
 
         private void LevelCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
@@ -101,8 +102,9 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void DefaultLevelUpCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.DefaultLevelUpCommand));
-            window.Show();
+            // TODO
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.DefaultLevelUpCommand));
+            //window.Show();
         }
 
         private void DefaultLevelUpCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
@@ -121,11 +123,12 @@ namespace MixItUp.WPF.Windows.Currency
 
                     if (isNew)
                     {
-                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
-                        if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
-                        {
-                            customDialogControl.AddSelectedCommands();
-                        }
+                        // TODO
+                        //NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
+                        //if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
+                        //{
+                        //    customDialogControl.AddSelectedCommands();
+                        //}
                     }
 
                     this.Close();
@@ -135,13 +138,15 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void CustomLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.viewModel.AddCustomLevelUpCommand((CustomCommand)e);
-            this.viewModel.CustomLevelUpNumber = 0;
+            // TODO
+            //this.viewModel.AddCustomLevelUpCommand((CustomCommand)e);
+            //this.viewModel.CustomLevelUpNumber = 0;
         }
 
         private void DefaultLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.viewModel.DefaultLevelUpCommand = (CustomCommand)e;
+            // TODO
+            //this.viewModel.DefaultLevelUpCommand = (CustomCommand)e;
         }
     }
 }

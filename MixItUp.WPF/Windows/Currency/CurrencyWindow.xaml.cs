@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Currency;
@@ -54,9 +55,10 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
-            window.Show();
+            // TODO
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
+            //window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            //window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -114,11 +116,12 @@ namespace MixItUp.WPF.Windows.Currency
 
                     if (isNew)
                     {
-                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
-                        if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
-                        {
-                            customDialogControl.AddSelectedCommands();
-                        }
+                        // TODO
+                        //NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
+                        //if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
+                        //{
+                        //    customDialogControl.AddSelectedCommands();
+                        //}
                     }
 
                     this.Close();
@@ -126,9 +129,9 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void Window_CommandSaveSuccessfully(object sender, CommandModelBase e)
         {
-            this.viewModel.RankChangedCommand = (CustomCommand)e;
+            this.viewModel.RankChangedCommand = (CustomCommandModel)e;
         }
     }
 }

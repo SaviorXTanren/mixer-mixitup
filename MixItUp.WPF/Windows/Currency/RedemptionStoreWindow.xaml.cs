@@ -42,10 +42,11 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void CustomProductCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl button = (CommandButtonsControl)sender;
-            RedemptionStoreProductViewModel product = (RedemptionStoreProductViewModel)button.DataContext;
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(product.Command));
-            window.Show();
+            // TODO
+            //CommandButtonsControl button = (CommandButtonsControl)sender;
+            //RedemptionStoreProductViewModel product = (RedemptionStoreProductViewModel)button.DataContext;
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(product.Command));
+            //window.Show();
         }
 
         private void CustomProductCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
@@ -57,14 +58,16 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void ManualRedeemNeededCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.ManualRedeemNeededCommand));
-            window.Show();
+            // TODO
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.ManualRedeemNeededCommand));
+            //window.Show();
         }
 
         private void DefaultRedeemCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.DefaultRedemptionCommand));
-            window.Show();
+            // TODO
+            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.DefaultRedemptionCommand));
+            //window.Show();
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -78,11 +81,12 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void CustomProductNewCommandWindow_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            if (this.lastSelectedProductCommand != null)
-            {
-                this.lastSelectedProductCommand.Command = (CustomCommand)e;
-            }
-            this.lastSelectedProductCommand = null;
+            // TODO
+            //if (this.lastSelectedProductCommand != null)
+            //{
+            //    this.lastSelectedProductCommand.Command = (CustomCommand)e;
+            //}
+            //this.lastSelectedProductCommand = null;
         }
     }
 }

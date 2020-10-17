@@ -53,10 +53,11 @@ namespace MixItUp.WPF.Controls.MainControls
                 GameCommandBase command = commandButtonControl.GetCommandFromCommandButtons<GameCommandBase>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.GameCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.Refresh();
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    // TODO
+                    //ChannelSession.Settings.GameCommands.Remove(command);
+                    //await ChannelSession.SaveSettings();
+                    //this.viewModel.Refresh();
+                    //ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             });
         }

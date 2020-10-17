@@ -57,9 +57,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 ActionGroupCommand command = commandButtonsControl.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.ActionGroupCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.RemoveCommand(command);
+                    // TODO
+                    //ChannelSession.Settings.ActionGroupCommands.Remove(command);
+                    //await ChannelSession.SaveSettings();
+                    //this.viewModel.RemoveCommand(command);
                 }
             });
         }

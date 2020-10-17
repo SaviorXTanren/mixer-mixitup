@@ -57,9 +57,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.EventCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.RefreshEventCommands();
+                    // TODO
+                    //ChannelSession.Settings.EventCommands.Remove(command);
+                    //await ChannelSession.SaveSettings();
+                    //this.viewModel.RefreshEventCommands();
                 }
             });
         }
