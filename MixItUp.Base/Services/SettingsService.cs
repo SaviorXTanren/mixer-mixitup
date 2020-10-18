@@ -361,7 +361,7 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    string filePath = Path.Combine(backupPath, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
+                    string filePath = Path.Combine(backupPath, settings.Name + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
 
                     await this.SavePackagedBackup(settings, filePath);
 

@@ -64,18 +64,7 @@ namespace MixItUp.Base.Model.Settings
         #region Authentication
 
         [DataMember]
-        public uint MixerUserID { get; set; }
-        [DataMember]
-        public uint MixerChannelID { get; set; }
-
-        [JsonProperty]
-        public OAuthTokenModel TwitchUserOAuthToken { get; set; }
-        [JsonProperty]
-        public OAuthTokenModel TwitchBotOAuthToken { get; set; }
-        [JsonProperty]
-        public string TwitchUserID { get; set; }
-        [JsonProperty]
-        public string TwitchChannelID { get; set; }
+        public Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel> PlatformAuthentications { get; set; } = new Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel>();
 
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
@@ -718,11 +707,11 @@ namespace MixItUp.Base.Model.Settings
 
             if (ChannelSession.TwitchUserConnection != null)
             {
-                this.TwitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             }
             if (ChannelSession.TwitchBotConnection != null)
             {
-                this.TwitchBotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)
@@ -905,6 +894,14 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
+            foreach (StreamingPlatformTypeEnum platform in EnumHelper.GetEnumList<StreamingPlatformTypeEnum>())
+            {
+                if (!this.PlatformAuthentications.ContainsKey(platform))
+                {
+                    this.PlatformAuthentications[platform] = new PlatformAuthenticationSettingsModel(platform);
+                }
+            }
+
             // TODO
             //this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommandModel.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.");
             //this.GameQueueUserSelectedCommand = this.GameQueueUserSelectedCommand ?? CustomCommandModel.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");

@@ -169,7 +169,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
                         await ChannelSession.DisconnectTwitchBot();
-                        ChannelSession.Settings.TwitchBotOAuthToken = null;
+                        ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
                     }
                     this.BotAccountAvatar = null;
                     this.BotAccountUsername = null;

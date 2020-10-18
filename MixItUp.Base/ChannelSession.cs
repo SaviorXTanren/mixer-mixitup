@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Settings;
@@ -159,8 +160,12 @@ namespace MixItUp.Base
             ChannelSession.Settings = settings;
 
             // Twitch connection
+            if (!ChannelSession.Settings.PlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+            {
+                ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new PlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+            }
 
-            Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
+            Result<TwitchPlatformService> twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
             if (twitchResult.Success)
             {
                 ChannelSession.TwitchUserConnection = twitchResult.Value;
@@ -173,6 +178,8 @@ namespace MixItUp.Base
 
             if (userResult.Success)
             {
+                ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
+
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
@@ -185,9 +192,9 @@ namespace MixItUp.Base
                     return new Result("Failed to get V5 API Twitch user data");
                 }
 
-                if (settings.TwitchBotOAuthToken != null)
+                if (ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                 {
-                    twitchResult = await TwitchPlatformService.Connect(settings.TwitchBotOAuthToken);
+                    twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
                     if (twitchResult.Success)
                     {
                         ChannelSession.TwitchBotConnection = twitchResult.Value;
@@ -199,14 +206,14 @@ namespace MixItUp.Base
                     }
                     else
                     {
-                        settings.TwitchBotOAuthToken = null;
+                        ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
                         return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
                     }
                 }
             }
             else
             {
-                ChannelSession.Settings.TwitchUserOAuthToken = null;
+                ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
                 return userResult;
             }
 
@@ -332,7 +339,7 @@ namespace MixItUp.Base
                         {
                             IEnumerable<SettingsV3Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
 
-                            if (currentSettings.Any(s => !string.IsNullOrEmpty(s.TwitchChannelID) && string.Equals(s.TwitchChannelID, twitchChannelNew.id)))
+                            if (currentSettings.Any(s => !string.IsNullOrEmpty(s.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID) && string.Equals(s.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID, twitchChannelNew.id)))
                             {
                                 GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.display_name}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                                 return false;
@@ -342,20 +349,20 @@ namespace MixItUp.Base
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                        if (!string.IsNullOrEmpty(ChannelSession.Settings.TwitchUserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.TwitchUserID))
+                        if (!string.IsNullOrEmpty(ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.display_name} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.TwitchUserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.display_name} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                             GlobalEvents.ShowMessageBox("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
-                            ChannelSession.Settings.TwitchUserOAuthToken.accessToken = string.Empty;
-                            ChannelSession.Settings.TwitchUserOAuthToken.refreshToken = string.Empty;
-                            ChannelSession.Settings.TwitchUserOAuthToken.expiresIn = 0;
+                            ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
+                            ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
+                            ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
                             return false;
                         }
 
                         ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
 
-                        ChannelSession.Settings.TwitchUserID = ChannelSession.TwitchUserNewAPI.id;
-                        ChannelSession.Settings.TwitchChannelID = ChannelSession.TwitchUserNewAPI.id;
+                        ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = ChannelSession.TwitchUserNewAPI.id;
+                        ChannelSession.Settings.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = ChannelSession.TwitchUserNewAPI.id;
                     }
                     catch (Exception ex)
                     {
