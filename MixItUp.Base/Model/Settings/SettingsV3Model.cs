@@ -645,6 +645,22 @@ namespace MixItUp.Base.Model.Settings
                     }
                 });
 
+                ChannelSession.ChatCommands.Clear();
+                ChannelSession.EventCommands.Clear();
+                ChannelSession.TimerCommands.Clear();
+                ChannelSession.ActionGroupCommands.Clear();
+                ChannelSession.GameCommands.Clear();
+                ChannelSession.TwitchChannelPointsCommands.Clear();
+                foreach (CommandModelBase command in this.Commands.Values.ToList())
+                {
+                    if (command is ChatCommandModel) { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                    else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
+                    else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
+                    else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
+                    else if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
+                    else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+                }
+
                 foreach (CounterModel counter in this.Counters.Values.ToList())
                 {
                     if (counter.ResetOnLoad)
