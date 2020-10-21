@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Controls.Settings;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +36,14 @@ namespace MixItUp.WPF.Controls.Settings
         {
             Button button = (Button)sender;
             OverlayEndpointListingViewModel overlay = (OverlayEndpointListingViewModel)button.DataContext;
-            Clipboard.SetText(overlay.Address);
+            try
+            {
+                Clipboard.SetText(overlay.Address);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
     }
 }
