@@ -24,6 +24,8 @@ namespace MixItUp.Base.Model.Actions
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
 
+        private const string StartinCommercialBreakMessage = "Starting commercial break. Keep in mind you are still live and not all viewers will receive a commercial.";
+
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
         public static TwitchActionModel CreateUserAction(TwitchActionType type, string username)
@@ -134,7 +136,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
                 }
-                else if (!string.IsNullOrEmpty(response.message))
+                else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
                 }
