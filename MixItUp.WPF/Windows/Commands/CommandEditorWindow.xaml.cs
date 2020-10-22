@@ -99,9 +99,17 @@ namespace MixItUp.WPF.Windows.Commands
 
         protected override async Task OnLoaded()
         {
+            this.viewModel.CloseEditor += ViewModel_CloseEditor;
+            await this.viewModel.OnLoaded();
+
             this.DetailsContentControl.Content = this.editorDetailsControl;
 
             await base.OnLoaded();
+        }
+
+        private void ViewModel_CloseEditor(object sender, System.EventArgs e)
+        {
+            this.Close();
         }
     }
 }

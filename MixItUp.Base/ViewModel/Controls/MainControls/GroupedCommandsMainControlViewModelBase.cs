@@ -53,6 +53,22 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
+        public void FullRefresh()
+        {
+            this.CommandGroups.Clear();
+            IEnumerable<CommandModelBase> commands = this.GetCommands();
+            foreach (var group in commands.GroupBy(c => c.GroupName ?? "ZZZZZZZZZZZZZZZZZZZZZZZ").OrderBy(g => g.Key))
+            {
+                CommandGroupSettingsModel groupSettings = null;
+                string groupName = group.First().GroupName;
+                if (!string.IsNullOrEmpty(groupName) && ChannelSession.Settings.CommandGroups.ContainsKey(groupName))
+                {
+                    groupSettings = ChannelSession.Settings.CommandGroups[groupName];
+                }
+                this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, group));
+            }
+        }
+
         protected abstract IEnumerable<CommandModelBase> GetCommands();
 
         protected virtual void FilterCommands()
@@ -67,22 +83,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.FullRefresh();
             return base.OnVisibleInternal();
-        }
-
-        protected void FullRefresh()
-        {
-            this.CommandGroups.Clear();
-            IEnumerable<CommandModelBase> commands = this.GetCommands();
-            foreach (var group in commands.GroupBy(c => c.GroupName ?? "ZZZZZZZZZZZZZZZZZZZZZZZ").OrderBy(g => g.Key))
-            {
-                CommandGroupSettingsModel groupSettings = null;
-                string groupName = group.First().GroupName;
-                if (!string.IsNullOrEmpty(groupName) && ChannelSession.Settings.CommandGroups.ContainsKey(groupName))
-                {
-                    groupSettings = ChannelSession.Settings.CommandGroups[groupName];
-                }
-                this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, group));
-            }
         }
     }
 }

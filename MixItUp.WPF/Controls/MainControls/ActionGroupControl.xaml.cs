@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,12 +39,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            ActionGroupCommand command = commandButtonsControl.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
+            ActionGroupCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ActionGroupCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl(command));
-                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.Closed += Window_Closed;
                 window.Show();
             }
         }
@@ -53,23 +52,27 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                ActionGroupCommand command = commandButtonsControl.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
+                ActionGroupCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ActionGroupCommandModel>();
                 if (command != null)
                 {
-                    // TODO
-                    //ChannelSession.Settings.ActionGroupCommands.Remove(command);
-                    //await ChannelSession.SaveSettings();
-                    //this.viewModel.RemoveCommand(command);
+                    ChannelSession.ActionGroupCommands.Remove(command);
+                    ChannelSession.Settings.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
+                    this.viewModel.FullRefresh();
                 }
             });
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl());
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.ActionGroup);
+            window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.viewModel.FullRefresh();
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Actions;
 using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -45,6 +46,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
         public ICommand SaveCommand { get; private set; }
 
+        public event EventHandler CloseEditor = delegate { };
+
         private CommandModelBase existingCommand;
 
         public CommandEditorWindowViewModelBase(CommandModelBase existingCommand)
@@ -53,11 +56,6 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             this.existingCommand = existingCommand;
 
             this.Name = this.existingCommand.Name;
-            
-            foreach (ActionModelBase action in this.existingCommand.Actions)
-            {
-                this.AddAction(action);
-            }
         }
 
         public CommandEditorWindowViewModelBase()
@@ -107,13 +105,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
                         case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel(); break;
                     }
-
-                    if (editorViewModel != null)
-                    {
-                        editorViewModel.Initialize(this);
-                        await editorViewModel.OnLoaded();
-                        this.Actions.Add(editorViewModel);
-                    }
+                    await this.AddActionViewModel(editorViewModel);
                 }
             });
 
@@ -150,6 +142,11 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     return;
                 }
 
+                if (this.existingCommand != null)
+                {
+                    command.ID = this.existingCommand.ID;
+                }
+
                 foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
                 {
                     ActionModelBase action = await actionViewModel.GetAction();
@@ -164,6 +161,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 await ChannelSession.SaveSettings();
 
                 await this.SaveCommandToSettings(command);
+
+                this.CloseEditor(this, new EventArgs());
             });
         }
 
@@ -198,11 +197,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             ActionModelBase action = await actionViewModel.ValidateAndGetAction();
             if (action != null)
             {
-                actionViewModel = this.AddAction(action);
-                if (actionViewModel != null)
-                {
-                    await actionViewModel.OnLoaded();
-                }
+                await this.AddAction(action);
             }
         }
 
@@ -213,13 +208,16 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (ActionEditorControlViewModelBase actionEditor in this.Actions)
+            if (this.existingCommand != null)
             {
-                await actionEditor.OnLoaded();
+                foreach (ActionModelBase action in this.existingCommand.Actions)
+                {
+                    await this.AddAction(action);
+                }
             }
         }
 
-        private ActionEditorControlViewModelBase AddAction(ActionModelBase action)
+        private async Task AddAction(ActionModelBase action)
         {
             ActionEditorControlViewModelBase editorViewModel = null;
             switch (action.Type)
@@ -250,13 +248,17 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;
                 case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel((WebRequestActionModel)action); break;
             }
+            await this.AddActionViewModel(editorViewModel);
+        }
 
+        private async Task AddActionViewModel(ActionEditorControlViewModelBase editorViewModel)
+        {
             if (editorViewModel != null)
             {
                 editorViewModel.Initialize(this);
+                await editorViewModel.OnLoaded();
                 this.Actions.Add(editorViewModel);
             }
-            return editorViewModel;
         }
     }
 }

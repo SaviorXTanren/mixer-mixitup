@@ -17,19 +17,11 @@ namespace MixItUp.WPF.Controls.Actions
         public ActionEditorContainerControl()
         {
             InitializeComponent();
-
-            this.DataContextChanged += ActionEditorContainerControl_DataContextChanged;
         }
 
-        protected override async Task OnLoaded()
+        protected override Task OnLoaded()
         {
-            this.ActionContentControl.Content = this.Control;
-            await base.OnLoaded();
-        }
-
-        private void ActionEditorContainerControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (this.DataContext != null && this.DataContext is ActionEditorControlViewModelBase)
+            if (this.IsLoaded && this.DataContext != null && this.DataContext is ActionEditorControlViewModelBase && this.ActionContentControl.Content == null)
             {
                 this.ViewModel = (ActionEditorControlViewModelBase)this.DataContext;
                 switch (this.ViewModel.Type)
@@ -61,11 +53,12 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.WebRequest: this.Control = new WebRequestActionEditorControl(); break;
                 }
 
-                if (this.IsLoaded)
+                if (this.Control != null)
                 {
                     this.ActionContentControl.Content = this.Control;
                 }
             }
+            return Task.FromResult(0);
         }
     }
 }
