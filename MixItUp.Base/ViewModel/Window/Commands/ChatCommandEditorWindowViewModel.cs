@@ -123,10 +123,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
             ChatCommandModel c = (ChatCommandModel)command;
-            if (!ChannelSession.ChatCommands.Contains(c))
-            {
-                ChannelSession.ChatCommands.Add(c);
-            }
+            ChannelSession.ChatCommands.Remove(c);
+            ChannelSession.ChatCommands.Add(c);
             ChannelSession.Services.Chat.RebuildCommandTriggers();
             return Task.FromResult(0);
         }

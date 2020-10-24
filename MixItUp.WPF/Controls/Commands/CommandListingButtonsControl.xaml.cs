@@ -119,11 +119,7 @@ namespace MixItUp.WPF.Controls.Commands
             CommandModelBase command = this.GetCommandFromCommandButtons<CommandModelBase>();
             if (command != null)
             {
-                await command.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
-                if (command.Requirements.Cooldown != null)
-                {
-                    command.Requirements.Reset();
-                }
+                await command.TestPerform();
             }
         }
 

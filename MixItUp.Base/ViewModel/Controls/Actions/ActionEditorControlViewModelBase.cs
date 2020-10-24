@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 ActionModelBase action = await this.ValidateAndGetAction();
                 if (action != null)
                 {
-                    await action.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
+                    await action.TestPerform();
                 }
             });
 

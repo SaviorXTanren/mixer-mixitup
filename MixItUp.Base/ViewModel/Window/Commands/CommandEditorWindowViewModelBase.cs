@@ -16,6 +16,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 {
     public abstract class CommandEditorWindowViewModelBase : WindowViewModelBase
     {
+        public const string MixItUpCommandFileExtension = ".miucommand";
+
         public string Name
         {
             get { return this.name; }
@@ -42,9 +44,12 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             }
         }
         private ActionTypeEnum selectedActionType;
-        public ICommand AddCommand { get; private set; }
 
+        public ICommand AddCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
+        public ICommand TestCommand { get; private set; }
+        public ICommand ExportCommand { get; private set; }
+        public ICommand ImportCommand { get; private set; }
 
         public event EventHandler CloseEditor = delegate { };
 
@@ -111,58 +116,56 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
             this.SaveCommand = this.CreateCommand(async (parameter) =>
             {
-                List<Result> results = new List<Result>();
-
-                results.Add(await this.Validate());
-                results.AddRange(await this.Requirements.Validate());
-                foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
+                if (await this.ValidateCommand())
                 {
-                    results.Add(await actionViewModel.Validate());
-                }
-
-                if (results.Any(r => !r.Success))
-                {
-                    StringBuilder error = new StringBuilder();
-                    error.AppendLine(MixItUp.Base.Resources.TheFollowingErrorsMustBeFixed);
-                    error.AppendLine();
-                    foreach (Result result in results)
+                    CommandModelBase command = await this.BuildCommand();
+                    if (command != null)
                     {
-                        if (!result.Success)
+                        ChannelSession.Settings.SetCommand(command);
+                        await ChannelSession.SaveSettings();
+
+                        await this.SaveCommandToSettings(command);
+
+                        this.CloseEditor(this, new EventArgs());
+                    }
+                }
+            });
+
+            this.TestCommand = this.CreateCommand(async (parameter) =>
+            {
+                if (await this.ValidateCommand())
+                {
+                    CommandModelBase command = await this.BuildCommand();
+                    if (command != null)
+                    {
+                        await command.TestPerform();
+                    }
+                }
+            });
+
+            this.ExportCommand = this.CreateCommand(async (parameter) =>
+            {
+                if (await this.ValidateCommand())
+                {
+                    CommandModelBase command = await this.BuildCommand();
+                    if (command != null)
+                    {
+                        string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
+                        if (!string.IsNullOrEmpty(fileName))
                         {
-                            error.AppendLine(" - " + result.Message);
+                            await FileSerializerHelper.SerializeToFile(fileName, command);
                         }
                     }
-                    await DialogHelper.ShowMessage(error.ToString());
-                    return;
                 }
+            });
 
-                CommandModelBase command = await this.GetCommand();
-                if (command == null)
+            this.ImportCommand = this.CreateCommand(async (parameter) =>
+            {
+                string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    return;
+                    // TODO
                 }
-
-                if (this.existingCommand != null)
-                {
-                    command.ID = this.existingCommand.ID;
-                }
-
-                foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
-                {
-                    ActionModelBase action = await actionViewModel.GetAction();
-                    if (action == null)
-                    {
-                        return;
-                    }
-                    command.Actions.Add(action);
-                }
-
-                ChannelSession.Settings.SetCommand(command);
-                await ChannelSession.SaveSettings();
-
-                await this.SaveCommandToSettings(command);
-
-                this.CloseEditor(this, new EventArgs());
             });
         }
 
@@ -259,6 +262,61 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 await editorViewModel.OnLoaded();
                 this.Actions.Add(editorViewModel);
             }
+        }
+
+        private async Task<bool> ValidateCommand()
+        {
+            List<Result> results = new List<Result>();
+
+            results.Add(await this.Validate());
+            results.AddRange(await this.Requirements.Validate());
+            foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
+            {
+                results.Add(await actionViewModel.Validate());
+            }
+
+            if (results.Any(r => !r.Success))
+            {
+                StringBuilder error = new StringBuilder();
+                error.AppendLine(MixItUp.Base.Resources.TheFollowingErrorsMustBeFixed);
+                error.AppendLine();
+                foreach (Result result in results)
+                {
+                    if (!result.Success)
+                    {
+                        error.AppendLine(" - " + result.Message);
+                    }
+                }
+                await DialogHelper.ShowMessage(error.ToString());
+                return false;
+            }
+            return true;
+        }
+
+        private async Task<CommandModelBase> BuildCommand()
+        {
+            CommandModelBase command = await this.GetCommand();
+            if (command == null)
+            {
+                return null;
+            }
+
+            if (this.existingCommand != null)
+            {
+                command.ID = this.existingCommand.ID;
+            }
+
+            foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
+            {
+                ActionModelBase action = await actionViewModel.GetAction();
+                if (action == null)
+                {
+                    return null;
+                }
+                command.Actions.Add(action);
+            }
+
+            return command;
         }
     }
 }

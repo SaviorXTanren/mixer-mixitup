@@ -223,6 +223,15 @@ namespace MixItUp.Base.Model.Commands
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
+        public virtual async Task TestPerform()
+        {
+            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
+            if (this.Requirements.Cooldown != null)
+            {
+                this.Requirements.Reset();
+            }
+        }
+
         public async Task Perform() { await this.Perform(ChannelSession.GetCurrentUser()); }
 
         public async Task Perform(UserViewModel user) { await this.Perform(user, StreamingPlatformTypeEnum.None, null, null); }

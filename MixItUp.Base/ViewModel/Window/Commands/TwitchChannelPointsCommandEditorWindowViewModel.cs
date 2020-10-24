@@ -26,10 +26,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
             TwitchChannelPointsCommandModel c = (TwitchChannelPointsCommandModel)command;
-            if (!ChannelSession.TwitchChannelPointsCommands.Contains(c))
-            {
-                ChannelSession.TwitchChannelPointsCommands.Add(c);
-            }
+            ChannelSession.TwitchChannelPointsCommands.Remove(c);
+            ChannelSession.TwitchChannelPointsCommands.Add(c);
             return Task.FromResult(0);
         }
     }
