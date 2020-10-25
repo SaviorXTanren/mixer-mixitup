@@ -83,7 +83,7 @@ namespace MixItUp.WPF.Windows.Commands
             : this()
         {
             this.editorDetailsControl = new EventCommandEditorDetailsControl();
-            this.DataContext = this.ViewModel = new EventCommandEditorWindowViewModel(eventType);
+            this.DataContext = this.ViewModel = this.viewModel = new EventCommandEditorWindowViewModel(eventType);
 
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };

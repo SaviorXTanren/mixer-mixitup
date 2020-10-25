@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,22 +28,20 @@ namespace MixItUp.WPF.Controls.MainControls
             return Task.FromResult(0);
         }
 
-        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
+        private void NewEventCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            EventCommandItemViewModel eventCommand = (EventCommandItemViewModel)button.DataContext;
-            CommandWindow window = new CommandWindow(new EventCommandDetailsControl(eventCommand.EventType));
+            EventCommandItemViewModel eventCommand = (EventCommandItemViewModel)((Button)sender).DataContext;
+            CommandEditorWindow window = new CommandEditorWindow(eventCommand.EventType);
             window.Closed += Window_Closed;
             window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
+            EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new EventCommandDetailsControl(command));
+                CommandEditorWindow window = new CommandEditorWindow(command);
                 window.Closed += Window_Closed;
                 window.Show();
             }
@@ -53,21 +51,20 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
+                EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
                 if (command != null)
                 {
-                    // TODO
-                    //ChannelSession.Settings.EventCommands.Remove(command);
-                    //await ChannelSession.SaveSettings();
-                    //this.viewModel.RefreshEventCommands();
+                    ChannelSession.EventCommands.Remove(command);
+                    ChannelSession.Settings.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
+                    this.viewModel.RefreshCommands();
                 }
             });
         }
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            this.viewModel.RefreshEventCommands();
+            this.viewModel.RefreshCommands();
         }
     }
 }

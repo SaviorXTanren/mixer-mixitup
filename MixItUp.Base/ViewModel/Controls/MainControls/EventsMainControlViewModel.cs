@@ -94,10 +94,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public EventsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.RefreshEventCommands();
+            this.RefreshCommands();
         }
 
-        public void RefreshEventCommands()
+        public void RefreshCommands()
         {
             this.EventCommands.Clear();
 
