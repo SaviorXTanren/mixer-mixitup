@@ -82,10 +82,5 @@ namespace MixItUp.WPF.Controls.MainControls
                 parent.RaiseEvent(eventArg);
             }
         }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.viewModel.FullRefresh();
-        }
     }
 }

@@ -27,7 +27,7 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -35,7 +35,7 @@
             <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
         </Grid>
 
-        <TextBox Grid.Column="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />
+        <TextBox Grid.Row="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
