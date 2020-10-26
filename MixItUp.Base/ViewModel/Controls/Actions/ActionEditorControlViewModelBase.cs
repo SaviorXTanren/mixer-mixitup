@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private bool enabled = true;
+        private bool enabled;
 
         private CommandEditorWindowViewModelBase commandEditorViewModel;
 
@@ -52,7 +52,11 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.Enabled = action.Enabled;
         }
 
-        public ActionEditorControlViewModelBase() { }
+        public ActionEditorControlViewModelBase()
+        {
+            this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
+            this.Enabled = true;
+        }
 
         protected override Task OnLoadedInternal()
         {
