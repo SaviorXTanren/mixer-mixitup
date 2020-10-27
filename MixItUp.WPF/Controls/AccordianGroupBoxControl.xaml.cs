@@ -15,6 +15,10 @@ namespace MixItUp.WPF.Controls
         public event RoutedEventHandler Maximized;
         public event RoutedEventHandler Minimized;
 
+        // Using a DependencyProperty as the backing store for IsMinimized.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsMinimizedProperty =
+            DependencyProperty.Register("IsMinimized", typeof(bool), typeof(AccordianGroupBoxControl), new PropertyMetadata(false));
+
         public AccordianGroupBoxControl()
         {
             InitializeComponent();
@@ -27,10 +31,6 @@ namespace MixItUp.WPF.Controls
             get { return (bool)GetValue(IsMinimizedProperty); }
             set { SetValue(IsMinimizedProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for IsMinimized.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsMinimizedProperty =
-            DependencyProperty.Register("IsMinimized", typeof(bool), typeof(AccordianGroupBoxControl), new PropertyMetadata(false));
 
         public bool IsUIMinimized { get { return this.Height == MinimizedGroupBoxHeight; } }
 
@@ -48,14 +48,6 @@ namespace MixItUp.WPF.Controls
             this.Maximized?.Invoke(this, new RoutedEventArgs());
         }
 
-        private void AccordianGroupBoxControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (this.IsMinimized)
-            {
-                this.Minimize();
-            }
-        }
-
         protected override void OnHeaderChanged(object oldHeader, object newHeader)
         {
             base.OnHeaderChanged(oldHeader, newHeader);
@@ -64,6 +56,14 @@ namespace MixItUp.WPF.Controls
             {
                 header.MouseLeftButtonUp -= Header_MouseLeftButtonUp;
                 header.MouseLeftButtonUp += Header_MouseLeftButtonUp;
+            }
+        }
+
+        private void AccordianGroupBoxControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.IsMinimized)
+            {
+                this.Minimize();
             }
         }
 

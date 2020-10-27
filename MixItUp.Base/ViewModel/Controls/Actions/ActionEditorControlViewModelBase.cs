@@ -1,9 +1,7 @@
-﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -44,12 +42,30 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         }
         private bool enabled;
 
+        public bool IsMinimized
+        {
+            get { return this.isMinimized; }
+            set
+            {
+                this.isMinimized = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowNameTextBlock");
+                this.NotifyPropertyChanged("ShowNameTextBox");
+            }
+        }
+        private bool isMinimized;
+
+        public bool ShowNameTextBlock { get { return this.IsMinimized; } }
+
+        public bool ShowNameTextBox { get { return !this.IsMinimized; } }
+
         private CommandEditorWindowViewModelBase commandEditorViewModel;
 
         public ActionEditorControlViewModelBase(ActionModelBase action)
         {
             this.Name = action.Name;
             this.Enabled = action.Enabled;
+            this.IsMinimized = true;
         }
 
         public ActionEditorControlViewModelBase()
