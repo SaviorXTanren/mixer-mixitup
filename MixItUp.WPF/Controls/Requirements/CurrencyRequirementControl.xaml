@@ -16,12 +16,16 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid MinWidth="300" MinHeight="100">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
+        <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.CurrencyRequirement}" HorizontalAlignment="Center" TextDecorations="Underline" FontWeight="Bold" />
+
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,5">
@@ -45,6 +49,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="80" Style="{StaticResource MaterialDesignRaisedButton}" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+        <Button Grid.Row="4" Command="{Binding AddItemCommand}" Width="80" Style="{StaticResource MaterialDesignRaisedButton}" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

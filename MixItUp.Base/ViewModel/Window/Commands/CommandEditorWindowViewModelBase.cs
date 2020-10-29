@@ -61,6 +61,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             this.existingCommand = existingCommand;
 
             this.Name = this.existingCommand.Name;
+            this.Requirements = new RequirementsSetViewModel(this.existingCommand.Requirements);
         }
 
         public CommandEditorWindowViewModelBase()
@@ -305,6 +306,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             {
                 command.ID = this.existingCommand.ID;
             }
+            command.Requirements = this.Requirements.GetRequirements();
 
             foreach (ActionEditorControlViewModelBase actionViewModel in this.Actions)
             {

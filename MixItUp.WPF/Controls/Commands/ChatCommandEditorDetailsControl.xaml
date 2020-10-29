@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:RequirementsControls="clr-namespace:MixItUp.WPF.Controls.Requirements"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:CommandEditorDetailsControlBase.Resources>
@@ -17,49 +18,59 @@
     </local:CommandEditorDetailsControlBase.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            
-            <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+            </Grid>
+
+            <TextBox Grid.Row="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeExclamation}" IsEnabled="{Binding IncludeExclamationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="6" IsChecked="{Binding Wildcards}" />
+
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="10" IsChecked="{Binding Unlocked}" />
+            </Grid>
         </Grid>
 
-        <TextBox Grid.Row="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />
-
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeExclamation}" IsEnabled="{Binding IncludeExclamationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="6" IsChecked="{Binding Wildcards}" />
-
-            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <ToggleButton Grid.Column="10" IsChecked="{Binding Unlocked}" />
-        </Grid>
+        <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding Requirements}" />
     </Grid>
 </local:CommandEditorDetailsControlBase>
