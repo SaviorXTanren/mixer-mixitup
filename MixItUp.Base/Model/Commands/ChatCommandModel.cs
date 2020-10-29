@@ -84,8 +84,6 @@ namespace MixItUp.Base.Model.Commands
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
-        public string TriggersString { get { return string.Join(" ", this.Triggers); } }
-
         public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
         {
             if (this.Wildcards)

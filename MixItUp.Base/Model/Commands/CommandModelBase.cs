@@ -221,6 +221,8 @@ namespace MixItUp.Base.Model.Commands
         [JsonIgnore]
         protected abstract SemaphoreSlim CommandLockSemaphore { get; }
 
+        public string TriggersString { get { return string.Join(" ", this.Triggers); } }
+
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
         public virtual async Task TestPerform()
