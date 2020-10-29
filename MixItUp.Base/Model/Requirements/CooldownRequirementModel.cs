@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                if (CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
+                if (!string.IsNullOrEmpty(this.GroupName) && CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
                 {
                     timeLeft = CooldownRequirementModel.groupCooldowns[this.GroupName].AddSeconds(amount) - DateTimeOffset.Now;
                 }
@@ -116,7 +116,10 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
+                if (!string.IsNullOrEmpty(this.GroupName))
+                {
+                    CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
+                }
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
@@ -133,7 +136,10 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
-                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+                if (!string.IsNullOrEmpty(this.GroupName))
+                {
+                    CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+                }
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
@@ -145,7 +151,10 @@ namespace MixItUp.Base.Model.Requirements
         public override void Reset()
         {
             this.globalCooldown = DateTimeOffset.MinValue;
-            CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+            if (!string.IsNullOrEmpty(this.GroupName) && CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
+            {
+                CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.MinValue;
+            }
             this.individualCooldowns.Clear();
         }
     }
