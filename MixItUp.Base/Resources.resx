@@ -3410,4 +3410,28 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ChatCommandMissingTriggers" xml:space="preserve">
     <value>Missing chat triggers</value>
   </data>
+  <data name="GameQueueUserJoinedCommandName" xml:space="preserve">
+    <value>Game Queue Used Joined</value>
+  </data>
+  <data name="GameQueueUserSelectedCommandName" xml:space="preserve">
+    <value>Game Queue Used Selected</value>
+  </data>
+  <data name="InventoryItemsBoughtCommandName" xml:space="preserve">
+    <value>Shop Items Bought</value>
+  </data>
+  <data name="InventoryItemsSoldCommandName" xml:space="preserve">
+    <value>Shop Items Sold</value>
+  </data>
+  <data name="InventoryItemsTradedCommandName" xml:space="preserve">
+    <value>Items Traded</value>
+  </data>
+  <data name="ModerationStrikeCommandName" xml:space="preserve">
+    <value>Moderation Strike</value>
+  </data>
+  <data name="RedemptionStoreDefaultRedemptionCommandName" xml:space="preserve">
+    <value>Redemption Store Default Redemption</value>
+  </data>
+  <data name="RedemptionStoreManualRedeemNeededCommandName" xml:space="preserve">
+    <value>Redemption Store Manual Redeem Needed</value>
+  </data>
 </root>

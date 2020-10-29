@@ -966,13 +966,13 @@ namespace MixItUp.Base.Model.Settings
 
             if (this.GetCustomCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
-                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                CustomCommand command = CustomCommand.BasicChatCommand(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
                 this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
                 this.SetCustomCommand(command);
             }
             if (this.GetCustomCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
-                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
+                CustomCommand command = CustomCommand.BasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, "@$username just redeemed $productname");
                 this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
                 this.SetCustomCommand(command);
             }

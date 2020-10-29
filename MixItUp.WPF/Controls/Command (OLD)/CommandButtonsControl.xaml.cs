@@ -255,21 +255,21 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else if (command is CustomCommand)
                 {
-                    if (command.Name.Equals(InventoryWindowViewModel.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindowViewModel.ItemsSoldCommandName))
-                    {
-                        extraSpecialIdentifiers["itemtotal"] = "5";
-                        extraSpecialIdentifiers["itemname"] = "Chocolate Bars";
-                        extraSpecialIdentifiers["itemcost"] = "500";
-                        extraSpecialIdentifiers["currencyname"] = "CURRENCY_NAME";
-                    }
-                    else if (command.Name.Contains("Moderation Strike"))
+                    //if (command.Name.Equals(InventoryWindowViewModel.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindowViewModel.ItemsSoldCommandName))
+                    //{
+                    //    extraSpecialIdentifiers["itemtotal"] = "5";
+                    //    extraSpecialIdentifiers["itemname"] = "Chocolate Bars";
+                    //    extraSpecialIdentifiers["itemcost"] = "500";
+                    //    extraSpecialIdentifiers["currencyname"] = "CURRENCY_NAME";
+                    //}
+                    if (command.Name.Contains("Moderation Strike"))
                     {
                         extraSpecialIdentifiers[ModerationService.ModerationReasonSpecialIdentifier] = "Bad Stuff";
                     }
-                    else if (command.Name.Equals(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName) || command.Name.Equals(RedemptionStorePurchaseModel.DefaultRedemptionCommandName))
-                    {
-                        extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = "Test Product";
-                    }
+                    //else if (command.Name.Equals(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName) || command.Name.Equals(RedemptionStorePurchaseModel.DefaultRedemptionCommandName))
+                    //{
+                    //    extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = "Test Product";
+                    //}
                     else
                     {
                         extraSpecialIdentifiers["queueposition"] = "1";

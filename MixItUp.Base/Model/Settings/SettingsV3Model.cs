@@ -919,8 +919,8 @@ namespace MixItUp.Base.Model.Settings
             }
 
             // TODO
-            //this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommandModel.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.");
-            //this.GameQueueUserSelectedCommand = this.GameQueueUserSelectedCommand ?? CustomCommandModel.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
+            //this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommandModel.BasicChatCommand(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, "You are #$queueposition in the queue to play.");
+            //this.GameQueueUserSelectedCommand = this.GameQueueUserSelectedCommand ?? CustomCommandModel.BasicChatCommand(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, "It's time to play @$username! Listen carefully for instructions on how to join...");
 
             //this.GiveawayStartedReminderCommand = this.GiveawayStartedReminderCommand ?? CustomCommandModel.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
             //this.GiveawayUserJoinedCommand = this.GiveawayUserJoinedCommand ?? CustomCommandModel.BasicChatCommand("Giveaway User Joined");

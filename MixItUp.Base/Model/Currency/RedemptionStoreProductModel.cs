@@ -87,9 +87,6 @@ namespace MixItUp.Base.Model.Currency
     [DataContract]
     public class RedemptionStorePurchaseModel
     {
-        public const string ManualRedemptionNeededCommandName = "Redemption Store Manual Redeem Needed";
-        public const string DefaultRedemptionCommandName = "Redemption Store Default Redemption";
-
         public static async Task Purchase(UserViewModel user, IEnumerable<string> arguments)
         {
             if (arguments.Count() == 0)

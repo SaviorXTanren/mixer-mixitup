@@ -73,9 +73,9 @@ namespace MixItUp.Base.Model.Actions
         [JsonIgnore]
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
 
-        public virtual async Task TestPerform()
+        public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
-            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
+            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers);
         }
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)

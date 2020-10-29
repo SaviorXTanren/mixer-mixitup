@@ -117,45 +117,36 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
             this.SaveCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await this.ValidateCommand())
+                CommandModelBase command = await this.ValidateAndBuildCommand();
+                if (command != null)
                 {
-                    CommandModelBase command = await this.BuildCommand();
-                    if (command != null)
-                    {
-                        ChannelSession.Settings.SetCommand(command);
-                        await ChannelSession.SaveSettings();
+                    ChannelSession.Settings.SetCommand(command);
+                    await ChannelSession.SaveSettings();
 
-                        await this.SaveCommandToSettings(command);
+                    await this.SaveCommandToSettings(command);
 
-                        this.CloseEditor(this, new EventArgs());
-                    }
+                    this.CloseEditor(this, new EventArgs());
                 }
             });
 
             this.TestCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await this.ValidateCommand())
+                CommandModelBase command = await this.ValidateAndBuildCommand();
+                if (command != null)
                 {
-                    CommandModelBase command = await this.BuildCommand();
-                    if (command != null)
-                    {
-                        await command.TestPerform();
-                    }
+                    await command.TestPerform();
                 }
             });
 
             this.ExportCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await this.ValidateCommand())
+                CommandModelBase command = await this.ValidateAndBuildCommand();
+                if (command != null)
                 {
-                    CommandModelBase command = await this.BuildCommand();
-                    if (command != null)
+                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
+                    if (!string.IsNullOrEmpty(fileName))
                     {
-                        string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
-                        if (!string.IsNullOrEmpty(fileName))
-                        {
-                            await FileSerializerHelper.SerializeToFile(fileName, command);
-                        }
+                        await FileSerializerHelper.SerializeToFile(fileName, command);
                     }
                 }
             });
@@ -265,7 +256,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             }
         }
 
-        private async Task<bool> ValidateCommand()
+        public async Task<CommandModelBase> ValidateAndBuildCommand()
         {
             List<Result> results = new List<Result>();
 
@@ -289,13 +280,9 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     }
                 }
                 await DialogHelper.ShowMessage(error.ToString());
-                return false;
+                return null;
             }
-            return true;
-        }
 
-        private async Task<CommandModelBase> BuildCommand()
-        {
             CommandModelBase command = await this.GetCommand();
             if (command == null)
             {

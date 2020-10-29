@@ -225,9 +225,11 @@ namespace MixItUp.Base.Model.Commands
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
+        public virtual Dictionary<string, string> GetUniqueSpecialIdentifiers() { return new Dictionary<string, string>(); }
+
         public virtual async Task TestPerform()
         {
-            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, new Dictionary<string, string>());
+            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, this.GetUniqueSpecialIdentifiers());
             if (this.Requirements.Cooldown != null)
             {
                 this.Requirements.Reset();

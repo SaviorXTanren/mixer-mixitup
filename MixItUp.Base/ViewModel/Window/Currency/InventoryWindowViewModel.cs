@@ -13,10 +13,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
 {
     public class InventoryWindowViewModel : WindowViewModelBase
     {
-        public const string ItemsBoughtCommandName = "Shop Items Bought";
-        public const string ItemsSoldCommandName = "Shop Items Sold";
-        public const string ItemsTradedCommandName = "Items Traded";
-
         public InventoryModel Inventory
         {
             get { return this.inventory; }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
@@ -78,10 +79,14 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         {
             this.PlayCommand = this.CreateCommand(async (parameter) =>
             {
-                ActionModelBase action = await this.ValidateAndGetAction();
-                if (action != null)
+                CommandModelBase command = await this.commandEditorViewModel.ValidateAndBuildCommand();
+                if (command != null)
                 {
-                    await action.TestPerform();
+                    ActionModelBase action = await this.ValidateAndGetAction();
+                    if (action != null)
+                    {
+                        await action.TestPerform(command.GetUniqueSpecialIdentifiers());
+                    }
                 }
             });
 

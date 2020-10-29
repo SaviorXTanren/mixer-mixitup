@@ -3553,6 +3553,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game Queue Used Joined.
+        /// </summary>
+        public static string GameQueueUserJoinedCommandName {
+            get {
+                return ResourceManager.GetString("GameQueueUserJoinedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Queue Used Selected.
+        /// </summary>
+        public static string GameQueueUserSelectedCommandName {
+            get {
+                return ResourceManager.GetString("GameQueueUserSelectedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Games.
         /// </summary>
         public static string Games {
@@ -4053,6 +4071,33 @@ namespace MixItUp.Base {
         public static string Inventory {
             get {
                 return ResourceManager.GetString("Inventory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop Items Bought.
+        /// </summary>
+        public static string InventoryItemsBoughtCommandName {
+            get {
+                return ResourceManager.GetString("InventoryItemsBoughtCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop Items Sold.
+        /// </summary>
+        public static string InventoryItemsSoldCommandName {
+            get {
+                return ResourceManager.GetString("InventoryItemsSoldCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items Traded.
+        /// </summary>
+        public static string InventoryItemsTradedCommandName {
+            get {
+                return ResourceManager.GetString("InventoryItemsTradedCommandName", resourceCulture);
             }
         }
         
@@ -5142,6 +5187,15 @@ namespace MixItUp.Base {
         public static string ModerationReasonOptional {
             get {
                 return ResourceManager.GetString("ModerationReasonOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moderation Strike.
+        /// </summary>
+        public static string ModerationStrikeCommandName {
+            get {
+                return ResourceManager.GetString("ModerationStrikeCommandName", resourceCulture);
             }
         }
         
@@ -6420,6 +6474,24 @@ namespace MixItUp.Base {
         public static string RedemptionStore {
             get {
                 return ResourceManager.GetString("RedemptionStore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redemption Store Default Redemption.
+        /// </summary>
+        public static string RedemptionStoreDefaultRedemptionCommandName {
+            get {
+                return ResourceManager.GetString("RedemptionStoreDefaultRedemptionCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redemption Store Manual Redeem Needed.
+        /// </summary>
+        public static string RedemptionStoreManualRedeemNeededCommandName {
+            get {
+                return ResourceManager.GetString("RedemptionStoreManualRedeemNeededCommandName", resourceCulture);
             }
         }
         
