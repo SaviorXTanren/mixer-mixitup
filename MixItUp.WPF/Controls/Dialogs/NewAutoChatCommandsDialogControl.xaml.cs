@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class NewAutoChatCommandsDialogControl : UserControl
     {
-        public ObservableCollection<NewAutoChatCommand> commands = new ObservableCollection<NewAutoChatCommand>();
+        public ObservableCollection<NewAutoChatCommandModel> commands = new ObservableCollection<NewAutoChatCommandModel>();
 
-        public NewAutoChatCommandsDialogControl(IEnumerable<NewAutoChatCommand> commands)
+        public NewAutoChatCommandsDialogControl(IEnumerable<NewAutoChatCommandModel> commands)
         {
             InitializeComponent();
 
             this.NewCommandsItemsControl.ItemsSource = this.commands;
-            foreach (NewAutoChatCommand command in commands)
+            foreach (NewAutoChatCommandModel command in commands)
             {
                 this.commands.Add(command);
             }
@@ -26,12 +26,12 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public void AddSelectedCommands()
         {
-            foreach (NewAutoChatCommand command in this.commands)
+            foreach (NewAutoChatCommandModel command in this.commands)
             {
                 if (command.AddCommand)
                 {
-                    // TODO
-                    //ChannelSession.Settings.ChatCommands.Add(command.Command);
+                    ChannelSession.Settings.SetCommand(command.Command);
+                    ChannelSession.ChatCommands.Add(command.Command);
                 }
             }
             ChannelSession.Services.Chat.RebuildCommandTriggers();

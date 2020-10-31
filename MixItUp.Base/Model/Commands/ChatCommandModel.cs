@@ -62,6 +62,8 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public bool Wildcards { get; set; }
 
+        public ChatCommandModel(string name, HashSet<string> triggers) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation: true, wildcards: false) { }
+
         public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation, wildcards) { }
 
         internal ChatCommandModel(MixItUp.Base.Commands.ChatCommand command)
@@ -94,6 +96,20 @@ namespace MixItUp.Base.Model.Commands
             {
                 return ChatCommandModel.DoesMessageMatchTriggers(message, this.Triggers, out arguments);
             }
+        }
+    }
+
+    public class NewAutoChatCommandModel
+    {
+        public bool AddCommand { get; set; }
+        public string Description { get; set; }
+        public ChatCommandModel Command { get; set; }
+
+        public NewAutoChatCommandModel(string description, ChatCommandModel command)
+        {
+            this.AddCommand = true;
+            this.Description = description;
+            this.Command = command;
         }
     }
 }

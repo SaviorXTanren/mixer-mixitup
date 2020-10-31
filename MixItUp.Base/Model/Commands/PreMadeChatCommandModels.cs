@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Commands
             this.Name = command.Name;
             this.IsEnabled = command.IsEnabled;
             this.Role = command.Requirements.Role.Role;
-            this.Cooldown = int.Parse(command.Requirements.Cooldown.IndividualAmount);
+            this.Cooldown = command.Requirements.Cooldown.IndividualAmount;
         }
     }
 
@@ -51,14 +51,14 @@ namespace MixItUp.Base.Model.Commands
             : base(name, CommandTypeEnum.PreMade, triggers, includeExclamation: true, wildcards: false)
         {
             this.Requirements.Requirements.Add(new RoleRequirementModel(role));
-            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown.ToString()));
+            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettingsModel settings)
         {
             this.IsEnabled = settings.IsEnabled;
             this.Requirements.Role.Role = settings.Role;
-            this.Requirements.Cooldown.IndividualAmount = settings.Cooldown.ToString();
+            this.Requirements.Cooldown.IndividualAmount = settings.Cooldown;
         }
 
         protected override Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
@@ -725,7 +725,7 @@ namespace MixItUp.Base.Model.Commands
 
                 ChatCommandModel newCommand = new ChatCommandModel(commandTrigger, new HashSet<string>() { commandTrigger }, includeExclamation: true, wildcards: false);
                 newCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
-                newCommand.Requirements.Cooldown.IndividualAmount = cooldown.ToString();
+                newCommand.Requirements.Cooldown.IndividualAmount = cooldown;
                 newCommand.Actions.Add(new ChatActionModel(commandText));
                 ChannelSession.Settings.SetCommand(newCommand);
                 ChannelSession.ChatCommands.Add(newCommand);
@@ -769,7 +769,7 @@ namespace MixItUp.Base.Model.Commands
 
                 if (command.Requirements.Cooldown != null)
                 {
-                    command.Requirements.Cooldown.IndividualAmount = cooldown.ToString();
+                    command.Requirements.Cooldown.IndividualAmount = cooldown;
                 }
 
                 if (arguments.Count() > 2)

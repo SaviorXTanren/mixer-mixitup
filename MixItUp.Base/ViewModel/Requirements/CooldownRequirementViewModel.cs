@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private string selectedGroupName;
 
-        public string Amount
+        public int Amount
         {
             get { return this.amount; }
             set
@@ -54,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private string amount = "0";
+        private int amount;
 
         public CooldownRequirementViewModel() { }
 
@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override Task<Result> Validate()
         {
-            if (!this.ValidateStringAmount(this.Amount, canBeZero: true))
+            if (this.Amount < 0)
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified));
             }
@@ -90,7 +90,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             if (this.SelectedType == CooldownTypeEnum.Group)
             {
-                ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName] = this.Amount.ToString();
+                ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName] = this.Amount;
             }
             return new CooldownRequirementModel(this.SelectedType, this.Amount, this.SelectedGroupName);
         }

@@ -29,10 +29,10 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public int CooldownString
         {
-            get { return int.Parse(this.command.Requirements.Cooldown.IndividualAmount); }
+            get { return this.command.Requirements.Cooldown.IndividualAmount; }
             set
             {
-                this.command.Requirements.Cooldown.IndividualAmount = value.ToString();
+                this.command.Requirements.Cooldown.IndividualAmount = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }
@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             if (this.setting != null)
             {
                 this.setting.Role = this.command.Requirements.Role.Role;
-                this.setting.Cooldown = int.Parse(this.command.Requirements.Cooldown.Amount);
+                this.setting.Cooldown = this.command.Requirements.Cooldown.Amount;
                 this.setting.IsEnabled = this.command.IsEnabled;
             }
         }

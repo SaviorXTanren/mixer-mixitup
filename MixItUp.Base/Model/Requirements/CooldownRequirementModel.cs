@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Requirements
         public CooldownTypeEnum Type { get; set; }
 
         [DataMember]
-        public string IndividualAmount { get; set; }
+        public int IndividualAmount { get; set; }
 
         [DataMember]
         public string GroupName { get; set; }
@@ -41,11 +41,11 @@ namespace MixItUp.Base.Model.Requirements
             : this()
         {
             this.Type = (CooldownTypeEnum)(int)requirement.Type;
-            this.IndividualAmount = requirement.Amount.ToString();
+            this.IndividualAmount = requirement.Amount;
             this.GroupName = requirement.GroupName;
         }
 
-        public CooldownRequirementModel(CooldownTypeEnum type, string amount, string groupName = null)
+        public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
         {
             this.Type = type;
             this.IndividualAmount = amount;
@@ -56,11 +56,11 @@ namespace MixItUp.Base.Model.Requirements
         public bool IsGroup { get { return this.Type == CooldownTypeEnum.Group && !string.IsNullOrEmpty(this.GroupName); } }
 
         [JsonIgnore]
-        public string Amount
+        public int Amount
         {
             get
             {
-                string amount = null;
+                int amount = 0;
                 if (this.IsGroup)
                 {
                     if (ChannelSession.Settings.CooldownGroupAmounts.ContainsKey(this.GroupName))
@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            int amount = await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers);
+            int amount = this.Amount;
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
             if (this.Type == CooldownTypeEnum.Standard)
             {

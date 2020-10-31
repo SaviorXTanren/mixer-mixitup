@@ -395,7 +395,7 @@ namespace MixItUp.Base.Services
 
             foreach (var kvp in oldSettings.CooldownGroups)
             {
-                newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value.ToString();
+                newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;
             }
 
 

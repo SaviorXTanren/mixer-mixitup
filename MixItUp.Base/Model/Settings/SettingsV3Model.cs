@@ -181,7 +181,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Dictionary<string, CommandGroupSettingsModel> CommandGroups { get; set; } = new Dictionary<string, CommandGroupSettingsModel>();
         [DataMember]
-        public Dictionary<string, string> CooldownGroupAmounts { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, int> CooldownGroupAmounts { get; set; } = new Dictionary<string, int>();
 
         [DataMember]
         public List<PreMadeChatCommandSettingsModel> PreMadeChatCommandSettings { get; set; } = new List<PreMadeChatCommandSettingsModel>();

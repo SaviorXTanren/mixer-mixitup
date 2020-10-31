@@ -1,8 +1,9 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -848,47 +849,62 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             await ChannelSession.SaveSettings();
         }
 
-        // TODO
-        //public IEnumerable<NewAutoChatCommand> GetNewAutoChatCommands()
-        //{
-        //    List<NewAutoChatCommand> commandsToAdd = new List<NewAutoChatCommand>();
-        //    if (this.Currency != null)
-        //    {
-        //        ChatCommand statusCommand = new ChatCommand("User " + this.Currency.Name, this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
-        //        string statusChatText = string.Empty;
-        //        if (this.Currency.IsRank)
-        //        {
-        //            statusChatText = string.Format("@$username is a ${0} with ${1} {2}!", this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
-        //        }
-        //        else
-        //        {
-        //            statusChatText = string.Format("@$username has ${0} {1}!", this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
-        //        }
-        //        statusCommand.Actions.Add(new ChatAction(statusChatText));
-        //        commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
+        public IEnumerable<NewAutoChatCommandModel> GetNewAutoChatCommands()
+        {
+            List<NewAutoChatCommandModel> commandsToAdd = new List<NewAutoChatCommandModel>();
+            if (this.Currency != null)
+            {
+                ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
+                statusCommand.Requirements.Role.Role = UserRoleEnum.User;
+                statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+                statusCommand.Requirements.Cooldown.IndividualAmount = 5;
 
-        //        if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.None)
-        //        {
-        //            ChatCommand addCommand = new ChatCommand("Add " + this.Currency.Name, "add" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
-        //            addCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
-        //            addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.Currency.Name)));
-        //            commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
+                string statusChatText = string.Empty;
+                if (this.Currency.IsRank)
+                {
+                    statusChatText = string.Format("@$username is a ${0} with ${1} {2}!", this.Currency.UserRankNameSpecialIdentifier, this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                }
+                else
+                {
+                    statusChatText = string.Format("@$username has ${0} {1}!", this.Currency.UserAmountSpecialIdentifier, this.Currency.Name);
+                }
+                statusCommand.Actions.Add(new ChatActionModel(statusChatText));
+                commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", statusCommand.Triggers.First(), "Shows User's Amount"), statusCommand));
 
-        //            ChatCommand addAllCommand = new ChatCommand("Add All " + this.Currency.Name, "addall" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
-        //            addAllCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
-        //            addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", this.Currency.Name)));
-        //            commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
+                if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.None)
+                {
+                    ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
+                    addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+                    addCommand.Requirements.Cooldown.IndividualAmount = 5;
 
-        //            if (!this.Currency.IsRank)
-        //            {
-        //                ChatCommand giveCommand = new ChatCommand("Give " + this.Currency.Name, "give" + this.Currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
-        //                giveCommand.Actions.Add(new CurrencyAction(this.Currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
-        //                giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", this.Currency.Name)));
-        //                commandsToAdd.Add(new NewAutoChatCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));
-        //            }
-        //        }
-        //    }
-        //    return commandsToAdd;
-        //}
+                    addCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
+                    addCommand.Actions.Add(new ChatActionModel(string.Format("@$targetusername received $arg2text {0}!", this.Currency.Name)));
+                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), "Adds Amount To Specified User"), addCommand));
+
+                    ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
+                    addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
+                    addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+                    addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
+
+                    addAllCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+                    addAllCommand.Actions.Add(new ChatActionModel(string.Format("Everyone got $arg1text {0}!", this.Currency.Name)));
+                    commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addAllCommand.Triggers.First(), "Adds Amount To All Chat Users"), addAllCommand));
+
+                    if (!this.Currency.IsRank)
+                    {
+                        ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
+                        giveCommand.Requirements.Role.Role = UserRoleEnum.User;
+                        giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+                        giveCommand.Requirements.Cooldown.IndividualAmount = 5;
+
+                        giveCommand.Actions.Add(new ConsumablesActionModel(this.Currency, ConsumablesActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
+                        giveCommand.Actions.Add(new ChatActionModel(string.Format("@$username gave @$targetusername $arg2text {0}!", this.Currency.Name)));
+                        commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", giveCommand.Triggers.First(), "Gives Amount To Specified User"), giveCommand));
+                    }
+                }
+            }
+            return commandsToAdd;
+        }
     }
 }

@@ -116,12 +116,11 @@ namespace MixItUp.WPF.Windows.Currency
 
                     if (isNew)
                     {
-                        // TODO
-                        //NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
-                        //if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
-                        //{
-                        //    customDialogControl.AddSelectedCommands();
-                        //}
+                        NewAutoChatCommandsDialogControl customDialogControl = new NewAutoChatCommandsDialogControl(this.viewModel.GetNewAutoChatCommands());
+                        if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
+                        {
+                            customDialogControl.AddSelectedCommands();
+                        }
                     }
 
                     this.Close();
