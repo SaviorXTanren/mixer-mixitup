@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
@@ -85,21 +86,20 @@ namespace MixItUp.Base.Model.Commands
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             List<string> commandTriggers = new List<string>();
-            // TODO
-            //foreach (ChatCommandModel command in ChannelSession.AllEnabledChatCommands)
-            //{
-            //    if (await command.Requirements.Validate(user))
-            //    {
-            //        if (command.IncludeExclamation)
-            //        {
-            //            commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
-            //        }
-            //        else
-            //        {
-            //            commandTriggers.AddRange(command.Triggers);
-            //        }
-            //    }
-            //}
+            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
+            {
+                if (await command.Requirements.Role.Validate(user, platform, arguments, specialIdentifiers))
+                {
+                    if (command.IncludeExclamation)
+                    {
+                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                    }
+                    else
+                    {
+                        commandTriggers.AddRange(command.Triggers);
+                    }
+                }
+            }
 
             if (commandTriggers.Count > 0)
             {
@@ -122,11 +122,10 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (GameCommandModelBase command in ChannelSession.GameCommands)
             {
-                // TODO
-                //if (command.IsEnabled && await command.Requirements.DoesMeetUserRoleRequirement(user))
-                //{
-                //    commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
-                //}
+                if (command.IsEnabled && await command.Requirements.Role.Validate(user, platform, arguments, specialIdentifiers))
+                {
+                    commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                }
             }
 
             if (commandTriggers.Count > 0)
@@ -724,11 +723,12 @@ namespace MixItUp.Base.Model.Commands
                 string commandText = commandTextBuilder.ToString();
                 commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
 
-                // TODO
-                //ChatCommand newCommand = new ChatCommand(commandTrigger, commandTrigger, new RequirementViewModel());
-                //newCommand.Requirements.Cooldown.Amount = cooldown;
-                //newCommand.Actions.Add(new ChatAction(commandText));
-                //ChannelSession.Settings.ChatCommands.Add(newCommand);
+                ChatCommandModel newCommand = new ChatCommandModel(commandTrigger, new HashSet<string>() { commandTrigger }, includeExclamation: true, wildcards: false);
+                newCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+                newCommand.Requirements.Cooldown.IndividualAmount = cooldown.ToString();
+                newCommand.Actions.Add(new ChatActionModel(commandText));
+                ChannelSession.Settings.SetCommand(newCommand);
+                ChannelSession.ChatCommands.Add(newCommand);
 
                 if (ChannelSession.Services.Chat != null)
                 {
@@ -784,8 +784,7 @@ namespace MixItUp.Base.Model.Commands
                     commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
 
                     command.Actions.Clear();
-                    // TODO
-                    //command.Actions.Add(new ChatAction(commandText));
+                    command.Actions.Add(new ChatActionModel(commandText));
                 }
 
                 if (ChannelSession.Services.Chat != null)

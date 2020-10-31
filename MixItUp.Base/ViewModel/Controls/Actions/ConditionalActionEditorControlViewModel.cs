@@ -6,6 +6,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -188,17 +189,13 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 if (this.ShowCommands)
                 {
                     CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(this.SelectedSuccessTriggerType);
-                    switch (commandType)
+                    if (commandType == CommandTypeEnum.PreMade)
                     {
-                        // TODO
-                        case CommandTypeEnum.ActionGroup: break;
-                        case CommandTypeEnum.Chat: break;
-                        case CommandTypeEnum.Event: break;
-                        case CommandTypeEnum.Game: break;
-                        case CommandTypeEnum.PreMade: break;
-                        case CommandTypeEnum.Remote: break;
-                        case CommandTypeEnum.Timer: break;
-                        case CommandTypeEnum.TwitchChannelPoints: break;
+                        return ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name);
+                    }
+                    else
+                    {
+                        return ChannelSession.AllCommands.Where(c => c.Type == commandType).OrderBy(c => c.Name);
                     }
                 }
                 return commands;

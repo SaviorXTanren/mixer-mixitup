@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -13,18 +11,18 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.StreamingSoftware; } }
 
-        public IEnumerable<StreamingSoftwareTypeEnum> StreamingSoftwares { get { return EnumHelper.GetEnumList<StreamingSoftwareTypeEnum>(); } }
+        public IEnumerable<StreamingSoftwareTypeEnum> StreamingSoftwareTypes { get { return EnumHelper.GetEnumList<StreamingSoftwareTypeEnum>(); } }
 
-        public StreamingSoftwareTypeEnum SelectedStreamingSoftware
+        public StreamingSoftwareTypeEnum SelectedStreamingSoftwareType
         {
-            get { return this.selectedStreamingSoftware; }
+            get { return this.selectedStreamingSoftwareType; }
             set
             {
-                this.selectedStreamingSoftware = value;
+                this.selectedStreamingSoftwareType = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private StreamingSoftwareTypeEnum selectedStreamingSoftware;
+        private StreamingSoftwareTypeEnum selectedStreamingSoftwareType;
 
         public IEnumerable<StreamingSoftwareActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<StreamingSoftwareActionTypeEnum>(); } }
 
@@ -56,7 +54,27 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         {
             get
             {
-                // TODO
+                if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
+                {
+                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        return true;
+                    }
+                }
+                else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
+                {
+                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit || this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    {
+                        return true;
+                    }
+                }
+                else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceDimensions)
+                {
+                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        return true;
+                    }
+                }
                 return false;
             }
         }
@@ -210,7 +228,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         public StreamingSoftwareActionEditorControlViewModel(StreamingSoftwareActionModel action)
             : base(action)
         {
-            this.SelectedStreamingSoftware = action.StreamingSoftwareType;
+            this.SelectedStreamingSoftwareType = action.StreamingSoftwareType;
             this.SelectedActionType = action.ActionType;
             if (this.ShowSceneCollectionGrid)
             {
@@ -253,7 +271,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             {
                 if (string.IsNullOrEmpty(this.SourceName))
                 {
-                    StreamingSoftwareSourceDimensionsModel dimensions = await StreamingSoftwareActionModel.GetSourceDimensions(this.SelectedStreamingSoftware, this.SceneName, this.SourceName);
+                    StreamingSoftwareSourceDimensionsModel dimensions = await StreamingSoftwareActionModel.GetSourceDimensions(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName);
                     if (dimensions != null)
                     {
                         this.SourceXPosition = dimensions.X;
@@ -316,30 +334,30 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         {
             if (this.ShowSceneCollectionGrid)
             {
-                return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSceneCollectionAction(this.SelectedStreamingSoftware, this.SceneCollectionName));
+                return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSceneCollectionAction(this.SelectedStreamingSoftwareType, this.SceneCollectionName));
             }
             else if (this.ShowSceneGrid)
             {
-                return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSceneAction(this.SelectedStreamingSoftware, this.SceneName));
+                return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSceneAction(this.SelectedStreamingSoftwareType, this.SceneName));
             }
             else if (this.ShowSourceGrid)
             {
                 if (this.ShowTextSourceGrid)
                 {
-                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateTextSourceAction(this.SelectedStreamingSoftware, this.SceneName, this.SourceName, this.SourceVisible, this.SourceText, this.SourceTextFilePath));
+                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateTextSourceAction(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName, this.SourceVisible, this.SourceText, this.SourceTextFilePath));
                 }
                 else if (this.ShowWebBrowserSourceGrid)
                 {
-                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateWebBrowserSourceAction(this.SelectedStreamingSoftware, this.SceneName, this.SourceName, this.SourceVisible, this.SourceWebPageFilePath));
+                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateWebBrowserSourceAction(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName, this.SourceVisible, this.SourceWebPageFilePath));
                 }
                 else if (this.ShowSourceDimensionsGrid)
                 {
-                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceDimensionsAction(this.SelectedStreamingSoftware, this.SceneName, this.SourceName, this.SourceVisible,
+                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceDimensionsAction(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName, this.SourceVisible,
                         new StreamingSoftwareSourceDimensionsModel(this.SourceXPosition, this.SourceYPosition, this.SourceRotation, this.SourceXScale, this.SourceYScale)));
                 }
                 else
                 {
-                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceVisibilityAction(this.SelectedStreamingSoftware, this.SceneName, this.SourceName, this.SourceVisible));
+                    return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceVisibilityAction(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName, this.SourceVisible));
                 }
             }
             return Task.FromResult<ActionModelBase>(null);

@@ -48,8 +48,14 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         {
             get
             {
-                // TODO
-                return new List<CommandModelBase>();
+                if (this.SelectedCommandType == CommandTypeEnum.PreMade)
+                {
+                    return ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name);
+                }
+                else
+                {
+                    return ChannelSession.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name);
+                }
             }
         }
 

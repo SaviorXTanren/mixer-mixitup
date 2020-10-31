@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding StreamingSoftwares}" SelectedItem="{Binding SelectedStreamingSoftware}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingSoftware}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding StreamingSoftwareTypes}" SelectedItem="{Binding SelectedStreamingSoftwareType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingSoftware}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
