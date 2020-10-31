@@ -75,7 +75,7 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public Guid CommandID { get; set; }
-        // TODO
+
         [DataMember]
         public ActionModelBase Action { get; set; }
 
@@ -113,8 +113,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        // TODO
-        public CommandModelBase GetCommand() { return null; }// return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
+        public CommandModelBase GetCommand() { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {

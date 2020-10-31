@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
@@ -116,7 +116,7 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
+        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions)
         {
             await this.OBSCommandTimeoutWrapper(() =>
             {
@@ -129,7 +129,7 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
+        public async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName)
         {
             return await this.OBSCommandTimeoutWrapper(() =>
             {
@@ -147,7 +147,7 @@ namespace MixItUp.WPF.Services
                 {
                     if (item.SourceName.Equals(sourceName))
                     {
-                        return new StreamingSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
+                        return new StreamingSoftwareSourceDimensionsModel() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
                     }
                 }
                 return null;

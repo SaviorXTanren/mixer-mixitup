@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,16 +77,14 @@ namespace MixItUp.Base.Model.Actions
         {
             get
             {
-                // TODO
-                return null;
-                //if (this.PreMadeType != null)
-                //{
-                //    return ChannelSession.AllCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
-                //}
-                //else
-                //{
-                //    return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
-                //}
+                if (this.PreMadeType != null)
+                {
+                    return ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
+                }
+                else
+                {
+                    return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
+                }
             }
         }
 
@@ -93,9 +92,7 @@ namespace MixItUp.Base.Model.Actions
         {
             get
             {
-                // TODO
-                return null;
-                // return CommandModelBase.AllCommands.Where(c => !string.IsNullOrEmpty(c.GroupName) && c.GroupName.Equals(this.GroupName));
+                return ChannelSession.AllCommands.Where(c => string.Equals(this.CommandGroupName, c.GroupName));
             }
         }
 

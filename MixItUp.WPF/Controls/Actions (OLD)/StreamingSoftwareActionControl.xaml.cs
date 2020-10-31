@@ -292,7 +292,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (ChannelSession.Services.OBSStudio.IsConnected || (await ChannelSession.Services.OBSStudio.Connect()).Success)
                     {
-                        dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                        //dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                     }
                     else
                     {
@@ -303,7 +303,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (ChannelSession.Services.StreamlabsOBS.IsConnected || (await ChannelSession.Services.StreamlabsOBS.Connect()).Success)
                     {
-                        dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                        //dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                     }
                     else
                     {

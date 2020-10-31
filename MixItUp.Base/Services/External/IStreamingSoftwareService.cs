@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using System;
 using System.Threading.Tasks;
 
@@ -17,8 +17,8 @@ namespace MixItUp.Base.Services.External
 
         Task SetSourceVisibility(string sceneName, string sourceName, bool visibility);
         Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url);
-        Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions);
-        Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName);
+        Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions);
+        Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName);
 
         Task StartStopStream();
 

@@ -267,7 +267,7 @@ namespace MixItUp.Base.Actions
                         }
                         else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                         {
-                            await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
+                            //await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
                         }
                         await ssService.SetSourceVisibility(sceneName, sourceName, this.SourceVisible);
                     }

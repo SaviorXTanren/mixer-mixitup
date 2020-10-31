@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
+        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
@@ -282,12 +282,12 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
+        public async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
-                return new StreamingSourceDimensions()
+                return new StreamingSoftwareSourceDimensionsModel()
                 {
                     X = (int)sceneItem.Transform.Position.X,
                     Y = (int)sceneItem.Transform.Position.Y,

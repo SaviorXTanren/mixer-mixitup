@@ -77,23 +77,21 @@ namespace MixItUp.Base.Model.Actions
 
             if (softwareType == StreamingSoftwareTypeEnum.DefaultSetting)
             {
-                // TODO
+                softwareType = ChannelSession.Settings.DefaultStreamingSoftware;
             }
 
             if (softwareType == StreamingSoftwareTypeEnum.OBSStudio)
             {
                 if (ChannelSession.Services.OBSStudio.IsConnected || (await ChannelSession.Services.OBSStudio.Connect()).Success)
                 {
-                    // TODO
-                    //dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(sceneName, sourceName);
                 }
             }
             else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
                 if (ChannelSession.Services.StreamlabsOBS.IsConnected || (await ChannelSession.Services.StreamlabsOBS.Connect()).Success)
                 {
-                    // TODO
-                    //dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(sceneName, sourceName);
                 }
             }
 
@@ -226,8 +224,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        // TODO
-        public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return StreamingSoftwareTypeEnum.DefaultSetting; } }// (this.SoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.SoftwareType; } }
+        public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.StreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.StreamingSoftwareType; } }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
@@ -312,8 +309,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else if (this.ActionType == StreamingSoftwareActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                         {
-                            // TODO
-                            //await ssService.SetSourceDimensions(parentName, name, this.SourceDimensions);
+                            await ssService.SetSourceDimensions(parentName, name, this.SourceDimensions);
                         }
                         await ssService.SetSourceVisibility(parentName, name, this.Visible);
                     }
