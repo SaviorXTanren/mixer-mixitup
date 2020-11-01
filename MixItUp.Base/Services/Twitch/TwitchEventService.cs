@@ -754,7 +754,7 @@ namespace MixItUp.Base.Services.Twitch
             specialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
             if (!string.IsNullOrEmpty(redemption.user_input))
             {
-                specialIdentifiers["message"] = redemption.user_input.Trim();
+                specialIdentifiers["message"] = redemption.user_input;
                 arguments = new List<string>(redemption.user_input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }
 
