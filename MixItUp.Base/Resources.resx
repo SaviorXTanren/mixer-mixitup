@@ -3434,4 +3434,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="RedemptionStoreManualRedeemNeededCommandName" xml:space="preserve">
     <value>Redemption Store Manual Redeem Needed</value>
   </data>
+  <data name="FailedToImportCommand" xml:space="preserve">
+    <value>Failed to import command</value>
+  </data>
 </root>

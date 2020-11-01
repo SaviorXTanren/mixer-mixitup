@@ -3247,6 +3247,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to import command.
+        /// </summary>
+        public static string FailedToImportCommand {
+            get {
+                return ResourceManager.GetString("FailedToImportCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to We were unable to update your game because we could not find a game matching that name.
         /// </summary>
         public static string FailedToUpdateGame {

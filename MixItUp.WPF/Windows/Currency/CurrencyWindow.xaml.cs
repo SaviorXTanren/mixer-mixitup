@@ -1,12 +1,13 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Currency;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -55,19 +56,18 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
-            //CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
-            //window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
-            //window.Show();
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.UserRankChanged);
+            window.CommandSaved += Window_CommandSaved;
+            window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
@@ -76,11 +76,11 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+                CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
                 if (command != null)
                 {
                     this.viewModel.RankChangedCommand = null;
+                    ChannelSession.Settings.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                 }
             });
@@ -128,9 +128,9 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandModelBase e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.RankChangedCommand = (CustomCommandModel)e;
+            this.viewModel.RankChangedCommand = (CustomCommandModel)command;
         }
     }
 }

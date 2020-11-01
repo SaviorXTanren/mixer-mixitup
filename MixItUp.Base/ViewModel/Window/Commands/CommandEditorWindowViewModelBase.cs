@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         public ICommand ExportCommand { get; private set; }
         public ICommand ImportCommand { get; private set; }
 
-        public event EventHandler CloseEditor = delegate { };
+        public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
         private CommandModelBase existingCommand;
 
@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
 
                     await this.SaveCommandToSettings(command);
 
-                    this.CloseEditor(this, new EventArgs());
+                    this.CommandSaved(this, command);
                 }
             });
 
@@ -146,17 +146,29 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        await FileSerializerHelper.SerializeToFile(fileName, command);
+                        await FileSerializerHelper.SerializeToFile(fileName, new ActionList(command));
                     }
                 }
             });
 
             this.ImportCommand = this.CreateCommand(async (parameter) =>
             {
-                string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
-                if (!string.IsNullOrEmpty(fileName))
+                try
                 {
-                    // TODO
+                    string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        ActionList actionList = await FileSerializerHelper.DeserializeFromFile<ActionList>(fileName);
+                        foreach (ActionModelBase action in actionList.Actions)
+                        {
+                            await this.AddAction(action);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
                 }
             });
         }

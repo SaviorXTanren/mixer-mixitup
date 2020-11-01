@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.WPF.Controls.Commands;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Commands
@@ -14,6 +15,8 @@ namespace MixItUp.WPF.Windows.Commands
         public CommandEditorDetailsControlBase editorDetailsControl { get; private set; }
 
         public CommandEditorWindowViewModelBase viewModel { get; private set; }
+
+        public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
         public CommandEditorWindow(CommandModelBase existingCommand)
             : this()
@@ -49,7 +52,7 @@ namespace MixItUp.WPF.Windows.Commands
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
         }
 
-        public CommandEditorWindow(CommandTypeEnum commandType)
+        public CommandEditorWindow(CommandTypeEnum commandType, string name = null)
             : this()
         {
             switch (commandType)
@@ -71,6 +74,10 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new ActionGroupCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Game:
+                    break;
+                case CommandTypeEnum.Custom:
+                    this.editorDetailsControl = new CustomCommandEditorDetailsControl();
+                    this.viewModel = (!string.IsNullOrEmpty(name)) ? new CustomCommandEditorWindowViewModel(name) : new CustomCommandEditorWindowViewModel();
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
@@ -99,7 +106,7 @@ namespace MixItUp.WPF.Windows.Commands
 
         protected override async Task OnLoaded()
         {
-            this.viewModel.CloseEditor += ViewModel_CloseEditor;
+            this.viewModel.CommandSaved += ViewModel_CommandSaved;
             await this.viewModel.OnLoaded();
 
             this.DetailsContentControl.Content = this.editorDetailsControl;
@@ -107,8 +114,9 @@ namespace MixItUp.WPF.Windows.Commands
             await base.OnLoaded();
         }
 
-        private void ViewModel_CloseEditor(object sender, System.EventArgs e)
+        private void ViewModel_CommandSaved(object sender, CommandModelBase command)
         {
+            this.CommandSaved(this, command);
             this.Close();
         }
     }
