@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -138,7 +139,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private string shopCommandText;
+        private string shopCommandText = "!shop";
         public CommandModelBase ShopBuyCommand
         {
             get { return this.shopBuyCommand; }
@@ -179,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                 this.NotifyPropertyChanged();
             }
         }
-        private string tradeCommandText;
+        private string tradeCommandText = "!trade";
         public CommandModelBase TradeCommand
         {
             get { return this.tradeCommand; }
@@ -235,19 +236,16 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         {
             this.DefaultItemMaxAmount = 99;
 
-            // TODO
-            //this.ShopCommandText = "!shop";
-            //CustomCommand buyCommand = new CustomCommand(InventoryWindowViewModel.ItemsBoughtCommandName);
-            //buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
-            //this.ShopBuyCommand = buyCommand;
-            //CustomCommand sellCommand = new CustomCommand(InventoryWindowViewModel.ItemsSoldCommandName);
-            //sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
-            //this.ShopSellCommand = sellCommand;
+            CustomCommandModel buyCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsBoughtCommandName);
+            buyCommand.Actions.Add(new ChatActionModel("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            this.ShopBuyCommand = buyCommand;
+            CustomCommandModel sellCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsSoldCommandName);
+            sellCommand.Actions.Add(new ChatActionModel("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false));
+            this.ShopSellCommand = sellCommand;
 
-            //this.TradeCommandText = "!trade";
-            //CustomCommand tradeCommand = new CustomCommand(InventoryWindowViewModel.ItemsTradedCommandName);
-            //tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
-            //this.TradeCommand = tradeCommand;
+            CustomCommandModel tradeCommand = new CustomCommandModel(MixItUp.Base.Resources.InventoryItemsTradedCommandName);
+            tradeCommand.Actions.Add(new ChatActionModel("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+            this.TradeCommand = tradeCommand;
 
             this.SaveItemCommand = this.CreateCommand(async (parameter) =>
             {
