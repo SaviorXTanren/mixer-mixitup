@@ -28,6 +28,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 {
                     ChannelSession.Settings.JustGivingPageShortName = null;
                 }
+                ChannelSession.Services.JustGiving.SetFundraiser(this.SelectedFundraiser);
             }
         }
         private JustGivingFundraiser selectedFundraiser;
