@@ -98,6 +98,8 @@ namespace MixItUp.Base.Services
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
         private LockedList<CommandModelBase> commands = new LockedList<CommandModelBase>();
+        private Dictionary<string, CommandModelBase> triggersToCommands = new Dictionary<string, CommandModelBase>();
+        private List<CommandModelBase> wildcardCommands = new List<CommandModelBase>();
 
         private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
 
@@ -267,10 +269,25 @@ namespace MixItUp.Base.Services
         public void RebuildCommandTriggers()
         {
             this.commands.Clear();
+            this.triggersToCommands.Clear();
+            this.wildcardCommands.Clear();
             this.chatMenuCommands.Clear();
             foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
                 this.commands.Add(command);
+                if (command.Wildcards)
+                {
+                    this.wildcardCommands.Add(command);
+                }
+                else
+                {
+                    foreach (string trigger in command.Triggers)
+                    {
+                        string t = (command.IncludeExclamation) ? "!" + trigger.ToLower() : trigger.ToLower();
+                        this.triggersToCommands[t] = command;
+                    }
+                }
+
                 // TODO
                 //if (command.Requirements.Settings.ShowOnChatMenu)
                 //{
@@ -449,29 +466,39 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
+                    // To user-only commands first
                     // TODO
-                    //List<CommandModelBase> commands = this.commands.ToList();
                     //foreach (CommandModelBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
                     //{
                     //    commands.Add(command);
                     //}
 
-                    //foreach (CommandModelBase command in commands)
-                    //{
-                    //    if (command.DoesTextMatchCommand(message.PlainTextMessage, out arguments))
-                    //    {
-                    //        if (command.IsEnabled)
-                    //        {
-                    //            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-                    //            await command.Perform(message.User, message.Platform, arguments: arguments);
-                    //            if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
-                    //            {
-                    //                await this.DeleteMessage(message);
-                    //            }
-                    //        }
-                    //        break;
-                    //    }
-                    //}
+                    // then Wild Card checks
+                    // TODO
+
+                    // Then regular
+                    string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
+                    for (int i = 0; i < messageParts.Length; i++)
+                    {
+                        string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
+                        if (this.triggersToCommands.ContainsKey(commandCheck))
+                        {
+                            CommandModelBase command = this.triggersToCommands[commandCheck];
+                            if (command.IsEnabled)
+                            {
+                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+                                await command.Perform(message.User, message.Platform, arguments: messageParts.Skip(i + 1));
+
+                                // TODO
+                                //if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                                //{
+                                //    await this.DeleteMessage(message);
+                                //}
+
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
