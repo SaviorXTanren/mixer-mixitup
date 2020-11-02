@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
 
         public event EventHandler ContextMenuCommandsChanged = delegate { };
 
-        public AlertsDashboardControlViewModel(WindowViewModelBase windowViewModel) : base(windowViewModel) { }
+        public AlertsDashboardControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { }
 
         protected override async Task OnLoadedInternal()
         {

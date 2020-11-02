@@ -5,6 +5,7 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         Disabled,
     }
 
-    public class CurrencyWindowViewModel : WindowViewModelBase
+    public class CurrencyWindowViewModel : UIViewModelBase
     {
         public CurrencyModel Currency { get; set; }
 

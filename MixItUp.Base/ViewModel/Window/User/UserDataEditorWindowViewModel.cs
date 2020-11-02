@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +23,7 @@ namespace MixItUp.Base.ViewModel.Window.User
         }
     }
 
-    public class UserDataEditorWindowViewModel : WindowViewModelBase
+    public class UserDataEditorWindowViewModel : UIViewModelBase
     {
         public const string UserEntranceCommandName = "Entrance Command";
 

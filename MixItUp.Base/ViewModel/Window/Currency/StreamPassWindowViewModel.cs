@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
     }
 
-    public class StreamPassWindowViewModel : WindowViewModelBase
+    public class StreamPassWindowViewModel : UIViewModelBase
     {
         public StreamPassModel StreamPass { get; private set; }
 

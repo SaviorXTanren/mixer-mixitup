@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Window.User
         public UserDataImportColumnViewModel(string name) { this.Name = name; }
     }
 
-    public class UserDataImportWindowViewModel : WindowViewModelBase
+    public class UserDataImportWindowViewModel : UIViewModelBase
     {
         public string UserDataFilePath
         {

@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Accounts;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
@@ -13,7 +14,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Window.Wizard
 {
-    public class NewUserWizardWindowViewModel : WindowViewModelBase
+    public class NewUserWizardWindowViewModel : UIViewModelBase
     {
         public bool WizardComplete { get; private set; }
 

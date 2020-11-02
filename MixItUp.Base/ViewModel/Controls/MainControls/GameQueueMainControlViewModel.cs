@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand DeleteCommand { get; private set; }
         public ICommand ClearQueueCommand { get; private set; }
 
-        public GameQueueMainControlViewModel(WindowViewModelBase windowViewModel)
+        public GameQueueMainControlViewModel(UIViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;

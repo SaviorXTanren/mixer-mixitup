@@ -70,11 +70,6 @@ namespace MixItUp.WPF.Controls.MainControls
             window.Show();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.viewModel.FullRefresh();
-        }
-
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             if (!e.Handled)

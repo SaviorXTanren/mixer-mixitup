@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace MixItUp.Base.Util
@@ -38,6 +39,14 @@ namespace MixItUp.Base.Util
             stringBuilder.Append(exception.Message);
             this.Message = stringBuilder.ToString();
             this.Exception = exception;
+        }
+
+        public Result(IEnumerable<Result> results)
+        {
+            foreach (Result result in results)
+            {
+                this.Combine(result);
+            }
         }
 
         public void Combine(Result other)

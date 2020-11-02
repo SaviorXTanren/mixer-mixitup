@@ -37,13 +37,7 @@
 
             <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding Actions}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ActionControls:ActionEditorContainerControl />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <ActionControls:ActionEditorListControl />
                 </ScrollViewer>
             </Border>
 

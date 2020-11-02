@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Window;
+﻿using MixItUp.Base.ViewModels;
 using MixItUp.WPF.Controls;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -10,13 +10,13 @@ namespace MixItUp.WPF.Windows
 {
     public class LoadingWindowBase : Window
     {
-        public WindowViewModelBase ViewModel { get; protected set; }
+        public UIViewModelBase ViewModel { get; protected set; }
 
         private int asyncOperationCount = 0;
 
         private LoadingStatusBar statusBar;
 
-        public LoadingWindowBase(WindowViewModelBase viewModel)
+        public LoadingWindowBase(UIViewModelBase viewModel)
             : this()
         {
             this.DataContext = this.ViewModel = viewModel;

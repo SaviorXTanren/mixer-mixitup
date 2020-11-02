@@ -1,6 +1,8 @@
-﻿namespace MixItUp.Base.ViewModel.Window
+﻿using MixItUp.Base.ViewModels;
+
+namespace MixItUp.Base.ViewModel.Window
 {
-    public class MainWindowViewModel : WindowViewModelBase
+    public class MainWindowViewModel : UIViewModelBase
     {
     }
 }

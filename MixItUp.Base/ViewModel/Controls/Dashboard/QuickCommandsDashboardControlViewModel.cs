@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
         public string CommandFiveName { get { return this.GetCommandName(this.CommandFive); } }
         public ICommand CommandFiveCommand { get; set; }
 
-        public QuickCommandsDashboardControlViewModel(WindowViewModelBase windowViewModel)
+        public QuickCommandsDashboardControlViewModel(UIViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             this.commandOne = this.GetCommand(0);

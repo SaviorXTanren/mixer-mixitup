@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Window.Currency
 {
-    public class InventoryWindowViewModel : WindowViewModelBase
+    public class InventoryWindowViewModel : UIViewModelBase
     {
         public InventoryModel Inventory
         {

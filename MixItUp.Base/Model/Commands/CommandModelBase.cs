@@ -57,6 +57,29 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
+        public static async Task RunActions(IEnumerable<ActionModelBase> actions, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);
+            for (int i = 0; i < actionsToRun.Count; i++)
+            {
+                ActionModelBase action = actionsToRun[i];
+                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                {
+                    ChannelSession.Services.Overlay.StartBatching();
+                }
+
+                await action.Perform(user, platform, arguments, specialIdentifiers);
+
+                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                {
+                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayActionModel))
+                    {
+                        await ChannelSession.Services.Overlay.EndBatching();
+                    }
+                }
+            }
+        }
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -305,6 +328,8 @@ namespace MixItUp.Base.Model.Commands
 
                     this.TrackTelemetry();
 
+                    // TODO
+                    // Add determination for running action processing in background task or waiting for completion
                     foreach (UserViewModel u in users)
                     {
                         u.Data.TotalCommandsRun++;
@@ -381,25 +406,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            List<ActionModelBase> actionsToRun = new List<ActionModelBase>(this.Actions);
-            for (int i = 0; i < actionsToRun.Count; i++)
-            {
-                ActionModelBase action = actionsToRun[i];
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
-                {
-                    ChannelSession.Services.Overlay.StartBatching();
-                }
-
-                await action.Perform(user, platform, arguments, specialIdentifiers);
-
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
-                {
-                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayActionModel))
-                    {
-                        await ChannelSession.Services.Overlay.EndBatching();
-                    }
-                }
-            }
+            await CommandModelBase.RunActions(this.Actions, user, platform, arguments, specialIdentifiers);
         }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }

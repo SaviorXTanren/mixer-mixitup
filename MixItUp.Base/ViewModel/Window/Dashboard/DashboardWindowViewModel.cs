@@ -91,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         }
     }
 
-    public class DashboardWindowViewModel : WindowViewModelBase
+    public class DashboardWindowViewModel : UIViewModelBase
     {
         public DashboardWindowViewModel() { }
 

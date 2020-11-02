@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Window.Command
         }
     }
 
-    public class GameCommandWindowViewModel : WindowViewModelBase
+    public class GameCommandWindowViewModel : UIViewModelBase
     {
         public event EventHandler<GameTypeListing> GameTypeSelected;
 

@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public bool ShowNameTextBox { get { return !this.IsMinimized; } }
 
-        private CommandEditorWindowViewModelBase commandEditorViewModel;
+        private ActionEditorListControlViewModel actionEditorListControlViewModel;
 
         public ActionEditorControlViewModelBase(ActionModelBase action)
         {
@@ -79,32 +79,32 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
         {
             this.PlayCommand = this.CreateCommand(async (parameter) =>
             {
-                CommandModelBase command = await this.commandEditorViewModel.ValidateAndBuildCommand();
-                if (command != null)
+                ActionModelBase action = await this.ValidateAndGetAction();
+                if (action != null)
                 {
-                    ActionModelBase action = await this.ValidateAndGetAction();
-                    if (action != null)
+                    Dictionary<string, string> specialIdentifiers = await this.actionEditorListControlViewModel.GetUniqueSpecialIdentifiers();
+                    if (specialIdentifiers != null)
                     {
-                        await action.TestPerform(command.GetUniqueSpecialIdentifiers());
+                        await action.TestPerform(specialIdentifiers);
                     }
                 }
             });
 
             this.MoveUpCommand = this.CreateCommand((parameter) =>
             {
-                this.commandEditorViewModel.MoveActionUp(this);
+                this.actionEditorListControlViewModel.MoveActionUp(this);
                 return Task.FromResult(0);
             });
 
             this.MoveDownCommand = this.CreateCommand((parameter) =>
             {
-                this.commandEditorViewModel.MoveActionDown(this);
+                this.actionEditorListControlViewModel.MoveActionDown(this);
                 return Task.FromResult(0);
             });
 
             this.CopyCommand = this.CreateCommand(async (parameter) =>
             {
-                await this.commandEditorViewModel.DuplicateAction(this);
+                await this.actionEditorListControlViewModel.DuplicateAction(this);
             });
 
             this.HelpCommand = this.CreateCommand((parameter) =>
@@ -115,16 +115,16 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
             this.DeleteCommand = this.CreateCommand((parameter) =>
             {
-                this.commandEditorViewModel.DeleteAction(this);
+                this.actionEditorListControlViewModel.DeleteAction(this);
                 return Task.FromResult(0);
             });
 
             return Task.FromResult(0);
         }
 
-        public void Initialize(CommandEditorWindowViewModelBase commandEditorViewModel)
+        public void Initialize(ActionEditorListControlViewModel actionEditorListControlViewModel)
         {
-            this.commandEditorViewModel = commandEditorViewModel;
+            this.actionEditorListControlViewModel = actionEditorListControlViewModel;
         }
 
         public virtual Task<Result> Validate()

@@ -77,28 +77,17 @@ namespace MixItUp.Base.Model.Actions
         public Guid CommandID { get; set; }
 
         [DataMember]
-        public ActionModelBase Action { get; set; }
+        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ConditionalActionModel.asyncSemaphore; } }
 
-        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, CommandModelBase command)
-            : this(caseSensitive, op, clauses)
-        {
-            this.CommandID = command.ID;
-        }
-
-        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, ActionModelBase action)
-            : this(caseSensitive, op, clauses)
-        {
-            this.Action = action;
-        }
-
-        private ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses)
+        public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
             : base(ActionTypeEnum.Conditional)
         {
             this.CaseSensitive = caseSensitive;
             this.Operator = op;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
+            this.Actions = new List<ActionModelBase>(actions);
         }
 
         internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action)
@@ -106,14 +95,26 @@ namespace MixItUp.Base.Model.Actions
         {
             this.CaseSensitive = !action.IgnoreCase;
             this.Operator = (ConditionalOperatorTypeEnum)(int)action.Operator;
-            this.CommandID = action.CommandID;
+
             foreach (var clause in action.Clauses)
             {
                 this.Clauses.Add(new ConditionalClauseModel((ConditionalComparisionTypeEnum)(int)clause.ComparisionType, clause.Value1, clause.Value2, clause.Value3));
             }
-        }
 
-        public CommandModelBase GetCommand() { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
+            if (action.Action != null)
+            {
+                // TODO
+                //this.Actions.Add(action.Action);
+            }
+            else
+            {
+                CommandModelBase command = ChannelSession.Settings.GetCommand(action.CommandID);
+                if (command != null)
+                {
+                    this.Actions.Add(new CommandActionModel(CommandActionTypeEnum.RunCommand, command, string.Empty));
+                }
+            }
+        }
 
         protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
@@ -139,18 +140,9 @@ namespace MixItUp.Base.Model.Actions
 
             if (finalResult)
             {
-                if (this.CommandID != Guid.Empty)
-                {
-                    CommandModelBase command = this.GetCommand();
-                    if (command != null)
-                    {
-                        await command.Perform(user, platform, arguments, new Dictionary<string, string>(specialIdentifiers));
-                    }
-                }
-                else if (this.Action != null)
-                {
-                    await this.Action.Perform(user, platform, arguments, specialIdentifiers);
-                }
+                // TODO
+                // Add option for whether actions should be run in background or wait for them
+                await CommandModelBase.RunActions(this.Actions, user, platform, arguments, specialIdentifiers);
             }
         }
 

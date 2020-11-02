@@ -1,11 +1,9 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -91,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public ICommand ScrollingLockCommand { get; private set; }
 
-        public ChatListControlViewModel(WindowViewModelBase windowViewModel)
+        public ChatListControlViewModel(UIViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             this.SendMessageCommand = this.CreateCommand(async (parameter) =>

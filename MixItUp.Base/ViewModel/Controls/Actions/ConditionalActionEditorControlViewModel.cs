@@ -112,8 +112,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
     public class ConditionalActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
-        private const string SingleActionCommandType = "SingleAction";
-
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Conditional; } }
 
         public bool CaseSensitive
@@ -144,97 +142,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
 
-        public IEnumerable<string> SuccessTriggerTypes
-        {
-            get
-            {
-                List<CommandTypeEnum> commandTypes = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
-                commandTypes.Remove(CommandTypeEnum.Custom);
+        public ActionEditorListControlViewModel ActionEditorList { get; set; } = new ActionEditorListControlViewModel();
 
-                List<string> results = new List<string>(EnumHelper.GetEnumNames(commandTypes));
-                results.Sort();
-                results.Add(SingleActionCommandType);
-
-                return results;
-            }
-        }
-
-        public string SelectedSuccessTriggerType
-        {
-            get { return this.selectedSuccessTriggerType; }
-            set
-            {
-                this.selectedSuccessTriggerType = value;
-
-                this.SelectedCommand = null;
-
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("ShowCommands");
-                this.NotifyPropertyChanged("Commands");
-                this.NotifyPropertyChanged("SelectedCommand");
-                this.NotifyPropertyChanged("ShowActions");
-                this.NotifyPropertyChanged("Actions");
-                this.NotifyPropertyChanged("SelectedAction");
-            }
-        }
-        private string selectedSuccessTriggerType;
-
-        public bool ShowCommands { get { return !string.Equals(this.SelectedSuccessTriggerType, SingleActionCommandType); } }
-
-        public IEnumerable<CommandModelBase> Commands
-        {
-            get
-            {
-                List<CommandModelBase> commands = new List<CommandModelBase>();
-                if (this.ShowCommands)
-                {
-                    CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(this.SelectedSuccessTriggerType);
-                    if (commandType == CommandTypeEnum.PreMade)
-                    {
-                        return ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name);
-                    }
-                    else
-                    {
-                        return ChannelSession.AllCommands.Where(c => c.Type == commandType).OrderBy(c => c.Name);
-                    }
-                }
-                return commands;
-            }
-        }
-
-        public CommandModelBase SelectedCommand
-        {
-            get { return this.selectedCommand; }
-            set
-            {
-                this.selectedCommand = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private CommandModelBase selectedCommand;
-
-        public bool ShowActions { get { return !this.ShowCommands; } }
-
-        public IEnumerable<ActionTypeEnum> Actions
-        {
-            get
-            {
-                List<ActionTypeEnum> actions = new List<ActionTypeEnum>(EnumHelper.GetEnumList<ActionTypeEnum>());
-                actions.Remove(ActionTypeEnum.Custom);
-                return actions;
-            }
-        }
-
-        public ActionTypeEnum SelectedAction
-        {
-            get { return this.selectedAction; }
-            set
-            {
-                this.selectedAction = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private ActionTypeEnum selectedAction;
+        private List<ActionModelBase> subActions = new List<ActionModelBase>();
 
         public ConditionalActionEditorControlViewModel(ConditionalActionModel action)
             : base(action)
@@ -247,14 +157,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 this.Clauses.Add(new ConditionalClauseViewModel(clause, this));
             }
 
-            if (action.CommandID != Guid.Empty)
+            foreach (ActionModelBase subAction in action.Actions)
             {
-                // TODO
-            }
-            else if (action.Action != null)
-            {
-                this.SelectedAction = action.Action.Type;
-                // TODO
+                subActions.Add(subAction);
             }
         }
 
@@ -271,47 +176,37 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
                 return Task.FromResult(0);
             });
+
+            foreach (ActionModelBase subAction in subActions)
+            {
+                await this.ActionEditorList.AddAction(subAction);
+            }
+            subActions.Clear();
+
             await base.OnLoadedInternal();
         }
 
-        public override Task<Result> Validate()
+        public override async Task<Result> Validate()
         {
             foreach (ConditionalClauseViewModel clause in this.Clauses)
             {
                 if (!clause.Validate())
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.ConditionalActionClauseMissingValue));
+                    return new Result(MixItUp.Base.Resources.ConditionalActionClauseMissingValue);
                 }
             }
 
-            if (string.IsNullOrEmpty(this.SelectedSuccessTriggerType))
+            IEnumerable<Result> results = await this.ActionEditorList.ValidateActions();
+            if (results.Any(r => !r.Success))
             {
-                return Task.FromResult(new Result(MixItUp.Base.Resources.ConditionalActionMissingSuccessTrigger));
+                return new Result(results.All(r => !r.Success));
             }
-
-            if (this.ShowCommands)
-            {
-                // TODO
-            }
-            else if (this.ShowActions)
-            {
-                // TODO
-                return Task.FromResult(new Result(MixItUp.Base.Resources.ConditionalActionSuccessTriggerActionHasErrors));
-            }
-
-            return Task.FromResult(new Result());
+            return new Result();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowCommands)
-            {
-                // TODO
-            }
-            else if (this.ShowActions)
-            {
-                // TODO
-            }
+            // TODO
             return Task.FromResult<ActionModelBase>(null);
         }
     }

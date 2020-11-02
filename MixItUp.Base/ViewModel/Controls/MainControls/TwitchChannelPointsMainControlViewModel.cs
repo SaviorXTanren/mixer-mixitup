@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModels;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public ObservableCollection<TwitchChannelPointsCommandModel> Commands { get; private set; } = new ObservableCollection<TwitchChannelPointsCommandModel>();
 
-        public TwitchChannelPointsMainControlViewModel(WindowViewModelBase windowViewModel) : base(windowViewModel) { }
+        public TwitchChannelPointsMainControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { }
 
         public void Refresh()
         {

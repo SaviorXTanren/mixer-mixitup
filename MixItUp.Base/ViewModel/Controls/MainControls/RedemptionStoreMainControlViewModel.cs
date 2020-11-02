@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +10,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class RedemptionStorePurchaseViewModel : UIViewModelBase
+    public class RedemptionStorePurchaseViewModel : ViewModels.UIViewModelBase
     {
         public RedemptionStorePurchaseModel Purchase { get; set; }
 
@@ -101,7 +100,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        public RedemptionStoreMainControlViewModel(WindowViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
+        public RedemptionStoreMainControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
 
         public async Task Refresh()
         {

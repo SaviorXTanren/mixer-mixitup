@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
         }
     }
 
-    public class OverlayWidgetEditorWindowViewModel : WindowViewModelBase
+    public class OverlayWidgetEditorWindowViewModel : UIViewModelBase
     {
         public event EventHandler<OverlayTypeListing> OverlayTypeSelected;
 
