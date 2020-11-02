@@ -1,9 +1,8 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -142,6 +141,8 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
 
+        public ICommand ImportActionsCommand { get; private set; }
+
         public ActionEditorListControlViewModel ActionEditorList { get; set; } = new ActionEditorListControlViewModel();
 
         private List<ActionModelBase> subActions = new List<ActionModelBase>();
@@ -175,6 +176,18 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             {
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
                 return Task.FromResult(0);
+            });
+
+            this.ImportActionsCommand = this.CreateCommand(async (parameter) =>
+            {
+                IEnumerable<ActionModelBase> actions = await CommandEditorWindowViewModelBase.ImportActions();
+                if (actions != null)
+                {
+                    foreach (ActionModelBase action in actions)
+                    {
+                        await this.ActionEditorList.AddAction(action);
+                    }
+                }
             });
 
             foreach (ActionModelBase subAction in subActions)

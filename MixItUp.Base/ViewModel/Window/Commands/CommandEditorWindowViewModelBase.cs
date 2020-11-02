@@ -17,6 +17,17 @@ namespace MixItUp.Base.ViewModel.Window.Commands
     {
         public const string MixItUpCommandFileExtension = ".miucommand";
 
+        public static async Task<IEnumerable<ActionModelBase>> ImportActions()
+        {
+            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                ActionList actionList = await FileSerializerHelper.DeserializeFromFile<ActionList>(fileName);
+                return actionList.Actions;
+            }
+            return null;
+        }
+
         public string Name
         {
             get { return this.name; }
@@ -90,11 +101,10 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             {
                 try
                 {
-                    string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
-                    if (!string.IsNullOrEmpty(fileName))
+                    IEnumerable<ActionModelBase> actions = await CommandEditorWindowViewModelBase.ImportActions();
+                    if (actions != null)
                     {
-                        ActionList actionList = await FileSerializerHelper.DeserializeFromFile<ActionList>(fileName);
-                        foreach (ActionModelBase action in actionList.Actions)
+                        foreach (ActionModelBase action in actions)
                         {
                             await this.AddAction(action);
                         }

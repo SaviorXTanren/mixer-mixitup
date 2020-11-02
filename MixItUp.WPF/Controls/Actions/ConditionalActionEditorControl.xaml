@@ -111,6 +111,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding ActionEditorList.ActionTypes}" SelectedItem="{Binding ActionEditorList.SelectedActionType}" Width="300" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}">
@@ -123,6 +125,10 @@
 
             <Button Grid.Column="2" ToolTip="{x:Static resx:Resources.Add}" Command="{Binding ActionEditorList.AddCommand}">
                 <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
+
+            <Button Grid.Column="6" ToolTip="{x:Static resx:Resources.ImportActions}" Command="{Binding ImportActionsCommand}">
+                <MaterialDesign:PackIcon Kind="Import" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
 
