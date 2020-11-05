@@ -12,6 +12,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
         public EventCommandEditorWindowViewModel(EventCommandModel existingCommand)
             : base(existingCommand)
         {
+            this.EventType = existingCommand.EventType;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.EventType);
         }
 
