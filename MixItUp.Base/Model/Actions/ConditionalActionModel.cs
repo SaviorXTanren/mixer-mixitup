@@ -90,7 +90,7 @@ namespace MixItUp.Base.Model.Actions
             this.Actions = new List<ActionModelBase>(actions);
         }
 
-        internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action)
+        internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action, ActionModelBase subAction)
             : base(ActionTypeEnum.Conditional)
         {
             this.CaseSensitive = !action.IgnoreCase;
@@ -101,18 +101,9 @@ namespace MixItUp.Base.Model.Actions
                 this.Clauses.Add(new ConditionalClauseModel((ConditionalComparisionTypeEnum)(int)clause.ComparisionType, clause.Value1, clause.Value2, clause.Value3));
             }
 
-            if (action.Action != null)
+            if (subAction != null)
             {
-                // TODO
-                //this.Actions.Add(action.Action);
-            }
-            else
-            {
-                CommandModelBase command = ChannelSession.Settings.GetCommand(action.CommandID);
-                if (command != null)
-                {
-                    this.Actions.Add(new CommandActionModel(CommandActionTypeEnum.RunCommand, command, string.Empty));
-                }
+                this.Actions.Add(subAction);
             }
         }
 
