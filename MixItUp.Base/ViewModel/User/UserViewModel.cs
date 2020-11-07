@@ -712,7 +712,10 @@ namespace MixItUp.Base.ViewModel.User
             this.TwitchDisplayName = displayName;
             this.Data.TwitchBadges = badges;
             this.Data.TwitchBadgeInfo = badgeInfo;
-            this.Data.TwitchColor = color;
+            if (!string.IsNullOrEmpty(color))
+            {
+                this.Data.TwitchColor = color;
+            }
 
             if (this.Data.TwitchBadges != null)
             {
