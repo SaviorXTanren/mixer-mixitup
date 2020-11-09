@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.CommandID = id;
         }
 
-        public StreamPassCustomLevelUpCommandViewModel(int level, CustomCommandModel command)
+        public StreamPassCustomLevelUpCommandViewModel(int level, CommandModelBase command)
         {
             this.Level = level;
             this.Command = command;
@@ -258,9 +258,6 @@ namespace MixItUp.Base.ViewModel.Window.Currency
         }
         private CommandModelBase defaultLevelUpCommand;
 
-        public bool DefaultLevelUpCommandSet { get { return this.DefaultLevelUpCommand != null; } }
-        public bool DefaultLevelUpCommandNotSet { get { return !this.DefaultLevelUpCommandSet; } }
-
         private int savedCustomLevelUpNumber;
 
         public StreamPassWindowViewModel()
@@ -275,6 +272,8 @@ namespace MixItUp.Base.ViewModel.Window.Currency
                     }
                 }
             });
+
+            this.DefaultLevelUpCommand = new CustomCommandModel(MixItUp.Base.Resources.LevelUp);
         }
 
         public StreamPassWindowViewModel(StreamPassModel seasonPass)
@@ -301,6 +300,12 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             this.BitsBonus = this.StreamPass.BitsBonus;
 
             this.DefaultLevelUpCommand = this.StreamPass.DefaultLevelUpCommand;
+            if (this.DefaultLevelUpCommand == null)
+            {
+                this.DefaultLevelUpCommand = new CustomCommandModel(MixItUp.Base.Resources.LevelUp);
+                this.DefaultLevelUpCommand.IsEnabled = false;
+            }
+
             foreach (var kvp in this.StreamPass.CustomLevelUpCommands)
             {
                 this.CustomLevelUpCommands.Add(new StreamPassCustomLevelUpCommandViewModel(kvp.Key, kvp.Value));
@@ -331,7 +336,7 @@ namespace MixItUp.Base.ViewModel.Window.Currency
             return true;
         }
 
-        public void AddCustomLevelUpCommand(CustomCommandModel command)
+        public void AddCustomLevelUpCommand(CommandModelBase command)
         {
             List<StreamPassCustomLevelUpCommandViewModel> commands = this.CustomLevelUpCommands.ToList();
             commands.Add(new StreamPassCustomLevelUpCommandViewModel(this.savedCustomLevelUpNumber, command));

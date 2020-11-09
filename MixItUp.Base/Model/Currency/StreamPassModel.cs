@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Currency
                             command = ChannelSession.Settings.GetCommand(this.CustomLevelUpCommands[level]);
                         }
 
-                        if (command == null && this.DefaultLevelUpCommand != null)
+                        if (command == null && this.DefaultLevelUpCommand != null && this.DefaultLevelUpCommand.IsEnabled)
                         {
                             command = this.DefaultLevelUpCommand;
                         }

@@ -45,6 +45,10 @@ namespace MixItUp.WPF.Windows.Commands
                     break;
                 case CommandTypeEnum.Game:
                     break;
+                case CommandTypeEnum.Custom:
+                    this.editorDetailsControl = new CustomCommandEditorDetailsControl();
+                    this.viewModel = new CustomCommandEditorWindowViewModel((CustomCommandModel)existingCommand);
+                    break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
 

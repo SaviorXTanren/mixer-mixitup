@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -232,7 +232,7 @@
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="220">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                                                    <CommandsControls:CommandListingButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -261,11 +261,7 @@
                             </Grid>
 
                             <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.DefaultLevelUpCommand}" HorizontalAlignment="Center" Width="220">
-                                <Grid>
-                                    <Button x:Name="DefaultLevelUpNewCommandButton" HorizontalAlignment="Center" Click="DefaultLevelUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding DefaultLevelUpCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                                    <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" DeleteClicked="DefaultLevelUpCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" Visibility="{Binding DefaultLevelUpCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                </Grid>
+                                <CommandsControls:CommandListingButtonsControl DataContext="{Binding DefaultLevelUpCommand}" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" HideDeleteButton="True" />
                             </GroupBox>
                         </Grid>
                     </Grid>

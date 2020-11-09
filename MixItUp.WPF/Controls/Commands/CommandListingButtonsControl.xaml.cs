@@ -3,6 +3,7 @@ using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window.Currency;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -41,6 +42,11 @@ namespace MixItUp.WPF.Controls.Commands
                 else if (commandListingButtonsControl.DataContext is EventCommandItemViewModel)
                 {
                     EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandListingButtonsControl.DataContext;
+                    return (T)((CommandModelBase)commandItem.Command);
+                }
+                else if (commandListingButtonsControl.DataContext is StreamPassCustomLevelUpCommandViewModel)
+                {
+                    StreamPassCustomLevelUpCommandViewModel commandItem = (StreamPassCustomLevelUpCommandViewModel)commandListingButtonsControl.DataContext;
                     return (T)((CommandModelBase)commandItem.Command);
                 }
             }

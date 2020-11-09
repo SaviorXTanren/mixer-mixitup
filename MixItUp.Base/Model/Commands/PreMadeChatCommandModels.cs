@@ -52,6 +52,7 @@ namespace MixItUp.Base.Model.Commands
         {
             this.Requirements.Requirements.Add(new RoleRequirementModel(role));
             this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));
+            this.Requirements.Requirements.Add(new SettingsRequirementModel());
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettingsModel settings)
