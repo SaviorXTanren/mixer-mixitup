@@ -779,28 +779,20 @@ namespace MixItUp.Base.Model.Settings
                 this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
             }
 
-            // TODO
             // Clear out unused Cooldown Groups and Command Groups
-            //var allUsedCooldownGroupNames =
-            //    this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
-            //    .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
-            //    .Distinct();
-            //var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
-            //foreach (var unused in allUnusedCooldownGroupNames)
-            //{
-            //    this.CooldownGroupAmounts.Remove(unused.Key);
-            //}
+            var allUsedCooldownGroupNames = this.Commands.Values.ToList().Select(c => c.Requirements?.Cooldown?.GroupName).Distinct();
+            var allUnusedCooldownGroupNames = this.CooldownGroupAmounts.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach (var unused in allUnusedCooldownGroupNames)
+            {
+                this.CooldownGroupAmounts.Remove(unused.Key);
+            }
 
-            //var allUsedCommandGroupNames =
-            //    this.ChatCommands.Select(c => c.GroupName)
-            //    .Union(this.ActionGroupCommands.Select(a => a.GroupName))
-            //    .Union(this.TimerCommands.Select(a => a.GroupName))
-            //    .Distinct();
-            //var allUnusedCommandGroupNames = this.CommandGroups.ToList().Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
-            //foreach (var unused in allUnusedCommandGroupNames)
-            //{
-            //    this.CommandGroups.Remove(unused.Key);
-            //}
+            var allUsedCommandGroupNames = this.Commands.Values.ToList().Select(c => c.GroupName).Distinct();
+            var allUnusedCommandGroupNames = this.CommandGroups.ToList().Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach (var unused in allUnusedCommandGroupNames)
+            {
+                this.CommandGroups.Remove(unused.Key);
+            }
         }
 
         public async Task SaveDatabaseData()
