@@ -97,8 +97,8 @@ namespace MixItUp.Base.Services
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private LockedList<CommandModelBase> commands = new LockedList<CommandModelBase>();
         private Dictionary<string, CommandModelBase> triggersToCommands = new Dictionary<string, CommandModelBase>();
+        private int longestTrigger = 0;
         private List<CommandModelBase> wildcardCommands = new List<CommandModelBase>();
 
         private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
@@ -268,13 +268,12 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.commands.Clear();
             this.triggersToCommands.Clear();
+            this.longestTrigger = 0;
             this.wildcardCommands.Clear();
             this.chatMenuCommands.Clear();
             foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
-                this.commands.Add(command);
                 if (command.Wildcards)
                 {
                     this.wildcardCommands.Add(command);
@@ -285,14 +284,14 @@ namespace MixItUp.Base.Services
                     {
                         string t = (command.IncludeExclamation) ? "!" + trigger.ToLower() : trigger.ToLower();
                         this.triggersToCommands[t] = command;
+                        this.longestTrigger = Math.Max(this.longestTrigger, t.Length);
                     }
                 }
 
-                // TODO
-                //if (command.Requirements.Settings.ShowOnChatMenu)
-                //{
-                //    this.chatMenuCommands.Add(command);
-                //}
+                if (command.Requirements.Settings.ShowOnChatContextMenu)
+                {
+                    this.chatMenuCommands.Add(command);
+                }
             }
 
             this.ChatCommandsReprocessed(this, new EventArgs());
@@ -414,9 +413,9 @@ namespace MixItUp.Base.Services
                     if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
                     {
                         this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
+                        if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
                         {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
+                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(message.User, message.Platform);
                         }
                     }
 
@@ -466,38 +465,66 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
-                    // To user-only commands first
-                    // TODO
-                    //foreach (CommandModelBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
-                    //{
-                    //    commands.Add(command);
-                    //}
-
-                    // then Wild Card checks
-                    // TODO
-
-                    // Then regular
-                    string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
-                    for (int i = 0; i < messageParts.Length; i++)
+                    bool commandTriggered = false;
+                    if (message.User.Data.CustomCommandIDs.Count > 0)
                     {
-                        string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
-                        if (this.triggersToCommands.ContainsKey(commandCheck))
+                        Dictionary<string, CommandModelBase> userOnlyTriggersToCommands = new Dictionary<string, CommandModelBase>();
+                        List<ChatCommandModel> userOnlyWildcardCommands = new List<ChatCommandModel>();
+                        foreach (Guid commandID in message.User.Data.CustomCommandIDs)
                         {
-                            CommandModelBase command = this.triggersToCommands[commandCheck];
-                            if (command.IsEnabled)
+                            ChatCommandModel command = (ChatCommandModel)ChannelSession.Settings.GetCommand(commandID);
+                            if (command != null && command.IsEnabled)
                             {
-                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-                                await command.Perform(message.User, message.Platform, arguments: messageParts.Skip(i + 1));
+                                if (command.Wildcards)
+                                {
+                                    userOnlyWildcardCommands.Add(command);
+                                }
+                                else
+                                {
+                                    foreach (string trigger in command.Triggers)
+                                    {
+                                        string t = (command.IncludeExclamation) ? "!" + trigger.ToLower() : trigger.ToLower();
+                                        userOnlyTriggersToCommands[t] = command;
+                                    }
+                                }
+                            }
+                        }
 
-                                // TODO
-                                //if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
-                                //{
-                                //    await this.DeleteMessage(message);
-                                //}
+                        if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
+                        {
+                            foreach (ChatCommandModel command in userOnlyWildcardCommands)
+                            {
+                                if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
+                                {
+                                    await this.RunChatCommand(message,command, arguments);
+                                    commandTriggered = true;
+                                    break;
+                                }
+                            }
+                        }
 
+                        if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
+                        {
+                            commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
+                        }
+                    }
+
+                    if (!commandTriggered)
+                    {
+                        foreach (ChatCommandModel command in this.wildcardCommands)
+                        {
+                            if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
+                            {
+                                await this.RunChatCommand(message, command, arguments);
+                                commandTriggered = true;
                                 break;
                             }
                         }
+                    }
+
+                    if (!commandTriggered)
+                    {
+                        commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
                     }
                 }
 
@@ -630,6 +657,37 @@ namespace MixItUp.Base.Services
             foreach (AlertChatMessageViewModel alert in alerts)
             {
                 await ChannelSession.Services.Alerts.AddAlert(alert);
+            }
+        }
+
+        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands)
+        {
+            string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
+            for (int i = 0; i < messageParts.Length; i++)
+            {
+                string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
+                if (commandCheck.Length > this.longestTrigger)
+                {
+                    return false;
+                }
+
+                if (commands.ContainsKey(commandCheck))
+                {
+                    await this.RunChatCommand(message, commands[commandCheck], messageParts.Skip(i + 1));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
+        {
+            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+            await command.Perform(message.User, message.Platform, arguments);
+
+            if (command.Requirements.Settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DeleteChatMessageWhenRun))
+            {
+                await this.DeleteMessage(message);
             }
         }
 

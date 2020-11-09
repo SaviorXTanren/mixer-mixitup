@@ -5,6 +5,9 @@ namespace MixItUp.Base.Model.Requirements
     public class SettingsRequirementModel : RequirementModelBase
     {
         [DataMember]
+        public bool DeleteChatMessageWhenRun { get; set; }
+
+        [DataMember]
         public bool ShowOnChatContextMenu { get; set; }
 
         public SettingsRequirementModel() { }

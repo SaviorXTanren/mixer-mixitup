@@ -117,8 +117,15 @@ namespace MixItUp.Base.Model.User
         public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
+        public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
+        [DataMember]
+        public Guid EntranceCommandID { get; set; }
+
+        [DataMember]
+        [Obsolete]
         public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
         [DataMember]
+        [Obsolete]
         public CustomCommand EntranceCommand { get; set; }
 
         [DataMember]
@@ -388,8 +395,8 @@ namespace MixItUp.Base.Model.User
             this.ViewingMinutes += other.ViewingMinutes;
             this.OfflineViewingMinutes += other.OfflineViewingMinutes;
 
-            this.CustomCommands = other.CustomCommands;
-            this.EntranceCommand = other.EntranceCommand;
+            this.CustomCommandIDs = other.CustomCommandIDs;
+            this.EntranceCommandID = other.EntranceCommandID;
 
             this.IsCurrencyRankExempt = other.IsCurrencyRankExempt;
             this.PatreonUserID = other.PatreonUserID;

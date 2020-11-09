@@ -13,38 +13,6 @@ namespace MixItUp.Base.Model.Commands
     {
         public const string CommandWildcardMatchingRegexFormat = "\\s?{0}\\s?";
 
-        public static bool DoesMessageMatchTriggers(ChatMessageViewModel message, IEnumerable<string> triggers, out IEnumerable<string> arguments)
-        {
-            arguments = null;
-            foreach (string trigger in triggers)
-            {
-                if (message.PlainTextMessage.StartsWith(trigger))
-                {
-                    if (message.PlainTextMessage.Length == trigger.Length || message.PlainTextMessage[trigger.Length] == ' ')
-                    {
-                        arguments = message.PlainTextMessage.Substring(trigger.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, IEnumerable<string> triggers, out IEnumerable<string> arguments)
-        {
-            arguments = null;
-            foreach (string trigger in triggers)
-            {
-                Match match = Regex.Match(message.PlainTextMessage, string.Format(CommandWildcardMatchingRegexFormat, Regex.Escape(trigger)), RegexOptions.IgnoreCase);
-                if (match != null && match.Success)
-                {
-                    arguments = message.PlainTextMessage.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public static bool IsValidCommandTrigger(string command)
         {
             if (!string.IsNullOrEmpty(command))
@@ -86,16 +54,19 @@ namespace MixItUp.Base.Model.Commands
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
-        public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
+        public bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
         {
-            if (this.Wildcards)
+            arguments = null;
+            foreach (string trigger in this.Triggers)
             {
-                return ChatCommandModel.DoesMessageMatchWildcardTriggers(message, this.Triggers, out arguments);
+                Match match = Regex.Match(message.PlainTextMessage, string.Format(CommandWildcardMatchingRegexFormat, Regex.Escape(trigger)), RegexOptions.IgnoreCase);
+                if (match != null && match.Success)
+                {
+                    arguments = message.PlainTextMessage.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    return true;
+                }
             }
-            else
-            {
-                return ChatCommandModel.DoesMessageMatchTriggers(message, this.Triggers, out arguments);
-            }
+            return false;
         }
     }
 

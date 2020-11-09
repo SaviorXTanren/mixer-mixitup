@@ -157,6 +157,8 @@ namespace MixItUp.Base.Model.Commands
 
         public async Task Perform(UserViewModel user) { await this.Perform(user, StreamingPlatformTypeEnum.None, null, null); }
 
+        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform) { await this.Perform(user, platform, null); }
+
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments) { await this.Perform(user, StreamingPlatformTypeEnum.None, arguments, null); }
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) { await this.Perform(user, platform, arguments, null); }
