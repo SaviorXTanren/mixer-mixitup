@@ -3437,4 +3437,22 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="FailedToImportCommand" xml:space="preserve">
     <value>Failed to import command</value>
   </data>
+  <data name="GiveawayStartedReminderCommandName" xml:space="preserve">
+    <value>Giveaway Started/Reminder</value>
+  </data>
+  <data name="GiveawayUserJoinedCommandName" xml:space="preserve">
+    <value>Giveaway User Joined</value>
+  </data>
+  <data name="GiveawayWinnerSelectedCommandName" xml:space="preserve">
+    <value>Giveaway Winner Selected</value>
+  </data>
+  <data name="ModerationStrike1CommandName" xml:space="preserve">
+    <value>Moderation Strike 1</value>
+  </data>
+  <data name="ModerationStrike2CommandName" xml:space="preserve">
+    <value>Moderation Strike 2</value>
+  </data>
+  <data name="ModerationStrike3CommandName" xml:space="preserve">
+    <value>Moderation Strike 3+</value>
+  </data>
 </root>

@@ -256,6 +256,12 @@ namespace MixItUp.Base.Model.Settings
         public bool GameQueueSubPriority { get; set; }
         [DataMember]
         public RequirementViewModel GameQueueRequirements { get; set; } = new RequirementViewModel();
+
+        [DataMember]
+        public Guid GameQueueUserJoinedCommandID { get; set; }
+        [DataMember]
+        public Guid GameQueueUserSelectedCommandID { get; set; }
+
         [Obsolete]
         [DataMember]
         public Base.Commands.CustomCommand GameQueueUserJoinedCommand { get; set; }
@@ -301,6 +307,14 @@ namespace MixItUp.Base.Model.Settings
         public bool GiveawayRequireClaim { get; set; } = true;
         [DataMember]
         public bool GiveawayAllowPastWinners { get; set; }
+
+        [DataMember]
+        public Guid GiveawayStartedReminderCommandID { get; set; }
+        [DataMember]
+        public Guid GiveawayUserJoinedCommandID { get; set; }
+        [DataMember]
+        public Guid GiveawayWinnerSelectedCommandID { get; set; }
+
         [Obsolete]
         [DataMember]
         public Base.Commands.CustomCommand GiveawayStartedReminderCommand { get; set; }
@@ -358,6 +372,14 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool ModerationResetStrikesOnLaunch { get; set; }
+
+        [DataMember]
+        public Guid ModerationStrike1CommandID { get; set; }
+        [DataMember]
+        public Guid ModerationStrike2CommandID { get; set; }
+        [DataMember]
+        public Guid ModerationStrike3CommandID { get; set; }
+
         [Obsolete]
         [DataMember]
         public Base.Commands.CustomCommand ModerationStrike1Command { get; set; }
@@ -910,18 +932,6 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
-            // TODO
-            //this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommandModel.BasicChatCommand(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, "You are #$queueposition in the queue to play.");
-            //this.GameQueueUserSelectedCommand = this.GameQueueUserSelectedCommand ?? CustomCommandModel.BasicChatCommand(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, "It's time to play @$username! Listen carefully for instructions on how to join...");
-
-            //this.GiveawayStartedReminderCommand = this.GiveawayStartedReminderCommand ?? CustomCommandModel.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
-            //this.GiveawayUserJoinedCommand = this.GiveawayUserJoinedCommand ?? CustomCommandModel.BasicChatCommand("Giveaway User Joined");
-            //this.GiveawayWinnerSelectedCommand = this.GiveawayWinnerSelectedCommand ?? CustomCommandModel.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won $giveawayitem!");
-
-            //this.ModerationStrike1Command = this.ModerationStrike1Command ?? CustomCommandModel.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
-            //this.ModerationStrike2Command = this.ModerationStrike2Command ?? CustomCommandModel.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
-            //this.ModerationStrike3Command = this.ModerationStrike3Command ?? CustomCommandModel.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
-
             if (this.DashboardItems.Count < 4)
             {
                 this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
@@ -931,19 +941,69 @@ namespace MixItUp.Base.Model.Settings
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
 
-            // TODO
-            //if (this.GetCustomCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
-            //{
-            //    CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
-            //    this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
-            //    this.SetCustomCommand(command);
-            //}
-            //if (this.GetCustomCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
-            //{
-            //    CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
-            //    this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
-            //    this.SetCustomCommand(command);
-            //}
+            if (this.GetCommand(this.GameQueueUserJoinedCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, "You are #$queueposition in the queue to play.");
+                this.GameQueueUserJoinedCommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.GameQueueUserSelectedCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, "It's time to play @$username! Listen carefully for instructions on how to join...");
+                this.GameQueueUserSelectedCommandID = command.ID;
+                this.SetCommand(command);
+            }
+
+            if (this.GetCommand(this.GiveawayStartedReminderCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayStartedReminderCommandName, "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
+                this.GiveawayStartedReminderCommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.GiveawayUserJoinedCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayUserJoinedCommandName);
+                this.GiveawayUserJoinedCommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.GiveawayWinnerSelectedCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayWinnerSelectedCommandName, "Congratulations @$username, you won $giveawayitem!");
+                this.GiveawayWinnerSelectedCommandID = command.ID;
+                this.SetCommand(command);
+            }
+
+            if (this.GetCommand(this.ModerationStrike1CommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike1CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike1CommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.ModerationStrike2CommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike2CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike2CommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.ModerationStrike3CommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike3CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike3CommandID = command.ID;
+                this.SetCommand(command);
+            }
+
+            if (this.GetCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
+                this.SetCommand(command);
+            }
+            if (this.GetCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
+            {
+                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, "@$username just redeemed $productname");
+                this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
+                this.SetCommand(command);
+            }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

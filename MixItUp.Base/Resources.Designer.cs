@@ -3652,6 +3652,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Giveaway Started/Reminder.
+        /// </summary>
+        public static string GiveawayStartedReminderCommandName {
+            get {
+                return ResourceManager.GetString("GiveawayStartedReminderCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giveaway User Joined.
+        /// </summary>
+        public static string GiveawayUserJoinedCommandName {
+            get {
+                return ResourceManager.GetString("GiveawayUserJoinedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giveaway Winner Selected.
+        /// </summary>
+        public static string GiveawayWinnerSelectedCommandName {
+            get {
+                return ResourceManager.GetString("GiveawayWinnerSelectedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global Mod.
         /// </summary>
         public static string GlobalMod {
@@ -5196,6 +5223,33 @@ namespace MixItUp.Base {
         public static string ModerationReasonOptional {
             get {
                 return ResourceManager.GetString("ModerationReasonOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moderation Strike 1.
+        /// </summary>
+        public static string ModerationStrike1CommandName {
+            get {
+                return ResourceManager.GetString("ModerationStrike1CommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moderation Strike 2.
+        /// </summary>
+        public static string ModerationStrike2CommandName {
+            get {
+                return ResourceManager.GetString("ModerationStrike2CommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moderation Strike 3+.
+        /// </summary>
+        public static string ModerationStrike3CommandName {
+            get {
+                return ResourceManager.GetString("ModerationStrike3CommandName", resourceCulture);
             }
         }
         
