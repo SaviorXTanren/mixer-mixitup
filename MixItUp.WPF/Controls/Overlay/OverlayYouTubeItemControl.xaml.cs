@@ -42,7 +42,14 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override async Task OnLoaded()
         {
-            this.DataContext = this.viewModel;
+            if (this.DataContext is OverlayYouTubeItemViewModel)
+            {
+                this.viewModel = (OverlayYouTubeItemViewModel)this.DataContext;
+            }
+            else
+            {
+                this.DataContext = this.viewModel;
+            }
             await this.viewModel.OnLoaded();
         }
     }

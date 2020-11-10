@@ -18,13 +18,6 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayItemPositionViewModel();
         }
 
-        public OverlayItemPositionControl(OverlayItemPositionModel position)
-        {
-            InitializeComponent();
-
-            this.viewModel = new OverlayItemPositionViewModel(position);
-        }
-
         public void SetPosition(OverlayItemPositionModel position)
         {
             this.viewModel.SetPosition(position);
@@ -37,7 +30,14 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override async Task OnLoaded()
         {
-            this.DataContext = this.viewModel;
+            if (this.DataContext is OverlayItemPositionViewModel)
+            {
+                this.viewModel = (OverlayItemPositionViewModel)this.DataContext;
+            }
+            else
+            {
+                this.DataContext = this.viewModel;
+            }
             await this.viewModel.OnLoaded();
         }
     }

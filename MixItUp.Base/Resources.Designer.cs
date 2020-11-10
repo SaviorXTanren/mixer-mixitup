@@ -5776,6 +5776,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overlay Action: Duration must be greater than 0.
+        /// </summary>
+        public static string OverlayActionDurationInvalid {
+            get {
+                return ResourceManager.GetString("OverlayActionDurationInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overlay Action: Missing required information for type of Overlay action.
+        /// </summary>
+        public static string OverlayActionItemInvalid {
+            get {
+                return ResourceManager.GetString("OverlayActionItemInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overlay Action: Missing Widget.
+        /// </summary>
+        public static string OverlayActionMissingWidget {
+            get {
+                return ResourceManager.GetString("OverlayActionMissingWidget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay Endpoints.
         /// </summary>
         public static string OverlayEndpoints {

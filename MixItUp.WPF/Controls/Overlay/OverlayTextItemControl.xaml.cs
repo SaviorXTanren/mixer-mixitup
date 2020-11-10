@@ -44,8 +44,14 @@ namespace MixItUp.WPF.Controls.Overlay
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-
-            this.DataContext = this.viewModel;
+            if (this.DataContext is OverlayTextItemViewModel)
+            {
+                this.viewModel = (OverlayTextItemViewModel)this.DataContext;
+            }
+            else
+            {
+                this.DataContext = this.viewModel;
+            }
             await this.viewModel.OnLoaded();
         }
     }

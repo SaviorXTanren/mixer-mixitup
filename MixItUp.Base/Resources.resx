@@ -3455,4 +3455,13 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="ModerationStrike3CommandName" xml:space="preserve">
     <value>Moderation Strike 3+</value>
   </data>
+  <data name="OverlayActionDurationInvalid" xml:space="preserve">
+    <value>Overlay Action: Duration must be greater than 0</value>
+  </data>
+  <data name="OverlayActionItemInvalid" xml:space="preserve">
+    <value>Overlay Action: Missing required information for type of Overlay action</value>
+  </data>
+  <data name="OverlayActionMissingWidget" xml:space="preserve">
+    <value>Overlay Action: Missing Widget</value>
+  </data>
 </root>

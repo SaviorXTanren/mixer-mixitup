@@ -217,10 +217,9 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return new Result();
         }
 
-        protected override Task<ActionModelBase> GetActionInternal()
+        protected override async Task<ActionModelBase> GetActionInternal()
         {
-            // TODO
-            return Task.FromResult<ActionModelBase>(null);
+            return new ConditionalActionModel(this.CaseSensitive, this.SelectedOperatorType, this.Clauses.Select(c => c.Clause), await this.ActionEditorList.GetActions());
         }
     }
 }
