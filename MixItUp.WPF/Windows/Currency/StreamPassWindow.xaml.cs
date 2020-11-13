@@ -77,7 +77,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CommandModelBase>());
+            CommandEditorWindow window = new CommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
             window.Show();
         }
 

@@ -47,7 +47,12 @@ namespace MixItUp.WPF.Controls.Commands
                 else if (commandListingButtonsControl.DataContext is StreamPassCustomLevelUpCommandViewModel)
                 {
                     StreamPassCustomLevelUpCommandViewModel commandItem = (StreamPassCustomLevelUpCommandViewModel)commandListingButtonsControl.DataContext;
-                    return (T)((CommandModelBase)commandItem.Command);
+                    return (T)commandItem.Command;
+                }
+                else if (commandListingButtonsControl.DataContext is RedemptionStoreProductViewModel)
+                {
+                    RedemptionStoreProductViewModel commandItem = (RedemptionStoreProductViewModel)commandListingButtonsControl.DataContext;
+                    return (T)commandItem.Command;
                 }
             }
             return null;
@@ -79,6 +84,8 @@ namespace MixItUp.WPF.Controls.Commands
             set { SetValue(HideEnableDisableToggleProperty, value); }
         }
 
+        public CommandModelBase GetCommandFromCommandButtons() { return CommandListingButtonsControl.GetCommandFromCommandButtons<CommandModelBase>(this); }
+
         public T GetCommandFromCommandButtons<T>() where T : CommandModelBase { return CommandListingButtonsControl.GetCommandFromCommandButtons<T>(this); }
 
         private void CommandListingButtonsControl_Loaded(object sender, RoutedEventArgs e)
@@ -108,7 +115,7 @@ namespace MixItUp.WPF.Controls.Commands
                 this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
             }
 
-            CommandModelBase command = this.GetCommandFromCommandButtons<CommandModelBase>();
+            CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
                 if (this.EnableDisableToggleSwitch != null)
@@ -122,7 +129,7 @@ namespace MixItUp.WPF.Controls.Commands
         {
             this.RaiseEvent(new RoutedEventArgs(CommandListingButtonsControl.PlayClickedEvent, this));
 
-            CommandModelBase command = this.GetCommandFromCommandButtons<CommandModelBase>();
+            CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
                 await command.TestPerform();
@@ -151,7 +158,7 @@ namespace MixItUp.WPF.Controls.Commands
         {
             this.RaiseEvent(new RoutedEventArgs(CommandListingButtonsControl.EnableDisableToggledEvent, this));
 
-            CommandModelBase command = this.GetCommandFromCommandButtons<CommandModelBase>();
+            CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
                 command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
