@@ -97,6 +97,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
                     await ChannelSession.SaveSettings();
+
+                    ChannelSession.Services.Moderation.RebuildCache();
                 });
             }
         }
@@ -124,7 +126,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private string ConvertFilteredWordListToText(IEnumerable<string> words)
         {
             string text = string.Join(Environment.NewLine, words);
-            text = text.Replace(ModerationService.BannedWordWildcardRegexFormat, "*");
+            text = text.Replace(ModerationService.WordWildcardRegex, "*");
             return text;
         }
 
@@ -134,7 +136,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 text = "";
             }
-            text = text.Replace("*", ModerationService.BannedWordWildcardRegexFormat);
+            text = text.Replace("*", ModerationService.WordWildcardRegex);
 
             list.Clear();
             foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
