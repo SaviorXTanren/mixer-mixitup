@@ -57,6 +57,11 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
+        public static Task RunActionsInBackground(IEnumerable<ActionModelBase> actions, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            return Task.Run(async () => await CommandModelBase.RunActions(actions, user, platform, arguments, specialIdentifiers));
+        }
+
         public static async Task RunActions(IEnumerable<ActionModelBase> actions, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);
