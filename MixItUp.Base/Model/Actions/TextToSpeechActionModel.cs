@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -138,12 +139,12 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = (int)(action.Rate * 100);
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
             if (overlay != null)
             {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.Text, user, platform, arguments, specialIdentifiers);
+                string message = await this.ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume / 100.0, Pitch = this.Pitch / 100.0, Rate = this.Rate / 100.0 });
             }
         }

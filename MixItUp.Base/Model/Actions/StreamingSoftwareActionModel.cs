@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -226,7 +227,7 @@ namespace MixItUp.Base.Model.Actions
 
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.StreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.StreamingSoftwareType; } }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
@@ -263,13 +264,13 @@ namespace MixItUp.Base.Model.Actions
                     string name = null;
                     if (!string.IsNullOrEmpty(this.ItemName))
                     {
-                        name = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, platform, arguments, specialIdentifiers);
+                        name = await this.ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
                     }
 
                     string parentName = null;
                     if (!string.IsNullOrEmpty(this.ParentName))
                     {
-                        parentName = await this.ReplaceStringWithSpecialModifiers(this.ParentName, user, platform, arguments, specialIdentifiers);
+                        parentName = await this.ReplaceStringWithSpecialModifiers(this.ParentName, parameters);
                     }
 
                     if (this.ActionType == StreamingSoftwareActionTypeEnum.StartStopStream)
@@ -288,7 +289,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ActionType == StreamingSoftwareActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
-                            await ssService.SetWebBrowserSourceURL(parentName, name, await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, platform, arguments, specialIdentifiers));
+                            await ssService.SetWebBrowserSourceURL(parentName, name, await this.ReplaceStringWithSpecialModifiers(this.SourceURL, parameters));
                         }
                         else if (this.ActionType == StreamingSoftwareActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
                         {
@@ -301,7 +302,7 @@ namespace MixItUp.Base.Model.Actions
 
                                 using (StreamWriter writer = new StreamWriter(File.Open(this.SourceTextFilePath, FileMode.Create)))
                                 {
-                                    writer.Write(await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, platform, arguments, specialIdentifiers));
+                                    writer.Write(await this.ReplaceStringWithSpecialModifiers(this.SourceText, parameters));
                                     writer.Flush();
                                 }
                             }

@@ -56,30 +56,9 @@ namespace MixItUp.Base.Actions
             this.Amount = amount;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
-            {
-                if (this.UpdateAmount || this.SetAmount)
-                {
-                    string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
-                    if (double.TryParse(amountText, out double amount))
-                    {
-                        if (this.UpdateAmount)
-                        {
-                            await ChannelSession.Settings.Counters[this.CounterName].UpdateAmount(amount);
-                        }
-                        else if (this.SetAmount)
-                        {
-                            await ChannelSession.Settings.Counters[this.CounterName].SetAmount(amount);
-                        }
-                    }
-                }
-                else if (this.ResetAmount)
-                {
-                    await ChannelSession.Settings.Counters[this.CounterName].ResetAmount();
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

@@ -222,10 +222,10 @@ namespace MixItUp.Base.Model.Actions
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
-            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers);
+            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers));
         }
 
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task Perform(CommandParametersModel parameters)
         {
             if (this.Enabled)
             {
@@ -235,16 +235,16 @@ namespace MixItUp.Base.Model.Actions
 
                     ChannelSession.Services.Telemetry.TrackAction(this.Type);
 
-                    await this.PerformInternal(user, platform, arguments, specialIdentifiers);
+                    await this.PerformInternal(parameters);
                 });
             }
         }
 
-        protected abstract Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers);
+        protected abstract Task PerformInternal(CommandParametersModel parameters);
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers, bool encode = false)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters, bool encode = false)
         {
-            return await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(str, user, platform, arguments, specialIdentifiers, encode);
+            return await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(str, parameters, encode);
         }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }

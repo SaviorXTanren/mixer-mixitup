@@ -198,7 +198,7 @@ namespace MixItUp.Base.Model.Currency
                         if (command != null)
                         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform(ChannelSession.Services.User.GetUserByID(user.ID), arguments: null, specialIdentifiers: specialIdentifiers);
+                            command.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID), specialIdentifiers: specialIdentifiers));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                     }

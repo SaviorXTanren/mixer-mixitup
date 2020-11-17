@@ -30,13 +30,9 @@ namespace MixItUp.Base.Actions
             this.Amount = amount;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
-            if (double.TryParse(amountText, out double amount) && amount > 0.0)
-            {
-                await Task.Delay((int)(1000 * amount));
-            }
+            return Task.FromResult(0);
         }
     }
 }

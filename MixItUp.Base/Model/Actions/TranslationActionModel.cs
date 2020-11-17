@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
@@ -41,20 +42,20 @@ namespace MixItUp.Base.Model.Actions
             this.Text = action.Text;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.Translation != null)
             {
-                string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, platform, arguments, specialIdentifiers);
+                string text = await this.ReplaceStringWithSpecialModifiers(this.Text, parameters);
                 string translationResult = await ChannelSession.Services.Translation.Translate(this.Culture, text, this.AllowProfanity);
                 if (string.IsNullOrEmpty(translationResult))
                 {
                     translationResult = this.Text;
                 }
 
-                if (!string.IsNullOrEmpty(translationResult) && string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, translationResult)))
+                if (!string.IsNullOrEmpty(translationResult) && string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(parameters.User, translationResult)))
                 {
-                    specialIdentifiers[ResponseSpecialIdentifier] = translationResult;
+                    parameters.SpecialIdentifiers[ResponseSpecialIdentifier] = translationResult;
                 }
             }
         }

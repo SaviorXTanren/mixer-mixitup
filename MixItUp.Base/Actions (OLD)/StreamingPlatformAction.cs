@@ -69,30 +69,9 @@ namespace MixItUp.Base.Actions
             this.ActionType = type;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (this.ActionType == StreamingPlatformActionType.Host)
-            {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
-                await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-            }
-            else if (this.ActionType == StreamingPlatformActionType.Raid)
-            {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
-                await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-            }
-            else if (this.ActionType == StreamingPlatformActionType.RunAd)
-            {
-                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
-                if (response == null)
-                {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
-                }
-                else if (!string.IsNullOrEmpty(response.message))
-                {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

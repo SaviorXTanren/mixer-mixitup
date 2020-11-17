@@ -107,12 +107,12 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<bool> results = new List<bool>();
             foreach (ConditionalClauseModel clause in this.Clauses)
             {
-                results.Add(await this.Check(clause, user, platform, arguments, specialIdentifiers));
+                results.Add(await this.Check(clause, parameters));
             }
 
             bool finalResult = false;
@@ -133,14 +133,14 @@ namespace MixItUp.Base.Model.Actions
             {
                 // TODO
                 // Add option for whether actions should be run in background or wait for them
-                await CommandModelBase.RunActions(this.Actions, user, platform, arguments, specialIdentifiers);
+                await CommandModelBase.RunActions(this.Actions, parameters);
             }
         }
 
-        private async Task<bool> Check(ConditionalClauseModel clause, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        private async Task<bool> Check(ConditionalClauseModel clause, CommandParametersModel parameters)
         {
-            string v1 = await this.ReplaceStringWithSpecialModifiers(clause.Value1, user, platform, arguments, specialIdentifiers);
-            string v2 = await this.ReplaceStringWithSpecialModifiers(clause.Value2, user, platform, arguments, specialIdentifiers);
+            string v1 = await this.ReplaceStringWithSpecialModifiers(clause.Value1, parameters);
+            string v2 = await this.ReplaceStringWithSpecialModifiers(clause.Value2, parameters);
 
             if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
@@ -149,7 +149,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Between)
             {
-                string v3 = await this.ReplaceStringWithSpecialModifiers(clause.Value3, user, platform, arguments, specialIdentifiers);
+                string v3 = await this.ReplaceStringWithSpecialModifiers(clause.Value3, parameters);
                 if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num) && double.TryParse(v3, out double v3num))
                 {
                     return (v2num <= v1num && v1num <= v3num);

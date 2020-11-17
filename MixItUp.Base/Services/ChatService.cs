@@ -415,7 +415,7 @@ namespace MixItUp.Base.Services
                         this.userEntranceCommands.Add(message.User.ID);
                         if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
                         {
-                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(message.User, message.Platform);
+                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform));
                         }
                     }
 
@@ -683,9 +683,9 @@ namespace MixItUp.Base.Services
         private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
         {
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-            await command.Perform(message.User, message.Platform, arguments);
+            await command.Perform(new CommandParametersModel(message.User, message.Platform, arguments));
 
-            if (command.Requirements.Settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DeleteChatMessageWhenRun))
+            if (command.Requirements.Settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatMessageWhenRun))
             {
                 await this.DeleteMessage(message);
             }

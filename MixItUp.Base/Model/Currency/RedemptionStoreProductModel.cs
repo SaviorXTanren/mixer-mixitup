@@ -136,17 +136,17 @@ namespace MixItUp.Base.Model.Currency
                     }
                 }
 
-                if (await product.Requirements.Validate(user, user.Platform, arguments, new Dictionary<string, string>()))
+                if (await product.Requirements.Validate(new CommandParametersModel(user, arguments)))
                 {
-                    await product.Requirements.Perform(user, user.Platform, arguments, new Dictionary<string, string>());
-                    foreach (UserViewModel u in product.Requirements.GetPerformingUsers(user, user.Platform, arguments, new Dictionary<string, string>()))
+                    await product.Requirements.Perform(new CommandParametersModel(user, arguments));
+                    foreach (CommandParametersModel u in product.Requirements.GetPerformingUsers(new CommandParametersModel(user, arguments)))
                     {
                         if (!product.IsInfinite)
                         {
                             product.CurrentAmount--;
                         }
 
-                        RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, u);
+                        RedemptionStorePurchaseModel purchase = new RedemptionStorePurchaseModel(product, u.User);
                         ChannelSession.Settings.RedemptionStorePurchases.Add(purchase);
 
                         if (product.AutoRedeem)
@@ -156,14 +156,12 @@ namespace MixItUp.Base.Model.Currency
                         else
                         {
                             purchase.State = RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded;
-
-                            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                            extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+                            u.SpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
                             CommandModelBase command = ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
                             if (command != null)
                             {
-                                await command.Perform(u, arguments: null, specialIdentifiers: extraSpecialIdentifiers);
+                                await command.Perform(u);
                             }
 
                             GlobalEvents.RedemptionStorePurchasesUpdated();
@@ -293,10 +291,10 @@ namespace MixItUp.Base.Model.Currency
 
                 if (command != null)
                 {
-                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                    extraSpecialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                    specialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                    await command.Perform(user, arguments: null, specialIdentifiers: extraSpecialIdentifiers);
+                    await command.Perform(new CommandParametersModel(user, specialIdentifiers: specialIdentifiers));
                 }
 
                 if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)
@@ -317,7 +315,7 @@ namespace MixItUp.Base.Model.Currency
             UserViewModel user = this.User;
             if (product != null && user != null)
             {
-                await product.Requirements.Refund(user, user.Platform, new List<string>(), new Dictionary<string, string>());
+                await product.Requirements.Refund(new CommandParametersModel(user));
                 if (!product.IsInfinite)
                 {
                     product.CurrentAmount++;

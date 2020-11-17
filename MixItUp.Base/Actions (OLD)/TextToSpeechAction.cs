@@ -139,14 +139,9 @@ namespace MixItUp.Base.Actions
             this.Rate = rate;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
-            if (overlay != null)
-            {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, arguments);
-                await overlay.SendTextToSpeech(new OverlayTextToSpeech() { Text = message, Voice = this.Voice, Volume = this.Volume, Pitch = this.Pitch, Rate = this.Rate });
-            }
+            return Task.FromResult(0);
         }
     }
 }

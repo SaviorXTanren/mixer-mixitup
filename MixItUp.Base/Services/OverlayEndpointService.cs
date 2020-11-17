@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -49,8 +50,8 @@ namespace MixItUp.Base.Services
 
         Task EndBatching();
 
-        Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform);
-        Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform);
+        Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters);
+        Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters);
         Task HideItem(OverlayItemModelBase item);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
@@ -179,13 +180,13 @@ namespace MixItUp.Base.Services
             this.batchPackets.Clear();
         }
 
-        public async Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public async Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {
             if (item != null)
             {
                 try
                 {
-                    JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers, platform);
+                    JObject jobj = await item.GetProcessedItem(parameters);
                     if (jobj != null)
                     {
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
@@ -203,13 +204,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public async Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters)
         {
             if (item != null)
             {
                 try
                 {
-                    JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers, platform);
+                    JObject jobj = await item.GetProcessedItem(parameters);
                     if (jobj != null)
                     {
                         await this.SendPacket("Update", jobj);

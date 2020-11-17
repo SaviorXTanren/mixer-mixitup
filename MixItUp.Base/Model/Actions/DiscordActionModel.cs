@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -59,7 +60,7 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldMuteDeafen = action.ShouldMuteDeafen;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == DiscordActionTypeEnum.SendMessage)
             {
@@ -70,7 +71,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (this.channel != null)
                 {
-                    string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, user, platform, arguments, specialIdentifiers);
+                    string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
                     await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
                 }
             }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -101,7 +102,7 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = action.DeductFromUser;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             CurrencyModel currency = null;
 
@@ -133,7 +134,7 @@ namespace MixItUp.Base.Model.Actions
 
                 if (!string.IsNullOrEmpty(this.ItemName))
                 {
-                    string itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, platform, arguments, specialIdentifiers);
+                    string itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, parameters);
                     item = inventory.GetItem(itemName);
                     if (item == null)
                     {
@@ -171,20 +172,20 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (currency != null)
                 {
-                    currency.ResetAmount(user.Data);
+                    currency.ResetAmount(parameters.User.Data);
                 }
                 else if (inventory != null)
                 {
-                    inventory.ResetAmount(user.Data);
+                    inventory.ResetAmount(parameters.User.Data);
                 }
                 else if (streamPass != null)
                 {
-                    streamPass.ResetAmount(user.Data);
+                    streamPass.ResetAmount(parameters.User.Data);
                 }
             }
             else
             {
-                string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, platform, arguments, specialIdentifiers);
+                string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
                 if (!double.TryParse(amountTextValue, out double doubleAmount))
                 {
                     await ChannelSession.Services.Chat.SendMessage(string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
@@ -201,14 +202,14 @@ namespace MixItUp.Base.Model.Actions
                 HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
                 if (this.ActionType == ConsumablesActionTypeEnum.AddToUser)
                 {
-                    receiverUserData.Add(user.Data);
+                    receiverUserData.Add(parameters.User.Data);
                 }
                 else if (this.ActionType == ConsumablesActionTypeEnum.AddToSpecificUser || this.ActionType == ConsumablesActionTypeEnum.SubtractFromSpecificUser)
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
-                        string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
-                        UserViewModel receivingUser = ChannelSession.Services.User.GetUserByUsername(usernameString, platform);
+                        string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        UserViewModel receivingUser = ChannelSession.Services.User.GetUserByUsername(usernameString, parameters.Platform);
                         if (receivingUser != null)
                         {
                             receiverUserData.Add(receivingUser.Data);
@@ -236,30 +237,30 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (currency != null)
                     {
-                        if (!currency.HasAmount(user.Data, amountValue))
+                        if (!currency.HasAmount(parameters.User.Data, amountValue))
                         {
                             await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
                             return;
                         }
-                        currency.SubtractAmount(user.Data, amountValue);
+                        currency.SubtractAmount(parameters.User.Data, amountValue);
                     }
                     else if (inventory != null)
                     {
-                        if (!inventory.HasAmount(user.Data, item, amountValue))
+                        if (!inventory.HasAmount(parameters.User.Data, item, amountValue))
                         {
                             await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, item));
                             return;
                         }
-                        inventory.SubtractAmount(user.Data, item, amountValue);
+                        inventory.SubtractAmount(parameters.User.Data, item, amountValue);
                     }
                     else if (streamPass != null)
                     {
-                        if (!streamPass.HasAmount(user.Data, amountValue))
+                        if (!streamPass.HasAmount(parameters.User.Data, amountValue))
                         {
                             await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
                             return;
                         }
-                        streamPass.SubtractAmount(user.Data, amountValue);
+                        streamPass.SubtractAmount(parameters.User.Data, amountValue);
                     }
                 }
 

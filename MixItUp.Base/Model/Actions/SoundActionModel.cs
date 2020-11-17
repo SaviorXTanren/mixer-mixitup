@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
@@ -43,16 +44,16 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = action.OutputDevice;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, platform, arguments, specialIdentifiers);
+            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             if (SoundActionModel.MixItUpOverlay.Equals(this.OutputDevice))
             {
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
                 if (overlay != null)
                 {
                     var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale);
-                    await overlay.ShowItem(overlayItem, user, arguments, specialIdentifiers, platform);
+                    await overlay.ShowItem(overlayItem, parameters);
                 }
             }
             else

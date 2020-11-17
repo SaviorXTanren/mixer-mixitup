@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -301,16 +302,16 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public virtual async Task<JObject> GetProcessedItem(CommandParametersModel parameters)
         {
             JObject jobj = JObject.FromObject(this);
-            await this.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
+            await this.PerformReplacements(jobj, parameters);
             return jobj;
         }
 
         public virtual Task LoadCachedData() { return Task.FromResult(0); }
 
-        protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected virtual async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)
         {
             if (jobj != null)
             {
@@ -318,27 +319,20 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (jobj[key].Type == JTokenType.String)
                     {
-                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), user, arguments, extraSpecialIdentifiers, platform);
+                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), parameters);
                     }
                     else if (jobj[key].Type == JTokenType.Object)
                     {
-                        await this.PerformReplacements((JObject)jobj[key], user, arguments, extraSpecialIdentifiers, platform);
+                        await this.PerformReplacements((JObject)jobj[key], parameters);
                     }
                 }
             }
         }
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, platform: platform, encode: false);
-            if (extraSpecialIdentifiers != null)
-            {
-                foreach (var kvp in extraSpecialIdentifiers)
-                {
-                    siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
-                }
-            }
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: false);
+            await siString.ReplaceCommonSpecialModifiers(parameters);
             return siString.ToString();
         }
 

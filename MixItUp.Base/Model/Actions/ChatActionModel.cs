@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -42,15 +43,15 @@ namespace MixItUp.Base.Model.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatActionModel.asyncSemaphore; } }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, platform, arguments, specialIdentifiers);
+            string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, parameters);
             if (this.IsWhisper)
             {
-                string whisperUserName = user.Username;
+                string whisperUserName = parameters.User.Username;
                 if (!string.IsNullOrEmpty(this.WhisperUserName))
                 {
-                    whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, platform, arguments, specialIdentifiers);
+                    whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
                 }
                 await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
             }

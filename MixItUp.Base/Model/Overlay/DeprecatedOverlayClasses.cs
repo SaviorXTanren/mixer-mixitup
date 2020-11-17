@@ -176,18 +176,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public T Copy<T>() { return JSONSerializerHelper.DeserializeFromString<T>(JSONSerializerHelper.SerializeToString(this)); }
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        protected Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: encode);
-            if (extraSpecialIdentifiers != null)
-            {
-                foreach (var kvp in extraSpecialIdentifiers)
-                {
-                    siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
-                }
-            }
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            return siString.ToString();
+            return Task.FromResult(string.Empty);
         }
     }
 

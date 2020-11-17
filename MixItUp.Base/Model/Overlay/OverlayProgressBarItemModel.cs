@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
@@ -158,7 +159,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 
@@ -184,7 +185,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (!string.IsNullOrEmpty(this.CurrentAmountCustom))
                 {
-                    string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers, platform);
+                    string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, parameters);
                     if (double.TryParse(customAmount, out amount))
                     {
                         if (this.StartAmount <= 0)
@@ -197,7 +198,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (!string.IsNullOrEmpty(this.GoalAmountCustom))
                 {
-                    string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, user, arguments, extraSpecialIdentifiers, platform);
+                    string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, parameters);
                     if (double.TryParse(customGoal, out goal))
                     {
                         this.GoalAmount = goal;

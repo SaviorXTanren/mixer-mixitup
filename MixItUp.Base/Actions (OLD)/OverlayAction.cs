@@ -56,7 +56,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (this.ShowWidget)
                     {
-                        await widget.Enable(user, arguments, this.extraSpecialIdentifiers);
+                        //await widget.Enable(user, arguments, this.extraSpecialIdentifiers);
                     }
                     else
                     {
@@ -70,7 +70,7 @@ namespace MixItUp.Base.Actions
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
+                    //await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
                 }
             }
         }

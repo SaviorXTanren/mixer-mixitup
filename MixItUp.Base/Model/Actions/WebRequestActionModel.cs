@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -67,7 +68,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -75,7 +76,7 @@ namespace MixItUp.Base.Model.Actions
                 httpClient.DefaultRequestHeaders.Add("Twitch-UserID", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.id : string.Empty);
                 httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.login : string.Empty);
 
-                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, platform, arguments, specialIdentifiers, encode: true)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -133,7 +134,7 @@ namespace MixItUp.Base.Model.Actions
 
                                                 if (currentToken != null)
                                                 {
-                                                    specialIdentifiers[kvp.Value] = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), user, platform, arguments, specialIdentifiers);
+                                                    parameters.SpecialIdentifiers[kvp.Value] = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
                                                 }
                                             }
                                         }
@@ -146,7 +147,7 @@ namespace MixItUp.Base.Model.Actions
                             }
                             else
                             {
-                                specialIdentifiers[ResponseSpecialIdentifier] = decodedWebRequestResult;
+                                parameters.SpecialIdentifiers[ResponseSpecialIdentifier] = decodedWebRequestResult;
                             }
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace MixItUp.Base.Model.Requirements
 
         [JsonIgnore]
         private List<Guid> lastApplicableUsers = new List<Guid>();
+        [JsonIgnore]
+        private Dictionary<Guid, CommandParametersModel> performParameters = new Dictionary<Guid, CommandParametersModel>();
 
         public ThresholdRequirementModel() { }
 
@@ -45,25 +48,25 @@ namespace MixItUp.Base.Model.Requirements
 
         public bool IsEnabled { get { return this.Amount > 0; } }
 
-        public List<UserViewModel> GetApplicableUsers()
+        public List<CommandParametersModel> GetApplicableUsers()
         {
-            List<UserViewModel> users = new List<UserViewModel>();
+            List<CommandParametersModel> users = new List<CommandParametersModel>();
             foreach (Guid userID in this.lastApplicableUsers)
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
-                if (user != null)
+                if (this.performParameters.ContainsKey(userID))
                 {
-                    users.Add(user);
+                    users.Add(this.performParameters[userID]);
                 }
             }
             return users;
         }
 
-        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task<bool> Validate(CommandParametersModel parameters)
         {
             if (this.IsEnabled)
             {
-                this.performs[user.ID] = DateTimeOffset.Now;
+                this.performs[parameters.User.ID] = DateTimeOffset.Now;
+                this.performParameters[parameters.User.ID] = parameters;
 
                 DateTimeOffset cutoffDateTime = DateTimeOffset.MinValue;
                 if (this.TimeSpan > 0)
@@ -76,6 +79,7 @@ namespace MixItUp.Base.Model.Requirements
                     if (this.performs[key] < cutoffDateTime)
                     {
                         this.performs.Remove(key);
+                        this.performParameters.Remove(key);
                     }
                 }
 
@@ -91,9 +95,10 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override Task Perform(CommandParametersModel parameters)
         {
             this.performs.Clear();
+            this.performParameters.Clear();
             return Task.FromResult(0);
         }
     }

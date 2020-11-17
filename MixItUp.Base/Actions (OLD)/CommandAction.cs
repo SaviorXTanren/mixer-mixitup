@@ -82,47 +82,9 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            CommandBase command = this.Command;
-            if (this.CommandActionType == CommandActionTypeEnum.RunCommand)
-            {
-                if (command != null)
-                {
-                    IEnumerable<string> newArguments = null;
-                    if (!string.IsNullOrEmpty(this.CommandArguments))
-                    {
-                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.CommandArguments, user, arguments);
-                        newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                    }
-                    else
-                    {
-                        newArguments = arguments;
-                    }
-
-                    await command.Perform(user, this.platform, newArguments, this.GetExtraSpecialIdentifiers());
-                }
-            }
-            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommand || this.CommandActionType == CommandActionTypeEnum.EnableCommand)
-            {
-                if (command != null)
-                {
-                    command.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
-                }
-            }
-            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommandGroup || this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup)
-            {
-                IEnumerable<CommandBase> commands = this.CommandGroup;
-                if (commands != null)
-                {
-                    foreach (CommandBase cmd in commands)
-                    {
-                        cmd.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
-                    }
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -88,11 +88,11 @@ namespace MixItUp.Base.Model.Requirements
 
         public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
 
-        public async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task<bool> Validate(CommandParametersModel parameters)
         {
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                if (!await requirement.Validate(user, platform, arguments, specialIdentifiers))
+                if (!await requirement.Validate(parameters))
                 {
                     return false;
                 }
@@ -100,26 +100,26 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task Perform(CommandParametersModel parameters)
         {
-            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user, platform, arguments, specialIdentifiers);
+            IEnumerable<CommandParametersModel> users = this.GetRequirementUsers(parameters);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                foreach (UserViewModel u in users)
+                foreach (CommandParametersModel u in users)
                 {
-                    await requirement.Perform(u, platform, arguments, specialIdentifiers);
+                    await requirement.Perform(u);
                 }
             }
         }
 
-        public async Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task Refund(CommandParametersModel parameters)
         {
-            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user, platform, arguments, specialIdentifiers);
+            IEnumerable<CommandParametersModel> users = this.GetRequirementUsers(parameters);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                foreach (UserViewModel u in users)
+                foreach (CommandParametersModel u in users)
                 {
-                    await requirement.Refund(u, platform, arguments, specialIdentifiers);
+                    await requirement.Refund(u);
                 }
             }
         }
@@ -132,33 +132,33 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public IEnumerable<UserViewModel> GetPerformingUsers(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters)
         {
             ThresholdRequirementModel threshold = this.Threshold;
             if (threshold != null && threshold.IsEnabled && threshold.RunForEachUser)
             {
-                return this.GetRequirementUsers(user, platform, arguments, specialIdentifiers);
+                return this.GetRequirementUsers(parameters);
             }
             else
             {
-                return new List<UserViewModel>() { user };
+                return new List<CommandParametersModel>() { parameters };
             }
         }
 
-        public IEnumerable<UserViewModel> GetRequirementUsers(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public IEnumerable<CommandParametersModel> GetRequirementUsers(CommandParametersModel parameters)
         {
-            List<UserViewModel> users = new List<UserViewModel>();
+            List<CommandParametersModel> users = new List<CommandParametersModel>();
             ThresholdRequirementModel threshold = this.Threshold;
             if (threshold != null && threshold.IsEnabled)
             {
-                foreach (UserViewModel u in threshold.GetApplicableUsers())
+                foreach (CommandParametersModel u in threshold.GetApplicableUsers())
                 {
                     users.Add(u);
                 }
             }
             else
             {
-                users.Add(user);
+                users.Add(parameters);
             }
             return users;
         }

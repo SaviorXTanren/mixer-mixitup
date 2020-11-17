@@ -39,7 +39,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments);
+            string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, null);
 
             if (SoundAction.MixItUpOverlay.Equals(this.OutputDevice))
             {
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Actions
                 if (overlay != null)
                 {
                     var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale);
-                    await overlay.ShowItem(overlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
+                    //await overlay.ShowItem(overlayItem, user, arguments, this.extraSpecialIdentifiers, this.platform);
                 }
             }
             else

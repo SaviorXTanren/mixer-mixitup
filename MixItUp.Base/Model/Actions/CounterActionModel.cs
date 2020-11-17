@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -47,7 +48,7 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = action.Amount;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
@@ -57,7 +58,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else
                 {
-                    string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, platform, arguments, specialIdentifiers);
+                    string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
                     if (double.TryParse(amountText, out double amount))
                     {
                         if (this.ActionType == CounterActionTypeEnum.Update)

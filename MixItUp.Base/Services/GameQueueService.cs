@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Requirements;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
@@ -134,7 +135,7 @@ namespace MixItUp.Base.Services
         {
             foreach (UserViewModel user in this.queue.ToList())
             {
-                if (await roleRequirement.Validate(user, user.Platform, new List<string>(), new Dictionary<string, string>()))
+                if (await roleRequirement.Validate(new CommandParametersModel(user)))
                 {
                     this.queue.Remove(user);
                     await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);

@@ -1,4 +1,5 @@
 ﻿using Jace;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -50,9 +51,9 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, user, platform, arguments, specialIdentifiers);
+            string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);
 
             replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
             replacementText = await this.ProcessStringFunction(replacementText, "removecommas", (text) => { return Task.FromResult(text.Replace(",", string.Empty)); });
@@ -87,7 +88,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                specialIdentifiers[this.SpecialIdentifierName] = replacementText;
+                parameters.SpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
             }
         }
 

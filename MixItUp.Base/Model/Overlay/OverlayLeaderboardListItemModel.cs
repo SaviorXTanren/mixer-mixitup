@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
@@ -188,7 +189,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public override async Task<JObject> GetProcessedItem(CommandParametersModel parameters)
         {
             List<OverlayLeaderboardItem> items = new List<OverlayLeaderboardItem>();
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
@@ -244,7 +245,7 @@ namespace MixItUp.Base.Model.Overlay
                 await this.ProcessLeaderboardItems(items);
             }
 
-            return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, platform);
+            return await base.GetProcessedItem(parameters);
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)

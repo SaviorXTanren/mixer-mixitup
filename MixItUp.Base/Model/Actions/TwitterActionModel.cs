@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,14 +67,14 @@ namespace MixItUp.Base.Model.Actions
             this.NameUpdate = action.NewProfileName;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.Twitter.IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
-                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, platform, arguments, specialIdentifiers);
-                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, platform, arguments, specialIdentifiers);
+                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, parameters);
+                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, parameters);
 
                     if (!string.IsNullOrEmpty(tweet))
                     {

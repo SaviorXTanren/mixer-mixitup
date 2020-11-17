@@ -53,31 +53,9 @@ namespace MixItUp.Base.Actions
             this.NewProfileName = profileName;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Twitter.IsConnected)
-            {
-                if (this.ActionType == TwitterActionTypeEnum.SendTweet)
-                {
-                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, arguments);
-                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
-
-                    if (TwitterAction.CheckIfTweetContainsTooManyTags(tweet))
-                    {
-                        await ChannelSession.Services.Chat.SendMessage("The tweet you specified can not be sent because it contains an @mention");
-                        return;
-                    }
-
-                    if (!await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath))
-                    {
-                        await ChannelSession.Services.Chat.SendMessage("The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
-                    }
-                }
-                else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
-                {
-                    await ChannelSession.Services.Twitter.UpdateName(this.NewProfileName);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

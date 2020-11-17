@@ -62,7 +62,7 @@ namespace MixItUp.Base.Model.Commands
             this.Requirements.Cooldown.IndividualAmount = settings.Cooldown;
         }
 
-        protected override Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override Task PerformInternal(CommandParametersModel parameters)
         {
             return Task.FromResult(0);
         }
@@ -74,7 +74,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public MixItUpPreMadeChatCommandModel() : base("Mix It Up", "mixitup", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             await ChannelSession.Services.Chat.SendMessage("This channel uses the Mix It Up app to improve their stream. Check out http://mixitupapp.com for more information!");
         }
@@ -84,12 +84,12 @@ namespace MixItUp.Base.Model.Commands
     {
         public CommandsPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Commands, "commands", 0, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
-                if (await command.Requirements.Role.Validate(user, platform, arguments, specialIdentifiers))
+                if (await command.Requirements.Role.Validate(parameters))
                 {
                     if (command.IncludeExclamation)
                     {
@@ -118,12 +118,12 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamesPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Games, "games", 0, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<string> commandTriggers = new List<string>();
             foreach (GameCommandModelBase command in ChannelSession.GameCommands)
             {
-                if (command.IsEnabled && await command.Requirements.Role.Validate(user, platform, arguments, specialIdentifiers))
+                if (command.IsEnabled && await command.Requirements.Role.Validate(parameters))
                 {
                     commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
                 }
@@ -145,7 +145,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public MixItUpCommandsPreMadeChatCommandModel() : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             await ChannelSession.Services.Chat.SendMessage("All common, Mix It Up chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
         }
@@ -155,7 +155,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             await ChannelSession.RefreshChannel();
             if (ChannelSession.TwitchChannelV5 != null)
@@ -182,7 +182,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public TitlePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Title, new HashSet<string>() { "title", "stream" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             await ChannelSession.RefreshChannel();
             await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchChannelV5.status);
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Model.Commands
 
         public UptimePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Uptime, "uptime", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
             if (startTime > DateTimeOffset.MinValue)
@@ -222,9 +222,9 @@ namespace MixItUp.Base.Model.Commands
     {
         public FollowAgePreMadeChatCommandModel() : base(MixItUp.Base.Resources.FollowAge, "followage", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Follow Age: " + user.FollowAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.Username + "'s Follow Age: " + parameters.User.FollowAgeString);
         }
     }
 
@@ -232,9 +232,9 @@ namespace MixItUp.Base.Model.Commands
     {
         public SubscribeAgePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SubscribeAge, new HashSet<string>() { "subage", "subscribeage" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Subscribe Age: " + user.SubscribeAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.Username + "'s Subscribe Age: " + parameters.User.SubscribeAgeString);
         }
     }
 
@@ -242,9 +242,9 @@ namespace MixItUp.Base.Model.Commands
     {
         public StreamerAgePreMadeChatCommandModel() : base(MixItUp.Base.Resources.StreamerAge, new HashSet<string>() { "streamerage", "age" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Streamer Age: " + user.AccountAgeString);
+            await ChannelSession.Services.Chat.SendMessage(parameters.User.Username + "'s Streamer Age: " + parameters.User.AccountAgeString);
         }
     }
 
@@ -252,7 +252,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public QuotePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Quote, new HashSet<string>() { "quote", "quotes" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Settings.QuotesEnabled)
             {
@@ -261,9 +261,9 @@ namespace MixItUp.Base.Model.Commands
                     int quoteNumber = 0;
                     UserQuoteViewModel quote = null;
 
-                    if (arguments.Count() == 1)
+                    if (parameters.Arguments.Count() == 1)
                     {
-                        if (!int.TryParse(arguments.ElementAt(0), out quoteNumber))
+                        if (!int.TryParse(parameters.Arguments.ElementAt(0), out quoteNumber))
                         {
                             await ChannelSession.Services.Chat.SendMessage("USAGE: !quote [QUOTE NUMBER]");
                             return;
@@ -275,7 +275,7 @@ namespace MixItUp.Base.Model.Commands
                             await ChannelSession.Services.Chat.SendMessage($"Unable to find quote number {quoteNumber}.");
                         }
                     }
-                    else if (arguments.Count() == 0)
+                    else if (parameters.Arguments.Count() == 0)
                     {
                         int quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.Quotes.Count);
                         quote = ChannelSession.Settings.Quotes[quoteIndex];
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Model.Commands
     {
         public LastQuotePreMadeChatCommandModel() : base(MixItUp.Base.Resources.LastQuote, new HashSet<string>() { "lastquote" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Settings.QuotesEnabled)
             {
@@ -333,14 +333,14 @@ namespace MixItUp.Base.Model.Commands
     {
         public AddQuotePreMadeChatCommandModel() : base(MixItUp.Base.Resources.AddQuote, new HashSet<string>() { "addquote", "quoteadd" }, 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Settings.QuotesEnabled)
             {
-                if (arguments.Count() > 0)
+                if (parameters.Arguments.Count() > 0)
                 {
                     StringBuilder quoteBuilder = new StringBuilder();
-                    foreach (string arg in arguments)
+                    foreach (string arg in parameters.Arguments)
                     {
                         quoteBuilder.Append(arg + " ");
                     }
@@ -405,7 +405,7 @@ namespace MixItUp.Base.Model.Commands
 
         public Magic8BallPreMadeChatCommandModel() : base(MixItUp.Base.Resources.MagicEightBall, new HashSet<string>() { "magic8ball", "8ball" }, 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             int index = RandomHelper.GenerateRandomNumber(this.responses.Count);
             await ChannelSession.Services.Chat.SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]));
@@ -469,12 +469,12 @@ namespace MixItUp.Base.Model.Commands
 
         public XboxGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.XboxGame, "xboxgame", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string gameName = null;
-            if (arguments.Count() > 0)
+            if (parameters.Arguments.Count() > 0)
             {
-                gameName = string.Join(" ", arguments);
+                gameName = string.Join(" ", parameters.Arguments);
             }
             else
             {
@@ -570,12 +570,12 @@ namespace MixItUp.Base.Model.Commands
 
         public SteamGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SteamGame, "steamgame", 5, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string gameName = null;
-            if (arguments.Count() > 0)
+            if (parameters.Arguments.Count() > 0)
             {
-                gameName = string.Join(" ", arguments);
+                gameName = string.Join(" ", parameters.Arguments);
             }
             else
             {
@@ -602,11 +602,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public SetTitlePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() > 0)
+            if (parameters.Arguments.Count() > 0)
             {
-                string name = string.Join(" ", arguments);
+                string name = string.Join(" ", parameters.Arguments);
                 await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, status: name);
                 await ChannelSession.RefreshChannel();
                 await ChannelSession.Services.Chat.SendMessage("Title Updated: " + name);
@@ -623,11 +623,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public SetGamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() > 0)
+            if (parameters.Arguments.Count() > 0)
             {
-                string name = string.Join(" ", arguments).ToLower();
+                string name = string.Join(" ", parameters.Arguments).ToLower();
                 IEnumerable<Twitch.Base.Models.NewAPI.Games.GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(name);
                 if (games != null && games.Count() > 0)
                 {
@@ -654,20 +654,20 @@ namespace MixItUp.Base.Model.Commands
     {
         public SetUserTitlePreMadeChatCommandModel() : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() > 1)
+            if (parameters.Arguments.Count() > 1)
             {
-                string username = arguments.ElementAt(0);
+                string username = parameters.Arguments.ElementAt(0);
                 if (username.StartsWith("@"))
                 {
                     username = username.Substring(1);
                 }
 
-                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
+                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
                 if (targetUser != null)
                 {
-                    targetUser.Title = string.Join(" ", arguments.Skip(1));
+                    targetUser.Title = string.Join(" ", parameters.Arguments.Skip(1));
                 }
                 else
                 {
@@ -685,11 +685,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public AddCommandPreMadeChatCommandModel() : base(MixItUp.Base.Resources.AddCommand, "addcommand", 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() >= 3)
+            if (parameters.Arguments.Count() >= 3)
             {
-                string commandTrigger = arguments.ElementAt(0).ToLower();
+                string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
                 if (!CommandBase.IsValidCommandString(commandTrigger))
                 {
@@ -709,14 +709,14 @@ namespace MixItUp.Base.Model.Commands
                     }
                 }
 
-                if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
+                if (!int.TryParse(parameters.Arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Cooldown must be 0 or greater");
                     return;
                 }
 
                 StringBuilder commandTextBuilder = new StringBuilder();
-                foreach (string arg in arguments.Skip(2))
+                foreach (string arg in parameters.Arguments.Skip(2))
                 {
                     commandTextBuilder.Append(arg + " ");
                 }
@@ -749,11 +749,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public UpdateCommandPreMadeChatCommandModel() : base(MixItUp.Base.Resources.UpdateCommand, new HashSet<string>() { "updatecommand", "editcommand" }, 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() >= 2)
+            if (parameters.Arguments.Count() >= 2)
             {
-                string commandTrigger = arguments.ElementAt(0).ToLower();
+                string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
                 CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
@@ -762,7 +762,7 @@ namespace MixItUp.Base.Model.Commands
                     return;
                 }
 
-                if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
+                if (!int.TryParse(parameters.Arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Cooldown must be 0 or greater");
                     return;
@@ -773,10 +773,10 @@ namespace MixItUp.Base.Model.Commands
                     command.Requirements.Cooldown.IndividualAmount = cooldown;
                 }
 
-                if (arguments.Count() > 2)
+                if (parameters.Arguments.Count() > 2)
                 {
                     StringBuilder commandTextBuilder = new StringBuilder();
-                    foreach (string arg in arguments.Skip(2))
+                    foreach (string arg in parameters.Arguments.Skip(2))
                     {
                         commandTextBuilder.Append(arg + " ");
                     }
@@ -806,11 +806,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public DisableCommandPreMadeChatCommandModel() : base(MixItUp.Base.Resources.DisableCommand, "disablecommand", 5, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() == 1)
+            if (parameters.Arguments.Count() == 1)
             {
-                string commandTrigger = arguments.ElementAt(0).ToLower();
+                string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
                 CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
@@ -839,11 +839,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public StartGiveawayPreMadeChatCommandModel() : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, UserRoleEnum.Streamer) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments.Count() > 0)
+            if (parameters.Arguments.Count() > 0)
             {
-                string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments));
+                string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", parameters.Arguments));
                 if (!string.IsNullOrEmpty(result))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: " + result);
@@ -862,18 +862,18 @@ namespace MixItUp.Base.Model.Commands
 
         public LinkMixerAccountPreMadeChatCommandModel() : base("Link Mixer Account", "linkmixeraccount", 0, UserRoleEnum.User) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments != null && arguments.Count() == 1)
+            if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                string mixerUsername = arguments.First().Replace("@", "");
+                string mixerUsername = parameters.Arguments.First().Replace("@", "");
 #pragma warning disable CS0612 // Type or member is obsolete
                 UserDataModel mixerUserData = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Mixer, mixerUsername);
 #pragma warning restore CS0612 // Type or member is obsolete
                 if (mixerUserData != null)
                 {
-                    LinkedAccounts[user.ID] = mixerUserData.ID;
-                    await ChannelSession.Services.Chat.SendMessage($"@{user.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {user.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
+                    LinkedAccounts[parameters.User.ID] = mixerUserData.ID;
+                    await ChannelSession.Services.Chat.SendMessage($"@{parameters.User.Username} is attempting to link the Mixer account {mixerUserData.MixerUsername} to their {parameters.User.Platform} account. Mods can type \"!approvemixeraccount @<TWITCH USERNAME>\" in chat to approve this linking.");
                     return;
                 }
                 await ChannelSession.Services.Chat.SendMessage("There is no Mixer user data for that username");
@@ -889,11 +889,11 @@ namespace MixItUp.Base.Model.Commands
     {
         public ApproveMixerAccountPreMadeChatCommandModel() : base("Approve Mixer Account", "approvemixeraccount", 0, UserRoleEnum.Mod) { }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (arguments != null && arguments.Count() == 1)
+            if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
-                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(arguments.First().Replace("@", ""), user.Platform);
+                UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
                 if (targetUser != null && LinkMixerAccountChatCommand.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
                     UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountChatCommand.LinkedAccounts[targetUser.ID]);

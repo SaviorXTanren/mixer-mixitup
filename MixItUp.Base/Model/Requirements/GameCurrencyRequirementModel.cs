@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace MixItUp.Base.Model.Requirements
             this.MaxAmount = maxAmount;
         }
 
-        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task<bool> Validate(CommandParametersModel parameters)
         {
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
@@ -48,13 +49,13 @@ namespace MixItUp.Base.Model.Requirements
 
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
             {
-                return await base.Validate(user, platform, arguments, specialIdentifiers);
+                return await base.Validate(parameters);
             }
             else
             {
-                int amount = await this.GetGameAmount(user, platform, arguments, specialIdentifiers);
-                int minAmount = await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers);
-                int maxAmount = await this.GetAmount(this.MaxAmount, user, platform, arguments, specialIdentifiers);
+                int amount = await this.GetGameAmount(parameters);
+                int minAmount = await this.GetAmount(this.Amount, parameters);
+                int maxAmount = await this.GetAmount(this.MaxAmount, parameters);
                 if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                 {
                     if (amount < minAmount)
@@ -62,7 +63,7 @@ namespace MixItUp.Base.Model.Requirements
                         await this.SendChatMessage(string.Format("You must specify an amount greater than or equal to {0} {1}", this.Amount, currency.Name));
                         return false;
                     }
-                    return await this.ValidateAmount(user, platform, arguments, specialIdentifiers, currency, amount);
+                    return await this.ValidateAmount(parameters, currency, amount);
                 }
                 else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
@@ -71,67 +72,67 @@ namespace MixItUp.Base.Model.Requirements
                         await this.SendChatMessage(string.Format("You must specify an amount between {0} - {1} {2}", this.Amount, this.MaxAmount, currency.Name));
                         return false;
                     }
-                    return await this.ValidateAmount(user, platform, arguments, specialIdentifiers, currency, amount);
+                    return await this.ValidateAmount(parameters, currency, amount);
                 }
             }
             return false;
         }
 
-        public override async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Perform(CommandParametersModel parameters)
         {
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
-                await base.Perform(user, platform, arguments, specialIdentifiers);
+                await base.Perform(parameters);
             }
             else
             {
                 CurrencyModel currency = this.Currency;
-                if (currency != null && !user.Data.IsCurrencyRankExempt)
+                if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
                 {
                     if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
                     {
-                        await base.Perform(user, platform, arguments, specialIdentifiers);
+                        await base.Perform(parameters);
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.SubtractAmount(user.Data, await this.GetGameAmount(user, platform, arguments, specialIdentifiers));
+                        currency.SubtractAmount(parameters.User.Data, await this.GetGameAmount(parameters));
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.SubtractAmount(user.Data, await this.GetGameAmount(user, platform, arguments, specialIdentifiers));
+                        currency.SubtractAmount(parameters.User.Data, await this.GetGameAmount(parameters));
                     }
                 }
             }
         }
 
-        public override async Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task Refund(CommandParametersModel parameters)
         {
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
-                await base.Perform(user, platform, arguments, specialIdentifiers);
+                await base.Perform(parameters);
             }
             else
             {
                 CurrencyModel currency = this.Currency;
-                if (currency != null && !user.Data.IsCurrencyRankExempt)
+                if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
                 {
                     if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
                     {
-                        await base.Refund(user, platform, arguments, specialIdentifiers);
+                        await base.Refund(parameters);
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.AddAmount(user.Data, await this.GetGameAmount(user, platform, arguments, specialIdentifiers));
+                        currency.AddAmount(parameters.User.Data, await this.GetGameAmount(parameters));
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.AddAmount(user.Data, await this.GetGameAmount(user, platform, arguments, specialIdentifiers));
+                        currency.AddAmount(parameters.User.Data, await this.GetGameAmount(parameters));
                     }
                 }
             }
         }
 
-        public async Task<int> GetGameAmount(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task<int> GetGameAmount(CommandParametersModel parameters)
         {
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
@@ -139,18 +140,18 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
             {
-                return await this.GetAmount(this.Amount, user, platform, arguments, specialIdentifiers);
+                return await this.GetAmount(this.Amount, parameters);
             }
             else
             {
                 int amount = 0;
-                if (arguments.Count() > 0)
+                if (parameters.Arguments.Count() > 0)
                 {
-                    if (!int.TryParse(arguments.ElementAt(0), out amount))
+                    if (!int.TryParse(parameters.Arguments.ElementAt(0), out amount))
                     {
-                        if (arguments.Count() > 1)
+                        if (parameters.Arguments.Count() > 1)
                         {
-                            int.TryParse(arguments.ElementAt(1), out amount);
+                            int.TryParse(parameters.Arguments.ElementAt(1), out amount);
                         }
                     }
                 }

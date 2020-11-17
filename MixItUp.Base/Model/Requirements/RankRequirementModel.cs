@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -74,7 +75,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task<bool> Validate(CommandParametersModel parameters)
         {
             CurrencyModel rankSystem = this.RankSystem;
             if (rankSystem == null)
@@ -88,11 +89,11 @@ namespace MixItUp.Base.Model.Requirements
                 return false;
             }
 
-            if (!user.Data.IsCurrencyRankExempt)
+            if (!parameters.User.Data.IsCurrencyRankExempt)
             {
                 if (this.MatchType == RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
                 {
-                    if (!rankSystem.HasAmount(user.Data, rank.Amount))
+                    if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
                     {
                         await this.SendChatMessage(string.Format("You do not have the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
-                    if (rankSystem.GetRank(user.Data) != rank)
+                    if (rankSystem.GetRank(parameters.User.Data) != rank)
                     {
                         await this.SendChatMessage(string.Format("You do not have the required rank of {0} to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;
@@ -108,8 +109,8 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
                 {
-                    RankModel nextRank = rankSystem.GetNextRank(user.Data);
-                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(user.Data, nextRank.Amount))
+                    RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
+                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
                     {
                         await this.SendChatMessage(string.Format("You are over the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
                         return false;

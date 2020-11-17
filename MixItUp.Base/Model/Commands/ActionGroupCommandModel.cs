@@ -27,15 +27,15 @@ namespace MixItUp.Base.Model.Commands
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ActionGroupCommandModel.commandLockSemaphore; } }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.IsRandomized)
             {
-                await CommandModelBase.RunActions(new List<ActionModelBase>() { this.Actions.Random() }, user, platform, arguments, specialIdentifiers);
+                await CommandModelBase.RunActions(new List<ActionModelBase>() { this.Actions.Random() }, parameters);
             }
             else
             {
-                await CommandModelBase.RunActions(this.Actions, user, platform, arguments, specialIdentifiers);
+                await CommandModelBase.RunActions(this.Actions, parameters);
             }
         }
     }

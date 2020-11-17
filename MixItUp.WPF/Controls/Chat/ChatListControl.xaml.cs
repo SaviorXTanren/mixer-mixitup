@@ -362,7 +362,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is CommandModelBase)
                         {
                             CommandModelBase command = (CommandModelBase)menuItem.DataContext;
-                            await command.Perform(user: null, platform: message.Platform, arguments: new List<string>() { message.User.Username }, specialIdentifiers: null);
+                            await command.Perform(new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }));
                         }
                     }
                 }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -52,9 +53,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task Initialize() { await this.Item.Initialize(); }
 
-        public async Task Enable() { await this.Enable(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task Enable() { await this.Enable(new CommandParametersModel()); }
 
-        public async Task Enable(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task Enable(CommandParametersModel parameters)
         {
             this.IsEnabled = true;
             if (!this.Item.IsEnabled)
@@ -82,25 +83,25 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task LoadCachedData() { await this.Item.LoadCachedData(); }
 
-        public async Task ShowItem() { await this.ShowItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>(), StreamingPlatformTypeEnum.All); }
+        public async Task ShowItem() { await this.ShowItem(new CommandParametersModel()); }
 
-        public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public async Task ShowItem(CommandParametersModel parameters)
         {
             IOverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
-                await overlay.ShowItem(this.Item, user, arguments, extraSpecialIdentifiers, platform);
+                await overlay.ShowItem(this.Item, parameters);
             }
         }
 
-        public async Task UpdateItem() { await this.UpdateItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>(), StreamingPlatformTypeEnum.All); }
+        public async Task UpdateItem() { await this.UpdateItem(new CommandParametersModel()); }
 
-        public async Task UpdateItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public async Task UpdateItem(CommandParametersModel parameters)
         {
             IOverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
-                await overlay.UpdateItem(this.Item, user, arguments, extraSpecialIdentifiers, platform);
+                await overlay.UpdateItem(this.Item, parameters);
             }
         }
 

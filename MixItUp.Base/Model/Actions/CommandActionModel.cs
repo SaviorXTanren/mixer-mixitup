@@ -96,7 +96,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             CommandModelBase command = this.Command;
             if (this.ActionType == CommandActionTypeEnum.RunCommand)
@@ -106,15 +106,15 @@ namespace MixItUp.Base.Model.Actions
                     IEnumerable<string> newArguments = null;
                     if (!string.IsNullOrEmpty(this.Arguments))
                     {
-                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.Arguments, user, platform, arguments, specialIdentifiers);
+                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
                         newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     }
                     else
                     {
-                        newArguments = arguments;
+                        newArguments = parameters.Arguments;
                     }
 
-                    await command.Perform(user, platform, newArguments, specialIdentifiers);
+                    await command.Perform(new CommandParametersModel(parameters.User, parameters.Platform, newArguments, parameters.SpecialIdentifiers));
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)

@@ -37,23 +37,9 @@ namespace MixItUp.Base.Actions
             this.WaitForFinish = waitForFinish;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = this.FilePath;
-            process.StartInfo.Arguments = await this.ReplaceStringWithSpecialModifiers(this.Arguments, user, arguments);
-            process.StartInfo.CreateNoWindow = !this.ShowWindow;
-            process.StartInfo.WindowStyle = (!this.ShowWindow) ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
-            process.StartInfo.UseShellExecute = false;
-
-            process.Start();
-            if (this.WaitForFinish)
-            {
-                while (!process.HasExited)
-                {
-                    await Task.Delay(500);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

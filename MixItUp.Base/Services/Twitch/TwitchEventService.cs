@@ -775,7 +775,7 @@ namespace MixItUp.Base.Services.Twitch
             TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
             if (command != null)
             {
-                await command.Perform(user, arguments: arguments, specialIdentifiers: specialIdentifiers);
+                await command.Perform(new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
             }
 
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -159,9 +160,9 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public override async Task<JObject> GetProcessedItem(CommandParametersModel parameters)
         {
-            JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, platform);
+            JObject jobj = await base.GetProcessedItem(parameters);
             this.cachedItems.AddRange(this.Items);
             while (this.cachedItems.Count > this.TotalToShow)
             {
@@ -179,7 +180,7 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)
         {
             if (jobj != null)
             {
@@ -193,16 +194,16 @@ namespace MixItUp.Base.Model.Overlay
                         itemJObj["HTML"] = jobj["HTML"];
                         itemJObj["HTML"] = this.PerformTemplateReplacements(itemJObj["HTML"].ToString(), this.Items[i].TemplateReplacements);
 
-                        await base.PerformReplacements(itemJObj, user, arguments, extraSpecialIdentifiers, platform);
+                        await base.PerformReplacements(itemJObj, parameters);
                     }
                 }
-                await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
+                await base.PerformReplacements(jobj, parameters);
             }
         }
 
-        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
-            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers, platform);
+            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(parameters);
 
             replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
             replacementSets["BORDER_COLOR"] = this.BorderColor;

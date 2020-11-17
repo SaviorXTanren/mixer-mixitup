@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Serial;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Serial;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +36,12 @@ namespace MixItUp.Base.Model.Actions
             this.Message = action.Message;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));
             if (serialDevice != null)
             {
-                await ChannelSession.Services.SerialService.SendMessage(serialDevice, await this.ReplaceStringWithSpecialModifiers(this.Message, user, platform, arguments, specialIdentifiers));
+                await ChannelSession.Services.SerialService.SendMessage(serialDevice, await this.ReplaceStringWithSpecialModifiers(this.Message, parameters));
             }
         }
     }

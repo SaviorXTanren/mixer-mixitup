@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             this.TestCommand = this.CreateCommand((System.Func<object, System.Threading.Tasks.Task>)(async (parameter) =>
             {
                 UserViewModel currentUser = ChannelSession.GetCurrentUser();
-                await command.Perform(currentUser, arguments: new List<string>() { "@" + currentUser.Username });
+                await command.Perform(new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
             }));
         }
 

@@ -6,6 +6,8 @@ namespace MixItUp.Base.Model.Requirements
     {
         [DataMember]
         public bool DeleteChatMessageWhenRun { get; set; }
+        [DataMember]
+        public bool DontDeleteChatMessageWhenRun { get; set; }
 
         [DataMember]
         public bool ShowOnChatContextMenu { get; set; }
@@ -15,6 +17,8 @@ namespace MixItUp.Base.Model.Requirements
         internal SettingsRequirementModel(MixItUp.Base.ViewModel.Requirement.SettingsRequirementViewModel requirement)
             : this()
         {
+            this.DeleteChatMessageWhenRun = requirement.DeleteChatCommandWhenRun;
+            this.DontDeleteChatMessageWhenRun = requirement.DontDeleteChatCommandWhenRun;
             this.ShowOnChatContextMenu = requirement.ShowOnChatMenu;
         }
     }

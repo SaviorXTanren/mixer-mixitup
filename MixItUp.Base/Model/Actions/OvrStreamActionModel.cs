@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = action.Variables;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.OvrStream.IsConnected)
             {
@@ -65,7 +66,7 @@ namespace MixItUp.Base.Model.Actions
                     Dictionary<string, string> processedVariables = new Dictionary<string, string>();
                     foreach (var kvp in this.Variables)
                     {
-                        processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, platform, arguments, specialIdentifiers);
+                        processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, parameters);
 
                         // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
                         if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))

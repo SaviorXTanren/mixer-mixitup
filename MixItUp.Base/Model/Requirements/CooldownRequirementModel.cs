@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -76,7 +77,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task<bool> Validate(CommandParametersModel parameters)
         {
             int amount = this.Amount;
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
@@ -93,9 +94,9 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                if (this.individualCooldowns.ContainsKey(user.ID))
+                if (this.individualCooldowns.ContainsKey(parameters.User.ID))
                 {
-                    timeLeft = this.individualCooldowns[user.ID].AddSeconds(amount) - DateTimeOffset.Now;
+                    timeLeft = this.individualCooldowns[parameters.User.ID].AddSeconds(amount) - DateTimeOffset.Now;
                 }
             }
 
@@ -108,7 +109,7 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override Task Perform(CommandParametersModel parameters)
         {
             if (this.Type == CooldownTypeEnum.Standard)
             {
@@ -123,12 +124,12 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
+                this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now;
             }
             return Task.FromResult(0);
         }
 
-        public override Task Refund(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override Task Refund(CommandParametersModel parameters)
         {
             if (this.Type == CooldownTypeEnum.Standard)
             {
@@ -143,7 +144,7 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.MinValue;
+                this.individualCooldowns[parameters.User.ID] = DateTimeOffset.MinValue;
             }
             return Task.FromResult(0);
         }

@@ -85,45 +85,9 @@ namespace MixItUp.Base.Actions
             this.ResponseAction = responseAction;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Translation != null)
-            {
-                string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                string translationResult = await ChannelSession.Services.Translation.Translate(this.Culture, text, this.AllowProfanity);
-                if (string.IsNullOrEmpty(translationResult))
-                {
-                    translationResult = this.Text;
-                }
-
-                if (!string.IsNullOrEmpty(translationResult))
-                {
-                    if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, translationResult)))
-                    {
-                        if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
-                        {
-                            if (ChannelSession.Services.Chat != null)
-                            {
-                                await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
-                            }
-                        }
-                        else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)
-                        {
-                        }
-                        else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
-                        {
-                            string replacementText = await this.ReplaceStringWithSpecialModifiers(translationResult, user, arguments);
-                            SpecialIdentifierStringBuilder.AddGlobalSpecialIdentifier(this.SpecialIdentifierName, replacementText);
-                        }
-                    }
-                }
-            }
-        }
-
-        private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string translationResult)
-        {
-            this.extraSpecialIdentifiers[TranslationAction.ResponseSpecialIdentifier] = translationResult;
-            return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
+            return Task.FromResult(0);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -70,7 +71,7 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == ModerationActionTypeEnum.ClearChat)
             {
@@ -81,12 +82,12 @@ namespace MixItUp.Base.Model.Actions
                 UserViewModel targetUser = null;
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, user, platform, arguments, specialIdentifiers);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
                 }
                 else
                 {
-                    targetUser = user;
+                    targetUser = parameters.User;
                 }
 
                 if (targetUser != null)
@@ -116,7 +117,7 @@ namespace MixItUp.Base.Model.Actions
                         string moderationReason = "Manual Moderation Strike";
                         if (!string.IsNullOrEmpty(this.ModerationReason))
                         {
-                            moderationReason = await this.ReplaceStringWithSpecialModifiers(this.ModerationReason, user, platform, arguments, specialIdentifiers);
+                            moderationReason = await this.ReplaceStringWithSpecialModifiers(this.ModerationReason, parameters);
                         }
                         await targetUser.AddModerationStrike(moderationReason);
                     }
@@ -128,7 +129,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!string.IsNullOrEmpty(this.TimeoutAmount))
                         {
-                            string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeoutAmount, user, platform, arguments, specialIdentifiers);
+                            string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeoutAmount, parameters);
                             if (uint.TryParse(timeAmountString, out uint timeAmount))
                             {
                                 await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);

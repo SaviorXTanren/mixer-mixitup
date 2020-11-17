@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -117,16 +118,16 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == TwitchActionType.Host)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
                 await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.Raid)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
+                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
                 await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.RunAd)
@@ -146,12 +147,12 @@ namespace MixItUp.Base.Model.Actions
                 UserViewModel targetUser = null;
                 if (!string.IsNullOrEmpty(this.Username))
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.Username, user, platform, arguments, specialIdentifiers);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
                 }
                 else
                 {
-                    targetUser = user;
+                    targetUser = parameters.User;
                 }
 
                 if (targetUser != null)
@@ -182,7 +183,7 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clip.url);
                             }
-                            specialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
+                            parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
                             GlobalEvents.TwitchClipCreated(clip);
                             return;

@@ -51,32 +51,9 @@ namespace MixItUp.Base.Actions
             this.DiscordType = type;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Discord.IsConnected)
-            {
-                if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
-                {
-                    if (this.channel == null)
-                    {
-                        this.channel = await ChannelSession.Services.Discord.GetChannel(this.SendMessageChannelID);
-                    }
-
-                    if (this.channel != null)
-                    {
-                        string message = await this.ReplaceStringWithSpecialModifiers(this.SendMessageText, user, arguments);
-                        await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
-                    }
-                }
-                else if (this.DiscordType == DiscordActionTypeEnum.MuteSelf)
-                {
-                    await ChannelSession.Services.Discord.MuteServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
-                }
-                else if (this.DiscordType == DiscordActionTypeEnum.DeafenSelf)
-                {
-                    await ChannelSession.Services.Discord.DeafenServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

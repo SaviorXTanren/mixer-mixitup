@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.Model.Actions
             this.TargetUsername = action.TargetUsername;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == GameQueueActionType.EnableDisableQueue)
             {
@@ -84,15 +85,12 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
+                UserViewModel targetUser = parameters.User;
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, user, platform, arguments, specialIdentifiers);
-                    UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username, platform);
-                    if (targetUser != null)
-                    {
-                        user = targetUser;
-                    }
-                    else
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
+                    if (targetUser == null)
                     {
                         await ChannelSession.Services.Chat.SendMessage("The user could not be found");
                         return;
@@ -101,15 +99,15 @@ namespace MixItUp.Base.Model.Actions
 
                 if (this.ActionType == GameQueueActionType.JoinQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.Join(user);
+                    await ChannelSession.Services.GameQueueService.Join(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.JoinFrontOfQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.JoinFront(user);
+                    await ChannelSession.Services.GameQueueService.JoinFront(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.QueuePosition)
                 {
-                    await ChannelSession.Services.GameQueueService.PrintUserPosition(user);
+                    await ChannelSession.Services.GameQueueService.PrintUserPosition(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.QueueStatus)
                 {
@@ -117,7 +115,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == GameQueueActionType.LeaveQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.Leave(user);
+                    await ChannelSession.Services.GameQueueService.Leave(targetUser);
                 }
                 if (this.ActionType == GameQueueActionType.SelectFirst)
                 {
@@ -129,6 +127,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == GameQueueActionType.SelectFirstType)
                 {
+                    // TODO
                     //await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
                 }
                 else if (this.ActionType == GameQueueActionType.ClearQueue)

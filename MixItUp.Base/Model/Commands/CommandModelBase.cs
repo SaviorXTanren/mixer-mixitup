@@ -57,12 +57,12 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
-        public static Task RunActionsInBackground(IEnumerable<ActionModelBase> actions, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public static Task RunActionsInBackground(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
         {
-            return Task.Run(async () => await CommandModelBase.RunActions(actions, user, platform, arguments, specialIdentifiers));
+            return Task.Run(async () => await CommandModelBase.RunActions(actions, parameters));
         }
 
-        public static async Task RunActions(IEnumerable<ActionModelBase> actions, UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public static async Task RunActions(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
         {
             List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);
             for (int i = 0; i < actionsToRun.Count; i++)
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Model.Commands
                     ChannelSession.Services.Overlay.StartBatching();
                 }
 
-                await action.Perform(user, platform, arguments, specialIdentifiers);
+                await action.Perform(parameters);
 
                 if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
                 {
@@ -151,26 +151,16 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual async Task TestPerform()
         {
-            await this.Perform(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, this.GetUniqueSpecialIdentifiers());
+            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, this.GetUniqueSpecialIdentifiers()));
             if (this.Requirements.Cooldown != null)
             {
                 this.Requirements.Reset();
             }
         }
 
-        public async Task Perform() { await this.Perform(ChannelSession.GetCurrentUser()); }
+        public async Task Perform() { await this.Perform(new CommandParametersModel()); }
 
-        public async Task Perform(UserViewModel user) { await this.Perform(user, StreamingPlatformTypeEnum.None, null, null); }
-
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform) { await this.Perform(user, platform, null); }
-
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments) { await this.Perform(user, StreamingPlatformTypeEnum.None, arguments, null); }
-
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) { await this.Perform(user, platform, arguments, null); }
-
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) { await this.Perform(user, StreamingPlatformTypeEnum.None, arguments, specialIdentifiers); }
-
-        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public async Task Perform(CommandParametersModel parameters)
         {
             try
             {
@@ -180,33 +170,14 @@ namespace MixItUp.Base.Model.Commands
 
                     ChannelSession.Services.Telemetry.TrackCommand(this.Type);
 
-                    if (user == null)
-                    {
-                        user = ChannelSession.GetCurrentUser();
-                    }
-
-                    if (arguments == null)
-                    {
-                        arguments = new List<string>();
-                    }
-
-                    if (specialIdentifiers == null)
-                    {
-                        specialIdentifiers = new Dictionary<string, string>();
-                    }
-
-                    if (platform == StreamingPlatformTypeEnum.None)
-                    {
-                        platform = user.Platform;
-                    }
 
                     await this.CommandLockSemaphore.WaitAsync();
 
-                    if (!await this.ValidateRequirements(user, platform, arguments, specialIdentifiers))
+                    if (!await this.ValidateRequirements(parameters))
                     {
                         return;
                     }
-                    IEnumerable<UserViewModel> users = await this.PerformRequirements(user, platform, arguments, specialIdentifiers);
+                    IEnumerable<CommandParametersModel> users = await this.PerformRequirements(parameters);
 
                     if (this.IsUnlocked)
                     {
@@ -217,10 +188,10 @@ namespace MixItUp.Base.Model.Commands
 
                     // TODO
                     // Add determination for running action processing in background task or waiting for completion
-                    foreach (UserViewModel u in users)
+                    foreach (CommandParametersModel u in users)
                     {
-                        u.Data.TotalCommandsRun++;
-                        await this.PerformInternal(u, platform, arguments, specialIdentifiers);
+                        u.User.Data.TotalCommandsRun++;
+                        await this.PerformInternal(parameters);
                     }
 
                     if (!this.IsUnlocked)
@@ -268,11 +239,11 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual bool DoesCommandHaveWork { get { return this.Actions.Count > 0; } }
 
-        protected virtual async Task<bool> ValidateRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
             if (this.Requirements != null)
             {
-                if (!await this.Requirements.Validate(user, platform, arguments, specialIdentifiers))
+                if (!await this.Requirements.Validate(parameters))
                 {
                     return false;
                 }
@@ -280,20 +251,20 @@ namespace MixItUp.Base.Model.Commands
             return true;
         }
 
-        protected virtual async Task<IEnumerable<UserViewModel>> PerformRequirements(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected virtual async Task<IEnumerable<CommandParametersModel>> PerformRequirements(CommandParametersModel parameters)
         {
-            List<UserViewModel> users = new List<UserViewModel>() { user };
+            List<CommandParametersModel> users = new List<CommandParametersModel>() { parameters };
             if (this.Requirements != null)
             {
-                await this.Requirements.Perform(user, platform, arguments, specialIdentifiers);
-                users = new List<UserViewModel>(this.Requirements.GetPerformingUsers(user, platform, arguments, specialIdentifiers));
+                await this.Requirements.Perform(parameters);
+                users = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
             }
             return users;
         }
 
-        protected virtual async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected virtual async Task PerformInternal(CommandParametersModel parameters)
         {
-            await CommandModelBase.RunActions(this.Actions, user, platform, arguments, specialIdentifiers);
+            await CommandModelBase.RunActions(this.Actions, parameters);
         }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }

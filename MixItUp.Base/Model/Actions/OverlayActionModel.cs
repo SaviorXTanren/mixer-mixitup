@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -51,7 +52,7 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = action.ShowWidget;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.WidgetID != Guid.Empty)
             {
@@ -60,7 +61,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (this.ShowWidget)
                     {
-                        await widget.Enable(user, arguments, specialIdentifiers);
+                        await widget.Enable(parameters);
                     }
                     else
                     {
@@ -74,7 +75,7 @@ namespace MixItUp.Base.Model.Actions
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    await overlay.ShowItem(this.OverlayItem, user, arguments, specialIdentifiers, platform);
+                    await overlay.ShowItem(this.OverlayItem, parameters);
                 }
             }
         }

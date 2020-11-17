@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -56,15 +57,15 @@ namespace MixItUp.Base.Model.Actions
             this.LineIndex = action.LineIndexToRead;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, platform, arguments, specialIdentifiers);
+            string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile)
             {
                 filePath = filePath.ToFilePathString();
 
                 string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
-                textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, user, platform, arguments, specialIdentifiers);
+                textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, parameters);
                 if (this.ActionType == FileActionTypeEnum.SaveToFile)
                 {
                     await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
@@ -81,7 +82,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                specialIdentifiers.Remove(this.TransferText);
+                parameters.SpecialIdentifiers.Remove(this.TransferText);
 
                 string data = await ChannelSession.Services.FileService.ReadFile(filePath);
                 if (!string.IsNullOrEmpty(data))
@@ -97,7 +98,7 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 if (!string.IsNullOrEmpty(this.LineIndex))
                                 {
-                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, user, platform, arguments, specialIdentifiers);
+                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
                                     if (int.TryParse(lineToRead, out lineIndex))
                                     {
                                         lineIndex = lineIndex - 1;
@@ -133,8 +134,8 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
 
-                    data = await this.ReplaceStringWithSpecialModifiers(data, user, platform, arguments, specialIdentifiers);
-                    specialIdentifiers[this.TransferText] = data;
+                    data = await this.ReplaceStringWithSpecialModifiers(data, parameters);
+                    parameters.SpecialIdentifiers[this.TransferText] = data;
                 }
             }
         }

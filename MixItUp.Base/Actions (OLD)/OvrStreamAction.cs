@@ -69,52 +69,9 @@ namespace MixItUp.Base.Actions
             this.OvrStreamActionType = ovrStreamActionType;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.OvrStream.IsConnected)
-            {
-                if (this.OvrStreamActionType == OvrStreamActionTypeEnum.UpdateVariables ||
-                    this.OvrStreamActionType == OvrStreamActionTypeEnum.PlayTitle)
-                {
-                    Dictionary<string, string> processedVariables = new Dictionary<string, string>();
-                    foreach (var kvp in this.Variables)
-                    {
-                        processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);
-
-                        // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
-                        if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            string path = await ChannelSession.Services.OvrStream.DownloadImage(processedVariables[kvp.Key]);
-                            if (path != null)
-                            {
-                                processedVariables[kvp.Key] = path;
-                            }
-                        }
-                    }
-
-                    switch (this.OvrStreamActionType)
-                    {
-                        case OvrStreamActionTypeEnum.UpdateVariables:
-                            await ChannelSession.Services.OvrStream.UpdateVariables(this.TitleName, processedVariables);
-                            break;
-                        case OvrStreamActionTypeEnum.PlayTitle:
-                            await ChannelSession.Services.OvrStream.PlayTitle(this.TitleName, processedVariables);
-                            break;
-                    }
-                }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
-                {
-                    await ChannelSession.Services.OvrStream.HideTitle(this.TitleName);
-                }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.EnableTitle)
-                {
-                    await ChannelSession.Services.OvrStream.EnableTitle(this.TitleName);
-                }
-                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.DisableTitle)
-                {
-                    await ChannelSession.Services.OvrStream.DisableTitle(this.TitleName);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

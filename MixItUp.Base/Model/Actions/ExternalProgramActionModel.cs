@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
@@ -43,11 +44,11 @@ namespace MixItUp.Base.Model.Actions
             this.WaitForFinish = action.WaitForFinish;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;
-            process.StartInfo.Arguments = await this.ReplaceStringWithSpecialModifiers(this.Arguments, user, platform, arguments, specialIdentifiers);
+            process.StartInfo.Arguments = await this.ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
             process.StartInfo.WindowStyle = (!this.ShowWindow) ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal;
             process.StartInfo.UseShellExecute = false;

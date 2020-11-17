@@ -190,97 +190,9 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (this.ActionType == StreamingActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText))
-            {
-                this.UpdateReferenceTextFile(await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments));
-            }
-
-            string url = string.Empty;
-            if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
-            {
-                url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
-            }
-
-            string sceneName = null;
-            if (!string.IsNullOrEmpty(this.SceneName))
-            {
-                sceneName = await this.ReplaceStringWithSpecialModifiers(this.SceneName, user, arguments);
-            }
-
-            string sourceName = null;
-            if (!string.IsNullOrEmpty(this.SourceName))
-            {
-                sourceName = await this.ReplaceStringWithSpecialModifiers(this.SourceName, user, arguments);
-            }
-
-            IStreamingSoftwareService ssService = null;
-            if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
-            {
-                ssService = ChannelSession.Services.OBSStudio;
-            }
-            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
-            {
-                ssService = ChannelSession.Services.XSplit;
-            }
-            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
-            {
-                ssService = ChannelSession.Services.StreamlabsOBS;
-            }
-
-            if (ssService != null && ssService.IsEnabled)
-            {
-                Logger.Log(LogLevel.Debug, "Checking for Streaming Software connection");
-
-                if (!ssService.IsConnected)
-                {
-                    Result result = await ssService.Connect();
-                    if (!result.Success)
-                    {
-                        Logger.Log(LogLevel.Error, result.Message);
-                        return;
-                    }
-                }
-
-                Logger.Log(LogLevel.Debug, "Performing for Streaming Software connection");
-
-                if (ssService.IsConnected)
-                {
-                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
-                    {
-                        await ssService.StartStopStream();
-                    }
-                    else if (this.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
-                    {
-                        await ssService.SaveReplayBuffer();
-                    }
-                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(sceneName))
-                    {
-                        await ssService.ShowScene(sceneName);
-                    }
-                    else if (!string.IsNullOrEmpty(sourceName))
-                    {
-                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
-                        {
-                            await ssService.SetWebBrowserSourceURL(sceneName, sourceName, url);
-                        }
-                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
-                        {
-                            //await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
-                        }
-                        await ssService.SetSourceVisibility(sceneName, sourceName, this.SourceVisible);
-                    }
-                    else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
-                    {
-                        await ssService.SetSceneCollection(this.SceneCollectionName);
-                    }
-                }
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "The Streaming Software selected is not enabled: " + this.SelectedStreamingSoftware);
-            }
+            return Task.FromResult(0);
         }
     }
 }

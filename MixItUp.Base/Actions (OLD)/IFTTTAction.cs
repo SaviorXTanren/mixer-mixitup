@@ -34,25 +34,9 @@ namespace MixItUp.Base.Actions
             this.EventValue3 = eventValue3;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.IFTTT.IsConnected)
-            {
-                Dictionary<string, string> values = new Dictionary<string, string>();
-                if (!string.IsNullOrEmpty(this.EventValue1))
-                {
-                    values["value1"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue1, user, arguments);
-                }
-                if (!string.IsNullOrEmpty(this.EventValue2))
-                {
-                    values["value2"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue2, user, arguments);
-                }
-                if (!string.IsNullOrEmpty(this.EventValue3))
-                {
-                    values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, user, arguments);
-                }
-                await ChannelSession.Services.IFTTT.SendTrigger(this.EventName, values);
-            }
+            return Task.FromResult(0);
         }
     }
 }

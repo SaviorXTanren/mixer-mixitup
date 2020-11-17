@@ -36,25 +36,9 @@ namespace MixItUp.Base.Actions
             this.WhisperUserName = whisperUserName;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Chat != null)
-            {
-                string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
-                if (this.IsWhisper)
-                {
-                    string whisperUserName = user.Username;
-                    if (!string.IsNullOrEmpty(this.WhisperUserName))
-                    {
-                        whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, arguments);
-                    }
-                    await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
-                }
-                else
-                {
-                    await ChannelSession.Services.Chat.SendMessage(message, this.SendAsStreamer);
-                }
-            }
+            return Task.FromResult(0);
         }
     }
 }

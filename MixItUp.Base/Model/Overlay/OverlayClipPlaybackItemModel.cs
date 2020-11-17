@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -69,7 +70,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        public override async Task<JObject> GetProcessedItem(CommandParametersModel parameters)
         {
             JObject jobj = null;
             if (this.lastTwitchClip != null)
@@ -87,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (!string.IsNullOrEmpty(this.lastClipURL))
             {
-                jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, StreamingPlatformTypeEnum.Twitch);
+                jobj = await base.GetProcessedItem(parameters);
             }
 
             this.Platform = StreamingPlatformTypeEnum.None;

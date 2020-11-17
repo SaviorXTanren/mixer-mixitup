@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -36,16 +37,16 @@ namespace MixItUp.Base.Model.Requirements
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public override async Task<bool> Validate(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        public override async Task<bool> Validate(CommandParametersModel parameters)
         {
-            if (!user.HasPermissionsTo(this.Role))
+            if (!parameters.User.HasPermissionsTo(this.Role))
             {
                 if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ChannelSession.Services.Patreon.IsConnected)
                 {
                     PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitID);
                     if (benefit != null)
                     {
-                        PatreonTier tier = user.PatreonTier;
+                        PatreonTier tier = parameters.User.PatreonTier;
                         if (tier != null && tier.BenefitIDs.Contains(benefit.ID))
                         {
                             return true;
@@ -56,9 +57,9 @@ namespace MixItUp.Base.Model.Requirements
                 return false;
             }
 
-            if (this.Role == UserRoleEnum.Subscriber && !user.ExceedsPermissions(this.Role))
+            if (this.Role == UserRoleEnum.Subscriber && !parameters.User.ExceedsPermissions(this.Role))
             {
-                if (user.SubscribeTier < this.SubscriberTier)
+                if (parameters.User.SubscribeTier < this.SubscriberTier)
                 {
                     await this.SendErrorMessage();
                     return false;

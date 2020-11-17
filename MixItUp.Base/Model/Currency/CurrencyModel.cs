@@ -266,7 +266,7 @@ namespace MixItUp.Base.Model.Currency
 
                 if (prevRank != newRank && this.RankChangedCommand != null)
                 {
-                    this.RankChangedCommand.Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                    this.RankChangedCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID)));
                 }
             }
         }

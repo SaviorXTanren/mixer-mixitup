@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -41,22 +42,22 @@ namespace MixItUp.Base.Model.Actions
             this.EventValue3 = action.EventValue3;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.IFTTT.IsConnected)
             {
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(this.EventValue1))
                 {
-                    values["value1"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue1, user, platform, arguments, specialIdentifiers);
+                    values["value1"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue1, parameters);
                 }
                 if (!string.IsNullOrEmpty(this.EventValue2))
                 {
-                    values["value2"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue2, user, platform, arguments, specialIdentifiers);
+                    values["value2"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue2, parameters);
                 }
                 if (!string.IsNullOrEmpty(this.EventValue3))
                 {
-                    values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, user, platform, arguments, specialIdentifiers);
+                    values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, parameters);
                 }
                 await ChannelSession.Services.IFTTT.SendTrigger(this.EventName, values);
             }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -112,14 +113,14 @@ namespace MixItUp.Base.Actions
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, CommandParametersModel parameters, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.platform, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            await siString.ReplaceCommonSpecialModifiers(parameters);
             return siString.ToString();
         }
 
