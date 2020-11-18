@@ -53,7 +53,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding SelectedCommand}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding SelectedCommand}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
             <TextBox Grid.Row="2" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />

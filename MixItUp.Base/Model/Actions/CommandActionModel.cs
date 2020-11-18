@@ -108,7 +108,10 @@ namespace MixItUp.Base.Model.Actions
                         newArguments = parameters.Arguments;
                     }
 
-                    await command.Perform(new CommandParametersModel(parameters.User, parameters.Platform, newArguments, parameters.SpecialIdentifiers));
+                    await command.Perform(new CommandParametersModel(parameters.User, parameters.Platform, newArguments, parameters.SpecialIdentifiers)
+                    {
+                        DontLockCommand = true
+                    });
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)

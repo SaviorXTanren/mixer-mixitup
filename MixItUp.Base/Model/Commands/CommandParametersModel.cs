@@ -40,6 +40,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public UserViewModel TargetUser { get; set; }
 
+        [DataMember]
+        public bool DontLockCommand { get; set; } = false;
+
         public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }
 
         public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }

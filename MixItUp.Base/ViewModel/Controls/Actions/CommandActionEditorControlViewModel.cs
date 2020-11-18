@@ -29,7 +29,15 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
         public bool ShowCommandsSection { get { return this.SelectedActionType == CommandActionTypeEnum.RunCommand || this.SelectedActionType == CommandActionTypeEnum.EnableCommand || this.SelectedActionType == CommandActionTypeEnum.DisableCommand; } }
 
-        public IEnumerable<CommandTypeEnum> CommandTypes { get { return EnumHelper.GetEnumList<CommandTypeEnum>(); } }
+        public IEnumerable<CommandTypeEnum> CommandTypes
+        {
+            get
+            {
+                List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
+                types.Remove(CommandTypeEnum.Custom);
+                return types;
+            }
+        }
 
         public CommandTypeEnum SelectedCommandType
         {

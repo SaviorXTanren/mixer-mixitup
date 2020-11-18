@@ -170,8 +170,10 @@ namespace MixItUp.Base.Model.Commands
 
                     ChannelSession.Services.Telemetry.TrackCommand(this.Type);
 
-
-                    await this.CommandLockSemaphore.WaitAsync();
+                    if (!this.IsUnlocked && !parameters.DontLockCommand)
+                    {
+                        await this.CommandLockSemaphore.WaitAsync();
+                    }
 
                     if (!await this.ValidateRequirements(parameters))
                     {
@@ -194,7 +196,7 @@ namespace MixItUp.Base.Model.Commands
                         await this.PerformInternal(parameters);
                     }
 
-                    if (!this.IsUnlocked)
+                    if (!this.IsUnlocked && !parameters.DontLockCommand)
                     {
                         this.CommandLockSemaphore.Release();
                     }
