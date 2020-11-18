@@ -1,11 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -63,8 +61,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class ConditionalActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
         [DataMember]
         public bool CaseSensitive { get; set; }
         [DataMember]
@@ -78,8 +74,6 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return ConditionalActionModel.asyncSemaphore; } }
 
         public ConditionalActionModel(bool caseSensitive, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, IEnumerable<ActionModelBase> actions)
             : base(ActionTypeEnum.Conditional)

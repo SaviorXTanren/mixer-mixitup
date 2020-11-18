@@ -1,9 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -18,10 +15,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class DiscordActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return DiscordActionModel.asyncSemaphore; } }
-
         public static DiscordActionModel CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordActionModel(DiscordActionTypeEnum.SendMessage) { ChannelID = channel.ID, MessageText = message, FilePath = filePath }; }
 
         public static DiscordActionModel CreateForMuteSelf(bool mute) { return new DiscordActionModel(DiscordActionTypeEnum.MuteSelf) { ShouldMuteDeafen = mute }; }

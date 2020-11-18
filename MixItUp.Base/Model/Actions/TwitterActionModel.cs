@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -21,10 +18,6 @@ namespace MixItUp.Base.Model.Actions
     public class TwitterActionModel : ActionModelBase
     {
         public static bool CheckIfTweetContainsTooManyTags(string tweet) { return !string.IsNullOrEmpty(tweet) && tweet.Count(c => c == '@') > 0; }
-
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return TwitterActionModel.asyncSemaphore; } }
 
         public static TwitterActionModel CreateTweetAction(string tweetText, string imagePath = null)
         {

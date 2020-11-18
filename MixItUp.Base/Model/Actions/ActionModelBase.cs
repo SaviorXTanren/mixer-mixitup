@@ -1,14 +1,10 @@
-﻿using LinqToTwitter;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -39,6 +35,7 @@ namespace MixItUp.Base.Model.Actions
         Translation,
         Twitter,
         Conditional,
+        [Name("StreamingSoftwareOBSSLOBS")]
         StreamingSoftware,
         Streamlabs,
         Command,
@@ -217,9 +214,6 @@ namespace MixItUp.Base.Model.Actions
             this.Enabled = true;
         }
 
-        [JsonIgnore]
-        protected abstract SemaphoreSlim AsyncSemaphore { get; }
-
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
             await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers));
@@ -229,14 +223,11 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.Enabled)
             {
-                await this.AsyncSemaphore.WaitAndRelease(async () =>
-                {
-                    Logger.Log(LogLevel.Debug, $"Starting action performing: {this}");
+                Logger.Log(LogLevel.Debug, $"Starting action performing: {this}");
 
-                    ChannelSession.Services.Telemetry.TrackAction(this.Type);
+                ChannelSession.Services.Telemetry.TrackAction(this.Type);
 
-                    await this.PerformInternal(parameters);
-                });
+                await this.PerformInternal(parameters);
             }
         }
 

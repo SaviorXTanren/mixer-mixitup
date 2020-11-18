@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -11,10 +9,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class TextToSpeechActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return TextToSpeechActionModel.asyncSemaphore; } }
-
         public static readonly IEnumerable<string> AvailableVoices = new List<string>()
         {
             "Afrikaans Male",

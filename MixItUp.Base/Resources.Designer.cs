@@ -8125,6 +8125,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streaming Software (OBS, SLOBS).
+        /// </summary>
+        public static string StreamingSoftwareOBSSLOBS {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareOBSSLOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StreamJar Donation.
         /// </summary>
         public static string StreamJarDonation {

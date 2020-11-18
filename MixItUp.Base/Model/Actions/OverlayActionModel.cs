@@ -1,12 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.User;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -14,10 +11,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class OverlayActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return OverlayActionModel.asyncSemaphore; } }
-
         [DataMember]
         public string OverlayName { get; set; }
 

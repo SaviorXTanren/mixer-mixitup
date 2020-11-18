@@ -3464,4 +3464,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="OverlayActionMissingWidget" xml:space="preserve">
     <value>Overlay Action: Missing Widget</value>
   </data>
+  <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
+    <value>Streaming Software (OBS, SLOBS)</value>
+  </data>
 </root>

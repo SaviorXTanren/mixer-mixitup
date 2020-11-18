@@ -1,8 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -10,11 +7,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class WaitActionModel : ActionModelBase
     {
-        // Allow multiple wait actions to be executed at the same time
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(int.MaxValue);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return WaitActionModel.asyncSemaphore; } }
-
         [DataMember]
         public string Amount { get; set; }
 

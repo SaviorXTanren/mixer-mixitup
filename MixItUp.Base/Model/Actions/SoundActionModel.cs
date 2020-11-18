@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -12,10 +9,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class SoundActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return SoundActionModel.asyncSemaphore; } }
-
         public static readonly string DefaultAudioDevice = MixItUp.Base.Resources.DefaultOutput;
         public static readonly string MixItUpOverlay = MixItUp.Base.Resources.MixItUpOverlay;
 

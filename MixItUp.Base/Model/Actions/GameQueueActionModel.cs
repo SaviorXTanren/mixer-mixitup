@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -27,10 +25,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class GameQueueActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return GameQueueActionModel.asyncSemaphore; } }
-
         [DataMember]
         public GameQueueActionType ActionType { get; set; }
 

@@ -1,13 +1,10 @@
 ﻿using Jace;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -15,10 +12,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class SpecialIdentifierActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return SpecialIdentifierActionModel.asyncSemaphore; } }
-
         private const string TextProcessorFunctionRegexPatternFormat = "{0}\\([^)]+\\)";
 
         [DataMember]

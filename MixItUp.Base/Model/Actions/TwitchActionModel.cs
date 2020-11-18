@@ -3,7 +3,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.Clips;
@@ -50,10 +49,6 @@ namespace MixItUp.Base.Model.Actions
             action.ClipShowInfoInChat = showInfoInChat;
             return action;
         }
-
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return TwitchActionModel.asyncSemaphore; } }
 
         [DataMember]
         public TwitchActionType ActionType { get; set; }

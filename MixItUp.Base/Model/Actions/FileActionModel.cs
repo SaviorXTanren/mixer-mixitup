@@ -1,11 +1,8 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -24,10 +21,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class FileActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return FileActionModel.asyncSemaphore; } }
-
         [DataMember]
         public FileActionTypeEnum ActionType { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -25,10 +23,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class WebRequestActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return WebRequestActionModel.asyncSemaphore; } }
-
         public const string ResponseSpecialIdentifier = "webrequestresult";
 
         [DataMember]

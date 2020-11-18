@@ -5,7 +5,6 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -28,10 +27,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class ConsumablesActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return ConsumablesActionModel.asyncSemaphore; } }
-
         [DataMember]
         public Guid CurrencyID { get; set; }
         [DataMember]

@@ -1,13 +1,10 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Actions
@@ -66,10 +63,6 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public class StreamingSoftwareActionModel : ActionModelBase
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return StreamingSoftwareActionModel.asyncSemaphore; } }
-
         public const string SourceTextFilesDirectoryName = "SourceTextFiles";
 
         public static async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName)
