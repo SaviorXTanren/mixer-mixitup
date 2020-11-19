@@ -17,6 +17,8 @@ namespace MixItUp.Base.Model.Commands
             this.Type = CommandTypeEnum.TwitchChannelPoints;
         }
 
+        protected TwitchChannelPointsCommandModel() : base() { }
+
         protected override SemaphoreSlim CommandLockSemaphore { get { return TwitchChannelPointsCommandModel.commandLockSemaphore; } }
     }
 }

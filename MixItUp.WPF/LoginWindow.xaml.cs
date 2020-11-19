@@ -52,7 +52,12 @@ namespace MixItUp.WPF
 
             if (this.streamerSettings.Count > 0)
             {
+                this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
                 this.StreamerLoginButton.IsEnabled = true;
+                if (this.streamerSettings.Count == 1)
+                {
+                    this.ExistingStreamerComboBox.SelectedIndex = 0;
+                }
             }
 
             if (ChannelSession.AppSettings.AutoLogInID != Guid.Empty)

@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.Window.Currency;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -25,6 +24,8 @@ namespace MixItUp.Base.Model.Commands
             this.Name = command.Name;
             this.Type = CommandTypeEnum.Custom;
         }
+
+        protected CustomCommandModel() : base() { }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return CustomCommandModel.commandLockSemaphore; } }
 

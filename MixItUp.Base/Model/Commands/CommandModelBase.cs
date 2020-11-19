@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -134,6 +133,8 @@ namespace MixItUp.Base.Model.Commands
             }
 #pragma warning restore CS0612 // Type or member is obsolete
         }
+
+        protected CommandModelBase() { }
 
         [JsonIgnore]
         protected abstract SemaphoreSlim CommandLockSemaphore { get; }

@@ -601,30 +601,13 @@ namespace MixItUp.Base.Model.Settings
                             this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
                         }
                     }
-#pragma warning disable CS0612 // Type or member is obsolete
-                    else if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-                    {
-                        if (!string.IsNullOrEmpty(userData.MixerUsername))
-                        {
-                            this.UsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
-                        }
-                    }
-#pragma warning restore CS0612 // Type or member is obsolete
                 });
                 this.UserData.ClearTracking();
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
-                    string json = (string)data["Data"];
-                    if (json.Contains("MixItUp.Base.ViewModel.User.UserQuoteViewModel"))
-                    {
-                        json = json.Replace("MixItUp.Base.ViewModel.User.UserQuoteViewModel", "MixItUp.Base.Model.User.UserQuoteModel");
-                        this.Quotes.Add(new UserQuoteViewModel(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>(json)));
-                    }
-                    else
-                    {
-                        this.Quotes.Add(new UserQuoteViewModel(JSONSerializerHelper.DeserializeFromString<UserQuoteModel>((string)data["Data"])));
-                    }
+                    DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
+                    this.Quotes.Add(new UserQuoteViewModel(new UserQuoteModel(Convert.ToInt32(data["ID"]), (string)data["Quote"], dateTime, (string)data["GameName"])));
                 });
                 this.Quotes.ClearTracking();
 
@@ -825,8 +808,9 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
+                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "TwitchID", u.TwitchID },
+                        { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", null }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
                 List<Guid> removedCommands = new List<Guid>();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
@@ -838,8 +822,8 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
                     this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
-                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(q.Model) } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
+                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
             }
         }
 

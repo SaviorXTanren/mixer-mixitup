@@ -26,6 +26,8 @@ namespace MixItUp.Base.Model.Commands
             this.Type = CommandTypeEnum.Event;
         }
 
+        protected EventCommandModel() : base() { }
+
         protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }
 
         public override Dictionary<string, string> GetUniqueSpecialIdentifiers()

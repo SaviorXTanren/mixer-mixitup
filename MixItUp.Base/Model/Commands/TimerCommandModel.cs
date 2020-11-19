@@ -17,6 +17,8 @@ namespace MixItUp.Base.Model.Commands
             this.Type = CommandTypeEnum.Timer;
         }
 
+        protected TimerCommandModel() : base() { }
+
         protected override SemaphoreSlim CommandLockSemaphore { get { return TimerCommandModel.commandLockSemaphore; } }
     }
 }

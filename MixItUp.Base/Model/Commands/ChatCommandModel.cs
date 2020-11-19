@@ -52,6 +52,8 @@ namespace MixItUp.Base.Model.Commands
             this.Wildcards = wildcards;
         }
 
+        protected ChatCommandModel() : base() { }
+
         protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
         public bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)

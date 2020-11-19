@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -24,6 +23,8 @@ namespace MixItUp.Base.Model.Commands
             this.Name = command.Name;
             this.Type = CommandTypeEnum.ActionGroup;
         }
+
+        protected ActionGroupCommandModel() : base() { }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ActionGroupCommandModel.commandLockSemaphore; } }
 
