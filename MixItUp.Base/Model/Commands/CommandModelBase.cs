@@ -57,11 +57,6 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
-        public static Task RunActionsInBackground(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
-        {
-            return Task.Run(async () => await CommandModelBase.RunActions(actions, parameters));
-        }
-
         public static async Task RunActions(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
         {
             List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);
@@ -162,6 +157,7 @@ namespace MixItUp.Base.Model.Commands
 
         public async Task Perform(CommandParametersModel parameters)
         {
+            bool lockPerformed = false;
             try
             {
                 if (this.IsEnabled && this.DoesCommandHaveWork)
@@ -172,6 +168,7 @@ namespace MixItUp.Base.Model.Commands
 
                     if (!this.IsUnlocked && !parameters.DontLockCommand)
                     {
+                        lockPerformed = true;
                         await this.CommandLockSemaphore.WaitAsync();
                     }
 
@@ -179,34 +176,26 @@ namespace MixItUp.Base.Model.Commands
                     {
                         return;
                     }
-                    IEnumerable<CommandParametersModel> users = await this.PerformRequirements(parameters);
-
-                    if (this.IsUnlocked)
-                    {
-                        this.CommandLockSemaphore.Release();
-                    }
+                    IEnumerable<CommandParametersModel> parameterList = await this.PerformRequirements(parameters);
 
                     this.TrackTelemetry();
 
-                    // TODO
-                    // Add determination for running action processing in background task or waiting for completion
-                    foreach (CommandParametersModel u in users)
+                    if (parameters.WaitForCommandToFinish)
                     {
-                        u.User.Data.TotalCommandsRun++;
-                        await this.PerformInternal(parameters);
+                        await this.PerformTask(parameterList, lockPerformed);
                     }
-
-                    if (!this.IsUnlocked && !parameters.DontLockCommand)
+                    else
                     {
-                        this.CommandLockSemaphore.Release();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => await this.PerformTask(parameterList, lockPerformed));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
             }
-            catch (TaskCanceledException) { }
             catch (Exception ex) { Logger.Log(ex); }
             finally
             {
-                if (this.CommandLockSemaphore.CurrentCount == 0)
+                if (lockPerformed || this.CommandLockSemaphore.CurrentCount == 0)
                 {
                     this.CommandLockSemaphore.Release();
                 }
@@ -270,5 +259,27 @@ namespace MixItUp.Base.Model.Commands
         }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+
+        private async Task PerformTask(IEnumerable<CommandParametersModel> parameterList, bool lockPerformed)
+        {
+            try
+            {
+                foreach (CommandParametersModel parameters in parameterList)
+                {
+                    parameters.User.Data.TotalCommandsRun++;
+                    await this.PerformInternal(parameters);
+                }
+            }
+            catch (TaskCanceledException) { }
+            catch (Exception ex) { Logger.Log(ex); }
+            finally
+            {
+                if (lockPerformed)
+                {
+                    lockPerformed = false;
+                    this.CommandLockSemaphore.Release();
+                }
+            }
+        }
     }
 }

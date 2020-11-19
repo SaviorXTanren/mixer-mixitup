@@ -110,6 +110,7 @@ namespace MixItUp.Base.Model.Actions
 
                     await command.Perform(new CommandParametersModel(parameters.User, parameters.Platform, newArguments, parameters.SpecialIdentifiers)
                     {
+                        WaitForCommandToFinish = true,
                         DontLockCommand = true
                     });
                 }

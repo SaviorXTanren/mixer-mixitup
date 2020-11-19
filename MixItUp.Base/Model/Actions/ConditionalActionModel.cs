@@ -125,8 +125,6 @@ namespace MixItUp.Base.Model.Actions
 
             if (finalResult)
             {
-                // TODO
-                // Add option for whether actions should be run in background or wait for them
                 await CommandModelBase.RunActions(this.Actions, parameters);
             }
         }

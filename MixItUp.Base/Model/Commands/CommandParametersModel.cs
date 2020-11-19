@@ -41,6 +41,8 @@ namespace MixItUp.Base.Model.Commands
         public UserViewModel TargetUser { get; set; }
 
         [DataMember]
+        public bool WaitForCommandToFinish { get; set; } = false;
+        [DataMember]
         public bool DontLockCommand { get; set; } = false;
 
         public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }

@@ -21,6 +21,8 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public ThresholdRequirementViewModel Threshold { get; set; } = new ThresholdRequirementViewModel();
 
+        public SettingsRequirementViewModel Settings { get; set; } = new SettingsRequirementViewModel();
+
         public IEnumerable<RequirementViewModelBase> Requirements
         {
             get
@@ -32,6 +34,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 requirements.AddRange(this.Rank.Items);
                 requirements.AddRange(this.Inventory.Items);
                 requirements.Add(this.Threshold);
+                requirements.Add(this.Settings);
                 return requirements;
             }
         }
@@ -75,6 +78,10 @@ namespace MixItUp.Base.ViewModel.Requirements
                 else if (requirement is ThresholdRequirementModel)
                 {
                     this.Threshold = new ThresholdRequirementViewModel((ThresholdRequirementModel)requirement);
+                }
+                else if (requirement is SettingsRequirementModel)
+                {
+                    this.Settings = new SettingsRequirementViewModel((SettingsRequirementModel)requirement);
                 }
             }
         }
