@@ -40,20 +40,6 @@ namespace MixItUp.Base.Model.Commands
     }
 
     [DataContract]
-    public class ActionList
-    {
-        [DataMember]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
-
-        public ActionList() { }
-
-        public ActionList(CommandModelBase command)
-        {
-            this.Actions = new List<ActionModelBase>(command.Actions);
-        }
-    }
-
-    [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
         public static async Task RunActions(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)

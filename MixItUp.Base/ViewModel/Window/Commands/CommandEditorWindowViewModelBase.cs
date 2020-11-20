@@ -17,13 +17,12 @@ namespace MixItUp.Base.ViewModel.Window.Commands
     {
         public const string MixItUpCommandFileExtension = ".miucommand";
 
-        public static async Task<IEnumerable<ActionModelBase>> ImportActions()
+        public static async Task<CommandModelBase> ImportCommandFromFile()
         {
             string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
             if (!string.IsNullOrEmpty(fileName))
             {
-                ActionList actionList = await FileSerializerHelper.DeserializeFromFile<ActionList>(fileName);
-                return actionList.Actions;
+                return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
             }
             return null;
         }
@@ -92,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                     string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        await FileSerializerHelper.SerializeToFile(fileName, new ActionList(command));
+                        await FileSerializerHelper.SerializeToFile(fileName, command);
                     }
                 }
             });
@@ -101,10 +100,11 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             {
                 try
                 {
-                    IEnumerable<ActionModelBase> actions = await CommandEditorWindowViewModelBase.ImportActions();
-                    if (actions != null)
+                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile();
+                    if (command != null)
                     {
-                        foreach (ActionModelBase action in actions)
+                        // TODO Check if the imported command type matches the currently edited command. If so, import additional information.
+                        foreach (ActionModelBase action in command.Actions)
                         {
                             await this.AddAction(action);
                         }
