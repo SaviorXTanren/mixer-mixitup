@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -23,16 +21,16 @@ namespace MixItUp.Base.Model.Requirements
         public GameCurrencyRequirementTypeEnum GameCurrencyRequirementType { get; set; } = GameCurrencyRequirementTypeEnum.NoCost;
 
         [DataMember]
-        public string MaxAmount { get; set; }
+        public int MaxAmount { get; set; }
 
-        public GameCurrencyRequirementModel() { }
-
-        public GameCurrencyRequirementModel(GameCurrencyRequirementTypeEnum gameCurrencyRequirementType, CurrencyModel currency, string amount, string maxAmount = null)
-            : base(currency, amount)
+        public GameCurrencyRequirementModel(CurrencyModel currency, GameCurrencyRequirementTypeEnum gameCurrencyRequirementType, int minAmount, int maxAmount)
+            : base(currency, minAmount)
         {
             this.GameCurrencyRequirementType = gameCurrencyRequirementType;
             this.MaxAmount = maxAmount;
         }
+
+        private GameCurrencyRequirementModel() { }
 
         public override async Task<bool> Validate(CommandParametersModel parameters)
         {
@@ -53,23 +51,21 @@ namespace MixItUp.Base.Model.Requirements
             }
             else
             {
-                int amount = await this.GetGameAmount(parameters);
-                int minAmount = await this.GetAmount(this.Amount, parameters);
-                int maxAmount = await this.GetAmount(this.MaxAmount, parameters);
+                int amount = this.GetGameAmount(parameters);
                 if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                 {
-                    if (amount < minAmount)
+                    if (amount < this.Amount)
                     {
-                        await this.SendChatMessage(string.Format("You must specify an amount greater than or equal to {0} {1}", this.Amount, currency.Name));
+                        await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.Amount, currency.Name));
                         return false;
                     }
                     return await this.ValidateAmount(parameters, currency, amount);
                 }
                 else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
-                    if (amount < minAmount || amount > maxAmount)
+                    if (amount < this.Amount || amount > this.MaxAmount)
                     {
-                        await this.SendChatMessage(string.Format("You must specify an amount between {0} - {1} {2}", this.Amount, this.MaxAmount, currency.Name));
+                        await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.Amount, this.MaxAmount, currency.Name));
                         return false;
                     }
                     return await this.ValidateAmount(parameters, currency, amount);
@@ -95,11 +91,11 @@ namespace MixItUp.Base.Model.Requirements
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.SubtractAmount(parameters.User.Data, await this.GetGameAmount(parameters));
+                        currency.SubtractAmount(parameters.User.Data, this.GetGameAmount(parameters));
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.SubtractAmount(parameters.User.Data, await this.GetGameAmount(parameters));
+                        currency.SubtractAmount(parameters.User.Data, this.GetGameAmount(parameters));
                     }
                 }
             }
@@ -122,17 +118,17 @@ namespace MixItUp.Base.Model.Requirements
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.AddAmount(parameters.User.Data, await this.GetGameAmount(parameters));
+                        currency.AddAmount(parameters.User.Data, this.GetGameAmount(parameters));
                     }
                     else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.AddAmount(parameters.User.Data, await this.GetGameAmount(parameters));
+                        currency.AddAmount(parameters.User.Data, this.GetGameAmount(parameters));
                     }
                 }
             }
         }
 
-        public async Task<int> GetGameAmount(CommandParametersModel parameters)
+        public int GetGameAmount(CommandParametersModel parameters)
         {
             if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.NoCost)
             {
@@ -140,7 +136,7 @@ namespace MixItUp.Base.Model.Requirements
             }
             else if (this.GameCurrencyRequirementType == GameCurrencyRequirementTypeEnum.RequiredAmount)
             {
-                return await this.GetAmount(this.Amount, parameters);
+                return this.Amount;
             }
             else
             {

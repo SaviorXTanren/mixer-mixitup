@@ -3467,4 +3467,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="StreamingSoftwareOBSSLOBS" xml:space="preserve">
     <value>Streaming Software (OBS, SLOBS)</value>
   </data>
+  <data name="GameCurrencyRequirementAmountBetween" xml:space="preserve">
+    <value>You must specify an amount between {0} - {1} {2}</value>
+  </data>
+  <data name="GameCurrencyRequirementAmountGreaterThan" xml:space="preserve">
+    <value>You must specify an amount greater than or equal to {0} {1}</value>
+  </data>
 </root>

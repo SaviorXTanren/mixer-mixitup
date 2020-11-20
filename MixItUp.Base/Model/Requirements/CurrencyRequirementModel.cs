@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -16,33 +14,24 @@ namespace MixItUp.Base.Model.Requirements
         public Guid CurrencyID { get; set; }
 
         [DataMember]
-        public string Amount { get; set; }
+        public int Amount { get; set; }
 
-        public CurrencyRequirementModel() { }
-
-        public CurrencyRequirementModel(CurrencyModel currency, string amount)
+        public CurrencyRequirementModel(CurrencyModel currency, int amount)
         {
             this.CurrencyID = currency.ID;
             this.Amount = amount;
         }
 
         internal CurrencyRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
-            : this()
         {
-            if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount)
+            if (requirement.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
             {
                 this.CurrencyID = requirement.CurrencyID;
-                this.Amount = requirement.RequiredAmount.ToString();
-            }
-            else if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly)
-            {
-
-            }
-            else if (requirement.RequirementType == ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumAndMaximum)
-            {
-
+                this.Amount = requirement.RequiredAmount;
             }
         }
+
+        protected CurrencyRequirementModel() { }
 
         [JsonIgnore]
         public CurrencyModel Currency
@@ -64,25 +53,27 @@ namespace MixItUp.Base.Model.Requirements
             {
                 return true;
             }
-            return await this.ValidateAmount(parameters, currency, await this.GetAmount(this.Amount, parameters));
+            return await this.ValidateAmount(parameters, currency, this.Amount);
         }
 
-        public override async Task Perform(CommandParametersModel parameters)
+        public override Task Perform(CommandParametersModel parameters)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                currency.SubtractAmount(parameters.User.Data, await this.GetAmount(this.Amount, parameters));
+                currency.SubtractAmount(parameters.User.Data, this.Amount);
             }
+            return Task.FromResult(0);
         }
 
-        public override async Task Refund(CommandParametersModel parameters)
+        public override Task Refund(CommandParametersModel parameters)
         {
             CurrencyModel currency = this.Currency;
             if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                currency.AddAmount(parameters.User.Data, await this.GetAmount(this.Amount, parameters));
+                currency.AddAmount(parameters.User.Data, this.Amount);
             }
+            return Task.FromResult(0);
         }
 
         protected async Task<bool> ValidateAmount(CommandParametersModel parameters, CurrencyModel currency, int amount)

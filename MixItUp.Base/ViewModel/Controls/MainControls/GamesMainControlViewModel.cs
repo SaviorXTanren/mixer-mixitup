@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.ViewModel.Window;
 using System.Collections.ObjectModel;
 using System.Linq;

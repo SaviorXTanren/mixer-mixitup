@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Util;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -31,23 +30,6 @@ namespace MixItUp.Base.Model.Requirements
             {
                 await ChannelSession.Services.Chat.SendMessage(message);
             }
-        }
-
-        protected async Task<int> GetAmount(string amount, CommandParametersModel parameters)
-        {
-            if (!string.IsNullOrEmpty(amount))
-            {
-                if (amount.StartsWith(SpecialIdentifierStringBuilder.SpecialIdentifierHeader))
-                {
-                    amount = await SpecialIdentifierStringBuilder.ProcessSpecialIdentifiers(amount, parameters);
-                }
-
-                if (int.TryParse(amount, out int iAmount) && iAmount >= 0)
-                {
-                    return iAmount;
-                }
-            }
-            return 0;
         }
     }
 }

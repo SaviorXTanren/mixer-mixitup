@@ -49,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private CurrencyModel selectedCurrency;
 
-        public string Amount
+        public int Amount
         {
             get { return this.amount; }
             set
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.NotifyPropertyChanged();
             }
         }
-        private string amount = "0";
+        private int amount = 0;
 
         public ICommand DeleteCommand { get; private set; }
 
@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyMustBeSelected));
             }
 
-            if (!this.ValidateStringAmount(this.Amount))
+            if (this.Amount < 0)
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
             }

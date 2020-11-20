@@ -3535,6 +3535,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must specify an amount between {0} - {1} {2}.
+        /// </summary>
+        public static string GameCurrencyRequirementAmountBetween {
+            get {
+                return ResourceManager.GetString("GameCurrencyRequirementAmountBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify an amount greater than or equal to {0} {1}.
+        /// </summary>
+        public static string GameCurrencyRequirementAmountGreaterThan {
+            get {
+                return ResourceManager.GetString("GameCurrencyRequirementAmountGreaterThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game Name.
         /// </summary>
         public static string GameName {

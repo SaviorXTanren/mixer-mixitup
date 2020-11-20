@@ -77,5 +77,21 @@ namespace MixItUp.Base.Util
             }
             return result;
         }
+
+        public static T Bottom<T>(this IEnumerable<T> list, Func<T, int> selector)
+        {
+            T result = default(T);
+            int bottom = int.MaxValue;
+            foreach (T t in list)
+            {
+                int tValue = selector(t);
+                if (tValue < bottom)
+                {
+                    result = t;
+                    bottom = tValue;
+                }
+            }
+            return result;
+        }
     }
 }

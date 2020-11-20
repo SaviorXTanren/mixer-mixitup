@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -18,11 +16,11 @@ namespace MixItUp.Base.Model.Requirements
         public Guid ItemID { get; set; }
 
         [DataMember]
-        public string Amount { get; set; }
+        public int Amount { get; set; }
 
         public InventoryRequirementModel() { }
 
-        public InventoryRequirementModel(InventoryModel inventory, InventoryItemModel item, string amount)
+        public InventoryRequirementModel(InventoryModel inventory, InventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemID = item.ID;
@@ -33,7 +31,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             this.InventoryID = requirement.InventoryID;
             this.ItemID = requirement.ItemID;
-            this.Amount = requirement.Amount.ToString();
+            this.Amount = requirement.Amount;
         }
 
         [JsonIgnore]
@@ -77,7 +75,7 @@ namespace MixItUp.Base.Model.Requirements
                 return false;
             }
 
-            if (!parameters.User.Data.IsCurrencyRankExempt && !inventory.HasAmount(parameters.User.Data, item.ID, await this.GetAmount(this.Amount, parameters)))
+            if (!parameters.User.Data.IsCurrencyRankExempt && !inventory.HasAmount(parameters.User.Data, item.ID, this.Amount))
             {
                 await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, item.Name));
                 return false;
@@ -86,22 +84,24 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override async Task Perform(CommandParametersModel parameters)
+        public override Task Perform(CommandParametersModel parameters)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                inventory.SubtractAmount(parameters.User.Data, this.ItemID, await this.GetAmount(this.Amount, parameters));
+                inventory.SubtractAmount(parameters.User.Data, this.ItemID, this.Amount);
             }
+            return Task.FromResult(0);
         }
 
-        public override async Task Refund(CommandParametersModel parameters)
+        public override Task Refund(CommandParametersModel parameters)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                inventory.AddAmount(parameters.User.Data, this.ItemID, await this.GetAmount(this.Amount, parameters));
+                inventory.AddAmount(parameters.User.Data, this.ItemID, this.Amount);
             }
+            return Task.FromResult(0);
         }
     }
 }
