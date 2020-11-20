@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.API;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -18,7 +17,6 @@ namespace MixItUp.Base.Services
         Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
         Task<MixItUpUpdateModel> GetLatestTestUpdate();
 
-        Task SendUserFeatureEvent(UserFeatureEvent feature);
         Task SendIssueReport(IssueReportModel report);
     }
 
@@ -59,14 +57,6 @@ namespace MixItUp.Base.Services
         public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
         public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
-
-        public async Task SendUserFeatureEvent(UserFeatureEvent feature)
-        {
-            if (!ChannelSession.Settings.OptOutTracking && ChannelSession.Settings.FeatureMe)
-            {
-                await this.PostAsync("userfeature", feature);
-            }
-        }
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
 
