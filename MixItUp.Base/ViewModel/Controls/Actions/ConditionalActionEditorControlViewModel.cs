@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Commands;
 using MixItUp.Base.ViewModels;
@@ -180,10 +181,10 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
 
             this.ImportActionsCommand = this.CreateCommand(async (parameter) =>
             {
-                IEnumerable<ActionModelBase> actions = await CommandEditorWindowViewModelBase.ImportActions();
-                if (actions != null)
+                CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile();
+                if (command != null)
                 {
-                    foreach (ActionModelBase action in actions)
+                    foreach (ActionModelBase action in command.Actions)
                     {
                         await this.ActionEditorList.AddAction(action);
                     }
