@@ -3535,6 +3535,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A game is already underway.
+        /// </summary>
+        public static string GameCommandAlreadyUnderway {
+            get {
+                return ResourceManager.GetString("GameCommandAlreadyUnderway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid user could not be found.
+        /// </summary>
+        public static string GameCommandCouldNotFindUser {
+            get {
+                return ResourceManager.GetString("GameCommandCouldNotFindUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid bet amount must be specified.
+        /// </summary>
+        public static string GameCommandInvalidBetAmount {
+            get {
+                return ResourceManager.GetString("GameCommandInvalidBetAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user does not have {0} {1}.
+        /// </summary>
+        public static string GameCommandTargetUserInvalidAmount {
+            get {
+                return ResourceManager.GetString("GameCommandTargetUserInvalidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must specify an amount between {0} - {1} {2}.
         /// </summary>
         public static string GameCurrencyRequirementAmountBetween {

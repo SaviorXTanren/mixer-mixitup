@@ -30,7 +30,12 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private SlotMachineGameCommandModel() { }
 
-        public override IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>() { this.FailureOutcomeCommand }; }
+        public override IEnumerable<CommandModelBase> GetInnerCommands()
+        {
+            List<CommandModelBase> commands = new List<CommandModelBase>() { this.FailureOutcomeCommand };
+            commands.AddRange(this.Outcomes.Select(o => o.Command));
+            return commands;
+        }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

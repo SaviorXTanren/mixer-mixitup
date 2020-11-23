@@ -3473,4 +3473,16 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCurrencyRequirementAmountGreaterThan" xml:space="preserve">
     <value>You must specify an amount greater than or equal to {0} {1}</value>
   </data>
+  <data name="GameCommandCouldNotFindUser" xml:space="preserve">
+    <value>A valid user could not be found</value>
+  </data>
+  <data name="GameCommandInvalidBetAmount" xml:space="preserve">
+    <value>A valid bet amount must be specified</value>
+  </data>
+  <data name="GameCommandTargetUserInvalidAmount" xml:space="preserve">
+    <value>The user does not have {0} {1}</value>
+  </data>
+  <data name="GameCommandAlreadyUnderway" xml:space="preserve">
+    <value>A game is already underway</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -17,6 +18,8 @@ namespace MixItUp.Base.Model.Commands.Games
         }
 
         private SpinGameCommandModel() { }
+
+        public override IEnumerable<CommandModelBase> GetInnerCommands() { return this.Outcomes.Select(o => o.Command); }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

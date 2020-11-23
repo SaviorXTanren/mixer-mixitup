@@ -105,6 +105,11 @@ namespace MixItUp.Base.Model.Commands.Games
             return (gameCurrencyRequirement != null) ? gameCurrencyRequirement.GetGameAmount(parameters) : 0;
         }
 
+        protected UserViewModel GetRandomUser(CommandParametersModel parameters)
+        {
+            return ChannelSession.Services.User.GetRandomUser(parameters);
+        }
+
         protected override Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
             return base.ValidateRequirements(parameters);
