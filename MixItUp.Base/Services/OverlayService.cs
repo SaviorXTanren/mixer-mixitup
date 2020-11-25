@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 1000, this.WidgetsBackgroundUpdate);
+                AsyncRunner.RunAsyncBackground(this.backgroundThreadCancellationTokenSource.Token, 1000, this.WidgetsBackgroundUpdate);
 
                 this.IsConnected = true;
                 ChannelSession.Settings.EnableOverlay = true;

@@ -580,7 +580,7 @@ namespace MixItUp.Base.Commands
 
                             await this.GameStarted(user, arguments, betAmount);
 
-                            this.timeLimitTask = AsyncRunner.RunAsyncInBackground(async () =>
+                            this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
@@ -861,7 +861,7 @@ namespace MixItUp.Base.Commands
                     {
                         await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
 
-                        this.timeLimitTask = AsyncRunner.RunAsyncInBackground(async () =>
+                        this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
                         {
                             await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
@@ -1108,7 +1108,7 @@ namespace MixItUp.Base.Commands
             }
 
             this.timeLimitCancellationTokenSource = new CancellationTokenSource();
-            this.timeLimitTask = AsyncRunner.RunBackgroundTask(this.timeLimitCancellationTokenSource.Token, async (token) =>
+            this.timeLimitTask = AsyncRunner.RunAsyncBackground(this.timeLimitCancellationTokenSource.Token, async (token) =>
             {
                 await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
@@ -1413,7 +1413,7 @@ namespace MixItUp.Base.Commands
                             this.currentStarterUser = user;
 
                             this.taskCancellationSource = new CancellationTokenSource();
-                            this.timeLimitTask = AsyncRunner.RunBackgroundTask(this.taskCancellationSource.Token, async (timeLimitToken) =>
+                            this.timeLimitTask = AsyncRunner.RunAsyncBackground(this.taskCancellationSource.Token, async (timeLimitToken) =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
@@ -2914,7 +2914,7 @@ namespace MixItUp.Base.Commands
             this.totalPayout = 0;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncInBackground(async () =>
+            AsyncRunner.RunAsyncBackground(async () =>
             {
                 this.collectActive = true;
 

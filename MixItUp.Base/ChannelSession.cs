@@ -605,7 +605,7 @@ namespace MixItUp.Base
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
                         await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
 
-                        AsyncRunner.RunBackgroundTask(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
+                        AsyncRunner.RunAsyncBackground(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
                     }
                     catch (Exception ex)
                     {

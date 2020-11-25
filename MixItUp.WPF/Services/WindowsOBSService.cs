@@ -227,7 +227,7 @@ namespace MixItUp.WPF.Services
         private async Task<T> OBSCommandTimeoutWrapper<T>(Func<T> function, int timeout = CommandTimeoutInMilliseconds)
         {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            Task<T> task = AsyncRunner.RunSyncAsAsync(function, cancellationTokenSource.Token);
+            Task<T> task = AsyncRunner.RunAsyncBackground(function, cancellationTokenSource.Token);
             Task delay = Task.Delay(timeout);
             await Task.WhenAny(new Task[] { task, delay });
 
@@ -239,7 +239,7 @@ namespace MixItUp.WPF.Services
             {
                 cancellationTokenSource.Cancel();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunSyncAsAsync(() => this.OBSWebsocket_Disconnected(this, new EventArgs()), new CancellationToken());
+                AsyncRunner.RunAsyncBackground(() => this.OBSWebsocket_Disconnected(this, new EventArgs()), new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 return default(T);
             }

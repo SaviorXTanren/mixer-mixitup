@@ -1,6 +1,6 @@
 ﻿using StreamingClient.Base.Util;
 using System;
-using System.Net;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,18 +8,6 @@ namespace MixItUp.Base.Util
 {
     public static class AsyncRunner
     {
-        public static async Task RunAsync(Task task)
-        {
-            try
-            {
-                await task;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, includeStackTrace: true);
-            }
-        }
-
         public static async Task<T> RunAsync<T>(Task<T> task)
         {
             try
@@ -46,35 +34,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static async Task<T> RunAsync<T>(Func<Task<T>> task)
-        {
-            try
-            {
-                return await task();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, includeStackTrace: true);
-            }
-            return default(T);
-        }
-
-        public static Task RunAsyncInBackground(Func<Task> task)
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    await task();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex, includeStackTrace: true);
-                }
-            });
-        }
-
-        public static async Task RunSyncAsAsync(Action action, CancellationToken token)
+        public static async Task RunAsyncBackground(Action action, CancellationToken token)
         {
             await Task.Run(() =>
             {
@@ -89,7 +49,7 @@ namespace MixItUp.Base.Util
             }, token);
         }
 
-        public static async Task<T> RunSyncAsAsync<T>(Func<T> function, CancellationToken token)
+        public static async Task<T> RunAsyncBackground<T>(Func<T> function, CancellationToken token)
         {
             return await Task.Run(() =>
             {
@@ -105,21 +65,23 @@ namespace MixItUp.Base.Util
             }, token);
         }
 
-        public static void RunAsyncAsSync(Task task)
+        public static Task RunAsyncBackground(Func<Task> task)
         {
-            try
+            return Task.Run(async () =>
             {
-                task.Wait();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, includeStackTrace: true);
-            }
+                try
+                {
+                    await task();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex, includeStackTrace: true);
+                }
+            });
         }
 
-        public static Task RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunAsyncBackground(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             return Task.Run(async () =>
             {
                 try
@@ -130,13 +92,11 @@ namespace MixItUp.Base.Util
                 catch (OperationCanceledException) { return; }
                 catch (Exception ex) { Logger.Log(ex); }
             });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public static void RunBackgroundTask(CancellationToken token, int delayInMilliseconds, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunAsyncBackground(CancellationToken token, int delayInMilliseconds, Func<CancellationToken, Task> backgroundTask)
         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 while (!token.IsCancellationRequested)
                 {
@@ -160,7 +120,6 @@ namespace MixItUp.Base.Util
                     catch (Exception ex) { Logger.Log(ex); }
                 }
             });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
     }
 }

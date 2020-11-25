@@ -248,7 +248,7 @@ namespace MixItUp.Base.Services.External
                     }
                 }
 
-                MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+                MixItUp.Base.Util.AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                 this.TrackServiceTelemetry("ExtraLife");
                 return new Result();

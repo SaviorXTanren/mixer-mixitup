@@ -117,7 +117,7 @@ namespace MixItUp.Base.Model.Overlay
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-            AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 1000, this.TimerBackground);
+            AsyncRunner.RunAsyncBackground(this.backgroundThreadCancellationTokenSource.Token, 1000, this.TimerBackground);
 
             await base.Enable();
         }

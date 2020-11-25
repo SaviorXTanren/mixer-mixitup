@@ -149,7 +149,7 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
+            AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)

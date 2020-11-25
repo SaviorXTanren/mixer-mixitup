@@ -201,7 +201,7 @@ namespace MixItUp.Base.Services.External
                     donationsReceived[donation.ID] = donation;
                 }
 
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+                AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
                 this.TrackServiceTelemetry("StreamJar");
                 return new Result();
             }

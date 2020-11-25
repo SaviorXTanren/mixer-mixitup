@@ -252,7 +252,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundEventChecks);
+                        AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundEventChecks);
 
                         this.IsConnected = true;
 

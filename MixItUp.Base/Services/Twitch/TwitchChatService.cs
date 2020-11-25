@@ -184,7 +184,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
+                        AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
 
                         await Task.Delay(3000);
 
@@ -410,90 +410,90 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
                 }
-            }));
+            });
         }
 
         public async Task ClearMessages()
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
                 }
-            }));
+            });
         }
 
         public async Task ModUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task UnmodUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task TimeoutUser(UserViewModel user, int lengthInSeconds)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
                 }
-            }));
+            });
         }
 
         public async Task BanUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task UnbanUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task RunCommercial(int lengthInSeconds)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
                 }
-            }));
+            });
         }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }

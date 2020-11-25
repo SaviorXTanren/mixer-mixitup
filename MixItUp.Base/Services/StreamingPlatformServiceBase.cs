@@ -32,40 +32,23 @@ namespace MixItUp.Base.Services
             return result;
         }
 
-        protected async Task RunAsync(Task task) { await AsyncRunner.RunAsync(task); }
-
-        protected async Task<T> RunAsync<T>(Task<T> task) { return await AsyncRunner.RunAsync(task); }
-
-        protected async Task RunAsync(Func<Task> task) { await AsyncRunner.RunAsync(task); }
-
-        protected async Task<T> RunAsync<T>(Func<Task<T>> task) { return await AsyncRunner.RunAsync(task); }
-
         protected async Task<IEnumerable<T>> RunAsync<T>(Task<IEnumerable<T>> task)
         {
+            IEnumerable<T> result = null;
             try
             {
-                await task;
-                return task.Result;
+                result = await AsyncRunner.RunAsync(task);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-            return ReflectionHelper.CreateInstanceOf<List<T>>();
-        }
 
-        protected async Task<IDictionary<K, V>> RunAsync<K, V>(Task<IDictionary<K, V>> task)
-        {
-            try
+            if (result == null)
             {
-                await task;
-                return task.Result;
+                result = ReflectionHelper.CreateInstanceOf<List<T>>();
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return ReflectionHelper.CreateInstanceOf<Dictionary<K, V>>();
+            return result;
         }
     }
 }

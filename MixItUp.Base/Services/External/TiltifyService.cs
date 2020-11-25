@@ -349,7 +349,7 @@ namespace MixItUp.Base.Services.External
             this.user = await this.GetUser();
             if (this.user != null)
             {
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+                AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
                 this.TrackServiceTelemetry("Tiltify");
                 return new Result();
             }
