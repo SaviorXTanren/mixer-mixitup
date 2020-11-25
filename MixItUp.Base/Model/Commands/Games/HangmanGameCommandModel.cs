@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,20 +147,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private async Task ClearData()
         {
-            HashSet<string> wordsToUse = new HashSet<string>(GameCommandModelBase.DefaultWords.Where(s => s.Length > 4));
-            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
-            {
-                string fileData = await ChannelSession.Services.FileService.ReadFile(this.CustomWordsFilePath);
-                if (!string.IsNullOrEmpty(fileData))
-                {
-                    wordsToUse = new HashSet<string>();
-                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        wordsToUse.Add(split);
-                    }
-                }
-            }
-            this.CurrentWord = wordsToUse.Random().ToUpper();
+            this.CurrentWord = await this.GetRandomWord(this.CustomWordsFilePath);
             this.SuccessfulGuesses.Clear();
             this.FailedGuesses.Clear();
             this.TotalAmount = this.InitialAmount;

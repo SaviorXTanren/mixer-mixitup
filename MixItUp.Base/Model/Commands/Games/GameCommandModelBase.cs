@@ -157,6 +157,24 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
+        protected async Task<string> GetRandomWord(string customWordsFilePath)
+        {
+            HashSet<string> wordsToUse = GameCommandModelBase.DefaultWords;
+            if (!string.IsNullOrEmpty(customWordsFilePath) && ChannelSession.Services.FileService.FileExists(customWordsFilePath))
+            {
+                string fileData = await ChannelSession.Services.FileService.ReadFile(customWordsFilePath);
+                if (!string.IsNullOrEmpty(fileData))
+                {
+                    wordsToUse = new HashSet<string>();
+                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        wordsToUse.Add(split);
+                    }
+                }
+            }
+            return wordsToUse.Random().ToUpper();
+        }
+
         protected int GenerateProbability() { return RandomHelper.GenerateProbability(); }
 
         protected int GenerateRandomNumber(int maxValue) { return RandomHelper.GenerateRandomNumber(maxValue); }

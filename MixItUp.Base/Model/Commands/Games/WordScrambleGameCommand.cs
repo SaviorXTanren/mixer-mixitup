@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Commands.Games
 {
     [DataContract]
-    public class HitmanGameCommandModel : GameCommandModelBase
+    public class WordScrambleGameCommand : GameCommandModelBase
     {
-        public const string GameHitmanNameSpecialIdentifier = "gamehitmanname";
+        public const string GameWordScrambleWordSpecialIdentifier = "gamewordscrambleword";
+        public const string GameWordScrambleAnswerSpecialIdentifier = "gamewordscrambleanswer";
 
         [DataMember]
         public int MinimumParticipants { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
         [DataMember]
-        public int HitmanTimeLimit { get; set; }
+        public int WordScrambleTimeLimit { get; set; }
 
         [DataMember]
         public string CustomWordsFilePath { get; set; }
@@ -32,9 +33,9 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel NotEnoughPlayersCommand { get; set; }
 
         [DataMember]
-        public CustomCommandModel HitmanApproachingCommand { get; set; }
+        public CustomCommandModel WordScramblePrepareCommand { get; set; }
         [DataMember]
-        public CustomCommandModel HitmanAppearsCommand { get; set; }
+        public CustomCommandModel WordScrambleBeginCommand { get; set; }
 
         [DataMember]
         public CustomCommandModel UserSuccessCommand { get; set; }
@@ -48,27 +49,29 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
         [JsonIgnore]
-        private string runHitmanName;
+        private string runWord;
+        [JsonIgnore]
+        private string runWordScrambled;
 
-        public HitmanGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int hitmanTimeLimit, string customWordsFilePath,
-            CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel hitmanApproachingCommand,
-            CustomCommandModel hitmanAppearsCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
+        public WordScrambleGameCommand(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int wordScrambleTimeLimit, string customWordsFilePath,
+            CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand,
+            CustomCommandModel wordScramblePrepareCommand, CustomCommandModel wordScrambleBeginCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
             : base(name, triggers)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;
-            this.HitmanTimeLimit = hitmanTimeLimit;
+            this.WordScrambleTimeLimit = wordScrambleTimeLimit;
             this.CustomWordsFilePath = customWordsFilePath;
             this.StartedCommand = startedCommand;
             this.UserJoinCommand = userJoinCommand;
             this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
-            this.HitmanApproachingCommand = hitmanApproachingCommand;
-            this.HitmanAppearsCommand = hitmanAppearsCommand;
+            this.WordScramblePrepareCommand = wordScramblePrepareCommand;
+            this.WordScrambleBeginCommand = wordScrambleBeginCommand;
             this.UserSuccessCommand = userSuccessCommand;
             this.UserFailCommand = userFailCommand;
         }
 
-        private HitmanGameCommandModel() { }
+        private WordScrambleGameCommand() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {
@@ -76,8 +79,8 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.StartedCommand);
             commands.Add(this.UserJoinCommand);
             commands.Add(this.NotEnoughPlayersCommand);
-            commands.Add(this.HitmanApproachingCommand);
-            commands.Add(this.HitmanAppearsCommand);
+            commands.Add(this.WordScramblePrepareCommand);
+            commands.Add(this.WordScrambleBeginCommand);
             commands.Add(this.UserSuccessCommand);
             commands.Add(this.UserFailCommand);
             return commands;
@@ -85,7 +88,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.runParameters == null)
+            if (this.runWord == null)
             {
                 this.runBetAmount = this.GetBetAmount(parameters);
                 this.runParameters = parameters;
@@ -105,21 +108,25 @@ namespace MixItUp.Base.Model.Commands.Games
                         return;
                     }
 
-                    await this.HitmanApproachingCommand.Perform(this.runParameters);
+                    await this.WordScramblePrepareCommand.Perform(this.runParameters);
 
                     await Task.Delay(5000);
 
-                    this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
+                    this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
+                    this.runWordScrambled = this.runWord.Shuffle();
+
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
 
                     GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
-                    await this.HitmanAppearsCommand.Perform(this.runParameters);
+                    await this.WordScrambleBeginCommand.Perform(this.runParameters);
 
-                    await Task.Delay(this.HitmanTimeLimit * 1000);
+                    await Task.Delay(this.WordScrambleTimeLimit * 1000);
 
                     GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
-                    if (!string.IsNullOrEmpty(this.runHitmanName))
+                    if (!string.IsNullOrEmpty(this.runWord))
                     {
                         this.UserFailCommand.Perform(this.runParameters);
                     }
@@ -140,13 +147,14 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
-            if (!string.IsNullOrEmpty(this.runHitmanName) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runHitmanName, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
+            if (!string.IsNullOrEmpty(this.runWord) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runWord, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
             {
                 int payout = this.runBetAmount * this.runUsers.Count;
                 this.GameCurrencyRequirement.Currency.AddAmount(message.User.Data, payout);
 
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
-                this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
+                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
+                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
 
                 this.ClearData();
                 await this.UserSuccessCommand.Perform(this.runUsers[message.User]);
@@ -157,7 +165,8 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.runParameters = null;
             this.runBetAmount = 0;
-            this.runHitmanName = null;
+            this.runWord = null;
+            this.runWordScrambled = null;
             this.runUsers.Clear();
         }
     }
