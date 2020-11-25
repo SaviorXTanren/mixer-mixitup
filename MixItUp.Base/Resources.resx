@@ -3488,4 +3488,10 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandHangmanNotLetter" xml:space="preserve">
     <value>The argument must be a valid letter</value>
   </data>
+  <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
+    <value>You've already collected your share</value>
+  </data>
+  <data name="GameCommandVolcanoCollectUnderway" xml:space="preserve">
+    <value>Collecting is currently underway, please wait until it has completed</value>
+  </data>
 </root>

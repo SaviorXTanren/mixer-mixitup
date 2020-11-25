@@ -3580,6 +3580,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve already collected your share.
+        /// </summary>
+        public static string GameCommandVolcanoAlreadyCollected {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoAlreadyCollected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collecting is currently underway, please wait until it has completed.
+        /// </summary>
+        public static string GameCommandVolcanoCollectUnderway {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollectUnderway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must specify an amount between {0} - {1} {2}.
         /// </summary>
         public static string GameCurrencyRequirementAmountBetween {

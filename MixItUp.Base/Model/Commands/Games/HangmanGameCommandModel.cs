@@ -47,9 +47,6 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public HashSet<char> FailedGuesses { get; set; } = new HashSet<char>();
 
-        [JsonIgnore]
-        private CommandParametersModel runParameters;
-
         public HangmanGameCommandModel(string name, HashSet<string> triggers, string statusArgument, int maxFailures, int initialAmount, string customWordsFilePath, CustomCommandModel statusCommand,
             CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand, CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand)
             : base(name, triggers)

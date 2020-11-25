@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -71,18 +72,18 @@ namespace MixItUp.Base.Model.Commands.Games
 
                             this.runCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            Task.Run(async () =>
+                            AsyncRunner.RunBackgroundTask(this.runCancellationTokenSource.Token, async(cancellationToken) =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
-                                if (this.runCancellationTokenSource != null && !this.runCancellationTokenSource.IsCancellationRequested)
+                                if (cancellationToken != null && !cancellationToken.IsCancellationRequested)
                                 {
                                     await this.NotAcceptedCommand.Perform(parameters);
                                     await this.Requirements.Refund(parameters);
                                 }
 
                                 this.ClearData();
-                            }, this.runCancellationTokenSource.Token);
+                            });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                             await this.StartedCommand.Perform(parameters);

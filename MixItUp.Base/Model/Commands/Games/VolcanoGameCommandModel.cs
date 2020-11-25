@@ -1,0 +1,202 @@
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
+namespace MixItUp.Base.Model.Commands.Games
+{
+    [DataContract]
+    public class VolcanoGameCommandModel : GameCommandModelBase
+    {
+        [DataMember]
+        public string StatusArgument { get; set; }
+
+        [DataMember]
+        public CustomCommandModel Stage1DepositCommand { get; set; }
+        [DataMember]
+        public CustomCommandModel Stage1StatusCommand { get; set; }
+
+        [DataMember]
+        public int Stage2MinimumAmount { get; set; }
+        [DataMember]
+        public CustomCommandModel Stage2DepositCommand { get; set; }
+        [DataMember]
+        public CustomCommandModel Stage2StatusCommand { get; set; }
+
+        [DataMember]
+        public int Stage3MinimumAmount { get; set; }
+        [DataMember]
+        public CustomCommandModel Stage3DepositCommand { get; set; }
+        [DataMember]
+        public CustomCommandModel Stage3StatusCommand { get; set; }
+
+        [DataMember]
+        public int PayoutProbability { get; set; }
+        [DataMember]
+        public double PayoutPercentageMinimum { get; set; }
+        [DataMember]
+        public double PayoutPercentageMaximum { get; set; }
+        [DataMember]
+        public CustomCommandModel PayoutCommand { get; set; }
+
+        [DataMember]
+        public string CollectArgument { get; set; }
+        [DataMember]
+        public int CollectTimeLimit { get; set; }
+        [DataMember]
+        public double CollectPayoutPercentageMinimum { get; set; }
+        [DataMember]
+        public double CollectPayoutPercentageMaximum { get; set; }
+        [DataMember]
+        public CustomCommandModel CollectCommand { get; set; }
+
+        [DataMember]
+        public int TotalAmount { get; set; }
+
+        [JsonIgnore]
+        private bool collectActive = false;
+        [JsonIgnore]
+        private HashSet<UserViewModel> collectUsers = new HashSet<UserViewModel>();
+
+        public VolcanoGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel stage1DepositCommand, CustomCommandModel stage1StatusCommand,
+            int stage2MinimumAmount, CustomCommandModel stage2DepositCommand, CustomCommandModel stage2StatusCommand,
+            int stage3MinimumAmount, CustomCommandModel stage3DepositCommand, CustomCommandModel stage3StatusCommand,
+            int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommandModel payoutCommand,
+            string collectArgument, int collectTimeLimit, double collectPayoutPercentageMinimum, double collectPayoutPercentageMaximum, CustomCommandModel collectCommand)
+            : base(name, triggers)
+        {
+            this.StatusArgument = statusArgument;
+            this.Stage1DepositCommand = stage1DepositCommand;
+            this.Stage1StatusCommand = stage1StatusCommand;
+            this.Stage2MinimumAmount = stage2MinimumAmount;
+            this.Stage2DepositCommand = stage2DepositCommand;
+            this.Stage2StatusCommand = stage2StatusCommand;
+            this.Stage3MinimumAmount = stage3MinimumAmount;
+            this.Stage3DepositCommand = stage3DepositCommand;
+            this.Stage3StatusCommand = stage3StatusCommand;
+            this.PayoutProbability = payoutProbability;
+            this.PayoutPercentageMinimum = payoutPercentageMinimum;
+            this.PayoutPercentageMaximum = payoutPercentageMaximum;
+            this.PayoutCommand = payoutCommand;
+            this.CollectArgument = collectArgument;
+            this.CollectTimeLimit = collectTimeLimit;
+            this.CollectPayoutPercentageMinimum = collectPayoutPercentageMinimum;
+            this.CollectPayoutPercentageMaximum = collectPayoutPercentageMaximum;
+            this.CollectCommand = collectCommand;
+        }
+
+        private VolcanoGameCommandModel() { }
+
+        public override IEnumerable<CommandModelBase> GetInnerCommands()
+        {
+            List<CommandModelBase> commands = new List<CommandModelBase>();
+            commands.Add(this.Stage1DepositCommand);
+            commands.Add(this.Stage1StatusCommand);
+            commands.Add(this.Stage2DepositCommand);
+            commands.Add(this.Stage2StatusCommand);
+            commands.Add(this.Stage3DepositCommand);
+            commands.Add(this.Stage3StatusCommand);
+            commands.Add(this.PayoutCommand);
+            commands.Add(this.CollectCommand);
+            return commands;
+        }
+
+        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        {
+            if (this.collectActive)
+            {
+                if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.CollectArgument, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (!this.collectUsers.Contains(parameters.User))
+                    {
+                        this.collectUsers.Add(parameters.User);
+                        int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum);
+                        this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout);
+
+                        parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
+                        await this.CollectCommand.Perform(parameters);
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
+                }
+                return false;
+            }
+            else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (this.TotalAmount >= this.Stage3MinimumAmount)
+                {
+                    await this.Stage3StatusCommand.Perform(parameters);
+                }
+                else if (this.TotalAmount >= this.Stage2MinimumAmount)
+                {
+                    await this.Stage2StatusCommand.Perform(parameters);
+                }
+                else
+                {
+                    await this.Stage1StatusCommand.Perform(parameters);
+                }
+                return false;
+            }
+            else
+            {
+                return await base.ValidateRequirements(parameters);
+            }
+        }
+
+        protected override async Task PerformInternal(CommandParametersModel parameters)
+        {
+            int betAmount = this.GetBetAmount(parameters);
+            this.TotalAmount += betAmount;
+
+            if (this.TotalAmount >= this.Stage3MinimumAmount)
+            {
+                if (this.GenerateProbability() <= this.PayoutProbability)
+                {
+                    this.collectUsers.Add(parameters.User);
+                    int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum);
+                    this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout);
+                    parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncInBackground(async () =>
+                    {
+                        this.collectActive = true;
+                        await Task.Delay(this.CollectTimeLimit * 1000);
+                        this.ClearData();
+                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    await this.PayoutCommand.Perform(parameters);
+                }
+                else
+                {
+                    await this.Stage3DepositCommand.Perform(parameters);
+                }
+            }
+            else if (this.TotalAmount >= this.Stage2MinimumAmount)
+            {
+                await this.Stage2DepositCommand.Perform(parameters);
+            }
+            else
+            {
+                await this.Stage1DepositCommand.Perform(parameters);
+            }
+        }
+
+        private void ClearData()
+        {
+            this.TotalAmount = 0;
+            this.collectActive = false;
+            this.collectUsers.Clear();
+        }
+    }
+}

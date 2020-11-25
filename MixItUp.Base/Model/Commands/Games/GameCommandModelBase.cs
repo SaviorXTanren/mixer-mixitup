@@ -162,5 +162,13 @@ namespace MixItUp.Base.Model.Commands.Games
         protected int GenerateRandomNumber(int maxValue) { return RandomHelper.GenerateRandomNumber(maxValue); }
 
         protected int GenerateRandomNumber(int minValue, int maxValue) { return RandomHelper.GenerateRandomNumber(minValue, maxValue); }
+
+        protected int GenerateRandomNumber(int total, double minimumPercentage, double maximumPercentage)
+        {
+            double amount = Convert.ToDouble(total);
+            int minAmount = Convert.ToInt32(amount * minimumPercentage);
+            int maxAmount = Convert.ToInt32(amount * maximumPercentage);
+            return this.GenerateRandomNumber(minAmount, maxAmount);
+        }
     }
 }
