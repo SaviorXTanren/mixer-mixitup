@@ -17,15 +17,14 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public string StatusArgument { get; set; }
         [DataMember]
+        public CustomCommandModel StatusCommand { get; set; }
+
+        [DataMember]
         public int MaxFailures { get; set; }
         [DataMember]
         public int InitialAmount { get; set; }
-
         [DataMember]
         public string CustomWordsFilePath { get; set; }
-
-        [DataMember]
-        public CustomCommandModel StatusCommand { get; set; }
 
         [DataMember]
         public CustomCommandModel SuccessfulGuessCommand { get; set; }
@@ -46,15 +45,15 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public HashSet<char> FailedGuesses { get; set; } = new HashSet<char>();
 
-        public HangmanGameCommandModel(string name, HashSet<string> triggers, string statusArgument, int maxFailures, int initialAmount, string customWordsFilePath, CustomCommandModel statusCommand,
+        public HangmanGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand, int maxFailures, int initialAmount, string customWordsFilePath,
             CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand, CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand)
             : base(name, triggers)
         {
             this.StatusArgument = statusArgument;
+            this.StatusCommand = statusCommand;
             this.MaxFailures = maxFailures;
             this.InitialAmount = initialAmount;
             this.CustomWordsFilePath = customWordsFilePath;
-            this.StatusCommand = statusCommand;
             this.SuccessfulGuessCommand = successfulGuessCommand;
             this.FailedGuessCommand = failedGuessCommand;
             this.GameWonCommand = gameWonCommand;
@@ -76,13 +75,13 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
+            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
+            {
+                await this.ClearData();
+            }
+
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
-                {
-                    await this.ClearData();
-                }
-
                 this.AddSpecialIdentifiersToParameters(parameters);
                 await this.StatusCommand.Perform(parameters);
 
@@ -96,11 +95,6 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
-            {
-                await this.ClearData();
-            }
-
             if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == 1)
             {
                 this.TotalAmount += this.GetBetAmount(parameters);

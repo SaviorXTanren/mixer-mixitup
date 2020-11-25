@@ -2104,6 +2104,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have the required {0} {1} to do this.
+        /// </summary>
+        public static string CurrencyRequirementDoNotHaveAmount {
+            get {
+                return ResourceManager.GetString("CurrencyRequirementDoNotHaveAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -3567,6 +3576,42 @@ namespace MixItUp.Base {
         public static string GameCommandInvalidBetAmount {
             get {
                 return ResourceManager.GetString("GameCommandInvalidBetAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to high.
+        /// </summary>
+        public static string GameCommandLockBoxHigh {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxHigh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The guess must be exactly {0} numbers.
+        /// </summary>
+        public static string GameCommandLockBoxIncorrectLength {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxIncorrectLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to low.
+        /// </summary>
+        public static string GameCommandLockBoxLow {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxLow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The guess must a valid combination of the digits 0 - 9.
+        /// </summary>
+        public static string GameCommandLockBoxNotNumber {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxNotNumber", resourceCulture);
             }
         }
         

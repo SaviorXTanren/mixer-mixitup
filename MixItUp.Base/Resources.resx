@@ -3488,6 +3488,21 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandHangmanNotLetter" xml:space="preserve">
     <value>The argument must be a valid letter</value>
   </data>
+  <data name="CurrencyRequirementDoNotHaveAmount" xml:space="preserve">
+    <value>You do not have the required {0} {1} to do this</value>
+  </data>
+  <data name="GameCommandLockBoxHigh" xml:space="preserve">
+    <value>high</value>
+  </data>
+  <data name="GameCommandLockBoxIncorrectLength" xml:space="preserve">
+    <value>The guess must be exactly {0} numbers</value>
+  </data>
+  <data name="GameCommandLockBoxLow" xml:space="preserve">
+    <value>low</value>
+  </data>
+  <data name="GameCommandLockBoxNotNumber" xml:space="preserve">
+    <value>The guess must a valid combination of the digits 0 - 9</value>
+  </data>
   <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
     <value>You've already collected your share</value>
   </data>
