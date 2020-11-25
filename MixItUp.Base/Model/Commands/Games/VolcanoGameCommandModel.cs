@@ -156,6 +156,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             int betAmount = this.GetBetAmount(parameters);
             this.TotalAmount += betAmount;
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
 
             if (this.TotalAmount >= this.Stage3MinimumAmount)
             {
