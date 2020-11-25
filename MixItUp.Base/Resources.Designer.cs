@@ -3553,6 +3553,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The argument must be a valid letter.
+        /// </summary>
+        public static string GameCommandHangmanNotLetter {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanNotLetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid bet amount must be specified.
         /// </summary>
         public static string GameCommandInvalidBetAmount {
