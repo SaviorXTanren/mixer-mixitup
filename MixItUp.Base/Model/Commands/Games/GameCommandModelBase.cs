@@ -83,6 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
     {
         public const string GameBetSpecialIdentifier = "gamebet";
         public const string GamePayoutSpecialIdentifier = "gamepayout";
+        public const string GameAllPayoutSpecialIdentifier = "gameallpayout";
         public const string GameWinnersSpecialIdentifier = "gamewinners";
         public const string GameTotalAmountSpecialIdentifier = "gametotalamount";
 
