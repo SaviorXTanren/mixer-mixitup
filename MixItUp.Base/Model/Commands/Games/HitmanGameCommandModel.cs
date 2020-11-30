@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands.Games
@@ -89,46 +90,58 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 this.runBetAmount = this.GetBetAmount(parameters);
                 this.runParameters = parameters;
+                this.runUsers[parameters.User] = parameters;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                //AsyncRunner.RunAsyncBackground(async () =>
-                //{
-                //    await Task.Delay(this.TimeLimit * 1000);
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                {
+                    await Task.Delay(this.TimeLimit * 1000);
 
-                //    if (this.runUsers.Count < this.MinimumParticipants)
-                //    {
-                //        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
-                //        foreach (var kvp in this.runUsers.ToList())
-                //        {
-                //            await this.Requirements.Refund(kvp.Value);
-                //        }
-                //        return;
-                //    }
+                    this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
 
-                //    await this.HitmanApproachingCommand.Perform(this.runParameters);
+                    if (this.runUsers.Count < this.MinimumParticipants)
+                    {
+                        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                        foreach (var kvp in this.runUsers.ToList())
+                        {
+                            await this.Requirements.Refund(kvp.Value);
+                        }
+                        await this.CooldownRequirement.Perform(this.runParameters);
+                        this.ClearData();
+                        return;
+                    }
 
-                //    await Task.Delay(5000);
+                    await this.HitmanApproachingCommand.Perform(this.runParameters);
 
-                //    this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
+                    await Task.Delay(5000);
 
-                //    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
-                //    await this.HitmanAppearsCommand.Perform(this.runParameters);
+                    await this.HitmanAppearsCommand.Perform(this.runParameters);
 
-                //    await Task.Delay(this.HitmanTimeLimit * 1000);
+                    await Task.Delay(this.HitmanTimeLimit * 1000);
 
-                //    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+                    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
-                //    if (!string.IsNullOrEmpty(this.runHitmanName))
-                //    {
-                //        this.UserFailCommand.Perform(this.runParameters);
-                //    }
-                //    this.ClearData();
-                //});
+                    if (!string.IsNullOrEmpty(this.runHitmanName))
+                    {
+                        this.UserFailCommand.Perform(this.runParameters);
+                    }
+                    await this.CooldownRequirement.Perform(this.runParameters);
+                    this.ClearData();
+                }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
+                this.ResetCooldown();
+                return;
+            }
+            else if (string.IsNullOrEmpty(this.runHitmanName) && !this.runUsers.ContainsKey(parameters.User))
+            {
+                this.runUsers[parameters.User] = parameters;
+                await this.UserJoinCommand.Perform(this.runParameters);
+                this.ResetCooldown();
                 return;
             }
             else
@@ -148,6 +161,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
 
+                await this.CooldownRequirement.Perform(this.runParameters);
                 this.ClearData();
                 await this.UserSuccessCommand.Perform(this.runUsers[message.User]);
             }

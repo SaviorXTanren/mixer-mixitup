@@ -100,6 +100,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public GameCurrencyRequirementModel GameCurrencyRequirement { get { return (GameCurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
 
+        public CooldownRequirementModel CooldownRequirement { get { return (CooldownRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
+
         public virtual IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>(); }
 
         protected int GetBetAmount(CommandParametersModel parameters)
@@ -107,6 +109,8 @@ namespace MixItUp.Base.Model.Commands.Games
             GameCurrencyRequirementModel gameCurrencyRequirement = this.GameCurrencyRequirement;
             return (gameCurrencyRequirement != null) ? gameCurrencyRequirement.GetGameAmount(parameters) : 0;
         }
+
+        protected void ResetCooldown() { this.CooldownRequirement.Reset(); }
 
         protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {

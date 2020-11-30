@@ -81,12 +81,13 @@ namespace MixItUp.Base.Model.Commands.Games
                                     await this.NotAcceptedCommand.Perform(parameters);
                                     await this.Requirements.Refund(parameters);
                                 }
-
+                                await this.CooldownRequirement.Perform(parameters);
                                 this.ClearData();
                             }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                             await this.StartedCommand.Perform(parameters);
+                            this.ResetCooldown();
                             return;
                         }
                         else
@@ -120,6 +121,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
                         await this.PerformOutcome(this.runParameters, this.FailedOutcome, this.runBetAmount);
                     }
+                    await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();
                 }
                 else
