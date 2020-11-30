@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands.Games
@@ -168,12 +169,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    AsyncRunner.RunAsyncBackground(async () =>
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
                         this.collectActive = true;
                         await Task.Delay(this.CollectTimeLimit * 1000);
                         this.ClearData();
-                    });
+                    }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     await this.PayoutCommand.Perform(parameters);

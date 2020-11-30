@@ -252,7 +252,9 @@ namespace MixItUp.Base.Services.Twitch
 
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundEventChecks);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(this.BackgroundEventChecks, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         this.IsConnected = true;
 

@@ -81,7 +81,9 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                AsyncRunner.RunAsyncBackground(this.backgroundThreadCancellationTokenSource.Token, 1000, this.WidgetsBackgroundUpdate);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(this.WidgetsBackgroundUpdate, this.backgroundThreadCancellationTokenSource.Token, 1000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 this.IsConnected = true;
                 ChannelSession.Settings.EnableOverlay = true;

@@ -580,36 +580,36 @@ namespace MixItUp.Base.Commands
 
                             await this.GameStarted(user, arguments, betAmount);
 
-                            this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
-                            {
-                                await Task.Delay(this.TimeLimit * 1000);
+                            //this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
+                            //{
+                            //    await Task.Delay(this.TimeLimit * 1000);
 
-                                if (this.enteredUsers.Count < this.MinimumParticipants)
-                                {
-                                    await this.NotEnoughUsers();
+                            //    if (this.enteredUsers.Count < this.MinimumParticipants)
+                            //    {
+                            //        await this.NotEnoughUsers();
 
-                                    this.Requirements.UpdateCooldown(user);
-                                }
-                                else
-                                {
-                                    await this.TimeComplete();
+                            //        this.Requirements.UpdateCooldown(user);
+                            //    }
+                            //    else
+                            //    {
+                            //        await this.TimeComplete();
 
-                                    this.Requirements.UpdateCooldown(user);
+                            //        this.Requirements.UpdateCooldown(user);
 
-                                    CurrencyModel currency = this.Requirements.Currency.GetCurrency();
-                                    if (currency == null)
-                                    {
-                                        this.ResetData(user);
-                                        return;
-                                    }
+                            //        CurrencyModel currency = this.Requirements.Currency.GetCurrency();
+                            //        if (currency == null)
+                            //        {
+                            //            this.ResetData(user);
+                            //            return;
+                            //        }
 
-                                    await this.SelectWinners();
+                            //        await this.SelectWinners();
 
-                                    await this.GameCompleted();
-                                }
+                            //        await this.GameCompleted();
+                            //    }
 
-                                this.ResetData(user);
-                            });
+                            //    this.ResetData(user);
+                            //});
 
                             await this.PerformCommand(this.StartedCommand, user, arguments, betAmount, 0);
                         }
@@ -861,16 +861,16 @@ namespace MixItUp.Base.Commands
                     {
                         await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
 
-                        this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
-                        {
-                            await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
+                        //this.timeLimitTask = AsyncRunner.RunAsyncBackground(async () =>
+                        //{
+                        //    await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
-                            this.Requirements.UpdateCooldown(user);
+                        //    this.Requirements.UpdateCooldown(user);
 
-                            await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
+                        //    await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.Username }, 0, 0);
 
-                            this.ResetData(user);
-                        });
+                        //    this.ResetData(user);
+                        //});
                     }
                     else
                     {
@@ -1108,7 +1108,7 @@ namespace MixItUp.Base.Commands
             }
 
             this.timeLimitCancellationTokenSource = new CancellationTokenSource();
-            this.timeLimitTask = AsyncRunner.RunAsyncBackground(this.timeLimitCancellationTokenSource.Token, async (token) =>
+            this.timeLimitTask = AsyncRunner.RunAsyncBackground(async (token) =>
             {
                 await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
@@ -1119,7 +1119,7 @@ namespace MixItUp.Base.Commands
 
                     this.ResetData(this.currentUser);
                 }
-            });
+            }, this.timeLimitCancellationTokenSource.Token);
         }
     }
 
@@ -1413,7 +1413,7 @@ namespace MixItUp.Base.Commands
                             this.currentStarterUser = user;
 
                             this.taskCancellationSource = new CancellationTokenSource();
-                            this.timeLimitTask = AsyncRunner.RunAsyncBackground(this.taskCancellationSource.Token, async (timeLimitToken) =>
+                            this.timeLimitTask = AsyncRunner.RunAsyncBackground(async (timeLimitToken) =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
@@ -1438,7 +1438,7 @@ namespace MixItUp.Base.Commands
                                         }
                                     }));
                                 }
-                            });
+                            }, this.taskCancellationSource.Token);
 
                             await this.PerformCommand(this.StartedCommand, user, new List<string>() { currentTargetUser.Username }, currentBetAmount, 0);
                         }
@@ -2914,17 +2914,17 @@ namespace MixItUp.Base.Commands
             this.totalPayout = 0;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            AsyncRunner.RunAsyncBackground(async () =>
-            {
-                this.collectActive = true;
+            //AsyncRunner.RunAsyncBackground(async () =>
+            //{
+            //    this.collectActive = true;
 
-                await Task.Delay(this.CollectTimeLimit * 1000);
+            //    await Task.Delay(this.CollectTimeLimit * 1000);
 
-                this.collectActive = false;
+            //    this.collectActive = false;
 
-                this.TotalAmount = 0;
-                this.collectUsers.Clear();
-            });
+            //    this.TotalAmount = 0;
+            //    this.collectUsers.Clear();
+            //});
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await this.PerformPayout(user, arguments, betAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.PayoutCommand);

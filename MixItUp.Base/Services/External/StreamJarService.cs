@@ -201,7 +201,10 @@ namespace MixItUp.Base.Services.External
                     donationsReceived[donation.ID] = donation;
                 }
 
-                AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                 this.TrackServiceTelemetry("StreamJar");
                 return new Result();
             }

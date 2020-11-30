@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                             this.runCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            AsyncRunner.RunAsyncBackground(this.runCancellationTokenSource.Token, async(cancellationToken) =>
+                            AsyncRunner.RunAsyncBackground(async(cancellationToken) =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
@@ -83,7 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
                                 }
 
                                 this.ClearData();
-                            });
+                            }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                             await this.StartedCommand.Perform(parameters);

@@ -149,7 +149,9 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)

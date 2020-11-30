@@ -91,40 +91,40 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runParameters = parameters;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async () =>
-                {
-                    await Task.Delay(this.TimeLimit * 1000);
+                //AsyncRunner.RunAsyncBackground(async () =>
+                //{
+                //    await Task.Delay(this.TimeLimit * 1000);
 
-                    if (this.runUsers.Count < this.MinimumParticipants)
-                    {
-                        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
-                        foreach (var kvp in this.runUsers.ToList())
-                        {
-                            await this.Requirements.Refund(kvp.Value);
-                        }
-                        return;
-                    }
+                //    if (this.runUsers.Count < this.MinimumParticipants)
+                //    {
+                //        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                //        foreach (var kvp in this.runUsers.ToList())
+                //        {
+                //            await this.Requirements.Refund(kvp.Value);
+                //        }
+                //        return;
+                //    }
 
-                    await this.HitmanApproachingCommand.Perform(this.runParameters);
+                //    await this.HitmanApproachingCommand.Perform(this.runParameters);
 
-                    await Task.Delay(5000);
+                //    await Task.Delay(5000);
 
-                    this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
+                //    this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
 
-                    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+                //    GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
-                    await this.HitmanAppearsCommand.Perform(this.runParameters);
+                //    await this.HitmanAppearsCommand.Perform(this.runParameters);
 
-                    await Task.Delay(this.HitmanTimeLimit * 1000);
+                //    await Task.Delay(this.HitmanTimeLimit * 1000);
 
-                    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+                //    GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
-                    if (!string.IsNullOrEmpty(this.runHitmanName))
-                    {
-                        this.UserFailCommand.Perform(this.runParameters);
-                    }
-                    this.ClearData();
-                });
+                //    if (!string.IsNullOrEmpty(this.runHitmanName))
+                //    {
+                //        this.UserFailCommand.Perform(this.runParameters);
+                //    }
+                //    this.ClearData();
+                //});
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 await this.StartedCommand.Perform(this.runParameters);

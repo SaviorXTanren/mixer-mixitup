@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands.Games
@@ -94,7 +95,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runParameters = parameters;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(async () =>
+                AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
                     await Task.Delay(this.TimeLimit * 1000);
 
@@ -131,7 +132,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.UserFailCommand.Perform(this.runParameters);
                     }
                     this.ClearData();
-                });
+                }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 await this.StartedCommand.Perform(this.runParameters);

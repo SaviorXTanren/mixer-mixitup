@@ -37,7 +37,7 @@ namespace MixItUp.Base.Services
 
                 timerCommandIndexes[string.Empty] = 0;
 
-                AsyncRunner.RunAsyncBackground(this.backgroundThreadCancellationTokenSource.Token, 60000, this.TimerCommandsBackground);
+                AsyncRunner.RunAsyncBackground(this.TimerCommandsBackground, this.backgroundThreadCancellationTokenSource.Token, 60000);
             }
         }
 

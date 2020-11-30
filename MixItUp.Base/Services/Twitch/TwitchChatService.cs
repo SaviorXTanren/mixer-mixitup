@@ -184,7 +184,9 @@ namespace MixItUp.Base.Services.Twitch
 
                         await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
-                        AsyncRunner.RunAsyncBackground(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await Task.Delay(3000);
 

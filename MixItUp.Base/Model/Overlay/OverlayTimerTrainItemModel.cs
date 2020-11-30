@@ -117,7 +117,9 @@ namespace MixItUp.Base.Model.Overlay
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-            AsyncRunner.RunAsyncBackground(this.backgroundThreadCancellationTokenSource.Token, 1000, this.TimerBackground);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.TimerBackground, this.backgroundThreadCancellationTokenSource.Token, 1000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await base.Enable();
         }

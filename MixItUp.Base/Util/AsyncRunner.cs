@@ -1,6 +1,5 @@
 ﻿using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,28 +33,13 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static async Task RunAsyncBackground(Action action, CancellationToken token)
+        public static Task<T> RunAsyncBackground<T>(Func<CancellationToken, T> action, CancellationToken token)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 try
                 {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            }, token);
-        }
-
-        public static async Task<T> RunAsyncBackground<T>(Func<T> function, CancellationToken token)
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    return function();
+                    return action(token);
                 }
                 catch (Exception ex)
                 {
@@ -65,22 +49,7 @@ namespace MixItUp.Base.Util
             }, token);
         }
 
-        public static Task RunAsyncBackground(Func<Task> task)
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    await task();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex, includeStackTrace: true);
-                }
-            });
-        }
-
-        public static Task RunAsyncBackground(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunAsyncBackground(Func<CancellationToken, Task> backgroundTask, CancellationToken token)
         {
             return Task.Run(async () =>
             {
@@ -91,10 +60,10 @@ namespace MixItUp.Base.Util
                 catch (ThreadAbortException) { return; }
                 catch (OperationCanceledException) { return; }
                 catch (Exception ex) { Logger.Log(ex); }
-            });
+            }, token);
         }
 
-        public static Task RunAsyncBackground(CancellationToken token, int delayInMilliseconds, Func<CancellationToken, Task> backgroundTask)
+        public static Task RunAsyncBackground(Func<CancellationToken, Task> backgroundTask, CancellationToken token, int delayInMilliseconds)
         {
             return Task.Run(async () =>
             {
@@ -119,7 +88,7 @@ namespace MixItUp.Base.Util
                     catch (OperationCanceledException) { return; }
                     catch (Exception ex) { Logger.Log(ex); }
                 }
-            });
+            }, token);
         }
     }
 }
