@@ -93,11 +93,15 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 this.runBetAmount = this.GetBetAmount(parameters);
                 this.runParameters = parameters;
+                this.runUsers[parameters.User] = parameters;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
                     await Task.Delay(this.TimeLimit * 1000);
+
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled = this.runWord.Shuffle();
 
                     if (this.runUsers.Count < this.MinimumParticipants)
                     {
@@ -114,12 +118,6 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.WordScramblePrepareCommand.Perform(this.runParameters);
 
                     await Task.Delay(5000);
-
-                    this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
-                    this.runWordScrambled = this.runWord.Shuffle();
-
-                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
-                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
 
                     GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
@@ -140,6 +138,13 @@ namespace MixItUp.Base.Model.Commands.Games
 
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
+                return;
+            }
+            else if (string.IsNullOrEmpty(this.runWord) && !this.runUsers.ContainsKey(parameters.User))
+            {
+                this.runUsers[parameters.User] = parameters;
+                await this.UserJoinCommand.Perform(this.runParameters);
+                this.ResetCooldown();
                 return;
             }
             else
