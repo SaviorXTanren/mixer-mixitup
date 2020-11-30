@@ -3616,6 +3616,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Valid Bet Types: {0}.
+        /// </summary>
+        public static string GameCommandRouletteValidBetTypes {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteValidBetTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The user does not have {0} {1}.
         /// </summary>
         public static string GameCommandTargetUserInvalidAmount {

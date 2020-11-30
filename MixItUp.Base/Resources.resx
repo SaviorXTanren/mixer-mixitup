@@ -3509,4 +3509,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandVolcanoCollectUnderway" xml:space="preserve">
     <value>Collecting is currently underway, please wait until it has completed</value>
   </data>
+  <data name="GameCommandRouletteValidBetTypes" xml:space="preserve">
+    <value>Valid Bet Types: {0}</value>
+  </data>
 </root>
