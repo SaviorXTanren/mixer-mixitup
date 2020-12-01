@@ -90,6 +90,7 @@ namespace MixItUp.Base.Services
             await ChannelSession.SaveSettings();
 
             this.IsRunning = true;
+            this.Winner = null;
 
             this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
             this.giveawayCommand.Requirements = ChannelSession.Settings.GiveawayRequirements;
@@ -123,7 +124,6 @@ namespace MixItUp.Base.Services
             }
 
             this.TimeLeft = 0;
-            this.Winner = null;
 
             this.giveawayCommand = null;
             this.enteredUsers.Clear();
