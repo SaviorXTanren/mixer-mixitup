@@ -192,6 +192,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             this.GameCurrencyRequirement.Currency.AddAmount(winner.User.Data, individualPayout);
                         }
+                        this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winnerParameters.Select(u => "@" + u.User.Username));
 
                         if (selectedType == WinLosePlayerType.Knight)
                         {
