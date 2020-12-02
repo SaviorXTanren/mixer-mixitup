@@ -151,8 +151,6 @@ namespace MixItUp.Base.Model.Commands
                 {
                     Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
-                    ChannelSession.Services.Telemetry.TrackCommand(this.Type);
-
                     if (!this.IsUnlocked && !parameters.DontLockCommand)
                     {
                         lockPerformed = true;
