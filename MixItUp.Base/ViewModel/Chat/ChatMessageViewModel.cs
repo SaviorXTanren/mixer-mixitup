@@ -103,6 +103,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public virtual bool ContainsOnlyEmotes() { return false; }
 
+        public IEnumerable<string> ToArguments() { return (!string.IsNullOrEmpty(this.PlainTextMessage)) ? this.PlainTextMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) : null; }
+
         public async Task<bool> CheckForModeration()
         {
             if (this.User != null && !this.IsWhisper)
