@@ -227,6 +227,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private void ClearData()
         {
+            this.gameActive = false;
             this.runParameters = null;
             this.runBetAmount = 0;
             this.runUsers.Clear();

@@ -113,6 +113,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private void ClearData()
         {
+            this.gameActive = false;
             this.startParameters = null;
             this.lastTossParameters = null;
         }
