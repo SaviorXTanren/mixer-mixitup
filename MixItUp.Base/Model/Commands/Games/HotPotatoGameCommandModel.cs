@@ -26,6 +26,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel PotatoExplodeCommand { get; set; }
 
         [JsonIgnore]
+        private bool gameActive = false;
+        [JsonIgnore]
         private CommandParametersModel startParameters;
         [JsonIgnore]
         private CommandParametersModel lastTossParameters;
@@ -55,7 +57,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.startParameters == null || this.lastTossParameters.TargetUser == parameters.User)
+            if (this.startParameters == null || (this.gameActive && this.lastTossParameters?.TargetUser == parameters.User))
             {
                 if (this.AllowUserTargeting)
                 {
@@ -75,6 +77,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     if (this.startParameters == null)
                     {
+                        this.gameActive = true;
                         this.startParameters = parameters;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -82,6 +85,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
+                            this.gameActive = false;
                             await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
 
                             this.CooldownRequirement.Perform(this.startParameters);

@@ -134,6 +134,8 @@ namespace MixItUp.Base.Model.Commands.Games
             return base.PerformInternal(parameters);
         }
 
+        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+
         protected GameOutcomeModel SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcomeModel> outcomes)
         {
             int randomNumber = this.GenerateProbability();

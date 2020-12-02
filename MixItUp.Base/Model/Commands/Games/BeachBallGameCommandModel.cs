@@ -26,6 +26,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel BallMissedCommand { get; set; }
 
         [JsonIgnore]
+        private bool gameActive = false;
+        [JsonIgnore]
         private CommandParametersModel startParameters;
         [JsonIgnore]
         private CommandParametersModel lastHitParameters;
@@ -57,7 +59,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.startParameters == null || this.lastHitParameters.TargetUser == parameters.User)
+            if (this.startParameters == null || (this.gameActive && this.lastHitParameters?.TargetUser == parameters.User))
             {
                 if (this.AllowUserTargeting)
                 {
@@ -77,6 +79,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     if (this.startParameters == null)
                     {
+                        this.gameActive = true;
                         this.startParameters = parameters;
                         await this.StartedCommand.Perform(parameters);
                     }
@@ -94,8 +97,9 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
-                        if (!token.IsCancellationRequested)
+                        if (this.gameActive && !token.IsCancellationRequested)
                         {
+                            this.gameActive = false;
                             await this.BallMissedCommand.Perform(this.lastHitParameters);
                             this.CooldownRequirement.Perform(this.startParameters);
                             this.ClearData();

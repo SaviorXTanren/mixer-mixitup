@@ -26,6 +26,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public int TimeLimit { get; set; }
 
         [JsonIgnore]
+        private bool gameActive = false;
+        [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
         private int runBetAmount;
@@ -76,8 +78,9 @@ namespace MixItUp.Base.Model.Commands.Games
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
-                                if (cancellationToken != null && !cancellationToken.IsCancellationRequested)
+                                if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
                                 {
+                                    this.gameActive = false;
                                     await this.NotAcceptedCommand.Perform(parameters);
                                     await this.Requirements.Refund(parameters);
                                 }
@@ -86,6 +89,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                            this.gameActive = true;
                             await this.StartedCommand.Perform(parameters);
                             this.ResetCooldown();
                             return;
@@ -109,6 +113,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (this.runParameters != null && parameters.User == this.runParameters.TargetUser)
                 {
+                    this.gameActive = false;
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
                         this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);

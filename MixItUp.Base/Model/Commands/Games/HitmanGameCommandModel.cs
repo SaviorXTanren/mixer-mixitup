@@ -43,6 +43,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel UserFailCommand { get; set; }
 
         [JsonIgnore]
+        private bool gameActive = false;
+        [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
         private int runBetAmount;
@@ -123,15 +125,17 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
-                    if (!string.IsNullOrEmpty(this.runHitmanName))
+                    if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
                         this.UserFailCommand.Perform(this.runParameters);
                     }
+                    this.gameActive = false;
                     await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();
                 }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                this.gameActive = true;
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
                 this.ResetCooldown();
@@ -155,6 +159,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (!string.IsNullOrEmpty(this.runHitmanName) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runHitmanName, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
             {
+                this.gameActive = false;
                 int payout = this.runBetAmount * this.runUsers.Count;
                 this.GameCurrencyRequirement.Currency.AddAmount(message.User.Data, payout);
 
