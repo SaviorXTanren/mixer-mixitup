@@ -682,6 +682,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Answer.
+        /// </summary>
+        public static string Answer {
+            get {
+                return ResourceManager.GetString("Answer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Answer 1.
         /// </summary>
         public static string Answer1 {
@@ -3549,6 +3558,15 @@ namespace MixItUp.Base {
         public static string GameCommandAlreadyUnderway {
             get {
                 return ResourceManager.GetString("GameCommandAlreadyUnderway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The option number you selected is not answer.
+        /// </summary>
+        public static string GameCommandBetInvalidSelection {
+            get {
+                return ResourceManager.GetString("GameCommandBetInvalidSelection", resourceCulture);
             }
         }
         
