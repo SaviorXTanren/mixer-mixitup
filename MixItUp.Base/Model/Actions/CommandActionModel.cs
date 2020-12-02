@@ -108,11 +108,10 @@ namespace MixItUp.Base.Model.Actions
                         newArguments = parameters.Arguments;
                     }
 
-                    await command.Perform(new CommandParametersModel(parameters.User, parameters.Platform, newArguments, parameters.SpecialIdentifiers)
-                    {
-                        WaitForCommandToFinish = true,
-                        DontLockCommand = true
-                    });
+                    CommandParametersModel copyParameters = parameters.Duplicate();
+                    copyParameters.WaitForCommandToFinish = true;
+                    copyParameters.DontLockCommand = true;
+                    await command.Perform(copyParameters);
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)
