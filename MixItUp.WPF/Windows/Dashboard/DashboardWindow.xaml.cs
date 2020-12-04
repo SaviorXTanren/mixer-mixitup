@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Window.Dashboard;
+﻿using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Dashboard;
 using System;
 using System.Runtime.InteropServices;

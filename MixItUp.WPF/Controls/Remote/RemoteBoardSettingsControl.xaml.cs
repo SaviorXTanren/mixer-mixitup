@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.Remote;
+﻿using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote;
 using System.Windows.Controls;
 

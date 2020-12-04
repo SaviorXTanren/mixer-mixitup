@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.ViewModel.Controls.Actions;
+using MixItUp.Base.ViewModel.Actions;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;

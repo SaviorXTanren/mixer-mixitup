@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Windows.Users;
 using System;
 using System.Collections.ObjectModel;

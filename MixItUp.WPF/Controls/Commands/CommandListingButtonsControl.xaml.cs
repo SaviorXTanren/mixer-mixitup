@@ -2,8 +2,8 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window.Currency;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel.Currency;
 using System.Collections.Generic;
 using System.Windows;
 

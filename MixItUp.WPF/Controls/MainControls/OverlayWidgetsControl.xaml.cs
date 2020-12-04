@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using System.Threading.Tasks;

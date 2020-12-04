@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModel\Command %2528OLD%2529\**" />
+    <EmbeddedResource Remove="ViewModel\Command %2528OLD%2529\**" />
+    <None Remove="ViewModel\Command %2528OLD%2529\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Overlay\OverlayPage.html" />
     <None Remove="Overlay\webSocketWrapper.js" />
     <None Remove="XSplit\Mix It Up.html" />
@@ -12,6 +18,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
+    <Compile Include="ViewModel\Command %28OLD%29\GameCommandWindowViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

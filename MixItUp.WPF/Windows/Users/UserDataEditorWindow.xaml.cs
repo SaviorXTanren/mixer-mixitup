@@ -3,7 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window.User;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Windows.Command;

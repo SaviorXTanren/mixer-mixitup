@@ -10,7 +10,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;

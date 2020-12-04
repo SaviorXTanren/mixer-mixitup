@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Window.Command;
+using MixItUp.Base.ViewModel.Command;
 using MixItUp.WPF.Controls.Games;
 using System.Collections.Generic;
 using System.Threading.Tasks;

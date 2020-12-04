@@ -3,7 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Controls.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Chat;
 using System;
 using System.Collections.Generic;

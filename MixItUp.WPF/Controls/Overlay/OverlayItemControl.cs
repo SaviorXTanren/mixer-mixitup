@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+using MixItUp.Base.ViewModel.Overlay;
 using System.Diagnostics;
 using System.Windows.Navigation;
 

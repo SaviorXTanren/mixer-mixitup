@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Dialogs;
 using System.Threading.Tasks;
 

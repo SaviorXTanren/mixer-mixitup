@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.Services;
+using MixItUp.Base.ViewModel.Services;
 using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Services

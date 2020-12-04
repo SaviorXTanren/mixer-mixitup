@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.ViewModel.Controls.Actions;
+using MixItUp.Base.ViewModel.Actions;
 
 namespace MixItUp.WPF.Controls.Actions
 {

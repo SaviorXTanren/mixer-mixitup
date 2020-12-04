@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.Services;
+﻿using MixItUp.Base.ViewModel.Services;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Services

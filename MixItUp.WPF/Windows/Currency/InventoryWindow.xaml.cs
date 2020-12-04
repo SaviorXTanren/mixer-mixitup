@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.ViewModel.Window.Currency;
+using MixItUp.Base.ViewModel.Currency;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System.Threading.Tasks;

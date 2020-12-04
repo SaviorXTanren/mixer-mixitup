@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+using MixItUp.Base.ViewModel.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay

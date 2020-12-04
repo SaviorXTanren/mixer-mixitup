@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base.ViewModel.MainControls;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 

@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;

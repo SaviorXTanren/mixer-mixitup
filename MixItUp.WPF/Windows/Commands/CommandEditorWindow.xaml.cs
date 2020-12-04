@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.ViewModel.Window.Commands;
+using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
 using System;
 using System.Threading.Tasks;

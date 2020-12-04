@@ -10,7 +10,7 @@
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:CommandModels="clr-namespace:MixItUp.Base.Commands;assembly=MixItUp.Base"
-             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Controls.Commands;assembly=MixItUp.Base"
+             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Commands;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"

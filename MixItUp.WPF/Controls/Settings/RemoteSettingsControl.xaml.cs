@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using MixItUp.Base.ViewModel.Controls.Settings;
+using MixItUp.Base.ViewModel.Settings;
 
 namespace MixItUp.WPF.Controls.Settings
 {

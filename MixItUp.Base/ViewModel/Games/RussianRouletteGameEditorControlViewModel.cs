@@ -1,0 +1,126 @@
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace MixItUp.Base.ViewModel.Games
+{
+    public class RussianRouletteGameEditorControlViewModel : GameEditorControlViewModelBase
+    {
+        public string MinimumParticipantsString
+        {
+            get { return this.MinimumParticipants.ToString(); }
+            set
+            {
+                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        public int MinimumParticipants { get; set; } = 2;
+
+        public string TimeLimitString
+        {
+            get { return this.TimeLimit.ToString(); }
+            set
+            {
+                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        public int TimeLimit { get; set; } = 60;
+
+        public string MaxWinnersString
+        {
+            get { return this.MaxWinners.ToString(); }
+            set
+            {
+                this.MaxWinners = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        public int MaxWinners { get; set; } = 1;
+
+        public CustomCommand StartedCommand { get; set; }
+
+        public CustomCommand UserJoinCommand { get; set; }
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
+
+        public CustomCommand UserSuccessCommand { get; set; }
+        public CustomCommand UserFailCommand { get; set; }
+        public CustomCommand GameCompleteCommand { get; set; }
+
+        private RussianRouletteGameCommand existingCommand;
+
+        public RussianRouletteGameEditorControlViewModel(CurrencyModel currency)
+        {
+            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
+
+            this.UserJoinCommand = this.CreateBasicChatCommand();
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
+
+            this.UserSuccessCommand = this.CreateBasicChatCommand();
+            this.UserFailCommand = this.CreateBasicChatCommand();
+            this.GameCompleteCommand = this.CreateBasicChatCommand("The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout " + currency.Name + "!");
+        }
+
+        public RussianRouletteGameEditorControlViewModel(RussianRouletteGameCommand command)
+        {
+            this.existingCommand = command;
+
+            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
+            this.TimeLimit = this.existingCommand.TimeLimit;
+            this.MaxWinners = this.existingCommand.MaxWinners;
+
+            this.StartedCommand = this.existingCommand.StartedCommand;
+
+            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
+            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
+
+            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
+            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
+            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+        }
+
+        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        {
+            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
+
+            GameCommandBase newCommand = new RussianRouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
+                new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.MaxWinners,
+                this.GameCompleteCommand, this.NotEnoughPlayersCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
+        }
+
+        public override async Task<bool> Validate()
+        {
+            if (this.TimeLimit <= 0)
+            {
+                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
+                return false;
+            }
+
+            if (this.MinimumParticipants <= 0)
+            {
+                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
+                return false;
+            }
+
+            if (this.MaxWinners <= 0)
+            {
+                await DialogHelper.ShowMessage("The Max Winners is not a valid number greater than 0");
+                return false;
+            }
+
+            if (this.MaxWinners >= this.MinimumParticipants)
+            {
+                await DialogHelper.ShowMessage("Max Winners must be less than Minimum Participants");
+                return false;
+            }
+
+            return true;
+        }
+    }
+}

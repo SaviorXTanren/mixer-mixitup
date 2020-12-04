@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Controls.Games;
+using MixItUp.Base.ViewModel.Games;
 using MixItUp.Base.ViewModel.Requirement;
 using System.Threading.Tasks;
 using System.Windows;

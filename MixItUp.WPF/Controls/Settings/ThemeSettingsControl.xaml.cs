@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.Settings;
+﻿using MixItUp.Base.ViewModel.Settings;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Settings

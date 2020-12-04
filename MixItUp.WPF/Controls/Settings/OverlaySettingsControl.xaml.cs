@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.Settings;
+﻿using MixItUp.Base.ViewModel.Settings;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
