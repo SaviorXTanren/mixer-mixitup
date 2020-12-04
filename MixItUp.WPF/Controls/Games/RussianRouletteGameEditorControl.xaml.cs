@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class RussianRouletteGameEditorControl : GameEditorControlBase
     {
-        private RussianRouletteGameEditorControlViewModel viewModel;
+        private RussianRouletteGameCommandEditorWindowViewModel viewModel;
         private RussianRouletteGameCommand existingCommand;
 
         public RussianRouletteGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new RussianRouletteGameEditorControlViewModel(currency);
+            this.viewModel = new RussianRouletteGameCommandEditorWindowViewModel(currency);
         }
 
         public RussianRouletteGameEditorControl(RussianRouletteGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new RussianRouletteGameEditorControlViewModel(command);
+            this.viewModel = new RussianRouletteGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

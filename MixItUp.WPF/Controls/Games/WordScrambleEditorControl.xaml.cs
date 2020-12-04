@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class WordScrambleGameEditorControl : GameEditorControlBase
     {
-        private WordScrambleGameEditorControlViewModel viewModel;
+        private WordScrambleGameCommandEditorWindowViewModel viewModel;
         private WordScrambleGameCommand existingCommand;
 
         public WordScrambleGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new WordScrambleGameEditorControlViewModel(currency);
+            this.viewModel = new WordScrambleGameCommandEditorWindowViewModel(currency);
         }
 
         public WordScrambleGameEditorControl(WordScrambleGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new WordScrambleGameEditorControlViewModel(command);
+            this.viewModel = new WordScrambleGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

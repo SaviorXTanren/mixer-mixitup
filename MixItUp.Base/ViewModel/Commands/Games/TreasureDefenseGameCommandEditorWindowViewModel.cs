@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class TreasureDefenseGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class TreasureDefenseGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private TreasureDefenseGameCommand existingCommand;
 
-        public TreasureDefenseGameEditorControlViewModel(CurrencyModel currency)
+        public TreasureDefenseGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Treasure Defense with a $gamebet " + currency.Name + " entry fee! Type !treasure to join in!");
 
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.ThiefSelectedCommand = this.CreateBasicChatCommand("King @$username picked @$targetusername to defend the treasure...and they were a Thief! They stole the treasure, giving all Thieves $gamepayout " + currency.Name + " each!");
         }
 
-        public TreasureDefenseGameEditorControlViewModel(TreasureDefenseGameCommand command)
+        public TreasureDefenseGameCommandEditorWindowViewModel(TreasureDefenseGameCommand command)
         {
             this.existingCommand = command;
 

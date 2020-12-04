@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class HangmanGameEditorControl : GameEditorControlBase
     {
-        private HangmanGameEditorControlViewModel viewModel;
+        private HangmanGameCommandEditorWindowViewModel viewModel;
         private HangmanGameCommand existingCommand;
 
         public HangmanGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new HangmanGameEditorControlViewModel(currency);
+            this.viewModel = new HangmanGameCommandEditorWindowViewModel(currency);
         }
 
         public HangmanGameEditorControl(HangmanGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new HangmanGameEditorControlViewModel(command);
+            this.viewModel = new HangmanGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

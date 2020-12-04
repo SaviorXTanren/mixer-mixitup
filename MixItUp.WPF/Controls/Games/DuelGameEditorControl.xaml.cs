@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class DuelGameEditorControl : GameEditorControlBase
     {
-        private DuelGameEditorControlViewModel viewModel;
+        private DuelGameCommandEditorWindowViewModel viewModel;
         private DuelGameCommand existingCommand;
 
         public DuelGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new DuelGameEditorControlViewModel(currency);
+            this.viewModel = new DuelGameCommandEditorWindowViewModel(currency);
         }
 
         public DuelGameEditorControl(DuelGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new DuelGameEditorControlViewModel(command);
+            this.viewModel = new DuelGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

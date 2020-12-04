@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class SlotMachineGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class SlotMachineGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string Symbols
         {
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private SlotMachineGameCommand existingCommand;
 
-        public SlotMachineGameEditorControlViewModel(CurrencyModel currency)
+        public SlotMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
             this.FailureOutcomeCommand = this.CreateBasicChatCommand("Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...");
@@ -109,7 +109,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.Outcomes.Add(new SlotMachineOutcome("X", "$", "O", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 500, 500, 500, anyOrder: true));
         }
 
-        public SlotMachineGameEditorControlViewModel(SlotMachineGameCommand command)
+        public SlotMachineGameCommandEditorWindowViewModel(SlotMachineGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
 
-        private SlotMachineGameEditorControlViewModel()
+        private SlotMachineGameCommandEditorWindowViewModel()
         {
             this.AddOutcomeCommand = this.CreateCommand((parameter) =>
             {

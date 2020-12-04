@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HangmanGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class HangmanGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string MaxFailuresString
         {
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private HangmanGameCommand existingCommand;
 
-        public HangmanGameEditorControlViewModel(CurrencyModel currency)
+        public HangmanGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
             this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent");
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.GameLostCommand = this.CreateBasicChatCommand("The game is lost with too many failed guesses; the correct answer was \"$gamehangmananswer\". There goes $gametotalamount " + currency.Name + "!");
         }
 
-        public HangmanGameEditorControlViewModel(HangmanGameCommand command)
+        public HangmanGameCommandEditorWindowViewModel(HangmanGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -85,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.GameLostCommand = this.existingCommand.GameLostCommand;
         }
 
-        private HangmanGameEditorControlViewModel()
+        private HangmanGameCommandEditorWindowViewModel()
         {
             this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
             {

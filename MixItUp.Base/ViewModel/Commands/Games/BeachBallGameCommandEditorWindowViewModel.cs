@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class BeachBallGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class BeachBallGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string LowerTimeLimitString
         {
@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public BeachBallGameCommand existingCommand;
 
-        public BeachBallGameEditorControlViewModel(CurrencyModel currency)
+        public BeachBallGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of beach ball and hit the ball to @$targetusername. Quick, type !beachball to hit it to someone else!");
             this.BallHitCommand = this.CreateBasicChatCommand("@$username has hit the ball to @$targetusername. Quick, type !beachball to hit it to someone else!");
@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.BallMissedCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, "100"));
         }
 
-        public BeachBallGameEditorControlViewModel(BeachBallGameCommand command)
+        public BeachBallGameCommandEditorWindowViewModel(BeachBallGameCommand command)
         {
             this.existingCommand = command;
 

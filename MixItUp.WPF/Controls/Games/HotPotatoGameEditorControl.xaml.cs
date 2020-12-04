@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class HotPotatoGameEditorControl : GameEditorControlBase
     {
-        private HotPotatoGameEditorControlViewModel viewModel;
+        private HotPotatoGameCommandEditorWindowViewModel viewModel;
         private HotPotatoGameCommand existingCommand;
 
         public HotPotatoGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new HotPotatoGameEditorControlViewModel(currency);
+            this.viewModel = new HotPotatoGameCommandEditorWindowViewModel(currency);
         }
 
         public HotPotatoGameEditorControl(HotPotatoGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new HotPotatoGameEditorControlViewModel(command);
+            this.viewModel = new HotPotatoGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

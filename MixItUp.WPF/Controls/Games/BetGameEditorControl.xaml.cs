@@ -12,14 +12,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class BetGameEditorControl : GameEditorControlBase
     {
-        private BetGameEditorControlViewModel viewModel;
+        private BetGameCommandEditorWindowViewModel viewModel;
         private BetGameCommand existingCommand;
 
         public BetGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new BetGameEditorControlViewModel(currency);
+            this.viewModel = new BetGameCommandEditorWindowViewModel(currency);
         }
 
         public BetGameEditorControl(BetGameCommand command)
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new BetGameEditorControlViewModel(this.existingCommand);
+            this.viewModel = new BetGameCommandEditorWindowViewModel(this.existingCommand);
         }
 
         public override async Task<bool> Validate()

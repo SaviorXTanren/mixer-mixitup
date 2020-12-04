@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class BidGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles(); } }
 
@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private BidGameCommand existingCommand;
 
-        public BidGameEditorControlViewModel(CurrencyModel currency)
+        public BidGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a bidding war starting at $gamebet " + currency.Name + " for...SOMETHING! Type !bid <AMOUNT> in chat to outbid them!");
             this.UserJoinedCommand = this.CreateBasicChatCommand("@$username has become the top bidder with $gamebet " + currency.Name + "! Type !bid <AMOUNT> in chat to outbid them!");
@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.GameCompleteCommand = this.CreateBasicChatCommand("$gamewinners won the bidding war with a bid of $gamebet " + currency.Name + "! Listen closely for how to claim your prize...");
         }
 
-        public BidGameEditorControlViewModel(BidGameCommand command)
+        public BidGameCommandEditorWindowViewModel(BidGameCommand command)
         {
             this.existingCommand = command;
 

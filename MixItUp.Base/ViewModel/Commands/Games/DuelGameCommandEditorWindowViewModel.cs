@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class DuelGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class DuelGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string TimeLimitString
         {
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private DuelGameCommand existingCommand;
 
-        public DuelGameEditorControlViewModel(CurrencyModel currency)
+        public DuelGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
             this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");
@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username, winning $gamepayout " + currency.Name + "!");
         }
 
-        public DuelGameEditorControlViewModel(DuelGameCommand command)
+        public DuelGameCommandEditorWindowViewModel(DuelGameCommand command)
         {
             this.existingCommand = command;
 

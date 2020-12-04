@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class PickpocketGameEditorControl : GameEditorControlBase
     {
-        private PickpocketGameEditorControlViewModel viewModel;
+        private PickpocketGameCommandEditorWindowViewModel viewModel;
         private PickpocketGameCommand existingCommand;
 
         public PickpocketGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new PickpocketGameEditorControlViewModel(currency);
+            this.viewModel = new PickpocketGameCommandEditorWindowViewModel(currency);
         }
 
         public PickpocketGameEditorControl(PickpocketGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new PickpocketGameEditorControlViewModel(command);
+            this.viewModel = new PickpocketGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

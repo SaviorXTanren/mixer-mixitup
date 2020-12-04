@@ -22,9 +22,9 @@ namespace MixItUp.Base.ViewModel.Games
 
         public ICommand DeleteCustomQuestionCommand { get; set; }
 
-        private TriviaGameEditorControlViewModel control;
+        private TriviaGameCommandEditorWindowViewModel control;
 
-        public TriviaGameQuestionViewModel(TriviaGameEditorControlViewModel control)
+        public TriviaGameQuestionViewModel(TriviaGameCommandEditorWindowViewModel control)
         {
             this.control = control;
 
@@ -35,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Games
             });
         }
 
-        public TriviaGameQuestionViewModel(TriviaGameEditorControlViewModel control, TriviaGameQuestion question)
+        public TriviaGameQuestionViewModel(TriviaGameCommandEditorWindowViewModel control, TriviaGameQuestion question)
             : this(control)
         {
             this.Question = question.Question;
@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class TriviaGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class TriviaGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string TimeLimitString
         {
@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public TriviaGameCommand existingCommand;
 
-        public TriviaGameEditorControlViewModel(CurrencyModel currency)
+        public TriviaGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion", "$gameanswers");
@@ -154,7 +154,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.CorrectAnswerCommand = this.CreateBasicChatCommand($"The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {currency.Name}!");
         }
 
-        public TriviaGameEditorControlViewModel(TriviaGameCommand command)
+        public TriviaGameCommandEditorWindowViewModel(TriviaGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -180,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
 
-        private TriviaGameEditorControlViewModel()
+        private TriviaGameCommandEditorWindowViewModel()
         {
             this.AddCustomQuestionCommand = this.CreateCommand((parameter) =>
             {

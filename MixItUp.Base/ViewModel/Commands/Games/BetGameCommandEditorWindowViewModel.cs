@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class BetGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class BetGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public ObservableCollection<BetOutcome> Options { get; set; } = new ObservableCollection<BetOutcome>();
 
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private BetGameCommand existingCommand;
 
-        public BetGameEditorControlViewModel(CurrencyModel currency)
+        public BetGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");
@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.Options.Add(new BetOutcome("Lose Match", this.CreateBasicChatCommand(), 200));
         }
 
-        public BetGameEditorControlViewModel(BetGameCommand command)
+        public BetGameCommandEditorWindowViewModel(BetGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -137,7 +137,7 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
 
-        private BetGameEditorControlViewModel()
+        private BetGameCommandEditorWindowViewModel()
         {
             this.AddOutcomeCommand = this.CreateCommand((parameter) =>
             {

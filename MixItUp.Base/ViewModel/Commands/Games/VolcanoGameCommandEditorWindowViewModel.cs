@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class VolcanoGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class VolcanoGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string StatusArgument { get; set; } = "status";
 
@@ -112,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private VolcanoGameCommand existingCommand;
 
-        public VolcanoGameEditorControlViewModel(CurrencyModel currency)
+        public VolcanoGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.Stage1DepositCommand = this.CreateBasicChatCommand("After a few seconds, @$username hears a faint clunk as their " + currency.Name + " hit the bottom of the volcano");
             this.Stage1StatusCommand = this.CreateBasicChatCommand("Peering in, you can hardly see anything inside. Total Amount: $gametotalamount");
@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.CollectCommand = this.CreateBasicChatCommand("@$username walked away with $gamepayout " + currency.Name + "after scavenging the aftermath!");
         }
 
-        public VolcanoGameEditorControlViewModel(VolcanoGameCommand command)
+        public VolcanoGameCommandEditorWindowViewModel(VolcanoGameCommand command)
         {
             this.existingCommand = command;
 

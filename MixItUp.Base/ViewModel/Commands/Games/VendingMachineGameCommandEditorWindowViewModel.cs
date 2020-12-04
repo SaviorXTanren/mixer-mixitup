@@ -1,10 +1,11 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,40 +14,30 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class SpinOutcome : UIViewModelBase
+    public class VendingMachineOutcome : UIViewModelBase
     {
         public string Name { get; set; }
 
         public CustomCommand Command { get; set; }
 
-        public int Payout { get; set; }
-
         public int UserChance { get; set; }
         public int SubscriberChance { get; set; }
         public int ModChance { get; set; }
 
-        public SpinOutcome(string name, CustomCommand command, int payout = 0, int userChance = 0, int subscriberChance = 0, int modChance = 0)
+        public VendingMachineOutcome(string name, CustomCommand command, int userChance = 0, int subscriberChance = 0, int modChance = 0)
         {
             this.Name = name;
             this.Command = command;
-            this.Payout = payout;
             this.UserChance = userChance;
             this.SubscriberChance = subscriberChance;
             this.ModChance = modChance;
         }
 
-        public SpinOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
+        public VendingMachineOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
         {
-            this.Payout = Convert.ToInt32(outcome.Payout * 100.0);
             this.UserChance = outcome.RoleProbabilities[UserRoleEnum.User];
             this.SubscriberChance = outcome.RoleProbabilities[UserRoleEnum.Subscriber];
             this.ModChance = outcome.RoleProbabilities[UserRoleEnum.Mod];
-        }
-
-        public string PayoutString
-        {
-            get { return this.Payout.ToString(); }
-            set { this.Payout = this.GetPositiveIntFromString(value); }
         }
 
         public string UserChanceString
@@ -69,62 +60,73 @@ namespace MixItUp.Base.ViewModel.Games
 
         public GameOutcome GetGameOutcome()
         {
-            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0,
-                new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserChance }, { UserRoleEnum.Subscriber, this.SubscriberChance }, { UserRoleEnum.Mod, this.ModChance } },
-                this.Command);
+            return new GameOutcome(this.Name, 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserChance }, { UserRoleEnum.Subscriber, this.SubscriberChance },
+                { UserRoleEnum.Mod, this.ModChance } }, this.Command);
         }
     }
 
-    public class SpinGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class VendingMachineGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public ObservableCollection<SpinOutcome> Outcomes { get; set; } = new ObservableCollection<SpinOutcome>();
+        public ObservableCollection<VendingMachineOutcome> Outcomes { get; set; } = new ObservableCollection<VendingMachineOutcome>();
 
         public ICommand AddOutcomeCommand { get; set; }
         public ICommand DeleteOutcomeCommand { get; set; }
 
-        private SpinGameCommand existingCommand;
+        private VendingMachineGameCommand existingCommand;
 
-        public SpinGameEditorControlViewModel(CurrencyModel currency)
+        public VendingMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
-            this.Outcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));
-            this.Outcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout " + currency.Name + "!"), 200, 30, 30, 30));
+            this.Outcomes.Add(new VendingMachineOutcome("Nothing", this.CreateBasicChatCommand("@$username opened their capsule and found nothing..."), 40, 40, 40));
+
+            CustomCommand currencyCommand = this.CreateBasicChatCommand("@$username opened their capsule and found 50 " + currency.Name + "!");
+            currencyCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, 50.ToString()));
+            this.Outcomes.Add(new VendingMachineOutcome("50", currencyCommand, 30, 30, 30));
+
+            CustomCommand overlayCommand = this.CreateBasicChatCommand("@$username opened their capsule and found a dancing Carlton!");
+            OverlayImageItemModel overlayImage = new OverlayImageItemModel("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif", 500, 500);
+            overlayImage.Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0);
+            overlayImage.Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.FadeIn, OverlayItemEffectVisibleAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.FadeOut, 3);
+            overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.Overlay.DefaultOverlayName, overlayImage));
+
+            this.Outcomes.Add(new VendingMachineOutcome("Dancing Carlton", overlayCommand, 30, 30, 30));
         }
 
-        public SpinGameEditorControlViewModel(SpinGameCommand command)
+        public VendingMachineGameCommandEditorWindowViewModel(VendingMachineGameCommand command)
             : this()
         {
             this.existingCommand = command;
+
             foreach (GameOutcome outcome in this.existingCommand.Outcomes)
             {
-                this.Outcomes.Add(new SpinOutcome(outcome));
+                this.Outcomes.Add(new VendingMachineOutcome(outcome));
             }
         }
 
-        private SpinGameEditorControlViewModel()
+        private VendingMachineGameCommandEditorWindowViewModel()
         {
             this.AddOutcomeCommand = this.CreateCommand((parameter) =>
             {
-                this.Outcomes.Add(new SpinOutcome("", this.CreateBasicChatCommand("@$username")));
+                this.Outcomes.Add(new VendingMachineOutcome("", this.CreateBasicChatCommand("@$username opened their capsule and found ")));
                 return Task.FromResult(0);
             });
 
             this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
             {
-                this.Outcomes.Remove((SpinOutcome)parameter);
+                this.Outcomes.Remove((VendingMachineOutcome)parameter);
                 return Task.FromResult(0);
             });
         }
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            GameCommandBase newCommand = new SpinGameCommand(name, triggers, requirements, this.Outcomes.Select(o => o.GetGameOutcome()));
+            GameCommandBase newCommand = new VendingMachineGameCommand(name, triggers, requirements, this.Outcomes.Select(o => o.GetGameOutcome()));
             this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()
         {
-            foreach (SpinOutcome outcome in this.Outcomes)
+            foreach (VendingMachineOutcome outcome in this.Outcomes)
             {
                 if (string.IsNullOrEmpty(outcome.Name))
                 {

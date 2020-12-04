@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class StealGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class PickpocketGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string UserPercentageString
         {
@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        public int UserPercentage { get; set; } = 60;
+        public int UserPercentage { get; set; } = 40;
 
         public string SubscriberPercentageString
         {
@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        public int SubscriberPercentage { get; set; } = 60;
+        public int SubscriberPercentage { get; set; } = 40;
 
         public string ModPercentageString
         {
@@ -41,20 +41,20 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        public int ModPercentage { get; set; } = 60;
+        public int ModPercentage { get; set; } = 40;
 
         public CustomCommand SuccessOutcomeCommand { get; set; }
         public CustomCommand FailOutcomeCommand { get; set; }
 
-        private StealGameCommand existingCommand;
+        private PickpocketGameCommand existingCommand;
 
-        public StealGameEditorControlViewModel(CurrencyModel currency)
+        public PickpocketGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username stole $gamepayout " + currency.Name + " from @$targetusername!");
             this.FailOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from @$targetusername...");
         }
 
-        public StealGameEditorControlViewModel(StealGameCommand command)
+        public PickpocketGameCommandEditorWindowViewModel(PickpocketGameCommand command)
         {
             this.existingCommand = command;
 
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Games
             Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserPercentage }, { UserRoleEnum.Subscriber, this.SubscriberPercentage }, { UserRoleEnum.Mod, this.ModPercentage } };
             Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserPercentage }, { UserRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { UserRoleEnum.Mod, 100 - this.ModPercentage } };
 
-            GameCommandBase newCommand = new StealGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
+            GameCommandBase newCommand = new PickpocketGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand));
             this.SaveGameCommand(newCommand, this.existingCommand);
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class LockBoxGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class LockBoxGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string CombinationLengthString
         {
@@ -54,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private LockBoxGameCommand existingCommand;
 
-        public LockBoxGameEditorControlViewModel(CurrencyModel currency)
+        public LockBoxGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.");
             this.SuccessfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout " + currency.Name + " inside it!");
@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.InspectionCommand = this.CreateBasicChatCommand("After inspecting the box for a bit, you surmise that one of the numbers is a $gamelockboxinspection.");
         }
 
-        public LockBoxGameEditorControlViewModel(LockBoxGameCommand command)
+        public LockBoxGameCommandEditorWindowViewModel(LockBoxGameCommand command)
         {
             this.existingCommand = command;
 

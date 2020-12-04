@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class BeachBallGameEditorControl : GameEditorControlBase
     {
-        private BeachBallGameEditorControlViewModel viewModel;
+        private BeachBallGameCommandEditorWindowViewModel viewModel;
         private BeachBallGameCommand existingCommand;
 
         public BeachBallGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new BeachBallGameEditorControlViewModel(currency);
+            this.viewModel = new BeachBallGameCommandEditorWindowViewModel(currency);
         }
 
         public BeachBallGameEditorControl(BeachBallGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new BeachBallGameEditorControlViewModel(command);
+            this.viewModel = new BeachBallGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

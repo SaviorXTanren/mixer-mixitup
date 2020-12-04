@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class RouletteGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class RouletteGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -126,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private RouletteGameCommand existingCommand;
 
-        public RouletteGameEditorControlViewModel(CurrencyModel currency)
+        public RouletteGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
 
@@ -138,7 +138,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.GameCompleteCommand = this.CreateBasicChatCommand("The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout");
         }
 
-        public RouletteGameEditorControlViewModel(RouletteGameCommand command)
+        public RouletteGameCommandEditorWindowViewModel(RouletteGameCommand command)
         {
             this.existingCommand = command;
 

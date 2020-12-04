@@ -12,14 +12,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class SpinGameEditorControl : GameEditorControlBase
     {
-        private SpinGameEditorControlViewModel viewModel;
+        private SpinGameCommandEditorWindowViewModel viewModel;
         private SpinGameCommand existingCommand;
 
         public SpinGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new SpinGameEditorControlViewModel(currency);
+            this.viewModel = new SpinGameCommandEditorWindowViewModel(currency);
         }
 
         public SpinGameEditorControl(SpinGameCommand command)
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new SpinGameEditorControlViewModel(command);
+            this.viewModel = new SpinGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

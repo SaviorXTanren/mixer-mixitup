@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class WordScrambleGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class HitmanGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -33,88 +33,88 @@ namespace MixItUp.Base.ViewModel.Games
         }
         public int TimeLimit { get; set; } = 30;
 
-        public string WordScrambleTimeLimitString
+        public string HitmanTimeLimitString
         {
-            get { return this.WordScrambleTimeLimit.ToString(); }
+            get { return this.HitmanTimeLimit.ToString(); }
             set
             {
-                this.WordScrambleTimeLimit = this.GetPositiveIntFromString(value);
+                this.HitmanTimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public int WordScrambleTimeLimit { get; set; } = 60;
+        public int HitmanTimeLimit { get; set; } = 10;
 
-        public string CustomWordsFilePath
+        public string CustomHitmanNamesFilePath
         {
-            get { return this.customWordsFilePath; }
+            get { return this.customHitmanNamesFilePath; }
             set
             {
-                this.customWordsFilePath = value;
+                this.customHitmanNamesFilePath = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string customWordsFilePath;
+        private string customHitmanNamesFilePath;
 
         public CustomCommand StartedCommand { get; set; }
 
         public CustomCommand UserJoinCommand { get; set; }
         public CustomCommand NotEnoughPlayersCommand { get; set; }
 
-        public CustomCommand WordScramblePrepareCommand { get; set; }
-        public CustomCommand WordScrambleBeginCommand { get; set; }
+        public CustomCommand HitmanApproachingCommand { get; set; }
+        public CustomCommand HitmanAppearsCommand { get; set; }
 
         public CustomCommand UserSuccessCommand { get; set; }
         public CustomCommand UserFailCommand { get; set; }
 
-        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
+        public ICommand BrowseCustomHitmanNamesFilePathCommand { get; set; }
 
-        public WordScrambleGameCommand existingCommand;
+        public HitmanGameCommand existingCommand;
 
-        public WordScrambleGameEditorControlViewModel(CurrencyModel currency)
+        public HitmanGameCommandEditorWindowViewModel(CurrencyModel currency)
             : this()
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of word scramble! Type !scramble in chat to play!");
+            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hitman! Type !hitman in chat to play!");
 
             this.UserJoinCommand = this.CreateBasicChatCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
-            this.WordScramblePrepareCommand = this.CreateBasicChatCommand("Everyone is gathered patiently with their pencils in hand. Get ready...");
-            this.WordScrambleBeginCommand = this.CreateBasicChatCommand("The scrambled word is \"$gamewordscrambleword\"; solve it and be the first to type it in chat!");
+            this.HitmanApproachingCommand = this.CreateBasicChatCommand("You can feel the presence of the hitman approaching. Get ready...");
+            this.HitmanAppearsCommand = this.CreateBasicChatCommand("It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!");
 
-            this.UserSuccessCommand = this.CreateBasicChatCommand("$gamewinners correctly guessed the word \"$gamewordscrambleanswer\" and walked away with a bounty of $gamepayout " + currency.Name + "!");
-            this.UserFailCommand = this.CreateBasicChatCommand("No one was able the guess the word \"$gamewordscrambleanswer\"! Better luck next time...");
+            this.UserSuccessCommand = this.CreateBasicChatCommand("$gamewinners got hitman $gamehitmanname and walked away with a bounty of $gamepayout " + currency.Name + "!");
+            this.UserFailCommand = this.CreateBasicChatCommand("No one was quick enough to get hitman $gamehitmanname! Better luck next time...");
         }
 
-        public WordScrambleGameEditorControlViewModel(WordScrambleGameCommand command)
+        public HitmanGameCommandEditorWindowViewModel(HitmanGameCommand command)
             : this()
         {
             this.existingCommand = command;
 
             this.MinimumParticipants = this.existingCommand.MinimumParticipants;
             this.TimeLimit = this.existingCommand.TimeLimit;
-            this.WordScrambleTimeLimit = this.existingCommand.WordScrambleTimeLimit;
-            this.CustomWordsFilePath = this.existingCommand.CustomWordsFilePath;
+            this.HitmanTimeLimit = this.existingCommand.HitmanTimeLimit;
+            this.CustomHitmanNamesFilePath = this.existingCommand.CustomWordsFilePath;
 
             this.StartedCommand = this.existingCommand.StartedCommand;
 
             this.UserJoinCommand = this.existingCommand.UserJoinCommand;
             this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
 
-            this.WordScramblePrepareCommand = this.existingCommand.WordScramblePrepareCommand;
-            this.WordScrambleBeginCommand = this.existingCommand.WordScrambleBeginCommand;
+            this.HitmanApproachingCommand = this.existingCommand.HitmanApproachingCommand;
+            this.HitmanAppearsCommand = this.existingCommand.HitmanAppearsCommand;
 
             this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
         }
 
-        private WordScrambleGameEditorControlViewModel()
+        private HitmanGameCommandEditorWindowViewModel()
         {
-            this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseCustomHitmanNamesFilePathCommand = this.CreateCommand((parameter) =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Text Files (*.txt)|*.txt|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    this.CustomWordsFilePath = filePath;
+                    this.CustomHitmanNamesFilePath = filePath;
                 }
                 return Task.FromResult(0);
             });
@@ -124,8 +124,8 @@ namespace MixItUp.Base.ViewModel.Games
         {
             Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
 
-            GameCommandBase newCommand = new WordScrambleGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.CustomWordsFilePath, this.WordScrambleTimeLimit,
-                this.StartedCommand, this.UserJoinCommand, this.WordScramblePrepareCommand, this.WordScrambleBeginCommand, new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand),
+            GameCommandBase newCommand = new HitmanGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.CustomHitmanNamesFilePath, this.HitmanTimeLimit,
+                this.StartedCommand, this.UserJoinCommand, this.HitmanApproachingCommand, this.HitmanAppearsCommand, new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand),
                 new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.NotEnoughPlayersCommand);
             this.SaveGameCommand(newCommand, this.existingCommand);
         }
@@ -144,15 +144,15 @@ namespace MixItUp.Base.ViewModel.Games
                 return false;
             }
 
-            if (this.WordScrambleTimeLimit <= 0)
+            if (this.HitmanTimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Word Scramble Time Limit is not a valid number greater than 0");
+                await DialogHelper.ShowMessage("The Hitman Time Limit is not a valid number greater than 0");
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && !ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
+            if (!string.IsNullOrEmpty(this.CustomHitmanNamesFilePath) && !ChannelSession.Services.FileService.FileExists(this.CustomHitmanNamesFilePath))
             {
-                await DialogHelper.ShowMessage("The Custom Words file you specified does not exist");
+                await DialogHelper.ShowMessage("The Custom Hitman Names file you specified does not exist");
                 return false;
             }
 

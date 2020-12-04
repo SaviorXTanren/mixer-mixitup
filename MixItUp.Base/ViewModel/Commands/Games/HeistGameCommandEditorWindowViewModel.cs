@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HeistGameEditorControlViewModel : GameEditorControlViewModelBase
+    public class HeistGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         private HeistGameCommand existingCommand;
 
-        public HeistGameEditorControlViewModel(CurrencyModel currency)
+        public HeistGameCommandEditorWindowViewModel(CurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Heist! Type !heist <AMOUNT> to join in!");
 
@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.NoneSucceedCommand = this.CreateBasicChatCommand("Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!");
         }
 
-        public HeistGameEditorControlViewModel(HeistGameCommand command)
+        public HeistGameCommandEditorWindowViewModel(HeistGameCommand command)
         {
             this.existingCommand = command;
 

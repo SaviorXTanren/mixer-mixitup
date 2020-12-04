@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class TriviaGameEditorControl : GameEditorControlBase
     {
-        private TriviaGameEditorControlViewModel viewModel;
+        private TriviaGameCommandEditorWindowViewModel viewModel;
         private TriviaGameCommand existingCommand;
 
         public TriviaGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new TriviaGameEditorControlViewModel(currency);
+            this.viewModel = new TriviaGameCommandEditorWindowViewModel(currency);
         }
 
         public TriviaGameEditorControl(TriviaGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new TriviaGameEditorControlViewModel(command);
+            this.viewModel = new TriviaGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()

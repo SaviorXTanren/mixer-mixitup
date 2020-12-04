@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class TreasureDefenseGameEditorControl : GameEditorControlBase
     {
-        private TreasureDefenseGameEditorControlViewModel viewModel;
+        private TreasureDefenseGameCommandEditorWindowViewModel viewModel;
         private TreasureDefenseGameCommand existingCommand;
 
         public TreasureDefenseGameEditorControl(CurrencyModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new TreasureDefenseGameEditorControlViewModel(currency);
+            this.viewModel = new TreasureDefenseGameCommandEditorWindowViewModel(currency);
         }
 
         public TreasureDefenseGameEditorControl(TreasureDefenseGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new TreasureDefenseGameEditorControlViewModel(command);
+            this.viewModel = new TreasureDefenseGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()
