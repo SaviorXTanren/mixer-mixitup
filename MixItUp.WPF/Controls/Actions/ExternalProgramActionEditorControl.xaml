@@ -47,6 +47,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowWindow}, StringFormat={StaticResource ColumnHeaderFormat}}" />
@@ -54,6 +58,9 @@
 
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="6" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Bottom" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SaveOutput}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <CheckBox Grid.Column="10" IsChecked="{Binding SaveOutput}" IsEnabled="{Binding WaitForFinish}" VerticalAlignment="Bottom" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

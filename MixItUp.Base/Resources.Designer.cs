@@ -7198,6 +7198,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save Output.
+        /// </summary>
+        public static string SaveOutput {
+            get {
+                return ResourceManager.GetString("SaveOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save Product.
         /// </summary>
         public static string SaveProduct {

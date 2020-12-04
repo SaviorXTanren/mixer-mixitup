@@ -48,9 +48,25 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             {
                 this.waitForFinish = value;
                 this.NotifyPropertyChanged();
+
+                if (!this.WaitForFinish)
+                {
+                    this.SaveOutput = false;
+                }
             }
         }
         private bool waitForFinish;
+
+        public bool SaveOutput
+        {
+            get { return this.saveOutput; }
+            set
+            {
+                this.saveOutput = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool saveOutput;
 
         public ExternalProgramActionEditorControlViewModel(ExternalProgramActionModel action)
             : base(action)
@@ -59,6 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             this.Arguments = action.Arguments;
             this.showWindow = action.ShowWindow;
             this.WaitForFinish = action.WaitForFinish;
+            this.SaveOutput = action.SaveOutput;
         }
 
         public ExternalProgramActionEditorControlViewModel() : base() { }
@@ -72,6 +89,6 @@ namespace MixItUp.Base.ViewModel.Controls.Actions
             return Task.FromResult(new Result());
         }
 
-        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new ExternalProgramActionModel(this.FilePath, this.Arguments, this.ShowWindow, this.WaitForFinish)); }
+        protected override Task<ActionModelBase> GetActionInternal() { return Task.FromResult<ActionModelBase>(new ExternalProgramActionModel(this.FilePath, this.Arguments, this.ShowWindow, this.WaitForFinish, this.SaveOutput)); }
     }
 }
