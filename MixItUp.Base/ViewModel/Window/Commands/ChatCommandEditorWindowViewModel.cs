@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Window.Commands
                 this.NotifyPropertyChanged("ChatTriggersHintText");
             }
         }
-        private bool includeExclamation;
+        private bool includeExclamation = true;
 
         public bool IncludeExclamationEnabled
         {
@@ -82,8 +82,8 @@ namespace MixItUp.Base.ViewModel.Window.Commands
             {
                 this.Triggers = string.Join(" ", existingCommand.Triggers);
             }
-            this.Wildcards = existingCommand.Wildcards;
             this.IncludeExclamation = existingCommand.IncludeExclamation;
+            this.Wildcards = existingCommand.Wildcards;
         }
 
         public ChatCommandEditorWindowViewModel() : base() { }
