@@ -110,14 +110,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<CommandModelBase> GetCommand()
         {
-            char[] triggerSeparator = new char[] { ' ' };
-            if (this.Triggers.Contains(';'))
-            {
-                triggerSeparator = new char[] { ';' };
-            }
-            HashSet<string> triggers = new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
-
-            return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, triggers, this.IncludeExclamation, this.Wildcards));
+            return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards));
         }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
@@ -127,6 +120,16 @@ namespace MixItUp.Base.ViewModel.Commands
             ChannelSession.ChatCommands.Add(c);
             ChannelSession.Services.Chat.RebuildCommandTriggers();
             return Task.FromResult(0);
+        }
+
+        protected HashSet<string> GetChatTriggers()
+        {
+            char[] triggerSeparator = new char[] { ' ' };
+            if (this.Triggers.Contains(';'))
+            {
+                triggerSeparator = new char[] { ';' };
+            }
+            return new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

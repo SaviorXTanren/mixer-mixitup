@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class LockBoxGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class LockBoxGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string CombinationLengthString
         {

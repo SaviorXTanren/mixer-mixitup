@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HotPotatoGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class HotPotatoGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string LowerTimeLimitString
         {

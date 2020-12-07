@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HangmanGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class HangmanGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string MaxFailuresString
         {

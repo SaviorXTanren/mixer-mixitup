@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class VendingMachineGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class VendingMachineGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public ObservableCollection<VendingMachineOutcome> Outcomes { get; set; } = new ObservableCollection<VendingMachineOutcome>();
 

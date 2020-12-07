@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class BidGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles(); } }
 

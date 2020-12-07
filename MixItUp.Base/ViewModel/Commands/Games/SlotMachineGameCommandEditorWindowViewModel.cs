@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class SlotMachineGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class SlotMachineGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string Symbols
         {

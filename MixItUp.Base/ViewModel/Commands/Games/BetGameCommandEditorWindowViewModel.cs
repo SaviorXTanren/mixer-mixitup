@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class BetGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class BetGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public ObservableCollection<BetOutcome> Options { get; set; } = new ObservableCollection<BetOutcome>();
 

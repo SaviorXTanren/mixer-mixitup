@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class DuelGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class DuelGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string TimeLimitString
         {

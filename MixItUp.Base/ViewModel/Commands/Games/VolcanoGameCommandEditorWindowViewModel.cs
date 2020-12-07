@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class VolcanoGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class VolcanoGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string StatusArgument { get; set; } = "status";
 

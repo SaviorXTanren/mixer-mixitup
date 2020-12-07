@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class CoinPusherGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class CoinPusherGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string MinimumAmountForPayoutString
         {

@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class WordScrambleGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class WordScrambleGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {

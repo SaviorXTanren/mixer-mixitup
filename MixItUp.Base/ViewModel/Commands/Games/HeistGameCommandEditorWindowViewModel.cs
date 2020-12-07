@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HeistGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class HeistGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string MinimumParticipantsString
         {

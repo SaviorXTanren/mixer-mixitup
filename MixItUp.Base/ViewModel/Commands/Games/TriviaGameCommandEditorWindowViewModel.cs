@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
     }
 
-    public class TriviaGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class TriviaGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string TimeLimitString
         {

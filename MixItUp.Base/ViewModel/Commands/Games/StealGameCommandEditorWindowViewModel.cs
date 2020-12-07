@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class StealGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
+    public class StealGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
     {
         public string UserPercentageString
         {
