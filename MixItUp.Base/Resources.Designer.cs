@@ -3562,11 +3562,131 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There must be at least 1 outcome.
+        /// </summary>
+        public static string GameCommandAtLeast1Outcome {
+            get {
+                return ResourceManager.GetString("GameCommandAtLeast1Outcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beach Ball.
+        /// </summary>
+        public static string GameCommandBeachBall {
+            get {
+                return ResourceManager.GetString("GameCommandBeachBall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Beach Ball game hits a beach ball to a player, who must then hit it off to someone else. If the person who the beach ball is going towards does not respond in time, then that user misses the hit and the game ends. The user who hit the beach ball last is dubbed the winner ($username) and the user who failed to hit the beach ball is dubbed the loser ($targetusername). By default, the passing of the beach ball is done randomly to a new user, but you can optionally allow the passer to specify who it gets hi [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string GameCommandBeachBallDescription {
+            get {
+                return ResourceManager.GetString("GameCommandBeachBallDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !beachball
+        ///EX: !beachball &lt;TARGET USER&gt;.
+        /// </summary>
+        public static string GameCommandBeachBallExample {
+            get {
+                return ResourceManager.GetString("GameCommandBeachBallExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bet.
+        /// </summary>
+        public static string GameCommandBet {
+            get {
+                return ResourceManager.GetString("GameCommandBet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn&apos;t abused, such as Moderators or higher only..
+        /// </summary>
+        public static string GameCommandBetDescription {
+            get {
+                return ResourceManager.GetString("GameCommandBetDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !bet
+        ///EX: !bet &lt;OPTION #&gt; 100
+        ///EX: !bet answer &lt;OPTION #&gt;.
+        /// </summary>
+        public static string GameCommandBetExample {
+            get {
+                return ResourceManager.GetString("GameCommandBetExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The option number you selected is not answer.
         /// </summary>
         public static string GameCommandBetInvalidSelection {
             get {
                 return ResourceManager.GetString("GameCommandBetInvalidSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bid.
+        /// </summary>
+        public static string GameCommandBid {
+            get {
+                return ResourceManager.GetString("GameCommandBid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn&apos;t abused, such as Moderators or higher only..
+        /// </summary>
+        public static string GameCommandBidDescription {
+            get {
+                return ResourceManager.GetString("GameCommandBidDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !bid 100.
+        /// </summary>
+        public static string GameCommandBidExample {
+            get {
+                return ResourceManager.GetString("GameCommandBidExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coin Pusher.
+        /// </summary>
+        public static string GameCommandCoinPusher {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Coin Pusher game allows a user to deposit a specific amount of currency into a machine with the chance for a large payout. A minimum amount of currency must be inserted into the machine to allow for a payout and a minimum &amp; maximum payout percentage can be specified when a payout occurs..
+        /// </summary>
+        public static string GameCommandCoinPusherDescription {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !pusher 100.
+        /// </summary>
+        public static string GameCommandCoinPusherExample {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherExample", resourceCulture);
             }
         }
         
@@ -3580,6 +3700,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duel.
+        /// </summary>
+        public static string GameCommandDuel {
+            get {
+                return ResourceManager.GetString("GameCommandDuel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user..
+        /// </summary>
+        public static string GameCommandDuelDescription {
+            get {
+                return ResourceManager.GetString("GameCommandDuelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !duel &lt;USERNAME&gt; 100.
+        /// </summary>
+        public static string GameCommandDuelExample {
+            get {
+                return ResourceManager.GetString("GameCommandDuelExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hangman.
+        /// </summary>
+        public static string GameCommandHangman {
+            get {
+                return ResourceManager.GetString("GameCommandHangman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Hangman game allows users to guess the letter combination of a random word to win an accumulated pot of currency. Every failed guess puts the required currency amount into the pot and adds a failure, while a correct guess adds the letter. The person to guess the last missing letter gets the whole pot. Users have the ability to see the status of the game to see how much the pot is and what has been guessed already..
+        /// </summary>
+        public static string GameCommandHangmanDescription {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !hangman &lt;LETTER&gt;.
+        /// </summary>
+        public static string GameCommandHangmanExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument must be a valid letter.
         /// </summary>
         public static string GameCommandHangmanNotLetter {
@@ -3589,11 +3763,120 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Heist.
+        /// </summary>
+        public static string GameCommandHeist {
+            get {
+                return ResourceManager.GetString("GameCommandHeist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet.
+        /// </summary>
+        public static string GameCommandHeistDescription {
+            get {
+                return ResourceManager.GetString("GameCommandHeistDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !heist 100.
+        /// </summary>
+        public static string GameCommandHeistExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hitman.
+        /// </summary>
+        public static string GameCommandHitman {
+            get {
+                return ResourceManager.GetString("GameCommandHitman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman&apos;s name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money..
+        /// </summary>
+        public static string GameCommandHitmanDescription {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !hitman 100.
+        /// </summary>
+        public static string GameCommandHitmanExample {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hot Potato.
+        /// </summary>
+        public static string GameCommandHotPotato {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to..
+        /// </summary>
+        public static string GameCommandHotPotatoDescription {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !potato
+        ///EX: !potato &lt;TARGET USER&gt;.
+        /// </summary>
+        public static string GameCommandHotPotatoExample {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid bet amount must be specified.
         /// </summary>
         public static string GameCommandInvalidBetAmount {
             get {
                 return ResourceManager.GetString("GameCommandInvalidBetAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lock Box.
+        /// </summary>
+        public static string GameCommandLockBox {
+            get {
+                return ResourceManager.GetString("GameCommandLockBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Lock Box game allows you to guess the combination of a locked box using the numbers 0 - 9 that contains a large amount of currency. Every failed guess puts the required currency amount into the box and gives a hint to the combination, while a correct guess gets all the currency inside. Users have the ability to see the status of the lock box to see how much is in it and inspect the lock box for a hint as to the combination..
+        /// </summary>
+        public static string GameCommandLockBoxDescription {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !lockbox 109.
+        /// </summary>
+        public static string GameCommandLockBoxExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxExample", resourceCulture);
             }
         }
         
@@ -3634,6 +3917,87 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An outcome is missing a command.
+        /// </summary>
+        public static string GameCommandOutcomeMissingCommand {
+            get {
+                return ResourceManager.GetString("GameCommandOutcomeMissingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome is missing a name.
+        /// </summary>
+        public static string GameCommandOutcomeMissingName {
+            get {
+                return ResourceManager.GetString("GameCommandOutcomeMissingName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pickpocket.
+        /// </summary>
+        public static string GameCommandPickpocket {
+            get {
+                return ResourceManager.GetString("GameCommandPickpocket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Pickpocket game attempts to steal currency from a specified user. If successful, the user steals the bet amount from the specified user. If failed, they lose the bet amount.
+        /// </summary>
+        public static string GameCommandPickpocketDescription {
+            get {
+                return ResourceManager.GetString("GameCommandPickpocketDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !pickpocket &lt;USERNAME&gt; 100.
+        /// </summary>
+        public static string GameCommandPickpocketExample {
+            get {
+                return ResourceManager.GetString("GameCommandPickpocketExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The probability for the role {0} does not add up to 100 across all outcomes.
+        /// </summary>
+        public static string GameCommandRoleProbabilityNotEqualTo100 {
+            get {
+                return ResourceManager.GetString("GameCommandRoleProbabilityNotEqualTo100", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roulette.
+        /// </summary>
+        public static string GameCommandRoulette {
+            get {
+                return ResourceManager.GetString("GameCommandRoulette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Roulette game allows a user to start a group betting game amongst all users to bet on a specific number or name. If the game is based on a number range, then a user can select any number in that range. If the game is based on a series of names, a user can select any one of the names. All users who select the winning bet type get the payout for their bet, everyone else losses their bet..
+        /// </summary>
+        public static string GameCommandRouletteDescription {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !roulette &lt;NUMBER&gt; 100.
+        /// </summary>
+        public static string GameCommandRouletteExample {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Valid Bet Types: {0}.
         /// </summary>
         public static string GameCommandRouletteValidBetTypes {
@@ -3643,11 +4007,214 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Russian Roulette.
+        /// </summary>
+        public static string GameCommandRussianRoulette {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRoulette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally..
+        /// </summary>
+        public static string GameCommandRussianRouletteDescription {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !rr 100
+        ///EX: !rr.
+        /// </summary>
+        public static string GameCommandRussianRouletteExample {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slot Machine.
+        /// </summary>
+        public static string GameCommandSlotMachine {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Slot Machine game picks a random set of 3 symbols from a pre-defined list and selects any outcome that matches those symbols. Besides selecting a payout for each outcome, you can also run a customized command for each outcome..
+        /// </summary>
+        public static string GameCommandSlotMachineDescription {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !slots 100.
+        /// </summary>
+        public static string GameCommandSlotMachineExample {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spin.
+        /// </summary>
+        public static string GameCommandSpin {
+            get {
+                return ResourceManager.GetString("GameCommandSpin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Spin game picks a random number and selects an outcome based on that number. Besides selecting a payout for each outcome, you can also run a customized command for each outcome..
+        /// </summary>
+        public static string GameCommandSpinDescription {
+            get {
+                return ResourceManager.GetString("GameCommandSpinDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !spin 100.
+        /// </summary>
+        public static string GameCommandSpinExample {
+            get {
+                return ResourceManager.GetString("GameCommandSpinExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steal.
+        /// </summary>
+        public static string GameCommandSteal {
+            get {
+                return ResourceManager.GetString("GameCommandSteal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the bet amount from the random user. If failed, they lose the bet amount..
+        /// </summary>
+        public static string GameCommandStealDescription {
+            get {
+                return ResourceManager.GetString("GameCommandStealDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !steal 100.
+        /// </summary>
+        public static string GameCommandStealExample {
+            get {
+                return ResourceManager.GetString("GameCommandStealExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The user does not have {0} {1}.
         /// </summary>
         public static string GameCommandTargetUserInvalidAmount {
             get {
                 return ResourceManager.GetString("GameCommandTargetUserInvalidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Treasure Defense.
+        /// </summary>
+        public static string GameCommandTreasureDefense {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Treasure Defense game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally.
+        ///
+        ///After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they a [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string GameCommandTreasureDefenseDescription {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !treasure &lt;AMOUNT&gt;
+        ///EX: !treasure
+        ///EX: !treasure &lt;SELECTED USER&gt;.
+        /// </summary>
+        public static string GameCommandTreasureDefenseExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trivia.
+        /// </summary>
+        public static string GameCommandTrivia {
+            get {
+                return ResourceManager.GetString("GameCommandTrivia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Trivia game picks a random question from a pre-determined list and asks all users to select the correct answer from a list of possible ones. All users that selected the correct answer are awarded a payout..
+        /// </summary>
+        public static string GameCommandTriviaDescription {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !trivia.
+        /// </summary>
+        public static string GameCommandTriviaExample {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vending Machine.
+        /// </summary>
+        public static string GameCommandVendingMachine {
+            get {
+                return ResourceManager.GetString("GameCommandVendingMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn&apos;t have a payout for each outcome and instead is more focused on an &quot;action&quot; occurring with each outcome, such as a sound effect, image, or a specialized effect..
+        /// </summary>
+        public static string GameCommandVendingMachineDescription {
+            get {
+                return ResourceManager.GetString("GameCommandVendingMachineDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !vend.
+        /// </summary>
+        public static string GameCommandVendingMachineExample {
+            get {
+                return ResourceManager.GetString("GameCommandVendingMachineExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volcano.
+        /// </summary>
+        public static string GameCommandVolcano {
+            get {
+                return ResourceManager.GetString("GameCommandVolcano", resourceCulture);
             }
         }
         
@@ -3666,6 +4233,53 @@ namespace MixItUp.Base {
         public static string GameCommandVolcanoCollectUnderway {
             get {
                 return ResourceManager.GetString("GameCommandVolcanoCollectUnderway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit &amp; Status commands are used depending on what stage the Volcano is at.
+        ///
+        ///Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized p [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string GameCommandVolcanoDescription {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !volcano 100.
+        /// </summary>
+        public static string GameCommandVolcanoExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to World Scramble.
+        /// </summary>
+        public static string GameCommandWordScramble {
+            get {
+                return ResourceManager.GetString("GameCommandWordScramble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Word Scramble game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a scrambled word will appear in chat. If a user types the unscrambled word in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money..
+        /// </summary>
+        public static string GameCommandWordScrambleDescription {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EX: !scramble 100.
+        /// </summary>
+        public static string GameCommandWordScrambleExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleExample", resourceCulture);
             }
         }
         
@@ -3738,6 +4352,15 @@ namespace MixItUp.Base {
         public static string Games {
             get {
                 return ResourceManager.GetString("Games", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Sub-Command.
+        /// </summary>
+        public static string GameSubCommand {
+            get {
+                return ResourceManager.GetString("GameSubCommand", resourceCulture);
             }
         }
         
@@ -4827,6 +5450,15 @@ namespace MixItUp.Base {
         public static string Logout {
             get {
                 return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lose.
+        /// </summary>
+        public static string Lose {
+            get {
+                return ResourceManager.GetString("Lose", resourceCulture);
             }
         }
         
@@ -10121,6 +10753,15 @@ namespace MixItUp.Base {
         public static string Wildcards {
             get {
                 return ResourceManager.GetString("Wildcards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Win.
+        /// </summary>
+        public static string Win {
+            get {
+                return ResourceManager.GetString("Win", resourceCulture);
             }
         }
         
