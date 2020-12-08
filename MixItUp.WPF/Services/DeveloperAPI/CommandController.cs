@@ -104,6 +104,13 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 return command;
             }
 
+            command = ChannelSession.TwitchChannelPointsCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "ChannelPoints";
+                return command;
+            }
+
             command = ChannelSession.ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
@@ -134,6 +141,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.ChatCommands, "Chat"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.EventCommands, "Event"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.TimerCommands, "Timer"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.TwitchChannelPointsCommands, "ChannelPoints"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.ActionGroupCommands, "ActionGroup"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.GameCommands, "Game"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.PreMadeChatCommands, "Pre-Made"));
