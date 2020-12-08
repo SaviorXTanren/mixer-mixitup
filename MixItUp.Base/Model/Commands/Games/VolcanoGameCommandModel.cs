@@ -67,7 +67,7 @@ namespace MixItUp.Base.Model.Commands.Games
             int stage3MinimumAmount, CustomCommandModel stage3DepositCommand, CustomCommandModel stage3StatusCommand,
             int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommandModel payoutCommand,
             string collectArgument, int collectTimeLimit, double collectPayoutPercentageMinimum, double collectPayoutPercentageMaximum, CustomCommandModel collectCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Volcano)
         {
             this.StatusArgument = statusArgument;
             this.Stage1DepositCommand = stage1DepositCommand;

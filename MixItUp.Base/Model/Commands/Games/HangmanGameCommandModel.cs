@@ -47,7 +47,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public HangmanGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand, int maxFailures, int initialAmount, string customWordsFilePath,
             CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand, CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Hangman)
         {
             this.StatusArgument = statusArgument;
             this.StatusCommand = statusCommand;

@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel FailureOutcomeCommand { get; set; }
 
         public SlotMachineGameCommandModel(string name, HashSet<string> triggers, IEnumerable<SlotGameOutcomeModel> outcomes, IEnumerable<string> symbols, CustomCommandModel failureOutcomeCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.SlotMachine)
         {
             this.Outcomes = new List<SlotGameOutcomeModel>(outcomes);
             this.Symbols = new List<string>(symbols);

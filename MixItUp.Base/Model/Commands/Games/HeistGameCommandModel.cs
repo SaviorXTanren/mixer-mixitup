@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Commands.Games
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, GameOutcomeModel userFailOutcome,
             CustomCommandModel allSucceedCommand, CustomCommandModel topThirdsSucceedCommand, CustomCommandModel middleThirdsSucceedCommand, CustomCommandModel lowThirdsSucceedCommand,
             CustomCommandModel noneSucceedCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Heist)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;

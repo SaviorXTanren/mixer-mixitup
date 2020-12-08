@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public GameOutcomeModel FailedOutcome { get; set; }
 
         public PickpocketGameCommandModel(string name, HashSet<string> triggers, GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Pickpocket)
         {
             this.SuccessfulOutcome = successfulOutcome;
             this.FailedOutcome = failedOutcome;

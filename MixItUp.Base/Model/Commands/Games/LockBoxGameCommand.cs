@@ -43,7 +43,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public LockBoxGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand,
             string inspectionArgument, int inspectionCost, CustomCommandModel inspectionCommand,
             int combinationLength, int initialAmount, CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.LockBox)
         {
             this.StatusCommand = statusCommand;
             this.CombinationLength = combinationLength;

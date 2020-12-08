@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public RussianRouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int maxWinners, CustomCommandModel startedCommand,
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand, CustomCommandModel gameCompleteCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.RussianRoulette)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;

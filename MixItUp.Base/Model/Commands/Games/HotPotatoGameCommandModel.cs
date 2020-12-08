@@ -34,7 +34,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public HotPotatoGameCommandModel(string name, HashSet<string> triggers, int lowerLimit, int upperLimit, bool allowUserTargeting,
             CustomCommandModel startedCommand, CustomCommandModel tossPotatoCommand, CustomCommandModel potatoExplodeCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.HotPotato)
         {
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;

@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public HitmanGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int hitmanTimeLimit, string customWordsFilePath,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel hitmanApproachingCommand,
             CustomCommandModel hitmanAppearsCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Hitman)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;

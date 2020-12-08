@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public DuelGameCommandModel(string name, HashSet<string> triggers, CustomCommandModel startedCommand, GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome,
             CustomCommandModel notAcceptedCommand, int timeLimit)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Duel)
         {
             this.StartedCommand = startedCommand;
             this.SuccessfulOutcome = successfulOutcome;

@@ -37,7 +37,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum startRoleRequirement, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel userJoinCommand,
             CustomCommandModel notEnoughPlayersCommand, CustomCommandModel gameCompleteCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Bid)
         {
             this.StartRoleRequirement = startRoleRequirement;
             this.TimeLimit = timeLimit;

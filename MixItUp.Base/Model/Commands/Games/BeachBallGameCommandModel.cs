@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public BeachBallGameCommandModel(string name, HashSet<string> triggers, int lowerLimit, int upperLimit, bool allowUserTargeting,
             CustomCommandModel startedCommand, CustomCommandModel ballHitCommand, CustomCommandModel ballMissedCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.BeachBall)
         {
             this.LowerLimit = lowerLimit;
             this.UpperLimit = upperLimit;

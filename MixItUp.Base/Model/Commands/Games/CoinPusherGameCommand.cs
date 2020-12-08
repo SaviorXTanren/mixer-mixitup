@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public CoinPusherGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand,
             int minimumAmountForPayout, int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommandModel noPayoutCommand, CustomCommandModel payoutCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.CoinPusher)
         {
             this.StatusArgument = statusArgument;
             this.StatusCommand = statusCommand;

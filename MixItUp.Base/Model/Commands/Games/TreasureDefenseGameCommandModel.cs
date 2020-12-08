@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public TreasureDefenseGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int kingTimeLimit, int thiefPlayerPercentage, CustomCommandModel startedCommand,
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel knightUserCommand, CustomCommandModel thiefUserCommand, CustomCommandModel kingUserCommand,
             CustomCommandModel knightSelectedCommand, CustomCommandModel thiefSelectedCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.TreasureDefense)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;

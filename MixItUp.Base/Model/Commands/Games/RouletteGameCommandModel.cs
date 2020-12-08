@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public RouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, bool isNumberRange, HashSet<string> validBetTypes, CustomCommandModel startedCommand,
             CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, CustomCommandModel userFailCommand, CustomCommandModel gameCompleteCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Roulette)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;

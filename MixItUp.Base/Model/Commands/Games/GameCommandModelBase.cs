@@ -12,6 +12,31 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands.Games
 {
+    public enum GameCommandTypeEnum
+    {
+        BeachBall,
+        Bet,
+        Bid,
+        CoinPusher,
+        Duel,
+        Hangman,
+        Heist,
+        Hitman,
+        HotPotato,
+        LockBox,
+        Pickpocket,
+        Roulette,
+        RussianRoulette,
+        SlotMachine,
+        Spin,
+        Steal,
+        TreasureDefense,
+        Trivia,
+        VendingMachine,
+        Volcano,
+        WordScramble
+    }
+
     [DataContract]
     public class RoleProbabilityPayoutModel
     {
@@ -91,7 +116,14 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
-        public GameCommandModelBase(string name, HashSet<string> triggers) : base(name, CommandTypeEnum.Game, triggers, includeExclamation: true, wildcards: false) { }
+        [DataMember]
+        public GameCommandTypeEnum GameType { get; set; }
+
+        public GameCommandModelBase(string name, HashSet<string> triggers, GameCommandTypeEnum gameType)
+            : base(name, CommandTypeEnum.Game, triggers, includeExclamation: true, wildcards: false)
+        {
+            this.GameType = gameType;
+        }
 
         protected GameCommandModelBase() : base() { }
 

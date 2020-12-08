@@ -12,7 +12,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public List<GameOutcomeModel> Outcomes { get; set; } = new List<GameOutcomeModel>();
 
         public VendingMachineGameCommandModel(string name, HashSet<string> triggers, IEnumerable<GameOutcomeModel> outcomes)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.VendingMachine)
         {
             this.Outcomes = new List<GameOutcomeModel>(outcomes);
         }

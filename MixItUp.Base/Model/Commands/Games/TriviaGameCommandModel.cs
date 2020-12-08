@@ -95,7 +95,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public TriviaGameCommandModel(string name, HashSet<string> triggers, int timeLimit, bool useRandomOnlineQuestions, int winAmount, IEnumerable<TriviaGameQuestionModel> customQuestions,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel correctAnswerCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Trivia)
         {
             this.TimeLimit = timeLimit;
             this.UseRandomOnlineQuestions = useRandomOnlineQuestions;

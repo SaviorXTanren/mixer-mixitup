@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public BetGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum startRoleRequirement, int minimumParticipants, int timeLimit, IEnumerable<GameOutcomeModel> betOptions,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel betsClosedCommand, CustomCommandModel gameCompleteCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.Bet)
         {
             this.StartRoleRequirement = startRoleRequirement;
             this.MinimumParticipants = minimumParticipants;

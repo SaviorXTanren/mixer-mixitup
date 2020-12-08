@@ -57,7 +57,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public WordScrambleGameCommand(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int wordScrambleTimeLimit, string customWordsFilePath,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand,
             CustomCommandModel wordScramblePrepareCommand, CustomCommandModel wordScrambleBeginCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
-            : base(name, triggers)
+            : base(name, triggers, GameCommandTypeEnum.WordScramble)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;
