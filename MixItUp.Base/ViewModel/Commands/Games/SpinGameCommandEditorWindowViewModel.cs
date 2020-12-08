@@ -2,31 +2,17 @@
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
     public class SpinGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
-
-        public ICommand AddOutcomeCommand { get; set; }
-        public ICommand DeleteOutcomeCommand { get; set; }
-
         private SpinGameCommandModel existingCommand;
 
-        public SpinGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
-        {
-            this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSpinWinExample, currency.Name))));
-            this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 50, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSpinLoseExample)));
-        }
-
         public SpinGameCommandEditorWindowViewModel(SpinGameCommandModel command)
-            : this()
+            : base(command)
         {
             this.existingCommand = command;
             foreach (GameOutcomeModel outcome in this.existingCommand.Outcomes)
@@ -35,19 +21,11 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
 
-        private SpinGameCommandEditorWindowViewModel()
+        public SpinGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
-            {
-                this.Outcomes.Add(new GameOutcomeViewModel());
-                return Task.FromResult(0);
-            });
-
-            this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
-            {
-                this.Outcomes.Remove((GameOutcomeViewModel)parameter);
-                return Task.FromResult(0);
-            });
+            this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSpinWinExample, currency.Name))));
+            this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 50, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSpinLoseExample)));
         }
 
         public override Task<CommandModelBase> GetCommand()

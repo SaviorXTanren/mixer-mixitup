@@ -5,11 +5,13 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
+using MixItUp.Base.ViewModel.Requirements;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
@@ -75,6 +77,66 @@ namespace MixItUp.Base.ViewModel.Games
 
         public ObservableCollection<RoleProbabilityPayoutViewModel> RoleProbabilityPayouts { get; set; } = new ObservableCollection<RoleProbabilityPayoutViewModel>();
 
+        public int UserChance
+        {
+            get { return this.userRoleProbabilityPayout.Probability; }
+            set
+            {
+                this.userRoleProbabilityPayout.Probability = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        public double UserPayout
+        {
+            get { return this.userRoleProbabilityPayout.Payout; }
+            set
+            {
+                this.userRoleProbabilityPayout.Payout = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private RoleProbabilityPayoutViewModel userRoleProbabilityPayout;
+
+        public int SubChance
+        {
+            get { return this.subRoleProbabilityPayout.Probability; }
+            set
+            {
+                this.subRoleProbabilityPayout.Probability = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        public double SubPayout
+        {
+            get { return this.subRoleProbabilityPayout.Payout; }
+            set
+            {
+                this.subRoleProbabilityPayout.Payout = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private RoleProbabilityPayoutViewModel subRoleProbabilityPayout;
+
+        public int ModChance
+        {
+            get { return this.modRoleProbabilityPayout.Probability; }
+            set
+            {
+                this.modRoleProbabilityPayout.Probability = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        public double ModPayout
+        {
+            get { return this.modRoleProbabilityPayout.Payout; }
+            set
+            {
+                this.modRoleProbabilityPayout.Payout = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private RoleProbabilityPayoutViewModel modRoleProbabilityPayout;
+
         public CustomCommandModel Command
         {
             get { return this.command; }
@@ -99,6 +161,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(UserRoleEnum.Subscriber, probability, payout));
             this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(UserRoleEnum.Mod, probability, payout));
             this.Command = command;
+            this.SetRoleProbabilityPayoutProperties();
         }
 
         public GameOutcomeViewModel(GameOutcomeModel model)
@@ -109,8 +172,9 @@ namespace MixItUp.Base.ViewModel.Games
                 this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(kvp.Value));
             }
             this.Command = command;
+            this.SetRoleProbabilityPayoutProperties();
         }
-
+        
         public Result Validate()
         {
             if (string.IsNullOrEmpty(this.Name))
@@ -127,17 +191,35 @@ namespace MixItUp.Base.ViewModel.Games
         }
 
         public GameOutcomeModel GetModel() { return new GameOutcomeModel(this.Name, this.RoleProbabilityPayouts.ToDictionary(rpp => rpp.Role, rpp => rpp.GetModel()), this.Command); }
+
+        private void SetRoleProbabilityPayoutProperties()
+        {
+            this.userRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.User);
+            this.subRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.Subscriber);
+            this.modRoleProbabilityPayout = this.RoleProbabilityPayouts.FirstOrDefault(rpp => rpp.Role == UserRoleEnum.Mod);
+        }
     }
 
     public abstract class GameCommandEditorWindowViewModelBase : ChatCommandEditorWindowViewModel
     {
-        public GameCommandEditorWindowViewModelBase(GameCommandModelBase existingCommand)
-            : base(existingCommand)
+        public GameCurrencyRequirementViewModel GameCurrencyRequirement { get { return this.Requirements.GameCurrency; } }
+
+        public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
+
+        public ICommand AddOutcomeCommand { get; set; }
+        public ICommand DeleteOutcomeCommand { get; set; }
+
+        public GameCommandEditorWindowViewModelBase(GameCommandModelBase existingCommand) : base(existingCommand) { this.SetUICommands(); }
+
+        public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
+            : base()
         {
-
+            if (this.GameCurrencyRequirement == null && currency != null)
+            {
+                this.Requirements.GameCurrency = new GameCurrencyRequirementViewModel(currency);
+            }
+            this.SetUICommands();
         }
-
-        public GameCommandEditorWindowViewModelBase() : base() { }
 
         public override async Task<Result> Validate()
         {
@@ -221,6 +303,21 @@ namespace MixItUp.Base.ViewModel.Games
             CustomCommandModel command = this.CreateBasicChatCommand();
             command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
             return command;
+        }
+
+        private void SetUICommands()
+        {
+            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            {
+                this.Outcomes.Add(new GameOutcomeViewModel());
+                return Task.FromResult(0);
+            });
+
+            this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
+            {
+                this.Outcomes.Remove((GameOutcomeViewModel)parameter);
+                return Task.FromResult(0);
+            });
         }
     }
 }

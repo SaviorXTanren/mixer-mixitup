@@ -39,9 +39,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Inventories}" SelectedItem="{Binding SelectedInventory}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}" Width="120" VerticalAlignment="Bottom" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Inventories}" SelectedItem="{Binding SelectedInventory}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Inventory}" Width="120" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="120" VerticalAlignment="Bottom" />
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Width="120" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                         <TextBox Grid.Column="4" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

@@ -3536,6 +3536,9 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandOutcomeMissingName" xml:space="preserve">
     <value>An outcome is missing a name</value>
   </data>
+  <data name="AddOutcome" xml:space="preserve">
+    <value>Add Outcome</value>
+  </data>
   <data name="GameCommandAtLeast1Outcome" xml:space="preserve">
     <value>There must be at least 1 outcome</value>
   </data>
@@ -3682,6 +3685,12 @@ EX: !rr</value>
   <data name="GameCommandSpinExample" xml:space="preserve">
     <value>EX: !spin 100</value>
   </data>
+  <data name="GameCommandSpinLoseExample" xml:space="preserve">
+    <value>Sorry @$username, you lost the spin!</value>
+  </data>
+  <data name="GameCommandSpinWinExample" xml:space="preserve">
+    <value>Congrats @$username, you won $gamepayout {0}!</value>
+  </data>
   <data name="GameCommandSteal" xml:space="preserve">
     <value>Steal</value>
   </data>
@@ -3741,5 +3750,53 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="GameCommandWordScrambleExample" xml:space="preserve">
     <value>EX: !scramble 100</value>
+  </data>
+  <data name="Outcomes" xml:space="preserve">
+    <value>Outcomes</value>
+  </data>
+  <data name="ModChancePercentage" xml:space="preserve">
+    <value>Mod Chance %</value>
+  </data>
+  <data name="ModPayoutPercentage" xml:space="preserve">
+    <value>Mod Payout %</value>
+  </data>
+  <data name="SubChancePercentage" xml:space="preserve">
+    <value>Sub Chance %</value>
+  </data>
+  <data name="SubPayoutPercentage" xml:space="preserve">
+    <value>Sub Payout %</value>
+  </data>
+  <data name="UserChancePercentage" xml:space="preserve">
+    <value>User Chance %</value>
+  </data>
+  <data name="UserPayoutPercentage" xml:space="preserve">
+    <value>User Payout %</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>Usage</value>
+  </data>
+  <data name="MinAmount" xml:space="preserve">
+    <value>Min Amount</value>
+  </data>
+  <data name="MinimumAndMaximum" xml:space="preserve">
+    <value>Minimum &amp; Maximum</value>
+  </data>
+  <data name="MinimumOnly" xml:space="preserve">
+    <value>Minimum Only</value>
+  </data>
+  <data name="NoCost" xml:space="preserve">
+    <value>No Cost</value>
+  </data>
+  <data name="RequiredAmount" xml:space="preserve">
+    <value>Required Amount</value>
+  </data>
+  <data name="GameCurrency" xml:space="preserve">
+    <value>Game Currency</value>
+  </data>
+  <data name="GameCommandAtLeast1Currency" xml:space="preserve">
+    <value>At least 1 currency must be created before Games can be used</value>
+  </data>
+  <data name="NewGame" xml:space="preserve">
+    <value>New Game</value>
   </data>
 </root>

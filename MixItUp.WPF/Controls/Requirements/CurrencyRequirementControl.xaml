@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="150" VerticalAlignment="Bottom" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="150" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                         <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

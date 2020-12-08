@@ -1,12 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -30,8 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void NewEventCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            EventCommandItemViewModel eventCommand = (EventCommandItemViewModel)((Button)sender).DataContext;
-            CommandEditorWindow window = new CommandEditorWindow(eventCommand.EventType);
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<EventCommandItemViewModel>(sender).EventType);
             window.Closed += Window_Closed;
             window.Show();
         }

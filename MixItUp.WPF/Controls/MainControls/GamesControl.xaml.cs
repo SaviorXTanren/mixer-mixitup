@@ -1,9 +1,10 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.ViewModel;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -35,11 +36,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonControl = (CommandButtonsControl)sender;
-            GameCommandBase command = commandButtonControl.GetCommandFromCommandButtons<GameCommandBase>(sender);
+            GameCommandModelBase command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<GameCommandModelBase>();
             if (command != null)
             {
-                GameCommandWindow window = new GameCommandWindow(command);
+                GameCommandEditorWindow window = new GameCommandEditorWindow(command);
                 window.Closed += Window_Closed;
                 window.Show();
             }
@@ -49,15 +49,13 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonControl = (CommandButtonsControl)sender;
-                GameCommandBase command = commandButtonControl.GetCommandFromCommandButtons<GameCommandBase>(sender);
+                GameCommandModelBase command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<GameCommandModelBase>();
                 if (command != null)
                 {
-                    // TODO
-                    //ChannelSession.Settings.GameCommands.Remove(command);
-                    //await ChannelSession.SaveSettings();
-                    //this.viewModel.Refresh();
-                    //ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ChannelSession.GameCommands.Remove(command);
+                    ChannelSession.Settings.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
+                    this.viewModel.Refresh();
                 }
             });
         }
@@ -69,15 +67,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
-            GameCommandWindow window = new GameCommandWindow();
+            GameCommandEditorWindow window = new GameCommandEditorWindow(GameCommandTypeEnum.Spin, this.viewModel.PrimaryCurrency);
             window.Closed += Window_Closed;
             window.Show();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             this.viewModel.Refresh();
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
         }
     }
 }

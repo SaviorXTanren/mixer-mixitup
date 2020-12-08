@@ -1,10 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel.Currency;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Games;
+using MixItUp.Base.ViewModel.MainControls;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Commands
@@ -42,7 +40,7 @@ namespace MixItUp.WPF.Controls.Commands
                 else if (commandListingButtonsControl.DataContext is EventCommandItemViewModel)
                 {
                     EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandListingButtonsControl.DataContext;
-                    return (T)((CommandModelBase)commandItem.Command);
+                    return (T)(CommandModelBase)commandItem.Command;
                 }
                 else if (commandListingButtonsControl.DataContext is StreamPassCustomLevelUpCommandViewModel)
                 {
@@ -53,6 +51,11 @@ namespace MixItUp.WPF.Controls.Commands
                 {
                     RedemptionStoreProductViewModel commandItem = (RedemptionStoreProductViewModel)commandListingButtonsControl.DataContext;
                     return (T)commandItem.Command;
+                }
+                else if (commandListingButtonsControl.DataContext is GameOutcomeViewModel)
+                {
+                    GameOutcomeViewModel commandItem = (GameOutcomeViewModel)commandListingButtonsControl.DataContext;
+                    return (T)(CommandModelBase)commandItem.Command;
                 }
             }
             return null;

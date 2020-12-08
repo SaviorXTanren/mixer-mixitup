@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Util;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dashboard
 {
@@ -26,8 +26,7 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                Button button = (Button)sender;
-                QueueUser queueUser = (QueueUser)button.DataContext;
+                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                 this.viewModel.MoveUpCommand.Execute(queueUser.user);
                 return Task.FromResult(0);
             });
@@ -37,8 +36,7 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                Button button = (Button)sender;
-                QueueUser queueUser = (QueueUser)button.DataContext;
+                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                 this.viewModel.MoveDownCommand.Execute(queueUser.user);
                 return Task.FromResult(0);
             });
@@ -48,8 +46,7 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                Button button = (Button)sender;
-                QueueUser queueUser = (QueueUser)button.DataContext;
+                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
                 this.viewModel.DeleteCommand.Execute(queueUser.user);
                 return Task.FromResult(0);
             });

@@ -44,17 +44,17 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding RankSystems}" SelectedItem="{Binding SelectedRankSystem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankSystem}" Width="120" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding RankSystems}" SelectedItem="{Binding SelectedRankSystem}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankSystem}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding MatchTypes}" SelectedItem="{Binding SelectedMatchType}" Width="40">
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding MatchTypes}" SelectedItem="{Binding SelectedMatchType}" Width="40" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        
-                        <ComboBox Grid.Column="4" ItemsSource="{Binding Ranks}" SelectedItem="{Binding SelectedRank}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rank}" Width="120" />
+
+                        <ComboBox Grid.Column="4" ItemsSource="{Binding Ranks}" SelectedItem="{Binding SelectedRank}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rank}" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                         <Button Grid.Column="6" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

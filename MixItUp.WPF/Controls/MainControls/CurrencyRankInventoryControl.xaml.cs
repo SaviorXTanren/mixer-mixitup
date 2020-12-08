@@ -4,6 +4,7 @@ using MixItUp.WPF.Windows.Currency;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using MixItUp.WPF.Util;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -33,8 +34,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            CurrencyRankInventoryContainerViewModel item = (CurrencyRankInventoryContainerViewModel)button.DataContext;
+            CurrencyRankInventoryContainerViewModel item = FrameworkElementHelpers.GetDataContext<CurrencyRankInventoryContainerViewModel>(sender);
             if (item.Inventory != null)
             {
                 InventoryWindow window = new InventoryWindow(item.Inventory);
@@ -51,8 +51,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            CurrencyRankInventoryContainerViewModel item = (CurrencyRankInventoryContainerViewModel)button.DataContext;
+            CurrencyRankInventoryContainerViewModel item = FrameworkElementHelpers.GetDataContext<CurrencyRankInventoryContainerViewModel>(sender);
             this.viewModel.DeleteItem(item);
         }
 

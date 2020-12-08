@@ -580,6 +580,10 @@
     <Compile Include="Controls\Commands\EventCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>EventCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\GameCommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>SpinGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -626,71 +630,71 @@
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BeachBallGameEditorControl.xaml.cs">
       <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\BetGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml.cs">
       <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\BidGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BidGameEditorControl.xaml.cs">
       <DependentUpon>BidGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\CoinPusherGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\CoinPusherGameEditorControl.xaml.cs">
       <DependentUpon>CoinPusherGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\DuelGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\DuelGameEditorControl.xaml.cs">
       <DependentUpon>DuelGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\GameCommandDetailsControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml.cs">
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\GameEditorControlBase.cs" />
-    <Compile Include="Controls\Games\HangmanGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameEditorControlBase.cs" />
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HangmanGameEditorControl.xaml.cs">
       <DependentUpon>HangmanGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\HeistGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml.cs">
       <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\HitmanGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HitmanGameEditorControl.xaml.cs">
       <DependentUpon>HitmanGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\HotPotatoGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HotPotatoGameEditorControl.xaml.cs">
       <DependentUpon>HotPotatoGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\LockBoxGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\LockBoxGameEditorControl.xaml.cs">
       <DependentUpon>LockBoxGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\PickpocketGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\PickpocketGameEditorControl.xaml.cs">
       <DependentUpon>PickpocketGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\RouletteGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RouletteGameEditorControl.xaml.cs">
       <DependentUpon>RouletteGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\RussianRouletteGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml.cs">
       <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\SlotMachineGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml.cs">
       <DependentUpon>SlotMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\SpinGameEditorControl.xaml.cs">
       <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\StealGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\StealGameEditorControl.xaml.cs">
       <DependentUpon>StealGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\TriviaGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TriviaGameEditorControl.xaml.cs">
       <DependentUpon>TriviaGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\VendingMachineGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\VendingMachineGameEditorControl.xaml.cs">
       <DependentUpon>VendingMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\TreasureDefenseGameEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TreasureDefenseGameEditorControl.xaml.cs">
       <DependentUpon>TreasureDefenseGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
+    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\WordScrambleEditorControl.xaml.cs">
       <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
@@ -904,6 +908,9 @@
     <Compile Include="Controls\Requirements\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirements\GameCurrencyRequirementControl.xaml.cs">
+      <DependentUpon>GameCurrencyRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirements\InventoryRequirementControl.xaml.cs">
       <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -1090,6 +1097,7 @@
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Util\FrameworkElementHelpers.cs" />
     <Compile Include="Util\InstalledFonts.cs" />
     <Compile Include="Util\InverseBooleanConverter.cs" />
     <Compile Include="Util\LocalizationConverter.cs" />
@@ -1105,6 +1113,9 @@
     </Compile>
     <Compile Include="Windows\Command %28OLD%29\GameCommandWindow.xaml.cs">
       <DependentUpon>GameCommandWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Commands\GameCommandEditorWindow.xaml.cs">
+      <DependentUpon>GameCommandEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
       <DependentUpon>CurrencyWindow.xaml</DependentUpon>
@@ -1439,6 +1450,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1499,91 +1514,91 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\BeachBallGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BeachBallGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\BetGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\BidGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BidGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\CoinPusherGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\CoinPusherGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\DuelGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\DuelGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\GameCommandDetailsControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\HangmanGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HangmanGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\HeistGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\HitmanGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HitmanGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\HotPotatoGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HotPotatoGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\LockBoxGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\LockBoxGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\PickpocketGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\PickpocketGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\RouletteGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\RouletteGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\RussianRouletteGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\SlotMachineGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\SpinGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\SpinGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\StealGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\StealGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\TriviaGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\TriviaGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\VendingMachineGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\VendingMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\VolcanoGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\TreasureDefenseGameEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\TreasureDefenseGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\WordScrambleEditorControl.xaml">
+    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\WordScrambleEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1864,6 +1879,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirements\CurrencyRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirements\GameCurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2166,6 +2185,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Command %28OLD%29\GameCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Commands\GameCommandEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

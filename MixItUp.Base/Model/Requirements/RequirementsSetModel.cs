@@ -12,10 +12,17 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public List<RequirementModelBase> Requirements { get; set; } = new List<RequirementModelBase>();
 
-        public RequirementsSetModel() { }
+        public RequirementsSetModel()
+        {
+            this.Requirements.Add(new RoleRequirementModel());
+            this.Requirements.Add(new CooldownRequirementModel());
+            this.Requirements.Add(new ThresholdRequirementModel());
+            this.Requirements.Add(new SettingsRequirementModel());
+        }
+
+        public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
 
         internal RequirementsSetModel(MixItUp.Base.ViewModel.Requirement.RequirementViewModel requirements)
-            : this()
         {
             if (requirements.Role != null)
             {
@@ -78,7 +85,9 @@ namespace MixItUp.Base.Model.Requirements
 
         public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
-        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel).Select(r => (CurrencyRequirementModel)r); } }
+        public GameCurrencyRequirementModel GameCurrency { get { return (GameCurrencyRequirementModel)this.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
+
+        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel && !(r is GameCurrencyRequirementModel)).Select(r => (CurrencyRequirementModel)r); } }
 
         public IEnumerable<RankRequirementModel> Rank { get { return this.Requirements.Where(r => r is RankRequirementModel).Select(r => (RankRequirementModel)r); } }
 
