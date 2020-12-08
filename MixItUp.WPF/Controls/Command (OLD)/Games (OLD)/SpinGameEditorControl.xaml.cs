@@ -27,21 +27,21 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new SpinGameCommandEditorWindowViewModel(command);
+            //this.viewModel = new SpinGameCommandEditorWindowViewModel(command);
         }
 
         public override async Task<bool> Validate()
         {
             if (!await this.CommandDetailsControl.Validate())
             {
-                return false;
+
             }
-            return await this.viewModel.Validate();
+            return false;
         }
 
         public override void SaveGameCommand()
         {
-            this.viewModel.SaveGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements());
+            //this.viewModel.SaveGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements());
         }
 
         protected override async Task OnLoaded()
