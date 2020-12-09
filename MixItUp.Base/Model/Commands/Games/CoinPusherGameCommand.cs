@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (this.TotalAmount >= this.MinimumAmountForPayout && this.GenerateProbability() <= this.PayoutProbability)
             {
                 int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum);
-                this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout);
+                this.PerformPayout(parameters, payout);
                 this.TotalAmount -= payout;
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();

@@ -159,7 +159,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (!string.IsNullOrEmpty(this.runWord) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runWord, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
             {
                 int payout = this.runBetAmount * this.runUsers.Count;
-                this.GameCurrencyRequirement.Currency.AddAmount(message.User.Data, payout);
+                this.PerformPayout(new CommandParametersModel(message.User), payout);
 
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                 this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;

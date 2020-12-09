@@ -115,7 +115,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.collectUsers.Add(parameters.User);
                         int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum);
-                        this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout);
+                        this.PerformPayout(parameters, payout);
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
                         await this.CollectCommand.Perform(parameters);
@@ -165,7 +165,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     this.collectUsers.Add(parameters.User);
                     int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum);
-                    this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout);
+                    this.PerformPayout(parameters, payout);
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

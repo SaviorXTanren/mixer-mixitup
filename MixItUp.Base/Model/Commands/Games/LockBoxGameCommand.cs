@@ -116,7 +116,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.AddSpecialIdentifiersToParameters(parameters);
                     if (guess == this.CurrentCombination)
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, this.TotalAmount);
+                        this.PerformPayout(parameters, this.TotalAmount);
                         this.ClearData();
                         await this.SuccessfulGuessCommand.Perform(parameters);
                     }

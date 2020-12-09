@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.CurrentWord.All(c => this.SuccessfulGuesses.Contains(c)))
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, this.TotalAmount);
+                        this.PerformPayout(parameters, this.TotalAmount);
                         await this.GameWonCommand.Perform(parameters);
                         await this.ClearData();
                     }

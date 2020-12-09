@@ -97,7 +97,7 @@ namespace MixItUp.Base.Model.Commands.Games
             RoleProbabilityPayoutModel roleProbabilityPayout = this.GetRoleProbabilityPayout(user);
             if (roleProbabilityPayout != null)
             {
-                return Convert.ToInt32(Convert.ToDouble(betAmount) * roleProbabilityPayout.Payout);
+                return Convert.ToInt32(Convert.ToDouble(betAmount) * (roleProbabilityPayout.Payout / 100.0));
             }
             return 0;
         }
@@ -189,12 +189,16 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected async Task PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome, int betAmount)
         {
-            parameters.SpecialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = outcome.GetPayout(parameters.User, betAmount).ToString();
+            int payout = outcome.GetPayout(parameters.User, betAmount);
+            this.PerformPayout(parameters, payout);
+            parameters.SpecialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = payout.ToString();
             if (outcome.Command != null)
             {
                 await outcome.Command.Perform(parameters);
             }
         }
+
+        protected void PerformPayout(CommandParametersModel parameters, int payout) { this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout); }
 
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {

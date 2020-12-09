@@ -171,7 +171,7 @@ namespace MixItUp.Base.ViewModel.Games
             {
                 this.RoleProbabilityPayouts.Add(new RoleProbabilityPayoutViewModel(kvp.Value));
             }
-            this.Command = command;
+            this.Command = model.Command;
             this.SetRoleProbabilityPayoutProperties();
         }
         

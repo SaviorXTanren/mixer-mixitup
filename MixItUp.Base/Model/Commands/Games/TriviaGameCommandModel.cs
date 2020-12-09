@@ -200,7 +200,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (kvp.Value == correctAnswerNumber)
                 {
                     winners.Add(participant);
-                    this.GameCurrencyRequirement.Currency.AddAmount(participant.User.Data, this.WinAmount);
+                    this.PerformPayout(participant, this.WinAmount);
                     await this.UserSuccessCommand.Perform(participant);
                 }
                 else
