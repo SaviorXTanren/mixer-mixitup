@@ -3636,15 +3636,6 @@ EX: !potato &lt;TARGET USER&gt;</value>
   <data name="GameCommandLockBoxExample" xml:space="preserve">
     <value>EX: !lockbox 109</value>
   </data>
-  <data name="GameCommandPickpocket" xml:space="preserve">
-    <value>Pickpocket</value>
-  </data>
-  <data name="GameCommandPickpocketDescription" xml:space="preserve">
-    <value>The Pickpocket game attempts to steal currency from a specified user. If successful, the user steals the bet amount from the specified user. If failed, they lose the bet amount</value>
-  </data>
-  <data name="GameCommandPickpocketExample" xml:space="preserve">
-    <value>EX: !pickpocket &lt;USERNAME&gt; 100</value>
-  </data>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
     <value>The probability for the role {0} does not add up to 100 across all outcomes</value>
   </data>
@@ -3695,10 +3686,11 @@ EX: !rr</value>
     <value>Steal</value>
   </data>
   <data name="GameCommandStealDescription" xml:space="preserve">
-    <value>The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the bet amount from the random user. If failed, they lose the bet amount.</value>
+    <value>The Steal game allows the user to attempt to steal currency from another user. If successful, the user steals the bet amount from the other user. If failed, they lose the bet amount.</value>
   </data>
   <data name="GameCommandStealExample" xml:space="preserve">
-    <value>EX: !steal 100</value>
+    <value>EX: !steal 100
+EX: !steal &lt;USERNAME&gt; 100</value>
   </data>
   <data name="GameCommandTreasureDefense" xml:space="preserve">
     <value>Treasure Defense</value>
@@ -3721,15 +3713,6 @@ EX: !treasure &lt;SELECTED USER&gt;</value>
   </data>
   <data name="GameCommandTriviaExample" xml:space="preserve">
     <value>EX: !trivia</value>
-  </data>
-  <data name="GameCommandVendingMachine" xml:space="preserve">
-    <value>Vending Machine</value>
-  </data>
-  <data name="GameCommandVendingMachineDescription" xml:space="preserve">
-    <value>The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn't have a payout for each outcome and instead is more focused on an "action" occurring with each outcome, such as a sound effect, image, or a specialized effect.</value>
-  </data>
-  <data name="GameCommandVendingMachineExample" xml:space="preserve">
-    <value>EX: !vend</value>
   </data>
   <data name="GameCommandVolcano" xml:space="preserve">
     <value>Volcano</value>
@@ -3798,5 +3781,11 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="NewGame" xml:space="preserve">
     <value>New Game</value>
+  </data>
+  <data name="Random" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="Targeted" xml:space="preserve">
+    <value>Targeted</value>
   </data>
 </root>

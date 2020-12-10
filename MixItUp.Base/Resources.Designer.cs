@@ -3953,33 +3953,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pickpocket.
-        /// </summary>
-        public static string GameCommandPickpocket {
-            get {
-                return ResourceManager.GetString("GameCommandPickpocket", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Pickpocket game attempts to steal currency from a specified user. If successful, the user steals the bet amount from the specified user. If failed, they lose the bet amount.
-        /// </summary>
-        public static string GameCommandPickpocketDescription {
-            get {
-                return ResourceManager.GetString("GameCommandPickpocketDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EX: !pickpocket &lt;USERNAME&gt; 100.
-        /// </summary>
-        public static string GameCommandPickpocketExample {
-            get {
-                return ResourceManager.GetString("GameCommandPickpocketExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The probability for the role {0} does not add up to 100 across all outcomes.
         /// </summary>
         public static string GameCommandRoleProbabilityNotEqualTo100 {
@@ -4134,7 +4107,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the bet amount from the random user. If failed, they lose the bet amount..
+        ///   Looks up a localized string similar to The Steal game allows the user to attempt to steal currency from another user. If successful, the user steals the bet amount from the other user. If failed, they lose the bet amount..
         /// </summary>
         public static string GameCommandStealDescription {
             get {
@@ -4143,7 +4116,8 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EX: !steal 100.
+        ///   Looks up a localized string similar to EX: !steal 100
+        ///EX: !steal &lt;USERNAME&gt; 100.
         /// </summary>
         public static string GameCommandStealExample {
             get {
@@ -4215,33 +4189,6 @@ namespace MixItUp.Base {
         public static string GameCommandTriviaExample {
             get {
                 return ResourceManager.GetString("GameCommandTriviaExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Vending Machine.
-        /// </summary>
-        public static string GameCommandVendingMachine {
-            get {
-                return ResourceManager.GetString("GameCommandVendingMachine", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn&apos;t have a payout for each outcome and instead is more focused on an &quot;action&quot; occurring with each outcome, such as a sound effect, image, or a specialized effect..
-        /// </summary>
-        public static string GameCommandVendingMachineDescription {
-            get {
-                return ResourceManager.GetString("GameCommandVendingMachineDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EX: !vend.
-        /// </summary>
-        public static string GameCommandVendingMachineExample {
-            get {
-                return ResourceManager.GetString("GameCommandVendingMachineExample", resourceCulture);
             }
         }
         
@@ -7317,6 +7264,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Random.
+        /// </summary>
+        public static string Random {
+            get {
+                return ResourceManager.GetString("Random", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Random Streamer.
         /// </summary>
         public static string RandomStreamer {
@@ -9338,6 +9294,15 @@ namespace MixItUp.Base {
         public static string Tags {
             get {
                 return ResourceManager.GetString("Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Targeted.
+        /// </summary>
+        public static string Targeted {
+            get {
+                return ResourceManager.GetString("Targeted", resourceCulture);
             }
         }
         

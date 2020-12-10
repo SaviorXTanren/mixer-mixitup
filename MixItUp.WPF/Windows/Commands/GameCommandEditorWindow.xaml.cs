@@ -45,8 +45,6 @@ namespace MixItUp.WPF.Windows.Commands
                     break;
                 case GameCommandTypeEnum.LockBox:
                     break;
-                case GameCommandTypeEnum.Pickpocket:
-                    break;
                 case GameCommandTypeEnum.Roulette:
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
@@ -62,8 +60,6 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.TreasureDefense:
                     break;
                 case GameCommandTypeEnum.Trivia:
-                    break;
-                case GameCommandTypeEnum.VendingMachine:
                     break;
                 case GameCommandTypeEnum.Volcano:
                     break;
@@ -101,8 +97,6 @@ namespace MixItUp.WPF.Windows.Commands
                     break;
                 case GameCommandTypeEnum.LockBox:
                     break;
-                case GameCommandTypeEnum.Pickpocket:
-                    break;
                 case GameCommandTypeEnum.Roulette:
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
@@ -118,8 +112,6 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.TreasureDefense:
                     break;
                 case GameCommandTypeEnum.Trivia:
-                    break;
-                case GameCommandTypeEnum.VendingMachine:
                     break;
                 case GameCommandTypeEnum.Volcano:
                     break;

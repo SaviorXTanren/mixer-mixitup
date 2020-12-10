@@ -84,6 +84,8 @@ namespace MixItUp.Base.Model.Commands
             }
         }
 
+        public bool IsTargetUserSelf { get { return this.TargetUser == this.User; } }
+
         public CommandParametersModel Duplicate()
         {
             CommandParametersModel result = new CommandParametersModel(this.User, this.Platform, this.Arguments, this.SpecialIdentifiers);

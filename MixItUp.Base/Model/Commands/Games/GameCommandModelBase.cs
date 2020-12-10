@@ -24,7 +24,6 @@ namespace MixItUp.Base.Model.Commands.Games
         Hitman,
         HotPotato,
         LockBox,
-        Pickpocket,
         Roulette,
         RussianRoulette,
         SlotMachine,
@@ -32,7 +31,6 @@ namespace MixItUp.Base.Model.Commands.Games
         Steal,
         TreasureDefense,
         Trivia,
-        VendingMachine,
         Volcano,
         WordScramble
     }
