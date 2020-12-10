@@ -581,6 +581,9 @@
       <DependentUpon>EventCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\Games\GameCommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>SlotMachineGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>SpinGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -672,9 +675,6 @@
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml.cs">
       <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml.cs">
-      <DependentUpon>SlotMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TriviaGameEditorControl.xaml.cs">
       <DependentUpon>TriviaGameEditorControl.xaml</DependentUpon>
@@ -1441,6 +1441,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1558,10 +1562,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

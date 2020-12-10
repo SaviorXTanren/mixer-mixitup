@@ -3809,4 +3809,37 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="SuccessProbability" xml:space="preserve">
     <value>Success Probability</value>
   </data>
+  <data name="GameCommandSlotMachineAllSymbolsMustBeUnique" xml:space="preserve">
+    <value>All slot symbols must be unique</value>
+  </data>
+  <data name="GameCommandSlotMachineAtLeast2Symbols" xml:space="preserve">
+    <value>At least 2 slots symbols must be entered</value>
+  </data>
+  <data name="GameCommandSlotMachineLoseExample" xml:space="preserve">
+    <value>Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...</value>
+  </data>
+  <data name="GameCommandSlotMachineOutcomeMissingSymbol" xml:space="preserve">
+    <value>An outcome is missing a symbol</value>
+  </data>
+  <data name="GameCommandSlotMachineOutcomeSymbolNotInAllSymbols" xml:space="preserve">
+    <value>An outcome contains a symbol not found in the set of all slot symbols</value>
+  </data>
+  <data name="GameCommandSlotMachineWinExample" xml:space="preserve">
+    <value>Result: $gameslotsoutcome - @$username walks away with $gamepayout {0}!</value>
+  </data>
+  <data name="Outcome" xml:space="preserve">
+    <value>Outcome</value>
+  </data>
+  <data name="Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="AnyOrder" xml:space="preserve">
+    <value>Any Order</value>
+  </data>
+  <data name="AvailableSymbols" xml:space="preserve">
+    <value>Available Symbols</value>
+  </data>
+  <data name="Symbols" xml:space="preserve">
+    <value>Symbols</value>
+  </data>
 </root>

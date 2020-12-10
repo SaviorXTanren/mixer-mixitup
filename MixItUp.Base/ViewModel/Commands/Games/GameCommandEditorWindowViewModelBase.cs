@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetRoleProbabilityPayoutProperties();
         }
         
-        public Result Validate()
+        public virtual Result Validate()
         {
             if (string.IsNullOrEmpty(this.Name))
             {
@@ -190,7 +190,7 @@ namespace MixItUp.Base.ViewModel.Games
             return new Result();
         }
 
-        public GameOutcomeModel GetModel() { return new GameOutcomeModel(this.Name, this.RoleProbabilityPayouts.ToDictionary(rpp => rpp.Role, rpp => rpp.GetModel()), this.Command); }
+        public virtual GameOutcomeModel GetModel() { return new GameOutcomeModel(this.Name, this.RoleProbabilityPayouts.ToDictionary(rpp => rpp.Role, rpp => rpp.GetModel()), this.Command); }
 
         private void SetRoleProbabilityPayoutProperties()
         {

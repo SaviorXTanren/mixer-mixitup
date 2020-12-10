@@ -745,6 +745,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Any Order.
+        /// </summary>
+        public static string AnyOrder {
+            get {
+                return ResourceManager.GetString("AnyOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Append To File.
         /// </summary>
         public static string AppendToFile {
@@ -921,6 +930,15 @@ namespace MixItUp.Base {
         public static string AutoReplenish {
             get {
                 return ResourceManager.GetString("AutoReplenish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available Symbols.
+        /// </summary>
+        public static string AvailableSymbols {
+            get {
+                return ResourceManager.GetString("AvailableSymbols", resourceCulture);
             }
         }
         
@@ -4053,6 +4071,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All slot symbols must be unique.
+        /// </summary>
+        public static string GameCommandSlotMachineAllSymbolsMustBeUnique {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineAllSymbolsMustBeUnique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least 2 slots symbols must be entered.
+        /// </summary>
+        public static string GameCommandSlotMachineAtLeast2Symbols {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineAtLeast2Symbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Slot Machine game picks a random set of 3 symbols from a pre-defined list and selects any outcome that matches those symbols. Besides selecting a payout for each outcome, you can also run a customized command for each outcome..
         /// </summary>
         public static string GameCommandSlotMachineDescription {
@@ -4067,6 +4103,42 @@ namespace MixItUp.Base {
         public static string GameCommandSlotMachineExample {
             get {
                 return ResourceManager.GetString("GameCommandSlotMachineExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time....
+        /// </summary>
+        public static string GameCommandSlotMachineLoseExample {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineLoseExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome is missing a symbol.
+        /// </summary>
+        public static string GameCommandSlotMachineOutcomeMissingSymbol {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineOutcomeMissingSymbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An outcome contains a symbol not found in the set of all slot symbols.
+        /// </summary>
+        public static string GameCommandSlotMachineOutcomeSymbolNotInAllSymbols {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineOutcomeSymbolNotInAllSymbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result: $gameslotsoutcome - @$username walks away with $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandSlotMachineWinExample {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineWinExample", resourceCulture);
             }
         }
         
@@ -6648,6 +6720,15 @@ namespace MixItUp.Base {
         public static string Orange {
             get {
                 return ResourceManager.GetString("Orange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outcome.
+        /// </summary>
+        public static string Outcome {
+            get {
+                return ResourceManager.GetString("Outcome", resourceCulture);
             }
         }
         
@@ -9321,6 +9402,24 @@ namespace MixItUp.Base {
         public static string SuccessTriggerType {
             get {
                 return ResourceManager.GetString("SuccessTriggerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbol.
+        /// </summary>
+        public static string Symbol {
+            get {
+                return ResourceManager.GetString("Symbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbols.
+        /// </summary>
+        public static string Symbols {
+            get {
+                return ResourceManager.GetString("Symbols", resourceCulture);
             }
         }
         

@@ -1,83 +1,103 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class SlotMachineOutcome : UIViewModelBase
+    public class SlotMachineGameOutcomeViewModel : GameOutcomeViewModel
     {
-        public string Symbol1 { get; set; }
-        public string Symbol2 { get; set; }
-        public string Symbol3 { get; set; }
+        public string Symbol1
+        {
+            get { return this.symbol1; }
+            set
+            {
+                this.symbol1 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string symbol1;
 
-        public CustomCommand Command { get; set; }
+        public string Symbol2
+        {
+            get { return this.symbol2; }
+            set
+            {
+                this.symbol2 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string symbol2;
 
-        public double UserPayout { get; set; }
-        public double SubscriberPayout { get; set; }
-        public double ModPayout { get; set; }
+        public string Symbol3
+        {
+            get { return this.symbol3; }
+            set
+            {
+                this.symbol3 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string symbol3;
 
-        public bool AnyOrder { get; set; }
+        public bool AnyOrder
+        { 
+            get { return this.anyOrder; }
+            set
+            {
+                this.anyOrder = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool anyOrder;
 
-        public SlotMachineOutcome(string symbol1, string symbol2, string symbol3, CustomCommand command, double userPayout = 0, double subscriberPayout = 0, double modPayout = 0, bool anyOrder = false)
+        public SlotMachineGameOutcomeViewModel(CustomCommandModel command) : this(0, command, string.Empty, string.Empty, string.Empty) { }
+
+        public SlotMachineGameOutcomeViewModel(double payout, CustomCommandModel command, string symbol1, string symbol2, string symbol3, bool anyOrder = false)
+            : base(MixItUp.Base.Resources.Outcome, 0, payout, command)
         {
             this.Symbol1 = symbol1;
             this.Symbol2 = symbol2;
             this.Symbol3 = symbol3;
             this.AnyOrder = anyOrder;
-            this.Command = command;
-            this.UserPayout = userPayout;
-            this.SubscriberPayout = subscriberPayout;
-            this.ModPayout = modPayout;
         }
 
-        public SlotMachineOutcome(SlotsGameOutcome outcome)
+        public SlotMachineGameOutcomeViewModel(SlotMachineGameOutcomeModel outcome)
+            : base(outcome)
         {
-            this.Symbol1 = outcome.Symbol1;
-            this.Symbol2 = outcome.Symbol2;
-            this.Symbol3 = outcome.Symbol3;
+            this.Symbol1 = outcome.Symbols[0];
+            this.Symbol2 = outcome.Symbols[1];
+            this.Symbol3 = outcome.Symbols[2];
             this.AnyOrder = outcome.AnyOrder;
-            this.Command = outcome.Command;
-            this.UserPayout = outcome.RolePayouts[UserRoleEnum.User] * 100.0;
-            this.SubscriberPayout = outcome.RolePayouts[UserRoleEnum.Subscriber] * 100.0;
-            this.ModPayout = outcome.RolePayouts[UserRoleEnum.Mod] * 100.0;
         }
 
-        public string UserPayoutString
+        public override Result Validate()
         {
-            get { return this.UserPayout.ToString(); }
-            set { this.UserPayout = this.GetPositiveIntFromString(value); }
+            Result result = base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(this.Symbol1) || string.IsNullOrEmpty(this.Symbol2) || string.IsNullOrEmpty(this.Symbol3))
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandSlotMachineOutcomeMissingSymbol);
+            }
+
+            return new Result();
         }
 
-        public string SubscriberPayoutString
+        public new SlotMachineGameOutcomeModel GetModel()
         {
-            get { return this.SubscriberPayout.ToString(); }
-            set { this.SubscriberPayout = this.GetPositiveIntFromString(value); }
-        }
-
-        public string ModPayoutString
-        {
-            get { return this.ModPayout.ToString(); }
-            set { this.ModPayout = this.GetPositiveIntFromString(value); }
-        }
-
-        public SlotsGameOutcome GetGameOutcome()
-        {
-            return new SlotsGameOutcome(this.Symbol1 + " " + this.Symbol2 + " " + this.Symbol3, this.Symbol1, this.Symbol2, this.Symbol3,
-                new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout / 100.0 }, { UserRoleEnum.Subscriber, this.SubscriberPayout / 100.0 }, { UserRoleEnum.Mod, this.ModPayout / 100.0 } },
-                this.Command, this.AnyOrder);
+            return new SlotMachineGameOutcomeModel(this.Name, this.RoleProbabilityPayouts.ToDictionary(rpp => rpp.Role, rpp => rpp.GetModel()), this.Command, new List<string>() { this.Symbol1, this.Symbol2, this.Symbol3 }, this.AnyOrder);
         }
     }
 
-    public class SlotMachineGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class SlotMachineGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
         public string Symbols
         {
@@ -88,128 +108,81 @@ namespace MixItUp.Base.ViewModel.Games
                 this.NotifyPropertyChanged();
             }
         }
-        private string symbols = "X O $";
+        private string symbols;
 
-        public ObservableCollection<SlotMachineOutcome> Outcomes { get; set; } = new ObservableCollection<SlotMachineOutcome>();
+        public CustomCommandModel FailureCommand
+        {
+            get { return this.failureCommand; }
+            set
+            {
+                this.failureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel failureCommand;
 
-        public CustomCommand FailureOutcomeCommand { get; set; }
-
-        public ICommand AddOutcomeCommand { get; set; }
-        public ICommand DeleteOutcomeCommand { get; set; }
-
-        private SlotMachineGameCommand existingCommand;
+        public SlotMachineGameCommandEditorWindowViewModel(SlotMachineGameCommandModel command)
+            : base(command)
+        {
+            this.Symbols = string.Join(" ", command.Symbols);
+            this.FailureCommand = command.FailureCommand;
+            foreach (SlotMachineGameOutcomeModel outcome in command.Outcomes)
+            {
+                this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(outcome));
+            }
+        }
 
         public SlotMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.FailureOutcomeCommand = this.CreateBasicChatCommand("Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...");
-
-            this.Outcomes.Add(new SlotMachineOutcome("O", "O", "O", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 200, 200, 200));
-            this.Outcomes.Add(new SlotMachineOutcome("$", "O", "$", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 150, 150, 150, anyOrder: true));
-            this.Outcomes.Add(new SlotMachineOutcome("X", "$", "O", this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!"), 500, 500, 500, anyOrder: true));
+            this.Symbols = "X O $";
+            this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSlotMachineLoseExample);
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(500, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "O", "O", "O"));
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "$", "O", "$"));
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(150, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "X", "$", "O", anyOrder: true));
         }
 
-        public SlotMachineGameCommandEditorWindowViewModel(SlotMachineGameCommand command)
-            : this()
+        public IEnumerable<string> SymbolsList { get { return (!string.IsNullOrEmpty(this.Symbols)) ? this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }
+
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.Symbols = string.Join(" ", this.existingCommand.AllSymbols);
-            this.FailureOutcomeCommand = this.existingCommand.FailureOutcomeCommand;
-
-            foreach (GameOutcome outcome in this.existingCommand.Outcomes)
-            {
-                this.Outcomes.Add(new SlotMachineOutcome((SlotsGameOutcome)outcome));
-            }
+            return Task.FromResult<CommandModelBase>(new SlotMachineGameCommandModel(this.Name, this.GetChatTriggers(), this.Outcomes.Select(o => ((SlotMachineGameOutcomeViewModel)o).GetModel()), this.SymbolsList, this.FailureCommand));
         }
 
-        private SlotMachineGameCommandEditorWindowViewModel()
+        public override async Task<Result> Validate()
         {
-            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                CurrencyModel currency = (CurrencyModel)parameter;
-                this.Outcomes.Add(new SlotMachineOutcome(null, null, null, this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!")));
-                return Task.FromResult(0);
-            });
-
-            this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
-            {
-                this.Outcomes.Remove((SlotMachineOutcome)parameter);
-                return Task.FromResult(0);
-            });
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            List<string> symbolsList = new List<string>(this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
-
-            GameCommandBase newCommand = new SlotMachineGameCommand(name, triggers, requirements, this.Outcomes.Select(o => o.GetGameOutcome()), symbolsList, this.FailureOutcomeCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (string.IsNullOrEmpty(this.Symbols))
-            {
-                await DialogHelper.ShowMessage("No slot symbols have been entered");
-                return false;
+                return result;
             }
 
-            List<string> symbolsList = new List<string>(this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
-            if (symbolsList.Count < 2)
+            IEnumerable<string> symbolsList = this.SymbolsList;
+            if (symbolsList.Count() < 2)
             {
-                await DialogHelper.ShowMessage("At least 2 slots symbols must be entered");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandSlotMachineAtLeast2Symbols);
             }
 
             if (symbolsList.GroupBy(s => s).Any(g => g.Count() > 1))
             {
-                await DialogHelper.ShowMessage("All slot symbols must be unique");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandSlotMachineAllSymbolsMustBeUnique);
             }
 
             HashSet<string> symbols = new HashSet<string>(symbolsList);
-
-            foreach (SlotMachineOutcome outcome in this.Outcomes)
+            if (this.Outcomes.Count() == 0)
             {
-                if (string.IsNullOrEmpty(outcome.Symbol1) || string.IsNullOrEmpty(outcome.Symbol2) || string.IsNullOrEmpty(outcome.Symbol3))
-                {
-                    await DialogHelper.ShowMessage("An outcome is missing its symbols");
-                    return false;
-                }
+                return new Result(MixItUp.Base.Resources.GameCommandAtLeast1Outcome);
+            }
 
+            foreach (SlotMachineGameOutcomeViewModel outcome in this.Outcomes)
+            {
                 if (!symbols.Contains(outcome.Symbol1) || !symbols.Contains(outcome.Symbol2) || !symbols.Contains(outcome.Symbol3))
                 {
-                    await DialogHelper.ShowMessage("An outcome contains a symbol not found in the set of all slot symbols");
-                    return false;
-                }
-
-                if (outcome.UserPayout < 0)
-                {
-                    await DialogHelper.ShowMessage("The User Payout %'s is not a valid number greater than or equal to 0");
-                    return false;
-                }
-
-                if (outcome.SubscriberPayout < 0)
-                {
-                    await DialogHelper.ShowMessage("The Subscriber Payout %'s is not a valid number greater than or equal to 0");
-                    return false;
-                }
-
-                if (outcome.ModPayout < 0)
-                {
-                    await DialogHelper.ShowMessage("The Mod Payout %'s is not a valid number greater than or equal to 0");
-                    return false;
-                }
-
-                if (outcome.Command == null)
-                {
-                    await DialogHelper.ShowMessage("An outcome is missing a command");
-                    return false;
+                    return new Result(MixItUp.Base.Resources.GameCommandSlotMachineOutcomeSymbolNotInAllSymbols);
                 }
             }
 
-            return true;
+            return new Result();
         }
     }
 }
