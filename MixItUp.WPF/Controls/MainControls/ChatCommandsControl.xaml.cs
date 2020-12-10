@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (command != null)
             {
                 CommandEditorWindow window = new CommandEditorWindow(command);
-                window.Closed += Window_Closed;
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.ChatCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
-                    this.viewModel.FullRefresh();
+                    this.viewModel.RemoveCommand(command);
                 }
             });
         }
@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Chat);
-            window.Closed += Window_Closed;
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 

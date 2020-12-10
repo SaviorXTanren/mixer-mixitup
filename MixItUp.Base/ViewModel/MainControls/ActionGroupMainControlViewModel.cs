@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 

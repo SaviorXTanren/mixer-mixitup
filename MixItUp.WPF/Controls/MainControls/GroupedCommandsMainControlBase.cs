@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModel.MainControls;
 using System.Windows;
 
@@ -13,9 +14,9 @@ namespace MixItUp.WPF.Controls.MainControls
             this.viewModel = viewModel;
         }
 
-        protected void Window_Closed(object sender, System.EventArgs e)
+        protected void Window_CommandSaved(object sender, CommandModelBase e)
         {
-            this.viewModel.FullRefresh();
+            this.viewModel.AddCommand(e);
         }
 
         protected void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)

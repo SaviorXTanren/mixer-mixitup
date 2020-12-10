@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Commands;
-using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -42,14 +41,31 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 groupSettings = ChannelSession.Settings.CommandGroups[command.GroupName];
             }
+
+            for (int i = 0; i < this.CommandGroups.Count; i++)
+            {
+                if (string.Compare(groupSettings.Name, this.CommandGroups[i].DisplayName, ignoreCase: true) < 0)
+                {
+                    this.CommandGroups.Insert(i, new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command }));
+                    return;
+                }
+            }
             this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command }));
         }
 
         public void RemoveCommand(CommandModelBase command)
         {
-            foreach (CommandGroupControlViewModel group in this.CommandGroups)
+            CommandGroupControlViewModel group = null;
+            foreach (CommandGroupControlViewModel g in this.CommandGroups)
             {
+                group = g;
                 group.RemoveCommand(command);
+                break;
+            }
+
+            if (group != null && !group.HasCommands)
+            {
+                this.CommandGroups.Remove(group);
             }
         }
 
