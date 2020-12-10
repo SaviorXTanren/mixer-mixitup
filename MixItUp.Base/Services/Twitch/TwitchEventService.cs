@@ -531,13 +531,14 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredUserData] = user.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsCheeredAmountData] = bitsCheered.Amount;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
-            trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
-            trigger.SpecialIdentifiers["message"] = bitsCheered.Message;
-            await ChannelSession.Services.Events.PerformEvent(trigger);
-
+            if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, bitsCheered.Message)))
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
+                trigger.SpecialIdentifiers["bitsamount"] = bitsCheered.Amount.ToString();
+                trigger.SpecialIdentifiers["message"] = bitsCheered.Message;
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Cheered {1} Bits", user.Username, bitsCheered.Amount), ChannelSession.Settings.AlertBitsCheeredColor));
-
             GlobalEvents.BitsOccurred(bitsCheered);
         }
 
@@ -587,11 +588,13 @@ namespace MixItUp.Base.Services.Twitch
                         }
                     }
 
-                    await ChannelSession.Services.Events.PerformEvent(trigger);
+                    if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, trigger.SpecialIdentifiers["message"])))
+                    {
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
                 }
 
                 GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, months));
-
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Re-Subscribed For {1} Months at {2}", user.Username, months, planTier), ChannelSession.Settings.AlertSubColor));
             }
         }
@@ -770,16 +773,18 @@ namespace MixItUp.Base.Services.Twitch
                 arguments = new List<string>(redemption.user_input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, specialIdentifiers);
-            trigger.Arguments = arguments;
-            await ChannelSession.Services.Events.PerformEvent(trigger);
-
-            TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
-            if (command != null)
+            if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, redemption.user_input)))
             {
-                await command.Perform(new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
-            }
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, specialIdentifiers);
+                trigger.Arguments = arguments;
+                await ChannelSession.Services.Events.PerformEvent(trigger);
 
+                TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
+                if (command != null)
+                {
+                    await command.Perform(new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                }
+            }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.Username, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));
         }
 
