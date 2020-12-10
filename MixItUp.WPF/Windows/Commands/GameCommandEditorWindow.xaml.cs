@@ -56,6 +56,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new SpinGameCommandEditorWindowViewModel((SpinGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Steal:
+                    this.editorDetailsControl = new StealGameCommandEditorDetailsControl();
+                    this.viewModel = new StealGameCommandEditorWindowViewModel((StealGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.TreasureDefense:
                     break;
@@ -108,6 +110,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new SpinGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Steal:
+                    this.editorDetailsControl = new StealGameCommandEditorDetailsControl();
+                    this.viewModel = new StealGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.TreasureDefense:
                     break;

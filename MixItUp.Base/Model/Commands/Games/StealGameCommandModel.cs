@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -6,6 +7,8 @@ namespace MixItUp.Base.Model.Commands.Games
 {
     public enum StealGamePlayerSelectionType
     {
+        [Obsolete]
+        None = 0,
         Targeted = 1,
         Random = 2,
     }

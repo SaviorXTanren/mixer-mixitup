@@ -14,7 +14,7 @@
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </UserControl.Resources>
     
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />

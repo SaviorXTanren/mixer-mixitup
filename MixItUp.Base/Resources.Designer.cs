@@ -1654,6 +1654,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}:.
+        /// </summary>
+        public static string ColumnHeaderFormat {
+            get {
+                return ResourceManager.GetString("ColumnHeaderFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Column #.
         /// </summary>
         public static string ColumnNumber {
@@ -3953,6 +3962,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Probabilities must be between 1 - 100.
+        /// </summary>
+        public static string GameCommandProbabilityMustBeBetween1And100 {
+            get {
+                return ResourceManager.GetString("GameCommandProbabilityMustBeBetween1And100", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The probability for the role {0} does not add up to 100 across all outcomes.
         /// </summary>
         public static string GameCommandRoleProbabilityNotEqualTo100 {
@@ -4122,6 +4140,33 @@ namespace MixItUp.Base {
         public static string GameCommandStealExample {
             get {
                 return ResourceManager.GetString("GameCommandStealExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username was unable to steal from @$targetusername....
+        /// </summary>
+        public static string GameCommandStealLoseExample {
+            get {
+                return ResourceManager.GetString("GameCommandStealLoseExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One user selection type must be selected.
+        /// </summary>
+        public static string GameCommandStealOneUserSelectionTypeMustBeSelected {
+            get {
+                return ResourceManager.GetString("GameCommandStealOneUserSelectionTypeMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username stole $gamepayout {0} from @$targetusername!.
+        /// </summary>
+        public static string GameCommandStealWinExample {
+            get {
+                return ResourceManager.GetString("GameCommandStealWinExample", resourceCulture);
             }
         }
         
@@ -9262,6 +9307,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Success Probability.
+        /// </summary>
+        public static string SuccessProbability {
+            get {
+                return ResourceManager.GetString("SuccessProbability", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success Trigger Type.
         /// </summary>
         public static string SuccessTriggerType {
@@ -10331,6 +10385,15 @@ namespace MixItUp.Base {
         public static string Users {
             get {
                 return ResourceManager.GetString("Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Selection.
+        /// </summary>
+        public static string UserSelection {
+            get {
+                return ResourceManager.GetString("UserSelection", resourceCulture);
             }
         }
         

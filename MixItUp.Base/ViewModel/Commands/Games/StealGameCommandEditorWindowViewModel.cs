@@ -1,102 +1,111 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class StealGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class StealGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string UserPercentageString
+        public bool UserSelectionTargeted
         {
-            get { return this.UserPercentage.ToString(); }
+            get { return this.userSelectionTargeted; }
             set
             {
-                this.UserPercentage = this.GetPositiveIntFromString(value);
+                this.userSelectionTargeted = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int UserPercentage { get; set; } = 60;
+        private bool userSelectionTargeted;
 
-        public string SubscriberPercentageString
+        public bool UserSelectionRandom
         {
-            get { return this.SubscriberPercentage.ToString(); }
+            get { return this.userSelectionRandom; }
             set
             {
-                this.SubscriberPercentage = this.GetPositiveIntFromString(value);
+                this.userSelectionRandom = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int SubscriberPercentage { get; set; } = 60;
+        private bool userSelectionRandom;
 
-        public string ModPercentageString
+        public GameOutcomeViewModel SuccessfulOutcome
         {
-            get { return this.ModPercentage.ToString(); }
+            get { return this.successfulOutcome; }
             set
             {
-                this.ModPercentage = this.GetPositiveIntFromString(value);
+                this.successfulOutcome = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int ModPercentage { get; set; } = 60;
+        private GameOutcomeViewModel successfulOutcome;
 
-        public CustomCommand SuccessOutcomeCommand { get; set; }
-        public CustomCommand FailOutcomeCommand { get; set; }
+        public GameOutcomeViewModel FailedOutcome
+        {
+            get { return this.failedOutcome; }
+            set
+            {
+                this.failedOutcome = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private GameOutcomeViewModel failedOutcome;
 
-        private StealGameCommand existingCommand;
+        public StealGameCommandEditorWindowViewModel(StealGameCommandModel command)
+            : base(command)
+        {
+            this.UserSelectionTargeted = command.SelectionType.HasFlag(StealGamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.SelectionType.HasFlag(StealGamePlayerSelectionType.Random);
+
+            this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
+            this.FailedOutcome = new GameOutcomeViewModel(command.FailedOutcome);
+        }
 
         public StealGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username stole $gamepayout " + currency.Name + " from @$targetusername!");
-            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from @$targetusername...");
+            this.UserSelectionTargeted = true;
+            this.UserSelectionRandom = true;
+
+            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandStealWinExample, currency.Name)));
+            this.FailedOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 0, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandStealLoseExample));
         }
 
-        public StealGameCommandEditorWindowViewModel(StealGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
+#pragma warning disable CS0612 // Type or member is obsolete
+            StealGamePlayerSelectionType selectionType = StealGamePlayerSelectionType.None;
+#pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= StealGamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= StealGamePlayerSelectionType.Random; }
 
-            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.User];
-            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
-            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Mod];
-
-            this.SuccessOutcomeCommand = this.existingCommand.SuccessfulOutcome.Command;
-            this.FailOutcomeCommand = this.existingCommand.FailedOutcome.Command;
+            return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), selectionType, this.SuccessfulOutcome.GetModel(), this.FailedOutcome.GetModel()));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserPercentage }, { UserRoleEnum.Subscriber, this.SubscriberPercentage }, { UserRoleEnum.Mod, this.ModPercentage } };
-            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserPercentage }, { UserRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { UserRoleEnum.Mod, 100 - this.ModPercentage } };
-
-            GameCommandBase newCommand = new StealGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
-                new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand));
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.UserPercentage < 0 || this.UserPercentage > 100)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The User Chance %'s is not a valid number between 0 - 100");
-                return false;
+                return result;
             }
 
-            if (this.SubscriberPercentage < 0 || this.SubscriberPercentage > 100)
+            if (!this.UserSelectionTargeted && !this.UserSelectionRandom)
             {
-                await DialogHelper.ShowMessage("The Sub Chance %'s is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandStealOneUserSelectionTypeMustBeSelected);
             }
 
-            if (this.ModPercentage < 0 || ModPercentage > 100)
+            foreach (RoleProbabilityPayoutViewModel rpp in this.SuccessfulOutcome.RoleProbabilityPayouts)
             {
-                await DialogHelper.ShowMessage("The Mod Chance %'s is not a valid number between 0 - 100");
-                return false;
+                if (rpp.Probability <= 0 || rpp.Probability > 100)
+                {
+                    return new Result(MixItUp.Base.Resources.GameCommandProbabilityMustBeBetween1And100);
+                }
             }
 
-            return true;
+            return new Result();
         }
     }
 }

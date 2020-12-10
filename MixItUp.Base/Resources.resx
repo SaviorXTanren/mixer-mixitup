@@ -3788,4 +3788,25 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="Targeted" xml:space="preserve">
     <value>Targeted</value>
   </data>
+  <data name="GameCommandStealLoseExample" xml:space="preserve">
+    <value>@$username was unable to steal from @$targetusername...</value>
+  </data>
+  <data name="GameCommandStealWinExample" xml:space="preserve">
+    <value>@$username stole $gamepayout {0} from @$targetusername!</value>
+  </data>
+  <data name="UserSelection" xml:space="preserve">
+    <value>User Selection</value>
+  </data>
+  <data name="ColumnHeaderFormat" xml:space="preserve">
+    <value>{0}:</value>
+  </data>
+  <data name="GameCommandProbabilityMustBeBetween1And100" xml:space="preserve">
+    <value>Probabilities must be between 1 - 100</value>
+  </data>
+  <data name="GameCommandStealOneUserSelectionTypeMustBeSelected" xml:space="preserve">
+    <value>One user selection type must be selected</value>
+  </data>
+  <data name="SuccessProbability" xml:space="preserve">
+    <value>Success Probability</value>
+  </data>
 </root>

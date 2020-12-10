@@ -584,6 +584,9 @@
     <Compile Include="Controls\Commands\Games\SpinGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>SpinGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\StealGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>StealGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -672,9 +675,6 @@
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml.cs">
       <DependentUpon>SlotMachineGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\StealGameEditorControl.xaml.cs">
-      <DependentUpon>StealGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TriviaGameEditorControl.xaml.cs">
       <DependentUpon>TriviaGameEditorControl.xaml</DependentUpon>
@@ -1445,6 +1445,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\StealGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1558,10 +1562,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\SlotMachineGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\StealGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

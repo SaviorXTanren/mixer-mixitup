@@ -9,13 +9,10 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class SpinGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        private SpinGameCommandModel existingCommand;
-
         public SpinGameCommandEditorWindowViewModel(SpinGameCommandModel command)
             : base(command)
         {
-            this.existingCommand = command;
-            foreach (GameOutcomeModel outcome in this.existingCommand.Outcomes)
+            foreach (GameOutcomeModel outcome in command.Outcomes)
             {
                 this.Outcomes.Add(new GameOutcomeViewModel(outcome));
             }
