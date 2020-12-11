@@ -402,7 +402,7 @@ namespace MixItUp.Base.Services
 
         private string PrepareTextForChecking(string text)
         {
-            string result = text.ToLower();
+            string result = string.IsNullOrEmpty(text) ? string.Empty : text.ToLower();
             result = ChatListControlViewModel.UserNameTagRegex.Replace(result, "");
             return result;
         }
