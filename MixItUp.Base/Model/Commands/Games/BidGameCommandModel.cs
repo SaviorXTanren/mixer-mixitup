@@ -12,17 +12,20 @@ namespace MixItUp.Base.Model.Commands.Games
     public class BidGameCommandModel : GameCommandModelBase
     {
         [DataMember]
-        public UserRoleEnum StartRoleRequirement { get; set; }
+        public UserRoleEnum StarterRole { get; set; }
+        [DataMember]
+        public int InitialAmount { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
+
         [DataMember]
-        public CustomCommandModel UserJoinCommand { get; set; }
+        public CustomCommandModel NewTopBidderCommand { get; set; }
+
         [DataMember]
         public CustomCommandModel NotEnoughPlayersCommand { get; set; }
-
         [DataMember]
         public CustomCommandModel GameCompleteCommand { get; set; }
 
@@ -35,14 +38,15 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int lastBidAmount;
 
-        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum startRoleRequirement, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel userJoinCommand,
+        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int initialAmount, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
             CustomCommandModel notEnoughPlayersCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bid)
         {
-            this.StartRoleRequirement = startRoleRequirement;
+            this.StarterRole = starterRole;
+            this.InitialAmount = initialAmount;
             this.TimeLimit = timeLimit;
             this.StartedCommand = startedCommand;
-            this.UserJoinCommand = userJoinCommand;
+            this.NewTopBidderCommand = newTopBidderCommand;
             this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
             this.GameCompleteCommand = gameCompleteCommand;
         }
@@ -53,7 +57,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             List<CommandModelBase> commands = new List<CommandModelBase>();
             commands.Add(this.StartedCommand);
-            commands.Add(this.UserJoinCommand);
+            commands.Add(this.NewTopBidderCommand);
             commands.Add(this.NotEnoughPlayersCommand);
             commands.Add(this.GameCompleteCommand);
             return commands;
@@ -67,10 +71,13 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                if (parameters.User.HasPermissionsTo(this.StartRoleRequirement))
+                if (parameters.User.HasPermissionsTo(this.StarterRole))
                 {
                     this.gameActive = true;
+                    this.lastBidAmount = this.InitialAmount;
+
                     this.runParameters = parameters;
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.InitialAmount.ToString();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
@@ -94,7 +101,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.StartedCommand.Perform(parameters);
                     return false;
                 }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StartRoleRequirement));
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
             }
             return false;
         }
@@ -109,7 +116,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.lastBidParameters = parameters;
                 this.lastBidAmount = betAmount;
 
-                await this.UserJoinCommand.Perform(parameters);
+                await this.NewTopBidderCommand.Perform(parameters);
                 this.ResetCooldown();
             }
             else

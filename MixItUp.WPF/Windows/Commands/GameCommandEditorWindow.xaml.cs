@@ -30,6 +30,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Bet:
                     break;
                 case GameCommandTypeEnum.Bid:
+                    this.editorDetailsControl = new BidGameCommandEditorDetailsControl();
+                    this.viewModel = new BidGameCommandEditorWindowViewModel((BidGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.CoinPusher:
                     this.editorDetailsControl = new CoinPusherGameCommandEditorDetailsControl();
@@ -88,6 +90,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Bet:
                     break;
                 case GameCommandTypeEnum.Bid:
+                    this.editorDetailsControl = new BidGameCommandEditorDetailsControl();
+                    this.viewModel = new BidGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.CoinPusher:
                     this.editorDetailsControl = new CoinPusherGameCommandEditorDetailsControl();

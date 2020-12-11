@@ -3709,6 +3709,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $gamewinners won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize....
+        /// </summary>
+        public static string GameCommandBidGameCompleteExample {
+            get {
+                return ResourceManager.GetString("GameCommandBidGameCompleteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial Amount.
+        /// </summary>
+        public static string GameCommandBidInitialAmount {
+            get {
+                return ResourceManager.GetString("GameCommandBidInitialAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial amount must be a positive number.
+        /// </summary>
+        public static string GameCommandBidInitialAmountMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandBidInitialAmountMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Top Bidder.
+        /// </summary>
+        public static string GameCommandBidNewTopBidder {
+            get {
+                return ResourceManager.GetString("GameCommandBidNewTopBidder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has become the top bidder with $gamebet {0}! Type !bid &lt;AMOUNT&gt; in chat to outbid them!.
+        /// </summary>
+        public static string GameCommandBidNewTopBidderExample {
+            get {
+                return ResourceManager.GetString("GameCommandBidNewTopBidderExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a bidding war starting at $gamebet {0} for...______________! Type !bid &lt;AMOUNT&gt; in chat to outbid them!.
+        /// </summary>
+        public static string GameCommandBidStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandBidStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coin Pusher.
         /// </summary>
         public static string GameCommandCoinPusher {
@@ -3813,6 +3867,15 @@ namespace MixItUp.Base {
         public static string GameCommandDuelExample {
             get {
                 return ResourceManager.GetString("GameCommandDuelExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Complete.
+        /// </summary>
+        public static string GameCommandGameComplete {
+            get {
+                return ResourceManager.GetString("GameCommandGameComplete", resourceCulture);
             }
         }
         
@@ -4003,6 +4066,24 @@ namespace MixItUp.Base {
         public static string GameCommandLockBoxNotNumber {
             get {
                 return ResourceManager.GetString("GameCommandLockBoxNotNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Enough Players.
+        /// </summary>
+        public static string GameCommandNotEnoughPlayers {
+            get {
+                return ResourceManager.GetString("GameCommandNotEnoughPlayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username couldn&apos;t get enough users to join in....
+        /// </summary>
+        public static string GameCommandNotEnoughPlayersExample {
+            get {
+                return ResourceManager.GetString("GameCommandNotEnoughPlayersExample", resourceCulture);
             }
         }
         
@@ -4233,6 +4314,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Started.
+        /// </summary>
+        public static string GameCommandStarted {
+            get {
+                return ResourceManager.GetString("GameCommandStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starter Role.
+        /// </summary>
+        public static string GameCommandStarterRole {
+            get {
+                return ResourceManager.GetString("GameCommandStarterRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Settings.
+        /// </summary>
+        public static string GameCommandStartSettings {
+            get {
+                return ResourceManager.GetString("GameCommandStartSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to status.
         /// </summary>
         public static string GameCommandStatusArgument {
@@ -4302,6 +4410,24 @@ namespace MixItUp.Base {
         public static string GameCommandTargetUserInvalidAmount {
             get {
                 return ResourceManager.GetString("GameCommandTargetUserInvalidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Limit.
+        /// </summary>
+        public static string GameCommandTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandTimeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time limit must be a positive number.
+        /// </summary>
+        public static string GameCommandTimeLimitMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandTimeLimitMustBePositive", resourceCulture);
             }
         }
         

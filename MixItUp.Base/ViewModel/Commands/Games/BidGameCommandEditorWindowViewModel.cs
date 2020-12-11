@@ -1,108 +1,144 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class BidGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return EnumHelper.GetEnumList<UserRoleEnum>(); } }
 
-        private UserRoleEnum whoCanStart = UserRoleEnum.Mod;
-        public UserRoleEnum WhoCanStart
+        public UserRoleEnum SelectedStarterRole
         {
-            get { return this.whoCanStart; }
+            get { return this.selectedStarterRole; }
             set
             {
-                this.whoCanStart = value;
+                this.selectedStarterRole = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private UserRoleEnum selectedStarterRole;
 
-        public string MinimumParticipantsString
+        public int InitialAmount
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.initialAmount; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.initialAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 1;
+        private int initialAmount;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 60;
+        private int timeLimit;
 
-        public CustomCommand StartedCommand { get; set; }
-        public CustomCommand UserJoinedCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
-        public CustomCommand GameCompleteCommand { get; set; }
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
 
-        private BidGameCommand existingCommand;
+        public CustomCommandModel NewTopBidderCommand
+        {
+            get { return this.newTopBidderCommand; }
+            set
+            {
+                this.newTopBidderCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel newTopBidderCommand;
+
+        public CustomCommandModel NotEnoughPlayersCommand
+        {
+            get { return this.notEnoughPlayersCommand; }
+            set
+            {
+                this.notEnoughPlayersCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notEnoughPlayersCommand;
+
+        public CustomCommandModel GameCompleteCommand
+        {
+            get { return this.gameCompleteCommand; }
+            set
+            {
+                this.gameCompleteCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameCompleteCommand;
+
+        public BidGameCommandEditorWindowViewModel(BidGameCommandModel command)
+            : base(command)
+        {
+            this.SelectedStarterRole = command.StarterRole;
+            this.InitialAmount = command.InitialAmount;
+            this.TimeLimit = command.TimeLimit;
+            this.StartedCommand = command.StartedCommand;
+            this.NewTopBidderCommand = command.NewTopBidderCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.GameCompleteCommand = command.GameCompleteCommand;
+        }
 
         public BidGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a bidding war starting at $gamebet " + currency.Name + " for...SOMETHING! Type !bid <AMOUNT> in chat to outbid them!");
-            this.UserJoinedCommand = this.CreateBasicChatCommand("@$username has become the top bidder with $gamebet " + currency.Name + "! Type !bid <AMOUNT> in chat to outbid them!");
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
-            this.GameCompleteCommand = this.CreateBasicChatCommand("$gamewinners won the bidding war with a bid of $gamebet " + currency.Name + "! Listen closely for how to claim your prize...");
+            this.SelectedStarterRole = UserRoleEnum.Mod;
+            this.InitialAmount = 100;
+            this.TimeLimit = 60;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidStartedExample, currency.Name));
+            this.NewTopBidderCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidNewTopBidderExample, currency.Name));
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidGameCompleteExample, currency.Name));
         }
 
-        public BidGameCommandEditorWindowViewModel(BidGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.WhoCanStart = this.existingCommand.GameStarterRequirement.MixerRole;
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-            this.UserJoinedCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+            return Task.FromResult<CommandModelBase>(new BidGameCommandModel(this.Name, this.GetChatTriggers(), this.SelectedStarterRole, this.InitialAmount, this.TimeLimit, this.StartedCommand, this.NewTopBidderCommand,
+                this.NotEnoughPlayersCommand, this.GameCompleteCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
-            GameCommandBase newCommand = new BidGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
-                this.StartedCommand, this.UserJoinedCommand, this.GameCompleteCommand, this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.WhoCanStart < 0)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The Who Can Start Game must have a valid User Role selection");
-                return false;
+                return result;
             }
 
-            if (this.MinimumParticipants <= 0)
+            if (this.InitialAmount < 0)
             {
-                await DialogHelper.ShowMessage("The Minimum Users is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandBidInitialAmountMustBePositive);
             }
 
-            if (this.TimeLimit <= 0)
+            if (this.TimeLimit < 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            return true;
+            return new Result();
         }
     }
 }
