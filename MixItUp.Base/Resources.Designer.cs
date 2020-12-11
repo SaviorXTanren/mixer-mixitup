@@ -3736,6 +3736,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into the machine...and nothing happens. All $gametotalamount {0} stares back at you..
+        /// </summary>
+        public static string GameCommandCoinPusherLoseExample {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherLoseExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum payout must be a positive number.
+        /// </summary>
+        public static string GameCommandCoinPusherMinimumPayoutMustBePostive {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherMinimumPayoutMustBePostive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payout percentage amounts are invalid.
+        /// </summary>
+        public static string GameCommandCoinPusherPayoutPercentageInvalid {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherPayoutPercentageInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After spending a few minutes, you count $gametotalamount {0} inside the machine..
+        /// </summary>
+        public static string GameCommandCoinPusherStatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherStatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into the machine...and hits the jackpot, walking away with $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandCoinPusherWinExample {
+            get {
+                return ResourceManager.GetString("GameCommandCoinPusherWinExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid user could not be found.
         /// </summary>
         public static string GameCommandCouldNotFindUser {
@@ -4184,6 +4229,15 @@ namespace MixItUp.Base {
         public static string GameCommandSpinWinExample {
             get {
                 return ResourceManager.GetString("GameCommandSpinWinExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to status.
+        /// </summary>
+        public static string GameCommandStatusArgument {
+            get {
+                return ResourceManager.GetString("GameCommandStatusArgument", resourceCulture);
             }
         }
         
@@ -5770,6 +5824,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Min Amount for Payout.
+        /// </summary>
+        public static string MinimumAmountForPayout {
+            get {
+                return ResourceManager.GetString("MinimumAmountForPayout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimum &amp; Maximum.
         /// </summary>
         public static string MinimumAndMaximum {
@@ -6976,6 +7039,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Payout.
+        /// </summary>
+        public static string Payout {
+            get {
+                return ResourceManager.GetString("Payout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payout Max %.
+        /// </summary>
+        public static string PayoutMaximumPercentage {
+            get {
+                return ResourceManager.GetString("PayoutMaximumPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payout Min %.
+        /// </summary>
+        public static string PayoutMinimumPercentage {
+            get {
+                return ResourceManager.GetString("PayoutMinimumPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending.
         /// </summary>
         public static string Pending {
@@ -7188,6 +7278,15 @@ namespace MixItUp.Base {
         public static string Pro {
             get {
                 return ResourceManager.GetString("Pro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Probability %.
+        /// </summary>
+        public static string ProbabilityPercentage {
+            get {
+                return ResourceManager.GetString("ProbabilityPercentage", resourceCulture);
             }
         }
         
@@ -8988,6 +9087,24 @@ namespace MixItUp.Base {
         public static string Statistics {
             get {
                 return ResourceManager.GetString("Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status Argument.
+        /// </summary>
+        public static string StatusArgument {
+            get {
+                return ResourceManager.GetString("StatusArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status Information.
+        /// </summary>
+        public static string StatusInformation {
+            get {
+                return ResourceManager.GetString("StatusInformation", resourceCulture);
             }
         }
         

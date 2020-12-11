@@ -1,137 +1,157 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class CoinPusherGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class CoinPusherGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumAmountForPayoutString
+        public int MinimumAmountForPayout
         {
-            get { return this.MinimumAmountForPayout.ToString(); }
+            get { return this.minimumAmountForPayout; }
             set
             {
-                this.MinimumAmountForPayout = this.GetPositiveIntFromString(value);
+                this.minimumAmountForPayout = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumAmountForPayout { get; set; } = 2500;
+        private int minimumAmountForPayout;
 
-        public string PayoutProbabilityString
+        public int ProbabilityPercentage
         {
-            get { return this.PayoutProbability.ToString(); }
+            get { return this.probabilityPercentage; }
             set
             {
-                this.PayoutProbability = this.GetPositiveIntFromString(value);
+                this.probabilityPercentage = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int PayoutProbability { get; set; } = 10;
+        private int probabilityPercentage;
 
-        public string PayoutPercentageMinimumString
+        public double PayoutMinimumPercentage
         {
-            get { return this.PayoutPercentageMinimum.ToString(); }
+            get { return this.payoutMinimumPercentage; }
             set
             {
-                this.PayoutPercentageMinimum = this.GetPositiveIntFromString(value);
+                this.payoutMinimumPercentage = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double PayoutPercentageMinimum { get; set; } = 30;
+        private double payoutMinimumPercentage;
 
-        public string PayoutPercentageMaximumString
+        public double PayoutMaximumPercentage
         {
-            get { return this.PayoutPercentageMaximum.ToString(); }
+            get { return this.payoutMaximumPercentage; }
             set
             {
-                this.PayoutPercentageMaximum = this.GetPositiveIntFromString(value);
+                this.payoutMaximumPercentage = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double PayoutPercentageMaximum { get; set; } = 70;
+        private double payoutMaximumPercentage;
 
-        public string StatusArgument { get; set; } = "status";
-        public CustomCommand StatusCommand { get; set; }
-        public CustomCommand NoPayoutCommand { get; set; }
-        public CustomCommand PayoutCommand { get; set; }
+        public CustomCommandModel SuccessCommand
+        {
+            get { return this.successCommand; }
+            set
+            {
+                this.successCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel successCommand;
 
-        private CoinPusherGameCommand existingCommand;
+        public CustomCommandModel FailureCommand
+        {
+            get { return this.failureCommand; }
+            set
+            {
+                this.failureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel failureCommand;
+
+        public string StatusArgument
+        {
+            get { return this.statusArgument; }
+            set
+            {
+                this.statusArgument = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string statusArgument;
+
+        public CustomCommandModel StatusCommand
+        {
+            get { return this.statusCommand; }
+            set
+            {
+                this.statusCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel statusCommand;
+
+        public CoinPusherGameCommandEditorWindowViewModel(CoinPusherGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumAmountForPayout = command.MinimumAmountForPayout;
+            this.ProbabilityPercentage = command.ProbabilityPercentage;
+            this.PayoutMinimumPercentage = command.PayoutMinimumPercentage;
+            this.PayoutMaximumPercentage = command.PayoutMaximumPercentage;
+            this.SuccessCommand = command.SuccessCommand;
+            this.FailureCommand = command.FailureCommand;
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = command.StatusCommand;
+        }
 
         public CoinPusherGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StatusCommand = this.CreateBasicChatCommand("After spending a few minutes, you count $gametotalamount " + currency.Name + " inside the machine.");
-            this.NoPayoutCommand = this.CreateBasicChatCommand("@$username drops their coins into the machine...and nothing happens. All $gametotalamount " + currency.Name + " stares back at you.");
-            this.PayoutCommand = this.CreateBasicChatCommand("@$username drops their coins into the machine...and hits the jackpot, walking away with $gamepayout " + currency.Name + "!");
+            this.MinimumAmountForPayout = 1000;
+            this.ProbabilityPercentage = 40;
+            this.PayoutMinimumPercentage = 25;
+            this.PayoutMaximumPercentage = 75;
+            this.SuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherWinExample, currency.Name));
+            this.FailureCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherLoseExample, currency.Name));
+            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgument;
+            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherStatusExample, currency.Name));
         }
 
-        public CoinPusherGameCommandEditorWindowViewModel(CoinPusherGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumAmountForPayout = this.existingCommand.MinimumAmountForPayout;
-            this.PayoutProbability = this.existingCommand.PayoutProbability;
-            this.PayoutPercentageMinimum = (this.existingCommand.PayoutPercentageMinimum * 100.0);
-            this.PayoutPercentageMaximum = (this.existingCommand.PayoutPercentageMaximum * 100.0);
-
-            this.StatusArgument = this.existingCommand.StatusArgument;
-            this.StatusCommand = this.existingCommand.StatusCommand;
-            this.NoPayoutCommand = this.existingCommand.NoPayoutCommand;
-            this.PayoutCommand = this.existingCommand.PayoutCommand;
+            return Task.FromResult<CommandModelBase>(new CoinPusherGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumAmountForPayout, this.ProbabilityPercentage, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage,
+                this.SuccessCommand, this.FailureCommand, this.StatusArgument, this.StatusCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            this.PayoutPercentageMinimum = (this.PayoutPercentageMinimum / 100.0);
-            this.PayoutPercentageMaximum = (this.PayoutPercentageMaximum / 100.0);
-
-            GameCommandBase newCommand = new CoinPusherGameCommand(name, triggers, requirements, this.StatusArgument.ToLower(), this.MinimumAmountForPayout,
-                this.PayoutProbability, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.StatusCommand, this.NoPayoutCommand, this.PayoutCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.MinimumAmountForPayout <= 0)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The Min Amount for Payout is not a valid number greater than 0");
-                return false;
+                return result;
             }
 
-            if (this.PayoutProbability <= 0 || this.PayoutProbability > 100)
+            if (this.MinimumAmountForPayout < 0)
             {
-                await DialogHelper.ShowMessage("The Payout Probability is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandCoinPusherMinimumPayoutMustBePostive);
             }
 
-            if (this.PayoutPercentageMinimum < 0 || PayoutPercentageMinimum > 100)
+            if (this.ProbabilityPercentage <= 0 || this.ProbabilityPercentage > 100)
             {
-                await DialogHelper.ShowMessage("The Min Payout % is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandProbabilityMustBeBetween1And100);
             }
 
-            if (this.PayoutPercentageMaximum < 0 || this.PayoutPercentageMaximum > 100)
+            if (this.PayoutMinimumPercentage <= 0 || this.PayoutMaximumPercentage <= 0 || this.PayoutMaximumPercentage < this.PayoutMinimumPercentage)
             {
-                await DialogHelper.ShowMessage("The Max Payout % is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandCoinPusherPayoutPercentageInvalid);
             }
 
-            if (this.PayoutPercentageMaximum < this.PayoutPercentageMinimum)
-            {
-                await DialogHelper.ShowMessage("The Max Payout % can not be less than Min Payout %");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.StatusArgument) && !this.StatusArgument.Any(c => char.IsLetterOrDigit(c)))
-            {
-                await DialogHelper.ShowMessage("The Status Argument must have a valid value");
-                return false;
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

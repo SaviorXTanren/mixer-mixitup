@@ -3842,4 +3842,43 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="Symbols" xml:space="preserve">
     <value>Symbols</value>
   </data>
+  <data name="GameCommandCoinPusherLoseExample" xml:space="preserve">
+    <value>@$username drops their coins into the machine...and nothing happens. All $gametotalamount {0} stares back at you.</value>
+  </data>
+  <data name="GameCommandCoinPusherMinimumPayoutMustBePostive" xml:space="preserve">
+    <value>Minimum payout must be a positive number</value>
+  </data>
+  <data name="GameCommandCoinPusherPayoutPercentageInvalid" xml:space="preserve">
+    <value>Payout percentage amounts are invalid</value>
+  </data>
+  <data name="GameCommandCoinPusherStatusExample" xml:space="preserve">
+    <value>After spending a few minutes, you count $gametotalamount {0} inside the machine.</value>
+  </data>
+  <data name="GameCommandCoinPusherWinExample" xml:space="preserve">
+    <value>@$username drops their coins into the machine...and hits the jackpot, walking away with $gamepayout {0}!</value>
+  </data>
+  <data name="GameCommandStatusArgument" xml:space="preserve">
+    <value>status</value>
+  </data>
+  <data name="MinimumAmountForPayout" xml:space="preserve">
+    <value>Min Amount for Payout</value>
+  </data>
+  <data name="Payout" xml:space="preserve">
+    <value>Payout</value>
+  </data>
+  <data name="PayoutMaximumPercentage" xml:space="preserve">
+    <value>Payout Max %</value>
+  </data>
+  <data name="PayoutMinimumPercentage" xml:space="preserve">
+    <value>Payout Min %</value>
+  </data>
+  <data name="ProbabilityPercentage" xml:space="preserve">
+    <value>Probability %</value>
+  </data>
+  <data name="StatusArgument" xml:space="preserve">
+    <value>Status Argument</value>
+  </data>
+  <data name="StatusInformation" xml:space="preserve">
+    <value>Status Information</value>
+  </data>
 </root>

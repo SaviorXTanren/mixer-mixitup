@@ -9,40 +9,39 @@ namespace MixItUp.Base.Model.Commands.Games
     public class CoinPusherGameCommandModel : GameCommandModelBase
     {
         [DataMember]
+        public int MinimumAmountForPayout { get; set; }
+        [DataMember]
+        public int ProbabilityPercentage { get; set; }
+        [DataMember]
+        public double PayoutMinimumPercentage { get; set; }
+        [DataMember]
+        public double PayoutMaximumPercentage { get; set; }
+
+        [DataMember]
+        public CustomCommandModel SuccessCommand { get; set; }
+        [DataMember]
+        public CustomCommandModel FailureCommand { get; set; }
+
+        [DataMember]
         public string StatusArgument { get; set; }
         [DataMember]
         public CustomCommandModel StatusCommand { get; set; }
 
         [DataMember]
-        public int MinimumAmountForPayout { get; set; }
-        [DataMember]
-        public int PayoutProbability { get; set; }
-
-        [DataMember]
-        public double PayoutPercentageMinimum { get; set; }
-        [DataMember]
-        public double PayoutPercentageMaximum { get; set; }
-
-        [DataMember]
-        public CustomCommandModel NoPayoutCommand { get; set; }
-        [DataMember]
-        public CustomCommandModel PayoutCommand { get; set; }
-
-        [DataMember]
         public int TotalAmount { get; set; }
 
-        public CoinPusherGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand,
-            int minimumAmountForPayout, int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommandModel noPayoutCommand, CustomCommandModel payoutCommand)
+        public CoinPusherGameCommandModel(string name, HashSet<string> triggers, int minimumAmountForPayout, int probabilityPercentage, double payoutMinimumPercentage, double payoutMaximumPercentage,
+            CustomCommandModel successCommand, CustomCommandModel failureCommand, string statusArgument, CustomCommandModel statusCommand)
             : base(name, triggers, GameCommandTypeEnum.CoinPusher)
         {
+            this.MinimumAmountForPayout = minimumAmountForPayout;
+            this.ProbabilityPercentage = probabilityPercentage;
+            this.PayoutMinimumPercentage = payoutMinimumPercentage;
+            this.PayoutMaximumPercentage = payoutMaximumPercentage;
+            this.SuccessCommand = successCommand;
+            this.FailureCommand = failureCommand;
             this.StatusArgument = statusArgument;
             this.StatusCommand = statusCommand;
-            this.MinimumAmountForPayout = minimumAmountForPayout;
-            this.PayoutProbability = payoutProbability;
-            this.PayoutPercentageMinimum = payoutPercentageMinimum;
-            this.PayoutPercentageMaximum = payoutPercentageMaximum;
-            this.NoPayoutCommand = noPayoutCommand;
-            this.PayoutCommand = payoutCommand;
         }
 
         private CoinPusherGameCommandModel() { }
@@ -50,9 +49,9 @@ namespace MixItUp.Base.Model.Commands.Games
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {
             List<CommandModelBase> commands = new List<CommandModelBase>();
+            commands.Add(this.SuccessCommand);
+            commands.Add(this.FailureCommand);
             commands.Add(this.StatusCommand);
-            commands.Add(this.NoPayoutCommand);
-            commands.Add(this.PayoutCommand);
             return commands;
         }
 
@@ -75,20 +74,20 @@ namespace MixItUp.Base.Model.Commands.Games
             int betAmount = this.GetBetAmount(parameters);
             this.TotalAmount += betAmount;
 
-            if (this.TotalAmount >= this.MinimumAmountForPayout && this.GenerateProbability() <= this.PayoutProbability)
+            if (this.TotalAmount >= this.MinimumAmountForPayout && this.GenerateProbability() <= this.ProbabilityPercentage)
             {
-                int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum);
+                int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage);
                 this.PerformPayout(parameters, payout);
                 this.TotalAmount -= payout;
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
-                await this.PayoutCommand.Perform(parameters);
+                await this.SuccessCommand.Perform(parameters);
             }
             else
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
-                await this.NoPayoutCommand.Perform(parameters);
+                await this.FailureCommand.Perform(parameters);
             }
         }
     }

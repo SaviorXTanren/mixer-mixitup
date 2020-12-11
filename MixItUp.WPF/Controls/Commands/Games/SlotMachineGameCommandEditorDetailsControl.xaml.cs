@@ -18,13 +18,8 @@ namespace MixItUp.WPF.Controls.Commands.Games
         private void FailureCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
-            window.CommandSaved += Window_CommandSaved;
+            window.CommandSaved += (object s, CommandModelBase command) => { ((SlotMachineGameCommandEditorWindowViewModel)this.DataContext).FailureCommand = (CustomCommandModel)command; };
             window.Show();
-        }
-
-        private void Window_CommandSaved(object sender, CommandModelBase command)
-        {
-            ((SlotMachineGameCommandEditorWindowViewModel)this.DataContext).FailureCommand = (CustomCommandModel)command;
         }
     }
 }
