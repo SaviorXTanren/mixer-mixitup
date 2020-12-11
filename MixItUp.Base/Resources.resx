@@ -3865,6 +3865,21 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandCoinPusherWinExample" xml:space="preserve">
     <value>@$username drops their coins into the machine...and hits the jackpot, walking away with $gamepayout {0}!</value>
   </data>
+  <data name="GameCommandDuelFailureExample" xml:space="preserve">
+    <value>@$targetusername defeated @$username, winning $gamepayout {0}!</value>
+  </data>
+  <data name="GameCommandDuelNotAccepted" xml:space="preserve">
+    <value>Not Accepted</value>
+  </data>
+  <data name="GameCommandDuelNotAcceptedExample" xml:space="preserve">
+    <value>@$targetusername did not respond in time...</value>
+  </data>
+  <data name="GameCommandDuelStartedExample" xml:space="preserve">
+    <value>@$username has challenged @$targetusername to a duel for $gamebet {0}! Type !duel in chat to accept!</value>
+  </data>
+  <data name="GameCommandDuelSuccessExample" xml:space="preserve">
+    <value>@$username won the duel against @$targetusername, winning $gamepayout {0}!</value>
+  </data>
   <data name="GameCommandGameComplete" xml:space="preserve">
     <value>Game Complete</value>
   </data>

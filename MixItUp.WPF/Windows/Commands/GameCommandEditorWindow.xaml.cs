@@ -36,6 +36,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new CoinPusherGameCommandEditorWindowViewModel((CoinPusherGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Duel:
+                    this.editorDetailsControl = new DuelGameCommandEditorDetailsControl();
+                    this.viewModel = new DuelGameCommandEditorWindowViewModel((DuelGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Hangman:
                     break;
@@ -96,6 +98,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new CoinPusherGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Duel:
+                    this.editorDetailsControl = new DuelGameCommandEditorDetailsControl();
+                    this.viewModel = new DuelGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Hangman:
                     break;

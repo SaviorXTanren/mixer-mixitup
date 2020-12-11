@@ -1,126 +1,152 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class DuelGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class DuelGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int timeLimit;
 
-        public string UserPercentageString
+        public bool UserSelectionTargeted
         {
-            get { return this.UserPercentage.ToString(); }
+            get { return this.userSelectionTargeted; }
             set
             {
-                this.UserPercentage = this.GetPositiveIntFromString(value);
+                this.userSelectionTargeted = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int UserPercentage { get; set; } = 50;
+        private bool userSelectionTargeted;
 
-        public string SubscriberPercentageString
+        public bool UserSelectionRandom
         {
-            get { return this.SubscriberPercentage.ToString(); }
+            get { return this.userSelectionRandom; }
             set
             {
-                this.SubscriberPercentage = this.GetPositiveIntFromString(value);
+                this.userSelectionRandom = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int SubscriberPercentage { get; set; } = 50;
+        private bool userSelectionRandom;
 
-        public string ModPercentageString
+        public CustomCommandModel StartedCommand
         {
-            get { return this.ModPercentage.ToString(); }
+            get { return this.startedCommand; }
             set
             {
-                this.ModPercentage = this.GetPositiveIntFromString(value);
+                this.startedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int ModPercentage { get; set; } = 50;
+        private CustomCommandModel startedCommand;
 
-        public CustomCommand StartedCommand { get; set; }
-        public CustomCommand NotAcceptedCommand { get; set; }
-        public CustomCommand SuccessOutcomeCommand { get; set; }
-        public CustomCommand FailOutcomeCommand { get; set; }
+        public CustomCommandModel NotAcceptedCommand
+        {
+            get { return this.notAcceptedCommand; }
+            set
+            {
+                this.notAcceptedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notAcceptedCommand;
 
-        private DuelGameCommand existingCommand;
+        public GameOutcomeViewModel SuccessfulOutcome
+        {
+            get { return this.successfulOutcome; }
+            set
+            {
+                this.successfulOutcome = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private GameOutcomeViewModel successfulOutcome;
+
+        public GameOutcomeViewModel FailedOutcome
+        {
+            get { return this.failedOutcome; }
+            set
+            {
+                this.failedOutcome = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private GameOutcomeViewModel failedOutcome;
+
+        public DuelGameCommandEditorWindowViewModel(DuelGameCommandModel command)
+            : base(command)
+        {
+            this.TimeLimit = command.TimeLimit;
+            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
+            this.StartedCommand = command.StartedCommand;
+            this.NotAcceptedCommand = command.NotAcceptedCommand;
+            this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
+            this.FailedOutcome = new GameOutcomeViewModel(command.FailedOutcome);
+        }
 
         public DuelGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
-            this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");
-            this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username won the duel against @$targetusername, winning $gamepayout " + currency.Name + "!");
-            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username, winning $gamepayout " + currency.Name + "!");
+            this.TimeLimit = 60;
+            this.UserSelectionTargeted = true;
+            this.UserSelectionRandom = true;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelStartedExample, currency.Name));
+            this.NotAcceptedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelNotAcceptedExample);
+            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelSuccessExample, currency.Name)));
+            this.FailedOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 0, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelFailureExample));
         }
 
-        public DuelGameCommandEditorWindowViewModel(DuelGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
+#pragma warning disable CS0612 // Type or member is obsolete
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
+#pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.User];
-            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
-            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Mod];
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-            this.NotAcceptedCommand = this.existingCommand.NotAcceptedCommand;
-            this.SuccessOutcomeCommand = this.existingCommand.SuccessfulOutcome.Command;
-            this.FailOutcomeCommand = this.existingCommand.FailedOutcome.Command;
+            return Task.FromResult<CommandModelBase>(new DuelGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, selectionType, this.StartedCommand, this.NotAcceptedCommand, this.SuccessfulOutcome.GetModel(), this.FailedOutcome.GetModel()));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserPercentage }, { UserRoleEnum.Subscriber, this.SubscriberPercentage }, { UserRoleEnum.Mod, this.ModPercentage } };
-            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserPercentage }, { UserRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { UserRoleEnum.Mod, 100 - this.ModPercentage } };
+            Result result = await base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
 
-            GameCommandBase newCommand = new DuelGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
-                new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand), this.StartedCommand, this.TimeLimit, this.NotAcceptedCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
+            if (!this.UserSelectionTargeted && !this.UserSelectionRandom)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandOneUserSelectionTypeMustBeSelected);
+            }
 
-        public override async Task<bool> Validate()
-        {
             if (this.TimeLimit < 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            if (this.UserPercentage < 0 || this.UserPercentage > 100)
+            foreach (RoleProbabilityPayoutViewModel rpp in this.SuccessfulOutcome.RoleProbabilityPayouts)
             {
-                await DialogHelper.ShowMessage("The User Chance %'s is not a valid number between 0 - 100");
-                return false;
+                if (rpp.Probability <= 0 || rpp.Probability > 100)
+                {
+                    return new Result(MixItUp.Base.Resources.GameCommandProbabilityMustBeBetween1And100);
+                }
             }
 
-            if (this.SubscriberPercentage < 0 || this.SubscriberPercentage > 100)
-            {
-                await DialogHelper.ShowMessage("The Sub Chance %'s is not a valid number between 0 - 100");
-                return false;
-            }
-
-            if (this.ModPercentage < 0 || ModPercentage > 100)
-            {
-                await DialogHelper.ShowMessage("The Mod Chance %'s is not a valid number between 0 - 100");
-                return false;
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

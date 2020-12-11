@@ -3843,6 +3843,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @$targetusername defeated @$username, winning $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandDuelFailureExample {
+            get {
+                return ResourceManager.GetString("GameCommandDuelFailureExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Accepted.
+        /// </summary>
+        public static string GameCommandDuelNotAccepted {
+            get {
+                return ResourceManager.GetString("GameCommandDuelNotAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$targetusername did not respond in time....
+        /// </summary>
+        public static string GameCommandDuelNotAcceptedExample {
+            get {
+                return ResourceManager.GetString("GameCommandDuelNotAcceptedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has challenged @$targetusername to a duel for $gamebet {0}! Type !duel in chat to accept!.
+        /// </summary>
+        public static string GameCommandDuelStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandDuelStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username won the duel against @$targetusername, winning $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandDuelSuccessExample {
+            get {
+                return ResourceManager.GetString("GameCommandDuelSuccessExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game Complete.
         /// </summary>
         public static string GameCommandGameComplete {

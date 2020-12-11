@@ -586,6 +586,9 @@
     <Compile Include="Controls\Commands\Games\CoinPusherGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>CoinPusherGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\DuelGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>DuelGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\GameCommandEditorDetailsControlBase.cs" />
     <Compile Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>HotPotatoGameCommandEditorDetailsControl.xaml</DependentUpon>
@@ -647,9 +650,6 @@
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml.cs">
       <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\DuelGameEditorControl.xaml.cs">
-      <DependentUpon>DuelGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml.cs">
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
@@ -1446,6 +1446,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\DuelGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1523,10 +1527,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\DuelGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

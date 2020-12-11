@@ -12,18 +12,19 @@ namespace MixItUp.Base.Model.Commands.Games
     public class DuelGameCommandModel : GameCommandModelBase
     {
         [DataMember]
+        public int TimeLimit { get; set; }
+        [DataMember]
+        public GamePlayerSelectionType SelectionType { get; set; }
+
+        [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
 
+        [DataMember]
+        public CustomCommandModel NotAcceptedCommand { get; set; }
         [DataMember]
         public GameOutcomeModel SuccessfulOutcome { get; set; }
         [DataMember]
         public GameOutcomeModel FailedOutcome { get; set; }
-
-        [DataMember]
-        public CustomCommandModel NotAcceptedCommand { get; set; }
-
-        [DataMember]
-        public int TimeLimit { get; set; }
 
         [JsonIgnore]
         private bool gameActive = false;
@@ -34,15 +35,16 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CancellationTokenSource runCancellationTokenSource;
 
-        public DuelGameCommandModel(string name, HashSet<string> triggers, CustomCommandModel startedCommand, GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome,
-            CustomCommandModel notAcceptedCommand, int timeLimit)
+        public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType selectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
+            GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome)
             : base(name, triggers, GameCommandTypeEnum.Duel)
         {
+            this.TimeLimit = timeLimit;
+            this.SelectionType = selectionType;
             this.StartedCommand = startedCommand;
+            this.NotAcceptedCommand = notAcceptedCommand;
             this.SuccessfulOutcome = successfulOutcome;
             this.FailedOutcome = failedOutcome;
-            this.NotAcceptedCommand = notAcceptedCommand;
-            this.TimeLimit = timeLimit;
         }
 
         private DuelGameCommandModel() { }
@@ -51,9 +53,9 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             List<CommandModelBase> commands = new List<CommandModelBase>();
             commands.Add(this.StartedCommand);
+            commands.Add(this.NotAcceptedCommand);
             commands.Add(this.SuccessfulOutcome.Command);
             commands.Add(this.FailedOutcome.Command);
-            commands.Add(this.NotAcceptedCommand);
             return commands;
         }
 
@@ -64,7 +66,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 int betAmount = this.GetBetAmount(parameters);
                 if (betAmount > 0)
                 {
-                    await parameters.SetTargetUser();
+                    await this.SetSelectedUser(this.SelectionType, parameters);
                     if (parameters.TargetUser != null)
                     {
                         if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
