@@ -1,123 +1,170 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class LockBoxGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class LockBoxGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string CombinationLengthString
+        public int CombinationLength
         {
-            get { return this.CombinationLength.ToString(); }
+            get { return this.combinationLength; }
             set
             {
-                this.CombinationLength = this.GetPositiveIntFromString(value);
+                this.combinationLength = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int CombinationLength { get; set; } = 3;
+        private int combinationLength;
 
-        public string InitialAmountString
+        public int InitialAmount
         {
-            get { return this.InitialAmount.ToString(); }
+            get { return this.initialAmount; }
             set
             {
-                this.InitialAmount = this.GetPositiveIntFromString(value);
+                this.initialAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int InitialAmount { get; set; } = 500;
+        private int initialAmount;
 
-        public string StatusArgument { get; set; } = "status";
-
-        public string InspectionArgument { get; set; } = "inspect";
-
-        public string InspectionCostString
+        public CustomCommandModel SuccessfulCommand
         {
-            get { return this.InspectionCost.ToString(); }
+            get { return this.successfulCommand; }
             set
             {
-                this.InspectionCost = this.GetPositiveIntFromString(value);
+                this.successfulCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int InspectionCost { get; set; } = 10;
+        private CustomCommandModel successfulCommand;
 
-        public CustomCommand FailedGuessCommand { get; set; }
-        public CustomCommand SuccessfulGuessCommand { get; set; }
-        public CustomCommand StatusCommand { get; set; }
-        public CustomCommand InspectionCommand { get; set; }
+        public CustomCommandModel FailureCommand
+        {
+            get { return this.failureCommand; }
+            set
+            {
+                this.failureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel failureCommand;
 
-        private LockBoxGameCommand existingCommand;
+        public string StatusArgument
+        {
+            get { return this.statusArgument; }
+            set
+            {
+                this.statusArgument = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string statusArgument;
+
+        public CustomCommandModel StatusCommand
+        {
+            get { return this.statusCommand; }
+            set
+            {
+                this.statusCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel statusCommand;
+
+        public string InspectionArgument
+        {
+            get { return this.inspectionArgument; }
+            set
+            {
+                this.inspectionArgument = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string inspectionArgument;
+
+        public int InspectionCost
+        {
+            get { return this.inspectionCost; }
+            set
+            {
+                this.inspectionCost = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int inspectionCost;
+
+        public CustomCommandModel InspectionCommand
+        {
+            get { return this.inspectionCommand; }
+            set
+            {
+                this.inspectionCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel inspectionCommand;
+
+        public LockBoxGameCommandEditorWindowViewModel(LockBoxGameCommandModel command)
+            : base(command)
+        {
+            this.CombinationLength = command.CombinationLength;
+            this.InitialAmount = command.InitialAmount;
+            this.SuccessfulCommand = command.SuccessfulCommand;
+            this.FailureCommand = command.FailureCommand;
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = command.StatusCommand;
+            this.InspectionArgument = command.InspectionArgument;
+            this.InspectionCost = command.InspectionCost;
+            this.InspectionCommand = command.InspectionCommand;
+        }
 
         public LockBoxGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.");
-            this.SuccessfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout " + currency.Name + " inside it!");
-            this.StatusCommand = this.CreateBasicChatCommand("After shaking the box for a bit, you guess there's about $gametotalamount " + currency.Name + " inside it.");
-            this.InspectionCommand = this.CreateBasicChatCommand("After inspecting the box for a bit, you surmise that one of the numbers is a $gamelockboxinspection.");
+            this.CombinationLength = 3;
+            this.InitialAmount = 100;
+            this.SuccessfulCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxSuccessfulExample, currency.Name));
+            this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandLockBoxFailureExample);
+            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
+            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxStatusExample, currency.Name));
+            this.InspectionArgument = MixItUp.Base.Resources.GameCommandLockBoxInspectionArgmentExample;
+            this.InspectionCost = 10;
+            this.InspectionCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandLockBoxInspectionExample);
         }
 
-        public LockBoxGameCommandEditorWindowViewModel(LockBoxGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.CombinationLength = this.existingCommand.CombinationLength;
-            this.InitialAmount = this.existingCommand.InitialAmount;
-            this.StatusArgument = this.existingCommand.StatusArgument;
-            this.InspectionArgument = this.existingCommand.InspectionArgument;
-            this.InspectionCost = this.existingCommand.InspectionCost;
-
-            this.FailedGuessCommand = this.existingCommand.FailedGuessCommand;
-            this.SuccessfulGuessCommand = this.existingCommand.SuccessfulGuessCommand;
-            this.StatusCommand = this.existingCommand.StatusCommand;
-            this.InspectionCommand = this.existingCommand.InspectionCommand;
+            return Task.FromResult<CommandModelBase>(new LockBoxGameCommandModel(this.Name, this.GetChatTriggers(), this.CombinationLength, this.InitialAmount, this.SuccessfulCommand, this.FailureCommand, this.StatusArgument, this.StatusCommand,
+                this.InspectionArgument, this.InspectionCost, this.InspectionCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            GameCommandBase newCommand = new LockBoxGameCommand(name, triggers, requirements, this.StatusArgument, this.StatusCommand, this.CombinationLength,
-                this.InitialAmount, this.SuccessfulGuessCommand, this.FailedGuessCommand, this.InspectionArgument.ToLower(), this.InspectionCost, this.InspectionCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
+            Result result = await base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
 
-        public override async Task<bool> Validate()
-        {
             if (this.CombinationLength <= 0)
             {
-                await DialogHelper.ShowMessage("The Combo Length is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandLockBoxCombinationLengthMustBeGreaterThan0);
             }
 
-            if (this.InitialAmount <= 0)
+            if (this.InitialAmount < 0)
             {
-                await DialogHelper.ShowMessage("The Initial Amount is not a valid number greater than 0");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.StatusArgument) && !this.StatusArgument.Any(c => char.IsLetterOrDigit(c)))
-            {
-                await DialogHelper.ShowMessage("The Status Argument must have a valid value");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.InspectionArgument) && !this.InspectionArgument.Any(c => char.IsLetterOrDigit(c)))
-            {
-                await DialogHelper.ShowMessage("The Inspection Argument must have a valid value");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandInitialAmountMustBePositive);
             }
 
             if (this.InspectionCost < 0)
             {
-                await DialogHelper.ShowMessage("The Inspection Cost is not a valid number greater than 0 or equal to 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandLockBoxInspetionCostMustBePositive);
             }
 
-            return true;
+            return new Result();
         }
     }
 }

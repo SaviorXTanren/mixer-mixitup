@@ -3690,24 +3690,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initial Amount.
-        /// </summary>
-        public static string GameCommandBidInitialAmount {
-            get {
-                return ResourceManager.GetString("GameCommandBidInitialAmount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initial amount must be a positive number.
-        /// </summary>
-        public static string GameCommandBidInitialAmountMustBePositive {
-            get {
-                return ResourceManager.GetString("GameCommandBidInitialAmountMustBePositive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to New Top Bidder.
         /// </summary>
         public static string GameCommandBidNewTopBidder {
@@ -4069,6 +4051,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initial Amount.
+        /// </summary>
+        public static string GameCommandInitialAmount {
+            get {
+                return ResourceManager.GetString("GameCommandInitialAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initial amount must be a positive number.
+        /// </summary>
+        public static string GameCommandInitialAmountMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandInitialAmountMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid bet amount must be specified.
         /// </summary>
         public static string GameCommandInvalidBetAmount {
@@ -4083,6 +4083,24 @@ namespace MixItUp.Base {
         public static string GameCommandLockBox {
             get {
                 return ResourceManager.GetString("GameCommandLockBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combination Length.
+        /// </summary>
+        public static string GameCommandLockBoxCombinationLength {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxCombinationLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Combination length must be greater than 0.
+        /// </summary>
+        public static string GameCommandLockBoxCombinationLengthMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxCombinationLengthMustBeGreaterThan0", resourceCulture);
             }
         }
         
@@ -4105,6 +4123,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into and try their combo $arg1text...but the box doesn&apos;t unlock. Their guess was too $gamelockboxhint..
+        /// </summary>
+        public static string GameCommandLockBoxFailureExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxFailureExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to high.
         /// </summary>
         public static string GameCommandLockBoxHigh {
@@ -4123,6 +4150,60 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to inspect.
+        /// </summary>
+        public static string GameCommandLockBoxInspectionArgmentExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspectionArgmentExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inspection Argument.
+        /// </summary>
+        public static string GameCommandLockBoxInspectionArgument {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspectionArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inspection Cost.
+        /// </summary>
+        public static string GameCommandLockBoxInspectionCost {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspectionCost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After inspecting the box for a bit, you surmise that one of the numbers is a $gamelockboxinspection..
+        /// </summary>
+        public static string GameCommandLockBoxInspectionExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspectionExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inspection Information.
+        /// </summary>
+        public static string GameCommandLockBoxInspectionInformation {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspectionInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inspection cost must be a positive number.
+        /// </summary>
+        public static string GameCommandLockBoxInspetionCostMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxInspetionCostMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to low.
         /// </summary>
         public static string GameCommandLockBoxLow {
@@ -4137,6 +4218,24 @@ namespace MixItUp.Base {
         public static string GameCommandLockBoxNotNumber {
             get {
                 return ResourceManager.GetString("GameCommandLockBoxNotNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After shaking the box for a bit, you guess there&apos;s about $gametotalamount {0} inside it..
+        /// </summary>
+        public static string GameCommandLockBoxStatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxStatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout {0} inside it!.
+        /// </summary>
+        public static string GameCommandLockBoxSuccessfulExample {
+            get {
+                return ResourceManager.GetString("GameCommandLockBoxSuccessfulExample", resourceCulture);
             }
         }
         
@@ -4441,9 +4540,9 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to status.
         /// </summary>
-        public static string GameCommandStatusArgument {
+        public static string GameCommandStatusArgumentExample {
             get {
-                return ResourceManager.GetString("GameCommandStatusArgument", resourceCulture);
+                return ResourceManager.GetString("GameCommandStatusArgumentExample", resourceCulture);
             }
         }
         

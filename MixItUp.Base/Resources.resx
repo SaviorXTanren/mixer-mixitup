@@ -3835,12 +3835,6 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandBidGameCompleteExample" xml:space="preserve">
     <value>$gamewinners won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize...</value>
   </data>
-  <data name="GameCommandBidInitialAmount" xml:space="preserve">
-    <value>Initial Amount</value>
-  </data>
-  <data name="GameCommandBidInitialAmountMustBePositive" xml:space="preserve">
-    <value>Initial amount must be a positive number</value>
-  </data>
   <data name="GameCommandBidNewTopBidder" xml:space="preserve">
     <value>New Top Bidder</value>
   </data>
@@ -3901,6 +3895,45 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandHotPotatoTossedPotato" xml:space="preserve">
     <value>Tossed Potato</value>
   </data>
+  <data name="GameCommandInitialAmount" xml:space="preserve">
+    <value>Initial Amount</value>
+  </data>
+  <data name="GameCommandInitialAmountMustBePositive" xml:space="preserve">
+    <value>Initial amount must be a positive number</value>
+  </data>
+  <data name="GameCommandLockBoxCombinationLength" xml:space="preserve">
+    <value>Combination Length</value>
+  </data>
+  <data name="GameCommandLockBoxCombinationLengthMustBeGreaterThan0" xml:space="preserve">
+    <value>Combination length must be greater than 0</value>
+  </data>
+  <data name="GameCommandLockBoxFailureExample" xml:space="preserve">
+    <value>@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.</value>
+  </data>
+  <data name="GameCommandLockBoxInspectionArgmentExample" xml:space="preserve">
+    <value>inspect</value>
+  </data>
+  <data name="GameCommandLockBoxInspectionArgument" xml:space="preserve">
+    <value>Inspection Argument</value>
+  </data>
+  <data name="GameCommandLockBoxInspectionCost" xml:space="preserve">
+    <value>Inspection Cost</value>
+  </data>
+  <data name="GameCommandLockBoxInspectionExample" xml:space="preserve">
+    <value>After inspecting the box for a bit, you surmise that one of the numbers is a $gamelockboxinspection.</value>
+  </data>
+  <data name="GameCommandLockBoxInspectionInformation" xml:space="preserve">
+    <value>Inspection Information</value>
+  </data>
+  <data name="GameCommandLockBoxInspetionCostMustBePositive" xml:space="preserve">
+    <value>Inspection cost must be a positive number</value>
+  </data>
+  <data name="GameCommandLockBoxStatusExample" xml:space="preserve">
+    <value>After shaking the box for a bit, you guess there's about $gametotalamount {0} inside it.</value>
+  </data>
+  <data name="GameCommandLockBoxSuccessfulExample" xml:space="preserve">
+    <value>@$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout {0} inside it!</value>
+  </data>
   <data name="GameCommandLowerTimeLimit" xml:space="preserve">
     <value>Lower Time Limit</value>
   </data>
@@ -3922,7 +3955,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandStartSettings" xml:space="preserve">
     <value>Start Settings</value>
   </data>
-  <data name="GameCommandStatusArgument" xml:space="preserve">
+  <data name="GameCommandStatusArgumentExample" xml:space="preserve">
     <value>status</value>
   </data>
   <data name="GameCommandTimeLimit" xml:space="preserve">

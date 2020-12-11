@@ -118,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.PayoutMaximumPercentage = 75;
             this.SuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherWinExample, currency.Name));
             this.FailureCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherLoseExample, currency.Name));
-            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgument;
+            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
             this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherStatusExample, currency.Name));
         }
 

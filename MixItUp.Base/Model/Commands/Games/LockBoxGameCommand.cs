@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,6 +13,16 @@ namespace MixItUp.Base.Model.Commands.Games
         public const string GameHitmanInspectionSpecialIdentifier = "gamelockboxinspection";
 
         [DataMember]
+        public int CombinationLength { get; set; }
+        [DataMember]
+        public int InitialAmount { get; set; }
+
+        [DataMember]
+        public CustomCommandModel SuccessfulCommand { get; set; }
+        [DataMember]
+        public CustomCommandModel FailureCommand { get; set; }
+
+        [DataMember]
         public string StatusArgument { get; set; }
         [DataMember]
         public CustomCommandModel StatusCommand { get; set; }
@@ -26,33 +35,23 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel InspectionCommand { get; set; }
 
         [DataMember]
-        public int InitialAmount { get; set; }
-        [DataMember]
-        public int CombinationLength { get; set; }
-
-        [DataMember]
-        public CustomCommandModel SuccessfulGuessCommand { get; set; }
-        [DataMember]
-        public CustomCommandModel FailedGuessCommand { get; set; }
-
-        [DataMember]
         public int CurrentCombination { get; set; }
         [DataMember]
         public int TotalAmount { get; set; }
 
-        public LockBoxGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand,
-            string inspectionArgument, int inspectionCost, CustomCommandModel inspectionCommand,
-            int combinationLength, int initialAmount, CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand)
+        public LockBoxGameCommandModel(string name, HashSet<string> triggers, int combinationLength, int initialAmount, CustomCommandModel successfulCommand, CustomCommandModel failureCommand,
+            string statusArgument, CustomCommandModel statusCommand, string inspectionArgument, int inspectionCost, CustomCommandModel inspectionCommand)
             : base(name, triggers, GameCommandTypeEnum.LockBox)
         {
-            this.StatusCommand = statusCommand;
             this.CombinationLength = combinationLength;
+            this.InitialAmount = initialAmount;
+            this.SuccessfulCommand = successfulCommand;
+            this.FailureCommand = failureCommand;
+            this.StatusArgument = statusArgument;
+            this.StatusCommand = statusCommand;
             this.InspectionArgument = inspectionArgument;
             this.InspectionCost = inspectionCost;
             this.InspectionCommand = inspectionCommand;
-            this.InitialAmount = initialAmount;
-            this.SuccessfulGuessCommand = successfulGuessCommand;
-            this.FailedGuessCommand = failedGuessCommand;
         }
 
         private LockBoxGameCommandModel() { }
@@ -60,10 +59,10 @@ namespace MixItUp.Base.Model.Commands.Games
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {
             List<CommandModelBase> commands = new List<CommandModelBase>();
+            commands.Add(this.SuccessfulCommand);
+            commands.Add(this.FailureCommand);
             commands.Add(this.StatusCommand);
             commands.Add(this.InspectionCommand);
-            commands.Add(this.SuccessfulGuessCommand);
-            commands.Add(this.FailedGuessCommand);
             return commands;
         }
 
@@ -118,13 +117,13 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.PerformPayout(parameters, this.TotalAmount);
                         this.ClearData();
-                        await this.SuccessfulGuessCommand.Perform(parameters);
+                        await this.SuccessfulCommand.Perform(parameters);
                     }
                     else
                     {
                         parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanHintSpecialIdentifier] =
                             (guess < this.CurrentCombination) ? MixItUp.Base.Resources.GameCommandLockBoxLow : MixItUp.Base.Resources.GameCommandLockBoxHigh;
-                        await this.FailedGuessCommand.Perform(parameters);
+                        await this.FailureCommand.Perform(parameters);
                     }
                     return;
                 }

@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Games
 
             if (this.InitialAmount < 0)
             {
-                return new Result(MixItUp.Base.Resources.GameCommandBidInitialAmountMustBePositive);
+                return new Result(MixItUp.Base.Resources.GameCommandInitialAmountMustBePositive);
             }
 
             if (this.TimeLimit < 0)
