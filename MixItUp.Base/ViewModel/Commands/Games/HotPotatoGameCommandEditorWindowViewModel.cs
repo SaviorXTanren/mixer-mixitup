@@ -30,6 +30,17 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private int upperTimeLimit;
 
+        public bool ResetTimeOnToss
+        {
+            get { return this.resetTimeOnToss; }
+            set
+            {
+                this.resetTimeOnToss = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool resetTimeOnToss;
+
         public bool UserSelectionTargeted
         {
             get { return this.userSelectionTargeted; }
@@ -90,6 +101,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.LowerTimeLimit = command.LowerTimeLimit;
             this.UpperTimeLimit = command.UpperTimeLimit;
+            this.ResetTimeOnToss = command.ResetTimeOnToss;
             this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
             this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
             this.StartedCommand = command.StartedCommand;
@@ -102,6 +114,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.LowerTimeLimit = 30;
             this.UpperTimeLimit = 60;
+            this.ResetTimeOnToss = false;
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;
             this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHotPotatoStartedExample);
@@ -117,7 +130,8 @@ namespace MixItUp.Base.ViewModel.Games
             if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
             if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
-            return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, selectionType, this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand));
+            return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, this.ResetTimeOnToss, selectionType,
+                this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand));
         }
 
         public override async Task<Result> Validate()

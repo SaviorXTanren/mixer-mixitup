@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public int LowerTimeLimit { get; set; }
         [DataMember]
         public int UpperTimeLimit { get; set; }
+        [DataMember]
+        public bool ResetTimeOnToss { get; set; }
 
         [DataMember]
         public GamePlayerSelectionType SelectionType { get; set; }
@@ -32,13 +34,16 @@ namespace MixItUp.Base.Model.Commands.Games
         private CommandParametersModel startParameters;
         [JsonIgnore]
         private CommandParametersModel lastTossParameters;
+        [JsonIgnore]
+        private CancellationTokenSource lastHitCancellationTokenSource;
 
-        public HotPotatoGameCommandModel(string name, HashSet<string> triggers, int lowerTimeLimit, int upperTimeLimit, GamePlayerSelectionType selectionType,
+        public HotPotatoGameCommandModel(string name, HashSet<string> triggers, int lowerTimeLimit, int upperTimeLimit, bool resetTimeOnToss, GamePlayerSelectionType selectionType,
             CustomCommandModel startedCommand, CustomCommandModel tossPotatoCommand, CustomCommandModel potatoExplodeCommand)
             : base(name, triggers, GameCommandTypeEnum.HotPotato)
         {
             this.LowerTimeLimit = lowerTimeLimit;
             this.UpperTimeLimit = upperTimeLimit;
+            this.ResetTimeOnToss = resetTimeOnToss;
             this.SelectionType = selectionType;
             this.StartedCommand = startedCommand;
             this.TossPotatoCommand = tossPotatoCommand;
@@ -68,21 +73,36 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.gameActive = true;
                         this.startParameters = parameters;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        AsyncRunner.RunAsyncBackground(async (token) =>
+                        if (this.ResetTimeOnToss)
                         {
-                            await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit));
+                            this.RestartTossTime();
+                        }
+                        else
+                        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            AsyncRunner.RunAsyncBackground(async (token) =>
+                            {
+                                await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit));
 
-                            this.gameActive = false;
-                            await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
+                                this.gameActive = false;
+                                await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
 
-                            this.CooldownRequirement.Perform(this.startParameters);
-                            this.ClearData();
-                        }, new CancellationToken());
+                                this.CooldownRequirement.Perform(this.startParameters);
+                                this.ClearData();
+                            }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
+                        }
                         await this.StartedCommand.Perform(parameters);
                     }
+                    else
+                    {
+                        if (this.ResetTimeOnToss)
+                        {
+                            this.RestartTossTime();
+                        }
+                        await this.TossPotatoCommand.Perform(parameters);
+                    }
+
                     this.lastTossParameters = parameters;
                     this.ResetCooldown();
                     return;
@@ -97,6 +117,31 @@ namespace MixItUp.Base.Model.Commands.Games
                 await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
             }
             await this.Requirements.Refund(parameters);
+        }
+
+        private void RestartTossTime()
+        {
+            if (this.lastHitCancellationTokenSource != null)
+            {
+                this.lastHitCancellationTokenSource.Cancel();
+                this.lastHitCancellationTokenSource = null;
+            }
+            this.lastHitCancellationTokenSource = new CancellationTokenSource();
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(async (token) =>
+            {
+                await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit));
+
+                if (this.gameActive && !token.IsCancellationRequested)
+                {
+                    this.gameActive = false;
+                    await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
+                    this.CooldownRequirement.Perform(this.startParameters);
+                    this.ClearData();
+                }
+            }, this.lastHitCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private void ClearData()

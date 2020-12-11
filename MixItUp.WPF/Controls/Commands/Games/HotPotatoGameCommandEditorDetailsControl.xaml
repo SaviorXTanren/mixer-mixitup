@@ -36,17 +36,24 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandTimeLimit}" HorizontalAlignment="Center">
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandSettings}" HorizontalAlignment="Center">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandLowerTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding LowerTimeLimit}" Width="80" />
 
                     <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandUpperTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UpperTimeLimit}" Width="80" />
+
+                    <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.GameCommandHotPotatoResetTimeOnToss}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,0,0,3" />
+                    <ToggleButton Grid.Column="6" IsChecked="{Binding ResetTimeOnToss}" />
                 </Grid>
             </GroupBox>
 

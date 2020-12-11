@@ -3542,16 +3542,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandAtLeast1Outcome" xml:space="preserve">
     <value>There must be at least 1 outcome</value>
   </data>
-  <data name="GameCommandBeachBall" xml:space="preserve">
-    <value>Beach Ball</value>
-  </data>
-  <data name="GameCommandBeachBallDescription" xml:space="preserve">
-    <value>The Beach Ball game hits a beach ball to a player, who must then hit it off to someone else. If the person who the beach ball is going towards does not respond in time, then that user misses the hit and the game ends. The user who hit the beach ball last is dubbed the winner ($username) and the user who failed to hit the beach ball is dubbed the loser ($targetusername). By default, the passing of the beach ball is done randomly to a new user, but you can optionally allow the passer to specify who it gets hit to.</value>
-  </data>
-  <data name="GameCommandBeachBallExample" xml:space="preserve">
-    <value>EX: !beachball
-EX: !beachball &lt;TARGET USER&gt;</value>
-  </data>
   <data name="GameCommandBet" xml:space="preserve">
     <value>Bet</value>
   </data>
@@ -3621,7 +3611,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
     <value>Hot Potato</value>
   </data>
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
-    <value>The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to.</value>
+    <value>The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to. You may also set whether the time limit on the hot potato resets with each toss.</value>
   </data>
   <data name="GameCommandHotPotatoExample" xml:space="preserve">
     <value>EX: !potato
@@ -3887,6 +3877,9 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandHotPotatoPotatoExploded" xml:space="preserve">
     <value>Potato Exploded</value>
   </data>
+  <data name="GameCommandHotPotatoResetTimeOnToss" xml:space="preserve">
+    <value>Reset Time On Toss</value>
+  </data>
   <data name="GameCommandHotPotatoStartedExample" xml:space="preserve">
     <value>@$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!</value>
   </data>
@@ -3901,6 +3894,9 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="GameCommandNotEnoughPlayersExample" xml:space="preserve">
     <value>@$username couldn't get enough users to join in...</value>
+  </data>
+  <data name="GameCommandSettings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="GameCommandStarted" xml:space="preserve">
     <value>Started</value>

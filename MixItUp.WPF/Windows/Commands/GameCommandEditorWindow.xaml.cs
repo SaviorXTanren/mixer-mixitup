@@ -25,8 +25,6 @@ namespace MixItUp.WPF.Windows.Commands
         {
             switch (existingCommand.GameType)
             {
-                case GameCommandTypeEnum.BeachBall:
-                    break;
                 case GameCommandTypeEnum.Bet:
                     break;
                 case GameCommandTypeEnum.Bid:
@@ -87,8 +85,6 @@ namespace MixItUp.WPF.Windows.Commands
         {
             switch (gameType)
             {
-                case GameCommandTypeEnum.BeachBall:
-                    break;
                 case GameCommandTypeEnum.Bet:
                     break;
                 case GameCommandTypeEnum.Bid:

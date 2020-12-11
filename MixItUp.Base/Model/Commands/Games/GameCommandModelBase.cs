@@ -14,7 +14,6 @@ namespace MixItUp.Base.Model.Commands.Games
 {
     public enum GameCommandTypeEnum
     {
-        BeachBall,
         Bet,
         Bid,
         CoinPusher,

@@ -3616,34 +3616,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Beach Ball.
-        /// </summary>
-        public static string GameCommandBeachBall {
-            get {
-                return ResourceManager.GetString("GameCommandBeachBall", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Beach Ball game hits a beach ball to a player, who must then hit it off to someone else. If the person who the beach ball is going towards does not respond in time, then that user misses the hit and the game ends. The user who hit the beach ball last is dubbed the winner ($username) and the user who failed to hit the beach ball is dubbed the loser ($targetusername). By default, the passing of the beach ball is done randomly to a new user, but you can optionally allow the passer to specify who it gets hi [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string GameCommandBeachBallDescription {
-            get {
-                return ResourceManager.GetString("GameCommandBeachBallDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EX: !beachball
-        ///EX: !beachball &lt;TARGET USER&gt;.
-        /// </summary>
-        public static string GameCommandBeachBallExample {
-            get {
-                return ResourceManager.GetString("GameCommandBeachBallExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Bet.
         /// </summary>
         public static string GameCommandBet {
@@ -3979,7 +3951,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to..
+        ///   Looks up a localized string similar to The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to. You may also set whether the time limit on the hot potato resets with eac [rest of string was truncated]&quot;;.
         /// </summary>
         public static string GameCommandHotPotatoDescription {
             get {
@@ -4021,6 +3993,15 @@ namespace MixItUp.Base {
         public static string GameCommandHotPotatoPotatoExploded {
             get {
                 return ResourceManager.GetString("GameCommandHotPotatoPotatoExploded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Time On Toss.
+        /// </summary>
+        public static string GameCommandHotPotatoResetTimeOnToss {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoResetTimeOnToss", resourceCulture);
             }
         }
         
@@ -4247,6 +4228,15 @@ namespace MixItUp.Base {
         public static string GameCommandRussianRouletteExample {
             get {
                 return ResourceManager.GetString("GameCommandRussianRouletteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string GameCommandSettings {
+            get {
+                return ResourceManager.GetString("GameCommandSettings", resourceCulture);
             }
         }
         

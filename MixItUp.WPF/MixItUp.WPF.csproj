@@ -645,9 +645,6 @@
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BeachBallGameEditorControl.xaml.cs">
-      <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml.cs">
       <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1522,10 +1519,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BeachBallGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
