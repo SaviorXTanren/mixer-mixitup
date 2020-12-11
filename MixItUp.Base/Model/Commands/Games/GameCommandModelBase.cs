@@ -35,6 +35,14 @@ namespace MixItUp.Base.Model.Commands.Games
         WordScramble
     }
 
+    public enum GamePlayerSelectionType
+    {
+        [Obsolete]
+        None = 0,
+        Targeted = 1,
+        Random = 2,
+    }
+
     [DataContract]
     public class RoleProbabilityPayoutModel
     {
@@ -142,6 +150,23 @@ namespace MixItUp.Base.Model.Commands.Games
         }
 
         protected void ResetCooldown() { this.CooldownRequirement.Reset(); }
+
+        protected async Task SetSelectedUser(GamePlayerSelectionType selectionType, CommandParametersModel parameters)
+        {
+            if (selectionType.HasFlag(GamePlayerSelectionType.Targeted))
+            {
+                await parameters.SetTargetUser();
+                if (parameters.IsTargetUserSelf)
+                {
+                    parameters.TargetUser = null;
+                }
+            }
+
+            if (selectionType.HasFlag(GamePlayerSelectionType.Random))
+            {
+                parameters.TargetUser = this.GetRandomUser(parameters);
+            }
+        }
 
         protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {

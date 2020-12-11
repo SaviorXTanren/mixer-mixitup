@@ -55,8 +55,8 @@ namespace MixItUp.Base.ViewModel.Games
         public StealGameCommandEditorWindowViewModel(StealGameCommandModel command)
             : base(command)
         {
-            this.UserSelectionTargeted = command.SelectionType.HasFlag(StealGamePlayerSelectionType.Targeted);
-            this.UserSelectionRandom = command.SelectionType.HasFlag(StealGamePlayerSelectionType.Random);
+            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
 
             this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
             this.FailedOutcome = new GameOutcomeViewModel(command.FailedOutcome);
@@ -75,10 +75,10 @@ namespace MixItUp.Base.ViewModel.Games
         public override Task<CommandModelBase> GetCommand()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
-            StealGamePlayerSelectionType selectionType = StealGamePlayerSelectionType.None;
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
 #pragma warning restore CS0612 // Type or member is obsolete
-            if (this.UserSelectionTargeted) { selectionType |= StealGamePlayerSelectionType.Targeted; }
-            if (this.UserSelectionRandom) { selectionType |= StealGamePlayerSelectionType.Random; }
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
             return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), selectionType, this.SuccessfulOutcome.GetModel(), this.FailedOutcome.GetModel()));
         }
@@ -93,7 +93,7 @@ namespace MixItUp.Base.ViewModel.Games
 
             if (!this.UserSelectionTargeted && !this.UserSelectionRandom)
             {
-                return new Result(MixItUp.Base.Resources.GameCommandStealOneUserSelectionTypeMustBeSelected);
+                return new Result(MixItUp.Base.Resources.GameCommandOneUserSelectionTypeMustBeSelected);
             }
 
             foreach (RoleProbabilityPayoutViewModel rpp in this.SuccessfulOutcome.RoleProbabilityPayouts)

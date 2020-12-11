@@ -3998,6 +3998,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The potato exploded in @$targetusername hands! @$username gains {0} {1}!.
+        /// </summary>
+        public static string GameCommandHotPotatoExplodedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoExplodedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!.
+        /// </summary>
+        public static string GameCommandHotPotatoPassedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoPassedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potato Exploded.
+        /// </summary>
+        public static string GameCommandHotPotatoPotatoExploded {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoPotatoExploded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!.
+        /// </summary>
+        public static string GameCommandHotPotatoStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tossed Potato.
+        /// </summary>
+        public static string GameCommandHotPotatoTossedPotato {
+            get {
+                return ResourceManager.GetString("GameCommandHotPotatoTossedPotato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid bet amount must be specified.
         /// </summary>
         public static string GameCommandInvalidBetAmount {
@@ -4070,6 +4115,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lower Time Limit.
+        /// </summary>
+        public static string GameCommandLowerTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandLowerTimeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Enough Players.
         /// </summary>
         public static string GameCommandNotEnoughPlayers {
@@ -4084,6 +4138,15 @@ namespace MixItUp.Base {
         public static string GameCommandNotEnoughPlayersExample {
             get {
                 return ResourceManager.GetString("GameCommandNotEnoughPlayersExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One user selection type must be selected.
+        /// </summary>
+        public static string GameCommandOneUserSelectionTypeMustBeSelected {
+            get {
+                return ResourceManager.GetString("GameCommandOneUserSelectionTypeMustBeSelected", resourceCulture);
             }
         }
         
@@ -4387,15 +4450,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One user selection type must be selected.
-        /// </summary>
-        public static string GameCommandStealOneUserSelectionTypeMustBeSelected {
-            get {
-                return ResourceManager.GetString("GameCommandStealOneUserSelectionTypeMustBeSelected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to @$username stole $gamepayout {0} from @$targetusername!.
         /// </summary>
         public static string GameCommandStealWinExample {
@@ -4486,6 +4540,15 @@ namespace MixItUp.Base {
         public static string GameCommandTriviaExample {
             get {
                 return ResourceManager.GetString("GameCommandTriviaExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upper Time Limit.
+        /// </summary>
+        public static string GameCommandUpperTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandUpperTimeLimit", resourceCulture);
             }
         }
         

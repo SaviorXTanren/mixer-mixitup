@@ -305,6 +305,14 @@ namespace MixItUp.Base.ViewModel.Games
             return command;
         }
 
+        protected CustomCommandModel CreateBasicChatCurrencyCommand(string message, CurrencyModel currency, string amount, bool whisper = false)
+        {
+            CustomCommandModel command = this.CreateBasicChatCommand();
+            command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
+            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
+            return command;
+        }
+
         private void SetUICommands()
         {
             this.AddOutcomeCommand = this.CreateCommand((parameter) =>

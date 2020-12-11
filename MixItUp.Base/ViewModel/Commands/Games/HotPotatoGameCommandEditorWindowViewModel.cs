@@ -1,107 +1,144 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HotPotatoGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class HotPotatoGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string LowerTimeLimitString
+        public int LowerTimeLimit
         {
-            get { return this.LowerTimeLimit.ToString(); }
+            get { return this.lowerTimeLimit; }
             set
             {
-                this.LowerTimeLimit = this.GetPositiveIntFromString(value);
+                this.lowerTimeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int LowerTimeLimit { get; set; } = 30;
+        private int lowerTimeLimit;
 
-        public string UpperTimeLimitString
+        public int UpperTimeLimit
         {
-            get { return this.UpperTimeLimit.ToString(); }
+            get { return this.upperTimeLimit; }
             set
             {
-                this.UpperTimeLimit = this.GetPositiveIntFromString(value);
+                this.upperTimeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int UpperTimeLimit { get; set; } = 30;
+        private int upperTimeLimit;
 
-        public bool AllowUserTargeting
+        public bool UserSelectionTargeted
         {
-            get { return this.allowUserTargeting; }
+            get { return this.userSelectionTargeted; }
             set
             {
-                this.allowUserTargeting = value;
+                this.userSelectionTargeted = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public bool allowUserTargeting { get; set; } = false;
+        private bool userSelectionTargeted;
 
-        public CustomCommand StartedCommand { get; set; }
+        public bool UserSelectionRandom
+        {
+            get { return this.userSelectionRandom; }
+            set
+            {
+                this.userSelectionRandom = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool userSelectionRandom;
 
-        public CustomCommand TossPotatoCommand { get; set; }
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
 
-        public CustomCommand PotatoExplodeCommand { get; set; }
+        public CustomCommandModel TossPotatoCommand
+        {
+            get { return this.tossPotatoCommand; }
+            set
+            {
+                this.tossPotatoCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel tossPotatoCommand;
 
-        public HotPotatoGameCommand existingCommand;
+        public CustomCommandModel PotatoExplodeCommand
+        {
+            get { return this.potatoExplodeCommand; }
+            set
+            {
+                this.potatoExplodeCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel potatoExplodeCommand;
+
+        public HotPotatoGameCommandEditorWindowViewModel(HotPotatoGameCommandModel command)
+            : base(command)
+        {
+            this.LowerTimeLimit = command.LowerTimeLimit;
+            this.UpperTimeLimit = command.UpperTimeLimit;
+            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
+            this.StartedCommand = command.StartedCommand;
+            this.TossPotatoCommand = command.TossPotatoCommand;
+            this.PotatoExplodeCommand = command.PotatoExplodeCommand;
+        }
 
         public HotPotatoGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!");
-            this.TossPotatoCommand = this.CreateBasicChatCommand("@$username has tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!");
-            this.PotatoExplodeCommand = this.CreateBasicChatCommand("The potato exploded in @$targetusername hands! @$username gains 100 " + currency.Name + "!");
-            this.PotatoExplodeCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, "100"));
+            this.LowerTimeLimit = 30;
+            this.UpperTimeLimit = 60;
+            this.UserSelectionTargeted = true;
+            this.UserSelectionRandom = true;
+            this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHotPotatoStartedExample);
+            this.TossPotatoCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHotPotatoPassedExample);
+            this.PotatoExplodeCommand = this.CreateBasicChatCurrencyCommand(string.Format(MixItUp.Base.Resources.GameCommandHotPotatoExplodedExample, 100, currency.Name), currency, "100");
         }
 
-        public HotPotatoGameCommandEditorWindowViewModel(HotPotatoGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
 #pragma warning disable CS0612 // Type or member is obsolete
-            if (this.existingCommand.TimeLimit > 0)
-            {
-                this.existingCommand.LowerLimit = this.existingCommand.TimeLimit;
-                this.existingCommand.UpperLimit = this.existingCommand.TimeLimit;
-                this.existingCommand.TimeLimit = 0;
-            }
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
 #pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
-            this.LowerTimeLimit = this.existingCommand.LowerLimit;
-            this.UpperTimeLimit = this.existingCommand.UpperLimit;
-            this.AllowUserTargeting = this.existingCommand.AllowUserTargeting;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-            this.TossPotatoCommand = this.existingCommand.TossPotatoCommand;
-            this.PotatoExplodeCommand = this.existingCommand.PotatoExplodeCommand;
+            return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, selectionType, this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            GameCommandBase newCommand = new HotPotatoGameCommand(name, triggers, requirements, this.LowerTimeLimit, this.UpperTimeLimit, this.AllowUserTargeting, this.StartedCommand, this.TossPotatoCommand,
-                this.PotatoExplodeCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.LowerTimeLimit <= 0)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The Lower Time Limit is not a valid number greater than 0");
-                return false;
+                return result;
             }
 
-            if (this.UpperTimeLimit <= 0)
+            if (this.LowerTimeLimit < 0 || this.UpperTimeLimit < 0 || this.UpperTimeLimit < this.LowerTimeLimit)
             {
-                await DialogHelper.ShowMessage("The Upper Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
-            return true;
+
+            if (!this.UserSelectionTargeted && !this.UserSelectionRandom)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandOneUserSelectionTypeMustBeSelected);
+            }
+
+            return new Result();
         }
     }
 }

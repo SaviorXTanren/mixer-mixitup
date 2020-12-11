@@ -46,6 +46,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Hitman:
                     break;
                 case GameCommandTypeEnum.HotPotato:
+                    this.editorDetailsControl = new HotPotatoGameCommandEditorDetailsControl();
+                    this.viewModel = new HotPotatoGameCommandEditorWindowViewModel((HotPotatoGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.LockBox:
                     break;
@@ -106,6 +108,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Hitman:
                     break;
                 case GameCommandTypeEnum.HotPotato:
+                    this.editorDetailsControl = new HotPotatoGameCommandEditorDetailsControl();
+                    this.viewModel = new HotPotatoGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.LockBox:
                     break;

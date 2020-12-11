@@ -11,11 +11,12 @@ namespace MixItUp.Base.Model.Commands.Games
     public class HotPotatoGameCommandModel : GameCommandModelBase
     {
         [DataMember]
-        public int LowerLimit { get; set; }
+        public int LowerTimeLimit { get; set; }
         [DataMember]
-        public int UpperLimit { get; set; }
+        public int UpperTimeLimit { get; set; }
+
         [DataMember]
-        public bool AllowUserTargeting { get; set; }
+        public GamePlayerSelectionType SelectionType { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
@@ -32,13 +33,13 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel lastTossParameters;
 
-        public HotPotatoGameCommandModel(string name, HashSet<string> triggers, int lowerLimit, int upperLimit, bool allowUserTargeting,
+        public HotPotatoGameCommandModel(string name, HashSet<string> triggers, int lowerTimeLimit, int upperTimeLimit, GamePlayerSelectionType selectionType,
             CustomCommandModel startedCommand, CustomCommandModel tossPotatoCommand, CustomCommandModel potatoExplodeCommand)
             : base(name, triggers, GameCommandTypeEnum.HotPotato)
         {
-            this.LowerLimit = lowerLimit;
-            this.UpperLimit = upperLimit;
-            this.AllowUserTargeting = allowUserTargeting;
+            this.LowerTimeLimit = lowerTimeLimit;
+            this.UpperTimeLimit = upperTimeLimit;
+            this.SelectionType = selectionType;
             this.StartedCommand = startedCommand;
             this.TossPotatoCommand = tossPotatoCommand;
             this.PotatoExplodeCommand = potatoExplodeCommand;
@@ -57,23 +58,10 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.startParameters == null || (this.gameActive && this.lastTossParameters?.TargetUser == parameters.User))
+            if (this.startParameters == null || this.gameActive)
             {
-                if (this.AllowUserTargeting)
-                {
-                    await parameters.SetTargetUser();
-                    if (parameters.TargetUser == parameters.User)
-                    {
-                        parameters.TargetUser = null;
-                    }
-                }
-
-                if (parameters.TargetUser == null)
-                {
-                    parameters.TargetUser = this.GetRandomUser(parameters);
-                }
-
-                if (parameters.TargetUser != null)
+                await this.SetSelectedUser(this.SelectionType, parameters);
+                if (parameters.TargetUser != null && this.lastTossParameters?.TargetUser == parameters.User)
                 {
                     if (this.startParameters == null)
                     {
@@ -83,7 +71,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(async (token) =>
                         {
-                            await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
+                            await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit));
 
                             this.gameActive = false;
                             await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
