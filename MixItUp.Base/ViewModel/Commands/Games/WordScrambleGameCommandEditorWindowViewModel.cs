@@ -170,7 +170,7 @@ namespace MixItUp.Base.ViewModel.Games
         public override Task<CommandModelBase> GetCommand()
         {
             return Task.FromResult<CommandModelBase>(new WordScrambleGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.WordScrambleTimeLimit, this.CustomWordsFilePath,
-                this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.wordScramblePrepareCommand, this.WordScrambleBeginCommand, this.UserSuccessCommand, this.UserFailureCommand));
+                this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.WordScramblePrepareCommand, this.WordScrambleBeginCommand, this.UserSuccessCommand, this.UserFailureCommand));
         }
 
         public override async Task<Result> Validate()

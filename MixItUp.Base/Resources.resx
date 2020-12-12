@@ -3988,6 +3988,24 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="StatusInformation" xml:space="preserve">
     <value>Status Information</value>
   </data>
+  <data name="GameCommandHitmanAppearsExample" xml:space="preserve">
+    <value>It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!</value>
+  </data>
+  <data name="GameCommandHitmanApproachingExample" xml:space="preserve">
+    <value>You can feel the presence of the hitman approaching. Get ready...</value>
+  </data>
+  <data name="GameCommandHitmanHItmanAppears" xml:space="preserve">
+    <value>Hitman Appears</value>
+  </data>
+  <data name="GameCommandHitmanHitmanApproaching" xml:space="preserve">
+    <value>Hitman Approaching</value>
+  </data>
+  <data name="GameCommandHitmanStartedExample" xml:space="preserve">
+    <value>@$username has started a game of hitman! Type !hitman in chat to play!</value>
+  </data>
+  <data name="GameCommandHItmanUserSuccessExample" xml:space="preserve">
+    <value>@$username got hitman $gamehitmanname and walked away with a bounty of $gamepayout {0}!</value>
+  </data>
   <data name="GameCommandMinimumParticipants" xml:space="preserve">
     <value>Minimum Participants</value>
   </data>

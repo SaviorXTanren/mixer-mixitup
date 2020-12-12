@@ -1,162 +1,210 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HitmanGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class HitmanGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int timeLimit;
 
-        public string HitmanTimeLimitString
+        public int HitmanTimeLimit
         {
-            get { return this.HitmanTimeLimit.ToString(); }
+            get { return this.hitmanTimeLimit; }
             set
             {
-                this.HitmanTimeLimit = this.GetPositiveIntFromString(value);
+                this.hitmanTimeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int HitmanTimeLimit { get; set; } = 10;
+        private int hitmanTimeLimit;
 
-        public string CustomHitmanNamesFilePath
+        public string CustomWordsFilePath
         {
-            get { return this.customHitmanNamesFilePath; }
+            get { return this.customWordsFilePath; }
             set
             {
-                this.customHitmanNamesFilePath = value;
+                this.customWordsFilePath = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string customHitmanNamesFilePath;
+        private string customWordsFilePath;
 
-        public CustomCommand StartedCommand { get; set; }
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
 
-        public CustomCommand UserJoinCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
+        public CustomCommandModel UserJoinCommand
+        {
+            get { return this.userJoinCommand; }
+            set
+            {
+                this.userJoinCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userJoinCommand;
 
-        public CustomCommand HitmanApproachingCommand { get; set; }
-        public CustomCommand HitmanAppearsCommand { get; set; }
+        public CustomCommandModel NotEnoughPlayersCommand
+        {
+            get { return this.notEnoughPlayersCommand; }
+            set
+            {
+                this.notEnoughPlayersCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notEnoughPlayersCommand;
 
-        public CustomCommand UserSuccessCommand { get; set; }
-        public CustomCommand UserFailCommand { get; set; }
+        public CustomCommandModel HitmanApproachingCommand
+        {
+            get { return this.hitmanApproachingCommand; }
+            set
+            {
+                this.hitmanApproachingCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel hitmanApproachingCommand;
 
-        public ICommand BrowseCustomHitmanNamesFilePathCommand { get; set; }
+        public CustomCommandModel HitmanAppearsCommand
+        {
+            get { return this.hitmanAppearsCommand; }
+            set
+            {
+                this.hitmanAppearsCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel hitmanAppearsCommand;
 
-        public HitmanGameCommand existingCommand;
+        public CustomCommandModel UserSuccessCommand
+        {
+            get { return this.userSuccessCommand; }
+            set
+            {
+                this.userSuccessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userSuccessCommand;
+
+        public CustomCommandModel UserFailureCommand
+        {
+            get { return this.userFailureCommand; }
+            set
+            {
+                this.userFailureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userFailureCommand;
+
+        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
+
+        public HitmanGameCommandEditorWindowViewModel(HitmanGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.HitmanTimeLimit = command.HitmanTimeLimit;
+            this.CustomWordsFilePath = command.CustomWordsFilePath;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.HitmanApproachingCommand = command.HitmanApproachingCommand;
+            this.HitmanAppearsCommand = command.HitmanAppearsCommand;
+            this.UserSuccessCommand = command.UserSuccessCommand;
+            this.UserFailureCommand = command.UserFailureCommand;
+
+            this.SetUICommands();
+        }
 
         public HitmanGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hitman! Type !hitman in chat to play!");
-
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.HitmanTimeLimit = 30;
+            this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanStartedExample);
             this.UserJoinCommand = this.CreateBasicChatCommand();
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.HitmanApproachingCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanApproachingExample);
+            this.HitmanAppearsCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanAppearsExample);
+            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHItmanUserSuccessExample, currency.Name));
+            this.UserFailureCommand = this.CreateBasicChatCommand();
 
-            this.HitmanApproachingCommand = this.CreateBasicChatCommand("You can feel the presence of the hitman approaching. Get ready...");
-            this.HitmanAppearsCommand = this.CreateBasicChatCommand("It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!");
-
-            this.UserSuccessCommand = this.CreateBasicChatCommand("$gamewinners got hitman $gamehitmanname and walked away with a bounty of $gamepayout " + currency.Name + "!");
-            this.UserFailCommand = this.CreateBasicChatCommand("No one was quick enough to get hitman $gamehitmanname! Better luck next time...");
+            this.SetUICommands();
         }
 
-        public HitmanGameCommandEditorWindowViewModel(HitmanGameCommand command)
-            : this()
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.HitmanTimeLimit = this.existingCommand.HitmanTimeLimit;
-            this.CustomHitmanNamesFilePath = this.existingCommand.CustomWordsFilePath;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-
-            this.HitmanApproachingCommand = this.existingCommand.HitmanApproachingCommand;
-            this.HitmanAppearsCommand = this.existingCommand.HitmanAppearsCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
+            return Task.FromResult<CommandModelBase>(new HitmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.HitmanTimeLimit, this.CustomWordsFilePath,
+                this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.HitmanApproachingCommand, this.HitmanAppearsCommand, this.UserSuccessCommand, this.UserFailureCommand));
         }
 
-        private HitmanGameCommandEditorWindowViewModel()
+        public override async Task<Result> Validate()
         {
-            this.BrowseCustomHitmanNamesFilePathCommand = this.CreateCommand((parameter) =>
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Text Files (*.txt)|*.txt|All files (*.*)|*.*");
+                return result;
+            }
+
+            if (this.MinimumParticipants < 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
+            }
+
+            if (this.TimeLimit <= 0 || this.HitmanTimeLimit <= 0)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
+            }
+
+            return new Result();
+        }
+
+        private void SetUICommands()
+        {
+            this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
+            {
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    this.CustomHitmanNamesFilePath = filePath;
+                    this.CustomWordsFilePath = filePath;
                 }
                 return Task.FromResult(0);
             });
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
-
-            GameCommandBase newCommand = new HitmanGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.CustomHitmanNamesFilePath, this.HitmanTimeLimit,
-                this.StartedCommand, this.UserJoinCommand, this.HitmanApproachingCommand, this.HitmanAppearsCommand, new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.TimeLimit <= 0)
-            {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.MinimumParticipants <= 0)
-            {
-                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.HitmanTimeLimit <= 0)
-            {
-                await DialogHelper.ShowMessage("The Hitman Time Limit is not a valid number greater than 0");
-                return false;
-            }
-
-            if (!string.IsNullOrEmpty(this.CustomHitmanNamesFilePath) && !ChannelSession.Services.FileService.FileExists(this.CustomHitmanNamesFilePath))
-            {
-                await DialogHelper.ShowMessage("The Custom Hitman Names file you specified does not exist");
-                return false;
-            }
-
-            return true;
         }
     }
 }

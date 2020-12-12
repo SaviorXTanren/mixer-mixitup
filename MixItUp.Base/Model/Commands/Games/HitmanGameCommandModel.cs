@@ -40,7 +40,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel UserSuccessCommand { get; set; }
         [DataMember]
-        public CustomCommandModel UserFailCommand { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
 
         [JsonIgnore]
         private bool gameActive = false;
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public HitmanGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int hitmanTimeLimit, string customWordsFilePath,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel hitmanApproachingCommand,
-            CustomCommandModel hitmanAppearsCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
+            CustomCommandModel hitmanAppearsCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailureCommand)
             : base(name, triggers, GameCommandTypeEnum.Hitman)
         {
             this.MinimumParticipants = minimumParticipants;
@@ -68,7 +68,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.HitmanApproachingCommand = hitmanApproachingCommand;
             this.HitmanAppearsCommand = hitmanAppearsCommand;
             this.UserSuccessCommand = userSuccessCommand;
-            this.UserFailCommand = userFailCommand;
+            this.UserFailureCommand = userFailureCommand;
         }
 
         private HitmanGameCommandModel() { }
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.HitmanApproachingCommand);
             commands.Add(this.HitmanAppearsCommand);
             commands.Add(this.UserSuccessCommand);
-            commands.Add(this.UserFailCommand);
+            commands.Add(this.UserFailureCommand);
             return commands;
         }
 
@@ -127,7 +127,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
-                        this.UserFailCommand.Perform(this.runParameters);
+                        this.UserFailureCommand.Perform(this.runParameters);
                     }
                     this.gameActive = false;
                     await this.CooldownRequirement.Perform(this.runParameters);

@@ -3951,6 +3951,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It&apos;s hitman $gamehitmanname! Quick, type $gamehitmanname in chat!.
+        /// </summary>
+        public static string GameCommandHitmanAppearsExample {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanAppearsExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can feel the presence of the hitman approaching. Get ready....
+        /// </summary>
+        public static string GameCommandHitmanApproachingExample {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanApproachingExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman&apos;s name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money..
         /// </summary>
         public static string GameCommandHitmanDescription {
@@ -3965,6 +3983,42 @@ namespace MixItUp.Base {
         public static string GameCommandHitmanExample {
             get {
                 return ResourceManager.GetString("GameCommandHitmanExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hitman Appears.
+        /// </summary>
+        public static string GameCommandHitmanHItmanAppears {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanHItmanAppears", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hitman Approaching.
+        /// </summary>
+        public static string GameCommandHitmanHitmanApproaching {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanHitmanApproaching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of hitman! Type !hitman in chat to play!.
+        /// </summary>
+        public static string GameCommandHitmanStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username got hitman $gamehitmanname and walked away with a bounty of $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandHItmanUserSuccessExample {
+            get {
+                return ResourceManager.GetString("GameCommandHItmanUserSuccessExample", resourceCulture);
             }
         }
         

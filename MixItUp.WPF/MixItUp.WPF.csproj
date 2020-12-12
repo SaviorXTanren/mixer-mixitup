@@ -590,6 +590,9 @@
       <DependentUpon>DuelGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\Games\GameCommandEditorDetailsControlBase.cs" />
+    <Compile Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HitmanGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>HotPotatoGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -666,9 +669,6 @@
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml.cs">
       <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HitmanGameEditorControl.xaml.cs">
-      <DependentUpon>HitmanGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RouletteGameEditorControl.xaml.cs">
       <DependentUpon>RouletteGameEditorControl.xaml</DependentUpon>
@@ -1450,6 +1450,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\HotPotatoGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1547,10 +1551,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HitmanGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
