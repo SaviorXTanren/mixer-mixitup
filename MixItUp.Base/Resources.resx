@@ -3988,4 +3988,40 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="StatusInformation" xml:space="preserve">
     <value>Status Information</value>
   </data>
+  <data name="GameCommandMinimumParticipants" xml:space="preserve">
+    <value>Minimum Participants</value>
+  </data>
+  <data name="GameCommandMinimumParticipantsMustBeGreaterThan0" xml:space="preserve">
+    <value>Minimum participants must be greater than 0</value>
+  </data>
+  <data name="GameCommandUserLose" xml:space="preserve">
+    <value>User Lose</value>
+  </data>
+  <data name="GameCommandUserWin" xml:space="preserve">
+    <value>User Win</value>
+  </data>
+  <data name="GameCommandWordScrambleCustomWordsFilePath" xml:space="preserve">
+    <value>Custom Words File Path</value>
+  </data>
+  <data name="GameCommandWordScrambleStartedExample" xml:space="preserve">
+    <value>@$username has started a game of word scramble! Type !scramble in chat to play!</value>
+  </data>
+  <data name="GameCommandWordScrambleTimeLimit" xml:space="preserve">
+    <value>Word Scramble Time Limit</value>
+  </data>
+  <data name="GameCommandWordScrambleUserSuccessExample" xml:space="preserve">
+    <value>@$username correctly guessed the word \"$gamewordscrambleanswer\" and walked away with a bounty of $gamepayout {0}!</value>
+  </data>
+  <data name="GameCommandWordScrambleWordScrambleBegin" xml:space="preserve">
+    <value>Word Scramble Begin</value>
+  </data>
+  <data name="GameCommandWordScrambleWordScrambleBeginExample" xml:space="preserve">
+    <value>The scrambled word is \"$gamewordscrambleword\"; solve it and be the first to type it in chat!</value>
+  </data>
+  <data name="GameCommandWordScrambleWordScramblePrepare" xml:space="preserve">
+    <value>Word Scramble Prepare</value>
+  </data>
+  <data name="GameCommandWordScrambleWordScramblePrepareExample" xml:space="preserve">
+    <value>Everyone is gathered patiently with their pencils in hand. Get ready...</value>
+  </data>
 </root>

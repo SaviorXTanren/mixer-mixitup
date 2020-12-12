@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
-            GameCommandEditorWindow window = new GameCommandEditorWindow(GameCommandTypeEnum.LockBox, this.viewModel.PrimaryCurrency);
+            GameCommandEditorWindow window = new GameCommandEditorWindow(GameCommandTypeEnum.WordScramble, this.viewModel.PrimaryCurrency);
             window.Closed += Window_Closed;
             window.Show();
         }

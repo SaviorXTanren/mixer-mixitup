@@ -1,48 +1,46 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class WordScrambleGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class WordScrambleGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int timeLimit;
 
-        public string WordScrambleTimeLimitString
+        public int WordScrambleTimeLimit
         {
-            get { return this.WordScrambleTimeLimit.ToString(); }
+            get { return this.wordScrambleTimeLimit; }
             set
             {
-                this.WordScrambleTimeLimit = this.GetPositiveIntFromString(value);
+                this.wordScrambleTimeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int WordScrambleTimeLimit { get; set; } = 60;
+        private int wordScrambleTimeLimit;
 
         public string CustomWordsFilePath
         {
@@ -55,108 +53,158 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private string customWordsFilePath;
 
-        public CustomCommand StartedCommand { get; set; }
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
 
-        public CustomCommand UserJoinCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
+        public CustomCommandModel UserJoinCommand
+        {
+            get { return this.userJoinCommand; }
+            set
+            {
+                this.userJoinCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userJoinCommand;
 
-        public CustomCommand WordScramblePrepareCommand { get; set; }
-        public CustomCommand WordScrambleBeginCommand { get; set; }
+        public CustomCommandModel NotEnoughPlayersCommand
+        {
+            get { return this.notEnoughPlayersCommand; }
+            set
+            {
+                this.notEnoughPlayersCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notEnoughPlayersCommand;
 
-        public CustomCommand UserSuccessCommand { get; set; }
-        public CustomCommand UserFailCommand { get; set; }
+        public CustomCommandModel WordScramblePrepareCommand
+        {
+            get { return this.wordScramblePrepareCommand; }
+            set
+            {
+                this.wordScramblePrepareCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel wordScramblePrepareCommand;
+
+        public CustomCommandModel WordScrambleBeginCommand
+        {
+            get { return this.wordScrambleBeginCommand; }
+            set
+            {
+                this.wordScrambleBeginCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel wordScrambleBeginCommand;
+
+        public CustomCommandModel UserSuccessCommand
+        {
+            get { return this.userSuccessCommand; }
+            set
+            {
+                this.userSuccessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userSuccessCommand;
+
+        public CustomCommandModel UserFailureCommand
+        {
+            get { return this.userFailureCommand; }
+            set
+            {
+                this.userFailureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userFailureCommand;
 
         public ICommand BrowseCustomWordsFilePathCommand { get; set; }
 
-        public WordScrambleGameCommand existingCommand;
+        public WordScrambleGameCommandEditorWindowViewModel(WordScrambleGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.WordScrambleTimeLimit = command.WordScrambleTimeLimit;
+            this.CustomWordsFilePath = command.CustomWordsFilePath;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.WordScramblePrepareCommand = command.WordScramblePrepareCommand;
+            this.WordScrambleBeginCommand = command.WordScrambleBeginCommand;
+            this.UserSuccessCommand = command.UserSuccessCommand;
+            this.UserFailureCommand = command.UserFailureCommand;
+
+            this.SetUICommands();
+        }
 
         public WordScrambleGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of word scramble! Type !scramble in chat to play!");
-
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.WordScrambleTimeLimit = 300;
+            this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleStartedExample);
             this.UserJoinCommand = this.CreateBasicChatCommand();
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.WordScramblePrepareCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScramblePrepareExample);
+            this.WordScrambleBeginCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScrambleBeginExample);
+            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandWordScrambleUserSuccessExample, currency.Name));
+            this.UserFailureCommand = this.CreateBasicChatCommand();
 
-            this.WordScramblePrepareCommand = this.CreateBasicChatCommand("Everyone is gathered patiently with their pencils in hand. Get ready...");
-            this.WordScrambleBeginCommand = this.CreateBasicChatCommand("The scrambled word is \"$gamewordscrambleword\"; solve it and be the first to type it in chat!");
-
-            this.UserSuccessCommand = this.CreateBasicChatCommand("$gamewinners correctly guessed the word \"$gamewordscrambleanswer\" and walked away with a bounty of $gamepayout " + currency.Name + "!");
-            this.UserFailCommand = this.CreateBasicChatCommand("No one was able the guess the word \"$gamewordscrambleanswer\"! Better luck next time...");
+            this.SetUICommands();
         }
 
-        public WordScrambleGameCommandEditorWindowViewModel(WordScrambleGameCommand command)
-            : this()
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.WordScrambleTimeLimit = this.existingCommand.WordScrambleTimeLimit;
-            this.CustomWordsFilePath = this.existingCommand.CustomWordsFilePath;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-
-            this.WordScramblePrepareCommand = this.existingCommand.WordScramblePrepareCommand;
-            this.WordScrambleBeginCommand = this.existingCommand.WordScrambleBeginCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
+            return Task.FromResult<CommandModelBase>(new WordScrambleGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.WordScrambleTimeLimit, this.CustomWordsFilePath,
+                this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.wordScramblePrepareCommand, this.WordScrambleBeginCommand, this.UserSuccessCommand, this.UserFailureCommand));
         }
 
-        private WordScrambleGameCommandEditorWindowViewModel()
+        public override async Task<Result> Validate()
+        {
+            Result result = await base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            if (this.MinimumParticipants < 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
+            }
+
+            if (this.TimeLimit <= 0 || this.WordScrambleTimeLimit <= 0)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
+            }
+
+            return new Result();
+        }
+
+        private void SetUICommands()
         {
             this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Text Files (*.txt)|*.txt|All files (*.*)|*.*");
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;
                 }
                 return Task.FromResult(0);
             });
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
-
-            GameCommandBase newCommand = new WordScrambleGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.CustomWordsFilePath, this.WordScrambleTimeLimit,
-                this.StartedCommand, this.UserJoinCommand, this.WordScramblePrepareCommand, this.WordScrambleBeginCommand, new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.TimeLimit <= 0)
-            {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.MinimumParticipants <= 0)
-            {
-                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.WordScrambleTimeLimit <= 0)
-            {
-                await DialogHelper.ShowMessage("The Word Scramble Time Limit is not a valid number greater than 0");
-                return false;
-            }
-
-            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && !ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
-            {
-                await DialogHelper.ShowMessage("The Custom Words file you specified does not exist");
-                return false;
-            }
-
-            return true;
         }
     }
 }

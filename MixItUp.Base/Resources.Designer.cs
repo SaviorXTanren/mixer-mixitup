@@ -4249,6 +4249,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum Participants.
+        /// </summary>
+        public static string GameCommandMinimumParticipants {
+            get {
+                return ResourceManager.GetString("GameCommandMinimumParticipants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum participants must be greater than 0.
+        /// </summary>
+        public static string GameCommandMinimumParticipantsMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("GameCommandMinimumParticipantsMustBeGreaterThan0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Enough Players.
         /// </summary>
         public static string GameCommandNotEnoughPlayers {
@@ -4687,6 +4705,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Lose.
+        /// </summary>
+        public static string GameCommandUserLose {
+            get {
+                return ResourceManager.GetString("GameCommandUserLose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Win.
+        /// </summary>
+        public static string GameCommandUserWin {
+            get {
+                return ResourceManager.GetString("GameCommandUserWin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volcano.
         /// </summary>
         public static string GameCommandVolcano {
@@ -4743,6 +4779,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Words File Path.
+        /// </summary>
+        public static string GameCommandWordScrambleCustomWordsFilePath {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleCustomWordsFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Word Scramble game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a scrambled word will appear in chat. If a user types the unscrambled word in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money..
         /// </summary>
         public static string GameCommandWordScrambleDescription {
@@ -4757,6 +4802,69 @@ namespace MixItUp.Base {
         public static string GameCommandWordScrambleExample {
             get {
                 return ResourceManager.GetString("GameCommandWordScrambleExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of word scramble! Type !scramble in chat to play!.
+        /// </summary>
+        public static string GameCommandWordScrambleStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word Scramble Time Limit.
+        /// </summary>
+        public static string GameCommandWordScrambleTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleTimeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username correctly guessed the word \&quot;$gamewordscrambleanswer\&quot; and walked away with a bounty of $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandWordScrambleUserSuccessExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleUserSuccessExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word Scramble Begin.
+        /// </summary>
+        public static string GameCommandWordScrambleWordScrambleBegin {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleWordScrambleBegin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scrambled word is \&quot;$gamewordscrambleword\&quot;; solve it and be the first to type it in chat!.
+        /// </summary>
+        public static string GameCommandWordScrambleWordScrambleBeginExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleWordScrambleBeginExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word Scramble Prepare.
+        /// </summary>
+        public static string GameCommandWordScrambleWordScramblePrepare {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleWordScramblePrepare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Everyone is gathered patiently with their pencils in hand. Get ready....
+        /// </summary>
+        public static string GameCommandWordScrambleWordScramblePrepareExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleWordScramblePrepareExample", resourceCulture);
             }
         }
         

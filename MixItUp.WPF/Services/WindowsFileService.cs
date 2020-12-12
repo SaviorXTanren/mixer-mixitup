@@ -20,6 +20,7 @@ namespace MixItUp.WPF.Services
 
         private static SemaphoreSlim fileLock = new SemaphoreSlim(1);
 
+        public string TextFileFilter() { return "Text Files|*.txt|All files (*.*)|*.*"; }
         public string ImageFileFilter() { return "All Picture Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*"; }
         public string MusicFileFilter() { return "MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*"; }
         public string VideoFileFilter() { return "MP4/WEBM Files|*.mp4;*.webm|All files (*.*)|*.*"; }

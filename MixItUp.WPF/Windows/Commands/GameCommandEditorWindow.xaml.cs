@@ -76,6 +76,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Volcano:
                     break;
                 case GameCommandTypeEnum.WordScramble:
+                    this.editorDetailsControl = new WordScrambleGameCommandEditorDetailsControl();
+                    this.viewModel = new WordScrambleGameCommandEditorWindowViewModel((WordScrambleGameCommandModel)existingCommand);
                     break;
             }
 
@@ -140,6 +142,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Volcano:
                     break;
                 case GameCommandTypeEnum.WordScramble:
+                    this.editorDetailsControl = new WordScrambleGameCommandEditorDetailsControl();
+                    this.viewModel = new WordScrambleGameCommandEditorWindowViewModel(currency);
                     break;
             }
 

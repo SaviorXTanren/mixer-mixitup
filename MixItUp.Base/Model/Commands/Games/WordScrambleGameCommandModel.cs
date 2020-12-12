@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Commands.Games
 {
     [DataContract]
-    public class WordScrambleGameCommand : GameCommandModelBase
+    public class WordScrambleGameCommandModel : GameCommandModelBase
     {
         public const string GameWordScrambleWordSpecialIdentifier = "gamewordscrambleword";
         public const string GameWordScrambleAnswerSpecialIdentifier = "gamewordscrambleanswer";
@@ -41,7 +41,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel UserSuccessCommand { get; set; }
         [DataMember]
-        public CustomCommandModel UserFailCommand { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
 
         [JsonIgnore]
         private CommandParametersModel runParameters;
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private string runWordScrambled;
 
-        public WordScrambleGameCommand(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int wordScrambleTimeLimit, string customWordsFilePath,
+        public WordScrambleGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int wordScrambleTimeLimit, string customWordsFilePath,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand,
             CustomCommandModel wordScramblePrepareCommand, CustomCommandModel wordScrambleBeginCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
             : base(name, triggers, GameCommandTypeEnum.WordScramble)
@@ -69,10 +69,10 @@ namespace MixItUp.Base.Model.Commands.Games
             this.WordScramblePrepareCommand = wordScramblePrepareCommand;
             this.WordScrambleBeginCommand = wordScrambleBeginCommand;
             this.UserSuccessCommand = userSuccessCommand;
-            this.UserFailCommand = userFailCommand;
+            this.UserFailureCommand = userFailCommand;
         }
 
-        private WordScrambleGameCommand() { }
+        private WordScrambleGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
         {
@@ -83,7 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.WordScramblePrepareCommand);
             commands.Add(this.WordScrambleBeginCommand);
             commands.Add(this.UserSuccessCommand);
-            commands.Add(this.UserFailCommand);
+            commands.Add(this.UserFailureCommand);
             return commands;
         }
 
@@ -100,8 +100,8 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     await Task.Delay(this.TimeLimit * 1000);
 
-                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
-                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled = this.runWord.Shuffle();
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled = this.runWord.Shuffle();
 
                     if (this.runUsers.Count < this.MinimumParticipants)
                     {
@@ -129,7 +129,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (!string.IsNullOrEmpty(this.runWord))
                     {
-                        this.UserFailCommand.Perform(this.runParameters);
+                        this.UserFailureCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();
@@ -162,8 +162,8 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.PerformPayout(new CommandParametersModel(message.User), payout);
 
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
-                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
-                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommand.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
+                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
+                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
 
                 await this.CooldownRequirement.Perform(this.runParameters);
                 this.ClearData();
