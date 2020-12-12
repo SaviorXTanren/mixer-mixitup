@@ -1,126 +1,173 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class RussianRouletteGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class RussianRouletteGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 60;
+        private int timeLimit;
 
-        public string MaxWinnersString
+        public int MaxWinners
         {
-            get { return this.MaxWinners.ToString(); }
+            get { return this.maxWinners; }
             set
             {
-                this.MaxWinners = this.GetPositiveIntFromString(value);
+                this.maxWinners = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MaxWinners { get; set; } = 1;
+        private int maxWinners;
 
-        public CustomCommand StartedCommand { get; set; }
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
 
-        public CustomCommand UserJoinCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
+        public CustomCommandModel UserJoinCommand
+        {
+            get { return this.userJoinCommand; }
+            set
+            {
+                this.userJoinCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userJoinCommand;
 
-        public CustomCommand UserSuccessCommand { get; set; }
-        public CustomCommand UserFailCommand { get; set; }
-        public CustomCommand GameCompleteCommand { get; set; }
+        public CustomCommandModel NotEnoughPlayersCommand
+        {
+            get { return this.notEnoughPlayersCommand; }
+            set
+            {
+                this.notEnoughPlayersCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notEnoughPlayersCommand;
 
-        private RussianRouletteGameCommand existingCommand;
+        public CustomCommandModel UserSuccessCommand
+        {
+            get { return this.userSuccessCommand; }
+            set
+            {
+                this.userSuccessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userSuccessCommand;
+
+        public CustomCommandModel UserFailureCommand
+        {
+            get { return this.userFailureCommand; }
+            set
+            {
+                this.userFailureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userFailureCommand;
+
+        public CustomCommandModel GameCompleteCommand
+        {
+            get { return this.gameCompleteCommand; }
+            set
+            {
+                this.gameCompleteCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameCompleteCommand;
+
+        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
+
+        public RussianRouletteGameCommandEditorWindowViewModel(RussianRouletteGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.MaxWinners = command.MaxWinners;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.UserSuccessCommand = command.UserSuccessCommand;
+            this.UserFailureCommand = command.UserFailureCommand;
+            this.GameCompleteCommand = command.GameCompleteCommand;
+        }
 
         public RussianRouletteGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
-
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.MaxWinners = 1;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteStartedExample, currency.Name));
             this.UserJoinCommand = this.CreateBasicChatCommand();
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
-
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.UserSuccessCommand = this.CreateBasicChatCommand();
-            this.UserFailCommand = this.CreateBasicChatCommand();
-            this.GameCompleteCommand = this.CreateBasicChatCommand("The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout " + currency.Name + "!");
+            this.UserFailureCommand = this.CreateBasicChatCommand();
+            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteGameCompleteExample, currency.Name));
         }
 
-        public RussianRouletteGameCommandEditorWindowViewModel(RussianRouletteGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.MaxWinners = this.existingCommand.MaxWinners;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
-            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+            return Task.FromResult<CommandModelBase>(new RussianRouletteGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.MaxWinners, this.StartedCommand,
+                this.UserJoinCommand, this.NotEnoughPlayersCommand, this.UserSuccessCommand, this.UserFailureCommand, this.GameCompleteCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
-
-            GameCommandBase newCommand = new RussianRouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
-                new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.MaxWinners,
-                this.GameCompleteCommand, this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.TimeLimit <= 0)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return result;
             }
 
-            if (this.MinimumParticipants <= 0)
+            if (this.MinimumParticipants < 1)
             {
-                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
+            }
+
+            if (this.TimeLimit <= 0)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
             if (this.MaxWinners <= 0)
             {
-                await DialogHelper.ShowMessage("The Max Winners is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandRussianRouletteMaxWinnersMustBeGreaterThan0);
             }
 
-            if (this.MaxWinners >= this.MinimumParticipants)
-            {
-                await DialogHelper.ShowMessage("Max Winners must be less than Minimum Participants");
-                return false;
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

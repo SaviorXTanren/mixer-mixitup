@@ -4070,9 +4070,9 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to Hitman Appears.
         /// </summary>
-        public static string GameCommandHitmanHItmanAppears {
+        public static string GameCommandHitmanHitmanAppears {
             get {
-                return ResourceManager.GetString("GameCommandHitmanHItmanAppears", resourceCulture);
+                return ResourceManager.GetString("GameCommandHitmanHitmanAppears", resourceCulture);
             }
         }
         
@@ -4097,9 +4097,9 @@ namespace MixItUp.Base {
         /// <summary>
         ///   Looks up a localized string similar to @$username got hitman $gamehitmanname and walked away with a bounty of $gamepayout {0}!.
         /// </summary>
-        public static string GameCommandHItmanUserSuccessExample {
+        public static string GameCommandHitmanUserSuccessExample {
             get {
-                return ResourceManager.GetString("GameCommandHItmanUserSuccessExample", resourceCulture);
+                return ResourceManager.GetString("GameCommandHitmanUserSuccessExample", resourceCulture);
             }
         }
         
@@ -4525,6 +4525,42 @@ namespace MixItUp.Base {
         public static string GameCommandRussianRouletteExample {
             get {
                 return ResourceManager.GetString("GameCommandRussianRouletteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The dust settles after a grueling match-up and...It&apos;s $gamewinners! Total Amount Per Winner: $gameallpayout {0}!.
+        /// </summary>
+        public static string GameCommandRussianRouletteGameCompleteExample {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteGameCompleteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Winners.
+        /// </summary>
+        public static string GameCommandRussianRouletteMaxWinners {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteMaxWinners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Winners must be greater than 0.
+        /// </summary>
+        public static string GameCommandRussianRouletteMaxWinnersMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteMaxWinnersMustBeGreaterThan0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of Russian Roulette with a $gamebet {0} entry fee! Type !rr to join in!.
+        /// </summary>
+        public static string GameCommandRussianRouletteStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteStartedExample", resourceCulture);
             }
         }
         

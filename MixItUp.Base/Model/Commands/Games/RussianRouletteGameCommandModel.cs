@@ -29,7 +29,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel UserSuccessCommand { get; set; }
         [DataMember]
-        public CustomCommandModel UserFailCommand { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
         [DataMember]
         public CustomCommandModel GameCompleteCommand { get; set; }
 
@@ -41,7 +41,7 @@ namespace MixItUp.Base.Model.Commands.Games
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
 
         public RussianRouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int maxWinners, CustomCommandModel startedCommand,
-            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand, CustomCommandModel gameCompleteCommand)
+            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailureCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.RussianRoulette)
         {
             this.MinimumParticipants = minimumParticipants;
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserJoinCommand = userJoinCommand;
             this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
             this.UserSuccessCommand = userSuccessCommand;
-            this.UserFailCommand = userFailCommand;
+            this.UserFailureCommand = userFailureCommand;
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
@@ -64,7 +64,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.UserJoinCommand);
             commands.Add(this.NotEnoughPlayersCommand);
             commands.Add(this.UserSuccessCommand);
-            commands.Add(this.UserFailCommand);
+            commands.Add(this.UserFailureCommand);
             commands.Add(this.GameCompleteCommand);
             return commands;
         }
@@ -117,7 +117,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     foreach (CommandParametersModel loser in participants)
                     {
-                        await this.UserFailCommand.Perform(loser);
+                        await this.UserFailureCommand.Perform(loser);
                     }
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));

@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.HitmanApproachingCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanApproachingExample);
             this.HitmanAppearsCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanAppearsExample);
-            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHItmanUserSuccessExample, currency.Name));
+            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHitmanUserSuccessExample, currency.Name));
             this.UserFailureCommand = this.CreateBasicChatCommand();
 
             this.SetUICommands();

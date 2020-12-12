@@ -602,6 +602,9 @@
     <Compile Include="Controls\Commands\Games\LockBoxGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>LockBoxGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\RussianRouletteGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>RussianRouletteGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>SlotMachineGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -672,9 +675,6 @@
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RouletteGameEditorControl.xaml.cs">
       <DependentUpon>RouletteGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml.cs">
-      <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TriviaGameEditorControl.xaml.cs">
       <DependentUpon>TriviaGameEditorControl.xaml</DependentUpon>
@@ -1466,6 +1466,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\RussianRouletteGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\SlotMachineGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1555,10 +1559,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\RouletteGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\RussianRouletteGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

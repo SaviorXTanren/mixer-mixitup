@@ -60,6 +60,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Roulette:
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
+                    this.editorDetailsControl = new RussianRouletteGameCommandEditorDetailsControl();
+                    this.viewModel = new RussianRouletteGameCommandEditorWindowViewModel((RussianRouletteGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.SlotMachine:
                     this.editorDetailsControl = new SlotMachineGameCommandEditorDetailsControl();
@@ -130,6 +132,8 @@ namespace MixItUp.WPF.Windows.Commands
                 case GameCommandTypeEnum.Roulette:
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
+                    this.editorDetailsControl = new RussianRouletteGameCommandEditorDetailsControl();
+                    this.viewModel = new RussianRouletteGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.SlotMachine:
                     this.editorDetailsControl = new SlotMachineGameCommandEditorDetailsControl();

@@ -4021,7 +4021,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandHitmanApproachingExample" xml:space="preserve">
     <value>You can feel the presence of the hitman approaching. Get ready...</value>
   </data>
-  <data name="GameCommandHitmanHItmanAppears" xml:space="preserve">
+  <data name="GameCommandHitmanHitmanAppears" xml:space="preserve">
     <value>Hitman Appears</value>
   </data>
   <data name="GameCommandHitmanHitmanApproaching" xml:space="preserve">
@@ -4030,7 +4030,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandHitmanStartedExample" xml:space="preserve">
     <value>@$username has started a game of hitman! Type !hitman in chat to play!</value>
   </data>
-  <data name="GameCommandHItmanUserSuccessExample" xml:space="preserve">
+  <data name="GameCommandHitmanUserSuccessExample" xml:space="preserve">
     <value>@$username got hitman $gamehitmanname and walked away with a bounty of $gamepayout {0}!</value>
   </data>
   <data name="GameCommandMinimumParticipants" xml:space="preserve">
@@ -4038,6 +4038,18 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="GameCommandMinimumParticipantsMustBeGreaterThan0" xml:space="preserve">
     <value>Minimum participants must be greater than 0</value>
+  </data>
+  <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
+    <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout {0}!</value>
+  </data>
+  <data name="GameCommandRussianRouletteMaxWinners" xml:space="preserve">
+    <value>Max Winners</value>
+  </data>
+  <data name="GameCommandRussianRouletteMaxWinnersMustBeGreaterThan0" xml:space="preserve">
+    <value>Max Winners must be greater than 0</value>
+  </data>
+  <data name="GameCommandRussianRouletteStartedExample" xml:space="preserve">
+    <value>@$username has started a game of Russian Roulette with a $gamebet {0} entry fee! Type !rr to join in!</value>
   </data>
   <data name="GameCommandUserLose" xml:space="preserve">
     <value>User Lose</value>
