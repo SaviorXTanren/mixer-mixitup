@@ -3906,11 +3906,92 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed Guess.
+        /// </summary>
+        public static string GameCommandHangmanFailedGuess {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanFailedGuess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent.
+        /// </summary>
+        public static string GameCommandHangmanFailedGuessExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanFailedGuessExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The game is lost with too many failed guesses; the correct answer was &quot;$gamehangmananswer&quot;. There goes $gametotalamount {0}!.
+        /// </summary>
+        public static string GameCommandHangmanGameLostExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanGameLostExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username got the last letter for &quot;$gamehangmananswer&quot;, winning the whole pot of $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandHangmanGameWonExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanGameWonExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Failures.
+        /// </summary>
+        public static string GameCommandHangmanMaxFailures {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanMaxFailures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Failures must be a positive number.
+        /// </summary>
+        public static string GameCommandHangmanMaxFailuresMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanMaxFailuresMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument must be a valid letter.
         /// </summary>
         public static string GameCommandHangmanNotLetter {
             get {
                 return ResourceManager.GetString("GameCommandHangmanNotLetter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to So far, you&apos;ve gotten $gamehangmancurrent correct &amp; guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount {0} inside it..
+        /// </summary>
+        public static string GameCommandHangmanStatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanStatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successful Guess.
+        /// </summary>
+        public static string GameCommandHangmanSuccessfulGuess {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanSuccessfulGuess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username drops their coins into the pot and try the letter $arg1text...and gets it right! $gamehangmancurrent.
+        /// </summary>
+        public static string GameCommandHangmanSuccessfulGuessExample {
+            get {
+                return ResourceManager.GetString("GameCommandHangmanSuccessfulGuessExample", resourceCulture);
             }
         }
         
@@ -4878,7 +4959,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @$username correctly guessed the word \&quot;$gamewordscrambleanswer\&quot; and walked away with a bounty of $gamepayout {0}!.
+        ///   Looks up a localized string similar to @$username correctly guessed the word &quot;$gamewordscrambleanswer&quot; and walked away with a bounty of $gamepayout {0}!.
         /// </summary>
         public static string GameCommandWordScrambleUserSuccessExample {
             get {
@@ -4896,7 +4977,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The scrambled word is \&quot;$gamewordscrambleword\&quot;; solve it and be the first to type it in chat!.
+        ///   Looks up a localized string similar to The scrambled word is &quot;$gamewordscrambleword&quot;; solve it and be the first to type it in chat!.
         /// </summary>
         public static string GameCommandWordScrambleWordScrambleBeginExample {
             get {

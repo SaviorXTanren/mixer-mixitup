@@ -15,11 +15,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public const string GameHangmanAnswerSpecialIdentifier = "gamehangmananswer";
 
         [DataMember]
-        public string StatusArgument { get; set; }
-        [DataMember]
-        public CustomCommandModel StatusCommand { get; set; }
-
-        [DataMember]
         public int MaxFailures { get; set; }
         [DataMember]
         public int InitialAmount { get; set; }
@@ -37,6 +32,11 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel GameLostCommand { get; set; }
 
         [DataMember]
+        public string StatusArgument { get; set; }
+        [DataMember]
+        public CustomCommandModel StatusCommand { get; set; }
+
+        [DataMember]
         public string CurrentWord { get; set; }
         [DataMember]
         public int TotalAmount { get; set; }
@@ -45,12 +45,10 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public HashSet<char> FailedGuesses { get; set; } = new HashSet<char>();
 
-        public HangmanGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel statusCommand, int maxFailures, int initialAmount, string customWordsFilePath,
-            CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand, CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand)
+        public HangmanGameCommandModel(string name, HashSet<string> triggers, int maxFailures, int initialAmount, string customWordsFilePath, CustomCommandModel successfulGuessCommand, CustomCommandModel failedGuessCommand,
+            CustomCommandModel gameWonCommand, CustomCommandModel gameLostCommand, string statusArgument, CustomCommandModel statusCommand)
             : base(name, triggers, GameCommandTypeEnum.Hangman)
         {
-            this.StatusArgument = statusArgument;
-            this.StatusCommand = statusCommand;
             this.MaxFailures = maxFailures;
             this.InitialAmount = initialAmount;
             this.CustomWordsFilePath = customWordsFilePath;
@@ -58,6 +56,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedGuessCommand = failedGuessCommand;
             this.GameWonCommand = gameWonCommand;
             this.GameLostCommand = gameLostCommand;
+            this.StatusArgument = statusArgument;
+            this.StatusCommand = statusCommand;
         }
 
         private HangmanGameCommandModel() { }

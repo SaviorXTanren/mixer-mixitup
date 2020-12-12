@@ -1,39 +1,35 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HangmanGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class HangmanGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MaxFailuresString
+        public int MaxFailures
         {
-            get { return this.MaxFailures.ToString(); }
+            get { return this.maxFailures; }
             set
             {
-                this.MaxFailures = this.GetPositiveIntFromString(value);
+                this.maxFailures = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MaxFailures { get; set; } = 5;
+        private int maxFailures;
 
-        public string InitialAmountString
+        public int InitialAmount
         {
-            get { return this.InitialAmount.ToString(); }
+            get { return this.initialAmount; }
             set
             {
-                this.InitialAmount = this.GetPositiveIntFromString(value);
+                this.initialAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int InitialAmount { get; set; } = 500;
-
-        public string StatusArgument { get; set; } = "status";
+        private int initialAmount;
 
         public string CustomWordsFilePath
         {
@@ -46,92 +42,143 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private string customWordsFilePath;
 
-        public CustomCommand FailedGuessCommand { get; set; }
-        public CustomCommand SuccessfulGuessCommand { get; set; }
+        public CustomCommandModel SuccessfulGuessCommand
+        {
+            get { return this.successfulGuessCommand; }
+            set
+            {
+                this.successfulGuessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel successfulGuessCommand;
 
-        public CustomCommand StatusCommand { get; set; }
+        public CustomCommandModel FailedGuessCommand
+        {
+            get { return this.failedGuessCommand; }
+            set
+            {
+                this.failedGuessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel failedGuessCommand;
 
-        public CustomCommand GameWonCommand { get; set; }
-        public CustomCommand GameLostCommand { get; set; }
+        public CustomCommandModel GameWonCommand
+        {
+            get { return this.gameWonCommand; }
+            set
+            {
+                this.gameWonCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameWonCommand;
+
+        public CustomCommandModel GameLostCommand
+        {
+            get { return this.gameLostCommand; }
+            set
+            {
+                this.gameLostCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameLostCommand;
+
+        public string StatusArgument
+        {
+            get { return this.statusArgument; }
+            set
+            {
+                this.statusArgument = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string statusArgument;
+
+        public CustomCommandModel StatusCommand
+        {
+            get { return this.statusCommand; }
+            set
+            {
+                this.statusCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel statusCommand;
 
         public ICommand BrowseCustomWordsFilePathCommand { get; set; }
 
-        private HangmanGameCommand existingCommand;
+        public HangmanGameCommandEditorWindowViewModel(HangmanGameCommandModel command)
+            : base(command)
+        {
+            this.MaxFailures = command.MaxFailures;
+            this.InitialAmount = command.InitialAmount;
+            this.CustomWordsFilePath = command.CustomWordsFilePath;
+            this.SuccessfulGuessCommand = command.SuccessfulGuessCommand;
+            this.FailedGuessCommand = command.FailedGuessCommand;
+            this.GameWonCommand = command.GameWonCommand;
+            this.GameLostCommand = command.GameLostCommand;
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = command.StatusCommand;
+
+            this.SetUICommands();
+        }
 
         public HangmanGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into the pot and try the letter $arg1text...but it was wrong! $gamehangmancurrent");
-            this.SuccessfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into the pot and try the letter $arg1text...and gets it right! $gamehangmancurrent");
-            this.StatusCommand = this.CreateBasicChatCommand("So far, you've gotten $gamehangmancurrent correct & guessed $gamehangmanfailedguesses wrong. Looking into the pot, you see $gametotalamount " + currency.Name + " inside it.");
-            this.GameWonCommand = this.CreateBasicChatCommand("@$username got the last letter for \"$gamehangmananswer\", winning the whole pot of $gamepayout " + currency.Name + "!");
-            this.GameLostCommand = this.CreateBasicChatCommand("The game is lost with too many failed guesses; the correct answer was \"$gamehangmananswer\". There goes $gametotalamount " + currency.Name + "!");
+            this.MaxFailures = 5;
+            this.InitialAmount = 100;
+            this.SuccessfulGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanSuccessfulGuessExample);
+            this.FailedGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanFailedGuessExample);
+            this.GameWonCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanGameWonExample);
+            this.GameLostCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanGameLostExample);
+            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
+            this.StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanStatusExample);
+
+            this.SetUICommands();
         }
 
-        public HangmanGameCommandEditorWindowViewModel(HangmanGameCommand command)
-            : this()
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MaxFailures = this.existingCommand.MaxFailures;
-            this.InitialAmount = this.existingCommand.InitialAmount;
-            this.StatusArgument = this.existingCommand.StatusArgument;
-            this.CustomWordsFilePath = this.existingCommand.CustomWordsFilePath;
-
-            this.FailedGuessCommand = this.existingCommand.FailedGuessCommand;
-            this.SuccessfulGuessCommand = this.existingCommand.SuccessfulGuessCommand;
-            this.StatusCommand = this.existingCommand.StatusCommand;
-            this.GameWonCommand = this.existingCommand.GameWonCommand;
-            this.GameLostCommand = this.existingCommand.GameLostCommand;
+            return Task.FromResult<CommandModelBase>(new HangmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MaxFailures, this.InitialAmount, this.CustomWordsFilePath,
+                this.SuccessfulGuessCommand, this.FailedGuessCommand, this.GameWonCommand, this.GameLostCommand, this.StatusArgument, this.StatusCommand));
         }
 
-        private HangmanGameCommandEditorWindowViewModel()
+        public override async Task<Result> Validate()
+        {
+            Result result = await base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            if (this.MaxFailures < 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandHangmanMaxFailuresMustBePositive);
+            }
+
+            if (this.InitialAmount < 0)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandInitialAmountMustBePositive);
+            }
+
+            return new Result();
+        }
+
+        private void SetUICommands()
         {
             this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Text Files (*.txt)|*.txt|All files (*.*)|*.*");
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;
                 }
                 return Task.FromResult(0);
             });
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            GameCommandBase newCommand = new HangmanGameCommand(name, triggers, requirements, this.StatusArgument, this.StatusCommand, this.MaxFailures,
-                this.InitialAmount, this.SuccessfulGuessCommand, this.FailedGuessCommand, this.GameWonCommand, this.GameLostCommand, this.CustomWordsFilePath);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.MaxFailures <= 0)
-            {
-                await DialogHelper.ShowMessage("The Max Failures is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.InitialAmount <= 0)
-            {
-                await DialogHelper.ShowMessage("The Initial Amount is not a valid number greater than 0");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.StatusArgument) && !this.StatusArgument.Any(c => char.IsLetterOrDigit(c)))
-            {
-                await DialogHelper.ShowMessage("The Status Argument must have a valid value");
-                return false;
-            }
-
-            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && !ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
-            {
-                await DialogHelper.ShowMessage("The Custom Words file you specified does not exist");
-                return false;
-            }
-
-            return true;
         }
     }
 }
