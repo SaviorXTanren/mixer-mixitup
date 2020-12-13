@@ -1,8 +1,11 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.Dialogs;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Commands;
 using System;
 using System.Threading.Tasks;
@@ -65,11 +68,18 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Services.Chat.RebuildCommandTriggers();
         }
 
-        private void AddGameButton_Click(object sender, RoutedEventArgs e)
+        private async void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
-            GameCommandEditorWindow window = new GameCommandEditorWindow(GameCommandTypeEnum.Heist, this.viewModel.PrimaryCurrency);
-            window.Closed += Window_Closed;
-            window.Show();
+            GameTypeSelectorDialogControl gameTypeSelectorDialogControl = new GameTypeSelectorDialogControl();
+            GameTypeSelectorDialogControlViewModel viewModel = new GameTypeSelectorDialogControlViewModel();
+            gameTypeSelectorDialogControl.DataContext = viewModel;
+            if (bool.Equals(await DialogHelper.ShowCustom(gameTypeSelectorDialogControl), true))
+            {
+                await Task.Delay(300);
+                GameCommandEditorWindow window = new GameCommandEditorWindow(viewModel.SelectedGameType, this.viewModel.PrimaryCurrency);
+                window.Closed += Window_Closed;
+                window.Show();
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)

@@ -3542,7 +3542,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandAtLeast1Outcome" xml:space="preserve">
     <value>There must be at least 1 outcome</value>
   </data>
-  <data name="GameCommandBet" xml:space="preserve">
+  <data name="Bet" xml:space="preserve">
     <value>Bet</value>
   </data>
   <data name="GameCommandBetDescription" xml:space="preserve">
@@ -3553,7 +3553,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
 EX: !bet &lt;OPTION #&gt; 100
 EX: !bet answer &lt;OPTION #&gt;</value>
   </data>
-  <data name="GameCommandBid" xml:space="preserve">
+  <data name="Bid" xml:space="preserve">
     <value>Bid</value>
   </data>
   <data name="GameCommandBidDescription" xml:space="preserve">
@@ -3562,7 +3562,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandBidExample" xml:space="preserve">
     <value>EX: !bid 100</value>
   </data>
-  <data name="GameCommandCoinPusher" xml:space="preserve">
+  <data name="CoinPusher" xml:space="preserve">
     <value>Coin Pusher</value>
   </data>
   <data name="GameCommandCoinPusherDescription" xml:space="preserve">
@@ -3571,7 +3571,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandCoinPusherExample" xml:space="preserve">
     <value>EX: !pusher 100</value>
   </data>
-  <data name="GameCommandDuel" xml:space="preserve">
+  <data name="Duel" xml:space="preserve">
     <value>Duel</value>
   </data>
   <data name="GameCommandDuelDescription" xml:space="preserve">
@@ -3580,7 +3580,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandDuelExample" xml:space="preserve">
     <value>EX: !duel &lt;USERNAME&gt; 100</value>
   </data>
-  <data name="GameCommandHangman" xml:space="preserve">
+  <data name="Hangman" xml:space="preserve">
     <value>Hangman</value>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
@@ -3589,7 +3589,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandHangmanExample" xml:space="preserve">
     <value>EX: !hangman &lt;LETTER&gt;</value>
   </data>
-  <data name="GameCommandHeist" xml:space="preserve">
+  <data name="Heist" xml:space="preserve">
     <value>Heist</value>
   </data>
   <data name="GameCommandHeistDescription" xml:space="preserve">
@@ -3598,7 +3598,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandHeistExample" xml:space="preserve">
     <value>EX: !heist 100</value>
   </data>
-  <data name="GameCommandHitman" xml:space="preserve">
+  <data name="Hitman" xml:space="preserve">
     <value>Hitman</value>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
@@ -3607,7 +3607,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
   <data name="GameCommandHitmanExample" xml:space="preserve">
     <value>EX: !hitman 100</value>
   </data>
-  <data name="GameCommandHotPotato" xml:space="preserve">
+  <data name="HotPotato" xml:space="preserve">
     <value>Hot Potato</value>
   </data>
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
@@ -3617,7 +3617,7 @@ EX: !bet answer &lt;OPTION #&gt;</value>
     <value>EX: !potato
 EX: !potato &lt;TARGET USER&gt;</value>
   </data>
-  <data name="GameCommandLockBox" xml:space="preserve">
+  <data name="LockBox" xml:space="preserve">
     <value>Lock Box</value>
   </data>
   <data name="GameCommandLockBoxDescription" xml:space="preserve">
@@ -3629,7 +3629,7 @@ EX: !potato &lt;TARGET USER&gt;</value>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
     <value>The probability for the role {0} does not add up to 100 across all outcomes</value>
   </data>
-  <data name="GameCommandRoulette" xml:space="preserve">
+  <data name="Roulette" xml:space="preserve">
     <value>Roulette</value>
   </data>
   <data name="GameCommandRouletteDescription" xml:space="preserve">
@@ -3638,7 +3638,7 @@ EX: !potato &lt;TARGET USER&gt;</value>
   <data name="GameCommandRouletteExample" xml:space="preserve">
     <value>EX: !roulette &lt;NUMBER&gt; 100</value>
   </data>
-  <data name="GameCommandRussianRoulette" xml:space="preserve">
+  <data name="RussianRoulette" xml:space="preserve">
     <value>Russian Roulette</value>
   </data>
   <data name="GameCommandRussianRouletteDescription" xml:space="preserve">
@@ -3648,7 +3648,7 @@ EX: !potato &lt;TARGET USER&gt;</value>
     <value>EX: !rr 100
 EX: !rr</value>
   </data>
-  <data name="GameCommandSlotMachine" xml:space="preserve">
+  <data name="SlotMachine" xml:space="preserve">
     <value>Slot Machine</value>
   </data>
   <data name="GameCommandSlotMachineDescription" xml:space="preserve">
@@ -3657,7 +3657,7 @@ EX: !rr</value>
   <data name="GameCommandSlotMachineExample" xml:space="preserve">
     <value>EX: !slots 100</value>
   </data>
-  <data name="GameCommandSpin" xml:space="preserve">
+  <data name="Spin" xml:space="preserve">
     <value>Spin</value>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
@@ -3672,7 +3672,7 @@ EX: !rr</value>
   <data name="GameCommandSpinWinExample" xml:space="preserve">
     <value>Congrats @$username, you won $gamepayout {0}!</value>
   </data>
-  <data name="GameCommandSteal" xml:space="preserve">
+  <data name="Steal" xml:space="preserve">
     <value>Steal</value>
   </data>
   <data name="GameCommandStealDescription" xml:space="preserve">
@@ -3682,7 +3682,7 @@ EX: !rr</value>
     <value>EX: !steal 100
 EX: !steal &lt;USERNAME&gt; 100</value>
   </data>
-  <data name="GameCommandTreasureDefense" xml:space="preserve">
+  <data name="TreasureDefense" xml:space="preserve">
     <value>Treasure Defense</value>
   </data>
   <data name="GameCommandTreasureDefenseDescription" xml:space="preserve">
@@ -3695,7 +3695,7 @@ After the time limit is up, a user from the participants is selected to be King.
 EX: !treasure
 EX: !treasure &lt;SELECTED USER&gt;</value>
   </data>
-  <data name="GameCommandTrivia" xml:space="preserve">
+  <data name="Trivia" xml:space="preserve">
     <value>Trivia</value>
   </data>
   <data name="GameCommandTriviaDescription" xml:space="preserve">
@@ -3704,7 +3704,7 @@ EX: !treasure &lt;SELECTED USER&gt;</value>
   <data name="GameCommandTriviaExample" xml:space="preserve">
     <value>EX: !trivia</value>
   </data>
-  <data name="GameCommandVolcano" xml:space="preserve">
+  <data name="Volcano" xml:space="preserve">
     <value>Volcano</value>
   </data>
   <data name="GameCommandVolcanoDescription" xml:space="preserve">
@@ -3715,8 +3715,8 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandVolcanoExample" xml:space="preserve">
     <value>EX: !volcano 100</value>
   </data>
-  <data name="GameCommandWordScramble" xml:space="preserve">
-    <value>World Scramble</value>
+  <data name="WordScramble" xml:space="preserve">
+    <value>Word Scramble</value>
   </data>
   <data name="GameCommandWordScrambleDescription" xml:space="preserve">
     <value>The Word Scramble game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a scrambled word will appear in chat. If a user types the unscrambled word in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>

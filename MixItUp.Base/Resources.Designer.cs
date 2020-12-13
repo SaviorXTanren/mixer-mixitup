@@ -1069,11 +1069,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bet.
+        /// </summary>
+        public static string Bet {
+            get {
+                return ResourceManager.GetString("Bet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Between.
         /// </summary>
         public static string Between {
             get {
                 return ResourceManager.GetString("Between", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bid.
+        /// </summary>
+        public static string Bid {
+            get {
+                return ResourceManager.GetString("Bid", resourceCulture);
             }
         }
         
@@ -1659,6 +1677,15 @@ namespace MixItUp.Base {
         public static string ClosingPleaseWait {
             get {
                 return ResourceManager.GetString("ClosingPleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coin Pusher.
+        /// </summary>
+        public static string CoinPusher {
+            get {
+                return ResourceManager.GetString("CoinPusher", resourceCulture);
             }
         }
         
@@ -2806,6 +2833,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duel.
+        /// </summary>
+        public static string Duel {
+            get {
+                return ResourceManager.GetString("Duel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duplicate.
         /// </summary>
         public static string Duplicate {
@@ -3616,15 +3652,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bet.
-        /// </summary>
-        public static string GameCommandBet {
-            get {
-                return ResourceManager.GetString("GameCommandBet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Bets Closed.
         /// </summary>
         public static string GameCommandBetBetsClosed {
@@ -3690,15 +3717,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bid.
-        /// </summary>
-        public static string GameCommandBid {
-            get {
-                return ResourceManager.GetString("GameCommandBid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn&apos;t abused, such as Moderators or higher only..
         /// </summary>
         public static string GameCommandBidDescription {
@@ -3749,15 +3767,6 @@ namespace MixItUp.Base {
         public static string GameCommandBidStartedExample {
             get {
                 return ResourceManager.GetString("GameCommandBidStartedExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Coin Pusher.
-        /// </summary>
-        public static string GameCommandCoinPusher {
-            get {
-                return ResourceManager.GetString("GameCommandCoinPusher", resourceCulture);
             }
         }
         
@@ -3834,15 +3843,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duel.
-        /// </summary>
-        public static string GameCommandDuel {
-            get {
-                return ResourceManager.GetString("GameCommandDuel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user..
         /// </summary>
         public static string GameCommandDuelDescription {
@@ -3911,15 +3911,6 @@ namespace MixItUp.Base {
         public static string GameCommandGameComplete {
             get {
                 return ResourceManager.GetString("GameCommandGameComplete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hangman.
-        /// </summary>
-        public static string GameCommandHangman {
-            get {
-                return ResourceManager.GetString("GameCommandHangman", resourceCulture);
             }
         }
         
@@ -4028,15 +4019,6 @@ namespace MixItUp.Base {
         public static string GameCommandHangmanSuccessfulGuessExample {
             get {
                 return ResourceManager.GetString("GameCommandHangmanSuccessfulGuessExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Heist.
-        /// </summary>
-        public static string GameCommandHeist {
-            get {
-                return ResourceManager.GetString("GameCommandHeist", resourceCulture);
             }
         }
         
@@ -4158,15 +4140,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hitman.
-        /// </summary>
-        public static string GameCommandHitman {
-            get {
-                return ResourceManager.GetString("GameCommandHitman", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to It&apos;s hitman $gamehitmanname! Quick, type $gamehitmanname in chat!.
         /// </summary>
         public static string GameCommandHitmanAppearsExample {
@@ -4235,15 +4208,6 @@ namespace MixItUp.Base {
         public static string GameCommandHitmanUserSuccessExample {
             get {
                 return ResourceManager.GetString("GameCommandHitmanUserSuccessExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hot Potato.
-        /// </summary>
-        public static string GameCommandHotPotato {
-            get {
-                return ResourceManager.GetString("GameCommandHotPotato", resourceCulture);
             }
         }
         
@@ -4344,15 +4308,6 @@ namespace MixItUp.Base {
         public static string GameCommandInvalidBetAmount {
             get {
                 return ResourceManager.GetString("GameCommandInvalidBetAmount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lock Box.
-        /// </summary>
-        public static string GameCommandLockBox {
-            get {
-                return ResourceManager.GetString("GameCommandLockBox", resourceCulture);
             }
         }
         
@@ -4609,15 +4564,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Roulette.
-        /// </summary>
-        public static string GameCommandRoulette {
-            get {
-                return ResourceManager.GetString("GameCommandRoulette", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to High Number.
         /// </summary>
         public static string GameCommandRouletteBetHighNumber {
@@ -4735,15 +4681,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Russian Roulette.
-        /// </summary>
-        public static string GameCommandRussianRoulette {
-            get {
-                return ResourceManager.GetString("GameCommandRussianRoulette", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally..
         /// </summary>
         public static string GameCommandRussianRouletteDescription {
@@ -4804,15 +4741,6 @@ namespace MixItUp.Base {
         public static string GameCommandSettings {
             get {
                 return ResourceManager.GetString("GameCommandSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Slot Machine.
-        /// </summary>
-        public static string GameCommandSlotMachine {
-            get {
-                return ResourceManager.GetString("GameCommandSlotMachine", resourceCulture);
             }
         }
         
@@ -4889,15 +4817,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spin.
-        /// </summary>
-        public static string GameCommandSpin {
-            get {
-                return ResourceManager.GetString("GameCommandSpin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Spin game picks a random number and selects an outcome based on that number. Besides selecting a payout for each outcome, you can also run a customized command for each outcome..
         /// </summary>
         public static string GameCommandSpinDescription {
@@ -4970,15 +4889,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Steal.
-        /// </summary>
-        public static string GameCommandSteal {
-            get {
-                return ResourceManager.GetString("GameCommandSteal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Steal game allows the user to attempt to steal currency from another user. If successful, the user steals the bet amount from the other user. If failed, they lose the bet amount..
         /// </summary>
         public static string GameCommandStealDescription {
@@ -5039,15 +4949,6 @@ namespace MixItUp.Base {
         public static string GameCommandTimeLimitMustBePositive {
             get {
                 return ResourceManager.GetString("GameCommandTimeLimitMustBePositive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Treasure Defense.
-        /// </summary>
-        public static string GameCommandTreasureDefense {
-            get {
-                return ResourceManager.GetString("GameCommandTreasureDefense", resourceCulture);
             }
         }
         
@@ -5196,15 +5097,6 @@ namespace MixItUp.Base {
         public static string GameCommandTreasureDefenseThiefUserExample {
             get {
                 return ResourceManager.GetString("GameCommandTreasureDefenseThiefUserExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Trivia.
-        /// </summary>
-        public static string GameCommandTrivia {
-            get {
-                return ResourceManager.GetString("GameCommandTrivia", resourceCulture);
             }
         }
         
@@ -5367,15 +5259,6 @@ namespace MixItUp.Base {
         public static string GameCommandUserWin {
             get {
                 return ResourceManager.GetString("GameCommandUserWin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Volcano.
-        /// </summary>
-        public static string GameCommandVolcano {
-            get {
-                return ResourceManager.GetString("GameCommandVolcano", resourceCulture);
             }
         }
         
@@ -5603,15 +5486,6 @@ namespace MixItUp.Base {
         public static string GameCommandVolcanoStatus {
             get {
                 return ResourceManager.GetString("GameCommandVolcanoStatus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to World Scramble.
-        /// </summary>
-        public static string GameCommandWordScramble {
-            get {
-                return ResourceManager.GetString("GameCommandWordScramble", resourceCulture);
             }
         }
         
@@ -5994,6 +5868,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hangman.
+        /// </summary>
+        public static string Hangman {
+            get {
+                return ResourceManager.GetString("Hangman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heist.
+        /// </summary>
+        public static string Heist {
+            get {
+                return ResourceManager.GetString("Heist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         public static string Help {
@@ -6102,6 +5994,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hitman.
+        /// </summary>
+        public static string Hitman {
+            get {
+                return ResourceManager.GetString("Hitman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host Bonus.
         /// </summary>
         public static string HostBonus {
@@ -6134,6 +6035,15 @@ namespace MixItUp.Base {
         public static string HotKeys {
             get {
                 return ResourceManager.GetString("HotKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hot Potato.
+        /// </summary>
+        public static string HotPotato {
+            get {
+                return ResourceManager.GetString("HotPotato", resourceCulture);
             }
         }
         
@@ -6827,6 +6737,15 @@ namespace MixItUp.Base {
         public static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lock Box.
+        /// </summary>
+        public static string LockBox {
+            get {
+                return ResourceManager.GetString("LockBox", resourceCulture);
             }
         }
         
@@ -9306,6 +9225,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roulette.
+        /// </summary>
+        public static string Roulette {
+            get {
+                return ResourceManager.GetString("Roulette", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RTS.
         /// </summary>
         public static string RTS {
@@ -9347,6 +9275,15 @@ namespace MixItUp.Base {
         public static string RunOneRandomly {
             get {
                 return ResourceManager.GetString("RunOneRandomly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Russian Roulette.
+        /// </summary>
+        public static string RussianRoulette {
+            get {
+                return ResourceManager.GetString("RussianRoulette", resourceCulture);
             }
         }
         
@@ -10062,6 +9999,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Slot Machine.
+        /// </summary>
+        public static string SlotMachine {
+            get {
+                return ResourceManager.GetString("SlotMachine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Small Streamer (&lt;10).
         /// </summary>
         public static string SmallStreamer {
@@ -10305,6 +10251,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spin.
+        /// </summary>
+        public static string Spin {
+            get {
+                return ResourceManager.GetString("Spin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Staff.
         /// </summary>
         public static string Staff {
@@ -10382,6 +10337,15 @@ namespace MixItUp.Base {
         public static string StatusInformation {
             get {
                 return ResourceManager.GetString("StatusInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steal.
+        /// </summary>
+        public static string Steal {
+            get {
+                return ResourceManager.GetString("Steal", resourceCulture);
             }
         }
         
@@ -11340,6 +11304,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Treasure Defense.
+        /// </summary>
+        public static string TreasureDefense {
+            get {
+                return ResourceManager.GetString("TreasureDefense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TreatStream Donation.
         /// </summary>
         public static string TreatStreamDonation {
@@ -11354,6 +11327,15 @@ namespace MixItUp.Base {
         public static string TriggerHint {
             get {
                 return ResourceManager.GetString("TriggerHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trivia.
+        /// </summary>
+        public static string Trivia {
+            get {
+                return ResourceManager.GetString("Trivia", resourceCulture);
             }
         }
         
@@ -12224,6 +12206,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Volcano.
+        /// </summary>
+        public static string Volcano {
+            get {
+                return ResourceManager.GetString("Volcano", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume.
         /// </summary>
         public static string Volume {
@@ -12481,6 +12472,15 @@ namespace MixItUp.Base {
         public static string WinnerSelected {
             get {
                 return ResourceManager.GetString("WinnerSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word Scramble.
+        /// </summary>
+        public static string WordScramble {
+            get {
+                return ResourceManager.GetString("WordScramble", resourceCulture);
             }
         }
         

@@ -678,13 +678,12 @@
     <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
       <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml.cs">
+      <DependentUpon>GameTypeSelectorDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml.cs">
-      <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameEditorControlBase.cs" />
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
@@ -1098,9 +1097,6 @@
     </Compile>
     <Compile Include="Windows\Command %28OLD%29\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Command %28OLD%29\GameCommandWindow.xaml.cs">
-      <DependentUpon>GameCommandWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Commands\GameCommandEditorWindow.xaml.cs">
       <DependentUpon>GameCommandEditorWindow.xaml</DependentUpon>
@@ -1566,11 +1562,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
+    <Page Include="Controls\Dialogs\GameTypeSelectorDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml">
+    <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2153,10 +2149,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Command %28OLD%29\CommandWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Command %28OLD%29\GameCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
