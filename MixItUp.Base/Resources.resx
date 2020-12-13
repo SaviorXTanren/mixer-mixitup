@@ -4129,6 +4129,48 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandRouletteBetType" xml:space="preserve">
     <value>Bet Type</value>
   </data>
+  <data name="GameCommandTreasureDefenseKingTimeLimit" xml:space="preserve">
+    <value>King Time Limit</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKingUser" xml:space="preserve">
+    <value>King User</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKingUserExample" xml:space="preserve">
+    <value>King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type "!treasure &lt;PLAYER&gt;" in chat to pick who will defend the treasure!</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKnightSelected" xml:space="preserve">
+    <value>Knight Selected</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKnightSelectedExample" xml:space="preserve">
+    <value>King @$username picked @$targetusername to defend the treasure...and they were a Knight! They defended the treasure, giving the King &amp; Knights $gamepayout {0} each!</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKnightUser" xml:space="preserve">
+    <value>Knight User</value>
+  </data>
+  <data name="GameCommandTreasureDefenseKnightUserExample" xml:space="preserve">
+    <value>You've been selected as a Knight; tell the King you are a Knight so you can defend the treasure!</value>
+  </data>
+  <data name="GameCommandTreasureDefenseStartedExample" xml:space="preserve">
+    <value>@$username has started a game of Treasure Defense with a $gamebet {0} entry fee! Type !treasure to join in!</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefPlayerPercentage" xml:space="preserve">
+    <value>Thief Player %</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefPlayerPercentageMustBeGreaterThan0" xml:space="preserve">
+    <value>Thief Player Percentage must be greater than 0</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefSelected" xml:space="preserve">
+    <value>Thief Selected</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefSelectedExample" xml:space="preserve">
+    <value>King @$username picked @$targetusername to defend the treasure...and they were a Thief! They stole the treasure, giving all Thieves $gamepayout {0} each!</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefUser" xml:space="preserve">
+    <value>Thief User</value>
+  </data>
+  <data name="GameCommandTreasureDefenseThiefUserExample" xml:space="preserve">
+    <value>You've been selected as a Thief; convince the King you are a Knight so you can steal the treasure!</value>
+  </data>
   <data name="GameCommandTriviaAddQuestion" xml:space="preserve">
     <value>Add Question</value>
   </data>

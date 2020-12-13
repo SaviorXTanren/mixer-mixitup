@@ -620,6 +620,9 @@
     <Compile Include="Controls\Commands\Games\StealGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>StealGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\TreasureDefenseGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>TreasureDefenseGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\TriviaGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TriviaGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -681,9 +684,6 @@
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameEditorControlBase.cs" />
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml.cs">
       <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TreasureDefenseGameEditorControl.xaml.cs">
-      <DependentUpon>TreasureDefenseGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
@@ -1490,6 +1490,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\TreasureDefenseGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\TriviaGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1567,10 +1571,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\TreasureDefenseGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -39,11 +39,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public CustomCommandModel NotEnoughPlayersCommand { get; set; }
 
         [DataMember]
-        public GameOutcomeModel UserSuccessOutcome { get; set; }
-        [DataMember]
-        public GameOutcomeModel UserFailOutcome { get; set; }
-
-        [DataMember]
         public CustomCommandModel KnightUserCommand { get; set; }
         [DataMember]
         public CustomCommandModel ThiefUserCommand { get; set; }
@@ -93,8 +88,6 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.StartedCommand);
             commands.Add(this.UserJoinCommand);
             commands.Add(this.NotEnoughPlayersCommand);
-            commands.Add(this.UserSuccessOutcome.Command);
-            commands.Add(this.UserFailOutcome.Command);
             commands.Add(this.KnightUserCommand);
             commands.Add(this.ThiefUserCommand);
             commands.Add(this.KingUserCommand);

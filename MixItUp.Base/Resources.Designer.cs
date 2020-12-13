@@ -4975,6 +4975,132 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to King Time Limit.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKingTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKingTimeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to King User.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKingUser {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to King @$username has discovered the treasure but needs someone to defend it! The thieves must work to convince the King to pick them, everyone else needs to prevent that. The King must type &quot;!treasure &lt;PLAYER&gt;&quot; in chat to pick who will defend the treasure!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKingUserExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKingUserExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Knight Selected.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKnightSelected {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKnightSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to King @$username picked @$targetusername to defend the treasure...and they were a Knight! They defended the treasure, giving the King &amp; Knights $gamepayout {0} each!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKnightSelectedExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKnightSelectedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Knight User.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKnightUser {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKnightUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve been selected as a Knight; tell the King you are a Knight so you can defend the treasure!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseKnightUserExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseKnightUserExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of Treasure Defense with a $gamebet {0} entry fee! Type !treasure to join in!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thief Player %.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefPlayerPercentage {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefPlayerPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thief Player Percentage must be greater than 0.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefPlayerPercentageMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefPlayerPercentageMustBeGreaterThan0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thief Selected.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefSelected {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to King @$username picked @$targetusername to defend the treasure...and they were a Thief! They stole the treasure, giving all Thieves $gamepayout {0} each!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefSelectedExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefSelectedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thief User.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefUser {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve been selected as a Thief; convince the King you are a Knight so you can steal the treasure!.
+        /// </summary>
+        public static string GameCommandTreasureDefenseThiefUserExample {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseThiefUserExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trivia.
         /// </summary>
         public static string GameCommandTrivia {

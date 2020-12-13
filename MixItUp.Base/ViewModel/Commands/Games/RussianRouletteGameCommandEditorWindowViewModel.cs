@@ -3,7 +3,6 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {

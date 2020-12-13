@@ -80,6 +80,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new StealGameCommandEditorWindowViewModel((StealGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.TreasureDefense:
+                    this.editorDetailsControl = new TreasureDefenseGameCommandEditorDetailsControl();
+                    this.viewModel = new TreasureDefenseGameCommandEditorWindowViewModel((TreasureDefenseGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Trivia:
                     this.editorDetailsControl = new TriviaGameCommandEditorDetailsControl();
@@ -160,6 +162,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new StealGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.TreasureDefense:
+                    this.editorDetailsControl = new TreasureDefenseGameCommandEditorDetailsControl();
+                    this.viewModel = new TreasureDefenseGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Trivia:
                     this.editorDetailsControl = new TriviaGameCommandEditorDetailsControl();
