@@ -108,8 +108,6 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel gameCompleteCommand;
 
-        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
-
         public RussianRouletteGameCommandEditorWindowViewModel(RussianRouletteGameCommandModel command)
             : base(command)
         {

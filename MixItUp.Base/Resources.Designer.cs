@@ -4984,6 +4984,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Question.
+        /// </summary>
+        public static string GameCommandTriviaAddQuestion {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaAddQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each question must have a correct answer and at least one wrong answer.
+        /// </summary>
+        public static string GameCommandTriviaAnswersMissing {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaAnswersMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one question must be added.
+        /// </summary>
+        public static string GameCommandTriviaAtLeastOneQuestion {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaAtLeastOneQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Correct Answer.
+        /// </summary>
+        public static string GameCommandTriviaCorrectAnswer {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaCorrectAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Questions.
+        /// </summary>
+        public static string GameCommandTriviaCustomQuestions {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaCustomQuestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Trivia game picks a random question from a pre-determined list and asks all users to select the correct answer from a list of possible ones. All users that selected the correct answer are awarded a payout..
         /// </summary>
         public static string GameCommandTriviaDescription {
@@ -4998,6 +5043,78 @@ namespace MixItUp.Base {
         public static string GameCommandTriviaExample {
             get {
                 return ResourceManager.GetString("GameCommandTriviaExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Question.
+        /// </summary>
+        public static string GameCommandTriviaQuestion {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A trivia question is missing.
+        /// </summary>
+        public static string GameCommandTriviaQuestionMissing {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaQuestionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Online Questions.
+        /// </summary>
+        public static string GameCommandTriviaUseRandomOnlineQuestions {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaUseRandomOnlineQuestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Win Amount.
+        /// </summary>
+        public static string GameCommandTriviaWinAmount {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaWinAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Win amount must be a positive number.
+        /// </summary>
+        public static string GameCommandTriviaWinAmountMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaWinAmountMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Answer 1.
+        /// </summary>
+        public static string GameCommandTriviaWrongAnswer1 {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaWrongAnswer1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Answer 2.
+        /// </summary>
+        public static string GameCommandTriviaWrongAnswer2 {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaWrongAnswer2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Answer 3.
+        /// </summary>
+        public static string GameCommandTriviaWrongAnswer3 {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaWrongAnswer3", resourceCulture);
             }
         }
         

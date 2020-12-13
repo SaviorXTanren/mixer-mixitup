@@ -1,10 +1,8 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModels;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,226 +12,284 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class TriviaGameQuestionViewModel : UIViewModelBase
     {
-        public string Question { get; set; }
-
-        public string CorrectAnswer { get; set; }
-
-        public List<string> WrongAnswers { get; set; } = new List<string>() { string.Empty, string.Empty, string.Empty };
-
-        public ICommand DeleteCustomQuestionCommand { get; set; }
-
-        private TriviaGameCommandEditorWindowViewModel control;
-
-        public TriviaGameQuestionViewModel(TriviaGameCommandEditorWindowViewModel control)
+        public string Question
         {
-            this.control = control;
-
-            this.DeleteCustomQuestionCommand = this.CreateCommand((parameter) =>
+            get { return this.question; }
+            set
             {
-                this.control.DeleteCustomQuestion(this);
-                return Task.FromResult(0);
-            });
-        }
-
-        public TriviaGameQuestionViewModel(TriviaGameCommandEditorWindowViewModel control, TriviaGameQuestion question)
-            : this(control)
-        {
-            this.Question = question.Question;
-            this.CorrectAnswer = question.CorrectAnswer;
-            for (int i = 0; i < question.WrongAnswers.Count; i++)
-            {
-                this.WrongAnswers[i] = question.WrongAnswers[i];
+                this.question = value;
+                this.NotifyPropertyChanged();
             }
         }
+        private string question;
+
+        public string CorrectAnswer
+        {
+            get { return this.correctAnswer; }
+            set
+            {
+                this.correctAnswer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string correctAnswer;
 
         public string WrongAnswer1
         {
-            get { return this.WrongAnswers[0]; }
+            get { return this.wrongAnswer1; }
             set
             {
-                this.WrongAnswers[0] = value;
+                this.wrongAnswer1 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string wrongAnswer1;
 
         public string WrongAnswer2
         {
-            get { return this.WrongAnswers[1]; }
+            get { return this.wrongAnswer2; }
             set
             {
-                this.WrongAnswers[1] = value;
+                this.wrongAnswer2 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string wrongAnswer2;
 
         public string WrongAnswer3
         {
-            get { return this.WrongAnswers[2]; }
+            get { return this.wrongAnswer3; }
             set
             {
-                this.WrongAnswers[2] = value;
+                this.wrongAnswer3 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string wrongAnswer3;
 
-        public uint TotalAnswers { get { return (uint)this.WrongAnswers.Count + 1; } }
+        public TriviaGameQuestionViewModel() { }
 
-        public bool Validate()
+        public TriviaGameQuestionViewModel(TriviaGameQuestionModel model)
         {
-            return (!string.IsNullOrEmpty(this.Question)) && (!string.IsNullOrEmpty(this.CorrectAnswer)) &&
-                ((!string.IsNullOrEmpty(this.WrongAnswer1)) || (!string.IsNullOrEmpty(this.WrongAnswer2)) || (!string.IsNullOrEmpty(this.WrongAnswer3)));
+            this.Question = model.Question;
+            this.CorrectAnswer = model.CorrectAnswer;
+            this.WrongAnswer1 = model.Answers[1];
+            this.WrongAnswer2 = (model.Answers.Count > 2) ? model.Answers[2] : string.Empty;
+            this.WrongAnswer3 = (model.Answers.Count > 3) ? model.Answers[3] : string.Empty;
         }
 
-        public TriviaGameQuestion GetQuestion()
+        public Result Validate()
         {
-            TriviaGameQuestion question = new TriviaGameQuestion()
+            if (string.IsNullOrEmpty(this.Question))
             {
-                Question = this.Question,
-                CorrectAnswer = this.CorrectAnswer
-            };
-            foreach (string wrongAnswer in this.WrongAnswers)
-            {
-                if (!string.IsNullOrEmpty(wrongAnswer))
-                {
-                    question.WrongAnswers.Add(wrongAnswer);
-                }
+                return new Result(MixItUp.Base.Resources.GameCommandTriviaQuestionMissing);
             }
-            return question;
+
+            if (string.IsNullOrEmpty(this.CorrectAnswer) || string.IsNullOrEmpty(this.WrongAnswer1))
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandTriviaAnswersMissing);
+            }
+
+            return new Result();
+        }
+
+        public TriviaGameQuestionModel GetModel()
+        {
+            TriviaGameQuestionModel result = new TriviaGameQuestionModel()
+            {
+                Question = this.Question
+            };
+            result.Answers.Add(this.CorrectAnswer);
+            result.Answers.Add(this.WrongAnswer1);
+            if (!string.IsNullOrEmpty(this.WrongAnswer2)) { result.Answers.Add(this.WrongAnswer2); }
+            if (!string.IsNullOrEmpty(this.WrongAnswer3)) { result.Answers.Add(this.WrongAnswer3); }
+            return result;
         }
     }
 
-    public class TriviaGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class TriviaGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string TimeLimitString
+        public int WinAmount
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.winAmount; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.winAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int winAmount;
 
-        public string WinAmountString
+        public int TimeLimit
         {
-            get { return this.WinAmount.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.WinAmount = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int WinAmount { get; set; } = 100;
+        private int timeLimit;
 
-        public bool UseRandomOnlineQuestions { get; set; }
+        public bool UseRandomOnlineQuestions
+        {
+            get { return this.useRandomOnlineQuestions; }
+            set
+            {
+                this.useRandomOnlineQuestions = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool useRandomOnlineQuestions;
+
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
+
+        public CustomCommandModel UserJoinCommand
+        {
+            get { return this.userJoinCommand; }
+            set
+            {
+                this.userJoinCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userJoinCommand;
+
+        public CustomCommandModel CorrectAnswerCommand
+        {
+            get { return this.correctAnswerCommand; }
+            set
+            {
+                this.correctAnswerCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel correctAnswerCommand;
+
+        public CustomCommandModel UserSuccessCommand
+        {
+            get { return this.userSuccessCommand; }
+            set
+            {
+                this.userSuccessCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userSuccessCommand;
+
+        public CustomCommandModel UserFailureCommand
+        {
+            get { return this.userFailureCommand; }
+            set
+            {
+                this.userFailureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userFailureCommand;
 
         public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>();
 
-        public CustomCommand StartedCommand { get; set; }
+        public ICommand AddQuestionCommand { get; set; }
+        public ICommand DeleteQuestionCommand { get; set; }
 
-        public CustomCommand UserJoinCommand { get; set; }
+        public TriviaGameCommandEditorWindowViewModel(TriviaGameCommandModel command)
+            : base(command)
+        {
+            this.WinAmount = command.WinAmount;
+            this.TimeLimit = command.TimeLimit;
+            this.UseRandomOnlineQuestions = command.UseRandomOnlineQuestions;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.CorrectAnswerCommand = command.CorrectAnswerCommand;
+            this.UserSuccessCommand = command.UserSuccessCommand;
+            this.UserFailureCommand = command.UserFailureCommand;
+            foreach (TriviaGameQuestionModel question in command.CustomQuestions)
+            {
+                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(question));
+            }
 
-        public CustomCommand UserSuccessCommand { get; set; }
-
-        public CustomCommand CorrectAnswerCommand { get; set; }
-
-        public ICommand AddCustomQuestionCommand { get; set; }
-
-        public TriviaGameCommand existingCommand;
+            this.SetUICommands();
+        }
 
         public TriviaGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion", "$gameanswers");
+            this.WinAmount = 100;
+            this.TimeLimit = 30;
+            this.UseRandomOnlineQuestions = true;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.UserJoinCommand = this.CreateBasicCommand();
+            this.CorrectAnswerCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.UserSuccessCommand = this.CreateBasicCommand();
+            this.UserFailureCommand = this.CreateBasicCommand();
 
-            this.UserJoinCommand = this.CreateBasicChatCommand();
-
-            this.UserSuccessCommand = this.CreateBasicCurrencyCommand(currency, "$gamepayout");
-
-            this.CorrectAnswerCommand = this.CreateBasicChatCommand($"The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {currency.Name}!");
+            this.SetUICommands();
         }
 
-        public TriviaGameCommandEditorWindowViewModel(TriviaGameCommand command)
-            : this()
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
+            return Task.FromResult<CommandModelBase>(new TriviaGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, this.UseRandomOnlineQuestions, this.WinAmount, this.CustomQuestions.Select(o => o.GetModel()),
+                this.StartedCommand, this.UserJoinCommand, this.CorrectAnswerCommand, this.UserSuccessCommand, this.UserFailureCommand));
+        }
 
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.WinAmount = this.existingCommand.WinAmount;
-
-            this.WinAmount = this.existingCommand.WinAmount;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-
-            this.CorrectAnswerCommand = this.existingCommand.CorrectAnswerCommand;
-
-            this.UseRandomOnlineQuestions = this.existingCommand.UseRandomOnlineQuestions;
-
-            foreach (TriviaGameQuestion question in command.CustomQuestions)
+        public override async Task<Result> Validate()
+        {
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(this, question));
-            }
-        }
-
-        private TriviaGameCommandEditorWindowViewModel()
-        {
-            this.AddCustomQuestionCommand = this.CreateCommand((parameter) =>
-            {
-                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(this));
-                return Task.FromResult(0);
-            });
-        }
-
-        public void DeleteCustomQuestion(TriviaGameQuestionViewModel question)
-        {
-            this.CustomQuestions.Remove(question);
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
-
-            GameCommandBase newCommand = new TriviaGameCommand(name, triggers, requirements, this.TimeLimit, this.StartedCommand, this.UserJoinCommand, 
-                new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), this.CustomQuestions.Select(q => q.GetQuestion()), this.WinAmount, this.CorrectAnswerCommand,
-                this.UseRandomOnlineQuestions);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.TimeLimit <= 0)
-            {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return result;
             }
 
             if (this.WinAmount < 0)
             {
-                await DialogHelper.ShowMessage("The Win amount is not a valid number greater than or equal to 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTriviaWinAmountMustBePositive);
             }
 
-            foreach (TriviaGameQuestionViewModel question in this.CustomQuestions)
+            if (this.TimeLimit <= 0)
             {
-                if (!question.Validate())
-                {
-                    await DialogHelper.ShowMessage("A Custom Question you supplied is missing the question, correct answer, or at least 1 wrong answer");
-                    return false;
-                }
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
             if (!this.UseRandomOnlineQuestions && this.CustomQuestions.Count == 0)
             {
-                await DialogHelper.ShowMessage("You must at least select the option to use random online questions or provide your own custom questions");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTriviaAtLeastOneQuestion);
             }
 
-            return true;
+            foreach (TriviaGameQuestionViewModel question in this.CustomQuestions)
+            {
+                result = question.Validate();
+                if (!result.Success)
+                {
+                    return result;
+                }
+            }
+
+            return new Result();
+        }
+
+        private void SetUICommands()
+        {
+            this.AddQuestionCommand = this.CreateCommand((parameter) =>
+            {
+                this.CustomQuestions.Add(new TriviaGameQuestionViewModel());
+                return Task.FromResult(0);
+            });
+
+            this.DeleteQuestionCommand = this.CreateCommand((parameter) =>
+            {
+                this.CustomQuestions.Remove((TriviaGameQuestionViewModel)parameter);
+                return Task.FromResult(0);
+            });
         }
     }
 }

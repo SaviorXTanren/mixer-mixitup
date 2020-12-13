@@ -4129,4 +4129,43 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandRouletteBetType" xml:space="preserve">
     <value>Bet Type</value>
   </data>
+  <data name="GameCommandTriviaAddQuestion" xml:space="preserve">
+    <value>Add Question</value>
+  </data>
+  <data name="GameCommandTriviaAnswersMissing" xml:space="preserve">
+    <value>Each question must have a correct answer and at least one wrong answer</value>
+  </data>
+  <data name="GameCommandTriviaAtLeastOneQuestion" xml:space="preserve">
+    <value>At least one question must be added</value>
+  </data>
+  <data name="GameCommandTriviaCorrectAnswer" xml:space="preserve">
+    <value>Correct Answer</value>
+  </data>
+  <data name="GameCommandTriviaCustomQuestions" xml:space="preserve">
+    <value>Custom Questions</value>
+  </data>
+  <data name="GameCommandTriviaQuestion" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="GameCommandTriviaQuestionMissing" xml:space="preserve">
+    <value>A trivia question is missing</value>
+  </data>
+  <data name="GameCommandTriviaUseRandomOnlineQuestions" xml:space="preserve">
+    <value>Use Online Questions</value>
+  </data>
+  <data name="GameCommandTriviaWinAmount" xml:space="preserve">
+    <value>Win Amount</value>
+  </data>
+  <data name="GameCommandTriviaWinAmountMustBePositive" xml:space="preserve">
+    <value>Win amount must be a positive number</value>
+  </data>
+  <data name="GameCommandTriviaWrongAnswer1" xml:space="preserve">
+    <value>Wrong Answer 1</value>
+  </data>
+  <data name="GameCommandTriviaWrongAnswer2" xml:space="preserve">
+    <value>Wrong Answer 2</value>
+  </data>
+  <data name="GameCommandTriviaWrongAnswer3" xml:space="preserve">
+    <value>Wrong Answer 3</value>
+  </data>
 </root>

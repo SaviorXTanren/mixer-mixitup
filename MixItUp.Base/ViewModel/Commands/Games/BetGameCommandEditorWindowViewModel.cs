@@ -156,8 +156,6 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel gameCompleteCommand;
 
-        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
-
         public BetGameCommandEditorWindowViewModel(BetGameCommandModel command)
             : base(command)
         {

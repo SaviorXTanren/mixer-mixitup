@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel UserSuccessCommand { get; set; }
         [DataMember]
-        public CustomCommandModel UserFailCommand { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
 
         [JsonIgnore]
         private CommandParametersModel runParameters;
@@ -94,17 +94,18 @@ namespace MixItUp.Base.Model.Commands.Games
         private Dictionary<UserViewModel, int> runUserSelections = new Dictionary<UserViewModel, int>();
 
         public TriviaGameCommandModel(string name, HashSet<string> triggers, int timeLimit, bool useRandomOnlineQuestions, int winAmount, IEnumerable<TriviaGameQuestionModel> customQuestions,
-            CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel correctAnswerCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailCommand)
+            CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel correctAnswerCommand, CustomCommandModel userSuccessCommand, CustomCommandModel userFailureCommand)
             : base(name, triggers, GameCommandTypeEnum.Trivia)
         {
             this.TimeLimit = timeLimit;
             this.UseRandomOnlineQuestions = useRandomOnlineQuestions;
             this.WinAmount = winAmount;
+            this.CustomQuestions = new List<TriviaGameQuestionModel>(customQuestions);
             this.StartedCommand = startedCommand;
             this.UserJoinCommand = userJoinCommand;
             this.CorrectAnswerCommand = correctAnswerCommand;
             this.UserSuccessCommand = userSuccessCommand;
-            this.UserFailCommand = userFailCommand;
+            this.UserFailureCommand = userFailureCommand;
         }
 
         private TriviaGameCommandModel() { }
@@ -116,7 +117,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.UserJoinCommand);
             commands.Add(this.CorrectAnswerCommand);
             commands.Add(this.UserSuccessCommand);
-            commands.Add(this.UserFailCommand);
+            commands.Add(this.UserFailureCommand);
             return commands;
         }
 
@@ -205,7 +206,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await this.UserFailCommand.Perform(participant);
+                    await this.UserFailureCommand.Perform(participant);
                 }
             }
 
