@@ -4093,6 +4093,18 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="NumberRange" xml:space="preserve">
     <value>Number Range</value>
   </data>
+  <data name="GameCommandBetBetsClosed" xml:space="preserve">
+    <value>Bets Closed</value>
+  </data>
+  <data name="GameCommandBetBetsClosedExample" xml:space="preserve">
+    <value>All bets are now closed! Let's wait and see what the result is...</value>
+  </data>
+  <data name="GameCommandBetGameCompleteExample" xml:space="preserve">
+    <value>$gamebetwinningoption was the winning choice!</value>
+  </data>
+  <data name="GameCommandBetStartedExample" xml:space="preserve">
+    <value>@$username has started a bet on ___________! Type !bet &lt;OPTION #&gt; &lt;AMOUNT&gt; in chat to participate! Options: $gamebetoptions</value>
+  </data>
   <data name="GameCommandPayout" xml:space="preserve">
     <value>Payout</value>
   </data>

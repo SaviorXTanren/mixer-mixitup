@@ -3625,6 +3625,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bets Closed.
+        /// </summary>
+        public static string GameCommandBetBetsClosed {
+            get {
+                return ResourceManager.GetString("GameCommandBetBetsClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All bets are now closed! Let&apos;s wait and see what the result is....
+        /// </summary>
+        public static string GameCommandBetBetsClosedExample {
+            get {
+                return ResourceManager.GetString("GameCommandBetBetsClosedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn&apos;t abused, such as Moderators or higher only..
         /// </summary>
         public static string GameCommandBetDescription {
@@ -3645,11 +3663,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $gamebetwinningoption was the winning choice!.
+        /// </summary>
+        public static string GameCommandBetGameCompleteExample {
+            get {
+                return ResourceManager.GetString("GameCommandBetGameCompleteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The option number you selected is not answer.
         /// </summary>
         public static string GameCommandBetInvalidSelection {
             get {
                 return ResourceManager.GetString("GameCommandBetInvalidSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a bet on ___________! Type !bet &lt;OPTION #&gt; &lt;AMOUNT&gt; in chat to participate! Options: $gamebetoptions.
+        /// </summary>
+        public static string GameCommandBetStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandBetStartedExample", resourceCulture);
             }
         }
         

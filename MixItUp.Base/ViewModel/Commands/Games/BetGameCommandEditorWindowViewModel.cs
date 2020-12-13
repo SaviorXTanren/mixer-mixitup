@@ -1,209 +1,223 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class BetOutcome : UIViewModelBase
+    public class BetGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string Name { get; set; }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return EnumHelper.GetEnumList<UserRoleEnum>(); } }
 
-        public CustomCommand Command { get; set; }
-
-        public int Payout { get; set; }
-
-        public BetOutcome(string name, CustomCommand command, int payout = 0)
+        public UserRoleEnum SelectedStarterRole
         {
-            this.Name = name;
-            this.Command = command;
-            this.Payout = payout;
-        }
-
-        public BetOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
-        {
-            this.Payout = Convert.ToInt32(outcome.Payout * 100.0);
-        }
-
-        public string PayoutString
-        {
-            get { return this.Payout.ToString(); }
-            set { this.Payout = this.GetPositiveIntFromString(value); }
-        }
-
-        public GameOutcome GetGameOutcome()
-        {
-            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.Command);
-        }
-    }
-
-    public class BetGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
-    {
-        public ObservableCollection<BetOutcome> Options { get; set; } = new ObservableCollection<BetOutcome>();
-
-        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles(); } }
-
-        private UserRoleEnum whoCanStart = UserRoleEnum.Mod;
-        public UserRoleEnum WhoCanStart
-        {
-            get { return this.whoCanStart; }
+            get { return this.selectedStarterRole; }
             set
             {
-                this.whoCanStart = value;
+                this.selectedStarterRole = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private UserRoleEnum selectedStarterRole;
 
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 60;
+        private int timeLimit;
 
-        public CustomCommand StartedCommand { get; set; }
-        public CustomCommand UserJoinedCommand { get; set; }
+        public IEnumerable<RouletteGameCommandBetType> BetTypes { get { return EnumHelper.GetEnumList<RouletteGameCommandBetType>(); } }
 
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
-        public CustomCommand BetsClosedCommand { get; set; }
+        public RouletteGameCommandBetType SelectedBetType
+        {
+            get { return this.selectedBetType; }
+            set
+            {
+                this.selectedBetType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsBetTypeNumberRange");
+                this.NotifyPropertyChanged("IsBetTypeCustom");
+            }
+        }
+        private RouletteGameCommandBetType selectedBetType;
 
-        public CustomCommand UserFailCommand { get; set; }
-        public CustomCommand GameCompleteCommand { get; set; }
+        public bool IsBetTypeNumberRange { get { return this.SelectedBetType == RouletteGameCommandBetType.NumberRange; } }
 
-        public ICommand AddOutcomeCommand { get; set; }
-        public ICommand DeleteOutcomeCommand { get; set; }
+        public int BetOptionsNumberRangeLow
+        {
+            get { return this.betOptionsNumberRangeLow; }
+            set
+            {
+                this.betOptionsNumberRangeLow = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int betOptionsNumberRangeLow;
 
-        private BetGameCommand existingCommand;
+        public int BetOptionsNumberRangeHigh
+        {
+            get { return this.betOptionsBumberRangeHigh; }
+            set
+            {
+                this.betOptionsBumberRangeHigh = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int betOptionsBumberRangeHigh;
+
+        public bool IsBetTypeCustom { get { return this.SelectedBetType == RouletteGameCommandBetType.Custom; } }
+
+        public string BetOptionsCustom
+        {
+            get { return this.betOptionsCustom; }
+            set
+            {
+                this.betOptionsCustom = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string betOptionsCustom;
+
+        public CustomCommandModel StartedCommand
+        {
+            get { return this.startedCommand; }
+            set
+            {
+                this.startedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel startedCommand;
+
+        public CustomCommandModel UserJoinCommand
+        {
+            get { return this.userJoinCommand; }
+            set
+            {
+                this.userJoinCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userJoinCommand;
+
+        public CustomCommandModel NotEnoughPlayersCommand
+        {
+            get { return this.notEnoughPlayersCommand; }
+            set
+            {
+                this.notEnoughPlayersCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel notEnoughPlayersCommand;
+
+        public CustomCommandModel BetsClosedCommand
+        {
+            get { return this.betsClosedCommand; }
+            set
+            {
+                this.betsClosedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel betsClosedCommand;
+
+        public CustomCommandModel GameCompleteCommand
+        {
+            get { return this.gameCompleteCommand; }
+            set
+            {
+                this.gameCompleteCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameCompleteCommand;
+
+        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
+
+        public BetGameCommandEditorWindowViewModel(BetGameCommandModel command)
+            : base(command)
+        {
+            this.SelectedStarterRole = command.StarterRole;
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.BetsClosedCommand = command.BetsClosedCommand;
+            this.GameCompleteCommand = command.GameCompleteCommand;
+            foreach (GameOutcomeModel outcome in command.BetOptions)
+            {
+                this.Outcomes.Add(new GameOutcomeViewModel(outcome));
+            }
+        }
 
         public BetGameCommandEditorWindowViewModel(CurrencyModel currency)
-            : this()
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");
-            this.UserJoinedCommand = this.CreateBasicChatCommand();
-
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
-            this.BetsClosedCommand = this.CreateBasicChatCommand("All bets are now closed! Let's wait and see what the result is...");
-            this.UserFailCommand = this.CreateBasicChatCommand();
-            this.GameCompleteCommand = this.CreateBasicChatCommand("$gamebetwinningoption was the winning choice!");
-
-            this.Options.Add(new BetOutcome("Win Match", this.CreateBasicChatCommand(), 200));
-            this.Options.Add(new BetOutcome("Lose Match", this.CreateBasicChatCommand(), 200));
+            this.SelectedStarterRole = UserRoleEnum.Mod;
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.UserJoinCommand = this.CreateBasicCommand();
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.BetsClosedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandBetBetsClosedExample);
+            this.GameCompleteCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandBetGameCompleteExample);
         }
 
-        public BetGameCommandEditorWindowViewModel(BetGameCommand command)
-            : this()
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.WhoCanStart = this.existingCommand.GameStarterRequirement.MixerRole;
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-            this.UserJoinedCommand = this.existingCommand.UserJoinCommand;
-
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-            this.BetsClosedCommand = this.existingCommand.BetsClosedCommand;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
-            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
-
-            foreach (GameOutcome outcome in this.existingCommand.BetOptions)
-            {
-                this.Options.Add(new BetOutcome(outcome));
-            }
+            return Task.FromResult<CommandModelBase>(new BetGameCommandModel(this.Name, this.GetChatTriggers(), this.SelectedStarterRole, this.MinimumParticipants, this.TimeLimit, this.Outcomes.Select(o => o.GetModel()),
+                this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.BetsClosedCommand, this.GameCompleteCommand));
         }
 
-        private BetGameCommandEditorWindowViewModel()
+        public override async Task<Result> Validate()
         {
-            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                this.Options.Add(new BetOutcome("", this.CreateBasicChatCommand("@$username")));
-                return Task.FromResult(0);
-            });
-
-            this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
-            {
-                this.Options.Remove((BetOutcome)parameter);
-                return Task.FromResult(0);
-            });
-        }
-
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
-        {
-            RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
-            GameCommandBase newCommand = new BetGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
-                this.Options.Select(o => o.GetGameOutcome()), this.StartedCommand, this.UserJoinedCommand, this.BetsClosedCommand,
-                new GameOutcome("Failure", 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.UserFailCommand),
-                this.GameCompleteCommand, this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (this.WhoCanStart < 0)
-            {
-                await DialogHelper.ShowMessage("The Who Can Start Game must have a valid User Role selection");
-                return false;
+                return result;
             }
 
-            if (this.MinimumParticipants <= 0)
+            if (this.MinimumParticipants < 1)
             {
-                await DialogHelper.ShowMessage("The Minimum Users is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
             }
 
             if (this.TimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            if (this.Options.Count() < 2)
+            if (this.Outcomes.Count == 0)
             {
-                await DialogHelper.ShowMessage("You must specify at least 2 different bet types");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandAtLeast1Outcome);
             }
 
-            foreach (BetOutcome outcome in this.Options)
-            {
-                if (string.IsNullOrEmpty(outcome.Name))
-                {
-                    await DialogHelper.ShowMessage("An outcome is missing a name");
-                    return false;
-                }
-
-                if (outcome.Command == null)
-                {
-                    await DialogHelper.ShowMessage("An outcome is missing a command");
-                    return false;
-                }
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

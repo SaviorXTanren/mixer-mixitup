@@ -120,7 +120,7 @@
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandStarted}">
-                <CommandsControls:CommandListingButtonsControl x:Name="StartedCommand" DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="StartedCommand_EditClicked_1" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                <CommandsControls:CommandListingButtonsControl x:Name="StartedCommand" DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="StartedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.UserJoined}">

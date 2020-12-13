@@ -580,6 +580,9 @@
     <Compile Include="Controls\Commands\EventCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>EventCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\BetGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>BetGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\BidGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>BidGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -665,9 +668,6 @@
     </Compile>
     <Compile Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml.cs">
       <DependentUpon>NewAutoChatCommandsDialogControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml.cs">
-      <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml.cs">
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
@@ -1438,6 +1438,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\BetGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\BidGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1547,10 +1551,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\NewAutoChatCommandsDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\BetGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

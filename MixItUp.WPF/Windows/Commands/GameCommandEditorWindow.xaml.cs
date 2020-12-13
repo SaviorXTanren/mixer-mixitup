@@ -26,6 +26,8 @@ namespace MixItUp.WPF.Windows.Commands
             switch (existingCommand.GameType)
             {
                 case GameCommandTypeEnum.Bet:
+                    this.editorDetailsControl = new BetGameCommandEditorDetailsControl();
+                    this.viewModel = new BetGameCommandEditorWindowViewModel((BetGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Bid:
                     this.editorDetailsControl = new BidGameCommandEditorDetailsControl();
@@ -100,6 +102,8 @@ namespace MixItUp.WPF.Windows.Commands
             switch (gameType)
             {
                 case GameCommandTypeEnum.Bet:
+                    this.editorDetailsControl = new BetGameCommandEditorDetailsControl();
+                    this.viewModel = new BetGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Bid:
                     this.editorDetailsControl = new BidGameCommandEditorDetailsControl();
