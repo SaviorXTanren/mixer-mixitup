@@ -46,6 +46,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new HangmanGameCommandEditorWindowViewModel((HangmanGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Heist:
+                    this.editorDetailsControl = new HeistGameCommandEditorDetailsControl();
+                    this.viewModel = new HeistGameCommandEditorWindowViewModel((HeistGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Hitman:
                     this.editorDetailsControl = new HitmanGameCommandEditorDetailsControl();
@@ -128,6 +130,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new HangmanGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Heist:
+                    this.editorDetailsControl = new HeistGameCommandEditorDetailsControl();
+                    this.viewModel = new HeistGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Hitman:
                     this.editorDetailsControl = new HitmanGameCommandEditorDetailsControl();

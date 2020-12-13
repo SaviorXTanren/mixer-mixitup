@@ -17,8 +17,6 @@ namespace MixItUp.Base.Model.Commands.Games
         public int MinimumParticipants { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
-        [DataMember]
-        public int MaxWinners { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
@@ -30,7 +28,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public GameOutcomeModel UserSuccessOutcome { get; set; }
         [DataMember]
-        public GameOutcomeModel UserFailOutcome { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
 
         [DataMember]
         public CustomCommandModel AllSucceedCommand { get; set; }
@@ -50,20 +48,19 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
 
-        public HeistGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int maxWinners, CustomCommandModel startedCommand,
-            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, GameOutcomeModel userFailOutcome,
+        public HeistGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, CustomCommandModel startedCommand,
+            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, CustomCommandModel userFailureCommand,
             CustomCommandModel allSucceedCommand, CustomCommandModel topThirdsSucceedCommand, CustomCommandModel middleThirdsSucceedCommand, CustomCommandModel lowThirdsSucceedCommand,
             CustomCommandModel noneSucceedCommand)
             : base(name, triggers, GameCommandTypeEnum.Heist)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;
-            this.MaxWinners = maxWinners;
             this.StartedCommand = startedCommand;
             this.UserJoinCommand = userJoinCommand;
             this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
             this.UserSuccessOutcome = userSuccessOutcome;
-            this.UserFailOutcome = userFailOutcome;
+            this.UserFailureCommand = userFailureCommand;
             this.AllSucceedCommand = allSucceedCommand;
             this.TopThirdsSucceedCommand = topThirdsSucceedCommand;
             this.MiddleThirdsSucceedCommand = middleThirdsSucceedCommand;
@@ -80,7 +77,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.UserJoinCommand);
             commands.Add(this.NotEnoughPlayersCommand);
             commands.Add(this.UserSuccessOutcome.Command);
-            commands.Add(this.UserFailOutcome.Command);
+            commands.Add(this.UserFailureCommand);
             commands.Add(this.AllSucceedCommand);
             commands.Add(this.TopThirdsSucceedCommand);
             commands.Add(this.MiddleThirdsSucceedCommand);
@@ -127,7 +124,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         }
                         else
                         {
-                            this.PerformOutcome(participant, this.UserFailOutcome, betAmount);
+                            await this.UserFailureCommand.Perform(participant);
                         }
                     }
 

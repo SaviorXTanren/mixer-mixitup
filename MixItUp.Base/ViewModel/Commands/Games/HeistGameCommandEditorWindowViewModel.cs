@@ -1,231 +1,204 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class HeistGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class HeistGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int timeLimit;
 
-        public string UserPayoutString
+        public CustomCommandModel StartedCommand
         {
-            get { return this.UserPayout.ToString(); }
+            get { return this.startedCommand; }
             set
             {
-                this.UserPayout = this.GetPositiveIntFromString(value);
+                this.startedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double UserPayout { get; set; } = 200;
+        private CustomCommandModel startedCommand;
 
-        public string SubscriberPayoutString
+        public CustomCommandModel UserJoinCommand
         {
-            get { return this.SubscriberPayout.ToString(); }
+            get { return this.userJoinCommand; }
             set
             {
-                this.SubscriberPayout = this.GetPositiveIntFromString(value);
+                this.userJoinCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double SubscriberPayout { get; set; } = 200;
+        private CustomCommandModel userJoinCommand;
 
-        public string ModPayoutString
+        public CustomCommandModel NotEnoughPlayersCommand
         {
-            get { return this.ModPayout.ToString(); }
+            get { return this.notEnoughPlayersCommand; }
             set
             {
-                this.ModPayout = this.GetPositiveIntFromString(value);
+                this.notEnoughPlayersCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double ModPayout { get; set; } = 200;
+        private CustomCommandModel notEnoughPlayersCommand;
 
-        public string UserProbabilityString
+        public GameOutcomeViewModel UserSuccessOutcome
         {
-            get { return this.UserProbability.ToString(); }
+            get { return this.userSuccessOutcome; }
             set
             {
-                this.UserProbability = this.GetPositiveIntFromString(value);
+                this.userSuccessOutcome = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int UserProbability { get; set; } = 60;
+        private GameOutcomeViewModel userSuccessOutcome;
 
-        public string SubscriberProbabilityString
+        public CustomCommandModel UserFailureCommand
         {
-            get { return this.SubscriberProbability.ToString(); }
+            get { return this.userFailureCommand; }
             set
             {
-                this.SubscriberProbability = this.GetPositiveIntFromString(value);
+                this.userFailureCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int SubscriberProbability { get; set; } = 60;
+        private CustomCommandModel userFailureCommand;
 
-        public string ModProbabilityString
+        public CustomCommandModel AllSucceedCommand
         {
-            get { return this.ModProbability.ToString(); }
+            get { return this.allSucceedCommand; }
             set
             {
-                this.ModProbability = this.GetPositiveIntFromString(value);
+                this.allSucceedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int ModProbability { get; set; } = 60;
+        private CustomCommandModel allSucceedCommand;
 
-        public CustomCommand StartedCommand { get; set; }
+        public CustomCommandModel TopThirdsSucceedCommand
+        {
+            get { return this.topThirdsSucceedCommand; }
+            set
+            {
+                this.topThirdsSucceedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel topThirdsSucceedCommand;
 
-        public CustomCommand UserJoinCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
+        public CustomCommandModel MiddleThirdsSucceedCommand
+        {
+            get { return this.middleThirdsSucceedCommand; }
+            set
+            {
+                this.middleThirdsSucceedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel middleThirdsSucceedCommand;
 
-        public CustomCommand UserSuccessCommand { get; set; }
-        public CustomCommand UserFailCommand { get; set; }
+        public CustomCommandModel LowThirdsSucceedCommand
+        {
+            get { return this.lowThirdsSucceedCommand; }
+            set
+            {
+                this.lowThirdsSucceedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel lowThirdsSucceedCommand;
 
-        public CustomCommand AllSucceedCommand { get; set; }
-        public CustomCommand TopThirdsSucceedCommand { get; set; }
-        public CustomCommand MiddleThirdsSucceedCommand { get; set; }
-        public CustomCommand LowThirdsSucceedCommand { get; set; }
-        public CustomCommand NoneSucceedCommand { get; set; }
+        public CustomCommandModel NoneSucceedCommand
+        {
+            get { return this.noneSucceedCommand; }
+            set
+            {
+                this.noneSucceedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel noneSucceedCommand;
 
-        private HeistGameCommand existingCommand;
+        public HeistGameCommandEditorWindowViewModel(HeistGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.UserSuccessOutcome = new GameOutcomeViewModel(command.UserSuccessOutcome);
+            this.userFailureCommand = command.UserFailureCommand;
+            this.AllSucceedCommand = command.AllSucceedCommand;
+            this.TopThirdsSucceedCommand = command.TopThirdsSucceedCommand;
+            this.MiddleThirdsSucceedCommand = command.MiddleThirdsSucceedCommand;
+            this.LowThirdsSucceedCommand = command.LowThirdsSucceedCommand;
+            this.NoneSucceedCommand = command.NoneSucceedCommand;
+        }
 
         public HeistGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Heist! Type !heist <AMOUNT> to join in!");
-
-            this.UserJoinCommand = this.CreateBasicChatCommand();
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
-
-            this.UserSuccessCommand = this.CreateBasicChatCommand();
-            this.UserFailCommand = this.CreateBasicChatCommand();
-
-            this.AllSucceedCommand = this.CreateBasic2ChatCommand("What a steal! Everyone made it out and cleaned the bank out dry! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
-            this.TopThirdsSucceedCommand = this.CreateBasic2ChatCommand("The cops showed up at the last second and snagged a few of you, but most made it out with the good! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
-            this.MiddleThirdsSucceedCommand = this.CreateBasic2ChatCommand("As you started to leave the bank, the cops were ready for you and got almost half of you! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
-            this.LowThirdsSucceedCommand = this.CreateBasic2ChatCommand("A heated battle took place inside the bank and almost everyone got caught by the cops! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
-            this.NoneSucceedCommand = this.CreateBasicChatCommand("Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!");
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHeistStartedExample);
+            this.UserJoinCommand = this.CreateBasicCommand();
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.UserSuccessOutcome = new GameOutcomeViewModel(string.Empty, 50, 200);
+            this.userFailureCommand = this.CreateBasicCommand();
+            this.AllSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistAllSucceedExample, currency.Name));
+            this.TopThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistTopThirdsSucceedExample, currency.Name));
+            this.MiddleThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistMiddleThirdsSucceedExample, currency.Name));
+            this.LowThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistLowThirdsSucceedExample, currency.Name));
+            this.NoneSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistNoneSucceedExample, currency.Name));
         }
 
-        public HeistGameCommandEditorWindowViewModel(HeistGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.User] * 100);
-            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Subscriber] * 100);
-            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Mod] * 100);
-            this.UserProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.User];
-            this.SubscriberProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
-            this.ModProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.Mod];
-
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
-
-            this.AllSucceedCommand = this.existingCommand.AllSucceedCommand;
-            this.TopThirdsSucceedCommand = this.existingCommand.TopThirdsSucceedCommand;
-            this.MiddleThirdsSucceedCommand = this.existingCommand.MiddleThirdsSucceedCommand;
-            this.LowThirdsSucceedCommand = this.existingCommand.LowThirdsSucceedCommand;
-            this.NoneSucceedCommand = this.existingCommand.NoneSucceedCommand;
+            return Task.FromResult<CommandModelBase>(new HeistGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand,
+                this.UserSuccessOutcome.GetModel(), this.UserFailureCommand, this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            this.UserPayout = this.UserPayout / 100.0;
-            this.SubscriberPayout = this.SubscriberPayout / 100.0;
-            this.ModPayout = this.ModPayout / 100.0;
+            Result result = await base.Validate();
+            if (!result.Success)
+            {
+                return result;
+            }
 
-            Dictionary<UserRoleEnum, double> successRolePayouts = new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout }, { UserRoleEnum.Subscriber, this.SubscriberPayout }, { UserRoleEnum.Mod, this.ModPayout } };
-            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserProbability }, { UserRoleEnum.Subscriber, this.SubscriberProbability }, { UserRoleEnum.Mod, this.ModProbability } };
-            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserProbability }, { UserRoleEnum.Subscriber, 100 - this.SubscriberProbability }, { UserRoleEnum.Mod, 100 - this.ModProbability } };
+            if (this.MinimumParticipants < 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
+            }
 
-            GameCommandBase newCommand = new HeistGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
-                new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, failRoleProbabilities, this.UserFailCommand),
-                this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand, this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
             if (this.TimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            if (this.MinimumParticipants <= 0)
-            {
-                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.UserPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The User Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.SubscriberPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Subscriber Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.ModPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Mod Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.UserProbability < 0 || this.UserProbability > 100)
-            {
-                await DialogHelper.ShowMessage("The User Chance %'s is not a valid number between 0 - 100");
-                return false;
-            }
-
-            if (this.SubscriberProbability < 0 || this.SubscriberProbability > 100)
-            {
-                await DialogHelper.ShowMessage("The Sub Chance %'s is not a valid number between 0 - 100");
-                return false;
-            }
-
-            if (this.ModProbability < 0 || this.ModProbability > 100)
-            {
-                await DialogHelper.ShowMessage("The Mod Chance %'s is not a valid number between 0 - 100");
-                return false;
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

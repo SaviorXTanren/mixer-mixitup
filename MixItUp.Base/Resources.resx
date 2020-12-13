@@ -4105,6 +4105,39 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandBetStartedExample" xml:space="preserve">
     <value>@$username has started a bet on ___________! Type !bet &lt;OPTION #&gt; &lt;AMOUNT&gt; in chat to participate! Options: $gamebetoptions</value>
   </data>
+  <data name="GameCommandHeistAllSucceed" xml:space="preserve">
+    <value>All Succeed</value>
+  </data>
+  <data name="GameCommandHeistAllSucceedExample" xml:space="preserve">
+    <value>What a steal! Everyone made it out and cleaned the bank out dry! Total Amount: $gameallpayout {0}! Winners: $gamewinners</value>
+  </data>
+  <data name="GameCommandHeistLowThirdsSucceed" xml:space="preserve">
+    <value>33% - 1% Succeed</value>
+  </data>
+  <data name="GameCommandHeistLowThirdsSucceedExample" xml:space="preserve">
+    <value>A heated battle took place inside the bank and almost everyone got caught by the cops! Total Amount: $gameallpayout {0}! Winners: $gamewinners</value>
+  </data>
+  <data name="GameCommandHeistMiddleThirdsSucceed" xml:space="preserve">
+    <value>65% - 33% Succeed</value>
+  </data>
+  <data name="GameCommandHeistMiddleThirdsSucceedExample" xml:space="preserve">
+    <value>As you started to leave the bank, the cops were ready for you and got almost half of you! Total Amount: $gameallpayout {0}! Winners: $gamewinners</value>
+  </data>
+  <data name="GameCommandHeistNoneSucceed" xml:space="preserve">
+    <value>None Succeed</value>
+  </data>
+  <data name="GameCommandHeistNoneSucceedExample" xml:space="preserve">
+    <value>Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!</value>
+  </data>
+  <data name="GameCommandHeistStartedExample" xml:space="preserve">
+    <value>@$username has started a game of Heist! Type !heist &lt;AMOUNT&gt; to join in!</value>
+  </data>
+  <data name="GameCommandHeistTopThirdsSucceed" xml:space="preserve">
+    <value>99% - 66% Succeed</value>
+  </data>
+  <data name="GameCommandHeistTopThirdsSucceedExample" xml:space="preserve">
+    <value>The cops showed up at the last second and snagged a few of you, but most made it out with the good! Total Amount: $gameallpayout {0}! Winners: $gamewinners</value>
+  </data>
   <data name="GameCommandPayout" xml:space="preserve">
     <value>Payout</value>
   </data>

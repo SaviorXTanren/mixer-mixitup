@@ -4041,6 +4041,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Succeed.
+        /// </summary>
+        public static string GameCommandHeistAllSucceed {
+            get {
+                return ResourceManager.GetString("GameCommandHeistAllSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What a steal! Everyone made it out and cleaned the bank out dry! Total Amount: $gameallpayout {0}! Winners: $gamewinners.
+        /// </summary>
+        public static string GameCommandHeistAllSucceedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistAllSucceedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet.
         /// </summary>
         public static string GameCommandHeistDescription {
@@ -4055,6 +4073,87 @@ namespace MixItUp.Base {
         public static string GameCommandHeistExample {
             get {
                 return ResourceManager.GetString("GameCommandHeistExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 33% - 1% Succeed.
+        /// </summary>
+        public static string GameCommandHeistLowThirdsSucceed {
+            get {
+                return ResourceManager.GetString("GameCommandHeistLowThirdsSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A heated battle took place inside the bank and almost everyone got caught by the cops! Total Amount: $gameallpayout {0}! Winners: $gamewinners.
+        /// </summary>
+        public static string GameCommandHeistLowThirdsSucceedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistLowThirdsSucceedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 65% - 33% Succeed.
+        /// </summary>
+        public static string GameCommandHeistMiddleThirdsSucceed {
+            get {
+                return ResourceManager.GetString("GameCommandHeistMiddleThirdsSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to As you started to leave the bank, the cops were ready for you and got almost half of you! Total Amount: $gameallpayout {0}! Winners: $gamewinners.
+        /// </summary>
+        public static string GameCommandHeistMiddleThirdsSucceedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistMiddleThirdsSucceedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None Succeed.
+        /// </summary>
+        public static string GameCommandHeistNoneSucceed {
+            get {
+                return ResourceManager.GetString("GameCommandHeistNoneSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!.
+        /// </summary>
+        public static string GameCommandHeistNoneSucceedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistNoneSucceedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of Heist! Type !heist &lt;AMOUNT&gt; to join in!.
+        /// </summary>
+        public static string GameCommandHeistStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 99% - 66% Succeed.
+        /// </summary>
+        public static string GameCommandHeistTopThirdsSucceed {
+            get {
+                return ResourceManager.GetString("GameCommandHeistTopThirdsSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The cops showed up at the last second and snagged a few of you, but most made it out with the good! Total Amount: $gameallpayout {0}! Winners: $gamewinners.
+        /// </summary>
+        public static string GameCommandHeistTopThirdsSucceedExample {
+            get {
+                return ResourceManager.GetString("GameCommandHeistTopThirdsSucceedExample", resourceCulture);
             }
         }
         

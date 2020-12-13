@@ -596,6 +596,9 @@
     <Compile Include="Controls\Commands\Games\HangmanGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>HangmanGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\HeistGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>HeistGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>HitmanGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -682,9 +685,6 @@
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameEditorControlBase.cs" />
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml.cs">
-      <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
@@ -1458,6 +1458,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\HeistGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\HitmanGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1567,10 +1571,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\GameCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
