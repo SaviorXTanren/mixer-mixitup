@@ -1,279 +1,257 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class RouletteGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class RouletteGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string MinimumParticipantsString
+        public int MinimumParticipants
         {
-            get { return this.MinimumParticipants.ToString(); }
+            get { return this.minimumParticipants; }
             set
             {
-                this.MinimumParticipants = this.GetPositiveIntFromString(value);
+                this.minimumParticipants = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinimumParticipants { get; set; } = 2;
+        private int minimumParticipants;
 
-        public string TimeLimitString
+        public int TimeLimit
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.timeLimit; }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.timeLimit = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        private int timeLimit;
 
-        public string UserPayoutString
+        public IEnumerable<RouletteGameCommandBetType> BetTypes { get { return EnumHelper.GetEnumList<RouletteGameCommandBetType>(); } }
+
+        public RouletteGameCommandBetType SelectedBetType
         {
-            get { return this.UserPayout.ToString(); }
+            get { return this.selectedBetType; }
             set
             {
-                this.UserPayout = this.GetPositiveIntFromString(value);
+                this.selectedBetType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsBetTypeNumberRange");
+                this.NotifyPropertyChanged("IsBetTypeCustom");
+            }
+        }
+        private RouletteGameCommandBetType selectedBetType;
+
+        public bool IsBetTypeNumberRange { get { return this.SelectedBetType == RouletteGameCommandBetType.NumberRange; } }
+
+        public int BetOptionsNumberRangeLow
+        {
+            get { return this.betOptionsNumberRangeLow; }
+            set
+            {
+                this.betOptionsNumberRangeLow = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double UserPayout { get; set; } = 200;
+        private int betOptionsNumberRangeLow;
 
-        public string SubscriberPayoutString
+        public int BetOptionsNumberRangeHigh
         {
-            get { return this.SubscriberPayout.ToString(); }
+            get { return this.betOptionsBumberRangeHigh; }
             set
             {
-                this.SubscriberPayout = this.GetPositiveIntFromString(value);
+                this.betOptionsBumberRangeHigh = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double SubscriberPayout { get; set; } = 200;
+        private int betOptionsBumberRangeHigh;
 
-        public string ModPayoutString
+        public bool IsBetTypeCustom { get { return this.SelectedBetType == RouletteGameCommandBetType.Custom; } }
+
+        public string BetOptionsCustom
         {
-            get { return this.ModPayout.ToString(); }
+            get { return this.betOptionsCustom; }
             set
             {
-                this.ModPayout = this.GetPositiveIntFromString(value);
+                this.betOptionsCustom = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double ModPayout { get; set; } = 200;
+        private string betOptionsCustom;
 
-        public bool IsNumberRange
+        public CustomCommandModel StartedCommand
         {
-            get { return this.isNumberRange; }
+            get { return this.startedCommand; }
             set
             {
-                this.isNumberRange = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsTextOptions");
-            }
-        }
-        private bool isNumberRange { get; set; } = true;
-
-        public string NumberRangeMinimumString
-        {
-            get { return this.NumberRangeMinimum.ToString(); }
-            set
-            {
-                this.NumberRangeMinimum = this.GetPositiveIntFromString(value);
+                this.startedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int NumberRangeMinimum { get; set; } = 1;
+        private CustomCommandModel startedCommand;
 
-        public string NumberRangeMaximumString
+        public CustomCommandModel UserJoinCommand
         {
-            get { return this.NumberRangeMaximum.ToString(); }
+            get { return this.userJoinCommand; }
             set
             {
-                this.NumberRangeMaximum = this.GetPositiveIntFromString(value);
+                this.userJoinCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int NumberRangeMaximum { get; set; } = 30;
+        private CustomCommandModel userJoinCommand;
 
-        public bool IsTextOptions { get { return !this.IsNumberRange; } }
-
-        public string SelectableBetTypes
+        public CustomCommandModel NotEnoughPlayersCommand
         {
-            get { return this.selectableBetTypes; }
+            get { return this.notEnoughPlayersCommand; }
             set
             {
-                this.selectableBetTypes = value;
+                this.notEnoughPlayersCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectableBetTypes { get; set; }
+        private CustomCommandModel notEnoughPlayersCommand;
 
-        public CustomCommand StartedCommand { get; set; }
+        public GameOutcomeViewModel UserSuccessOutcome
+        {
+            get { return this.userSuccessOutcome; }
+            set
+            {
+                this.userSuccessOutcome = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private GameOutcomeViewModel userSuccessOutcome;
 
-        public CustomCommand UserJoinCommand { get; set; }
-        public CustomCommand NotEnoughPlayersCommand { get; set; }
+        public CustomCommandModel UserFailureCommand
+        {
+            get { return this.userFailureCommand; }
+            set
+            {
+                this.userFailureCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel userFailureCommand;
 
-        public CustomCommand UserSuccessCommand { get; set; }
-        public CustomCommand UserFailCommand { get; set; }
+        public CustomCommandModel GameCompleteCommand
+        {
+            get { return this.gameCompleteCommand; }
+            set
+            {
+                this.gameCompleteCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel gameCompleteCommand;
 
-        public CustomCommand GameCompleteCommand { get; set; }
+        public ICommand BrowseCustomWordsFilePathCommand { get; set; }
 
-        private RouletteGameCommand existingCommand;
+        public RouletteGameCommandEditorWindowViewModel(RouletteGameCommandModel command)
+            : base(command)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.SelectedBetType = command.BetType;
+            if (this.SelectedBetType == RouletteGameCommandBetType.NumberRange)
+            {
+                this.BetOptionsNumberRangeLow = int.Parse(command.BetOptions.ElementAt(0));
+                this.BetOptionsNumberRangeHigh = int.Parse(command.BetOptions.ElementAt(1));
+            }
+            else if (this.SelectedBetType == RouletteGameCommandBetType.Custom)
+            {
+                this.BetOptionsCustom = string.Join(" ", command.BetOptions);
+            }
+            this.StartedCommand = command.StartedCommand;
+            this.UserJoinCommand = command.UserJoinCommand;
+            this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
+            this.UserSuccessOutcome = new GameOutcomeViewModel(command.UserSuccessOutcome);
+            this.UserFailureCommand = command.UserFailureCommand;
+            this.GameCompleteCommand = command.GameCompleteCommand;
+        }
 
         public RouletteGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
-
-            this.UserJoinCommand = this.CreateBasicChatCommand();
-            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
-
-            this.UserSuccessCommand = this.CreateBasicChatCommand();
-            this.UserFailCommand = this.CreateBasicChatCommand();
-            this.GameCompleteCommand = this.CreateBasicChatCommand("The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout");
+            this.MinimumParticipants = 2;
+            this.TimeLimit = 60;
+            this.SelectedBetType = RouletteGameCommandBetType.NumberRange;
+            this.BetOptionsNumberRangeLow = 1;
+            this.BetOptionsNumberRangeHigh = 9;
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteStartedExample, currency.Name));
+            this.UserJoinCommand = this.CreateBasicCommand();
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
+            this.UserSuccessOutcome = new GameOutcomeViewModel(string.Empty, 0, 200);
+            this.UserFailureCommand = this.CreateBasicCommand();
+            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteGameCompleteExample, currency.Name));
         }
 
-        public RouletteGameCommandEditorWindowViewModel(RouletteGameCommand command)
+        public IEnumerable<string> BetOptionsCustomList { get { return (!string.IsNullOrEmpty(this.BetOptionsCustom)) ? this.BetOptionsCustom.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }
+
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
-            this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.User] * 100);
-            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Subscriber] * 100);
-            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Mod] * 100);
-            this.IsNumberRange = this.existingCommand.IsNumberRange;
-            if (this.existingCommand.IsNumberRange)
+            HashSet<string> betOptions = new HashSet<string>();
+            if (this.SelectedBetType == RouletteGameCommandBetType.NumberRange)
             {
-                IEnumerable<int> numberBetTypes = this.existingCommand.ValidBetTypes.Select(b => int.Parse(b));
-                this.NumberRangeMinimum = numberBetTypes.Min();
-                this.NumberRangeMaximum = numberBetTypes.Max();
+                betOptions.Add(this.BetOptionsNumberRangeLow.ToString());
+                betOptions.Add(this.BetOptionsNumberRangeHigh.ToString());
             }
-            else
+            else if (this.SelectedBetType == RouletteGameCommandBetType.Custom)
             {
-                this.SelectableBetTypes = string.Join(Environment.NewLine, this.existingCommand.ValidBetTypes);
+                betOptions = new HashSet<string>(this.BetOptionsCustomList);
             }
 
-            this.StartedCommand = this.existingCommand.StartedCommand;
-
-            this.UserJoinCommand = this.existingCommand.UserJoinCommand;
-            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
-            this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
-            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+            return Task.FromResult<CommandModelBase>(new RouletteGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.SelectedBetType, betOptions, this.StartedCommand,
+                this.UserJoinCommand, this.NotEnoughPlayersCommand, this.UserSuccessOutcome.GetModel(), this.UserFailureCommand, this.GameCompleteCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            HashSet<string> validBetTypes = new HashSet<string>();
-            if (this.IsNumberRange)
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                for (int i = this.NumberRangeMinimum; i <= this.NumberRangeMaximum; i++)
-                {
-                    validBetTypes.Add(i.ToString());
-                }
-            }
-            else
-            {
-                foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    validBetTypes.Add(betType.ToLower());
-                }
+                return result;
             }
 
-            this.UserPayout = this.UserPayout / 100.0;
-            this.SubscriberPayout = this.SubscriberPayout / 100.0;
-            this.ModPayout = this.ModPayout / 100.0;
+            if (this.MinimumParticipants < 1)
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandMinimumParticipantsMustBeGreaterThan0);
+            }
 
-            Dictionary<UserRoleEnum, double> successRolePayouts = new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout }, { UserRoleEnum.Subscriber, this.SubscriberPayout }, { UserRoleEnum.Mod, this.ModPayout = this.ModPayout } };
-            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
-
-            GameCommandBase newCommand = new RouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.IsNumberRange, validBetTypes,
-                this.StartedCommand, this.UserJoinCommand, new GameOutcome("Success", successRolePayouts, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.GameCompleteCommand, this.NotEnoughPlayersCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
             if (this.TimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            if (this.MinimumParticipants <= 0)
+            if (this.SelectedBetType == RouletteGameCommandBetType.NumberRange)
             {
-                await DialogHelper.ShowMessage("The Minimum Participants is not a valid number greater than 0");
-                return false;
-            }
-
-            if (this.UserPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The User Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.SubscriberPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Subscriber Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.ModPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Mod Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.IsNumberRange)
-            {
-                if (this.NumberRangeMinimum <= 0)
+                if (this.BetOptionsNumberRangeLow < 0 || this.BetOptionsNumberRangeHigh < 0 || this.BetOptionsNumberRangeHigh < this.BetOptionsNumberRangeLow)
                 {
-                    await DialogHelper.ShowMessage("The Min Number is not a valid number greater than 0");
-                    return false;
-                }
-
-                if (this.NumberRangeMaximum <= 0)
-                {
-                    await DialogHelper.ShowMessage("The Max Number is not a valid number greater than 0");
-                    return false;
-                }
-
-                if (this.NumberRangeMaximum < this.NumberRangeMinimum)
-                {
-                    await DialogHelper.ShowMessage("The Max Number can not be less than the Min Number");
-                    return false;
+                    return new Result(MixItUp.Base.Resources.GameCommandRouletteBetOptionsNumberRangeInvalid);
                 }
             }
-            else
+            else if (this.SelectedBetType == RouletteGameCommandBetType.Custom)
             {
-                if (string.IsNullOrEmpty(this.SelectableBetTypes))
+                IEnumerable<string> symbolsList = this.BetOptionsCustomList;
+                if (symbolsList.Count() < 2)
                 {
-                    await DialogHelper.ShowMessage("The Valid Bet Types does not have a value");
-                    return false;
+                    return new Result(MixItUp.Base.Resources.GameCommandRouletteBetOptionsCustomMustBe2OrMore);
                 }
 
-                HashSet<string> validBetTypes = new HashSet<string>();
-                foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                if (symbolsList.GroupBy(s => s).Any(g => g.Count() > 1))
                 {
-                    validBetTypes.Add(betType.ToLower());
-                }
-
-                if (validBetTypes.Count() < 2)
-                {
-                    await DialogHelper.ShowMessage("You must specify at least 2 different bet types");
-                    return false;
+                    return new Result(MixItUp.Base.Resources.GameCommandRouletteBetOptionsCustomMustBeUnique);
                 }
             }
-
-            return true;
+            return new Result();
         }
     }
 }

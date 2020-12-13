@@ -157,12 +157,12 @@ namespace MixItUp.Base.ViewModel.Games
             this.TimeLimit = 60;
             this.HitmanTimeLimit = 30;
             this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanStartedExample);
-            this.UserJoinCommand = this.CreateBasicChatCommand();
+            this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.HitmanApproachingCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanApproachingExample);
             this.HitmanAppearsCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanAppearsExample);
             this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHitmanUserSuccessExample, currency.Name));
-            this.UserFailureCommand = this.CreateBasicChatCommand();
+            this.UserFailureCommand = this.CreateBasicCommand();
 
             this.SetUICommands();
         }

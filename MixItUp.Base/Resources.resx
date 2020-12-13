@@ -4039,6 +4039,15 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandMinimumParticipantsMustBeGreaterThan0" xml:space="preserve">
     <value>Minimum participants must be greater than 0</value>
   </data>
+  <data name="GameCommandRouletteGameCompleteExample" xml:space="preserve">
+    <value>The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout {0}</value>
+  </data>
+  <data name="GameCommandRouletteStartedExample" xml:space="preserve">
+    <value>@$username has started a game of roulette! Type !roulette &lt;BET TYPE&gt; &lt;AMOUNT&gt; in chat to play! Valid Bet Types: $gamevalidbettypes</value>
+  </data>
+  <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
+    <value>@$username won $gamepayout {0}!</value>
+  </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
     <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout {0}!</value>
   </data>
@@ -4080,5 +4089,32 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="GameCommandWordScrambleWordScramblePrepareExample" xml:space="preserve">
     <value>Everyone is gathered patiently with their pencils in hand. Get ready...</value>
+  </data>
+  <data name="NumberRange" xml:space="preserve">
+    <value>Number Range</value>
+  </data>
+  <data name="GameCommandPayout" xml:space="preserve">
+    <value>Payout</value>
+  </data>
+  <data name="GameCommandRouletteBetHighNumber" xml:space="preserve">
+    <value>High Number</value>
+  </data>
+  <data name="GameCommandRouletteBetLowNumber" xml:space="preserve">
+    <value>Low Number</value>
+  </data>
+  <data name="GameCommandRouletteBetOptions" xml:space="preserve">
+    <value>Bet Options</value>
+  </data>
+  <data name="GameCommandRouletteBetOptionsCustomMustBe2OrMore" xml:space="preserve">
+    <value>2 or more Bet Options must be specified</value>
+  </data>
+  <data name="GameCommandRouletteBetOptionsCustomMustBeUnique" xml:space="preserve">
+    <value>All Bet Options must be unique</value>
+  </data>
+  <data name="GameCommandRouletteBetOptionsNumberRangeInvalid" xml:space="preserve">
+    <value>The Bet Options number range is invalid</value>
+  </data>
+  <data name="GameCommandRouletteBetType" xml:space="preserve">
+    <value>Bet Type</value>
   </data>
 </root>

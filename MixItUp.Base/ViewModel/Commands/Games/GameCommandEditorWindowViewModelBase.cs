@@ -281,18 +281,18 @@ namespace MixItUp.Base.ViewModel.Games
             return new Result();
         }
 
-        protected CustomCommandModel CreateBasicChatCommand() { return new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand); }
+        protected CustomCommandModel CreateBasicCommand() { return new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand); }
 
         protected CustomCommandModel CreateBasicChatCommand(string message, bool whisper = false)
         {
-            CustomCommandModel command = this.CreateBasicChatCommand();
+            CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
             return command;
         }
 
         protected CustomCommandModel CreateBasic2ChatCommand(string message1, string message2)
         {
-            CustomCommandModel command = this.CreateBasicChatCommand();
+            CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message1));
             command.Actions.Add(new ChatActionModel(message2));
             return command;
@@ -300,14 +300,14 @@ namespace MixItUp.Base.ViewModel.Games
 
         protected CustomCommandModel CreateBasicCurrencyCommand(CurrencyModel currency, string amount)
         {
-            CustomCommandModel command = this.CreateBasicChatCommand();
+            CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
             return command;
         }
 
         protected CustomCommandModel CreateBasicChatCurrencyCommand(string message, CurrencyModel currency, string amount, bool whisper = false)
         {
-            CustomCommandModel command = this.CreateBasicChatCommand();
+            CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
             command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
             return command;

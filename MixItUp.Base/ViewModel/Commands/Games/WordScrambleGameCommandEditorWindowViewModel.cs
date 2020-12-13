@@ -157,12 +157,12 @@ namespace MixItUp.Base.ViewModel.Games
             this.TimeLimit = 60;
             this.WordScrambleTimeLimit = 300;
             this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleStartedExample);
-            this.UserJoinCommand = this.CreateBasicChatCommand();
+            this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.WordScramblePrepareCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScramblePrepareExample);
             this.WordScrambleBeginCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScrambleBeginExample);
             this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandWordScrambleUserSuccessExample, currency.Name));
-            this.UserFailureCommand = this.CreateBasicChatCommand();
+            this.UserFailureCommand = this.CreateBasicCommand();
 
             this.SetUICommands();
         }

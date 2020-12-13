@@ -10,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands.Games
 {
+    public enum RouletteGameCommandBetType
+    {
+        [Obsolete]
+        Traditional,
+        NumberRange,
+        Custom
+    }
+
     [DataContract]
     public class RouletteGameCommandModel : GameCommandModelBase
     {
@@ -22,9 +30,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int TimeLimit { get; set; }
         [DataMember]
-        public bool IsNumberRange { get; set; }
+        public RouletteGameCommandBetType BetType { get; set; }
         [DataMember]
-        public HashSet<string> ValidBetTypes { get; set; }
+        public HashSet<string> BetOptions { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
@@ -36,7 +44,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public GameOutcomeModel UserSuccessOutcome { get; set; }
         [DataMember]
-        public CustomCommandModel UserFailCommand { get; set; }
+        public CustomCommandModel UserFailureCommand { get; set; }
         [DataMember]
         public CustomCommandModel GameCompleteCommand { get; set; }
 
@@ -47,19 +55,19 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
 
-        public RouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, bool isNumberRange, HashSet<string> validBetTypes, CustomCommandModel startedCommand,
-            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, CustomCommandModel userFailCommand, CustomCommandModel gameCompleteCommand)
+        public RouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, RouletteGameCommandBetType betType, HashSet<string> betOptions, CustomCommandModel startedCommand,
+            CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand, GameOutcomeModel userSuccessOutcome, CustomCommandModel userFailureCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Roulette)
         {
             this.MinimumParticipants = minimumParticipants;
             this.TimeLimit = timeLimit;
-            this.IsNumberRange = isNumberRange;
-            this.ValidBetTypes = validBetTypes;
+            this.BetType = betType;
+            this.BetOptions = betOptions;
             this.StartedCommand = startedCommand;
             this.UserJoinCommand = userJoinCommand;
             this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
             this.UserSuccessOutcome = userSuccessOutcome;
-            this.UserFailCommand = userFailCommand;
+            this.UserFailureCommand = userFailureCommand;
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
@@ -72,27 +80,27 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.UserJoinCommand);
             commands.Add(this.NotEnoughPlayersCommand);
             commands.Add(this.UserSuccessOutcome.Command);
-            commands.Add(this.UserFailCommand);
+            commands.Add(this.UserFailureCommand);
             commands.Add(this.GameCompleteCommand);
             return commands;
         }
 
         protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
-            if (parameters.Arguments.Count > 0 && this.ValidBetTypes.Contains(parameters.Arguments[0].ToLower()))
+            if (parameters.Arguments.Count > 0 && this.BetOptions.Contains(parameters.Arguments[0].ToLower()))
             {
                 return await base.ValidateRequirements(parameters);
             }
 
             string validBetTypes = string.Empty;
-            if (this.IsNumberRange)
+            if (this.BetType == RouletteGameCommandBetType.NumberRange)
             {
-                IEnumerable<int> numbers = this.ValidBetTypes.Select(s => int.Parse(s));
+                IEnumerable<int> numbers = this.BetOptions.Select(s => int.Parse(s));
                 validBetTypes = numbers.Min() + "-" + numbers.Max();
             }
-            else
+            else if (this.BetType == RouletteGameCommandBetType.Custom)
             {
-                validBetTypes = string.Join(", ", this.ValidBetTypes);
+                validBetTypes = string.Join(", ", this.BetOptions);
             }
             await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, validBetTypes));
             return false;
@@ -126,7 +134,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             return;
                         }
 
-                        string winningBetType = this.ValidBetTypes.Random();
+                        string winningBetType = this.BetOptions.Random();
 
                         List<CommandParametersModel> winners = new List<CommandParametersModel>();
                         foreach (CommandParametersModel participant in this.runUsers.Values.ToList())
@@ -138,7 +146,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             }
                             else
                             {
-                                await this.UserFailCommand.Perform(participant);
+                                await this.UserFailureCommand.Perform(participant);
                             }
                         }
 

@@ -58,6 +58,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new LockBoxGameCommandEditorWindowViewModel((LockBoxGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.Roulette:
+                    this.editorDetailsControl = new RouletteGameCommandEditorDetailsControl();
+                    this.viewModel = new RouletteGameCommandEditorWindowViewModel((RouletteGameCommandModel)existingCommand);
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
                     this.editorDetailsControl = new RussianRouletteGameCommandEditorDetailsControl();
@@ -130,6 +132,8 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new LockBoxGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.Roulette:
+                    this.editorDetailsControl = new RouletteGameCommandEditorDetailsControl();
+                    this.viewModel = new RouletteGameCommandEditorWindowViewModel(currency);
                     break;
                 case GameCommandTypeEnum.RussianRoulette:
                     this.editorDetailsControl = new RussianRouletteGameCommandEditorDetailsControl();

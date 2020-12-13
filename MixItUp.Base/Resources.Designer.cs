@@ -4447,6 +4447,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Payout.
+        /// </summary>
+        public static string GameCommandPayout {
+            get {
+                return ResourceManager.GetString("GameCommandPayout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Probabilities must be between 1 - 100.
         /// </summary>
         public static string GameCommandProbabilityMustBeBetween1And100 {
@@ -4474,6 +4483,69 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to High Number.
+        /// </summary>
+        public static string GameCommandRouletteBetHighNumber {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetHighNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low Number.
+        /// </summary>
+        public static string GameCommandRouletteBetLowNumber {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetLowNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bet Options.
+        /// </summary>
+        public static string GameCommandRouletteBetOptions {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2 or more Bet Options must be specified.
+        /// </summary>
+        public static string GameCommandRouletteBetOptionsCustomMustBe2OrMore {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetOptionsCustomMustBe2OrMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Bet Options must be unique.
+        /// </summary>
+        public static string GameCommandRouletteBetOptionsCustomMustBeUnique {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetOptionsCustomMustBeUnique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Bet Options number range is invalid.
+        /// </summary>
+        public static string GameCommandRouletteBetOptionsNumberRangeInvalid {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetOptionsNumberRangeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bet Type.
+        /// </summary>
+        public static string GameCommandRouletteBetType {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteBetType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Roulette game allows a user to start a group betting game amongst all users to bet on a specific number or name. If the game is based on a number range, then a user can select any number in that range. If the game is based on a series of names, a user can select any one of the names. All users who select the winning bet type get the payout for their bet, everyone else losses their bet..
         /// </summary>
         public static string GameCommandRouletteDescription {
@@ -4488,6 +4560,33 @@ namespace MixItUp.Base {
         public static string GameCommandRouletteExample {
             get {
                 return ResourceManager.GetString("GameCommandRouletteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout {0}.
+        /// </summary>
+        public static string GameCommandRouletteGameCompleteExample {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteGameCompleteExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of roulette! Type !roulette &lt;BET TYPE&gt; &lt;AMOUNT&gt; in chat to play! Valid Bet Types: $gamevalidbettypes.
+        /// </summary>
+        public static string GameCommandRouletteStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteStartedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username won $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandRouletteUserSuccessExample {
+            get {
+                return ResourceManager.GetString("GameCommandRouletteUserSuccessExample", resourceCulture);
             }
         }
         
@@ -7214,6 +7313,15 @@ namespace MixItUp.Base {
         public static string NotSupportedStreamingSoftware {
             get {
                 return ResourceManager.GetString("NotSupportedStreamingSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number Range.
+        /// </summary>
+        public static string NumberRange {
+            get {
+                return ResourceManager.GetString("NumberRange", resourceCulture);
             }
         }
         
