@@ -623,6 +623,9 @@
     <Compile Include="Controls\Commands\Games\TriviaGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TriviaGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\Games\VolcanoGameCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>VolcanoGameCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>WordScrambleGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -678,9 +681,6 @@
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\GameEditorControlBase.cs" />
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml.cs">
       <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\VolcanoGameEditorControl.xaml.cs">
-      <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command %28OLD%29\Games %28OLD%29\TreasureDefenseGameEditorControl.xaml.cs">
       <DependentUpon>TreasureDefenseGameEditorControl.xaml</DependentUpon>
@@ -1494,6 +1494,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\Games\VolcanoGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1563,10 +1567,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\HeistGameEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command %28OLD%29\Games %28OLD%29\VolcanoGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

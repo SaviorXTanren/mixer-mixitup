@@ -1,247 +1,298 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
 {
-    public class VolcanoGameCommandEditorWindowViewModel : OLDGameCommandEditorWindowViewModelBase
+    public class VolcanoGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public string StatusArgument { get; set; } = "status";
-
-        public CustomCommand Stage1DepositCommand { get; set; }
-        public CustomCommand Stage1StatusCommand { get; set; }
-
-        public string Stage2MinimumAmountString
+        public string StatusArgument
         {
-            get { return this.Stage2MinimumAmount.ToString(); }
+            get { return this.statusArgument; }
             set
             {
-                this.Stage2MinimumAmount = this.GetPositiveIntFromString(value);
+                this.statusArgument = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int Stage2MinimumAmount { get; set; } = 5000;
-        public CustomCommand Stage2DepositCommand { get; set; }
-        public CustomCommand Stage2StatusCommand { get; set; }
+        private string statusArgument;
 
-        public string Stage3MinimumAmountString
+        public CustomCommandModel Stage1DepositCommand
         {
-            get { return this.Stage3MinimumAmount.ToString(); }
+            get { return this.stage1DepositCommand; }
             set
             {
-                this.Stage3MinimumAmount = this.GetPositiveIntFromString(value);
+                this.stage1DepositCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int Stage3MinimumAmount { get; set; } = 10000;
-        public CustomCommand Stage3DepositCommand { get; set; }
-        public CustomCommand Stage3StatusCommand { get; set; }
+        private CustomCommandModel stage1DepositCommand;
 
-        public string PayoutProbabilityString
+        public CustomCommandModel Stage1StatusCommand
         {
-            get { return this.PayoutProbability.ToString(); }
+            get { return this.stage1StatusCommand; }
             set
             {
-                this.PayoutProbability = this.GetPositiveIntFromString(value);
+                this.stage1StatusCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int PayoutProbability { get; set; } = 10;
+        private CustomCommandModel stage1StatusCommand;
 
-        public string PayoutPercentageMinimumString
+        public int Stage2MinimumAmount
         {
-            get { return this.PayoutPercentageMinimum.ToString(); }
+            get { return this.stage2MinimumAmount; }
             set
             {
-                this.PayoutPercentageMinimum = this.GetPositiveIntFromString(value);
+                this.stage2MinimumAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double PayoutPercentageMinimum { get; set; } = 40;
+        private int stage2MinimumAmount;
 
-        public string PayoutPercentageMaximumString
+        public CustomCommandModel Stage2DepositCommand
         {
-            get { return this.PayoutPercentageMaximum.ToString(); }
+            get { return this.stage2DepositCommand; }
             set
             {
-                this.PayoutPercentageMaximum = this.GetPositiveIntFromString(value);
+                this.stage2DepositCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double PayoutPercentageMaximum { get; set; } = 60;
-        public CustomCommand PayoutCommand { get; set; }
+        private CustomCommandModel stage2DepositCommand;
 
-        public string CollectArgument { get; set; } = "collect";
-        public string CollectTimeLimitString
+        public CustomCommandModel Stage2StatusCommand
         {
-            get { return this.CollectTimeLimit.ToString(); }
+            get { return this.stage2StatusCommand; }
             set
             {
-                this.CollectTimeLimit = this.GetPositiveIntFromString(value);
+                this.stage2StatusCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public int CollectTimeLimit { get; set; } = 30;
+        private CustomCommandModel stage2StatusCommand;
 
-        public string CollectPayoutPercentageMinimumString
+        public int Stage3MinimumAmount
         {
-            get { return this.CollectPayoutPercentageMinimum.ToString(); }
+            get { return this.stage3MinimumAmount; }
             set
             {
-                this.CollectPayoutPercentageMinimum = this.GetPositiveIntFromString(value);
+                this.stage3MinimumAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double CollectPayoutPercentageMinimum { get; set; } = 10;
+        private int stage3MinimumAmount;
 
-        public string CollectPayoutPercentageMaximumString
+        public CustomCommandModel Stage3DepositCommand
         {
-            get { return this.CollectPayoutPercentageMaximum.ToString(); }
+            get { return this.stage3DepositCommand; }
             set
             {
-                this.CollectPayoutPercentageMaximum = this.GetPositiveIntFromString(value);
+                this.stage3DepositCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public double CollectPayoutPercentageMaximum { get; set; } = 20;
-        public CustomCommand CollectCommand { get; set; }
+        private CustomCommandModel stage3DepositCommand;
 
-        private VolcanoGameCommand existingCommand;
+        public CustomCommandModel Stage3StatusCommand
+        {
+            get { return this.stage3StatusCommand; }
+            set
+            {
+                this.stage3StatusCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel stage3StatusCommand;
+
+        public int PayoutProbability
+        {
+            get { return this.payoutProbability; }
+            set
+            {
+                this.payoutProbability = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int payoutProbability;
+
+        public double PayoutMinimumPercentage
+        {
+            get { return this.payoutMinimumPercentage; }
+            set
+            {
+                this.payoutMinimumPercentage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double payoutMinimumPercentage;
+
+        public double PayoutMaximumPercentage
+        {
+            get { return this.payoutMaximumPercentage; }
+            set
+            {
+                this.payoutMaximumPercentage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double payoutMaximumPercentage;
+
+        public CustomCommandModel PayoutCommand
+        {
+            get { return this.payoutCommand; }
+            set
+            {
+                this.payoutCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel payoutCommand;
+
+        public string CollectArgument
+        {
+            get { return this.collectArgument; }
+            set
+            {
+                this.collectArgument = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string collectArgument;
+
+        public int CollectTimeLimit
+        {
+            get { return this.collectTimeLimit; }
+            set
+            {
+                this.collectTimeLimit = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int collectTimeLimit;
+
+        public double CollectMinimumPercentage
+        {
+            get { return this.collectMinimumPercentage; }
+            set
+            {
+                this.collectMinimumPercentage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double collectMinimumPercentage;
+
+        public double CollectMaximumPercentage
+        {
+            get { return this.collectMaximumPercentage; }
+            set
+            {
+                this.collectMaximumPercentage = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double collectMaximumPercentage;
+
+        public CustomCommandModel CollectCommand
+        {
+            get { return this.collectCommand; }
+            set
+            {
+                this.collectCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CustomCommandModel collectCommand;
+
+        public VolcanoGameCommandEditorWindowViewModel(VolcanoGameCommandModel command)
+            : base(command)
+        {
+            this.StatusArgument = command.StatusArgument;
+            this.Stage1DepositCommand = command.Stage1DepositCommand;
+            this.Stage1StatusCommand = command.Stage1StatusCommand;
+            this.Stage2MinimumAmount = command.Stage2MinimumAmount;
+            this.Stage2DepositCommand = command.Stage2DepositCommand;
+            this.Stage2StatusCommand = command.Stage2StatusCommand;
+            this.Stage3MinimumAmount = command.Stage3MinimumAmount;
+            this.Stage3DepositCommand = command.Stage3DepositCommand;
+            this.Stage3StatusCommand = command.Stage3StatusCommand;
+            this.PayoutProbability = command.PayoutProbability;
+            this.PayoutMinimumPercentage = command.PayoutMinimumPercentage;
+            this.PayoutMaximumPercentage = command.PayoutMaximumPercentage;
+            this.PayoutCommand = command.PayoutCommand;
+            this.CollectArgument = command.CollectArgument;
+            this.CollectTimeLimit = command.CollectTimeLimit;
+            this.CollectMinimumPercentage = command.CollectMinimumPercentage;
+            this.CollectMaximumPercentage = command.CollectMaximumPercentage;
+            this.CollectCommand = command.CollectCommand;
+        }
 
         public VolcanoGameCommandEditorWindowViewModel(CurrencyModel currency)
+            : base(currency)
         {
-            this.Stage1DepositCommand = this.CreateBasicChatCommand("After a few seconds, @$username hears a faint clunk as their " + currency.Name + " hit the bottom of the volcano");
-            this.Stage1StatusCommand = this.CreateBasicChatCommand("Peering in, you can hardly see anything inside. Total Amount: $gametotalamount");
-            this.Stage2DepositCommand = this.CreateBasicChatCommand("@$username hears a loud shuffling of " + currency.Name + " as their deposit goes in to the volcano");
-            this.Stage2StatusCommand = this.CreateBasicChatCommand("Peering in, you see the opening filled up over halfway inside the Volcano. Total Amount: $gametotalamount");
-            this.Stage3DepositCommand = this.CreateBasicChatCommand("@$username carefully places their " + currency.Name + " into the volcano, trying not to knock over the overflowing amount already in it.");
-            this.Stage3StatusCommand = this.CreateBasicChatCommand("The  " + currency.Name + " are starting to overflow from the top of the Volcano. Total Amount: $gametotalamount");
-
-            this.PayoutCommand = this.CreateBasic2ChatCommand("As @$username drops their " + currency.Name + " into the Volcano, a loud eruption occurs and $gamepayout " + currency.Name + " land on top of them!",
-                "The Volcano is exploding out coins! Quick, type \"!volcano collect\" in chat in the next 30 seconds!");
-
-            this.CollectCommand = this.CreateBasicChatCommand("@$username walked away with $gamepayout " + currency.Name + "after scavenging the aftermath!");
+            this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
+            this.Stage1DepositCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage1DepositExample);
+            this.Stage1StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage1StatusExample);
+            this.Stage2MinimumAmount = 1000;
+            this.Stage2DepositCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage2DepositExample);
+            this.Stage2StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage2StatusExample);
+            this.Stage3MinimumAmount = 2000;
+            this.Stage3DepositCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage3DepositExample);
+            this.Stage3StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage3StatusExample);
+            this.PayoutProbability = 25;
+            this.PayoutMinimumPercentage = 50;
+            this.PayoutMaximumPercentage = 75;
+            this.PayoutCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoPayoutExample, currency.Name));
+            this.CollectArgument = MixItUp.Base.Resources.GameCommandVolcanoCollectArgumentExample;
+            this.CollectTimeLimit = 60;
+            this.CollectMinimumPercentage = 25;
+            this.CollectMaximumPercentage = 50;
+            this.CollectCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoCollectExample, currency.Name));
         }
 
-        public VolcanoGameCommandEditorWindowViewModel(VolcanoGameCommand command)
+        public override Task<CommandModelBase> GetCommand()
         {
-            this.existingCommand = command;
-
-            this.StatusArgument = this.existingCommand.StatusArgument;
-            this.Stage1DepositCommand = this.existingCommand.Stage1DepositCommand;
-            this.Stage1StatusCommand = this.existingCommand.Stage1StatusCommand;
-            this.Stage2MinimumAmount = this.existingCommand.Stage2MinimumAmount;
-            this.Stage2DepositCommand = this.existingCommand.Stage2DepositCommand;
-            this.Stage2StatusCommand = this.existingCommand.Stage2StatusCommand;
-            this.Stage3MinimumAmount = this.existingCommand.Stage3MinimumAmount;
-            this.Stage3DepositCommand = this.existingCommand.Stage3DepositCommand;
-            this.Stage3StatusCommand = this.existingCommand.Stage3StatusCommand;
-
-            this.PayoutProbability = this.existingCommand.PayoutProbability;
-            this.PayoutPercentageMinimum = (this.existingCommand.PayoutPercentageMinimum * 100);
-            this.PayoutPercentageMaximum = (this.existingCommand.PayoutPercentageMaximum * 100);
-            this.PayoutCommand = this.existingCommand.PayoutCommand;
-
-            this.CollectArgument = this.existingCommand.CollectArgument;
-            this.CollectTimeLimit = this.existingCommand.CollectTimeLimit;
-            this.CollectPayoutPercentageMinimum = (this.existingCommand.CollectPayoutPercentageMinimum * 100);
-            this.CollectPayoutPercentageMaximum = (this.existingCommand.CollectPayoutPercentageMaximum * 100);
-            this.CollectCommand = this.existingCommand.CollectCommand;
+            return Task.FromResult<CommandModelBase>(new VolcanoGameCommandModel(this.Name, this.GetChatTriggers(), this.StatusArgument, this.Stage1DepositCommand, this.Stage1StatusCommand, this.Stage2MinimumAmount, this.Stage2DepositCommand,
+                this.Stage2StatusCommand, this.Stage3MinimumAmount, this.Stage3DepositCommand, this.Stage3StatusCommand, this.PayoutProbability, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage, this.PayoutCommand,
+                this.CollectArgument, this.CollectTimeLimit, this.CollectMinimumPercentage, this.CollectMaximumPercentage, this.CollectCommand));
         }
 
-        public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
+        public override async Task<Result> Validate()
         {
-            this.PayoutPercentageMinimum = this.PayoutPercentageMinimum / 100.0;
-            this.PayoutPercentageMaximum = this.PayoutPercentageMaximum / 100.0;
-            this.CollectPayoutPercentageMinimum = this.CollectPayoutPercentageMinimum / 100.0;
-            this.CollectPayoutPercentageMaximum = this.CollectPayoutPercentageMaximum / 100.0;
-
-            GameCommandBase newCommand = new VolcanoGameCommand(name, triggers, requirements,
-                this.StatusArgument.ToLower(), this.Stage1DepositCommand, this.Stage1StatusCommand, this.Stage2MinimumAmount, this.Stage2DepositCommand, this.Stage2StatusCommand, this.Stage3MinimumAmount,
-                this.Stage3DepositCommand, this.Stage3StatusCommand, this.PayoutProbability, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.PayoutCommand, this.CollectArgument,
-                this.CollectTimeLimit, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum, this.CollectCommand);
-            this.SaveGameCommand(newCommand, this.existingCommand);
-        }
-
-        public override async Task<bool> Validate()
-        {
-            if (string.IsNullOrEmpty(this.StatusArgument) && !this.StatusArgument.Any(c => char.IsLetterOrDigit(c)))
+            Result result = await base.Validate();
+            if (!result.Success)
             {
-                await DialogHelper.ShowMessage("The Status Argument must have a valid value");
-                return false;
+                return result;
             }
 
-            if (this.Stage2MinimumAmount <= 0)
+            if (this.Stage2MinimumAmount < 0 || Stage3MinimumAmount < 0 || this.Stage3MinimumAmount < this.Stage2MinimumAmount)
             {
-                await DialogHelper.ShowMessage("The Stage 2 Min Amount is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandVolcanoStageMinimumAmountsMustBePositiveNumbers);
             }
 
-            if (this.Stage3MinimumAmount <= 0)
+            if (this.PayoutProbability <= 0)
             {
-                await DialogHelper.ShowMessage("The Stage 3 Min Amount is not a valid number greater than 0");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandProbabilityMustBeBetween1And100);
             }
 
-            if (this.PayoutProbability <= 0 || this.PayoutProbability > 100)
+            if (this.PayoutMinimumPercentage < 0 || this.PayoutMaximumPercentage < 0 || this.PayoutMaximumPercentage < this.PayoutMinimumPercentage)
             {
-                await DialogHelper.ShowMessage("The Payout Probability is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandVolcanoPayoutPercentageMustBePositive);
             }
 
-            if (this.PayoutPercentageMinimum < 0 || PayoutPercentageMinimum > 100)
+            if (this.CollectTimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Min Payout % is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
             }
 
-            if (this.PayoutPercentageMaximum < 0 || this.PayoutPercentageMaximum > 100)
+            if (this.CollectMinimumPercentage < 0 || this.CollectMaximumPercentage < 0 || this.CollectMaximumPercentage < this.CollectMinimumPercentage)
             {
-                await DialogHelper.ShowMessage("The Max Payout % is not a valid number between 0 - 100");
-                return false;
+                return new Result(MixItUp.Base.Resources.GameCommandVolcanoCollectPercentageMustBePositive);
             }
 
-            if (this.PayoutPercentageMaximum < this.PayoutPercentageMinimum)
-            {
-                await DialogHelper.ShowMessage("The Max Payout % can not be less than Min Payout %");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.CollectArgument) && !this.CollectArgument.Any(c => char.IsLetterOrDigit(c)))
-            {
-                await DialogHelper.ShowMessage("The Collect Argument must have a valid value");
-                return false;
-            }
-
-            if (this.CollectTimeLimit < 0)
-            {
-                await DialogHelper.ShowMessage("The Collect Time Out must be greater than 0");
-                return false;
-            }
-
-            if (this.CollectPayoutPercentageMinimum < 0 || this.CollectPayoutPercentageMinimum > 100)
-            {
-                await DialogHelper.ShowMessage("The Collect Min Payout % is not a valid number between 0 - 100");
-                return false;
-            }
-
-            if (this.CollectPayoutPercentageMaximum < 0 || this.CollectPayoutPercentageMaximum > 100)
-            {
-                await DialogHelper.ShowMessage("The Collect Max Payout % is not a valid number between 0 - 100");
-                return false;
-            }
-
-            if (this.CollectPayoutPercentageMaximum < this.CollectPayoutPercentageMaximum)
-            {
-                await DialogHelper.ShowMessage("The Collect Max Payout % can not be less than Collect Min Payout %");
-                return false;
-            }
-
-            return true;
+            return new Result();
         }
     }
 }

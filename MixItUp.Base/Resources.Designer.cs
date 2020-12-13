@@ -5164,11 +5164,65 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collect.
+        /// </summary>
+        public static string GameCommandVolcanoCollect {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collect Argument.
+        /// </summary>
+        public static string GameCommandVolcanoCollectArgument {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollectArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to collect.
+        /// </summary>
+        public static string GameCommandVolcanoCollectArgumentExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollectArgumentExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username walked away with $gamepayout {0} after scavenging the aftermath!.
+        /// </summary>
+        public static string GameCommandVolcanoCollectExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollectExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collect Percentage must be a postive number.
+        /// </summary>
+        public static string GameCommandVolcanoCollectPercentageMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoCollectPercentageMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collecting is currently underway, please wait until it has completed.
         /// </summary>
         public static string GameCommandVolcanoCollectUnderway {
             get {
                 return ResourceManager.GetString("GameCommandVolcanoCollectUnderway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deposit.
+        /// </summary>
+        public static string GameCommandVolcanoDeposit {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoDeposit", resourceCulture);
             }
         }
         
@@ -5189,6 +5243,141 @@ namespace MixItUp.Base {
         public static string GameCommandVolcanoExample {
             get {
                 return ResourceManager.GetString("GameCommandVolcanoExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Amount.
+        /// </summary>
+        public static string GameCommandVolcanoMinimumAmount {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoMinimumAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payout.
+        /// </summary>
+        public static string GameCommandVolcanoPayout {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoPayout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type &quot;!volcano collect&quot; in chat in the next 30 seconds!.
+        /// </summary>
+        public static string GameCommandVolcanoPayoutExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoPayoutExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payout Percentage must be a positive number.
+        /// </summary>
+        public static string GameCommandVolcanoPayoutPercentageMustBePositive {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoPayoutPercentageMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stage 1.
+        /// </summary>
+        public static string GameCommandVolcanoStage1 {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After a few seconds, @$username hears a faint clunk hit the bottom of the volcano.
+        /// </summary>
+        public static string GameCommandVolcanoStage1DepositExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage1DepositExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peering in, you can hardly see anything inside. Total Amount: $gametotalamount.
+        /// </summary>
+        public static string GameCommandVolcanoStage1StatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage1StatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stage 2.
+        /// </summary>
+        public static string GameCommandVolcanoStage2 {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username hears a loud shuffling as their deposit goes in to the volcano.
+        /// </summary>
+        public static string GameCommandVolcanoStage2DepositExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage2DepositExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peering in, you see the opening filled up over halfway inside the Volcano. Total Amount: $gametotalamount.
+        /// </summary>
+        public static string GameCommandVolcanoStage2StatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage2StatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stage 3.
+        /// </summary>
+        public static string GameCommandVolcanoStage3 {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username carefully places their deposit into the volcano, trying not to knock over the overflowing amount already in it..
+        /// </summary>
+        public static string GameCommandVolcanoStage3DepositExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage3DepositExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Things are starting to overflow from the top of the Volcano. Total Amount: $gametotalamount.
+        /// </summary>
+        public static string GameCommandVolcanoStage3StatusExample {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStage3StatusExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stage Minimum Amounts must be positive numbers.
+        /// </summary>
+        public static string GameCommandVolcanoStageMinimumAmountsMustBePositiveNumbers {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStageMinimumAmountsMustBePositiveNumbers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string GameCommandVolcanoStatus {
+            get {
+                return ResourceManager.GetString("GameCommandVolcanoStatus", resourceCulture);
             }
         }
         

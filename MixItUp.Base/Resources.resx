@@ -4168,4 +4168,67 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandTriviaWrongAnswer3" xml:space="preserve">
     <value>Wrong Answer 3</value>
   </data>
+  <data name="GameCommandVolcanoCollect" xml:space="preserve">
+    <value>Collect</value>
+  </data>
+  <data name="GameCommandVolcanoCollectArgument" xml:space="preserve">
+    <value>Collect Argument</value>
+  </data>
+  <data name="GameCommandVolcanoCollectArgumentExample" xml:space="preserve">
+    <value>collect</value>
+  </data>
+  <data name="GameCommandVolcanoCollectExample" xml:space="preserve">
+    <value>@$username walked away with $gamepayout {0} after scavenging the aftermath!</value>
+  </data>
+  <data name="GameCommandVolcanoCollectPercentageMustBePositive" xml:space="preserve">
+    <value>Collect Percentage must be a postive number</value>
+  </data>
+  <data name="GameCommandVolcanoDeposit" xml:space="preserve">
+    <value>Deposit</value>
+  </data>
+  <data name="GameCommandVolcanoMinimumAmount" xml:space="preserve">
+    <value>Minimum Amount</value>
+  </data>
+  <data name="GameCommandVolcanoPayout" xml:space="preserve">
+    <value>Payout</value>
+  </data>
+  <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
+    <value>As @$username drops their deposit into the Volcano, a loud eruption occurs and $gamepayout {0} land on top of them! The Volcano is exploding out coins! Quick, type "!volcano collect" in chat in the next 30 seconds!</value>
+  </data>
+  <data name="GameCommandVolcanoPayoutPercentageMustBePositive" xml:space="preserve">
+    <value>Payout Percentage must be a positive number</value>
+  </data>
+  <data name="GameCommandVolcanoStage1" xml:space="preserve">
+    <value>Stage 1</value>
+  </data>
+  <data name="GameCommandVolcanoStage1DepositExample" xml:space="preserve">
+    <value>After a few seconds, @$username hears a faint clunk hit the bottom of the volcano</value>
+  </data>
+  <data name="GameCommandVolcanoStage1StatusExample" xml:space="preserve">
+    <value>Peering in, you can hardly see anything inside. Total Amount: $gametotalamount</value>
+  </data>
+  <data name="GameCommandVolcanoStage2" xml:space="preserve">
+    <value>Stage 2</value>
+  </data>
+  <data name="GameCommandVolcanoStage2DepositExample" xml:space="preserve">
+    <value>@$username hears a loud shuffling as their deposit goes in to the volcano</value>
+  </data>
+  <data name="GameCommandVolcanoStage2StatusExample" xml:space="preserve">
+    <value>Peering in, you see the opening filled up over halfway inside the Volcano. Total Amount: $gametotalamount</value>
+  </data>
+  <data name="GameCommandVolcanoStage3" xml:space="preserve">
+    <value>Stage 3</value>
+  </data>
+  <data name="GameCommandVolcanoStage3DepositExample" xml:space="preserve">
+    <value>@$username carefully places their deposit into the volcano, trying not to knock over the overflowing amount already in it.</value>
+  </data>
+  <data name="GameCommandVolcanoStage3StatusExample" xml:space="preserve">
+    <value>Things are starting to overflow from the top of the Volcano. Total Amount: $gametotalamount</value>
+  </data>
+  <data name="GameCommandVolcanoStageMinimumAmountsMustBePositiveNumbers" xml:space="preserve">
+    <value>Stage Minimum Amounts must be positive numbers</value>
+  </data>
+  <data name="GameCommandVolcanoStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
 </root>

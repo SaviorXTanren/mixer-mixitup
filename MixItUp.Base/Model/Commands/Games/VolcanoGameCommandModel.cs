@@ -37,9 +37,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int PayoutProbability { get; set; }
         [DataMember]
-        public double PayoutPercentageMinimum { get; set; }
+        public double PayoutMinimumPercentage { get; set; }
         [DataMember]
-        public double PayoutPercentageMaximum { get; set; }
+        public double PayoutMaximumPercentage { get; set; }
         [DataMember]
         public CustomCommandModel PayoutCommand { get; set; }
 
@@ -48,9 +48,9 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int CollectTimeLimit { get; set; }
         [DataMember]
-        public double CollectPayoutPercentageMinimum { get; set; }
+        public double CollectMinimumPercentage { get; set; }
         [DataMember]
-        public double CollectPayoutPercentageMaximum { get; set; }
+        public double CollectMaximumPercentage { get; set; }
         [DataMember]
         public CustomCommandModel CollectCommand { get; set; }
 
@@ -65,8 +65,8 @@ namespace MixItUp.Base.Model.Commands.Games
         public VolcanoGameCommandModel(string name, HashSet<string> triggers, string statusArgument, CustomCommandModel stage1DepositCommand, CustomCommandModel stage1StatusCommand,
             int stage2MinimumAmount, CustomCommandModel stage2DepositCommand, CustomCommandModel stage2StatusCommand,
             int stage3MinimumAmount, CustomCommandModel stage3DepositCommand, CustomCommandModel stage3StatusCommand,
-            int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommandModel payoutCommand,
-            string collectArgument, int collectTimeLimit, double collectPayoutPercentageMinimum, double collectPayoutPercentageMaximum, CustomCommandModel collectCommand)
+            int payoutProbability, double payoutMinimumPercentage, double payoutMaximumPercentage, CustomCommandModel payoutCommand,
+            string collectArgument, int collectTimeLimit, double collectMinimumPercentage, double collectMaximumPercentage, CustomCommandModel collectCommand)
             : base(name, triggers, GameCommandTypeEnum.Volcano)
         {
             this.StatusArgument = statusArgument;
@@ -79,13 +79,13 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Stage3DepositCommand = stage3DepositCommand;
             this.Stage3StatusCommand = stage3StatusCommand;
             this.PayoutProbability = payoutProbability;
-            this.PayoutPercentageMinimum = payoutPercentageMinimum;
-            this.PayoutPercentageMaximum = payoutPercentageMaximum;
+            this.PayoutMinimumPercentage = payoutMinimumPercentage;
+            this.PayoutMaximumPercentage = payoutMaximumPercentage;
             this.PayoutCommand = payoutCommand;
             this.CollectArgument = collectArgument;
             this.CollectTimeLimit = collectTimeLimit;
-            this.CollectPayoutPercentageMinimum = collectPayoutPercentageMinimum;
-            this.CollectPayoutPercentageMaximum = collectPayoutPercentageMaximum;
+            this.CollectMinimumPercentage = collectMinimumPercentage;
+            this.CollectMaximumPercentage = collectMaximumPercentage;
             this.CollectCommand = collectCommand;
         }
 
@@ -114,7 +114,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (!this.collectUsers.Contains(parameters.User))
                     {
                         this.collectUsers.Add(parameters.User);
-                        int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum);
+                        int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectMinimumPercentage, this.CollectMaximumPercentage);
                         this.PerformPayout(parameters, payout);
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (this.GenerateProbability() <= this.PayoutProbability)
                 {
                     this.collectUsers.Add(parameters.User);
-                    int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum);
+                    int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage);
                     this.PerformPayout(parameters, payout);
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
