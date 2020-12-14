@@ -41,25 +41,24 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private GameOutcomeViewModel successfulOutcome;
 
-        public GameOutcomeViewModel FailedOutcome
+        public CustomCommandModel FailedCommand
         {
-            get { return this.failedOutcome; }
+            get { return this.failedCommand; }
             set
             {
-                this.failedOutcome = value;
+                this.failedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private GameOutcomeViewModel failedOutcome;
+        private CustomCommandModel failedCommand;
 
         public StealGameCommandEditorWindowViewModel(StealGameCommandModel command)
             : base(command)
         {
             this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
             this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
-
             this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
-            this.FailedOutcome = new GameOutcomeViewModel(command.FailedOutcome);
+            this.FailedCommand = command.FailedCommand;
         }
 
         public StealGameCommandEditorWindowViewModel(CurrencyModel currency)
@@ -67,9 +66,8 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;
-
             this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandStealWinExample, currency.Name)));
-            this.FailedOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 0, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandStealLoseExample));
+            this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandStealLoseExample);
         }
 
         public override Task<CommandModelBase> GetCommand()
@@ -80,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Games
             if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
             if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
-            return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), selectionType, this.SuccessfulOutcome.GetModel(), this.FailedOutcome.GetModel()));
+            return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), selectionType, this.SuccessfulOutcome.GetModel(), this.FailedCommand));
         }
 
         public override async Task<Result> Validate()

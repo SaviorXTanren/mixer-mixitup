@@ -74,16 +74,16 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private GameOutcomeViewModel successfulOutcome;
 
-        public GameOutcomeViewModel FailedOutcome
+        public CustomCommandModel FailedCommand
         {
-            get { return this.failedOutcome; }
+            get { return this.failedCommand; }
             set
             {
-                this.failedOutcome = value;
+                this.failedCommand = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private GameOutcomeViewModel failedOutcome;
+        private CustomCommandModel failedCommand;
 
         public DuelGameCommandEditorWindowViewModel(DuelGameCommandModel command)
             : base(command)
@@ -94,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.StartedCommand = command.StartedCommand;
             this.NotAcceptedCommand = command.NotAcceptedCommand;
             this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
-            this.FailedOutcome = new GameOutcomeViewModel(command.FailedOutcome);
+            this.FailedCommand = command.FailedCommand;
         }
 
         public DuelGameCommandEditorWindowViewModel(CurrencyModel currency)
@@ -106,7 +106,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelStartedExample, currency.Name));
             this.NotAcceptedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelNotAcceptedExample);
             this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelSuccessExample, currency.Name)));
-            this.FailedOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 0, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelFailureExample));
+            this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelFailureExample);
         }
 
         public override Task<CommandModelBase> GetCommand()
@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Games
             if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
             if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
 
-            return Task.FromResult<CommandModelBase>(new DuelGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, selectionType, this.StartedCommand, this.NotAcceptedCommand, this.SuccessfulOutcome.GetModel(), this.FailedOutcome.GetModel()));
+            return Task.FromResult<CommandModelBase>(new DuelGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, selectionType, this.StartedCommand, this.NotAcceptedCommand, this.SuccessfulOutcome.GetModel(), this.FailedCommand));
         }
 
         public override async Task<Result> Validate()

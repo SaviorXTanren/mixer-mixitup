@@ -67,12 +67,12 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel FailureCommand { get; set; }
 
-        public SlotMachineGameCommandModel(string name, HashSet<string> triggers, IEnumerable<SlotMachineGameOutcomeModel> outcomes, IEnumerable<string> symbols, CustomCommandModel failureCommand)
+        public SlotMachineGameCommandModel(string name, HashSet<string> triggers, IEnumerable<string> symbols, CustomCommandModel failureCommand, IEnumerable<SlotMachineGameOutcomeModel> outcomes)
             : base(name, triggers, GameCommandTypeEnum.SlotMachine)
         {
-            this.Outcomes = new List<SlotMachineGameOutcomeModel>(outcomes);
             this.Symbols = new List<string>(symbols);
             this.FailureCommand = failureCommand;
+            this.Outcomes = new List<SlotMachineGameOutcomeModel>(outcomes);
         }
 
         private SlotMachineGameCommandModel() { }

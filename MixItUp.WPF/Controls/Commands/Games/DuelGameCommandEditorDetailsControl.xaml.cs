@@ -28,5 +28,12 @@ namespace MixItUp.WPF.Controls.Commands.Games
             window.CommandSaved += (object s, CommandModelBase command) => { ((DuelGameCommandEditorWindowViewModel)this.DataContext).NotAcceptedCommand = (CustomCommandModel)command; };
             window.Show();
         }
+
+        private void FailedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((DuelGameCommandEditorWindowViewModel)this.DataContext).FailedCommand = (CustomCommandModel)command; };
+            window.Show();
+        }
     }
 }

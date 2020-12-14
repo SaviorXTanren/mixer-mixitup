@@ -83,7 +83,7 @@
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.Lose}">
-                <CommandsControls:CommandListingButtonsControl DataContext="{Binding FailedOutcome}" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtons_CommandButtons" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                <CommandsControls:CommandListingButtonsControl x:Name="FailedCommand" DataContext="{Binding FailedCommand}" HorizontalAlignment="Center" EditClicked="FailedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>

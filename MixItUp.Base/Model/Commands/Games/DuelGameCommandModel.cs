@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public GameOutcomeModel SuccessfulOutcome { get; set; }
         [DataMember]
-        public GameOutcomeModel FailedOutcome { get; set; }
+        public CustomCommandModel FailedCommand { get; set; }
 
         [JsonIgnore]
         private bool gameActive = false;
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Commands.Games
         private CancellationTokenSource runCancellationTokenSource;
 
         public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType selectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
-            GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome)
+            GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
             : base(name, triggers, GameCommandTypeEnum.Duel)
         {
             this.TimeLimit = timeLimit;
@@ -44,7 +44,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StartedCommand = startedCommand;
             this.NotAcceptedCommand = notAcceptedCommand;
             this.SuccessfulOutcome = successfulOutcome;
-            this.FailedOutcome = failedOutcome;
+            this.FailedCommand = failedCommand;
         }
 
         private DuelGameCommandModel() { }
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Commands.Games
             commands.Add(this.StartedCommand);
             commands.Add(this.NotAcceptedCommand);
             commands.Add(this.SuccessfulOutcome.Command);
-            commands.Add(this.FailedOutcome.Command);
+            commands.Add(this.FailedCommand);
             return commands;
         }
 
@@ -116,17 +116,18 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (this.runParameters != null && parameters.User == this.runParameters.TargetUser)
                 {
                     this.gameActive = false;
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.runBetAmount.ToString();
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
                         this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
                         this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
-                        await this.PerformOutcome(this.runParameters, this.SuccessfulOutcome, this.runBetAmount);
+                        await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
                         this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
                         this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
-                        await this.PerformOutcome(this.runParameters, this.FailedOutcome, this.runBetAmount);
+                        await this.FailedCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();

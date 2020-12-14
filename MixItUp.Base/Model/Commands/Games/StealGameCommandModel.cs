@@ -14,14 +14,14 @@ namespace MixItUp.Base.Model.Commands.Games
         public GameOutcomeModel SuccessfulOutcome { get; set; }
 
         [DataMember]
-        public GameOutcomeModel FailedOutcome { get; set; }
+        public CustomCommandModel FailedCommand { get; set; }
 
-        public StealGameCommandModel(string name, HashSet<string> triggers, GamePlayerSelectionType selectionType, GameOutcomeModel successfulOutcome, GameOutcomeModel failedOutcome)
+        public StealGameCommandModel(string name, HashSet<string> triggers, GamePlayerSelectionType selectionType, GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
             : base(name, triggers, GameCommandTypeEnum.Steal)
         {
             this.SelectionType = selectionType;
             this.SuccessfulOutcome = successfulOutcome;
-            this.FailedOutcome = failedOutcome;
+            this.FailedCommand = failedCommand;
         }
 
         private StealGameCommandModel() { }
@@ -30,7 +30,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             List<CommandModelBase> commands = new List<CommandModelBase>();
             commands.Add(this.SuccessfulOutcome.Command);
-            commands.Add(this.FailedOutcome.Command);
+            commands.Add(this.FailedCommand);
             return commands;
         }
 
@@ -44,15 +44,16 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                     {
+                        parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
                         if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                         {
                             this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
                             this.GameCurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
-                            await this.PerformOutcome(parameters, this.SuccessfulOutcome, betAmount);
+                            await this.SuccessfulOutcome.Command.Perform(parameters);
                         }
                         else
                         {
-                            await this.PerformOutcome(parameters, this.FailedOutcome, betAmount);
+                            await this.FailedCommand.Perform(parameters);
                         }
                         return;
                     }

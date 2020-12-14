@@ -146,7 +146,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public override Task<CommandModelBase> GetCommand()
         {
-            return Task.FromResult<CommandModelBase>(new SlotMachineGameCommandModel(this.Name, this.GetChatTriggers(), this.Outcomes.Select(o => ((SlotMachineGameOutcomeViewModel)o).GetModel()), this.SymbolsList, this.FailureCommand));
+            return Task.FromResult<CommandModelBase>(new SlotMachineGameCommandModel(this.Name, this.GetChatTriggers(), this.SymbolsList, this.FailureCommand, this.Outcomes.Select(o => ((SlotMachineGameOutcomeViewModel)o).GetModel())));
         }
 
         public override async Task<Result> Validate()

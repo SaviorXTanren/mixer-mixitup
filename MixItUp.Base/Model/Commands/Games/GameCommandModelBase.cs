@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Requirements;
+﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -179,7 +178,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<IEnumerable<CommandParametersModel>> PerformRequirements(CommandParametersModel parameters)
         {
-            parameters.SpecialIdentifiers[GameCommandBase.GameBetSpecialIdentifier] = this.GetBetAmount(parameters).ToString();
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetBetAmount(parameters).ToString();
             return await base.PerformRequirements(parameters);
         }
 
@@ -213,7 +212,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             int payout = outcome.GetPayout(parameters.User, betAmount);
             this.PerformPayout(parameters, payout);
-            parameters.SpecialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = payout.ToString();
+            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
             if (outcome.Command != null)
             {
                 await outcome.Command.Perform(parameters);
