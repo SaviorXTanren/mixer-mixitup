@@ -42,13 +42,13 @@ namespace MixItUp.Base.Model.Commands.Games
                 await this.SetSelectedUser(this.SelectionType, parameters);
                 if (parameters.TargetUser != null)
                 {
-                    if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                    if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                     {
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
                         if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                         {
-                            this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
-                            this.GameCurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
+                            this.CurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
+                            this.CurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
                             await this.SuccessfulOutcome.Command.Perform(parameters);
                         }
                         else

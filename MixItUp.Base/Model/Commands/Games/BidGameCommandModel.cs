@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, this.GameCurrencyRequirement.Currency.Name));
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, this.CurrencyRequirement.Currency.Name));
                 await this.Requirements.Refund(parameters);
             }
         }

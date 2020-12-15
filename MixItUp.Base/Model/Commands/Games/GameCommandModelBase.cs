@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Commands.Games
         public string Name { get; set; }
 
         [DataMember]
-        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; }
+        public Dictionary<UserRoleEnum, RoleProbabilityPayoutModel> RoleProbabilityPayouts { get; set; } = new Dictionary<UserRoleEnum, RoleProbabilityPayoutModel>();
 
         [DataMember]
         public CustomCommandModel Command { get; set; }
@@ -82,6 +82,31 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Name = name;
             this.RoleProbabilityPayouts = roleProbabilityPayouts;
             this.Command = command;
+        }
+
+        internal GameOutcomeModel(Base.Commands.GameOutcome outcome)
+        {
+            this.Name = outcome.Name;
+            this.Command = new CustomCommandModel(outcome.Command) { IsEmbedded = true };
+            foreach (var kvp in outcome.RoleProbabilities)
+            {
+                this.RoleProbabilityPayouts[kvp.Key] = new RoleProbabilityPayoutModel(kvp.Key, kvp.Value);
+            }
+
+            if (outcome.RolePayouts.Count > 0)
+            {
+                foreach (var kvp in outcome.RolePayouts)
+                {
+                    this.RoleProbabilityPayouts[kvp.Key].Payout = kvp.Value;
+                }
+            }
+            else
+            {
+                foreach (var kvp in this.RoleProbabilityPayouts)
+                {
+                    kvp.Value.Payout = outcome.Payout;
+                }
+            }
         }
 
         protected GameOutcomeModel() { }
@@ -129,13 +154,20 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameType = gameType;
         }
 
+        internal GameCommandModelBase(Base.Commands.GameCommandBase command, GameCommandTypeEnum gameType)
+            : this(command.Name, command.CommandTriggers, gameType)
+        {
+            this.IsEnabled = command.IsEnabled;
+            this.Requirements = new RequirementsSetModel(command.Requirements);
+        }
+
         protected GameCommandModelBase() : base() { }
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return GameCommandModelBase.commandLockSemaphore; } }
 
         public override bool DoesCommandHaveWork { get { return true; } }
 
-        public GameCurrencyRequirementModel GameCurrencyRequirement { get { return (GameCurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
+        public CurrencyRequirementModel CurrencyRequirement { get { return (CurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is CurrencyRequirementModel); } }
 
         public CooldownRequirementModel CooldownRequirement { get { return (CooldownRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
@@ -143,8 +175,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected int GetBetAmount(CommandParametersModel parameters)
         {
-            GameCurrencyRequirementModel gameCurrencyRequirement = this.GameCurrencyRequirement;
-            return (gameCurrencyRequirement != null) ? gameCurrencyRequirement.GetGameAmount(parameters) : 0;
+            CurrencyRequirementModel currencyRequirement = this.CurrencyRequirement;
+            return (currencyRequirement != null) ? currencyRequirement.GetGameAmount(parameters) : 0;
         }
 
         protected void ResetCooldown() { this.CooldownRequirement.Reset(); }
@@ -219,7 +251,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected void PerformPayout(CommandParametersModel parameters, int payout) { this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout); }
+        protected void PerformPayout(CommandParametersModel parameters, int payout) { this.CurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout); }
 
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {

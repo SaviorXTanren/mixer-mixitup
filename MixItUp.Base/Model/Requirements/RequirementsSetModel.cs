@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Requirements
                 this.Requirements.Add(new CooldownRequirementModel());
             }
 
-            if (requirements.Currency != null && requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
+            if (requirements.Currency != null)
             {
                 this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
             }
@@ -85,9 +85,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
-        public GameCurrencyRequirementModel GameCurrency { get { return (GameCurrencyRequirementModel)this.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
-
-        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel && !(r is GameCurrencyRequirementModel)).Select(r => (CurrencyRequirementModel)r); } }
+        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel).Select(r => (CurrencyRequirementModel)r); } }
 
         public IEnumerable<RankRequirementModel> Rank { get { return this.Requirements.Where(r => r is RankRequirementModel).Select(r => (RankRequirementModel)r); } }
 

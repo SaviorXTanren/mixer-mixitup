@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
@@ -202,8 +203,6 @@ namespace MixItUp.Base.ViewModel.Games
 
     public abstract class GameCommandEditorWindowViewModelBase : ChatCommandEditorWindowViewModel
     {
-        public GameCurrencyRequirementViewModel GameCurrencyRequirement { get { return this.Requirements.GameCurrency; } }
-
         public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
 
         public ICommand AddOutcomeCommand { get; set; }
@@ -214,10 +213,7 @@ namespace MixItUp.Base.ViewModel.Games
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
             : base()
         {
-            if (this.GameCurrencyRequirement == null && currency != null)
-            {
-                this.Requirements.GameCurrency = new GameCurrencyRequirementViewModel(currency);
-            }
+            this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
             this.SetUICommands();
         }
 

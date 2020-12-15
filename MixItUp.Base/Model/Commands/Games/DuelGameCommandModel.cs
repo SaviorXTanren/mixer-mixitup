@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.SetSelectedUser(this.SelectionType, parameters);
                     if (parameters.TargetUser != null)
                     {
-                        if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                        if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                         {
                             this.runParameters = parameters;
                             this.runBetAmount = betAmount;
@@ -119,14 +119,14 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.runBetAmount.ToString();
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
-                        this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
                         await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
-                        this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
                         await this.FailedCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);

@@ -82,9 +82,9 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.InspectionArgument, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.User.Data, this.InspectionCost))
+                if (this.CurrencyRequirement.Currency.HasAmount(parameters.User.Data, this.InspectionCost))
                 {
-                    this.GameCurrencyRequirement.Currency.SubtractAmount(parameters.User.Data, this.InspectionCost);
+                    this.CurrencyRequirement.Currency.SubtractAmount(parameters.User.Data, this.InspectionCost);
                     this.TotalAmount += this.InspectionCost;
 
                     string currentCombinationString = this.CurrentCombination.ToString();
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GameCurrencyRequirement.Currency.Name));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.CurrencyRequirement.Currency.Name));
                 }
                 return false;
             }

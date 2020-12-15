@@ -108,7 +108,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     foreach (CommandParametersModel winner in winners)
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(winner.User.Data, individualPayout);
+                        this.CurrencyRequirement.Currency.AddAmount(winner.User.Data, individualPayout);
 
                         this.PerformPayout(winner, individualPayout);
                         winner.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
