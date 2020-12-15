@@ -65,11 +65,12 @@ namespace MixItUp.Base.ViewModel.Commands
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
                 {
-                    ChannelSession.Settings.SetCommand(command);
-                    await ChannelSession.SaveSettings();
-
+                    if (!command.IsEmbedded)
+                    {
+                        ChannelSession.Settings.SetCommand(command);
+                        await ChannelSession.SaveSettings();
+                    }
                     await this.SaveCommandToSettings(command);
-
                     this.CommandSaved(this, command);
                 }
             });

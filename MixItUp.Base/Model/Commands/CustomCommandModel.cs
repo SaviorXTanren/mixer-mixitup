@@ -1,22 +1,17 @@
-﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Threading;
 
 namespace MixItUp.Base.Model.Commands
 {
+    [DataContract]
     public class CustomCommandModel : CommandModelBase
     {
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         public CustomCommandModel(string name) : base(name, CommandTypeEnum.Custom) { }
-
-        public CustomCommandModel(string name, string chatActionText)
-            : this(name)
-        {
-            this.Actions.Add(new ChatActionModel(chatActionText));
-        }
 
         internal CustomCommandModel(MixItUp.Base.Commands.CustomCommand command)
             : base(command)

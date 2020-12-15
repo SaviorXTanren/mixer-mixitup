@@ -81,6 +81,9 @@ namespace MixItUp.Base.Model.Commands
         public bool Unlocked { get; set; }
 
         [DataMember]
+        public bool IsEmbedded { get; set; }
+
+        [DataMember]
         public string GroupName { get; set; }
 
         [DataMember]
