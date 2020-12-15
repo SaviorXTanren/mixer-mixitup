@@ -179,7 +179,10 @@ namespace MixItUp.Base.Model.Requirements
                     {
                         if (parameters.Arguments.Count() > 1)
                         {
-                            int.TryParse(parameters.Arguments.ElementAt(1), out amount);
+                            if (!int.TryParse(parameters.Arguments.ElementAt(1), out amount))
+                            {
+                                amount = this.MinAmount;
+                            }
                         }
                     }
                 }
