@@ -176,7 +176,7 @@ namespace MixItUp.Base.Model.Commands.Games
         protected int GetBetAmount(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.CurrencyRequirement;
-            return (currencyRequirement != null) ? currencyRequirement.GetGameAmount(parameters) : 0;
+            return (currencyRequirement != null) ? currencyRequirement.GetVariableAmount(parameters) : 0;
         }
 
         protected void ResetCooldown() { this.CooldownRequirement.Reset(); }

@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Requirements
             }
             else
             {
-                int amount = this.GetGameAmount(parameters);
+                int amount = this.GetVariableAmount(parameters);
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
                 {
                     if (amount < this.MinAmount)
@@ -125,11 +125,11 @@ namespace MixItUp.Base.Model.Requirements
                     }
                     else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.SubtractAmount(parameters.User.Data, this.GetGameAmount(parameters));
+                        currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                     }
                     else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.SubtractAmount(parameters.User.Data, this.GetGameAmount(parameters));
+                        currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                     }
                 }
             }
@@ -149,18 +149,18 @@ namespace MixItUp.Base.Model.Requirements
                     }
                     else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
                     {
-                        currency.AddAmount(parameters.User.Data, this.GetGameAmount(parameters));
+                        currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                     }
                     else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                     {
-                        currency.AddAmount(parameters.User.Data, this.GetGameAmount(parameters));
+                        currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                     }
                 }
             }
             return Task.FromResult(0);
         }
 
-        public int GetGameAmount(CommandParametersModel parameters)
+        public int GetVariableAmount(CommandParametersModel parameters)
         {
             if (this.RequirementType == CurrencyRequirementTypeEnum.NoCost)
             {
