@@ -109,7 +109,6 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CommandParametersModel copyParameters = parameters.Duplicate();
-                    copyParameters.WaitForCommandToFinish = true;
                     copyParameters.DontLockCommand = true;
                     await command.Perform(copyParameters);
                 }

@@ -254,6 +254,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 foreach (CommandParametersModel parameters in parameterList)
                 {
+                    parameters.WaitForCommandToFinish = true;
                     parameters.User.Data.TotalCommandsRun++;
                     await this.PerformInternal(parameters);
                 }
