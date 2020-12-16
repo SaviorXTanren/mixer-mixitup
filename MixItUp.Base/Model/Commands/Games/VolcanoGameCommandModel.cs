@@ -89,6 +89,29 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CollectCommand = collectCommand;
         }
 
+        internal VolcanoGameCommandModel(Base.Commands.VolcanoGameCommand command)
+            : base(command, GameCommandTypeEnum.Volcano)
+        {
+            this.StatusArgument = command.StatusArgument;
+            this.Stage1DepositCommand = new CustomCommandModel(command.Stage1DepositCommand) { IsEmbedded = true };
+            this.Stage1StatusCommand = new CustomCommandModel(command.Stage1StatusCommand) { IsEmbedded = true };
+            this.Stage2MinimumAmount = command.Stage2MinimumAmount;
+            this.Stage2DepositCommand = new CustomCommandModel(command.Stage2DepositCommand) { IsEmbedded = true };
+            this.Stage2StatusCommand = new CustomCommandModel(command.Stage2StatusCommand) { IsEmbedded = true };
+            this.Stage3MinimumAmount = command.Stage3MinimumAmount;
+            this.Stage3DepositCommand = new CustomCommandModel(command.Stage3DepositCommand) { IsEmbedded = true };
+            this.Stage3StatusCommand = new CustomCommandModel(command.Stage3StatusCommand) { IsEmbedded = true };
+            this.PayoutProbability = command.PayoutProbability;
+            this.PayoutMinimumPercentage = command.PayoutPercentageMinimum;
+            this.PayoutMaximumPercentage = command.PayoutPercentageMaximum;
+            this.PayoutCommand = new CustomCommandModel(command.PayoutCommand) { IsEmbedded = true };
+            this.CollectArgument = command.CollectArgument;
+            this.CollectTimeLimit = command.CollectTimeLimit;
+            this.CollectMinimumPercentage = command.CollectPayoutPercentageMinimum;
+            this.CollectMaximumPercentage = command.CollectPayoutPercentageMaximum;
+            this.CollectCommand = new CustomCommandModel(command.CollectArgument) { IsEmbedded = true };
+        }
+
         private VolcanoGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

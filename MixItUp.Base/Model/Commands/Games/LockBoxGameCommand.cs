@@ -54,6 +54,20 @@ namespace MixItUp.Base.Model.Commands.Games
             this.InspectionCommand = inspectionCommand;
         }
 
+        internal LockBoxGameCommandModel(Base.Commands.LockBoxGameCommand command)
+            : base(command, GameCommandTypeEnum.LockBox)
+        {
+            this.CombinationLength = command.CombinationLength;
+            this.InitialAmount = command.InitialAmount;
+            this.SuccessfulCommand = new CustomCommandModel(command.SuccessfulGuessCommand) { IsEmbedded = true };
+            this.FailureCommand = new CustomCommandModel(command.FailedGuessCommand) { IsEmbedded = true };
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = new CustomCommandModel(command.StatusCommand) { IsEmbedded = true };
+            this.InspectionArgument = command.InspectionArgument;
+            this.InspectionCost = command.InspectionCost;
+            this.InspectionCommand = new CustomCommandModel(command.InspectionCommand) { IsEmbedded = true };
+        }
+
         private LockBoxGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

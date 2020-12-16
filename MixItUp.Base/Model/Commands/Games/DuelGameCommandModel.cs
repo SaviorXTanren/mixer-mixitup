@@ -47,6 +47,17 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedCommand = failedCommand;
         }
 
+        internal DuelGameCommandModel(Base.Commands.DuelGameCommand command)
+            : base(command, GameCommandTypeEnum.Duel)
+        {
+            this.TimeLimit = command.TimeLimit;
+            this.SelectionType = GamePlayerSelectionType.Targeted;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.NotAcceptedCommand = new CustomCommandModel(command.NotAcceptedCommand) { IsEmbedded = true };
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
+        }
+
         private DuelGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

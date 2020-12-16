@@ -24,6 +24,22 @@ namespace MixItUp.Base.Model.Commands.Games
             this.FailedCommand = failedCommand;
         }
 
+        internal StealGameCommandModel(Base.Commands.StealGameCommand command)
+            : base(command, GameCommandTypeEnum.Steal)
+        {
+            this.SelectionType = GamePlayerSelectionType.Random;
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
+        }
+
+        internal StealGameCommandModel(Base.Commands.PickpocketGameCommand command)
+            : base(command, GameCommandTypeEnum.Steal)
+        {
+            this.SelectionType = GamePlayerSelectionType.Targeted;
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
+        }
+
         private StealGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

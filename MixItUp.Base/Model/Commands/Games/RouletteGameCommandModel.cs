@@ -51,8 +51,6 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
-        private int runBetAmount;
-        [JsonIgnore]
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
 
         public RouletteGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, RouletteGameCommandBetType betType, HashSet<string> betOptions, CustomCommandModel startedCommand,
@@ -69,6 +67,21 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserSuccessOutcome = userSuccessOutcome;
             this.UserFailureCommand = userFailureCommand;
             this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        internal RouletteGameCommandModel(Base.Commands.RouletteGameCommand command)
+            : base(command, GameCommandTypeEnum.Roulette)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.BetType = command.IsNumberRange ? RouletteGameCommandBetType.NumberRange : RouletteGameCommandBetType.Custom;
+            this.BetOptions = new HashSet<string>(command.ValidBetTypes);
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
+            this.UserSuccessOutcome = new GameOutcomeModel(command.UserSuccessOutcome);
+            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
+            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
         }
 
         private RouletteGameCommandModel() { }
@@ -175,7 +188,6 @@ namespace MixItUp.Base.Model.Commands.Games
         private void ClearData()
         {
             this.runParameters = null;
-            this.runBetAmount = 0;
             this.runUsers.Clear();
         }
     }

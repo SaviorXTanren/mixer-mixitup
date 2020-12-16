@@ -72,6 +72,22 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailCommand;
         }
 
+        internal WordScrambleGameCommandModel(Base.Commands.WordScrambleGameCommand command)
+            : base(command, GameCommandTypeEnum.WordScramble)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.WordScrambleTimeLimit = command.WordScrambleTimeLimit;
+            this.CustomWordsFilePath = command.CustomWordsFilePath;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
+            this.WordScramblePrepareCommand = new CustomCommandModel(command.WordScramblePrepareCommand) { IsEmbedded = true };
+            this.WordScrambleBeginCommand = new CustomCommandModel(command.WordScrambleBeginCommand) { IsEmbedded = true };
+            this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
+            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
+        }
+
         private WordScrambleGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

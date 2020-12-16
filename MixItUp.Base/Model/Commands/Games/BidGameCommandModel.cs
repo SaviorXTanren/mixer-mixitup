@@ -51,6 +51,18 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
+        internal BidGameCommandModel(Base.Commands.BidGameCommand command)
+            : base(command, GameCommandTypeEnum.Bid)
+        {
+            this.StarterRole = command.GameStarterRequirement.MixerRole;
+            this.InitialAmount = 0;
+            this.TimeLimit = command.TimeLimit;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.NewTopBidderCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
+            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
+        }
+
         private BidGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
