@@ -1,11 +1,10 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Currency;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Currency;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -386,23 +385,63 @@ namespace MixItUp.Base.Services
 
             await oldSettings.Initialize();
 
-
-
-
-
-
-
-
             foreach (var kvp in oldSettings.CooldownGroups)
             {
                 newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;
             }
 
+            foreach (ChatCommand command in oldSettings.ChatCommands)
+            {
+                newSettings.SetCommand(new ChatCommandModel(command));
+            }
+            foreach (EventCommand command in oldSettings.EventCommands)
+            {
+                newSettings.SetCommand(new EventCommandModel(command));
+            }
+            foreach (TimerCommand command in oldSettings.TimerCommands)
+            {
+                newSettings.SetCommand(new TimerCommandModel(command));
+            }
+            foreach (ActionGroupCommand command in oldSettings.ActionGroupCommands)
+            {
+                newSettings.SetCommand(new ActionGroupCommandModel(command));
+            }
+            foreach (TwitchChannelPointsCommand command in oldSettings.TwitchChannelPointsCommands)
+            {
+                newSettings.SetCommand(new TwitchChannelPointsCommandModel(command));
+            }
+            foreach (CustomCommand command in oldSettings.CustomCommands.Values)
+            {
+                newSettings.SetCommand(new CustomCommandModel(command));
+            }
+            foreach (GameCommandBase command in oldSettings.GameCommands)
+            {
+                if (command.GetType() == typeof(BeachBallGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((BeachBallGameCommand)command)); }
+                else if (command.GetType() == typeof(BetGameCommand)) { newSettings.SetCommand(new BetGameCommandModel((BetGameCommand)command)); }
+                else if (command.GetType() == typeof(BidGameCommand)) { newSettings.SetCommand(new BidGameCommandModel((BidGameCommand)command)); }
+                else if (command.GetType() == typeof(CoinPusherGameCommand)) { newSettings.SetCommand(new CoinPusherGameCommandModel((CoinPusherGameCommand)command)); }
+                else if (command.GetType() == typeof(DuelGameCommand)) { newSettings.SetCommand(new DuelGameCommandModel((DuelGameCommand)command)); }
+                else if (command.GetType() == typeof(HangmanGameCommand)) { newSettings.SetCommand(new HangmanGameCommandModel((HangmanGameCommand)command)); }
+                else if (command.GetType() == typeof(HeistGameCommand)) { newSettings.SetCommand(new HeistGameCommandModel((HeistGameCommand)command)); }
+                else if (command.GetType() == typeof(HitmanGameCommand)) { newSettings.SetCommand(new HitmanGameCommandModel((HitmanGameCommand)command)); }
+                else if (command.GetType() == typeof(HotPotatoGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((HotPotatoGameCommand)command)); }
+                else if (command.GetType() == typeof(LockBoxGameCommand)) { newSettings.SetCommand(new LockBoxGameCommandModel((LockBoxGameCommand)command)); }
+                else if (command.GetType() == typeof(PickpocketGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((PickpocketGameCommand)command)); }
+                else if (command.GetType() == typeof(RouletteGameCommand)) { newSettings.SetCommand(new RouletteGameCommandModel((RouletteGameCommand)command)); }
+                else if (command.GetType() == typeof(RussianRouletteGameCommand)) { newSettings.SetCommand(new RussianRouletteGameCommandModel((RussianRouletteGameCommand)command)); }
+                else if (command.GetType() == typeof(SlotMachineGameCommand)) { newSettings.SetCommand(new SlotMachineGameCommandModel((SlotMachineGameCommand)command)); }
+                else if (command.GetType() == typeof(SpinGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((SpinGameCommand)command)); }
+                else if (command.GetType() == typeof(StealGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((StealGameCommand)command)); }
+                else if (command.GetType() == typeof(TreasureDefenseGameCommand)) { newSettings.SetCommand(new TreasureDefenseGameCommandModel((TreasureDefenseGameCommand)command)); }
+                else if (command.GetType() == typeof(TriviaGameCommand)) { newSettings.SetCommand(new TriviaGameCommandModel((TriviaGameCommand)command)); }
+                else if (command.GetType() == typeof(VendingMachineGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((VendingMachineGameCommand)command)); }
+                else if (command.GetType() == typeof(VolcanoGameCommand)) { newSettings.SetCommand(new VolcanoGameCommandModel((VolcanoGameCommand)command)); }
+                else if (command.GetType() == typeof(WordScrambleGameCommand)) { newSettings.SetCommand(new WordScrambleGameCommandModel((WordScrambleGameCommand)command)); }
+            }
 
+            //oldSettings.Quotes;
 
-
-
-
+            //oldSettings.UserData;
 
             await ChannelSession.Services.Settings.Save(newSettings);
 
@@ -444,6 +483,7 @@ namespace MixItUp.Base.Services
             return (int)settingsJObj["Version"];
         }
     }
+
 
 #pragma warning disable CS0612 // Type or member is obsolete
     public static class SettingsV2Upgrader
