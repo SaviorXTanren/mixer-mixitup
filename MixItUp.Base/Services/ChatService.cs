@@ -498,7 +498,7 @@ namespace MixItUp.Base.Services
                             {
                                 if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
                                 {
-                                    await this.RunChatCommand(message,command, arguments);
+                                    await this.RunChatCommand(message, command, arguments);
                                     commandTriggered = true;
                                     break;
                                 }
@@ -507,7 +507,7 @@ namespace MixItUp.Base.Services
 
                         if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
                         {
-                            commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
+                            commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
                         }
                     }
 
