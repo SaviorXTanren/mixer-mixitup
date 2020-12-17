@@ -132,4 +132,36 @@ namespace MixItUp.Base.ViewModel.Commands
             return new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
         }
     }
+
+    public class UserOnlyChatCommandEditorWindowViewModel : ChatCommandEditorWindowViewModel
+    {
+        public Guid UserID
+        {
+            get { return this.userID; }
+            set
+            {
+                this.userID = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private Guid userID;
+
+        public UserOnlyChatCommandEditorWindowViewModel(UserOnlyChatCommandModel existingCommand)
+            : base(existingCommand)
+        {
+            this.UserID = existingCommand.UserID;
+        }
+
+        public UserOnlyChatCommandEditorWindowViewModel(Guid userID) : base() { this.UserID = userID; }
+
+        public override Task<CommandModelBase> GetCommand()
+        {
+            return Task.FromResult<CommandModelBase>(new UserOnlyChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards, this.UserID));
+        }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            return Task.FromResult(0);
+        }
+    }
 }

@@ -1,12 +1,13 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,82 +54,52 @@ namespace MixItUp.WPF.Windows.Users
 
         private void AddUserOnlyCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(autoAddToChatCommands: false));
-            window.CommandSaveSuccessfully += NewUserOnlyCommandWindow_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.UserOnlyChat, this.viewModel.User.ID);
+            window.CommandSaved += (object s, CommandModelBase command) =>
+            {
+                this.viewModel.AddUserOnlyChatCommand((UserOnlyChatCommandModel)command);
+                this.viewModel.RefreshUserOnlyChatCommands();
+            };
             window.Show();
-        }
-
-        private void NewUserOnlyCommandWindow_CommandSaveSuccessfully(object sender, CommandBase e)
-        {
-            this.viewModel.AddUserOnlyChatCommand((ChatCommand)e);
         }
 
         private void UserOnlyChatCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command, autoAddToChatCommands: false));
-                window.Closed += Window_Closed;
-                window.Show();
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.RefreshUserOnlyChatCommands(); };
+            window.Show();
         }
 
         private async void UserOnlyChatCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
-                if (command != null)
-                {
-                    this.viewModel.RemoveUserOnlyChatCommand(command);
-                    await ChannelSession.SaveSettings();
-                }
+                this.viewModel.RemoveUserOnlyChatCommand(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
+                await ChannelSession.SaveSettings();
             });
+        }
+
+        private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, UserDataEditorWindowViewModel.UserEntranceCommandName);
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.EntranceCommand = command; };
+            window.Show();
         }
 
         private void ExistingEntranceCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CommandModelBase>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.EntranceCommand = command; };
+            window.Show();
         }
 
         private async void ExistingEntranceCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-                if (command != null)
-                {
-                    this.viewModel.EntranceCommand = null;
-                    await ChannelSession.SaveSettings();
-                }
+                this.viewModel.EntranceCommand = null;
+                await ChannelSession.SaveSettings();
             });
-        }
-
-        private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(UserDataEditorWindowViewModel.UserEntranceCommandName)));
-            window.CommandSaveSuccessfully += NewEntranceCommandWindow_CommandSaveSuccessfully;
-            window.Show();
-        }
-
-        private void NewEntranceCommandWindow_CommandSaveSuccessfully(object sender, CommandBase e)
-        {
-            this.viewModel.EntranceCommand = (CustomCommand)e;
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.viewModel.RefreshUserOnlyChatCommands();
         }
 
         private void UserDataEditorWindow_Closed(object sender, EventArgs e)

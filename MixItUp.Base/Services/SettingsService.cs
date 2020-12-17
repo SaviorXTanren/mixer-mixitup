@@ -479,6 +479,21 @@ namespace MixItUp.Base.Services
             foreach (var kvp in oldSettings.UserData)
             {
                 newSettings.UserData[kvp.Key] = kvp.Value;
+                if (kvp.Value.EntranceCommand != null)
+                {
+                    CustomCommandModel entranceCommand = new CustomCommandModel(kvp.Value.EntranceCommand);
+                    ChannelSession.Settings.SetCommand(entranceCommand);
+                    kvp.Value.EntranceCommandID = entranceCommand.ID;
+                    kvp.Value.EntranceCommand = null;
+                }
+
+                foreach (ChatCommand command in kvp.Value.CustomCommands)
+                {
+                    UserOnlyChatCommandModel userCommand = new UserOnlyChatCommandModel(command, kvp.Key);
+                    ChannelSession.Settings.SetCommand(userCommand);
+                    kvp.Value.CustomCommandIDs.Add(userCommand.ID);
+                }
+                kvp.Value.CustomCommands.Clear();
             }
 
             await ChannelSession.Services.Settings.Save(newSettings);

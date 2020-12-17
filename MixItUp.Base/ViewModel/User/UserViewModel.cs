@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
@@ -786,24 +787,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)
             {
-                if (ChannelSession.Settings.ModerationStrike1Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike1Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike1CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes == 2)
             {
-                if (ChannelSession.Settings.ModerationStrike2Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike2Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike2CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes >= 3)
             {
-                if (ChannelSession.Settings.ModerationStrike3Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike3Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike3CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
         }
 

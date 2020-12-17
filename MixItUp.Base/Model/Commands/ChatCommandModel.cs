@@ -72,6 +72,27 @@ namespace MixItUp.Base.Model.Commands
         }
     }
 
+    [DataContract]
+    public class UserOnlyChatCommandModel : ChatCommandModel
+    {
+        [DataMember]
+        public Guid UserID { get; set; }
+
+        public UserOnlyChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards, Guid userID)
+            : base(name, CommandTypeEnum.UserOnlyChat, triggers, includeExclamation, wildcards)
+        {
+            this.UserID = userID;
+        }
+
+        internal UserOnlyChatCommandModel(MixItUp.Base.Commands.ChatCommand command, Guid userID)
+            : base(command)
+        {
+            this.UserID = userID;
+        }
+
+        private UserOnlyChatCommandModel() { }
+    }
+
     public class NewAutoChatCommandModel
     {
         public bool AddCommand { get; set; }

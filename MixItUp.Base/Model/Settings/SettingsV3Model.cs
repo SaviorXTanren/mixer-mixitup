@@ -616,7 +616,11 @@ namespace MixItUp.Base.Model.Settings
                     {
                         command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>((string)data["Data"]);
                     }
-                    
+                    else if (type == CommandTypeEnum.UserOnlyChat)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>((string)data["Data"]);
+                    }
+
                     if (command != null)
                     {
                         this.Commands[command.ID] = command;
@@ -631,11 +635,15 @@ namespace MixItUp.Base.Model.Settings
                 ChannelSession.TwitchChannelPointsCommands.Clear();
                 foreach (CommandModelBase command in this.Commands.Values.ToList())
                 {
-                    if (command is ChatCommandModel) { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                    if (command is ChatCommandModel)
+                    {
+                        if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
+                        else if (command is UserOnlyChatCommandModel) { }
+                        else { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                    }
                     else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
                     else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
                     else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
-                    else if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
                     else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
                 }
 
