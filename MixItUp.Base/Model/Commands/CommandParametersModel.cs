@@ -49,9 +49,13 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }
 
+        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.GetCurrentUser(), specialIdentifiers) { }
+
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
 
         public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments) : this(user, StreamingPlatformTypeEnum.None, arguments, null) { }
+
+        public CommandParametersModel(UserViewModel user, Dictionary<string, string> specialIdentifiers) : this(user, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
 

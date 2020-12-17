@@ -41,8 +41,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string FilePath { get; set; }
 
-        private DiscordChannel channel;
-
         public DiscordAction() : base(ActionTypeEnum.Discord) { }
 
         public DiscordAction(DiscordActionTypeEnum type)

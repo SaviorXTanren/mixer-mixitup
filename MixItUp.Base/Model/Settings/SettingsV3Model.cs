@@ -9,9 +9,8 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Dashboard;
+using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -263,13 +262,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Guid GameQueueUserSelectedCommandID { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GameQueueUserJoinedCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GameQueueUserSelectedCommand { get; set; }
-
         #endregion Game Queue
 
         #region Quotes
@@ -315,16 +307,6 @@ namespace MixItUp.Base.Model.Settings
         public Guid GiveawayUserJoinedCommandID { get; set; }
         [DataMember]
         public Guid GiveawayWinnerSelectedCommandID { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayStartedReminderCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayUserJoinedCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         #endregion Giveaway
 
@@ -380,16 +362,6 @@ namespace MixItUp.Base.Model.Settings
         public Guid ModerationStrike2CommandID { get; set; }
         [DataMember]
         public Guid ModerationStrike3CommandID { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike1Command { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike2Command { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike3Command { get; set; }
 
         #endregion Moderation
 
@@ -539,7 +511,7 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseDictionary<Guid, CommandModelBase> Commands { get; set; } = new DatabaseDictionary<Guid, CommandModelBase>();
 
         [JsonIgnore]
-        public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
+        public DatabaseList<UserQuoteModel> Quotes { get; set; } = new DatabaseList<UserQuoteModel>();
 
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
@@ -608,7 +580,7 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
                     DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
-                    this.Quotes.Add(new UserQuoteViewModel(new UserQuoteModel(Convert.ToInt32(data["ID"]), (string)data["Quote"], dateTime, (string)data["GameName"])));
+                    this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), (string)data["Quote"], dateTime, (string)data["GameName"]));
                 });
                 this.Quotes.ClearTracking();
 
@@ -900,6 +872,8 @@ namespace MixItUp.Base.Model.Settings
         }
 
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
+
+        public T GetCommand<T>(Guid id) where T : CommandModelBase { return (T)this.GetCommand(id); }
 
         public void SetCommand(CommandModelBase command) { if (command != null) { this.Commands[command.ID] = command; } }
 

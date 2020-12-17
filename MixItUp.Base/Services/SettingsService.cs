@@ -5,6 +5,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -381,9 +382,10 @@ namespace MixItUp.Base.Services
         public static async Task UpgradeV2ToV3(string filePath)
         {
             SettingsV2Model oldSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-            SettingsV3Model newSettings = new SettingsV3Model();
-
             await oldSettings.Initialize();
+
+            SettingsV3Model newSettings = new SettingsV3Model();
+            await newSettings.Initialize();
 
             foreach (var kvp in oldSettings.CooldownGroups)
             {
@@ -394,26 +396,32 @@ namespace MixItUp.Base.Services
             {
                 newSettings.SetCommand(new ChatCommandModel(command));
             }
+
             foreach (EventCommand command in oldSettings.EventCommands)
             {
                 newSettings.SetCommand(new EventCommandModel(command));
             }
+
             foreach (TimerCommand command in oldSettings.TimerCommands)
             {
                 newSettings.SetCommand(new TimerCommandModel(command));
             }
+
             foreach (ActionGroupCommand command in oldSettings.ActionGroupCommands)
             {
                 newSettings.SetCommand(new ActionGroupCommandModel(command));
             }
+
             foreach (TwitchChannelPointsCommand command in oldSettings.TwitchChannelPointsCommands)
             {
                 newSettings.SetCommand(new TwitchChannelPointsCommandModel(command));
             }
+
             foreach (CustomCommand command in oldSettings.CustomCommands.Values)
             {
                 newSettings.SetCommand(new CustomCommandModel(command));
             }
+
             foreach (GameCommandBase command in oldSettings.GameCommands)
             {
                 if (command.GetType() == typeof(BeachBallGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((BeachBallGameCommand)command)); }
@@ -439,9 +447,39 @@ namespace MixItUp.Base.Services
                 else if (command.GetType() == typeof(WordScrambleGameCommand)) { newSettings.SetCommand(new WordScrambleGameCommandModel((WordScrambleGameCommand)command)); }
             }
 
-            //oldSettings.Quotes;
+            newSettings.RemoveCommand(newSettings.GameQueueUserJoinedCommandID);
+            newSettings.GameQueueUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserJoinedCommand);
 
-            //oldSettings.UserData;
+            newSettings.RemoveCommand(newSettings.GameQueueUserSelectedCommandID);
+            newSettings.GameQueueUserSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserSelectedCommand);
+
+            newSettings.RemoveCommand(newSettings.GiveawayStartedReminderCommandID);
+            newSettings.GiveawayStartedReminderCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayStartedReminderCommand);
+
+            newSettings.RemoveCommand(newSettings.GiveawayUserJoinedCommandID);
+            newSettings.GiveawayUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayUserJoinedCommand);
+
+            newSettings.RemoveCommand(newSettings.GiveawayWinnerSelectedCommandID);
+            newSettings.GiveawayWinnerSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayWinnerSelectedCommand);
+
+            newSettings.RemoveCommand(newSettings.ModerationStrike1CommandID);
+            newSettings.ModerationStrike1CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike1Command);
+
+            newSettings.RemoveCommand(newSettings.ModerationStrike2CommandID);
+            newSettings.ModerationStrike2CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike2Command);
+
+            newSettings.RemoveCommand(newSettings.ModerationStrike3CommandID);
+            newSettings.ModerationStrike3CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike3Command);
+
+            foreach (UserQuoteViewModel quote in oldSettings.Quotes)
+            {
+                newSettings.Quotes.Add(quote.Model);
+            }
+
+            foreach (var kvp in oldSettings.UserData)
+            {
+                newSettings.UserData[kvp.Key] = kvp.Value;
+            }
 
             await ChannelSession.Services.Settings.Save(newSettings);
 
@@ -482,8 +520,14 @@ namespace MixItUp.Base.Services
             JObject settingsJObj = JObject.Parse(fileData);
             return (int)settingsJObj["Version"];
         }
-    }
 
+        private static Guid ImportCustomCommand(SettingsV3Model settings, CustomCommand oldCommand)
+        {
+            CustomCommandModel newCommand = new CustomCommandModel(oldCommand);
+            settings.SetCommand(newCommand);
+            return newCommand.ID;
+        }
+    }
 
 #pragma warning disable CS0612 // Type or member is obsolete
     public static class SettingsV2Upgrader

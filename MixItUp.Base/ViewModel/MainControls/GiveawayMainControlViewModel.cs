@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using System.Collections.ObjectModel;
@@ -112,6 +113,10 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
 
+        public CommandModelBase GiveawayStartedReminderCommand { get; set; }
+        public CommandModelBase GiveawayUserJoinedCommand { get; set; }
+        public CommandModelBase GiveawayWinnerSelectedCommand { get; set; }
+
         public ICommand StartGiveawayCommand { get; set; }
         public ICommand EndGiveawayCommand { get; set; }
 
@@ -119,6 +124,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             : base(windowViewModel)
         {
             GlobalEvents.OnGiveawaysChangedOccurred += GlobalEvents_OnGiveawaysChangedOccurred;
+
+            this.GiveawayStartedReminderCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID);
+            this.GiveawayUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID);
+            this.GiveawayWinnerSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID);
 
             this.StartGiveawayCommand = this.CreateCommand(async (x) =>
             {

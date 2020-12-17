@@ -7,7 +7,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -50,12 +50,12 @@
 
             <Button Grid.Column="6" Command="{Binding ClearQueueCommand}" IsEnabled="{Binding IsEnabled}" Width="110">Clear Queue</Button>
 
-            <GroupBox Header="User Joined" Grid.Column="8" Width="125">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommand" HorizontalAlignment="Center" EditClicked="GameQueueCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="8" Header="{x:Static resx:Resources.UserJoined}">
+                <CommandsControls:CommandListingButtonsControl x:Name="UserJoinedCommand" DataContext="{Binding GameQueueUserJoinedCommand}" HorizontalAlignment="Center" EditClicked="UserJoinedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Header="User Selected" Grid.Column="10" Width="125">
-                <CommandControls:CommandButtonsControl x:Name="UserSelectedCommand" HorizontalAlignment="Center" EditClicked="GameQueueCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="10" Header="{x:Static resx:Resources.UserSelection}">
+                <CommandsControls:CommandListingButtonsControl x:Name="UserSelectedCommand" DataContext="{Binding GameQueueUserSelectedCommand}" HorizontalAlignment="Center" EditClicked="UserSelectedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 

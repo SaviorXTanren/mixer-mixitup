@@ -1,14 +1,11 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
-using MixItUp.Base.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;

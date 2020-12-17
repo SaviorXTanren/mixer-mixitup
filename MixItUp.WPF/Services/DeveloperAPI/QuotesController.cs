@@ -1,16 +1,16 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.API.Models;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
-using MixItUp.Base.Util;
+using System.Web.Http;
 using WebSocketSharp;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         [Route]
         [HttpPut]
-        public async Task<Quote> Add([FromBody] AddQuote quote)
+        public async Task<Quote> Add([FromBody]AddQuote quote)
         {
             if (quote == null || quote.QuoteText.IsNullOrEmpty())
             {
@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             }
 
             var quoteText = quote.QuoteText.Trim(new char[] { ' ', '\'', '\"' });
-            UserQuoteViewModel newQuote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+            UserQuoteModel newQuote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
             ChannelSession.Settings.Quotes.Add(newQuote);
             await ChannelSession.SaveSettings();
 
@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return QuoteFromUserQuoteViewModel(newQuote);
         }
 
-        public static Quote QuoteFromUserQuoteViewModel(UserQuoteViewModel quoteData)
+        public static Quote QuoteFromUserQuoteViewModel(UserQuoteModel quoteData)
         {
             return new Quote
             {

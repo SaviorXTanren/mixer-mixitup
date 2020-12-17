@@ -260,7 +260,7 @@ namespace MixItUp.Base.Model.Commands
                 if (ChannelSession.Settings.Quotes.Count > 0)
                 {
                     int quoteNumber = 0;
-                    UserQuoteViewModel quote = null;
+                    UserQuoteModel quote = null;
 
                     if (parameters.Arguments.Count() == 1)
                     {
@@ -314,7 +314,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (ChannelSession.Settings.Quotes.Count > 0)
                 {
-                    UserQuoteViewModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
+                    UserQuoteModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                     if (quote != null)
                     {
                         await ChannelSession.Services.Chat.SendMessage(quote.ToString());
@@ -349,7 +349,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 

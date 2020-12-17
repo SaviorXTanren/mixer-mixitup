@@ -394,7 +394,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader) && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
             {
-                UserQuoteViewModel quote = ChannelSession.Settings.Quotes.PickRandom();
+                UserQuoteModel quote = ChannelSession.Settings.Quotes.PickRandom();
                 if (quote != null)
                 {
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());

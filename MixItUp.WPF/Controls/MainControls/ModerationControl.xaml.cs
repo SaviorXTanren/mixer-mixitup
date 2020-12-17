@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -58,9 +61,9 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
 
             this.ResetStrikesOnLaunchToggleButton.IsChecked = ChannelSession.Settings.ModerationResetStrikesOnLaunch;
-            this.Strike1Command.DataContext = ChannelSession.Settings.ModerationStrike1Command;
-            this.Strike2Command.DataContext = ChannelSession.Settings.ModerationStrike2Command;
-            this.Strike3Command.DataContext = ChannelSession.Settings.ModerationStrike3Command;
+            this.Strike1Command.DataContext = ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike1CommandID);
+            this.Strike2Command.DataContext = ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike2CommandID);
+            this.Strike3Command.DataContext = ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike3CommandID);
 
             this.isLoaded = true;
 
@@ -154,6 +157,27 @@ namespace MixItUp.WPF.Controls.MainControls
                 CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
                 window.Show();
             }
+        }
+
+        private void Strike1Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike1Command.DataContext = command; };
+            window.Show();
+        }
+
+        private void Strike2Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike2Command.DataContext = command; };
+            window.Show();
+        }
+
+        private void Strike3Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike3Command.DataContext = command; };
+            window.Show();
         }
     }
 }

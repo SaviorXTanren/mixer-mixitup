@@ -288,7 +288,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
             foreach (string quote in this.Quotes)
             {
-                ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue));
+                //ChannelSession.Settings.Quotes.Add(new UserQuoteModel(quote, DateTimeOffset.MinValue));
             }
 
             if (ChannelSession.Settings.Quotes.Count > 0)

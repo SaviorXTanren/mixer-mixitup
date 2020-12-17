@@ -312,7 +312,7 @@ namespace MixItUp.Base.Commands
                         if (ChannelSession.Settings.Quotes.Count > 0)
                         {
                             int quoteNumber = 0;
-                            UserQuoteViewModel quote = null;
+                            UserQuoteModel quote = null;
 
                             if (arguments.Count() == 1)
                             {
@@ -371,7 +371,7 @@ namespace MixItUp.Base.Commands
                     {
                         if (ChannelSession.Settings.Quotes.Count > 0)
                         {
-                            UserQuoteViewModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
+                            UserQuoteModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                             if (quote != null)
                             {
                                 await ChannelSession.Services.Chat.SendMessage(quote.ToString());
@@ -409,16 +409,16 @@ namespace MixItUp.Base.Commands
                         string quoteText = quoteBuilder.ToString();
                         quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
-                        ChannelSession.Settings.Quotes.Add(quote);
-                        await ChannelSession.SaveSettings();
+                        //UserQuoteModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+                        //ChannelSession.Settings.Quotes.Add(quote);
+                        //await ChannelSession.SaveSettings();
 
-                        GlobalEvents.QuoteAdded(quote);
+                        //GlobalEvents.QuoteAdded(quote);
 
-                        if (ChannelSession.Services.Chat != null)
-                        {
-                            await ChannelSession.Services.Chat.SendMessage("Added " + quote.ToString());
-                        }
+                        //if (ChannelSession.Services.Chat != null)
+                        //{
+                        //    await ChannelSession.Services.Chat.SendMessage("Added " + quote.ToString());
+                        //}
                     }
                     else
                     {
