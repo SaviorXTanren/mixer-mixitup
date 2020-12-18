@@ -27,9 +27,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            TimerCommandModel c = (TimerCommandModel)command;
-            ChannelSession.TimerCommands.Remove(c);
-            ChannelSession.TimerCommands.Add(c);
+            ChannelSession.TimerCommands.Remove((TimerCommandModel)this.existingCommand);
+            ChannelSession.TimerCommands.Add((TimerCommandModel)command);
             return Task.FromResult(0);
         }
     }

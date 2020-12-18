@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
-        private CommandModelBase existingCommand;
+        protected CommandModelBase existingCommand;
 
         public CommandEditorWindowViewModelBase(CommandModelBase existingCommand)
             : this()
