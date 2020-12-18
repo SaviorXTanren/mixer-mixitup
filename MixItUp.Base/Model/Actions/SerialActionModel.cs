@@ -29,6 +29,8 @@ namespace MixItUp.Base.Model.Actions
             this.Message = action.Message;
         }
 
+        private SerialActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));

@@ -41,6 +41,8 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = action.Amount;
         }
 
+        private CounterActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))

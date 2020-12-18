@@ -33,6 +33,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = (StreamlabsActionTypeEnum)(int)action.StreamlabType;
         }
 
+        private StreamlabsActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.Streamlabs.IsConnected)

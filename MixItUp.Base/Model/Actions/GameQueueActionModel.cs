@@ -50,6 +50,8 @@ namespace MixItUp.Base.Model.Actions
             this.TargetUsername = action.TargetUsername;
         }
 
+        private GameQueueActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == GameQueueActionType.EnableDisableQueue)

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,13 +13,7 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public List<RequirementModelBase> Requirements { get; set; } = new List<RequirementModelBase>();
 
-        public RequirementsSetModel()
-        {
-            this.Requirements.Add(new RoleRequirementModel());
-            this.Requirements.Add(new CooldownRequirementModel());
-            this.Requirements.Add(new ThresholdRequirementModel());
-            this.Requirements.Add(new SettingsRequirementModel());
-        }
+        public RequirementsSetModel() { }
 
         public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
 
@@ -81,9 +76,9 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
+        public RoleRequirementModel Role { get { return this.GetRequirementOrDefault<RoleRequirementModel>(); } }
 
-        public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
+        public CooldownRequirementModel Cooldown { get { return this.GetRequirementOrDefault<CooldownRequirementModel>(); } }
 
         public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel).Select(r => (CurrencyRequirementModel)r); } }
 
@@ -91,9 +86,9 @@ namespace MixItUp.Base.Model.Requirements
 
         public IEnumerable<InventoryRequirementModel> Inventory { get { return this.Requirements.Where(r => r is InventoryRequirementModel).Select(r => (InventoryRequirementModel)r); } }
 
-        public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
+        public ThresholdRequirementModel Threshold { get { return this.GetRequirementOrDefault<ThresholdRequirementModel>(); } }
 
-        public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
+        public SettingsRequirementModel Settings { get { return this.GetRequirementOrDefault<SettingsRequirementModel>(); } }
 
         public async Task<bool> Validate(CommandParametersModel parameters)
         {
@@ -168,6 +163,24 @@ namespace MixItUp.Base.Model.Requirements
                 users.Add(parameters);
             }
             return users;
+        }
+
+        public void AddBasicRequirements()
+        {
+            this.Requirements.Add(new RoleRequirementModel());
+            this.Requirements.Add(new CooldownRequirementModel());
+            this.Requirements.Add(new ThresholdRequirementModel());
+            this.Requirements.Add(new SettingsRequirementModel());
+        }
+
+        private T GetRequirementOrDefault<T>() where T : RequirementModelBase
+        {
+             T requirement = (T)this.Requirements.FirstOrDefault(r => r is T);
+            if (requirement == null)
+            {
+                requirement = (T)Activator.CreateInstance(typeof(T));
+            }
+            return requirement;
         }
     }
 }

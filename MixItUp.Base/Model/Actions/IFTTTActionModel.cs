@@ -36,6 +36,8 @@ namespace MixItUp.Base.Model.Actions
             this.EventValue3 = action.EventValue3;
         }
 
+        private IFTTTActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.IFTTT.IsConnected)

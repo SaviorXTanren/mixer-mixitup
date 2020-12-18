@@ -35,6 +35,8 @@ namespace MixItUp.Base.Model.Actions
             this.Text = action.Text;
         }
 
+        private TranslationActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.Translation != null)

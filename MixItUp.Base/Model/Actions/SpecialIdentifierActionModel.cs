@@ -44,6 +44,8 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
         }
 
+        private SpecialIdentifierActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string replacementText = await this.ReplaceStringWithSpecialModifiers(this.ReplacementText, parameters);

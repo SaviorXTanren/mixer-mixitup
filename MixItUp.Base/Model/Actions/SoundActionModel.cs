@@ -37,6 +37,8 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = action.OutputDevice;
         }
 
+        private SoundActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);

@@ -70,6 +70,8 @@ namespace MixItUp.Base.Model.Actions
             this.Alt = action.Alt;
         }
 
+        private InputActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }

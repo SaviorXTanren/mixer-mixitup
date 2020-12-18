@@ -101,6 +101,8 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
+        private ConditionalActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<bool> results = new List<bool>();

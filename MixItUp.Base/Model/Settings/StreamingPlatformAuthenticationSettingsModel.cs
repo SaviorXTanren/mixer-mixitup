@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Settings
 {
     [DataContract]
-    public class PlatformAuthenticationSettingsModel : IEquatable<PlatformAuthenticationSettingsModel>
+    public class StreamingPlatformAuthenticationSettingsModel : IEquatable<StreamingPlatformAuthenticationSettingsModel>
     {
         [DataMember]
         public StreamingPlatformTypeEnum Type { get; set; }
@@ -26,20 +26,20 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool IsEnabled { get; set; }
 
-        public PlatformAuthenticationSettingsModel() { }
+        public StreamingPlatformAuthenticationSettingsModel() { }
 
-        public PlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
+        public StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
 
         public override bool Equals(object obj)
         {
-            if (obj is PlatformAuthenticationSettingsModel)
+            if (obj is StreamingPlatformAuthenticationSettingsModel)
             {
-                return this.Equals((PlatformAuthenticationSettingsModel)obj);
+                return this.Equals((StreamingPlatformAuthenticationSettingsModel)obj);
             }
             return false;
         }
 
-        public bool Equals(PlatformAuthenticationSettingsModel other) { return this.Type == other.Type; }
+        public bool Equals(StreamingPlatformAuthenticationSettingsModel other) { return this.Type == other.Type; }
 
         public override int GetHashCode() { return this.Type.GetHashCode(); }
     }

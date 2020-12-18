@@ -113,6 +113,8 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
+        private TwitchActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == TwitchActionType.Host)

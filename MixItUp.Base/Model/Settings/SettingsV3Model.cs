@@ -64,7 +64,7 @@ namespace MixItUp.Base.Model.Settings
         #region Authentication
 
         [DataMember]
-        public Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel> PlatformAuthentications { get; set; } = new Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel>();
+        public Dictionary<StreamingPlatformTypeEnum, StreamingPlatformAuthenticationSettingsModel> StreamingPlatformAuthentications { get; set; } = new Dictionary<StreamingPlatformTypeEnum, StreamingPlatformAuthenticationSettingsModel>();
 
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
@@ -709,11 +709,11 @@ namespace MixItUp.Base.Model.Settings
 
             if (ChannelSession.TwitchUserConnection != null)
             {
-                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             }
             if (ChannelSession.TwitchBotConnection != null)
             {
-                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)
@@ -893,9 +893,9 @@ namespace MixItUp.Base.Model.Settings
         {
             foreach (StreamingPlatformTypeEnum platform in EnumHelper.GetEnumList<StreamingPlatformTypeEnum>())
             {
-                if (!this.PlatformAuthentications.ContainsKey(platform))
+                if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
                 {
-                    this.PlatformAuthentications[platform] = new PlatformAuthenticationSettingsModel(platform);
+                    this.StreamingPlatformAuthentications[platform] = new StreamingPlatformAuthenticationSettingsModel(platform);
                 }
             }
 

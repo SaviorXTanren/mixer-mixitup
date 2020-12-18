@@ -60,6 +60,8 @@ namespace MixItUp.Base.Model.Actions
             this.NameUpdate = action.NewProfileName;
         }
 
+        private TwitterActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.Twitter.IsConnected)

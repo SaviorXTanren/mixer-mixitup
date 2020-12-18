@@ -67,6 +67,8 @@ namespace MixItUp.Base.Model.Actions
             this.CommandGroupName = action.GroupName;
         }
 
+        private CommandActionModel() { }
+
         public CommandModelBase Command
         {
             get

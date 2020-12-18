@@ -133,6 +133,8 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = (int)(action.Rate * 100);
         }
 
+        private TextToSpeechActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);

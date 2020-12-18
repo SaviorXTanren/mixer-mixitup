@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Overlay;
@@ -384,122 +385,133 @@ namespace MixItUp.Base.Services
             SettingsV2Model oldSettings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             await oldSettings.Initialize();
 
-            SettingsV3Model newSettings = new SettingsV3Model();
-            await newSettings.Initialize();
-
-            foreach (var kvp in oldSettings.CooldownGroups)
+            if (oldSettings.IsStreamer)
             {
-                newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;
-            }
+                SettingsV3Model newSettings = new SettingsV3Model(oldSettings.Name, oldSettings.IsStreamer);
+                await newSettings.Initialize();
 
-            foreach (ChatCommand command in oldSettings.ChatCommands)
-            {
-                newSettings.SetCommand(new ChatCommandModel(command));
-            }
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = oldSettings.TwitchUserOAuthToken;
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = oldSettings.TwitchUserID;
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = oldSettings.TwitchChannelID;
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = (oldSettings.TwitchBotOAuthToken != null) ? string.Empty : null;
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = oldSettings.TwitchBotOAuthToken;
 
-            foreach (EventCommand command in oldSettings.EventCommands)
-            {
-                newSettings.SetCommand(new EventCommandModel(command));
-            }
-
-            foreach (TimerCommand command in oldSettings.TimerCommands)
-            {
-                newSettings.SetCommand(new TimerCommandModel(command));
-            }
-
-            foreach (ActionGroupCommand command in oldSettings.ActionGroupCommands)
-            {
-                newSettings.SetCommand(new ActionGroupCommandModel(command));
-            }
-
-            foreach (TwitchChannelPointsCommand command in oldSettings.TwitchChannelPointsCommands)
-            {
-                newSettings.SetCommand(new TwitchChannelPointsCommandModel(command));
-            }
-
-            foreach (CustomCommand command in oldSettings.CustomCommands.Values)
-            {
-                newSettings.SetCommand(new CustomCommandModel(command));
-            }
-
-            foreach (GameCommandBase command in oldSettings.GameCommands)
-            {
-                if (command.GetType() == typeof(BeachBallGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((BeachBallGameCommand)command)); }
-                else if (command.GetType() == typeof(BetGameCommand)) { newSettings.SetCommand(new BetGameCommandModel((BetGameCommand)command)); }
-                else if (command.GetType() == typeof(BidGameCommand)) { newSettings.SetCommand(new BidGameCommandModel((BidGameCommand)command)); }
-                else if (command.GetType() == typeof(CoinPusherGameCommand)) { newSettings.SetCommand(new CoinPusherGameCommandModel((CoinPusherGameCommand)command)); }
-                else if (command.GetType() == typeof(DuelGameCommand)) { newSettings.SetCommand(new DuelGameCommandModel((DuelGameCommand)command)); }
-                else if (command.GetType() == typeof(HangmanGameCommand)) { newSettings.SetCommand(new HangmanGameCommandModel((HangmanGameCommand)command)); }
-                else if (command.GetType() == typeof(HeistGameCommand)) { newSettings.SetCommand(new HeistGameCommandModel((HeistGameCommand)command)); }
-                else if (command.GetType() == typeof(HitmanGameCommand)) { newSettings.SetCommand(new HitmanGameCommandModel((HitmanGameCommand)command)); }
-                else if (command.GetType() == typeof(HotPotatoGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((HotPotatoGameCommand)command)); }
-                else if (command.GetType() == typeof(LockBoxGameCommand)) { newSettings.SetCommand(new LockBoxGameCommandModel((LockBoxGameCommand)command)); }
-                else if (command.GetType() == typeof(PickpocketGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((PickpocketGameCommand)command)); }
-                else if (command.GetType() == typeof(RouletteGameCommand)) { newSettings.SetCommand(new RouletteGameCommandModel((RouletteGameCommand)command)); }
-                else if (command.GetType() == typeof(RussianRouletteGameCommand)) { newSettings.SetCommand(new RussianRouletteGameCommandModel((RussianRouletteGameCommand)command)); }
-                else if (command.GetType() == typeof(SlotMachineGameCommand)) { newSettings.SetCommand(new SlotMachineGameCommandModel((SlotMachineGameCommand)command)); }
-                else if (command.GetType() == typeof(SpinGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((SpinGameCommand)command)); }
-                else if (command.GetType() == typeof(StealGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((StealGameCommand)command)); }
-                else if (command.GetType() == typeof(TreasureDefenseGameCommand)) { newSettings.SetCommand(new TreasureDefenseGameCommandModel((TreasureDefenseGameCommand)command)); }
-                else if (command.GetType() == typeof(TriviaGameCommand)) { newSettings.SetCommand(new TriviaGameCommandModel((TriviaGameCommand)command)); }
-                else if (command.GetType() == typeof(VendingMachineGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((VendingMachineGameCommand)command)); }
-                else if (command.GetType() == typeof(VolcanoGameCommand)) { newSettings.SetCommand(new VolcanoGameCommandModel((VolcanoGameCommand)command)); }
-                else if (command.GetType() == typeof(WordScrambleGameCommand)) { newSettings.SetCommand(new WordScrambleGameCommandModel((WordScrambleGameCommand)command)); }
-            }
-
-            newSettings.RemoveCommand(newSettings.GameQueueUserJoinedCommandID);
-            newSettings.GameQueueUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserJoinedCommand);
-
-            newSettings.RemoveCommand(newSettings.GameQueueUserSelectedCommandID);
-            newSettings.GameQueueUserSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserSelectedCommand);
-
-            newSettings.RemoveCommand(newSettings.GiveawayStartedReminderCommandID);
-            newSettings.GiveawayStartedReminderCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayStartedReminderCommand);
-
-            newSettings.RemoveCommand(newSettings.GiveawayUserJoinedCommandID);
-            newSettings.GiveawayUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayUserJoinedCommand);
-
-            newSettings.RemoveCommand(newSettings.GiveawayWinnerSelectedCommandID);
-            newSettings.GiveawayWinnerSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayWinnerSelectedCommand);
-
-            newSettings.RemoveCommand(newSettings.ModerationStrike1CommandID);
-            newSettings.ModerationStrike1CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike1Command);
-
-            newSettings.RemoveCommand(newSettings.ModerationStrike2CommandID);
-            newSettings.ModerationStrike2CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike2Command);
-
-            newSettings.RemoveCommand(newSettings.ModerationStrike3CommandID);
-            newSettings.ModerationStrike3CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike3Command);
-
-            foreach (UserQuoteViewModel quote in oldSettings.Quotes)
-            {
-                newSettings.Quotes.Add(quote.Model);
-            }
-
-            foreach (var kvp in oldSettings.UserData)
-            {
-                newSettings.UserData[kvp.Key] = kvp.Value;
-                if (kvp.Value.EntranceCommand != null)
+                foreach (var kvp in oldSettings.CooldownGroups)
                 {
-                    CustomCommandModel entranceCommand = new CustomCommandModel(kvp.Value.EntranceCommand);
-                    ChannelSession.Settings.SetCommand(entranceCommand);
-                    kvp.Value.EntranceCommandID = entranceCommand.ID;
-                    kvp.Value.EntranceCommand = null;
+                    newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;
                 }
 
-                foreach (ChatCommand command in kvp.Value.CustomCommands)
+                foreach (ChatCommand command in oldSettings.ChatCommands)
                 {
-                    UserOnlyChatCommandModel userCommand = new UserOnlyChatCommandModel(command, kvp.Key);
-                    ChannelSession.Settings.SetCommand(userCommand);
-                    kvp.Value.CustomCommandIDs.Add(userCommand.ID);
+                    newSettings.SetCommand(new ChatCommandModel(command));
                 }
-                kvp.Value.CustomCommands.Clear();
+
+                foreach (EventCommand command in oldSettings.EventCommands)
+                {
+                    newSettings.SetCommand(new EventCommandModel(command));
+                }
+
+                foreach (TimerCommand command in oldSettings.TimerCommands)
+                {
+                    newSettings.SetCommand(new TimerCommandModel(command));
+                }
+
+                foreach (ActionGroupCommand command in oldSettings.ActionGroupCommands)
+                {
+                    newSettings.SetCommand(new ActionGroupCommandModel(command));
+                }
+
+                foreach (TwitchChannelPointsCommand command in oldSettings.TwitchChannelPointsCommands)
+                {
+                    newSettings.SetCommand(new TwitchChannelPointsCommandModel(command));
+                }
+
+                foreach (CustomCommand command in oldSettings.CustomCommands.Values)
+                {
+                    newSettings.SetCommand(new CustomCommandModel(command));
+                }
+
+                foreach (GameCommandBase command in oldSettings.GameCommands)
+                {
+                    if (command.GetType() == typeof(BeachBallGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((BeachBallGameCommand)command)); }
+                    else if (command.GetType() == typeof(BetGameCommand)) { newSettings.SetCommand(new BetGameCommandModel((BetGameCommand)command)); }
+                    else if (command.GetType() == typeof(BidGameCommand)) { newSettings.SetCommand(new BidGameCommandModel((BidGameCommand)command)); }
+                    else if (command.GetType() == typeof(CoinPusherGameCommand)) { newSettings.SetCommand(new CoinPusherGameCommandModel((CoinPusherGameCommand)command)); }
+                    else if (command.GetType() == typeof(DuelGameCommand)) { newSettings.SetCommand(new DuelGameCommandModel((DuelGameCommand)command)); }
+                    else if (command.GetType() == typeof(HangmanGameCommand)) { newSettings.SetCommand(new HangmanGameCommandModel((HangmanGameCommand)command)); }
+                    else if (command.GetType() == typeof(HeistGameCommand)) { newSettings.SetCommand(new HeistGameCommandModel((HeistGameCommand)command)); }
+                    else if (command.GetType() == typeof(HitmanGameCommand)) { newSettings.SetCommand(new HitmanGameCommandModel((HitmanGameCommand)command)); }
+                    else if (command.GetType() == typeof(HotPotatoGameCommand)) { newSettings.SetCommand(new HotPotatoGameCommandModel((HotPotatoGameCommand)command)); }
+                    else if (command.GetType() == typeof(LockBoxGameCommand)) { newSettings.SetCommand(new LockBoxGameCommandModel((LockBoxGameCommand)command)); }
+                    else if (command.GetType() == typeof(PickpocketGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((PickpocketGameCommand)command)); }
+                    else if (command.GetType() == typeof(RouletteGameCommand)) { newSettings.SetCommand(new RouletteGameCommandModel((RouletteGameCommand)command)); }
+                    else if (command.GetType() == typeof(RussianRouletteGameCommand)) { newSettings.SetCommand(new RussianRouletteGameCommandModel((RussianRouletteGameCommand)command)); }
+                    else if (command.GetType() == typeof(SlotMachineGameCommand)) { newSettings.SetCommand(new SlotMachineGameCommandModel((SlotMachineGameCommand)command)); }
+                    else if (command.GetType() == typeof(SpinGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((SpinGameCommand)command)); }
+                    else if (command.GetType() == typeof(StealGameCommand)) { newSettings.SetCommand(new StealGameCommandModel((StealGameCommand)command)); }
+                    else if (command.GetType() == typeof(TreasureDefenseGameCommand)) { newSettings.SetCommand(new TreasureDefenseGameCommandModel((TreasureDefenseGameCommand)command)); }
+                    else if (command.GetType() == typeof(TriviaGameCommand)) { newSettings.SetCommand(new TriviaGameCommandModel((TriviaGameCommand)command)); }
+                    else if (command.GetType() == typeof(VendingMachineGameCommand)) { newSettings.SetCommand(new SpinGameCommandModel((VendingMachineGameCommand)command)); }
+                    else if (command.GetType() == typeof(VolcanoGameCommand)) { newSettings.SetCommand(new VolcanoGameCommandModel((VolcanoGameCommand)command)); }
+                    else if (command.GetType() == typeof(WordScrambleGameCommand)) { newSettings.SetCommand(new WordScrambleGameCommandModel((WordScrambleGameCommand)command)); }
+                }
+
+                newSettings.RemoveCommand(newSettings.GameQueueUserJoinedCommandID);
+                newSettings.GameQueueUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserJoinedCommand);
+
+                newSettings.RemoveCommand(newSettings.GameQueueUserSelectedCommandID);
+                newSettings.GameQueueUserSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GameQueueUserSelectedCommand);
+
+                newSettings.RemoveCommand(newSettings.GiveawayStartedReminderCommandID);
+                newSettings.GiveawayStartedReminderCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayStartedReminderCommand);
+
+                newSettings.RemoveCommand(newSettings.GiveawayUserJoinedCommandID);
+                newSettings.GiveawayUserJoinedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayUserJoinedCommand);
+
+                newSettings.RemoveCommand(newSettings.GiveawayWinnerSelectedCommandID);
+                newSettings.GiveawayWinnerSelectedCommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.GiveawayWinnerSelectedCommand);
+
+                newSettings.RemoveCommand(newSettings.ModerationStrike1CommandID);
+                newSettings.ModerationStrike1CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike1Command);
+
+                newSettings.RemoveCommand(newSettings.ModerationStrike2CommandID);
+                newSettings.ModerationStrike2CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike2Command);
+
+                newSettings.RemoveCommand(newSettings.ModerationStrike3CommandID);
+                newSettings.ModerationStrike3CommandID = SettingsV3Upgrader.ImportCustomCommand(newSettings, oldSettings.ModerationStrike3Command);
+
+                foreach (UserQuoteViewModel quote in oldSettings.Quotes)
+                {
+                    newSettings.Quotes.Add(quote.Model);
+                }
+
+                foreach (var kvp in oldSettings.UserData)
+                {
+                    newSettings.UserData[kvp.Key] = kvp.Value;
+                    if (kvp.Value.EntranceCommand != null)
+                    {
+                        CustomCommandModel entranceCommand = new CustomCommandModel(kvp.Value.EntranceCommand);
+                        ChannelSession.Settings.SetCommand(entranceCommand);
+                        kvp.Value.EntranceCommandID = entranceCommand.ID;
+                        kvp.Value.EntranceCommand = null;
+                    }
+
+                    foreach (ChatCommand command in kvp.Value.CustomCommands)
+                    {
+                        UserOnlyChatCommandModel userCommand = new UserOnlyChatCommandModel(command, kvp.Key);
+                        ChannelSession.Settings.SetCommand(userCommand);
+                        kvp.Value.CustomCommandIDs.Add(userCommand.ID);
+                    }
+                    kvp.Value.CustomCommands.Clear();
+                }
+
+                await ChannelSession.Services.Settings.Save(newSettings);
             }
-
-            await ChannelSession.Services.Settings.Save(newSettings);
-
             await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
+            await ChannelSession.Services.FileService.CopyFile(oldSettings.DatabaseFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.DatabaseFileName));
+
             await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsFilePath);
+            await ChannelSession.Services.FileService.DeleteFile(oldSettings.DatabaseFilePath);
         }
 #pragma warning restore CS0612 // Type or member is obsolete
 
