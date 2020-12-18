@@ -164,6 +164,7 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SelectedChannel = this.Channels.FirstOrDefault(c => c.ID.Equals(this.existingSelectedChannel));
                 }
             }
+            await base.OnLoadedInternal();
         }
     }
 }

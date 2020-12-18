@@ -43,7 +43,7 @@
             <ComboBox ItemsSource="{Binding AdLengths}" SelectedItem="{Binding SelectedAdLength}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AmountSeconds}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" Visibility="{Binding ShowClipsGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="2" Visibility="{Binding ShowClipsGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
