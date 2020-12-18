@@ -6,11 +6,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class CustomCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public CustomCommandEditorWindowViewModel(CustomCommandModel existingCommand)
-            : base(existingCommand)
-        {
-
-        }
+        public CustomCommandEditorWindowViewModel(CustomCommandModel existingCommand) : base(existingCommand) { }
 
         public CustomCommandEditorWindowViewModel(string name)
             : this()
@@ -19,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         public CustomCommandEditorWindowViewModel() : base() { }
+
+        public override bool CheckActionCount { get { return false; } }
 
         public override Task<Result> Validate()
         {

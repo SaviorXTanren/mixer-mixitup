@@ -4306,4 +4306,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandVolcanoStatus" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="CommandMustHaveAtLeast1Action" xml:space="preserve">
+    <value>At least 1 action must be added to the command</value>
+  </data>
 </root>

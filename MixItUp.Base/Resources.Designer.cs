@@ -1753,6 +1753,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least 1 action must be added to the command.
+        /// </summary>
+        public static string CommandMustHaveAtLeast1Action {
+            get {
+                return ResourceManager.GetString("CommandMustHaveAtLeast1Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command (No &apos;!&apos; needed).
         /// </summary>
         public static string CommandNoBang {

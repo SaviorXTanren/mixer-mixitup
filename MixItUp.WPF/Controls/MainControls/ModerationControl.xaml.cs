@@ -162,21 +162,33 @@ namespace MixItUp.WPF.Controls.MainControls
         private void Strike1Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
-            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike1Command.DataContext = command; };
+            window.CommandSaved += (object s, CommandModelBase command) =>
+            {
+                this.Strike1Command.DataContext = null;
+                this.Strike1Command.DataContext = command;
+            };
             window.Show();
         }
 
         private void Strike2Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
-            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike2Command.DataContext = command; };
+            window.CommandSaved += (object s, CommandModelBase command) =>
+            {
+                this.Strike2Command.DataContext = null;
+                this.Strike2Command.DataContext = command;
+            };
             window.Show();
         }
 
         private void Strike3Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
-            window.CommandSaved += (object s, CommandModelBase command) => { this.Strike3Command.DataContext = command; };
+            window.CommandSaved += (object s, CommandModelBase command) =>
+            {
+                this.Strike3Command.DataContext = null;
+                this.Strike3Command.DataContext = command;
+            };
             window.Show();
         }
     }

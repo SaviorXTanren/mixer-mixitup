@@ -121,6 +121,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public virtual bool AddRequirementsToCommand { get { return false; } }
 
+        public virtual bool CheckActionCount { get { return true; } }
+
         public abstract Task<Result> Validate();
 
         public abstract Task<CommandModelBase> GetCommand();
@@ -145,6 +147,10 @@ namespace MixItUp.Base.ViewModel.Commands
             results.Add(await this.Validate());
             results.AddRange(await this.Requirements.Validate());
             results.AddRange(await this.ValidateActions());
+            if (this.CheckActionCount && this.Actions.Count == 0)
+            {
+                results.Add(new Result(MixItUp.Base.Resources.CommandMustHaveAtLeast1Action));
+            }
 
             if (results.Any(r => !r.Success))
             {

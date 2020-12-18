@@ -44,8 +44,26 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ObservableCollection<QueueUser> QueueUsers { get; private set; } = new ObservableCollection<QueueUser>();
 
-        public CommandModelBase GameQueueUserJoinedCommand { get; set; }
-        public CommandModelBase GameQueueUserSelectedCommand { get; set; }
+        public CommandModelBase GameQueueUserJoinedCommand
+        {
+            get { return this.gameQueueUserJoinedCommand; }
+            set
+            {
+                this.gameQueueUserJoinedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase gameQueueUserJoinedCommand;
+        public CommandModelBase GameQueueUserSelectedCommand
+        {
+            get { return this.gameQueueUserSelectedCommand; }
+            set
+            {
+                this.gameQueueUserSelectedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase gameQueueUserSelectedCommand;
 
         public ICommand EnableDisableCommand { get; private set; }
         public ICommand MoveUpCommand { get; private set; }

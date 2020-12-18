@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -113,9 +112,36 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
 
-        public CommandModelBase GiveawayStartedReminderCommand { get; set; }
-        public CommandModelBase GiveawayUserJoinedCommand { get; set; }
-        public CommandModelBase GiveawayWinnerSelectedCommand { get; set; }
+        public CommandModelBase GiveawayStartedReminderCommand
+        {
+            get { return this.giveawayStartedReminderCommand; }
+            set
+            {
+                this.giveawayStartedReminderCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase giveawayStartedReminderCommand;
+        public CommandModelBase GiveawayUserJoinedCommand
+        {
+            get { return this.giveawayUserJoinedCommand; }
+            set
+            {
+                this.giveawayUserJoinedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase giveawayUserJoinedCommand;
+        public CommandModelBase GiveawayWinnerSelectedCommand
+        {
+            get { return this.giveawayWinnerSelectedCommand; }
+            set
+            {
+                this.giveawayWinnerSelectedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase giveawayWinnerSelectedCommand;
 
         public ICommand StartGiveawayCommand { get; set; }
         public ICommand EndGiveawayCommand { get; set; }
