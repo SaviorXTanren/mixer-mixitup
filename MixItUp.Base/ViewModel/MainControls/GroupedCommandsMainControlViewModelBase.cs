@@ -27,6 +27,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void AddCommand(CommandModelBase command)
         {
+            this.RemoveCommand(command);
+
             foreach (CommandGroupControlViewModel group in this.CommandGroups)
             {
                 if (string.Equals(group.GroupName, command.GroupName))

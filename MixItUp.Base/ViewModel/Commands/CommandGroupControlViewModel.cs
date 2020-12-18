@@ -61,25 +61,32 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private SortableObservableCollection<CommandModelBase> commands = new SortableObservableCollection<CommandModelBase>();
 
-        private List<CommandModelBase> allCommands = new List<CommandModelBase>();
+        private Dictionary<Guid, CommandModelBase> commandLookup = new Dictionary<Guid, CommandModelBase>();
 
         public CommandGroupControlViewModel(CommandGroupSettingsModel groupSettings, IEnumerable<CommandModelBase> commands)
         {
             this.GroupSettings = groupSettings;
-            this.allCommands.AddRange(commands);
+            foreach (CommandModelBase command in commands)
+            {
+                this.commandLookup[command.ID] = command;
+            }
             this.RefreshCommands();
         }
 
         public void AddCommand(CommandModelBase command)
         {
-            this.allCommands.Add(command);
+            if (this.commandLookup.ContainsKey(command.ID))
+            {
+                this.RemoveCommand(this.commandLookup[command.ID]);
+            }
+            this.commandLookup[command.ID] = command;
             this.Commands.SortedInsert(command);
             this.NotifyPropertyChanged("HasCommands");
         }
 
         public void RemoveCommand(CommandModelBase command)
         {
-            this.allCommands.Remove(command);
+            this.commandLookup.Remove(command.ID);
             this.Commands.Remove(command);
             this.NotifyPropertyChanged("HasCommands");
         }
@@ -88,10 +95,10 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             this.Commands.Clear();
 
-            var matchedCommands = this.allCommands;
+            var matchedCommands = this.commandLookup.Values.ToList();
             if (!string.IsNullOrEmpty(filter))
             {
-                matchedCommands = this.allCommands
+                matchedCommands = matchedCommands
                     .Where(
                         c => c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
                         c.Triggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)) ||
