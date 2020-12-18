@@ -119,6 +119,8 @@ namespace MixItUp.Base.ViewModel.Commands
             });
         }
 
+        public virtual bool AddRequirementsToCommand { get { return false; } }
+
         public abstract Task<Result> Validate();
 
         public abstract Task<CommandModelBase> GetCommand();
@@ -170,7 +172,11 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 command.ID = this.existingCommand.ID;
             }
-            command.Requirements = this.Requirements.GetRequirements();
+
+            if (this.AddRequirementsToCommand)
+            {
+                command.Requirements = this.Requirements.GetRequirements();
+            }
 
             IEnumerable<ActionModelBase> actions = await this.GetActions();
             if (actions == null)

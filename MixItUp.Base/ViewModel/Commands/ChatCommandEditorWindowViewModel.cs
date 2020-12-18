@@ -88,6 +88,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public ChatCommandEditorWindowViewModel() : base() { }
 
+        public override bool AddRequirementsToCommand { get { return true; } }
+
         public override Task<Result> Validate()
         {
             if (string.IsNullOrEmpty(this.Name))

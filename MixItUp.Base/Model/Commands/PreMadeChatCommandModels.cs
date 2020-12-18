@@ -51,9 +51,10 @@ namespace MixItUp.Base.Model.Commands
         public PreMadeChatCommandModelBase(string name, HashSet<string> triggers, int cooldown, UserRoleEnum role)
             : base(name, CommandTypeEnum.PreMade, triggers, includeExclamation: true, wildcards: false)
         {
-            this.Requirements.Requirements.Add(new RoleRequirementModel(role));
-            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));
-            this.Requirements.Requirements.Add(new SettingsRequirementModel());
+            this.Requirements.AddBasicRequirements();
+            this.Requirements.Role.Role = role;
+            this.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+            this.Requirements.Cooldown.IndividualAmount = cooldown;
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettingsModel settings)
@@ -90,15 +91,19 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
-                if (await command.Requirements.Role.Validate(parameters))
+                if (command.IsEnabled)
                 {
-                    if (command.IncludeExclamation)
+                    RoleRequirementModel role = command.Requirements.Role;
+                    if (role == null || await role.Validate(parameters))
                     {
-                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
-                    }
-                    else
-                    {
-                        commandTriggers.AddRange(command.Triggers);
+                        if (command.IncludeExclamation)
+                        {
+                            commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                        }
+                        else
+                        {
+                            commandTriggers.AddRange(command.Triggers);
+                        }
                     }
                 }
             }
@@ -124,9 +129,13 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (GameCommandModelBase command in ChannelSession.GameCommands)
             {
-                if (command.IsEnabled && await command.Requirements.Role.Validate(parameters))
+                if (command.IsEnabled)
                 {
-                    commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                    RoleRequirementModel role = command.Requirements.Role;
+                    if (role == null || await role.Validate(parameters))
+                    {
+                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                    }
                 }
             }
 
@@ -726,6 +735,7 @@ namespace MixItUp.Base.Model.Commands
                 commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
 
                 ChatCommandModel newCommand = new ChatCommandModel(commandTrigger, new HashSet<string>() { commandTrigger }, includeExclamation: true, wildcards: false);
+                newCommand.Requirements.AddBasicRequirements();
                 newCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 newCommand.Requirements.Cooldown.IndividualAmount = cooldown;
                 newCommand.Actions.Add(new ChatActionModel(commandText));

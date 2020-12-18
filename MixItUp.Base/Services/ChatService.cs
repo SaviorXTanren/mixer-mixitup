@@ -2,6 +2,7 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -290,7 +291,8 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                if (command.Requirements.Settings.ShowOnChatContextMenu)
+                SettingsRequirementModel settings = command.Requirements.Settings;
+                if (settings != null && settings.ShowOnChatContextMenu)
                 {
                     this.chatMenuCommands.Add(command);
                 }
@@ -687,9 +689,13 @@ namespace MixItUp.Base.Services
             Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
             await command.Perform(new CommandParametersModel(message.User, message.Platform, arguments));
 
-            if (command.Requirements.Settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatMessageWhenRun))
+            SettingsRequirementModel settings = command.Requirements.Settings;
+            if (settings != null)
             {
-                await this.DeleteMessage(message);
+                if (settings != null && settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !settings.DontDeleteChatMessageWhenRun))
+                {
+                    await this.DeleteMessage(message);
+                }
             }
         }
 
