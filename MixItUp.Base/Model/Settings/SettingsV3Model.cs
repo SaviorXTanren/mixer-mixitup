@@ -910,16 +910,16 @@ namespace MixItUp.Base.Model.Settings
 
             if (this.GetCommand(this.GameQueueUserJoinedCommandID) == null)
             {
-                this.GameQueueUserJoinedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, "You are #$queueposition in the queue to play.");
+                this.GameQueueUserJoinedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, MixItUp.Base.Resources.GameQueueUserJoinedExample);
             }
             if (this.GetCommand(this.GameQueueUserSelectedCommandID) == null)
             {
-                this.GameQueueUserSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, "It's time to play @$username! Listen carefully for instructions on how to join...");
+                this.GameQueueUserSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, MixItUp.Base.Resources.GameQueueUserSelectedExample);
             }
 
             if (this.GetCommand(this.GiveawayStartedReminderCommandID) == null)
             {
-                this.GiveawayStartedReminderCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayStartedReminderCommandName, "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
+                this.GiveawayStartedReminderCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayStartedReminderCommandName, MixItUp.Base.Resources.GiveawayStartedReminderExample);
             }
             if (this.GetCommand(this.GiveawayUserJoinedCommandID) == null)
             {
@@ -927,29 +927,29 @@ namespace MixItUp.Base.Model.Settings
             }
             if (this.GetCommand(this.GiveawayWinnerSelectedCommandID) == null)
             {
-                this.GiveawayWinnerSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayWinnerSelectedCommandName, "Congratulations @$username, you won $giveawayitem!");
+                this.GiveawayWinnerSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayWinnerSelectedCommandName, MixItUp.Base.Resources.GiveawayWinnerSelectedExample);
             }
 
             if (this.GetCommand(this.ModerationStrike1CommandID) == null)
             {
-                this.ModerationStrike1CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike1CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike1CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike1CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
             if (this.GetCommand(this.ModerationStrike2CommandID) == null)
             {
-                this.ModerationStrike2CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike2CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike2CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike2CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
             if (this.GetCommand(this.ModerationStrike3CommandID) == null)
             {
-                this.ModerationStrike3CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike3CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
+                this.ModerationStrike3CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike3CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
 
             if (this.GetCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
-                this.RedemptionStoreManualRedeemNeededCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                this.RedemptionStoreManualRedeemNeededCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededExample);
             }
             if (this.GetCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
-                this.RedemptionStoreDefaultRedemptionCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, "@$username just redeemed $productname");
+                this.RedemptionStoreDefaultRedemptionCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionExample);
             }
         }
 
