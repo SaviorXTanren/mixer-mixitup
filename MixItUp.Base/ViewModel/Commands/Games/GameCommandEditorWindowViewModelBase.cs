@@ -211,7 +211,7 @@ namespace MixItUp.Base.ViewModel.Games
         public GameCommandEditorWindowViewModelBase(GameCommandModelBase existingCommand) : base(existingCommand) { this.SetUICommands(); }
 
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
-            : base()
+            : base(CommandTypeEnum.Game)
         {
             this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
             this.SetUICommands();

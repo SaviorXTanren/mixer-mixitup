@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         }
 
-        public TimerCommandEditorWindowViewModel() : base() { }
+        public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
 
         public override Task<Result> Validate()
         {

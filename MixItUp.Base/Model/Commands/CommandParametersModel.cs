@@ -28,6 +28,11 @@ namespace MixItUp.Base.Model.Commands
             return user;
         }
 
+        public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
+        {
+            return new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers);
+        }
+
         [DataMember]
         public UserViewModel User { get; set; } = ChannelSession.GetCurrentUser();
         [DataMember]

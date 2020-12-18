@@ -14,26 +14,10 @@ namespace MixItUp.Base.Model.Commands
 
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
-        [DataMember]
-        public EventTypeEnum EventType { get; set; }
-
-        public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
-
-        internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
-            : base(command)
+        public static Dictionary<string, string> GetEventTestSpecialIdentifiers(EventTypeEnum eventType)
         {
-            this.Name = command.EventCommandType.ToString();
-            this.Type = CommandTypeEnum.Event;
-        }
-
-        protected EventCommandModel() : base() { }
-
-        protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }
-
-        public override Dictionary<string, string> GetUniqueSpecialIdentifiers()
-        {
-            Dictionary<string, string> specialIdentifiers = base.GetUniqueSpecialIdentifiers();
-            switch (this.EventType)
+            Dictionary<string, string> specialIdentifiers = CommandModelBase.GetGeneralTestSpecialIdentifiers();
+            switch (eventType)
             {
                 case EventTypeEnum.TwitchChannelRaided:
                     specialIdentifiers["hostviewercount"] = "123";
@@ -90,7 +74,7 @@ namespace MixItUp.Base.Model.Commands
                         ImageLink = genericImage
                     };
 
-                    switch (this.EventType)
+                    switch (eventType)
                     {
                         case EventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
                         case EventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
@@ -107,7 +91,7 @@ namespace MixItUp.Base.Model.Commands
                         specialIdentifiers[kvp.Key] = kvp.Value;
                     }
 
-                    if (this.EventType == EventTypeEnum.TreatStreamDonation)
+                    if (eventType == EventTypeEnum.TreatStreamDonation)
                     {
                         specialIdentifiers["donationtype"] = "Pizza";
                     }
@@ -131,5 +115,23 @@ namespace MixItUp.Base.Model.Commands
             }
             return specialIdentifiers;
         }
+
+        [DataMember]
+        public EventTypeEnum EventType { get; set; }
+
+        public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
+
+        internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
+            : base(command)
+        {
+            this.Name = command.EventCommandType.ToString();
+            this.Type = CommandTypeEnum.Event;
+        }
+
+        protected EventCommandModel() : base() { }
+
+        protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
     }
 }

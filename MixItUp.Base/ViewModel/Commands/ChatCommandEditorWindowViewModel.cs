@@ -86,7 +86,9 @@ namespace MixItUp.Base.ViewModel.Commands
             this.Wildcards = existingCommand.Wildcards;
         }
 
-        public ChatCommandEditorWindowViewModel() : base() { }
+        public ChatCommandEditorWindowViewModel(CommandTypeEnum commandType) : base(commandType) { }
+
+        public ChatCommandEditorWindowViewModel() : base(CommandTypeEnum.Chat) { }
 
         public override bool AddRequirementsToCommand { get { return true; } }
 
@@ -153,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.UserID = existingCommand.UserID;
         }
 
-        public UserOnlyChatCommandEditorWindowViewModel(Guid userID) : base() { this.UserID = userID; }
+        public UserOnlyChatCommandEditorWindowViewModel(Guid userID) : base(CommandTypeEnum.UserOnlyChat) { this.UserID = userID; }
 
         public override Task<CommandModelBase> GetCommand()
         {

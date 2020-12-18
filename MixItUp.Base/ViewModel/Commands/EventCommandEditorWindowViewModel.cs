@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -17,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         public EventCommandEditorWindowViewModel(EventTypeEnum eventType)
-            : base()
+            : base(CommandTypeEnum.Event)
         {
             this.EventType = eventType;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.EventType);
@@ -36,5 +37,7 @@ namespace MixItUp.Base.ViewModel.Commands
             ChannelSession.EventCommands.Add((EventCommandModel)command);
             return Task.FromResult(0);
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
     }
 }

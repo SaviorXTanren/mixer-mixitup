@@ -68,6 +68,8 @@ namespace MixItUp.Base.Model.Commands
             }
         }
 
+        public static Dictionary<string, string> GetGeneralTestSpecialIdentifiers() { return new Dictionary<string, string>(); }
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -135,11 +137,11 @@ namespace MixItUp.Base.Model.Commands
 
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
-        public virtual Dictionary<string, string> GetUniqueSpecialIdentifiers() { return new Dictionary<string, string>(); }
+        public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
         public virtual async Task TestPerform()
         {
-            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, this.GetUniqueSpecialIdentifiers()));
+            await this.Perform(CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers()));
             if (this.Requirements.Cooldown != null)
             {
                 this.Requirements.Reset();

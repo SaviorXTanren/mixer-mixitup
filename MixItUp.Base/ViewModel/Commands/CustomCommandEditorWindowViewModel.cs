@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -14,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.Name = name;
         }
 
-        public CustomCommandEditorWindowViewModel() : base() { }
+        public CustomCommandEditorWindowViewModel() : base(CommandTypeEnum.Custom) { }
 
         public override bool CheckActionCount { get { return false; } }
 
@@ -25,9 +26,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new CustomCommandModel(this.Name)); }
 
-        public override Task SaveCommandToSettings(CommandModelBase command)
-        {
-            return Task.FromResult(0);
-        }
+        public override Task SaveCommandToSettings(CommandModelBase command) { return Task.FromResult(0); }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return CustomCommandModel.GetCustomTestSpecialIdentifiers(this.Name); }
     }
 }

@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Commands
             : base(existingCommand)
         { }
 
-        public TwitchChannelPointsCommandEditorWindowViewModel() : base() { }
+        public TwitchChannelPointsCommandEditorWindowViewModel() : base(CommandTypeEnum.TwitchChannelPoints) { }
 
         public override Task<Result> Validate()
         {

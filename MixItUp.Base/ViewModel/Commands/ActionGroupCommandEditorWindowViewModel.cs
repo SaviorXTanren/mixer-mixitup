@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Commands
             : base(existingCommand)
         { }
 
-        public ActionGroupCommandEditorWindowViewModel() : base() { }
+        public ActionGroupCommandEditorWindowViewModel() : base(CommandTypeEnum.ActionGroup) { }
 
         public override Task<Result> Validate()
         {
