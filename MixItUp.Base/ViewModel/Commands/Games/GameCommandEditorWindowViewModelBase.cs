@@ -228,7 +228,7 @@ namespace MixItUp.Base.ViewModel.Games
             return new Result();
         }
 
-        public override Task<CommandModelBase> GetCommand() { throw new NotImplementedException(); }
+        public override Task<CommandModelBase> CreateNewCommand() { throw new NotImplementedException(); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {

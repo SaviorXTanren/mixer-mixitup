@@ -112,9 +112,18 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            ChatCommandModel cCommand = (ChatCommandModel)command;
+            cCommand.Triggers = this.GetChatTriggers();
+            cCommand.IncludeExclamation = this.IncludeExclamation;
+            cCommand.Wildcards = this.Wildcards;
         }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
@@ -157,7 +166,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public UserOnlyChatCommandEditorWindowViewModel(Guid userID) : base(CommandTypeEnum.UserOnlyChat) { this.UserID = userID; }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new UserOnlyChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards, this.UserID));
         }

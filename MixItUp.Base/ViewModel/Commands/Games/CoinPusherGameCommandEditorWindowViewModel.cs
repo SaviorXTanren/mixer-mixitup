@@ -122,10 +122,24 @@ namespace MixItUp.Base.ViewModel.Games
             this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherStatusExample, currency.Name));
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new CoinPusherGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumAmountForPayout, this.ProbabilityPercentage, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage,
                 this.SuccessCommand, this.FailureCommand, this.StatusArgument, this.StatusCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            CoinPusherGameCommandModel gCommand = (CoinPusherGameCommandModel)command;
+            gCommand.MinimumAmountForPayout = this.MinimumAmountForPayout;
+            gCommand.ProbabilityPercentage = this.ProbabilityPercentage;
+            gCommand.PayoutMinimumPercentage = this.PayoutMinimumPercentage;
+            gCommand.PayoutMaximumPercentage = this.PayoutMaximumPercentage;
+            gCommand.SuccessCommand = this.SuccessCommand;
+            gCommand.FailureCommand = this.FailureCommand;
+            gCommand.StatusArgument = this.StatusArgument;
+            gCommand.StatusCommand = this.StatusCommand;
         }
 
         public override async Task<Result> Validate()

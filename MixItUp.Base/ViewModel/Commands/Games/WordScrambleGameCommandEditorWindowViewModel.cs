@@ -167,10 +167,26 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new WordScrambleGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.WordScrambleTimeLimit, this.CustomWordsFilePath,
                 this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.WordScramblePrepareCommand, this.WordScrambleBeginCommand, this.UserSuccessCommand, this.UserFailureCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            WordScrambleGameCommandModel gCommand = (WordScrambleGameCommandModel)command;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.WordScrambleTimeLimit = this.WordScrambleTimeLimit;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.WordScramblePrepareCommand = this.WordScramblePrepareCommand;
+            gCommand.WordScrambleBeginCommand = this.WordScrambleBeginCommand;
+            gCommand.UserSuccessCommand = this.UserSuccessCommand;
+            gCommand.UserFailureCommand = this.UserFailureCommand;
         }
 
         public override async Task<Result> Validate()

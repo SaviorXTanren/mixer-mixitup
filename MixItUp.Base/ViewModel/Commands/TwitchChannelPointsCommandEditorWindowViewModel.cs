@@ -6,9 +6,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand)
-            : base(existingCommand)
-        { }
+        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand) : base(existingCommand) { }
 
         public TwitchChannelPointsCommandEditorWindowViewModel() : base(CommandTypeEnum.TwitchChannelPoints) { }
 
@@ -21,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {

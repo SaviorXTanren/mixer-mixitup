@@ -174,10 +174,28 @@ namespace MixItUp.Base.ViewModel.Games
             this.ThiefSelectedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseThiefSelectedExample, currency.Name));
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new TreasureDefenseGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.KingTimeLimit, this.ThiefPlayerPercentage, this.StartedCommand,
                 this.UserJoinCommand, this.NotEnoughPlayersCommand, this.KnightUserCommand, this.ThiefUserCommand, this.KingUserCommand, this.KnightSelectedCommand, this.ThiefSelectedCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            TreasureDefenseGameCommandModel gCommand = (TreasureDefenseGameCommandModel)command;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.KingTimeLimit = this.KingTimeLimit;
+            gCommand.ThiefPlayerPercentage = this.ThiefPlayerPercentage;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.KnightUserCommand = this.KnightUserCommand;
+            gCommand.ThiefUserCommand = this.ThiefUserCommand;
+            gCommand.KingUserCommand = this.KingUserCommand;
+            gCommand.KnightSelectedCommand = this.KnightSelectedCommand;
+            gCommand.ThiefSelectedCommand = this.ThiefSelectedCommand;
         }
 
         public override async Task<Result> Validate()

@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new CustomCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new CustomCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command) { return Task.FromResult(0); }
 

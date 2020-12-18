@@ -14,7 +14,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int TimeLimit { get; set; }
         [DataMember]
-        public GamePlayerSelectionType SelectionType { get; set; }
+        public GamePlayerSelectionType PlayerSelectionType { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
@@ -35,12 +35,12 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CancellationTokenSource runCancellationTokenSource;
 
-        public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType selectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
+        public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType playerSelectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
             GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
             : base(name, triggers, GameCommandTypeEnum.Duel)
         {
             this.TimeLimit = timeLimit;
-            this.SelectionType = selectionType;
+            this.PlayerSelectionType = playerSelectionType;
             this.StartedCommand = startedCommand;
             this.NotAcceptedCommand = notAcceptedCommand;
             this.SuccessfulOutcome = successfulOutcome;
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Commands.Games
             : base(command, GameCommandTypeEnum.Duel)
         {
             this.TimeLimit = command.TimeLimit;
-            this.SelectionType = GamePlayerSelectionType.Targeted;
+            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
             this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
             this.NotAcceptedCommand = new CustomCommandModel(command.NotAcceptedCommand) { IsEmbedded = true };
             this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
@@ -77,7 +77,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 int betAmount = this.GetBetAmount(parameters);
                 if (betAmount > 0)
                 {
-                    await this.SetSelectedUser(this.SelectionType, parameters);
+                    await this.SetSelectedUser(this.PlayerSelectionType, parameters);
                     if (parameters.TargetUser != null)
                     {
                         if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))

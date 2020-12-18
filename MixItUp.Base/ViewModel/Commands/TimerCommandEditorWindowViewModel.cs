@@ -6,11 +6,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TimerCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand)
-            : base(existingCommand)
-        {
-
-        }
+        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand) { }
 
         public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
 
@@ -23,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TimerCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TimerCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {

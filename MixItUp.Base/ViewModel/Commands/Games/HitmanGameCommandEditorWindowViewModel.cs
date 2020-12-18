@@ -167,10 +167,26 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new HitmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.HitmanTimeLimit, this.CustomWordsFilePath,
                 this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.HitmanApproachingCommand, this.HitmanAppearsCommand, this.UserSuccessCommand, this.UserFailureCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            HitmanGameCommandModel gCommand = (HitmanGameCommandModel)command;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.HitmanTimeLimit = this.HitmanTimeLimit;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.HitmanApproachingCommand = this.HitmanApproachingCommand;
+            gCommand.HitmanAppearsCommand = this.HitmanAppearsCommand;
+            gCommand.UserSuccessCommand = this.UserSuccessCommand;
+            gCommand.UserFailureCommand = this.UserFailureCommand;
         }
 
         public override async Task<Result> Validate()

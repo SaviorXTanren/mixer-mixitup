@@ -166,7 +166,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.UserSuccessOutcome = new GameOutcomeViewModel(string.Empty, 50, 200);
-            this.userFailureCommand = this.CreateBasicCommand();
+            this.UserFailureCommand = this.CreateBasicCommand();
             this.AllSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistAllSucceedExample, currency.Name));
             this.TopThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistTopThirdsSucceedExample, currency.Name));
             this.MiddleThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistMiddleThirdsSucceedExample, currency.Name));
@@ -174,10 +174,28 @@ namespace MixItUp.Base.ViewModel.Games
             this.NoneSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistNoneSucceedExample, currency.Name));
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new HeistGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand,
                 this.UserSuccessOutcome.GetModel(), this.UserFailureCommand, this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            HeistGameCommandModel gCommand = (HeistGameCommandModel)command;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.UserSuccessOutcome = this.UserSuccessOutcome.GetModel();
+            gCommand.UserFailureCommand = this.UserFailureCommand;
+            gCommand.AllSucceedCommand = this.AllSucceedCommand;
+            gCommand.TopThirdsSucceedCommand = this.TopThirdsSucceedCommand;
+            gCommand.MiddleThirdsSucceedCommand = this.MiddleThirdsSucceedCommand;
+            gCommand.LowThirdsSucceedCommand = this.LowThirdsSucceedCommand;
+            gCommand.NoneSucceedCommand = this.NoneSucceedCommand;
         }
 
         public override async Task<Result> Validate()

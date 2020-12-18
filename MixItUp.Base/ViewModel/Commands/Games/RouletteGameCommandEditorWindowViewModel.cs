@@ -194,21 +194,26 @@ namespace MixItUp.Base.ViewModel.Games
 
         public IEnumerable<string> BetOptionsCustomList { get { return (!string.IsNullOrEmpty(this.BetOptionsCustom)) ? this.BetOptionsCustom.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
-            HashSet<string> betOptions = new HashSet<string>();
-            if (this.SelectedBetType == RouletteGameCommandBetType.NumberRange)
-            {
-                betOptions.Add(this.BetOptionsNumberRangeLow.ToString());
-                betOptions.Add(this.BetOptionsNumberRangeHigh.ToString());
-            }
-            else if (this.SelectedBetType == RouletteGameCommandBetType.Custom)
-            {
-                betOptions = new HashSet<string>(this.BetOptionsCustomList);
-            }
-
-            return Task.FromResult<CommandModelBase>(new RouletteGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.SelectedBetType, betOptions, this.StartedCommand,
+            return Task.FromResult<CommandModelBase>(new RouletteGameCommandModel(this.Name, this.GetChatTriggers(), this.MinimumParticipants, this.TimeLimit, this.SelectedBetType, this.GetBetOptions(), this.StartedCommand,
                 this.UserJoinCommand, this.NotEnoughPlayersCommand, this.UserSuccessOutcome.GetModel(), this.UserFailureCommand, this.GameCompleteCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            RouletteGameCommandModel gCommand = (RouletteGameCommandModel)command;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.BetType = this.SelectedBetType;
+            gCommand.BetOptions = this.GetBetOptions();
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.UserSuccessOutcome = this.UserSuccessOutcome.GetModel();
+            gCommand.UserFailureCommand = this.UserFailureCommand;
+            gCommand.GameCompleteCommand = this.GameCompleteCommand;
         }
 
         public override async Task<Result> Validate()
@@ -250,6 +255,21 @@ namespace MixItUp.Base.ViewModel.Games
                 }
             }
             return new Result();
+        }
+
+        private HashSet<string> GetBetOptions()
+        {
+            HashSet<string> betOptions = new HashSet<string>();
+            if (this.SelectedBetType == RouletteGameCommandBetType.NumberRange)
+            {
+                betOptions.Add(this.BetOptionsNumberRangeLow.ToString());
+                betOptions.Add(this.BetOptionsNumberRangeHigh.ToString());
+            }
+            else if (this.SelectedBetType == RouletteGameCommandBetType.Custom)
+            {
+                betOptions = new HashSet<string>(this.BetOptionsCustomList);
+            }
+            return betOptions;
         }
     }
 }

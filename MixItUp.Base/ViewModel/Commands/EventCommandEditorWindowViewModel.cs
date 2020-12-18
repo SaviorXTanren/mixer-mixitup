@@ -29,7 +29,14 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new EventCommandModel(this.EventType)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new EventCommandModel(this.EventType)); }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            EventCommandModel eCommand = (EventCommandModel)command;
+            eCommand.EventType = this.EventType;
+        }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {

@@ -141,7 +141,13 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public abstract Task<Result> Validate();
 
-        public abstract Task<CommandModelBase> GetCommand();
+        public abstract Task<CommandModelBase> CreateNewCommand();
+
+        public virtual Task UpdateExistingCommand(CommandModelBase command)
+        {
+            command.Name = this.Name;
+            return Task.FromResult(0);
+        }
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
 
@@ -175,15 +181,19 @@ namespace MixItUp.Base.ViewModel.Commands
                 return null;
             }
 
-            CommandModelBase command = await this.GetCommand();
+            CommandModelBase command = this.existingCommand;
+            if (command != null)
+            {
+                await this.UpdateExistingCommand(command);
+            }
+            else
+            {
+                command = await this.CreateNewCommand();
+            }
+
             if (command == null)
             {
                 return null;
-            }
-
-            if (this.existingCommand != null)
-            {
-                command.ID = this.existingCommand.ID;
             }
 
             if (this.AddRequirementsToCommand)
