@@ -212,6 +212,17 @@ namespace MixItUp.Base.Services.External
             }
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            var scene = await this.GetActiveScene();
+            if (scene == null)
+            {
+                return "Unknown";
+            }
+
+            return scene.Name;
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);

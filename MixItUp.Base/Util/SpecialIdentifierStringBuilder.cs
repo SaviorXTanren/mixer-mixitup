@@ -301,6 +301,45 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
+            if (this.ContainsSpecialIdentifier("streamcurrentscene"))
+            {
+                IStreamingSoftwareService ssService = null;
+                switch (ChannelSession.Settings.DefaultStreamingSoftware)
+                {
+                    case Model.Actions.StreamingSoftwareTypeEnum.DefaultSetting:
+                        if (ChannelSession.Services.OBSStudio != null && ChannelSession.Services.OBSStudio.IsConnected && ChannelSession.Services.OBSStudio.IsEnabled)
+                        {
+                            ssService = ChannelSession.Services.OBSStudio;
+                        }
+                        else if (ChannelSession.Services.StreamlabsOBS != null && ChannelSession.Services.StreamlabsOBS.IsConnected && ChannelSession.Services.StreamlabsOBS.IsEnabled)
+                        {
+                            ssService = ChannelSession.Services.StreamlabsOBS;
+                        }
+                        else if (ChannelSession.Services.XSplit != null && ChannelSession.Services.XSplit.IsConnected && ChannelSession.Services.XSplit.IsEnabled)
+                        {
+                            ssService = ChannelSession.Services.XSplit;
+                        }
+                        break;
+                    case Model.Actions.StreamingSoftwareTypeEnum.OBSStudio:
+                        ssService = ChannelSession.Services.OBSStudio;
+                        break;
+                    case Model.Actions.StreamingSoftwareTypeEnum.XSplit:
+                        ssService = ChannelSession.Services.XSplit;
+                        break;
+                    case Model.Actions.StreamingSoftwareTypeEnum.StreamlabsOBS:
+                        ssService = ChannelSession.Services.StreamlabsOBS;
+                        break;
+                }
+
+                string currentScene = "Unknown";
+                if (ssService != null)
+                {
+                    currentScene = await ssService.GetCurrentScene();
+                }
+
+                this.ReplaceSpecialIdentifier("streamcurrentscene", currentScene);
+            }
+
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier))

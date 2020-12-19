@@ -87,6 +87,22 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            return await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                Logger.Log(LogLevel.Debug, "Getting Current OBS Scene");
+
+                var scene = this.OBSWebsocket.GetCurrentScene();
+                if (scene == null)
+                {
+                    return "Unknown";
+                }
+
+                return scene.Name;
+            });
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>

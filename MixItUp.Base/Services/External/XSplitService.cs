@@ -125,6 +125,11 @@ namespace MixItUp.Base.Services.External
             await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            return await Task.FromResult<string>("Not Yet Implemented");
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
