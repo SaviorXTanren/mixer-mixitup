@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
@@ -255,9 +256,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool GameQueueSubPriority { get; set; }
         [DataMember]
-        public RequirementViewModel GameQueueRequirements { get; set; } = new RequirementViewModel();
-
-        [DataMember]
         public Guid GameQueueUserJoinedCommandID { get; set; }
         [DataMember]
         public Guid GameQueueUserSelectedCommandID { get; set; }
@@ -293,7 +291,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int GiveawayMaximumEntries { get; set; } = 1;
         [DataMember]
-        public RequirementViewModel GiveawayRequirements { get; set; } = new RequirementViewModel();
+        public RequirementsSetModel GiveawayRequirementsSet { get; set; } = new RequirementsSetModel();
         [DataMember]
         public int GiveawayReminderInterval { get; set; } = 5;
         [DataMember]

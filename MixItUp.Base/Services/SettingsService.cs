@@ -3,6 +3,7 @@ using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -506,6 +507,8 @@ namespace MixItUp.Base.Services
                     }
                     kvp.Value.CustomCommands.Clear();
                 }
+
+                newSettings.GiveawayRequirementsSet = new RequirementsSetModel(oldSettings.GiveawayRequirements);
 
                 await ChannelSession.Services.Settings.Save(newSettings);
             }

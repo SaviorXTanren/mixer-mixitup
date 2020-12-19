@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
@@ -42,7 +41,7 @@ namespace MixItUp.Base.Services
         public IEnumerable<GiveawayUser> Users { get { return this.enteredUsers.Values.ToList(); } }
         public UserViewModel Winner { get; private set; }
 
-        private ChatCommand giveawayCommand = null;
+        private ChatCommandModel giveawayCommand = null;
 
         private Dictionary<Guid, GiveawayUser> enteredUsers = new Dictionary<Guid, GiveawayUser>();
 
@@ -93,8 +92,7 @@ namespace MixItUp.Base.Services
             this.IsRunning = true;
             this.Winner = null;
 
-            this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
-            this.giveawayCommand.Requirements = ChannelSession.Settings.GiveawayRequirements;
+            this.giveawayCommand = new ChatCommandModel("Giveaway Command", new HashSet<string>() { ChannelSession.Settings.GiveawayCommand });
             if (ChannelSession.Settings.GiveawayAllowPastWinners)
             {
                 this.pastWinners.Clear();
@@ -235,8 +233,10 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesMessageMatchTriggers(message, out IEnumerable<string> arguments))
                 {
+                    CommandParametersModel parameters = new CommandParametersModel(message);
+                    parameters.Arguments = new List<string>(arguments);
                     int entries = 1;
 
                     if (pastWinners.Contains(message.User.ID))
@@ -265,27 +265,28 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (await this.giveawayCommand.CheckAllRequirements(message.User))
+                    if (await ChannelSession.Settings.GiveawayRequirementsSet.Validate(parameters))
                     {
-                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
-                        {
-                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount, requireAmount: true))
-                            {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
-                                return;
-                            }
-                        }
+                        // TODO
+                        //if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                        //{
+                        //    int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
+                        //    if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount, requireAmount: true))
+                        //    {
+                        //        await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                        //        return;
+                        //    }
+                        //}
 
-                        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
-                        {
-                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount, requireAmount: true))
-                            {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
-                                return;
-                            }
-                        }
+                        //if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
+                        //{
+                        //    int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
+                        //    if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount, requireAmount: true))
+                        //    {
+                        //        await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                        //        return;
+                        //    }
+                        //}
 
                         if (!this.enteredUsers.ContainsKey(message.User.ID))
                         {

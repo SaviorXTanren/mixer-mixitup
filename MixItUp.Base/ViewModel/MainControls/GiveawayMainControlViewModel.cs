@@ -1,7 +1,11 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirements;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -92,6 +96,17 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
+        public RequirementsSetViewModel Requirements
+        {
+            get { return requirements; }
+            set
+            {
+                requirements = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private RequirementsSetViewModel requirements;
+
         public bool IsRunning { get { return ChannelSession.Services.GiveawayService.IsRunning; } }
         public bool IsNotRunning { get { return !this.IsRunning; } }
 
@@ -151,12 +166,22 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             GlobalEvents.OnGiveawaysChangedOccurred += GlobalEvents_OnGiveawaysChangedOccurred;
 
+            this.Requirements = new RequirementsSetViewModel(ChannelSession.Settings.GiveawayRequirementsSet);
+
             this.GiveawayStartedReminderCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID);
             this.GiveawayUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID);
             this.GiveawayWinnerSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID);
 
             this.StartGiveawayCommand = this.CreateCommand(async (x) =>
             {
+                IEnumerable<Result> requirementsValidation = await this.Requirements.Validate();
+                if (requirementsValidation.Any(r => !r.Success))
+                {
+                    await DialogHelper.ShowFailedResults(requirementsValidation);
+                    return;
+                }
+                ChannelSession.Settings.GiveawayRequirementsSet = this.Requirements.GetRequirements();
+
                 string result = await ChannelSession.Services.GiveawayService.Start(this.Item);
                 if (!string.IsNullOrEmpty(result))
                 {

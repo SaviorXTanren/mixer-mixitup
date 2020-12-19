@@ -28,10 +28,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.DataContext = this.viewModel = new GiveawayMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
-            this.Requirements.HideThresholdRequirement();
-            this.Requirements.HideSettingsRequirement();
-            this.Requirements.SetRequirements(ChannelSession.Settings.GiveawayRequirements);
-
             return base.InitializeInternal();
         }
 
@@ -44,17 +40,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
                 window.Show();
             }
-        }
-
-        private async void StartGiveawayButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!await this.Requirements.Validate())
-            {
-                return;
-            }
-
-            ChannelSession.Settings.GiveawayRequirements = this.Requirements.GetRequirements();
-            this.viewModel.StartGiveawayCommand.Execute(null);
         }
 
         private void GiveawayStartedReminderCommand_EditClicked(object sender, RoutedEventArgs e)

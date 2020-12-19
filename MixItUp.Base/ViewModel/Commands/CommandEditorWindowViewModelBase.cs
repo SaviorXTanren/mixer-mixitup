@@ -238,17 +238,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             if (results.Any(r => !r.Success))
             {
-                StringBuilder error = new StringBuilder();
-                error.AppendLine(MixItUp.Base.Resources.TheFollowingErrorsMustBeFixed);
-                error.AppendLine();
-                foreach (Result result in results)
-                {
-                    if (!result.Success)
-                    {
-                        error.AppendLine(" - " + result.Message);
-                    }
-                }
-                await DialogHelper.ShowMessage(error.ToString());
+                await DialogHelper.ShowFailedResults(results);
                 return true;
             }
             return false;

@@ -8,7 +8,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
-             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:RequirementsControls="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
 
@@ -44,19 +44,23 @@
             <Grid Grid.Row="0" IsEnabled="{Binding IsNotRunning}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="15" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="15" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="15" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="15" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBox Grid.Row="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GiveawayItem}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <TextBox Grid.Row="2" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+
+                <Grid Grid.Row="4" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
@@ -72,7 +76,7 @@
                     <TextBox Grid.Column="4" Text="{Binding MaxEntries}" Width="80" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxEntries}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
-                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -90,19 +94,9 @@
                     <CheckBox Grid.Column="6" IsChecked="{Binding AllowPastWinners}" />
                 </Grid>
 
-                <Grid Grid.Row="6" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <RequirementsControls:RequirementsSetControl Grid.Row="8" DataContext="{Binding Requirements}" ShowSettings="False" />
 
-                    <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-
-                    <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" MinWidth="220" />
-                </Grid>
-
-                <Grid Grid.Row="8" HorizontalAlignment="Center">
+                <Grid Grid.Row="10" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
@@ -126,7 +120,7 @@
             </Grid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button x:Name="StartGiveawayButton" Click="StartGiveawayButton_Click" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.StartGiveaway}"/>
+                <Button Command="{Binding StartGiveawayCommand}" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.StartGiveaway}"/>
                 <Button Command="{Binding EndGiveawayCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.CancelGiveaway}"/>
             </Grid>
 
