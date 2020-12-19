@@ -217,6 +217,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
+        public override bool CheckActionCount { get { return false; } }
+
         public override async Task<Result> Validate()
         {
             Result result = await base.Validate();
