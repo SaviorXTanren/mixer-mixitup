@@ -46,6 +46,7 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.File)
         {
             this.ActionType = (FileActionTypeEnum)(int)action.FileActionType;
+            this.FilePath = action.FilePath;
             this.TransferText = action.TransferText;
             this.LineIndex = action.LineIndexToRead;
         }
