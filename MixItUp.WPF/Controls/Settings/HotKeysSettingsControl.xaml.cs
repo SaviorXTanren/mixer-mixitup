@@ -75,7 +75,10 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task OnVisibilityChanged()
         {
-            this.CommandTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(ChannelSession.AllCommands.Select(c => c.Type).Distinct()).OrderBy(s => s);
+            List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
+            types.Remove(CommandTypeEnum.UserOnlyChat);
+            types.Remove(CommandTypeEnum.Custom);
+            this.CommandTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(types.OrderBy(s => s));
             this.KeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 
             this.RefreshList();
