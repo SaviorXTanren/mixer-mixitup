@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Commands
         {
             this.Name = command.Name;
             this.Type = CommandTypeEnum.Chat;
-            this.Triggers = command.CommandTriggers;
+            this.Triggers = command.Commands;
             this.IncludeExclamation = command.IncludeExclamationInCommands;
             this.Wildcards = command.Wildcards;
         }
