@@ -30,9 +30,9 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBox Grid.Column="1" Text="{Binding TargetUsername}" Visibility="{Binding ShowTargetUsername}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,10,0,0" />
+        <TextBox Grid.Row="1" Text="{Binding TargetUsername}" Visibility="{Binding ShowTargetUsername, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0,10,0,0" />
 
-        <ComboBox Grid.Column="1" ItemsSource="{Binding UserRoles}" Selected="{Binding SelectedUserRole}" Visibility="{Binding ShowUserRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserRole}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0">
+        <ComboBox Grid.Row="1" ItemsSource="{Binding UserRoles}" SelectedItem="{Binding SelectedUserRole}" Visibility="{Binding ShowUserRoles, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserRole}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

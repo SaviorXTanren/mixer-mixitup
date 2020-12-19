@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Commands
@@ -17,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         public EventCommandEditorWindowViewModel(EventTypeEnum eventType)
-            : base()
+            : base(CommandTypeEnum.Event)
         {
             this.EventType = eventType;
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.EventType);
@@ -28,14 +29,22 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new EventCommandModel(this.EventType)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new EventCommandModel(this.EventType)); }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            EventCommandModel eCommand = (EventCommandModel)command;
+            eCommand.EventType = this.EventType;
+        }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            EventCommandModel c = (EventCommandModel)command;
-            ChannelSession.EventCommands.Remove(c);
-            ChannelSession.EventCommands.Add(c);
+            ChannelSession.EventCommands.Remove((EventCommandModel)this.existingCommand);
+            ChannelSession.EventCommands.Add((EventCommandModel)command);
             return Task.FromResult(0);
         }
+
+        public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
     }
 }

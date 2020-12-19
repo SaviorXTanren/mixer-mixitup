@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
@@ -202,8 +203,6 @@ namespace MixItUp.Base.ViewModel.Games
 
     public abstract class GameCommandEditorWindowViewModelBase : ChatCommandEditorWindowViewModel
     {
-        public GameCurrencyRequirementViewModel GameCurrencyRequirement { get { return this.Requirements.GameCurrency; } }
-
         public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
 
         public ICommand AddOutcomeCommand { get; set; }
@@ -212,12 +211,9 @@ namespace MixItUp.Base.ViewModel.Games
         public GameCommandEditorWindowViewModelBase(GameCommandModelBase existingCommand) : base(existingCommand) { this.SetUICommands(); }
 
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
-            : base()
+            : base(CommandTypeEnum.Game)
         {
-            if (this.GameCurrencyRequirement == null && currency != null)
-            {
-                this.Requirements.GameCurrency = new GameCurrencyRequirementViewModel(currency);
-            }
+            this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
             this.SetUICommands();
         }
 
@@ -232,7 +228,7 @@ namespace MixItUp.Base.ViewModel.Games
             return new Result();
         }
 
-        public override Task<CommandModelBase> GetCommand() { throw new NotImplementedException(); }
+        public override Task<CommandModelBase> CreateNewCommand() { throw new NotImplementedException(); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
@@ -281,27 +277,18 @@ namespace MixItUp.Base.ViewModel.Games
             return new Result();
         }
 
-        protected CustomCommandModel CreateBasicCommand() { return new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand); }
+        protected CustomCommandModel CreateBasicCommand()
+        {
+            return new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand)
+            {
+                IsEmbedded = true
+            };
+        }
 
         protected CustomCommandModel CreateBasicChatCommand(string message, bool whisper = false)
         {
             CustomCommandModel command = this.CreateBasicCommand();
             command.Actions.Add(new ChatActionModel(message, sendAsStreamer: false, isWhisper: whisper));
-            return command;
-        }
-
-        protected CustomCommandModel CreateBasic2ChatCommand(string message1, string message2)
-        {
-            CustomCommandModel command = this.CreateBasicCommand();
-            command.Actions.Add(new ChatActionModel(message1));
-            command.Actions.Add(new ChatActionModel(message2));
-            return command;
-        }
-
-        protected CustomCommandModel CreateBasicCurrencyCommand(CurrencyModel currency, string amount)
-        {
-            CustomCommandModel command = this.CreateBasicCommand();
-            command.Actions.Add(new ConsumablesActionModel(currency, ConsumablesActionTypeEnum.AddToUser, amount));
             return command;
         }
 

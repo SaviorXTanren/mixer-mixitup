@@ -50,6 +50,8 @@ namespace MixItUp.Base.Model.Actions
             this.LineIndex = action.LineIndexToRead;
         }
 
+        private FileActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);

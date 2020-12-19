@@ -65,6 +65,8 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
+        private ModerationActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == ModerationActionTypeEnum.ClearChat)

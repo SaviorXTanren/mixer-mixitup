@@ -1,14 +1,11 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using MixItUp.WPF.Util;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -28,20 +25,20 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.DataContext = this.viewModel = new GameQueueMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
             await this.viewModel.OnLoaded();
-
-            this.UserJoinedCommand.DataContext = ChannelSession.Settings.GameQueueUserJoinedCommand;
-            this.UserSelectedCommand.DataContext = ChannelSession.Settings.GameQueueUserSelectedCommand;
         }
 
-        private void GameQueueCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        private void UserJoinedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((GameQueueMainControlViewModel)this.DataContext).GameQueueUserJoinedCommand = command; };
+            window.Show();
+        }
+
+        private void UserSelectedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((GameQueueMainControlViewModel)this.DataContext).GameQueueUserSelectedCommand = command; };
+            window.Show();
         }
 
         private async void MoveUpButton_Click(object sender, System.Windows.RoutedEventArgs e)

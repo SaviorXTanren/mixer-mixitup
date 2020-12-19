@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Commands
             : base(existingCommand)
         { }
 
-        public ActionGroupCommandEditorWindowViewModel() : base() { }
+        public ActionGroupCommandEditorWindowViewModel() : base(CommandTypeEnum.ActionGroup) { }
 
         public override Task<Result> Validate()
         {
@@ -21,13 +21,12 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new ActionGroupCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new ActionGroupCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ActionGroupCommandModel c = (ActionGroupCommandModel)command;
-            ChannelSession.ActionGroupCommands.Remove(c);
-            ChannelSession.ActionGroupCommands.Add(c);
+            ChannelSession.ActionGroupCommands.Remove((ActionGroupCommandModel)this.existingCommand);
+            ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command);
             return Task.FromResult(0);
         }
     }

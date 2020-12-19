@@ -93,17 +93,17 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowItemGrid { get { return this.SelectedActionType != OverlayActionTypeEnum.ShowHideWidget; } }
 
-        public bool ShowTextItem { get { return this.SelectedActionType != OverlayActionTypeEnum.Text; } }
+        public bool ShowTextItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Text; } }
 
-        public bool ShowImageItem { get { return this.SelectedActionType != OverlayActionTypeEnum.Image; } }
+        public bool ShowImageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Image; } }
 
-        public bool ShowVideoItem { get { return this.SelectedActionType != OverlayActionTypeEnum.Video; } }
+        public bool ShowVideoItem { get { return this.SelectedActionType == OverlayActionTypeEnum.Video; } }
 
-        public bool ShowYouTubeItem { get { return this.SelectedActionType != OverlayActionTypeEnum.YouTube; } }
+        public bool ShowYouTubeItem { get { return this.SelectedActionType == OverlayActionTypeEnum.YouTube; } }
 
-        public bool ShowWebPageItem { get { return this.SelectedActionType != OverlayActionTypeEnum.WebPage; } }
+        public bool ShowWebPageItem { get { return this.SelectedActionType == OverlayActionTypeEnum.WebPage; } }
 
-        public bool ShowHTMLItem { get { return this.SelectedActionType != OverlayActionTypeEnum.HTML; } }
+        public bool ShowHTMLItem { get { return this.SelectedActionType == OverlayActionTypeEnum.HTML; } }
 
         public OverlayItemViewModelBase ItemViewModel { get; set; }
 

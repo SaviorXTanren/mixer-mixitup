@@ -189,6 +189,8 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = actionType;
         }
 
+        private StreamingSoftwareActionModel() { }
+
         internal StreamingSoftwareActionModel(MixItUp.Base.Actions.StreamingSoftwareAction action)
             : base(ActionTypeEnum.StreamingSoftware)
         {

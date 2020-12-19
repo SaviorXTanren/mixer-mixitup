@@ -68,11 +68,9 @@ namespace MixItUp.Base.Model.Actions
                     ActionModelBase subAction = null;
                     if (conAction.CommandID != Guid.Empty)
                     {
-                        CommandModelBase command = ChannelSession.Settings.GetCommand(conAction.CommandID);
-                        if (command != null)
-                        {
-                            subAction = new CommandActionModel(CommandActionTypeEnum.RunCommand, command, string.Empty);
-                        }
+                        CommandActionModel cmdAction = new CommandActionModel(CommandActionTypeEnum.RunCommand, null);
+                        cmdAction.CommandID = conAction.CommandID;
+                        actions.Add(cmdAction);
                     }
                     else
                     {
@@ -213,6 +211,8 @@ namespace MixItUp.Base.Model.Actions
             this.Name = EnumLocalizationHelper.GetLocalizedName(this.Type);
             this.Enabled = true;
         }
+
+        protected ActionModelBase() { }
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {

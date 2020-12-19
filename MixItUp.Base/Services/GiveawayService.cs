@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
@@ -109,7 +110,7 @@ namespace MixItUp.Base.Services
             Task.Run(async () => { await this.GiveawayTimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID).Perform(new CommandParametersModel(this.GetSpecialIdentifiers()));
 
             return null;
         }
@@ -153,7 +154,7 @@ namespace MixItUp.Base.Services
 
                     if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
-                        await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                        await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID).Perform(new CommandParametersModel(this.GetSpecialIdentifiers()));
                     }
 
                     if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
@@ -192,7 +193,7 @@ namespace MixItUp.Base.Services
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
-                            await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID).Perform(new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                             await this.End();
                             return;
                         }
@@ -300,7 +301,7 @@ namespace MixItUp.Base.Services
                             specialIdentifiers["usergiveawayentries"] = entries.ToString();
                             specialIdentifiers["usergiveawaytotalentries"] = giveawayUser.Entries.ToString();
 
-                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID).Perform(new CommandParametersModel(message.User, arguments, specialIdentifiers));
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
@@ -308,7 +309,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                    await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID).Perform(new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                     await this.End();
                 }
             }

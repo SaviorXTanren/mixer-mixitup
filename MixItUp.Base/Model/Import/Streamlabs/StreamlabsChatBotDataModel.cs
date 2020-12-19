@@ -180,7 +180,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
             foreach (string quote in this.Quotes)
             {
-                ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue));
+                //ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(quote, DateTimeOffset.MinValue));
             }
 
             if (ChannelSession.Settings.Quotes.Count > 0)

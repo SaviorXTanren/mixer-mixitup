@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
@@ -50,15 +51,23 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ObservableCollection<ChatCommand> UserOnlyChatCommands { get; set; } = new ObservableCollection<ChatCommand>();
+        public ObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ObservableCollection<UserOnlyChatCommandModel>();
         public bool HasUserOnlyChatCommands { get { return this.UserOnlyChatCommands.Count > 0; } }
 
-        public CustomCommand EntranceCommand
+        public CommandModelBase EntranceCommand
         {
-            get { return this.User.Data.EntranceCommand; }
+            get { return ChannelSession.Settings.GetCommand(this.User.Data.EntranceCommandID); }
             set
             {
-                this.User.Data.EntranceCommand = value;
+                if (value == null)
+                {
+                    ChannelSession.Settings.RemoveCommand(this.User.Data.EntranceCommandID);
+                    this.User.Data.EntranceCommandID = Guid.Empty;
+                }
+                else
+                {
+                    this.User.Data.EntranceCommandID = value.ID;
+                }
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("HasEntranceCommand");
                 this.NotifyPropertyChanged("DoesNotHaveEntranceCommand");
@@ -135,24 +144,29 @@ namespace MixItUp.Base.ViewModel.User
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.BitsCheered, this.User.Data.TotalBitsCheered.ToString()));
         }
 
-        public void AddUserOnlyChatCommand(ChatCommand command)
+        public void AddUserOnlyChatCommand(UserOnlyChatCommandModel command)
         {
-            this.User.Data.CustomCommands.Add(command);
+            this.User.Data.CustomCommandIDs.Add(command.ID);
             this.RefreshUserOnlyChatCommands();
         }
 
-        public void RemoveUserOnlyChatCommand(ChatCommand command)
+        public void RemoveUserOnlyChatCommand(UserOnlyChatCommandModel command)
         {
-            this.User.Data.CustomCommands.Remove(command);
+            this.User.Data.CustomCommandIDs.Remove(command.ID);
+            ChannelSession.Settings.RemoveCommand(command.ID);
             this.RefreshUserOnlyChatCommands();
         }
 
         public void RefreshUserOnlyChatCommands()
         {
             this.UserOnlyChatCommands.Clear();
-            foreach (ChatCommand command in this.User.Data.CustomCommands)
+            foreach (Guid commandID in this.User.Data.CustomCommandIDs)
             {
-                this.UserOnlyChatCommands.Add(command);
+                UserOnlyChatCommandModel command = ChannelSession.Settings.GetCommand<UserOnlyChatCommandModel>(commandID);
+                if (command != null)
+                {
+                    this.UserOnlyChatCommands.Add(command);
+                }
             }
             this.NotifyPropertyChanged("HasUserOnlyChatCommands");
         }

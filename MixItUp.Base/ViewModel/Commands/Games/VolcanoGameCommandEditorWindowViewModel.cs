@@ -252,11 +252,35 @@ namespace MixItUp.Base.ViewModel.Games
             this.CollectCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoCollectExample, currency.Name));
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new VolcanoGameCommandModel(this.Name, this.GetChatTriggers(), this.StatusArgument, this.Stage1DepositCommand, this.Stage1StatusCommand, this.Stage2MinimumAmount, this.Stage2DepositCommand,
                 this.Stage2StatusCommand, this.Stage3MinimumAmount, this.Stage3DepositCommand, this.Stage3StatusCommand, this.PayoutProbability, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage, this.PayoutCommand,
                 this.CollectArgument, this.CollectTimeLimit, this.CollectMinimumPercentage, this.CollectMaximumPercentage, this.CollectCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            VolcanoGameCommandModel gCommand = (VolcanoGameCommandModel)command;
+            gCommand.StatusArgument = this.StatusArgument;
+            gCommand.Stage1DepositCommand = this.Stage1DepositCommand;
+            gCommand.Stage1StatusCommand = this.Stage1StatusCommand;
+            gCommand.Stage2MinimumAmount = this.Stage2MinimumAmount;
+            gCommand.Stage2DepositCommand = this.Stage2DepositCommand;
+            gCommand.Stage2StatusCommand = this.Stage2StatusCommand;
+            gCommand.Stage3MinimumAmount = this.Stage3MinimumAmount;
+            gCommand.Stage3DepositCommand = this.Stage3DepositCommand;
+            gCommand.Stage3StatusCommand = this.Stage3StatusCommand;
+            gCommand.PayoutProbability = this.PayoutProbability;
+            gCommand.PayoutMinimumPercentage = this.PayoutMinimumPercentage;
+            gCommand.PayoutMaximumPercentage = this.PayoutMaximumPercentage;
+            gCommand.PayoutCommand = this.PayoutCommand;
+            gCommand.CollectArgument = this.CollectArgument;
+            gCommand.CollectTimeLimit = this.CollectTimeLimit;
+            gCommand.CollectMinimumPercentage = this.CollectMinimumPercentage;
+            gCommand.CollectMaximumPercentage = this.CollectMaximumPercentage;
+            gCommand.CollectCommand = this.CollectCommand;
         }
 
         public override async Task<Result> Validate()

@@ -53,6 +53,8 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldMuteDeafen = action.ShouldMuteDeafen;
         }
 
+        private DiscordActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.ActionType == DiscordActionTypeEnum.SendMessage)

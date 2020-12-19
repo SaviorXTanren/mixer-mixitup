@@ -184,10 +184,24 @@ namespace MixItUp.Base.ViewModel.Games
             this.GameCompleteCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandBetGameCompleteExample);
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new BetGameCommandModel(this.Name, this.GetChatTriggers(), this.SelectedStarterRole, this.MinimumParticipants, this.TimeLimit, this.Outcomes.Select(o => o.GetModel()),
                 this.StartedCommand, this.UserJoinCommand, this.NotEnoughPlayersCommand, this.BetsClosedCommand, this.GameCompleteCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            BetGameCommandModel gCommand = (BetGameCommandModel)command;
+            gCommand.StarterRole = this.SelectedStarterRole;
+            gCommand.MinimumParticipants = this.MinimumParticipants;
+            gCommand.TimeLimit = this.timeLimit;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
+            gCommand.BetsClosedCommand = this.BetsClosedCommand;
+            gCommand.GameCompleteCommand = this.GameCompleteCommand;
         }
 
         public override async Task<Result> Validate()

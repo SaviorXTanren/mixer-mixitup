@@ -7,7 +7,7 @@
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -197,7 +197,7 @@
                                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CommandControls:CommandButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
+                                            <CommandsControls:CommandListingButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -229,7 +229,7 @@
 
                             <Button x:Name="NewEntranceCommandButton" Grid.Column="2" Visibility="{Binding DoesNotHaveEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" />
                             <Grid Grid.Column="2"  Visibility="{Binding HasEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" DataContext="{Binding EntranceCommand}" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
+                                <CommandsControls:CommandListingButtonsControl x:Name="ExistingEntranceCommandButtons" DataContext="{Binding EntranceCommand}" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
                             </Grid>
                         </Grid>
 

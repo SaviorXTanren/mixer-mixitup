@@ -80,6 +80,23 @@ namespace MixItUp.Base.Model.Commands.Games
             this.ThiefSelectedCommand = thiefSelectedCommand;
         }
 
+        internal TreasureDefenseGameCommandModel(Base.Commands.TreasureDefenseGameCommand command)
+            : base(command, GameCommandTypeEnum.TreasureDefense)
+        {
+            this.MinimumParticipants = command.MinimumParticipants;
+            this.TimeLimit = command.TimeLimit;
+            this.KingTimeLimit = 300;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
+            this.ThiefPlayerPercentage = command.ThiefPlayerPercentage;
+            this.KnightUserCommand = new CustomCommandModel(command.KnightUserCommand) { IsEmbedded = true };
+            this.ThiefUserCommand = new CustomCommandModel(command.ThiefUserCommand) { IsEmbedded = true };
+            this.KingUserCommand = new CustomCommandModel(command.KingUserCommand) { IsEmbedded = true };
+            this.KnightSelectedCommand = new CustomCommandModel(command.KnightSelectedCommand) { IsEmbedded = true };
+            this.ThiefSelectedCommand = new CustomCommandModel(command.ThiefSelectedCommand) { IsEmbedded = true };
+        }
+
         private TreasureDefenseGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

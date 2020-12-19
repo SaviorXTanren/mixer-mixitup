@@ -62,6 +62,8 @@ namespace MixItUp.Base.Model.Actions
             }
         }
 
+        private WebRequestActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             using (HttpClient httpClient = new HttpClient())

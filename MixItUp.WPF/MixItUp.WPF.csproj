@@ -895,9 +895,6 @@
     <Compile Include="Controls\Requirements\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirements\GameCurrencyRequirementControl.xaml.cs">
-      <DependentUpon>GameCurrencyRequirementControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Requirements\InventoryRequirementControl.xaml.cs">
       <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -1847,10 +1844,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirements\CurrencyRequirementControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Requirements\GameCurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

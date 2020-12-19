@@ -36,6 +36,8 @@ namespace MixItUp.Base.Model.Actions
             this.WhisperUserName = action.WhisperUserName;
         }
 
+        private ChatActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, parameters);

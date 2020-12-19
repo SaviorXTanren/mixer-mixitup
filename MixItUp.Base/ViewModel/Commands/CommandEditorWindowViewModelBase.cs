@@ -27,6 +27,17 @@ namespace MixItUp.Base.ViewModel.Commands
             return null;
         }
 
+        public CommandTypeEnum Type
+        {
+            get { return this.type; }
+            set
+            {
+                this.type = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandTypeEnum type;
+
         public string Name
         {
             get { return this.name; }
@@ -47,10 +58,10 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
-        private CommandModelBase existingCommand;
+        protected CommandModelBase existingCommand;
 
         public CommandEditorWindowViewModelBase(CommandModelBase existingCommand)
-            : this()
+            : this(existingCommand.Type)
         {
             this.existingCommand = existingCommand;
 
@@ -58,28 +69,34 @@ namespace MixItUp.Base.ViewModel.Commands
             this.Requirements = new RequirementsSetViewModel(this.existingCommand.Requirements);
         }
 
-        public CommandEditorWindowViewModelBase()
+        public CommandEditorWindowViewModelBase(CommandTypeEnum type)
         {
+            this.Type = type;
+
             this.SaveCommand = this.CreateCommand(async (parameter) =>
             {
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
                 {
-                    ChannelSession.Settings.SetCommand(command);
-                    await ChannelSession.SaveSettings();
-
+                    if (!command.IsEmbedded)
+                    {
+                        ChannelSession.Settings.SetCommand(command);
+                        await ChannelSession.SaveSettings();
+                    }
                     await this.SaveCommandToSettings(command);
-
                     this.CommandSaved(this, command);
                 }
             });
 
             this.TestCommand = this.CreateCommand(async (parameter) =>
             {
-                CommandModelBase command = await this.ValidateAndBuildCommand();
-                if (command != null)
+                if (!await this.CheckForResultErrors(await this.ValidateActions()))
                 {
-                    await command.TestPerform();
+                    IEnumerable<ActionModelBase> actions = await this.GetActions();
+                    if (actions != null)
+                    {
+                        await CommandModelBase.RunActions(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers()));
+                    }
                 }
             });
 
@@ -118,11 +135,23 @@ namespace MixItUp.Base.ViewModel.Commands
             });
         }
 
+        public virtual bool AddRequirementsToCommand { get { return false; } }
+
+        public virtual bool CheckActionCount { get { return true; } }
+
         public abstract Task<Result> Validate();
 
-        public abstract Task<CommandModelBase> GetCommand();
+        public abstract Task<CommandModelBase> CreateNewCommand();
+
+        public virtual Task UpdateExistingCommand(CommandModelBase command)
+        {
+            command.Name = this.Name;
+            return Task.FromResult(0);
+        }
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
+
+        public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
         protected override async Task OnLoadedInternal()
         {
@@ -142,34 +171,35 @@ namespace MixItUp.Base.ViewModel.Commands
             results.Add(await this.Validate());
             results.AddRange(await this.Requirements.Validate());
             results.AddRange(await this.ValidateActions());
-
-            if (results.Any(r => !r.Success))
+            if (this.CheckActionCount && this.Actions.Count == 0)
             {
-                StringBuilder error = new StringBuilder();
-                error.AppendLine(MixItUp.Base.Resources.TheFollowingErrorsMustBeFixed);
-                error.AppendLine();
-                foreach (Result result in results)
-                {
-                    if (!result.Success)
-                    {
-                        error.AppendLine(" - " + result.Message);
-                    }
-                }
-                await DialogHelper.ShowMessage(error.ToString());
+                results.Add(new Result(MixItUp.Base.Resources.CommandMustHaveAtLeast1Action));
+            }
+            
+            if (await this.CheckForResultErrors(results))
+            {
                 return null;
             }
 
-            CommandModelBase command = await this.GetCommand();
+            CommandModelBase command = this.existingCommand;
+            if (command != null)
+            {
+                await this.UpdateExistingCommand(command);
+            }
+            else
+            {
+                command = await this.CreateNewCommand();
+            }
+
             if (command == null)
             {
                 return null;
             }
 
-            if (this.existingCommand != null)
+            if (this.AddRequirementsToCommand)
             {
-                command.ID = this.existingCommand.ID;
+                command.Requirements = this.Requirements.GetRequirements();
             }
-            command.Requirements = this.Requirements.GetRequirements();
 
             IEnumerable<ActionModelBase> actions = await this.GetActions();
             if (actions == null)
@@ -186,9 +216,29 @@ namespace MixItUp.Base.ViewModel.Commands
             CommandModelBase command = await this.ValidateAndBuildCommand();
             if (command != null)
             {
-                return command.GetUniqueSpecialIdentifiers();
+                return command.GetTestSpecialIdentifiers();
             }
             return null;
+        }
+
+        private async Task<bool> CheckForResultErrors(IEnumerable<Result> results)
+        {
+            if (results.Any(r => !r.Success))
+            {
+                StringBuilder error = new StringBuilder();
+                error.AppendLine(MixItUp.Base.Resources.TheFollowingErrorsMustBeFixed);
+                error.AppendLine();
+                foreach (Result result in results)
+                {
+                    if (!result.Success)
+                    {
+                        error.AppendLine(" - " + result.Message);
+                    }
+                }
+                await DialogHelper.ShowMessage(error.ToString());
+                return true;
+            }
+            return false;
         }
     }
 }

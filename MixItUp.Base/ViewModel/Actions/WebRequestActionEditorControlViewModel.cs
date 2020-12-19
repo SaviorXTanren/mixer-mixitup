@@ -86,11 +86,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
 
-        public WebRequestActionEditorControlViewModel()
-            : base()
-        {
-
-        }
+        public WebRequestActionEditorControlViewModel() : base() {  }
 
         protected override async Task OnLoadedInternal()
         {

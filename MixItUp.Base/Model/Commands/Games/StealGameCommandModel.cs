@@ -8,7 +8,7 @@ namespace MixItUp.Base.Model.Commands.Games
     public class StealGameCommandModel : GameCommandModelBase
     {
         [DataMember]
-        public GamePlayerSelectionType SelectionType { get; set; }
+        public GamePlayerSelectionType PlayerSelectionType { get; set; }
 
         [DataMember]
         public GameOutcomeModel SuccessfulOutcome { get; set; }
@@ -16,12 +16,28 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public CustomCommandModel FailedCommand { get; set; }
 
-        public StealGameCommandModel(string name, HashSet<string> triggers, GamePlayerSelectionType selectionType, GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
+        public StealGameCommandModel(string name, HashSet<string> triggers, GamePlayerSelectionType playerSelectionType, GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
             : base(name, triggers, GameCommandTypeEnum.Steal)
         {
-            this.SelectionType = selectionType;
+            this.PlayerSelectionType = playerSelectionType;
             this.SuccessfulOutcome = successfulOutcome;
             this.FailedCommand = failedCommand;
+        }
+
+        internal StealGameCommandModel(Base.Commands.StealGameCommand command)
+            : base(command, GameCommandTypeEnum.Steal)
+        {
+            this.PlayerSelectionType = GamePlayerSelectionType.Random;
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
+        }
+
+        internal StealGameCommandModel(Base.Commands.PickpocketGameCommand command)
+            : base(command, GameCommandTypeEnum.Steal)
+        {
+            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
         }
 
         private StealGameCommandModel() { }
@@ -39,16 +55,16 @@ namespace MixItUp.Base.Model.Commands.Games
             int betAmount = this.GetBetAmount(parameters);
             if (betAmount > 0)
             {
-                await this.SetSelectedUser(this.SelectionType, parameters);
+                await this.SetSelectedUser(this.PlayerSelectionType, parameters);
                 if (parameters.TargetUser != null)
                 {
-                    if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                    if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                     {
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
                         if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                         {
-                            this.GameCurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
-                            this.GameCurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
+                            this.CurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
+                            this.CurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
                             await this.SuccessfulOutcome.Command.Perform(parameters);
                         }
                         else

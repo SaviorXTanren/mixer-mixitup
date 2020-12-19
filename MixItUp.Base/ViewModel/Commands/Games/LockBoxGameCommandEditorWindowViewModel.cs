@@ -135,10 +135,25 @@ namespace MixItUp.Base.ViewModel.Games
             this.InspectionCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandLockBoxInspectionExample);
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new LockBoxGameCommandModel(this.Name, this.GetChatTriggers(), this.CombinationLength, this.InitialAmount, this.SuccessfulCommand, this.FailureCommand, this.StatusArgument, this.StatusCommand,
                 this.InspectionArgument, this.InspectionCost, this.InspectionCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            LockBoxGameCommandModel gCommand = (LockBoxGameCommandModel)command;
+            gCommand.CombinationLength = this.CombinationLength;
+            gCommand.InitialAmount = this.InitialAmount;
+            gCommand.SuccessfulCommand = this.SuccessfulCommand;
+            gCommand.FailureCommand = this.FailureCommand;
+            gCommand.StatusArgument = this.StatusArgument;
+            gCommand.StatusCommand = this.StatusCommand;
+            gCommand.InspectionArgument = this.InspectionArgument;
+            gCommand.InspectionCost = this.InspectionCost;
+            gCommand.InspectionCommand = this.InspectionCommand;
         }
 
         public override async Task<Result> Validate()

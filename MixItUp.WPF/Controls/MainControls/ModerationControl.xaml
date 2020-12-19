@@ -8,7 +8,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -315,16 +315,16 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OneStrikeCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OneStrikeCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="Strike1Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
 
-                            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.TwoStrikesCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.TwoStrikesCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="Strike2Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
 
-                            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.ThreeOrMoreStrikesCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.ThreeOrMoreStrikesCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="Strike3Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
                         </Grid>
                     </Grid>

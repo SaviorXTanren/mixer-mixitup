@@ -144,9 +144,18 @@ namespace MixItUp.Base.ViewModel.Games
 
         public IEnumerable<string> SymbolsList { get { return (!string.IsNullOrEmpty(this.Symbols)) ? this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new SlotMachineGameCommandModel(this.Name, this.GetChatTriggers(), this.SymbolsList, this.FailureCommand, this.Outcomes.Select(o => ((SlotMachineGameOutcomeViewModel)o).GetModel())));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            SlotMachineGameCommandModel gCommand = (SlotMachineGameCommandModel)command;
+            gCommand.Symbols = new List<string>(this.SymbolsList);
+            gCommand.FailureCommand = this.FailureCommand;
+            gCommand.Outcomes = new List<SlotMachineGameOutcomeModel>(this.Outcomes.Select(o => ((SlotMachineGameOutcomeViewModel)o).GetModel()));
         }
 
         public override async Task<Result> Validate()

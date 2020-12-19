@@ -28,12 +28,12 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Consumables}" SelectedItem="{Binding SelectedConsumable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Consumables}" SelectedItem="{Binding SelectedConsumable}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Consumables}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="150" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="170">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -41,7 +41,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox Grid.Column="3" Visibility="{Binding ShowInventoryItems, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding InventoryItems}" Text="{Binding InventoryItemName}" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            <ComboBox Grid.Column="3" Visibility="{Binding ShowInventoryItems, Converter={StaticResource BooleanToVisibilityConverter}}" ItemsSource="{Binding InventoryItems}" Text="{Binding InventoryItemName}" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="150" />
 
             <TextBox Grid.Column="5" Text="{Binding Amount}" IsEnabled="{Binding CanEnterAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
@@ -54,7 +54,7 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" IsEnabled="{Binding CanDeductFromUser}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DeductFromUserRunningCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />

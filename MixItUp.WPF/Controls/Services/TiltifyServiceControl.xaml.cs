@@ -10,9 +10,6 @@ namespace MixItUp.WPF.Controls.Services
     {
         private TiltifyServiceControlViewModel viewModel;
 
-        private string authorizationToken = null;
-        private bool windowClosed = false;
-
         public TiltifyServiceControl()
         {
             this.DataContext = this.ViewModel = this.viewModel = new TiltifyServiceControlViewModel();

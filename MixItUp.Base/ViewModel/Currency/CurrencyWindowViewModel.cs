@@ -856,6 +856,7 @@ namespace MixItUp.Base.ViewModel.Currency
             if (this.Currency != null)
             {
                 ChatCommandModel statusCommand = new ChatCommandModel("User " + this.Currency.Name, new HashSet<string>() { this.Currency.SpecialIdentifier });
+                statusCommand.Requirements.AddBasicRequirements();
                 statusCommand.Requirements.Role.Role = UserRoleEnum.User;
                 statusCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 statusCommand.Requirements.Cooldown.IndividualAmount = 5;
@@ -875,6 +876,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 if (this.Currency.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
                     ChatCommandModel addCommand = new ChatCommandModel("Add " + this.Currency.Name, new HashSet<string>() { "add" + this.Currency.SpecialIdentifier });
+                    addCommand.Requirements.AddBasicRequirements();
                     addCommand.Requirements.Role.Role = UserRoleEnum.Mod;
                     addCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addCommand.Requirements.Cooldown.IndividualAmount = 5;
@@ -884,6 +886,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     commandsToAdd.Add(new NewAutoChatCommandModel(string.Format("!{0} - {1}", addCommand.Triggers.First(), "Adds Amount To Specified User"), addCommand));
 
                     ChatCommandModel addAllCommand = new ChatCommandModel("Add All " + this.Currency.Name, new HashSet<string>() { "addall" + this.Currency.SpecialIdentifier });
+                    addAllCommand.Requirements.AddBasicRequirements();
                     addAllCommand.Requirements.Role.Role = UserRoleEnum.Mod;
                     addAllCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                     addAllCommand.Requirements.Cooldown.IndividualAmount = 5;
@@ -895,6 +898,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     if (!this.Currency.IsRank)
                     {
                         ChatCommandModel giveCommand = new ChatCommandModel("Give " + this.Currency.Name, new HashSet<string>() { "give" + this.Currency.SpecialIdentifier });
+                        giveCommand.Requirements.AddBasicRequirements();
                         giveCommand.Requirements.Role.Role = UserRoleEnum.User;
                         giveCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                         giveCommand.Requirements.Cooldown.IndividualAmount = 5;

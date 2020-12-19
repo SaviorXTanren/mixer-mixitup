@@ -60,6 +60,20 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusCommand = statusCommand;
         }
 
+        internal HangmanGameCommandModel(Base.Commands.HangmanGameCommand command)
+            : base(command, GameCommandTypeEnum.Hangman)
+        {
+            this.MaxFailures = command.MaxFailures;
+            this.InitialAmount = command.InitialAmount;
+            this.CustomWordsFilePath = command.CustomWordsFilePath;
+            this.SuccessfulGuessCommand = new CustomCommandModel(command.SuccessfulGuessCommand) { IsEmbedded = true };
+            this.FailedGuessCommand = new CustomCommandModel(command.FailedGuessCommand) { IsEmbedded = true };
+            this.GameWonCommand = new CustomCommandModel(command.GameWonCommand) { IsEmbedded = true };
+            this.GameLostCommand = new CustomCommandModel(command.GameLostCommand) { IsEmbedded = true };
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = new CustomCommandModel(command.StatusArgument) { IsEmbedded = true };
+        }
+
         private HangmanGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

@@ -6,13 +6,9 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TimerCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand)
-            : base(existingCommand)
-        {
+        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand) { }
 
-        }
-
-        public TimerCommandEditorWindowViewModel() : base() { }
+        public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
 
         public override Task<Result> Validate()
         {
@@ -23,13 +19,12 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TimerCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TimerCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            TimerCommandModel c = (TimerCommandModel)command;
-            ChannelSession.TimerCommands.Remove(c);
-            ChannelSession.TimerCommands.Add(c);
+            ChannelSession.TimerCommands.Remove((TimerCommandModel)this.existingCommand);
+            ChannelSession.TimerCommands.Add((TimerCommandModel)command);
             return Task.FromResult(0);
         }
     }

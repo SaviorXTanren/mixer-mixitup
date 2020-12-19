@@ -86,7 +86,11 @@ namespace MixItUp.Base.ViewModel.Commands
             this.Wildcards = existingCommand.Wildcards;
         }
 
-        public ChatCommandEditorWindowViewModel() : base() { }
+        public ChatCommandEditorWindowViewModel(CommandTypeEnum commandType) : base(commandType) { }
+
+        public ChatCommandEditorWindowViewModel() : base(CommandTypeEnum.Chat) { }
+
+        public override bool AddRequirementsToCommand { get { return true; } }
 
         public override Task<Result> Validate()
         {
@@ -108,16 +112,24 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new ChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards));
         }
 
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            ChatCommandModel cCommand = (ChatCommandModel)command;
+            cCommand.Triggers = this.GetChatTriggers();
+            cCommand.IncludeExclamation = this.IncludeExclamation;
+            cCommand.Wildcards = this.Wildcards;
+        }
+
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            ChatCommandModel c = (ChatCommandModel)command;
-            ChannelSession.ChatCommands.Remove(c);
-            ChannelSession.ChatCommands.Add(c);
+            ChannelSession.ChatCommands.Remove((ChatCommandModel)this.existingCommand);
+            ChannelSession.ChatCommands.Add((ChatCommandModel)command);
             ChannelSession.Services.Chat.RebuildCommandTriggers();
             return Task.FromResult(0);
         }
@@ -130,6 +142,38 @@ namespace MixItUp.Base.ViewModel.Commands
                 triggerSeparator = new char[] { ';' };
             }
             return new HashSet<string>(this.Triggers.Split(triggerSeparator, StringSplitOptions.RemoveEmptyEntries));
+        }
+    }
+
+    public class UserOnlyChatCommandEditorWindowViewModel : ChatCommandEditorWindowViewModel
+    {
+        public Guid UserID
+        {
+            get { return this.userID; }
+            set
+            {
+                this.userID = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private Guid userID;
+
+        public UserOnlyChatCommandEditorWindowViewModel(UserOnlyChatCommandModel existingCommand)
+            : base(existingCommand)
+        {
+            this.UserID = existingCommand.UserID;
+        }
+
+        public UserOnlyChatCommandEditorWindowViewModel(Guid userID) : base(CommandTypeEnum.UserOnlyChat) { this.UserID = userID; }
+
+        public override Task<CommandModelBase> CreateNewCommand()
+        {
+            return Task.FromResult<CommandModelBase>(new UserOnlyChatCommandModel(this.Name, this.GetChatTriggers(), this.IncludeExclamation, this.Wildcards, this.UserID));
+        }
+
+        public override Task SaveCommandToSettings(CommandModelBase command)
+        {
+            return Task.FromResult(0);
         }
     }
 }

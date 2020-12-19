@@ -13,8 +13,6 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public CooldownRequirementViewModel Cooldown { get; set; } = new CooldownRequirementViewModel();
 
-        public GameCurrencyRequirementViewModel GameCurrency { get; set; } = null;
-
         public CurrencyListRequirementViewModel Currency { get; set; } = new CurrencyListRequirementViewModel();
 
         public RankListRequirementViewModel Rank { get; set; } = new RankListRequirementViewModel();
@@ -32,7 +30,6 @@ namespace MixItUp.Base.ViewModel.Requirements
                 List<RequirementViewModelBase> requirements = new List<RequirementViewModelBase>();
                 requirements.Add(this.Role);
                 requirements.Add(this.Cooldown);
-                if (this.GameCurrency != null) { requirements.Add(this.GameCurrency); }
                 requirements.AddRange(this.Currency.Items);
                 requirements.AddRange(this.Rank.Items);
                 requirements.AddRange(this.Inventory.Items);
@@ -65,10 +62,6 @@ namespace MixItUp.Base.ViewModel.Requirements
                 else if (requirement is CooldownRequirementModel)
                 {
                     this.Cooldown = new CooldownRequirementViewModel((CooldownRequirementModel)requirement);
-                }
-                else if (requirement is GameCurrencyRequirementModel)
-                {
-                    this.GameCurrency = new GameCurrencyRequirementViewModel((GameCurrencyRequirementModel)requirement);
                 }
                 else if (requirement is CurrencyRequirementModel)
                 {

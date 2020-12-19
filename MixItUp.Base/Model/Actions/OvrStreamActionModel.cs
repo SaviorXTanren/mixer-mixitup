@@ -50,6 +50,8 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = action.Variables;
         }
 
+        private OvrStreamActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (ChannelSession.Services.OvrStream.IsConnected)

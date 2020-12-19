@@ -102,8 +102,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.LowerTimeLimit = command.LowerTimeLimit;
             this.UpperTimeLimit = command.UpperTimeLimit;
             this.ResetTimeOnToss = command.ResetTimeOnToss;
-            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
-            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
+            this.UserSelectionTargeted = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Random);
             this.StartedCommand = command.StartedCommand;
             this.TossPotatoCommand = command.TossPotatoCommand;
             this.PotatoExplodeCommand = command.PotatoExplodeCommand;
@@ -122,16 +122,23 @@ namespace MixItUp.Base.ViewModel.Games
             this.PotatoExplodeCommand = this.CreateBasicChatCurrencyCommand(string.Format(MixItUp.Base.Resources.GameCommandHotPotatoExplodedExample, 100, currency.Name), currency, "100");
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
-#pragma warning restore CS0612 // Type or member is obsolete
-            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
-            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
-
-            return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, this.ResetTimeOnToss, selectionType,
+            return Task.FromResult<CommandModelBase>(new HotPotatoGameCommandModel(this.Name, this.GetChatTriggers(), this.LowerTimeLimit, this.UpperTimeLimit, this.ResetTimeOnToss, this.GetSelectionType(),
                 this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            HotPotatoGameCommandModel gCommand = (HotPotatoGameCommandModel)command;
+            gCommand.LowerTimeLimit = this.LowerTimeLimit;
+            gCommand.UpperTimeLimit = this.UpperTimeLimit;
+            gCommand.ResetTimeOnToss = this.ResetTimeOnToss;
+            gCommand.PlayerSelectionType = this.GetSelectionType();
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.TossPotatoCommand = this.TossPotatoCommand;
+            gCommand.PotatoExplodeCommand = this.PotatoExplodeCommand;
         }
 
         public override async Task<Result> Validate()
@@ -153,6 +160,16 @@ namespace MixItUp.Base.ViewModel.Games
             }
 
             return new Result();
+        }
+
+        private GamePlayerSelectionType GetSelectionType()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
+#pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
+            return selectionType;
         }
     }
 }

@@ -7,7 +7,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -111,16 +111,16 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.StartReminder}" Width="125">
-                        <CommandControls:CommandButtonsControl x:Name="GiveawayStartReminderCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.StartReminder}">
+                        <CommandsControls:CommandListingButtonsControl x:Name="GiveawayStartedReminderCommand" DataContext="{Binding GiveawayStartedReminderCommand}" HorizontalAlignment="Center" EditClicked="GiveawayStartedReminderCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                     </GroupBox>
 
-                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.UserJoined}" Width="125">
-                        <CommandControls:CommandButtonsControl x:Name="GiveawayUserJoinedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.UserJoined}">
+                        <CommandsControls:CommandListingButtonsControl x:Name="GiveawayUserJoinedCommand" DataContext="{Binding GiveawayUserJoinedCommand}" HorizontalAlignment="Center" EditClicked="GiveawayUserJoinedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                     </GroupBox>
 
-                    <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.WinnerSelected}" Width="125">
-                        <CommandControls:CommandButtonsControl x:Name="GiveawayWinnerSelectedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                    <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.WinnerSelected}">
+                        <CommandsControls:CommandListingButtonsControl x:Name="GiveawayWinnerSelectedCommand" DataContext="{Binding GiveawayWinnerSelectedCommand}" HorizontalAlignment="Center" EditClicked="GiveawayWinnerSelectedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                     </GroupBox>
                 </Grid>
             </Grid>

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -49,16 +50,49 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private CurrencyModel selectedCurrency;
 
-        public int Amount
+        public IEnumerable<CurrencyRequirementTypeEnum> RequirementTypes { get { return EnumHelper.GetEnumList<CurrencyRequirementTypeEnum>(); } }
+
+        public CurrencyRequirementTypeEnum SelectedRequirementType
         {
-            get { return this.amount; }
+            get { return selectedRequirementType; }
             set
             {
-                this.amount = value;
+                this.selectedRequirementType = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("CostEnabled");
+                this.NotifyPropertyChanged("ShowOnlyMin");
+                this.NotifyPropertyChanged("ShowMinAndMax");
+            }
+        }
+        private CurrencyRequirementTypeEnum selectedRequirementType;
+
+        public bool CostEnabled { get { return this.SelectedRequirementType != CurrencyRequirementTypeEnum.NoCost; } }
+
+        public bool ShowOnlyMin { get { return !this.ShowMinAndMax; } }
+
+        public bool ShowMinAndMax { get { return this.SelectedRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum; } }
+
+        public int MinAmount
+        {
+            get { return this.minAmount; }
+            set
+            {
+                this.minAmount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int amount = 0;
+        private int minAmount = 0;
+
+        public int MaxAmount
+        {
+            get { return this.maxAmount; }
+            set
+            {
+                this.maxAmount = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int maxAmount = 0;
 
         public ICommand DeleteCommand { get; private set; }
 
@@ -67,6 +101,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         public CurrencyRequirementViewModel(CurrencyListRequirementViewModel viewModel)
         {
             this.viewModel = viewModel;
+            this.SelectedRequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
 
             this.DeleteCommand = this.CreateCommand((parameter) =>
             {
@@ -79,7 +114,9 @@ namespace MixItUp.Base.ViewModel.Requirements
             : this(viewModel)
         {
             this.SelectedCurrency = requirement.Currency;
-            this.Amount = requirement.Amount;
+            this.SelectedRequirementType = requirement.RequirementType;
+            this.MinAmount = requirement.MinAmount;
+            this.MaxAmount = requirement.MaxAmount;
         }
 
         public override Task<Result> Validate()
@@ -89,9 +126,25 @@ namespace MixItUp.Base.ViewModel.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyMustBeSelected));
             }
 
-            if (this.Amount < 0)
+            if (this.SelectedRequirementType != CurrencyRequirementTypeEnum.NoCost)
             {
-                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
+                if (this.MinAmount < 0)
+                {
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
+                }
+
+                if (this.SelectedRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    if (this.MaxAmount < 0)
+                    {
+                        return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
+                    }
+
+                    if (this.MaxAmount < this.MinAmount)
+                    {
+                        return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
+                    }
+                }
             }
 
             return Task.FromResult(new Result());
@@ -99,7 +152,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new CurrencyRequirementModel(this.SelectedCurrency, this.Amount);
+            return new CurrencyRequirementModel(this.SelectedCurrency, this.SelectedRequirementType, this.MinAmount, this.MaxAmount);
         }
     }
 }

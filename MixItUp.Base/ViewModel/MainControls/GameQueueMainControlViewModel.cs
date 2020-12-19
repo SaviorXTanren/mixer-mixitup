@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -43,6 +44,27 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ObservableCollection<QueueUser> QueueUsers { get; private set; } = new ObservableCollection<QueueUser>();
 
+        public CommandModelBase GameQueueUserJoinedCommand
+        {
+            get { return this.gameQueueUserJoinedCommand; }
+            set
+            {
+                this.gameQueueUserJoinedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase gameQueueUserJoinedCommand;
+        public CommandModelBase GameQueueUserSelectedCommand
+        {
+            get { return this.gameQueueUserSelectedCommand; }
+            set
+            {
+                this.gameQueueUserSelectedCommand = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private CommandModelBase gameQueueUserSelectedCommand;
+
         public ICommand EnableDisableCommand { get; private set; }
         public ICommand MoveUpCommand { get; private set; }
         public ICommand MoveDownCommand { get; private set; }
@@ -53,6 +75,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             : base(windowViewModel)
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
+
+            this.GameQueueUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID);
+            this.GameQueueUserSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID);
 
             this.EnableDisableCommand = this.CreateCommand(async (x) =>
             {

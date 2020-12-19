@@ -25,6 +25,13 @@ namespace MixItUp.Base.Model.Commands.Games
         public string CorrectAnswer { get { return this.Answers[0]; } }
 
         public TriviaGameQuestionModel() { }
+
+        internal TriviaGameQuestionModel(Base.Commands.TriviaGameQuestion question)
+        {
+            this.Question = question.Question;
+            this.Answers.Add(question.CorrectAnswer);
+            this.Answers.AddRange(question.WrongAnswers);
+        }
     }
 
     [DataContract]
@@ -106,6 +113,20 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CorrectAnswerCommand = correctAnswerCommand;
             this.UserSuccessCommand = userSuccessCommand;
             this.UserFailureCommand = userFailureCommand;
+        }
+
+        internal TriviaGameCommandModel(Base.Commands.TriviaGameCommand command)
+            : base(command, GameCommandTypeEnum.Trivia)
+        {
+            this.TimeLimit = command.TimeLimit;
+            this.UseRandomOnlineQuestions = command.UseRandomOnlineQuestions;
+            this.WinAmount = command.WinAmount;
+            this.CustomQuestions = new List<TriviaGameQuestionModel>(command.CustomQuestions.Select(q => new TriviaGameQuestionModel(q)));
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.CorrectAnswerCommand = new CustomCommandModel(command.CorrectAnswerCommand) { IsEmbedded = true };
+            this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
+            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
         }
 
         private TriviaGameCommandModel() { }

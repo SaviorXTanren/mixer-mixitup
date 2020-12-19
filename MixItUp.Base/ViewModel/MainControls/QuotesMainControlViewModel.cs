@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteViewModel(this.AddQuoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;
@@ -91,9 +91,9 @@ namespace MixItUp.Base.ViewModel.MainControls
         public void Refresh()
         {
             this.Quotes.Clear();
-            foreach (UserQuoteViewModel quote in ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID))
+            foreach (UserQuoteModel quote in ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID))
             {
-                this.Quotes.Add(quote);
+                this.Quotes.Add(new UserQuoteViewModel(quote));
             }
         }
 
@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this quote?"))
             {
-                ChannelSession.Settings.Quotes.Remove(quote);
+                ChannelSession.Settings.Quotes.Remove(quote.Model);
                 this.Refresh();
             }
         }

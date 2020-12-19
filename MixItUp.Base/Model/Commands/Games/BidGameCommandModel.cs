@@ -51,6 +51,18 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
+        internal BidGameCommandModel(Base.Commands.BidGameCommand command)
+            : base(command, GameCommandTypeEnum.Bid)
+        {
+            this.StarterRole = command.GameStarterRequirement.MixerRole;
+            this.InitialAmount = 0;
+            this.TimeLimit = command.TimeLimit;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.NewTopBidderCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
+            this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
+            this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
+        }
+
         private BidGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()
@@ -121,7 +133,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, this.GameCurrencyRequirement.Currency.Name));
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, this.CurrencyRequirement.Currency.Name));
                 await this.Requirements.Refund(parameters);
             }
         }

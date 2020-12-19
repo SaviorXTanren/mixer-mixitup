@@ -44,6 +44,8 @@ namespace MixItUp.Base.Model.Actions
             this.WaitForFinish = action.WaitForFinish;
         }
 
+        private ExternalProgramActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<string> output = new List<string>();

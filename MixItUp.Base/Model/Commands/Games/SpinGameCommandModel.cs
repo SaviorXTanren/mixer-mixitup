@@ -17,6 +17,18 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Outcomes = new List<GameOutcomeModel>(outcomes);
         }
 
+        internal SpinGameCommandModel(Base.Commands.SpinGameCommand command)
+            : base(command, GameCommandTypeEnum.Spin)
+        {
+            this.Outcomes = new List<GameOutcomeModel>(command.Outcomes.Select(o => new GameOutcomeModel(o)));
+        }
+
+        internal SpinGameCommandModel(Base.Commands.VendingMachineGameCommand command)
+            : base(command, GameCommandTypeEnum.Spin)
+        {
+            this.Outcomes = new List<GameOutcomeModel>(command.Outcomes.Select(o => new GameOutcomeModel(o)));
+        }
+
         private SpinGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands() { return this.Outcomes.Select(o => o.Command); }

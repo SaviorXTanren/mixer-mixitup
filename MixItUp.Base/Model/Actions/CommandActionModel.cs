@@ -67,6 +67,8 @@ namespace MixItUp.Base.Model.Actions
             this.CommandGroupName = action.GroupName;
         }
 
+        private CommandActionModel() { }
+
         public CommandModelBase Command
         {
             get
@@ -109,7 +111,6 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CommandParametersModel copyParameters = parameters.Duplicate();
-                    copyParameters.WaitForCommandToFinish = true;
                     copyParameters.DontLockCommand = true;
                     await command.Perform(copyParameters);
                 }

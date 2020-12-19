@@ -4306,4 +4306,28 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="GameCommandVolcanoStatus" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="CommandMustHaveAtLeast1Action" xml:space="preserve">
+    <value>At least 1 action must be added to the command</value>
+  </data>
+  <data name="GameQueueUserJoinedExample" xml:space="preserve">
+    <value>You are #$queueposition in the queue to play.</value>
+  </data>
+  <data name="GameQueueUserSelectedExample" xml:space="preserve">
+    <value>It's time to play @$username! Listen carefully for instructions on how to join...</value>
+  </data>
+  <data name="GiveawayStartedReminderExample" xml:space="preserve">
+    <value>A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!</value>
+  </data>
+  <data name="GiveawayWinnerSelectedExample" xml:space="preserve">
+    <value>Congratulations @$username, you won $giveawayitem!</value>
+  </data>
+  <data name="ModerationStrikeExample" xml:space="preserve">
+    <value>$moderationreason. You have received a moderation strike &amp; currently have $usermoderationstrikes strike(s)</value>
+  </data>
+  <data name="RedemptionStoreDefaultRedemptionExample" xml:space="preserve">
+    <value>@$username just redeemed $productname</value>
+  </data>
+  <data name="RedemptionStoreManualRedeemNeededExample" xml:space="preserve">
+    <value>@$username just purchased $productname and needs to be manually redeemed</value>
+  </data>
 </root>

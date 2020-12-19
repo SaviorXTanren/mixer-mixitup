@@ -1753,6 +1753,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least 1 action must be added to the command.
+        /// </summary>
+        public static string CommandMustHaveAtLeast1Action {
+            get {
+                return ResourceManager.GetString("CommandMustHaveAtLeast1Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command (No &apos;!&apos; needed).
         /// </summary>
         public static string CommandNoBang {
@@ -5643,11 +5652,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are #$queueposition in the queue to play..
+        /// </summary>
+        public static string GameQueueUserJoinedExample {
+            get {
+                return ResourceManager.GetString("GameQueueUserJoinedExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game Queue Used Selected.
         /// </summary>
         public static string GameQueueUserSelectedCommandName {
             get {
                 return ResourceManager.GetString("GameQueueUserSelectedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s time to play @$username! Listen carefully for instructions on how to join....
+        /// </summary>
+        public static string GameQueueUserSelectedExample {
+            get {
+                return ResourceManager.GetString("GameQueueUserSelectedExample", resourceCulture);
             }
         }
         
@@ -5742,6 +5769,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!.
+        /// </summary>
+        public static string GiveawayStartedReminderExample {
+            get {
+                return ResourceManager.GetString("GiveawayStartedReminderExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Giveaway User Joined.
         /// </summary>
         public static string GiveawayUserJoinedCommandName {
@@ -5756,6 +5792,15 @@ namespace MixItUp.Base {
         public static string GiveawayWinnerSelectedCommandName {
             get {
                 return ResourceManager.GetString("GiveawayWinnerSelectedCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Congratulations @$username, you won $giveawayitem!.
+        /// </summary>
+        public static string GiveawayWinnerSelectedExample {
+            get {
+                return ResourceManager.GetString("GiveawayWinnerSelectedExample", resourceCulture);
             }
         }
         
@@ -7443,6 +7488,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $moderationreason. You have received a moderation strike &amp; currently have $usermoderationstrikes strike(s).
+        /// </summary>
+        public static string ModerationStrikeExample {
+            get {
+                return ResourceManager.GetString("ModerationStrikeExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moderator.
         /// </summary>
         public static string Moderator {
@@ -8856,11 +8910,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @$username just redeemed $productname.
+        /// </summary>
+        public static string RedemptionStoreDefaultRedemptionExample {
+            get {
+                return ResourceManager.GetString("RedemptionStoreDefaultRedemptionExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Redemption Store Manual Redeem Needed.
         /// </summary>
         public static string RedemptionStoreManualRedeemNeededCommandName {
             get {
                 return ResourceManager.GetString("RedemptionStoreManualRedeemNeededCommandName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username just purchased $productname and needs to be manually redeemed.
+        /// </summary>
+        public static string RedemptionStoreManualRedeemNeededExample {
+            get {
+                return ResourceManager.GetString("RedemptionStoreManualRedeemNeededExample", resourceCulture);
             }
         }
         

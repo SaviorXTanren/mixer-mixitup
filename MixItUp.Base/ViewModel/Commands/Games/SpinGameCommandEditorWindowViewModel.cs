@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,9 +26,16 @@ namespace MixItUp.Base.ViewModel.Games
             this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 50, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSpinLoseExample)));
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new SpinGameCommandModel(this.Name, this.GetChatTriggers(), this.Outcomes.Select(o => o.GetModel())));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            SpinGameCommandModel gCommand = (SpinGameCommandModel)command;
+            gCommand.Outcomes = new List<GameOutcomeModel>(this.Outcomes.Select(o => o.GetModel()));
         }
 
         public override async Task<Result> Validate()

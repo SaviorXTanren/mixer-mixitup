@@ -47,6 +47,10 @@ namespace MixItUp.WPF.Windows.Commands
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
                     this.viewModel = new CustomCommandEditorWindowViewModel((CustomCommandModel)existingCommand);
                     break;
+                case CommandTypeEnum.UserOnlyChat:
+                    this.editorDetailsControl = new ChatCommandEditorDetailsControl();
+                    this.viewModel = new UserOnlyChatCommandEditorWindowViewModel((UserOnlyChatCommandModel)existingCommand);
+                    break;
             }
             this.DataContext = this.ViewModel = this.viewModel;
 
@@ -78,6 +82,22 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
                     this.viewModel = (!string.IsNullOrEmpty(name)) ? new CustomCommandEditorWindowViewModel(name) : new CustomCommandEditorWindowViewModel();
+                    break;
+            }
+            this.DataContext = this.ViewModel = this.viewModel;
+
+            this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+        }
+
+        public CommandEditorWindow(CommandTypeEnum commandType, Guid id)
+            : this()
+        {
+            switch (commandType)
+            {
+                case CommandTypeEnum.UserOnlyChat:
+                    this.editorDetailsControl = new ChatCommandEditorDetailsControl();
+                    this.viewModel = new UserOnlyChatCommandEditorWindowViewModel(id);
                     break;
             }
             this.DataContext = this.ViewModel = this.viewModel;

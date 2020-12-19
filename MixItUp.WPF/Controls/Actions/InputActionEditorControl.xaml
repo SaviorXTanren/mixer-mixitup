@@ -45,14 +45,14 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Column="2" ItemsSource="{Binding KeyboardKeys}" SelectedItem="{Binding SelectedKeyboardKey}" Visibility="{Binding ShowKeyboard}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KeyboardKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <ComboBox Grid.Column="2" ItemsSource="{Binding KeyboardKeys}" SelectedItem="{Binding SelectedKeyboardKey}" Visibility="{Binding ShowKeyboard, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KeyboardKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ComboBox Grid.Column="2" ItemsSource="{Binding MouseButtons}" SelectedItem="{Binding SelectedMouseButton}" Visibility="{Binding ShowMouse}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MouseButton}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+        <ComboBox Grid.Column="2" ItemsSource="{Binding MouseButtons}" SelectedItem="{Binding SelectedMouseButton}" Visibility="{Binding ShowMouse, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MouseButton}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

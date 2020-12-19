@@ -141,10 +141,25 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new HangmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MaxFailures, this.InitialAmount, this.CustomWordsFilePath,
                 this.SuccessfulGuessCommand, this.FailedGuessCommand, this.GameWonCommand, this.GameLostCommand, this.StatusArgument, this.StatusCommand));
+        }
+
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            HangmanGameCommandModel gCommand = (HangmanGameCommandModel)command;
+            gCommand.MaxFailures = this.MaxFailures;
+            gCommand.InitialAmount = this.InitialAmount;
+            gCommand.SuccessfulGuessCommand = this.SuccessfulGuessCommand;
+            gCommand.FailedGuessCommand = this.FailedGuessCommand;
+            gCommand.GameWonCommand = this.GameWonCommand;
+            gCommand.GameLostCommand = this.GameLostCommand;
+            gCommand.StatusArgument = this.StatusArgument;
+            gCommand.StatusCommand = this.StatusCommand;
         }
 
         public override async Task<Result> Validate()

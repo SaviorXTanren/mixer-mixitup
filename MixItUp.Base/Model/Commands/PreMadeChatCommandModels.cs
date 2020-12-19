@@ -51,9 +51,10 @@ namespace MixItUp.Base.Model.Commands
         public PreMadeChatCommandModelBase(string name, HashSet<string> triggers, int cooldown, UserRoleEnum role)
             : base(name, CommandTypeEnum.PreMade, triggers, includeExclamation: true, wildcards: false)
         {
-            this.Requirements.Requirements.Add(new RoleRequirementModel(role));
-            this.Requirements.Requirements.Add(new CooldownRequirementModel(CooldownTypeEnum.Standard, cooldown));
-            this.Requirements.Requirements.Add(new SettingsRequirementModel());
+            this.Requirements.AddBasicRequirements();
+            this.Requirements.Role.Role = role;
+            this.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
+            this.Requirements.Cooldown.IndividualAmount = cooldown;
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettingsModel settings)
@@ -90,15 +91,19 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
             {
-                if (await command.Requirements.Role.Validate(parameters))
+                if (command.IsEnabled)
                 {
-                    if (command.IncludeExclamation)
+                    RoleRequirementModel role = command.Requirements.Role;
+                    if (role == null || await role.Validate(parameters))
                     {
-                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
-                    }
-                    else
-                    {
-                        commandTriggers.AddRange(command.Triggers);
+                        if (command.IncludeExclamation)
+                        {
+                            commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                        }
+                        else
+                        {
+                            commandTriggers.AddRange(command.Triggers);
+                        }
                     }
                 }
             }
@@ -124,9 +129,13 @@ namespace MixItUp.Base.Model.Commands
             List<string> commandTriggers = new List<string>();
             foreach (GameCommandModelBase command in ChannelSession.GameCommands)
             {
-                if (command.IsEnabled && await command.Requirements.Role.Validate(parameters))
+                if (command.IsEnabled)
                 {
-                    commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                    RoleRequirementModel role = command.Requirements.Role;
+                    if (role == null || await role.Validate(parameters))
+                    {
+                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                    }
                 }
             }
 
@@ -260,7 +269,7 @@ namespace MixItUp.Base.Model.Commands
                 if (ChannelSession.Settings.Quotes.Count > 0)
                 {
                     int quoteNumber = 0;
-                    UserQuoteViewModel quote = null;
+                    UserQuoteModel quote = null;
 
                     if (parameters.Arguments.Count() == 1)
                     {
@@ -314,7 +323,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (ChannelSession.Settings.Quotes.Count > 0)
                 {
-                    UserQuoteViewModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
+                    UserQuoteModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                     if (quote != null)
                     {
                         await ChannelSession.Services.Chat.SendMessage(quote.ToString());
@@ -349,7 +358,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -726,6 +735,7 @@ namespace MixItUp.Base.Model.Commands
                 commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
 
                 ChatCommandModel newCommand = new ChatCommandModel(commandTrigger, new HashSet<string>() { commandTrigger }, includeExclamation: true, wildcards: false);
+                newCommand.Requirements.AddBasicRequirements();
                 newCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 newCommand.Requirements.Cooldown.IndividualAmount = cooldown;
                 newCommand.Actions.Add(new ChatActionModel(commandText));

@@ -44,33 +44,34 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private StreamingSoftwareActionTypeEnum selectedActionType;
 
-        public bool OBSStudioNotEnabled { get { return !ChannelSession.Services.OBSStudio.IsConnected; } }
+        public bool OBSStudioNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.OBSStudio && !ChannelSession.Services.OBSStudio.IsConnected; } }
 
-        public bool XSplitNotEnabled { get { return !ChannelSession.Services.XSplit.IsConnected; } }
+        public bool XSplitNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.XSplit && !ChannelSession.Services.XSplit.IsConnected; } }
 
-        public bool StreamlabsOBSNotEnabled { get { return !ChannelSession.Services.StreamlabsOBS.IsConnected; } }
+        public bool StreamlabsOBSNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.StreamlabsOBS && !ChannelSession.Services.StreamlabsOBS.IsConnected; } }
 
         public bool ShowNotSupported
         {
             get
             {
+                StreamingSoftwareTypeEnum streamingSoftware = this.GetCurrentlySelectedStreamingSoftwareType();
                 if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
                 {
-                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
                     {
                         return true;
                     }
                 }
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SceneCollection)
                 {
-                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit || this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
                     {
                         return true;
                     }
                 }
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceDimensions)
                 {
-                    if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.XSplit)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
                     {
                         return true;
                     }
@@ -361,6 +362,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             }
             return Task.FromResult<ActionModelBase>(null);
+        }
+
+        private StreamingSoftwareTypeEnum GetCurrentlySelectedStreamingSoftwareType()
+        {
+            if (this.SelectedStreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting)
+            {
+                return ChannelSession.Settings.DefaultStreamingSoftware;
+            }
+            return this.SelectedStreamingSoftwareType;
         }
     }
 }

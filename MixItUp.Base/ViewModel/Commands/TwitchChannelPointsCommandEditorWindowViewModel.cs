@@ -6,11 +6,9 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand)
-            : base(existingCommand)
-        { }
+        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand) : base(existingCommand) { }
 
-        public TwitchChannelPointsCommandEditorWindowViewModel() : base() { }
+        public TwitchChannelPointsCommandEditorWindowViewModel() : base(CommandTypeEnum.TwitchChannelPoints) { }
 
         public override Task<Result> Validate()
         {
@@ -21,13 +19,12 @@ namespace MixItUp.Base.ViewModel.Commands
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> GetCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
-            TwitchChannelPointsCommandModel c = (TwitchChannelPointsCommandModel)command;
-            ChannelSession.TwitchChannelPointsCommands.Remove(c);
-            ChannelSession.TwitchChannelPointsCommands.Add(c);
+            ChannelSession.TwitchChannelPointsCommands.Remove((TwitchChannelPointsCommandModel)this.existingCommand);
+            ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command);
             return Task.FromResult(0);
         }
     }

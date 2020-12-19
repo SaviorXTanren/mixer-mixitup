@@ -89,8 +89,8 @@ namespace MixItUp.Base.ViewModel.Games
             : base(command)
         {
             this.TimeLimit = command.TimeLimit;
-            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
-            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
+            this.UserSelectionTargeted = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Random);
             this.StartedCommand = command.StartedCommand;
             this.NotAcceptedCommand = command.NotAcceptedCommand;
             this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
@@ -109,15 +109,21 @@ namespace MixItUp.Base.ViewModel.Games
             this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelFailureExample);
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
-#pragma warning restore CS0612 // Type or member is obsolete
-            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
-            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
+            return Task.FromResult<CommandModelBase>(new DuelGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, this.GetSelectionType(), this.StartedCommand, this.NotAcceptedCommand, this.SuccessfulOutcome.GetModel(), this.FailedCommand));
+        }
 
-            return Task.FromResult<CommandModelBase>(new DuelGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, selectionType, this.StartedCommand, this.NotAcceptedCommand, this.SuccessfulOutcome.GetModel(), this.FailedCommand));
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            DuelGameCommandModel gCommand = (DuelGameCommandModel)command;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.PlayerSelectionType = this.GetSelectionType();
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.NotAcceptedCommand = this.NotAcceptedCommand;
+            gCommand.SuccessfulOutcome = this.SuccessfulOutcome.GetModel();
+            gCommand.FailedCommand = this.FailedCommand;
         }
 
         public override async Task<Result> Validate()
@@ -147,6 +153,16 @@ namespace MixItUp.Base.ViewModel.Games
             }
 
             return new Result();
+        }
+
+        private GamePlayerSelectionType GetSelectionType()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
+#pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
+            return selectionType;
         }
     }
 }

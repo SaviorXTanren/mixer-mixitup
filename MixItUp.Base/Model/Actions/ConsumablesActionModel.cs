@@ -97,6 +97,8 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = action.DeductFromUser;
         }
 
+        private ConsumablesActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             CurrencyModel currency = null;

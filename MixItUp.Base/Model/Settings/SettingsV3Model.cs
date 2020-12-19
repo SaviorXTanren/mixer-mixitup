@@ -9,9 +9,8 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Dashboard;
+using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -65,7 +64,7 @@ namespace MixItUp.Base.Model.Settings
         #region Authentication
 
         [DataMember]
-        public Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel> PlatformAuthentications { get; set; } = new Dictionary<StreamingPlatformTypeEnum, PlatformAuthenticationSettingsModel>();
+        public Dictionary<StreamingPlatformTypeEnum, StreamingPlatformAuthenticationSettingsModel> StreamingPlatformAuthentications { get; set; } = new Dictionary<StreamingPlatformTypeEnum, StreamingPlatformAuthenticationSettingsModel>();
 
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
@@ -263,13 +262,6 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Guid GameQueueUserSelectedCommandID { get; set; }
 
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GameQueueUserJoinedCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GameQueueUserSelectedCommand { get; set; }
-
         #endregion Game Queue
 
         #region Quotes
@@ -315,16 +307,6 @@ namespace MixItUp.Base.Model.Settings
         public Guid GiveawayUserJoinedCommandID { get; set; }
         [DataMember]
         public Guid GiveawayWinnerSelectedCommandID { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayStartedReminderCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayUserJoinedCommand { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         #endregion Giveaway
 
@@ -380,16 +362,6 @@ namespace MixItUp.Base.Model.Settings
         public Guid ModerationStrike2CommandID { get; set; }
         [DataMember]
         public Guid ModerationStrike3CommandID { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike1Command { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike2Command { get; set; }
-        [Obsolete]
-        [DataMember]
-        public Base.Commands.CustomCommand ModerationStrike3Command { get; set; }
 
         #endregion Moderation
 
@@ -539,7 +511,7 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseDictionary<Guid, CommandModelBase> Commands { get; set; } = new DatabaseDictionary<Guid, CommandModelBase>();
 
         [JsonIgnore]
-        public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
+        public DatabaseList<UserQuoteModel> Quotes { get; set; } = new DatabaseList<UserQuoteModel>();
 
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
@@ -608,7 +580,7 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
                     DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
-                    this.Quotes.Add(new UserQuoteViewModel(new UserQuoteModel(Convert.ToInt32(data["ID"]), (string)data["Quote"], dateTime, (string)data["GameName"])));
+                    this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), (string)data["Quote"], dateTime, (string)data["GameName"]));
                 });
                 this.Quotes.ClearTracking();
 
@@ -644,7 +616,11 @@ namespace MixItUp.Base.Model.Settings
                     {
                         command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>((string)data["Data"]);
                     }
-                    
+                    else if (type == CommandTypeEnum.UserOnlyChat)
+                    {
+                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>((string)data["Data"]);
+                    }
+
                     if (command != null)
                     {
                         this.Commands[command.ID] = command;
@@ -659,11 +635,15 @@ namespace MixItUp.Base.Model.Settings
                 ChannelSession.TwitchChannelPointsCommands.Clear();
                 foreach (CommandModelBase command in this.Commands.Values.ToList())
                 {
-                    if (command is ChatCommandModel) { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                    if (command is ChatCommandModel)
+                    {
+                        if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
+                        else if (command is UserOnlyChatCommandModel) { }
+                        else { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                    }
                     else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
                     else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
                     else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
-                    else if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
                     else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
                 }
 
@@ -729,11 +709,11 @@ namespace MixItUp.Base.Model.Settings
 
             if (ChannelSession.TwitchUserConnection != null)
             {
-                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
             }
             if (ChannelSession.TwitchBotConnection != null)
             {
-                this.PlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)
@@ -901,6 +881,8 @@ namespace MixItUp.Base.Model.Settings
 
         public CommandModelBase GetCommand(Guid id) { return this.Commands.ContainsKey(id) ? this.Commands[id] : null; }
 
+        public T GetCommand<T>(Guid id) where T : CommandModelBase { return (T)this.GetCommand(id); }
+
         public void SetCommand(CommandModelBase command) { if (command != null) { this.Commands[command.ID] = command; } }
 
         public void RemoveCommand(CommandModelBase command) { if (command != null) { this.Commands.Remove(command.ID); } }
@@ -911,9 +893,9 @@ namespace MixItUp.Base.Model.Settings
         {
             foreach (StreamingPlatformTypeEnum platform in EnumHelper.GetEnumList<StreamingPlatformTypeEnum>())
             {
-                if (!this.PlatformAuthentications.ContainsKey(platform))
+                if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
                 {
-                    this.PlatformAuthentications[platform] = new PlatformAuthenticationSettingsModel(platform);
+                    this.StreamingPlatformAuthentications[platform] = new StreamingPlatformAuthenticationSettingsModel(platform);
                 }
             }
 
@@ -928,69 +910,64 @@ namespace MixItUp.Base.Model.Settings
 
             if (this.GetCommand(this.GameQueueUserJoinedCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, "You are #$queueposition in the queue to play.");
-                this.GameQueueUserJoinedCommandID = command.ID;
-                this.SetCommand(command);
+                this.GameQueueUserJoinedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserJoinedCommandName, MixItUp.Base.Resources.GameQueueUserJoinedExample);
             }
             if (this.GetCommand(this.GameQueueUserSelectedCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, "It's time to play @$username! Listen carefully for instructions on how to join...");
-                this.GameQueueUserSelectedCommandID = command.ID;
-                this.SetCommand(command);
+                this.GameQueueUserSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameQueueUserSelectedCommandName, MixItUp.Base.Resources.GameQueueUserSelectedExample);
             }
 
             if (this.GetCommand(this.GiveawayStartedReminderCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayStartedReminderCommandName, "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
-                this.GiveawayStartedReminderCommandID = command.ID;
-                this.SetCommand(command);
+                this.GiveawayStartedReminderCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayStartedReminderCommandName, MixItUp.Base.Resources.GiveawayStartedReminderExample);
             }
             if (this.GetCommand(this.GiveawayUserJoinedCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayUserJoinedCommandName);
-                this.GiveawayUserJoinedCommandID = command.ID;
-                this.SetCommand(command);
+                this.GiveawayUserJoinedCommandID = this.CreateBasicCommand(MixItUp.Base.Resources.GiveawayUserJoinedCommandName);
             }
             if (this.GetCommand(this.GiveawayWinnerSelectedCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.GiveawayWinnerSelectedCommandName, "Congratulations @$username, you won $giveawayitem!");
-                this.GiveawayWinnerSelectedCommandID = command.ID;
-                this.SetCommand(command);
+                this.GiveawayWinnerSelectedCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.GiveawayWinnerSelectedCommandName, MixItUp.Base.Resources.GiveawayWinnerSelectedExample);
             }
 
             if (this.GetCommand(this.ModerationStrike1CommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike1CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
-                this.ModerationStrike1CommandID = command.ID;
-                this.SetCommand(command);
+                this.ModerationStrike1CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike1CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
             if (this.GetCommand(this.ModerationStrike2CommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike2CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
-                this.ModerationStrike2CommandID = command.ID;
-                this.SetCommand(command);
+                this.ModerationStrike2CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike2CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
             if (this.GetCommand(this.ModerationStrike3CommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.ModerationStrike3CommandName, "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)");
-                this.ModerationStrike3CommandID = command.ID;
-                this.SetCommand(command);
+                this.ModerationStrike3CommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.ModerationStrike3CommandName, MixItUp.Base.Resources.ModerationStrikeExample);
             }
 
             if (this.GetCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
-                this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
-                this.SetCommand(command);
+                this.RedemptionStoreManualRedeemNeededCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededExample);
             }
             if (this.GetCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
-                CustomCommandModel command = new CustomCommandModel(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, "@$username just redeemed $productname");
-                this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
-                this.SetCommand(command);
+                this.RedemptionStoreDefaultRedemptionCommandID = this.CreateBasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionExample);
             }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
+
+        private Guid CreateBasicCommand(string name)
+        {
+            CustomCommandModel command = new CustomCommandModel(name);
+            this.SetCommand(command);
+            return command.ID;
+        }
+
+        private Guid CreateBasicChatCommand(string name, string chatText)
+        {
+            CustomCommandModel command = new CustomCommandModel(name);
+            command.Actions.Add(new ChatActionModel(chatText));
+            this.SetCommand(command);
+            return command.ID;
+        }
     }
 }

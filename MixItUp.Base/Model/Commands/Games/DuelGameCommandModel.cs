@@ -14,7 +14,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [DataMember]
         public int TimeLimit { get; set; }
         [DataMember]
-        public GamePlayerSelectionType SelectionType { get; set; }
+        public GamePlayerSelectionType PlayerSelectionType { get; set; }
 
         [DataMember]
         public CustomCommandModel StartedCommand { get; set; }
@@ -35,16 +35,27 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CancellationTokenSource runCancellationTokenSource;
 
-        public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType selectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
+        public DuelGameCommandModel(string name, HashSet<string> triggers, int timeLimit, GamePlayerSelectionType playerSelectionType, CustomCommandModel startedCommand, CustomCommandModel notAcceptedCommand,
             GameOutcomeModel successfulOutcome, CustomCommandModel failedCommand)
             : base(name, triggers, GameCommandTypeEnum.Duel)
         {
             this.TimeLimit = timeLimit;
-            this.SelectionType = selectionType;
+            this.PlayerSelectionType = playerSelectionType;
             this.StartedCommand = startedCommand;
             this.NotAcceptedCommand = notAcceptedCommand;
             this.SuccessfulOutcome = successfulOutcome;
             this.FailedCommand = failedCommand;
+        }
+
+        internal DuelGameCommandModel(Base.Commands.DuelGameCommand command)
+            : base(command, GameCommandTypeEnum.Duel)
+        {
+            this.TimeLimit = command.TimeLimit;
+            this.PlayerSelectionType = GamePlayerSelectionType.Targeted;
+            this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
+            this.NotAcceptedCommand = new CustomCommandModel(command.NotAcceptedCommand) { IsEmbedded = true };
+            this.SuccessfulOutcome = new GameOutcomeModel(command.SuccessfulOutcome);
+            this.FailedCommand = new CustomCommandModel(command.FailedOutcome.Command) { IsEmbedded = true };
         }
 
         private DuelGameCommandModel() { }
@@ -66,10 +77,10 @@ namespace MixItUp.Base.Model.Commands.Games
                 int betAmount = this.GetBetAmount(parameters);
                 if (betAmount > 0)
                 {
-                    await this.SetSelectedUser(this.SelectionType, parameters);
+                    await this.SetSelectedUser(this.PlayerSelectionType, parameters);
                     if (parameters.TargetUser != null)
                     {
-                        if (this.GameCurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                        if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                         {
                             this.runParameters = parameters;
                             this.runBetAmount = betAmount;
@@ -119,14 +130,14 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.runBetAmount.ToString();
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
-                        this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
                         await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
-                        this.GameCurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
-                        this.GameCurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
+                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
                         await this.FailedCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);

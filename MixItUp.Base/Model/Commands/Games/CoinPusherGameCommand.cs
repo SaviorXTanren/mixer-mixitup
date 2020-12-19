@@ -44,6 +44,19 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusCommand = statusCommand;
         }
 
+        internal CoinPusherGameCommandModel(Base.Commands.CoinPusherGameCommand command)
+            : base(command, GameCommandTypeEnum.CoinPusher)
+        {
+            this.MinimumAmountForPayout = command.MinimumAmountForPayout;
+            this.ProbabilityPercentage = command.PayoutProbability;
+            this.PayoutMinimumPercentage = command.PayoutPercentageMinimum;
+            this.PayoutMaximumPercentage = command.PayoutPercentageMaximum;
+            this.SuccessCommand = new CustomCommandModel(command.PayoutCommand) { IsEmbedded = true };
+            this.FailureCommand = new CustomCommandModel(command.NoPayoutCommand) { IsEmbedded = true };
+            this.StatusArgument = command.StatusArgument;
+            this.StatusCommand = new CustomCommandModel(command.StatusArgument) { IsEmbedded = true };
+        }
+
         private CoinPusherGameCommandModel() { }
 
         public override IEnumerable<CommandModelBase> GetInnerCommands()

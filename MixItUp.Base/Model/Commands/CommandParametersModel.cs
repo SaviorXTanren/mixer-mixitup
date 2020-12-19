@@ -28,6 +28,11 @@ namespace MixItUp.Base.Model.Commands
             return user;
         }
 
+        public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
+        {
+            return new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers);
+        }
+
         [DataMember]
         public UserViewModel User { get; set; } = ChannelSession.GetCurrentUser();
         [DataMember]
@@ -41,17 +46,21 @@ namespace MixItUp.Base.Model.Commands
         public UserViewModel TargetUser { get; set; }
 
         [DataMember]
-        public bool WaitForCommandToFinish { get; set; } = false;
+        public bool WaitForCommandToFinish { get; set; }
         [DataMember]
-        public bool DontLockCommand { get; set; } = false;
+        public bool DontLockCommand { get; set; }
 
         public CommandParametersModel() : this(ChannelSession.GetCurrentUser()) { }
 
         public CommandParametersModel(UserViewModel user) : this(user, StreamingPlatformTypeEnum.None) { }
 
+        public CommandParametersModel(Dictionary<string, string> specialIdentifiers) : this(ChannelSession.GetCurrentUser(), specialIdentifiers) { }
+
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform) : this(user, platform, null) { }
 
         public CommandParametersModel(UserViewModel user, IEnumerable<string> arguments) : this(user, StreamingPlatformTypeEnum.None, arguments, null) { }
+
+        public CommandParametersModel(UserViewModel user, Dictionary<string, string> specialIdentifiers) : this(user, null, specialIdentifiers) { }
 
         public CommandParametersModel(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments) : this(user, platform, arguments, null) { }
 
@@ -90,6 +99,8 @@ namespace MixItUp.Base.Model.Commands
         {
             CommandParametersModel result = new CommandParametersModel(this.User, this.Platform, this.Arguments, this.SpecialIdentifiers);
             result.TargetUser = this.TargetUser;
+            result.WaitForCommandToFinish = this.WaitForCommandToFinish;
+            result.DontLockCommand = this.DontLockCommand;
             return result;
         }
 

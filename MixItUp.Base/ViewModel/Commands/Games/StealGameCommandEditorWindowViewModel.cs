@@ -55,8 +55,8 @@ namespace MixItUp.Base.ViewModel.Games
         public StealGameCommandEditorWindowViewModel(StealGameCommandModel command)
             : base(command)
         {
-            this.UserSelectionTargeted = command.SelectionType.HasFlag(GamePlayerSelectionType.Targeted);
-            this.UserSelectionRandom = command.SelectionType.HasFlag(GamePlayerSelectionType.Random);
+            this.UserSelectionTargeted = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Targeted);
+            this.UserSelectionRandom = command.PlayerSelectionType.HasFlag(GamePlayerSelectionType.Random);
             this.SuccessfulOutcome = new GameOutcomeViewModel(command.SuccessfulOutcome);
             this.FailedCommand = command.FailedCommand;
         }
@@ -70,15 +70,18 @@ namespace MixItUp.Base.ViewModel.Games
             this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandStealLoseExample);
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
-#pragma warning restore CS0612 // Type or member is obsolete
-            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
-            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
+            return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), this.GetSelectionType(), this.SuccessfulOutcome.GetModel(), this.FailedCommand));
+        }
 
-            return Task.FromResult<CommandModelBase>(new StealGameCommandModel(this.Name, this.GetChatTriggers(), selectionType, this.SuccessfulOutcome.GetModel(), this.FailedCommand));
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            StealGameCommandModel gCommand = (StealGameCommandModel)command;
+            gCommand.PlayerSelectionType = this.GetSelectionType();
+            gCommand.SuccessfulOutcome = this.SuccessfulOutcome.GetModel();
+            gCommand.FailedCommand = this.FailedCommand;
         }
 
         public override async Task<Result> Validate()
@@ -103,6 +106,16 @@ namespace MixItUp.Base.ViewModel.Games
             }
 
             return new Result();
+        }
+
+        private GamePlayerSelectionType GetSelectionType()
+        {
+#pragma warning disable CS0612 // Type or member is obsolete
+            GamePlayerSelectionType selectionType = GamePlayerSelectionType.None;
+#pragma warning restore CS0612 // Type or member is obsolete
+            if (this.UserSelectionTargeted) { selectionType |= GamePlayerSelectionType.Targeted; }
+            if (this.UserSelectionRandom) { selectionType |= GamePlayerSelectionType.Random; }
+            return selectionType;
         }
     }
 }

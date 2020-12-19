@@ -22,6 +22,8 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = action.Amount;
         }
 
+        private WaitActionModel() { }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);

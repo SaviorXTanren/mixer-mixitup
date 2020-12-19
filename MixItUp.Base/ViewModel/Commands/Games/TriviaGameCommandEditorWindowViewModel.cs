@@ -236,10 +236,24 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
-        public override Task<CommandModelBase> GetCommand()
+        public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new TriviaGameCommandModel(this.Name, this.GetChatTriggers(), this.TimeLimit, this.UseRandomOnlineQuestions, this.WinAmount, this.CustomQuestions.Select(o => o.GetModel()),
                 this.StartedCommand, this.UserJoinCommand, this.CorrectAnswerCommand, this.UserSuccessCommand, this.UserFailureCommand));
+        }
+
+        public override async Task UpdateExistingCommand(CommandModelBase command)
+        {
+            await base.UpdateExistingCommand(command);
+            TriviaGameCommandModel gCommand = (TriviaGameCommandModel)command;
+            gCommand.WinAmount = this.WinAmount;
+            gCommand.TimeLimit = this.TimeLimit;
+            gCommand.UseRandomOnlineQuestions = this.UseRandomOnlineQuestions;
+            gCommand.StartedCommand = this.StartedCommand;
+            gCommand.UserJoinCommand = this.UserJoinCommand;
+            gCommand.CorrectAnswerCommand = this.CorrectAnswerCommand;
+            gCommand.UserSuccessCommand = this.UserSuccessCommand;
+            gCommand.UserFailureCommand = this.UserFailureCommand;
         }
 
         public override async Task<Result> Validate()

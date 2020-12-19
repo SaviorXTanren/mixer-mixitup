@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,13 +13,7 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public List<RequirementModelBase> Requirements { get; set; } = new List<RequirementModelBase>();
 
-        public RequirementsSetModel()
-        {
-            this.Requirements.Add(new RoleRequirementModel());
-            this.Requirements.Add(new CooldownRequirementModel());
-            this.Requirements.Add(new ThresholdRequirementModel());
-            this.Requirements.Add(new SettingsRequirementModel());
-        }
+        public RequirementsSetModel() { }
 
         public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
 
@@ -28,21 +23,13 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.Requirements.Add(new RoleRequirementModel(requirements.Role));
             }
-            else
-            {
-                this.Requirements.Add(new RoleRequirementModel());
-            }
 
             if (requirements.Cooldown != null)
             {
                 this.Requirements.Add(new CooldownRequirementModel(requirements.Cooldown));
             }
-            else
-            {
-                this.Requirements.Add(new CooldownRequirementModel());
-            }
 
-            if (requirements.Currency != null && requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
+            if (requirements.Currency != null)
             {
                 this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
             }
@@ -61,10 +48,6 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.Requirements.Add(new ThresholdRequirementModel(requirements.Threshold));
             }
-            else
-            {
-                this.Requirements.Add(new ThresholdRequirementModel());
-            }
 
             if (requirements.Settings != null)
             {
@@ -75,19 +58,13 @@ namespace MixItUp.Base.Model.Requirements
                     role.PatreonBenefitID = requirements.Settings.PatreonBenefitIDRequirement;
                 }
             }
-            else
-            {
-                this.Requirements.Add(new SettingsRequirementModel());
-            }
         }
 
         public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
 
         public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
-        public GameCurrencyRequirementModel GameCurrency { get { return (GameCurrencyRequirementModel)this.Requirements.FirstOrDefault(r => r is GameCurrencyRequirementModel); } }
-
-        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel && !(r is GameCurrencyRequirementModel)).Select(r => (CurrencyRequirementModel)r); } }
+        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel).Select(r => (CurrencyRequirementModel)r); } }
 
         public IEnumerable<RankRequirementModel> Rank { get { return this.Requirements.Where(r => r is RankRequirementModel).Select(r => (RankRequirementModel)r); } }
 
@@ -170,6 +147,14 @@ namespace MixItUp.Base.Model.Requirements
                 users.Add(parameters);
             }
             return users;
+        }
+
+        public void AddBasicRequirements()
+        {
+            this.Requirements.Add(new RoleRequirementModel());
+            this.Requirements.Add(new CooldownRequirementModel());
+            this.Requirements.Add(new ThresholdRequirementModel());
+            this.Requirements.Add(new SettingsRequirementModel());
         }
     }
 }
