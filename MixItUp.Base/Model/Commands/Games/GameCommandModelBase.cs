@@ -155,7 +155,7 @@ namespace MixItUp.Base.Model.Commands.Games
         }
 
         internal GameCommandModelBase(Base.Commands.GameCommandBase command, GameCommandTypeEnum gameType)
-            : this(command.Name, command.CommandTriggers, gameType)
+            : this(command.Name, command.Commands, gameType)
         {
             this.IsEnabled = command.IsEnabled;
             this.Requirements = new RequirementsSetModel(command.Requirements);
