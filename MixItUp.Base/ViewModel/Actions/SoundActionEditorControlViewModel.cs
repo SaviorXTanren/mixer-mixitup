@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
             }
         }
-        private int volume;
+        private int volume = 100;
 
         public SoundActionEditorControlViewModel(SoundActionModel action)
             : base(action)
