@@ -4510,4 +4510,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="ZoomOutUp" xml:space="preserve">
     <value>Zoom Out Up</value>
   </data>
+  <data name="ChatCommandTriggerAlreadyExists" xml:space="preserve">
+    <value>The following chat trigger is already used in another command: {0}</value>
+  </data>
 </root>

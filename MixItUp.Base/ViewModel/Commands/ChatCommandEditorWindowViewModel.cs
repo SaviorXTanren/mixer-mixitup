@@ -109,6 +109,26 @@ namespace MixItUp.Base.ViewModel.Commands
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ChatCommandInvalidTriggers));
             }
 
+            HashSet<string> triggers = this.GetChatTriggers();
+            if (this.IncludeExclamation)
+            {
+                triggers = new HashSet<string>(triggers.Select(t => "!" + t));
+            }
+
+            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
+            {
+                if (this.existingCommand != command)
+                {
+                    foreach (string trigger in command.GetFullTriggers())
+                    {
+                        if (triggers.Contains(trigger))
+                        {
+                            return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.ChatCommandTriggerAlreadyExists, trigger)));
+                        }
+                    }
+                }
+            }
+
             return Task.FromResult(new Result());
         }
 

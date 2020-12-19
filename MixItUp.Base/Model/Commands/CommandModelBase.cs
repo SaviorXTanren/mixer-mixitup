@@ -135,6 +135,8 @@ namespace MixItUp.Base.Model.Commands
 
         public string TriggersString { get { return string.Join(" ", this.Triggers); } }
 
+        public virtual IEnumerable<string> GetFullTriggers() { return this.Triggers; }
+
         protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }

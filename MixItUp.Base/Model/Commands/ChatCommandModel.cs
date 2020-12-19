@@ -56,14 +56,14 @@ namespace MixItUp.Base.Model.Commands
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
-        public IEnumerable<string> GetChatTriggers() { return this.IncludeExclamation ? this.Triggers.Select(t => "!" + t) : this.Triggers; }
+        public override IEnumerable<string> GetFullTriggers() { return this.IncludeExclamation ? this.Triggers.Select(t => "!" + t) : this.Triggers; }
 
         public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
         {
             arguments = null;
             if (!string.IsNullOrEmpty(message.PlainTextMessage))
             {
-                foreach (string trigger in this.GetChatTriggers())
+                foreach (string trigger in this.GetFullTriggers())
                 {
                     if (string.Equals(message.PlainTextMessage, trigger, StringComparison.CurrentCultureIgnoreCase) || message.PlainTextMessage.StartsWith(trigger + " "))
                     {

@@ -1456,6 +1456,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following chat trigger is already used in another command: {0}.
+        /// </summary>
+        public static string ChatCommandTriggerAlreadyExists {
+            get {
+                return ResourceManager.GetString("ChatCommandTriggerAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Message.
         /// </summary>
         public static string ChatMessage {
