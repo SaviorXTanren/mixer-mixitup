@@ -110,6 +110,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SelectedActionType = action.ActionType;
             if (this.ShowCommandsSection)
             {
+                this.SelectedCommandType = action.Command.Type;
                 this.SelectedCommand = action.Command;
             }
             else if (this.ShowCommandGroupsSection)
