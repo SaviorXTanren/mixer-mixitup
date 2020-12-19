@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -20,17 +21,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string filePath;
 
-        public IEnumerable<string> AudioSources
-        {
-            get
-            {
-                List<string> devices = new List<string>();
-                devices.Add(SoundActionModel.DefaultAudioDevice);
-                devices.Add(SoundActionModel.MixItUpOverlay);
-                devices.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
-                return devices;
-            }
-        }
+        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>();
 
         public string SelectedAudioDevice
         {
@@ -57,12 +48,18 @@ namespace MixItUp.Base.ViewModel.Actions
         public SoundActionEditorControlViewModel(SoundActionModel action)
             : base(action)
         {
+            this.LoadSoundDevices();
             this.FilePath = action.FilePath;
-            this.SelectedAudioDevice = action.OutputDevice;
+            this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : SoundActionModel.DefaultAudioDevice;
             this.Volume = action.VolumeScale;
         }
 
-        public SoundActionEditorControlViewModel() : base() { }
+        public SoundActionEditorControlViewModel()
+            : base()
+        {
+            this.LoadSoundDevices();
+            this.SelectedAudioDevice = SoundActionModel.DefaultAudioDevice;
+        }
 
         public override Task<Result> Validate()
         {
@@ -82,6 +79,16 @@ namespace MixItUp.Base.ViewModel.Actions
             else
             {
                 return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume));
+            }
+        }
+
+        private void LoadSoundDevices()
+        {
+            this.AudioDevices.Add(SoundActionModel.DefaultAudioDevice);
+            this.AudioDevices.Add(SoundActionModel.MixItUpOverlay);
+            foreach (string soundDevices in ChannelSession.Services.AudioService.GetOutputDevices())
+            {
+                this.AudioDevices.Add(soundDevices);
             }
         }
     }
