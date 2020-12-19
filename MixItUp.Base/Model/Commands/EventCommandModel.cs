@@ -126,6 +126,7 @@ namespace MixItUp.Base.Model.Commands
         {
             this.Name = command.EventCommandType.ToString();
             this.Type = CommandTypeEnum.Event;
+            this.EventType = command.EventCommandType;
         }
 
         protected EventCommandModel() : base() { }
