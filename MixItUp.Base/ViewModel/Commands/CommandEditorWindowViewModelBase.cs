@@ -49,6 +49,17 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private string name;
 
+        public bool Unlocked
+        {
+            get { return this.unlocked; }
+            set
+            {
+                this.unlocked = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool unlocked;
+
         public RequirementsSetViewModel Requirements { get; set; } = new RequirementsSetViewModel();
 
         public ICommand SaveCommand { get; private set; }
@@ -66,6 +77,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.existingCommand = existingCommand;
 
             this.Name = this.existingCommand.Name;
+            this.Unlocked = unlocked;
             this.Requirements = new RequirementsSetViewModel(this.existingCommand.Requirements);
         }
 
@@ -195,6 +207,7 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 return null;
             }
+            command.Unlocked = this.Unlocked;
 
             if (this.AddRequirementsToCommand)
             {
