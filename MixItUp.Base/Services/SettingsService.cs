@@ -61,6 +61,7 @@ namespace MixItUp.Base.Services
 
         public async Task<IEnumerable<SettingsV3Model>> GetAllSettings()
         {
+            bool v2SettingsUpgradeNeeded = false;
             bool backupSettingsLoaded = false;
             bool settingsLoadFailure = false;
 
@@ -69,6 +70,17 @@ namespace MixItUp.Base.Services
             {
                 if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
                 {
+                    if (!v2SettingsUpgradeNeeded)
+                    {
+                        if (!await DialogHelper.ShowConfirmation("We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform & is required to use Mix It Up." +
+                            Environment.NewLine + Environment.NewLine +
+                            "If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later"))
+                        {
+                            return new List<SettingsV3Model>();
+                        }
+                    }
+                    v2SettingsUpgradeNeeded = true;
+
                     SettingsV2Model setting = null;
                     try
                     {
