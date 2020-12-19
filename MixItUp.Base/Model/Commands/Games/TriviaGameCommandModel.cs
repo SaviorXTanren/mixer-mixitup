@@ -126,7 +126,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserJoinCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
             this.CorrectAnswerCommand = new CustomCommandModel(command.CorrectAnswerCommand) { IsEmbedded = true };
             this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
-            this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
+            this.UserFailureCommand = new CustomCommandModel(MixItUp.Base.Resources.GameSubCommand) { IsEmbedded = true };
         }
 
         private TriviaGameCommandModel() { }

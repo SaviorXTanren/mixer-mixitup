@@ -586,37 +586,40 @@ namespace MixItUp.Base.Model.Settings
                 {
                     CommandModelBase command = null;
                     CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
+
+                    string commandData = (string)data["Data"];
                     if (type == CommandTypeEnum.Chat)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.Event)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.Timer)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.ActionGroup)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.Game)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>((string)data["Data"]);
+                        commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
+                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
                     }
                     else if (type == CommandTypeEnum.TwitchChannelPoints)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.Custom)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
                     }
                     else if (type == CommandTypeEnum.UserOnlyChat)
                     {
-                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>((string)data["Data"]);
+                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
                     }
 
                     if (command != null)

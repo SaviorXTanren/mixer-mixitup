@@ -390,6 +390,7 @@ namespace MixItUp.Base.Services
             {
                 string settingsText = await ChannelSession.Services.FileService.ReadFile(filePath);
                 settingsText = settingsText.Replace("MixItUp.Base.Model.Settings.SettingsV2Model, MixItUp.Base", "MixItUp.Base.Model.Settings.SettingsV3Model, MixItUp.Base");
+                settingsText = settingsText.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
                 SettingsV3Model newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV3Model>(settingsText, ignoreErrors: true);
                 await newSettings.Initialize();
 
