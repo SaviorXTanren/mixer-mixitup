@@ -387,7 +387,9 @@ namespace MixItUp.Base.Services
 
             if (oldSettings.IsStreamer)
             {
-                SettingsV3Model newSettings = new SettingsV3Model(oldSettings.Name, oldSettings.IsStreamer);
+                string settingsText = await ChannelSession.Services.FileService.ReadFile(filePath);
+                settingsText = settingsText.Replace("MixItUp.Base.Model.Settings.SettingsV2Model, MixItUp.Base", "MixItUp.Base.Model.Settings.SettingsV3Model, MixItUp.Base");
+                SettingsV3Model newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV3Model>(settingsText, ignoreErrors: true);
                 await newSettings.Initialize();
 
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = oldSettings.TwitchUserOAuthToken;
@@ -491,7 +493,7 @@ namespace MixItUp.Base.Services
                     if (kvp.Value.EntranceCommand != null)
                     {
                         CustomCommandModel entranceCommand = new CustomCommandModel(kvp.Value.EntranceCommand);
-                        ChannelSession.Settings.SetCommand(entranceCommand);
+                        newSettings.SetCommand(entranceCommand);
                         kvp.Value.EntranceCommandID = entranceCommand.ID;
                         kvp.Value.EntranceCommand = null;
                     }
@@ -499,7 +501,7 @@ namespace MixItUp.Base.Services
                     foreach (ChatCommand command in kvp.Value.CustomCommands)
                     {
                         UserOnlyChatCommandModel userCommand = new UserOnlyChatCommandModel(command, kvp.Key);
-                        ChannelSession.Settings.SetCommand(userCommand);
+                        newSettings.SetCommand(userCommand);
                         kvp.Value.CustomCommandIDs.Add(userCommand.ID);
                     }
                     kvp.Value.CustomCommands.Clear();
