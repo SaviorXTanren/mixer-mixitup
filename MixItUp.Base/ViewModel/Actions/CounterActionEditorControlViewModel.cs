@@ -74,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public CounterActionEditorControlViewModel(CounterActionModel action)
             : base(action)
         {
-            this.CounterName = action.Name;
+            this.CounterName = action.CounterName;
             this.SelectedActionType = action.ActionType;
             this.Amount = action.Amount;
 
