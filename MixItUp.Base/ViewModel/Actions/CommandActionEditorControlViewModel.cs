@@ -34,6 +34,7 @@ namespace MixItUp.Base.ViewModel.Actions
             get
             {
                 List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
+                types.Remove(CommandTypeEnum.UserOnlyChat);
                 types.Remove(CommandTypeEnum.Custom);
                 return types;
             }
