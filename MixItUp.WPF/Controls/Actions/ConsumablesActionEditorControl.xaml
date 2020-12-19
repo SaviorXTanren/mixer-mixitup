@@ -52,15 +52,13 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" IsEnabled="{Binding CanDeductFromUser}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DeductFromUserRunningCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding DeductFromUser}" IsEnabled="{Binding CanDeductFromUser}" VerticalAlignment="Center"/>
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding UsersToApplyTo}" SelectedItem="{Binding SelectedUsersToApplyTo}" IsEnabled="{Binding CanSelectUsersToApplyTo}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsersToApplyTo}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+            <ComboBox Grid.Column="4" ItemsSource="{Binding UsersToApplyTo}" SelectedItem="{Binding SelectedUsersToApplyTo}" Visibility="{Binding CanSelectUsersToApplyTo, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsersToApplyTo}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -68,7 +66,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBox Grid.Column="6" Text="{Binding TargetUsername}" IsEnabled="{Binding CanEnterTargetUsername}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TargetUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding TargetUsername}" Visibility="{Binding CanEnterTargetUsername, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TargetUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

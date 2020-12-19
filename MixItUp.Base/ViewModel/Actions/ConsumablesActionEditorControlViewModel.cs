@@ -179,6 +179,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public ConsumablesActionEditorControlViewModel(ConsumablesActionModel action)
             : base(action)
         {
+            this.LoadConsumables();
             if (action.CurrencyID != Guid.Empty)
             {
                 this.SelectedConsumable = this.Consumables.FirstOrDefault(c => c.ID.Equals(action.CurrencyID));
@@ -200,26 +201,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.TargetUsername = action.Username;
         }
 
-        public ConsumablesActionEditorControlViewModel() : base() { }
-
-        protected override async Task OnLoadedInternal()
-        {
-            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-            {
-                this.Consumables.Add(new ConsumableViewModel(currency));
-            }
-
-            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
-            {
-                this.Consumables.Add(new ConsumableViewModel(inventory));
-            }
-
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values.ToList())
-            {
-                this.Consumables.Add(new ConsumableViewModel(streamPass));
-            }
-            await base.OnLoadedInternal();
-        }
+        public ConsumablesActionEditorControlViewModel() : base() { this.LoadConsumables(); }
 
         public override Task<Result> Validate()
         {
@@ -262,6 +244,22 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.DeductFromUser));
             }
             return Task.FromResult<ActionModelBase>(null);
+        }
+
+        private void LoadConsumables()
+        {
+            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+            {
+                this.Consumables.Add(new ConsumableViewModel(currency));
+            }
+            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
+            {
+                this.Consumables.Add(new ConsumableViewModel(inventory));
+            }
+            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+            {
+                this.Consumables.Add(new ConsumableViewModel(streamPass));
+            }
         }
     }
 }
