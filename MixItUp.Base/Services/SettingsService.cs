@@ -510,9 +510,11 @@ namespace MixItUp.Base.Services
                 await ChannelSession.Services.Settings.Save(newSettings);
             }
             await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
+- A            await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsLocalBackupFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsLocalBackupFileName));
             await ChannelSession.Services.FileService.CopyFile(oldSettings.DatabaseFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.DatabaseFileName));
 
             await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsFilePath);
+            await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsLocalBackupFilePath);
             await ChannelSession.Services.FileService.DeleteFile(oldSettings.DatabaseFilePath);
         }
 #pragma warning restore CS0612 // Type or member is obsolete
