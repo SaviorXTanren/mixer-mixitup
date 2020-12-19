@@ -133,12 +133,30 @@ s                                </Hyperlink>
                             </TextBlock>
                             </StackPanel>
 
-                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding SelectedEntranceAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EntranceAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding SelectedEntranceAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.EntranceAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
 
-                            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding SelectedExitAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExitAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+                            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding SelectedExitAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExitAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
 
-                        <ComboBox Grid.Row="4" ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding SelectedVisibleAnimations}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VisibleAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+                        <ComboBox Grid.Row="4" ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding SelectedVisibleAnimation}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VisibleAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </Grid>
                 </Border>
             </Grid>

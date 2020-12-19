@@ -4330,4 +4330,184 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="RedemptionStoreManualRedeemNeededExample" xml:space="preserve">
     <value>@$username just purchased $productname and needs to be manually redeemed</value>
   </data>
+  <data name="Bounce" xml:space="preserve">
+    <value>Bounce</value>
+  </data>
+  <data name="BounceIn" xml:space="preserve">
+    <value>Bounce In</value>
+  </data>
+  <data name="BounceInDown" xml:space="preserve">
+    <value>Bounce In Down</value>
+  </data>
+  <data name="BounceInLeft" xml:space="preserve">
+    <value>Bounce In Left</value>
+  </data>
+  <data name="BounceInRight" xml:space="preserve">
+    <value>Bounce In Right</value>
+  </data>
+  <data name="BounceInUp" xml:space="preserve">
+    <value>Bounce In Up</value>
+  </data>
+  <data name="BounceOut" xml:space="preserve">
+    <value>Bounce Out</value>
+  </data>
+  <data name="BounceOutDown" xml:space="preserve">
+    <value>Bounce Out Down</value>
+  </data>
+  <data name="BounceOutLeft" xml:space="preserve">
+    <value>Bounce Out Left</value>
+  </data>
+  <data name="BounceOutRight" xml:space="preserve">
+    <value>Bounce Out Right</value>
+  </data>
+  <data name="BounceOutUp" xml:space="preserve">
+    <value>Bounce Out Up</value>
+  </data>
+  <data name="FadeIn" xml:space="preserve">
+    <value>Fade In</value>
+  </data>
+  <data name="FadeInDown" xml:space="preserve">
+    <value>Fade In Down</value>
+  </data>
+  <data name="FadeInLeft" xml:space="preserve">
+    <value>Fade In Left</value>
+  </data>
+  <data name="FadeInRight" xml:space="preserve">
+    <value>Fade In Right</value>
+  </data>
+  <data name="FadeInUp" xml:space="preserve">
+    <value>Fade In Up</value>
+  </data>
+  <data name="FadeOut" xml:space="preserve">
+    <value>Fade Out</value>
+  </data>
+  <data name="FadeOutDown" xml:space="preserve">
+    <value>Fade Out Down</value>
+  </data>
+  <data name="FadeOutLeft" xml:space="preserve">
+    <value>Fade Out Left</value>
+  </data>
+  <data name="FadeOutRight" xml:space="preserve">
+    <value>Fade Out Right</value>
+  </data>
+  <data name="FadeOutUp" xml:space="preserve">
+    <value>Fade Out Up</value>
+  </data>
+  <data name="Flash" xml:space="preserve">
+    <value>Flash</value>
+  </data>
+  <data name="Flip" xml:space="preserve">
+    <value>Flip</value>
+  </data>
+  <data name="FlipInX" xml:space="preserve">
+    <value>Flip In X</value>
+  </data>
+  <data name="FlipInY" xml:space="preserve">
+    <value>Flip In Y</value>
+  </data>
+  <data name="FlipOutX" xml:space="preserve">
+    <value>Flip Out X</value>
+  </data>
+  <data name="FlipOutY" xml:space="preserve">
+    <value>Flip Out Y</value>
+  </data>
+  <data name="Hinge" xml:space="preserve">
+    <value>Hinge</value>
+  </data>
+  <data name="JackInTheBox" xml:space="preserve">
+    <value>Jack In The Box</value>
+  </data>
+  <data name="Jello" xml:space="preserve">
+    <value>Jello</value>
+  </data>
+  <data name="LightSpeedIn" xml:space="preserve">
+    <value>Light Speed In</value>
+  </data>
+  <data name="LightSpeedOut" xml:space="preserve">
+    <value>Light Speed Out</value>
+  </data>
+  <data name="Pulse" xml:space="preserve">
+    <value>Pulse</value>
+  </data>
+  <data name="RollIn" xml:space="preserve">
+    <value>Roll In</value>
+  </data>
+  <data name="RollOut" xml:space="preserve">
+    <value>Roll Out</value>
+  </data>
+  <data name="RotateIn" xml:space="preserve">
+    <value>Rotate In</value>
+  </data>
+  <data name="RotateOut" xml:space="preserve">
+    <value>Rotate Out</value>
+  </data>
+  <data name="RubberBand" xml:space="preserve">
+    <value>Rubber Band</value>
+  </data>
+  <data name="Shake" xml:space="preserve">
+    <value>Shake</value>
+  </data>
+  <data name="SlideInDown" xml:space="preserve">
+    <value>Slide In Down</value>
+  </data>
+  <data name="SlideInLeft" xml:space="preserve">
+    <value>Slide In Left</value>
+  </data>
+  <data name="SlideInRight" xml:space="preserve">
+    <value>Slide In Right</value>
+  </data>
+  <data name="SlideInUp" xml:space="preserve">
+    <value>Slide In Up</value>
+  </data>
+  <data name="SlideOutDown" xml:space="preserve">
+    <value>Slide Out Down</value>
+  </data>
+  <data name="SlideOutLeft" xml:space="preserve">
+    <value>Slide Out Left</value>
+  </data>
+  <data name="SlideOutRight" xml:space="preserve">
+    <value>Slide Out Right</value>
+  </data>
+  <data name="SlideOutUp" xml:space="preserve">
+    <value>Slide Out Up</value>
+  </data>
+  <data name="Swing" xml:space="preserve">
+    <value>Swing</value>
+  </data>
+  <data name="Tada" xml:space="preserve">
+    <value>Tada</value>
+  </data>
+  <data name="Wobble" xml:space="preserve">
+    <value>Wobble</value>
+  </data>
+  <data name="ZoomIn" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="ZoomInDown" xml:space="preserve">
+    <value>Zoom In Down</value>
+  </data>
+  <data name="ZoomInLeft" xml:space="preserve">
+    <value>Zoom In Left</value>
+  </data>
+  <data name="ZoomInRight" xml:space="preserve">
+    <value>Zoom In Right</value>
+  </data>
+  <data name="ZoomInUp" xml:space="preserve">
+    <value>Zoom In Up</value>
+  </data>
+  <data name="ZoomOut" xml:space="preserve">
+    <value>Zoom Out</value>
+  </data>
+  <data name="ZoomOutDown" xml:space="preserve">
+    <value>Zoom Out Down</value>
+  </data>
+  <data name="ZoomOutLeft" xml:space="preserve">
+    <value>Zoom Out Left</value>
+  </data>
+  <data name="ZoomOutRight" xml:space="preserve">
+    <value>Zoom Out Right</value>
+  </data>
+  <data name="ZoomOutUp" xml:space="preserve">
+    <value>Zoom Out Up</value>
+  </data>
 </root>
