@@ -274,7 +274,7 @@ namespace MixItUp.Base.ViewModel.Actions
             else
             {
                 OverlayItemModelBase overlayItem = this.ItemViewModel.GetOverlayItem();
-                if (overlayItem == null)
+                if (overlayItem != null)
                 {
                     overlayItem.Position = this.ItemPosition.GetPosition();
                     overlayItem.Effects = new OverlayItemEffectsModel(this.SelectedEntranceAnimation, this.SelectedVisibleAnimation, this.SelectedExitAnimation, this.ItemDuration);
