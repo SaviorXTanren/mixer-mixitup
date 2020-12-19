@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services.External
         Task<bool> TestConnection();
 
         Task ShowScene(string sceneName);
+        Task<string> GetCurrentScene();
 
         Task SetSourceVisibility(string sceneName, string sourceName, bool visibility);
         Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url);
