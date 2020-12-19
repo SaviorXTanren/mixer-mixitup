@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         CommandActionModel cmdAction = new CommandActionModel(CommandActionTypeEnum.RunCommand, null);
                         cmdAction.CommandID = conAction.CommandID;
-                        actions.Add(cmdAction);
+                        subAction = cmdAction;
                     }
                     else
                     {
