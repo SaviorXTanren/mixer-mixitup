@@ -126,7 +126,7 @@
             </GroupBox>
 
             <GroupBox Header="{x:Static resx:Resources.MeetTheTeam}" Grid.Row="2">
-                <Grid Height="100" HorizontalAlignment="Center">
+                <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="30" />
@@ -135,12 +135,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" x:Name="SaviorXTanrenButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SaviorXTanrenButton_Click" Height="100">
+                    <Button Grid.Column="0" x:Name="SaviorXTanrenButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SaviorXTanrenButton_Click" Height="105">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="100" />
                             </Grid.RowDefinitions>
 
                             <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/saviorxtanren-profile_image-03a0b918ad9b65c6-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
@@ -150,7 +150,7 @@
                         </Grid>
                     </Button>
 
-                    <Button Grid.Column="2" x:Name="VerbatimTButton" Style="{StaticResource MaterialDesignFlatButton}" Click="VerbatimTButton_Click" Height="100">
+                    <Button Grid.Column="2" x:Name="VerbatimTButton" Style="{StaticResource MaterialDesignFlatButton}" Click="VerbatimTButton_Click" Height="105">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -165,7 +165,7 @@
                         </Grid>
                     </Button>
 
-                    <Button Grid.Column="4" x:Name="TyrenDesButton" Style="{StaticResource MaterialDesignFlatButton}" Click="TyrenDesButton_Click" Height="100">
+                    <Button Grid.Column="4" x:Name="TyrenDesButton" Style="{StaticResource MaterialDesignFlatButton}" Click="TyrenDesButton_Click" Height="105">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
