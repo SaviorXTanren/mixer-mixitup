@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
-using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -251,14 +250,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected virtual async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.Requirements.Settings != null && this.Requirements.Settings.RunOneRandomly)
-            {
-                await CommandModelBase.RunActions(new List<ActionModelBase>() { this.Actions.Random() }, parameters);
-            }
-            else
-            {
-                await CommandModelBase.RunActions(this.Actions, parameters);
-            }
+            await CommandModelBase.RunActions(this.Actions, parameters);
         }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
