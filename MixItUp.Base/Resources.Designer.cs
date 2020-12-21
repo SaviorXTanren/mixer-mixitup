@@ -2194,6 +2194,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not a valid amount of {1}.
+        /// </summary>
+        public static string CounterActionNotAValidAmount {
+            get {
+                return ResourceManager.GetString("CounterActionNotAValidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Counter (Create &amp; Update).
         /// </summary>
         public static string CounterCreateAndUpdate {
@@ -12395,6 +12404,15 @@ namespace MixItUp.Base {
         public static string UserNameOptional {
             get {
                 return ResourceManager.GetString("UserNameOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user could not be found.
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
         

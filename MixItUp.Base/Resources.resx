@@ -4535,7 +4535,13 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="ConditionalCommandCopyFromExistingCommand" xml:space="preserve">
     <value>Copy From Existing Command</value>
   </data>
+  <data name="CounterActionNotAValidAmount" xml:space="preserve">
+    <value>{0} is not a valid amount of {1}</value>
+  </data>
   <data name="IncludeUsernameWithRequirementErrors" xml:space="preserve">
     <value>Include Username With Requirement Errors</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>The user could not be found</value>
   </data>
 </root>

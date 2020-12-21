@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -183,16 +184,18 @@ namespace MixItUp.Base.Model.Actions
             else
             {
                 string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, parameters);
+                amountTextValue = MathHelper.ProcessMathEquation(amountTextValue).ToString();
+
                 if (!double.TryParse(amountTextValue, out double doubleAmount))
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CounterActionNotAValidAmount, amountTextValue, systemName));
                     return;
                 }
 
                 int amountValue = (int)Math.Ceiling(doubleAmount);
-                if (amountValue <= 0)
+                if (amountValue < 0)
                 {
-                    await ChannelSession.Services.Chat.SendMessage("The amount specified must be greater than 0");
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName));
                     return;
                 }
 
@@ -213,7 +216,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The user could not be found");
+                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.UserNotFound);
                             return;
                         }
                     }
@@ -236,7 +239,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!currency.HasAmount(parameters.User.Data, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
                             return;
                         }
                         currency.SubtractAmount(parameters.User.Data, amountValue);
@@ -245,7 +248,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!inventory.HasAmount(parameters.User.Data, item, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, item));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item));
                             return;
                         }
                         inventory.SubtractAmount(parameters.User.Data, item, amountValue);
@@ -254,7 +257,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!streamPass.HasAmount(parameters.User.Data, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
                             return;
                         }
                         streamPass.SubtractAmount(parameters.User.Data, amountValue);

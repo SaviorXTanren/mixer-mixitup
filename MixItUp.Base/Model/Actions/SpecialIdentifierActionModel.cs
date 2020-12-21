@@ -57,24 +57,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ShouldProcessMath)
             {
-                try
-                {
-                    replacementText = replacementText.Replace("random(", "customrandom(");
-
-                    // Process Math
-                    CalculationEngine engine = new CalculationEngine(new System.Globalization.CultureInfo("en-US"));
-                    engine.AddFunction("customrandom", Random);
-                    engine.AddFunction("randomrange", RandomRange);
-
-                    double result = engine.Calculate(replacementText);
-                    replacementText = result.ToString();
-                }
-                catch (Exception ex)
-                {
-                    // Calculation failed, log and set to 0
-                    Logger.Log(ex);
-                    replacementText = "0";
-                }
+                replacementText = MathHelper.ProcessMathEquation(replacementText).ToString();
             }
 
             if (this.MakeGloballyUsable)
@@ -96,16 +79,6 @@ namespace MixItUp.Base.Model.Actions
                 text = text.Replace(match.Value, await processor(textToProcess));
             }
             return text;
-        }
-
-        private double Random(double max)
-        {
-            return this.RandomRange(1, max);
-        }
-
-        private double RandomRange(double min, double max)
-        {
-            return RandomHelper.GenerateRandomNumber((int)min, (int)max);
         }
     }
 }
