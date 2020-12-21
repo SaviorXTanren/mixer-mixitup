@@ -9108,6 +9108,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You do not have the required rank of {0} ({1} {2}) to do this.
+        /// </summary>
+        public static string RankRequirementNotGreaterThanOrEqual {
+            get {
+                return ResourceManager.GetString("RankRequirementNotGreaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are over the required rank of {0} ({1} {2}) to do this.
+        /// </summary>
+        public static string RankRequirementNotLessThan {
+            get {
+                return ResourceManager.GetString("RankRequirementNotLessThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rank System.
         /// </summary>
         public static string RankSystem {
@@ -11570,6 +11588,15 @@ namespace MixItUp.Base {
         public static string ThreeRight {
             get {
                 return ResourceManager.GetString("ThreeRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command requires {0} more users to trigger.
+        /// </summary>
+        public static string ThresholdRequirementNeedMore {
+            get {
+                return ResourceManager.GetString("ThresholdRequirementNeedMore", resourceCulture);
             }
         }
         

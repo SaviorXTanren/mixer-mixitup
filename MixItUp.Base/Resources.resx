@@ -4516,6 +4516,15 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="CooldownRequirementOnCooldown" xml:space="preserve">
     <value>This command is currently on cooldown, please wait another {0} second(s).</value>
   </data>
+  <data name="RankRequirementNotGreaterThanOrEqual" xml:space="preserve">
+    <value>You do not have the required rank of {0} ({1} {2}) to do this</value>
+  </data>
+  <data name="RankRequirementNotLessThan" xml:space="preserve">
+    <value>You are over the required rank of {0} ({1} {2}) to do this</value>
+  </data>
+  <data name="ThresholdRequirementNeedMore" xml:space="preserve">
+    <value>This command requires {0} more users to trigger</value>
+  </data>
   <data name="UnlockCommandHelpText" xml:space="preserve">
     <value>Mix It Up has build in Command locking functionality which ensures
 only 1 command type (Chat, Interactive, etc) can run at the same time
