@@ -59,15 +59,7 @@
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowSceneGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox Grid.Column="0" Text="{Binding SceneCollectionName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneCollectionName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <TextBox Grid.Column="2" Text="{Binding SceneName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding SceneName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="3" Visibility="{Binding ShowSourceGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
