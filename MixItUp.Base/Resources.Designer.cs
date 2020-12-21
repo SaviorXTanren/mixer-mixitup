@@ -1735,6 +1735,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clip Created: {0}.
+        /// </summary>
+        public static string ClipCreatedMessage {
+            get {
+                return ResourceManager.GetString("ClipCreatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clip creation failed, please try again later.
         /// </summary>
         public static string ClipCreationFailed {
@@ -2712,6 +2721,15 @@ namespace MixItUp.Base {
         public static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description (Optional).
+        /// </summary>
+        public static string DescriptionOptional {
+            get {
+                return ResourceManager.GetString("DescriptionOptional", resourceCulture);
             }
         }
         
@@ -10278,7 +10296,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Clip Info In Chat.
+        ///   Looks up a localized string similar to Show Info In Chat.
         /// </summary>
         public static string ShowClipInfoInChat {
             get {
@@ -11111,6 +11129,42 @@ namespace MixItUp.Base {
         public static string StreamlootsPackPurchased {
             get {
                 return ResourceManager.GetString("StreamlootsPackPurchased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Marker.
+        /// </summary>
+        public static string StreamMarker {
+            get {
+                return ResourceManager.GetString("StreamMarker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Marker Created: {0}.
+        /// </summary>
+        public static string StreamMarkerCreatedMessage {
+            get {
+                return ResourceManager.GetString("StreamMarkerCreatedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Marker creation failed, please try again later.
+        /// </summary>
+        public static string StreamMarkerCreationFailed {
+            get {
+                return ResourceManager.GetString("StreamMarkerCreationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Marker description must be 140 characters or less.
+        /// </summary>
+        public static string StreamMarkerDescriptionMustBe140CharactersOrLess {
+            get {
+                return ResourceManager.GetString("StreamMarkerDescriptionMustBe140CharactersOrLess", resourceCulture);
             }
         }
         

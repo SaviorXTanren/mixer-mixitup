@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base;
 using Twitch.Base.Models.NewAPI.Games;
+using Twitch.Base.Models.NewAPI.Streams;
 using Twitch.Base.Models.V5.Channel;
 using Twitch.Base.Models.V5.Teams;
 using Twitch.Base.Services.V5API;
@@ -244,6 +245,8 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<NewAPI.Tags.TagModel>> GetStreamTagsForChannel(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Tags.GetStreamTagsForBroadcaster(channel)); }
 
         public async Task<bool> UpdateStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
+
+        public async Task<CreatedStreamMarkerModel> CreateStreamMarker(NewAPI.Users.UserModel channel, string description) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Streams.CreateStreamMarker(channel, description)); }
 
         public async Task<bool> GetStreamTagsForChannel(NewAPI.Users.UserModel channel, IEnumerable<NewAPI.Tags.TagModel> tags) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.Tags.UpdateStreamTags(channel, tags)); }
 

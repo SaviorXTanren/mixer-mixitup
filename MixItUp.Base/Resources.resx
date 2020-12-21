@@ -2968,7 +2968,7 @@
     <value>Include Delay</value>
   </data>
   <data name="ShowClipInfoInChat" xml:space="preserve">
-    <value>Show Clip Info In Chat</value>
+    <value>Show Info In Chat</value>
   </data>
   <data name="BotAccountMustBeDifferent" xml:space="preserve">
     <value>The bot account must be a different account than your Streamer account. Please make sure to sign in to the bot account first in your default web browser before attempting to sign in.</value>
@@ -4541,7 +4541,25 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="IncludeUsernameWithRequirementErrors" xml:space="preserve">
     <value>Include Username With Requirement Errors</value>
   </data>
+  <data name="StreamMarker" xml:space="preserve">
+    <value>Stream Marker</value>
+  </data>
+  <data name="StreamMarkerCreationFailed" xml:space="preserve">
+    <value>Stream Marker creation failed, please try again later</value>
+  </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>The user could not be found</value>
+  </data>
+  <data name="ClipCreatedMessage" xml:space="preserve">
+    <value>Clip Created: {0}</value>
+  </data>
+  <data name="DescriptionOptional" xml:space="preserve">
+    <value>Description (Optional)</value>
+  </data>
+  <data name="StreamMarkerCreatedMessage" xml:space="preserve">
+    <value>Stream Marker Created: {0}</value>
+  </data>
+  <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
+    <value>Stream Marker description must be 140 characters or less</value>
   </data>
 </root>

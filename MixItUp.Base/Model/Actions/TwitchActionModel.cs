@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
 using Twitch.Base.Models.NewAPI.Clips;
+using Twitch.Base.Models.NewAPI.Streams;
 
 namespace MixItUp.Base.Model.Actions
 {
@@ -17,12 +18,16 @@ namespace MixItUp.Base.Model.Actions
         UnVIPUser,
         RunAd,
         Clip,
+        StreamMarker,
     }
 
     [DataContract]
     public class TwitchActionModel : ActionModelBase
     {
         public const string ClipURLSpecialIdentifier = "clipurl";
+        public const string StreamMarkerURLSpecialIdentifier = "streammarkerurl";
+
+        public const int StreamMarkerMaxDescriptionLength = 140;
 
         private const string StartinCommercialBreakMessage = "Starting commercial break. Keep in mind you are still live and not all viewers will receive a commercial.";
 
@@ -46,12 +51,22 @@ namespace MixItUp.Base.Model.Actions
         {
             TwitchActionModel action = new TwitchActionModel(TwitchActionType.Clip);
             action.ClipIncludeDelay = includeDelay;
-            action.ClipShowInfoInChat = showInfoInChat;
+            action.ShowInfoInChat = showInfoInChat;
             return action;
+        }
+
+        public static TwitchActionModel CreateStreamMarkerAction(string description, bool showInfoInChat)
+        {
+            TwitchActionModel actionModel = new TwitchActionModel(TwitchActionType.StreamMarker);
+            actionModel.StreamMarkerDescription = description;
+            actionModel.ShowInfoInChat = showInfoInChat;
+            return actionModel;
         }
 
         [DataMember]
         public TwitchActionType ActionType { get; set; }
+        [DataMember]
+        public bool ShowInfoInChat { get; set; }
 
         [DataMember]
         public string Username { get; set; }
@@ -61,8 +76,9 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public bool ClipIncludeDelay { get; set; }
+
         [DataMember]
-        public bool ClipShowInfoInChat { get; set; }
+        public string StreamMarkerDescription { get; set; }
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -95,7 +111,7 @@ namespace MixItUp.Base.Model.Actions
         {
             this.ActionType = TwitchActionType.Clip;
             this.ClipIncludeDelay = action.IncludeDelay;
-            this.ClipShowInfoInChat = action.ShowClipInfoInChat;
+            this.ShowInfoInChat = action.ShowClipInfoInChat;
         }
 
         internal TwitchActionModel(MixItUp.Base.Actions.ModerationAction action)
@@ -176,9 +192,9 @@ namespace MixItUp.Base.Model.Actions
                         ClipModel clip = await ChannelSession.TwitchUserConnection.GetClip(clipCreation);
                         if (clip != null && !string.IsNullOrEmpty(clip.url))
                         {
-                            if (this.ClipShowInfoInChat)
+                            if (this.ShowInfoInChat)
                             {
-                                await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clip.url);
+                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url));
                             }
                             parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
@@ -188,6 +204,27 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
                 await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
+            }
+            else if (this.ActionType == TwitchActionType.StreamMarker)
+            {
+                string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
+                if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
+                    return;
+                }
+
+                CreatedStreamMarkerModel streamMarker = await ChannelSession.TwitchUserConnection.CreateStreamMarker(ChannelSession.TwitchUserNewAPI, description);
+                if (streamMarker != null)
+                {
+                    if (this.ShowInfoInChat)
+                    {
+                        await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL));
+                    }
+                    parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
+                    return;
+                }
+                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
             }
         }
     }

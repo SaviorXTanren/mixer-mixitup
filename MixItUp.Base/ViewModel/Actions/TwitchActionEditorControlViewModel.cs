@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,21 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowUsernameGrid");
                 this.NotifyPropertyChanged("ShowAdGrid");
                 this.NotifyPropertyChanged("ShowClipsGrid");
+                this.NotifyPropertyChanged("ShowStreamMarkerGrid");
             }
         }
         private TwitchActionType selectedActionType;
+
+        public bool ShowInfoInChat
+        {
+            get { return this.showInfoInChat; }
+            set
+            {
+                this.showInfoInChat = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool showInfoInChat;
 
         public bool ShowUsernameGrid
         {
@@ -74,17 +87,18 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private bool clipIncludeDelay;
 
+        public bool ShowStreamMarkerGrid { get { return this.SelectedActionType == TwitchActionType.StreamMarker; } }
 
-        public bool ClipShowInfoInChat
+        public string StreamMarkerDescription
         {
-            get { return this.clipShowInfoInChat; }
+            get { return this.streamMarkerDescription; }
             set
             {
-                this.clipShowInfoInChat = value;
+                this.streamMarkerDescription = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private bool clipShowInfoInChat;
+        private string streamMarkerDescription;
 
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action)
@@ -101,11 +115,28 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowClipsGrid)
             {
                 this.ClipIncludeDelay = action.ClipIncludeDelay;
-                this.ClipShowInfoInChat = action.ClipShowInfoInChat;
+                this.ShowInfoInChat = action.ShowInfoInChat;
+            }
+            else if (this.ShowStreamMarkerGrid)
+            {
+                this.StreamMarkerDescription = action.StreamMarkerDescription;
+                this.ShowInfoInChat = action.ShowInfoInChat;
             }
         }
 
         public TwitchActionEditorControlViewModel() : base() { }
+
+        public override Task<Result> Validate()
+        {
+            if (this.ShowStreamMarkerGrid)
+            {
+                if (!string.IsNullOrEmpty(this.StreamMarkerDescription) && this.StreamMarkerDescription.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess));
+                }
+            }
+            return Task.FromResult(new Result());
+        }
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
@@ -119,7 +150,11 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowClipsGrid)
             {
-                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateClipAction(this.ClipIncludeDelay, this.ClipShowInfoInChat));
+                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateClipAction(this.ClipIncludeDelay, this.ShowInfoInChat));
+            }
+            else if (this.ShowStreamMarkerGrid)
+            {
+                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat));
             }
             return Task.FromResult<ActionModelBase>(null);
         }
