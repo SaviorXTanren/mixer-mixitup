@@ -66,8 +66,6 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private CurrencyRequirementTypeEnum selectedRequirementType;
 
-        public bool CostEnabled { get { return this.SelectedRequirementType != CurrencyRequirementTypeEnum.NoCost; } }
-
         public bool ShowOnlyMin { get { return !this.ShowMinAndMax; } }
 
         public bool ShowMinAndMax { get { return this.SelectedRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum; } }
@@ -126,24 +124,21 @@ namespace MixItUp.Base.ViewModel.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyMustBeSelected));
             }
 
-            if (this.SelectedRequirementType != CurrencyRequirementTypeEnum.NoCost)
+            if (this.MinAmount < 0)
             {
-                if (this.MinAmount < 0)
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
+            }
+
+            if (this.SelectedRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                if (this.MaxAmount < 0)
                 {
                     return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
                 }
 
-                if (this.SelectedRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                if (this.MaxAmount < this.MinAmount)
                 {
-                    if (this.MaxAmount < 0)
-                    {
-                        return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
-                    }
-
-                    if (this.MaxAmount < this.MinAmount)
-                    {
-                        return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
-                    }
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCurrencyAmountMustBeSpecified));
                 }
             }
 

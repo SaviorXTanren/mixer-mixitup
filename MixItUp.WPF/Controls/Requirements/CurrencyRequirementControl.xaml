@@ -57,7 +57,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBox Grid.Column="4" Text="{Binding MinAmount}" IsEnabled="{Binding CostEnabled}" Visibility="{Binding ShowOnlyMin, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="4" Text="{Binding MinAmount}" Visibility="{Binding ShowOnlyMin, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         <TextBox Grid.Column="4" Text="{Binding MinAmount}" Visibility="{Binding ShowMinAndMax, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinAmount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <TextBox Grid.Column="6" Text="{Binding MaxAmount}" Visibility="{Binding ShowMinAndMax, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
