@@ -916,8 +916,8 @@
     <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
-      <DependentUpon>IFITTServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\IFTTTServiceControl.xaml.cs">
+      <DependentUpon>IFTTTServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
       <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
@@ -1878,7 +1878,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\IFITTServiceControl.xaml">
+    <Page Include="Controls\Services\IFTTTServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
