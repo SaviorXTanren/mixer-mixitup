@@ -39,6 +39,8 @@ namespace MixItUp.Base.Util
 
         public static async Task<object> ShowCustomTimed(object dialog, int timeout) { return await DialogHelper.dialogShower.ShowCustomTimed(dialog, timeout); }
 
+        public static async Task ShowFailedResult(Result result) { await DialogHelper.ShowFailedResults(new List<Result>() { result }); }
+
         public static async Task ShowFailedResults(IEnumerable<Result> results)
         {
             if (results.Any(r => !r.Success))

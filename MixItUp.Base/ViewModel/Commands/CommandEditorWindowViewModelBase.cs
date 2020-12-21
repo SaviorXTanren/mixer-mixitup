@@ -165,8 +165,6 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public abstract Task SaveCommandToSettings(CommandModelBase command);
 
-        public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
-
         protected override async Task OnLoadedInternal()
         {
             if (this.existingCommand != null)
@@ -224,16 +222,6 @@ namespace MixItUp.Base.ViewModel.Commands
             command.Actions = new List<ActionModelBase>(actions);
 
             return command;
-        }
-
-        public override async Task<Dictionary<string, string>> GetUniqueSpecialIdentifiers()
-        {
-            CommandModelBase command = await this.ValidateAndBuildCommand();
-            if (command != null)
-            {
-                return command.GetTestSpecialIdentifiers();
-            }
-            return null;
         }
 
         private async Task<bool> CheckForResultErrors(IEnumerable<Result> results)

@@ -82,11 +82,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 ActionModelBase action = await this.ValidateAndGetAction();
                 if (action != null)
                 {
-                    Dictionary<string, string> specialIdentifiers = await this.actionEditorListControlViewModel.GetUniqueSpecialIdentifiers();
-                    if (specialIdentifiers != null)
-                    {
-                        await action.TestPerform(specialIdentifiers);
-                    }
+                    await action.TestPerform(this.actionEditorListControlViewModel.GetTestSpecialIdentifiers());
                 }
             });
 
@@ -148,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Actions
             Result result = await this.Validate();
             if (!result.Success)
             {
-                await DialogHelper.ShowMessage(result.ToString());
+                await DialogHelper.ShowFailedResult(result);
                 return null;
             }
             return await this.GetAction();

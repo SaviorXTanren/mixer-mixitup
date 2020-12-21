@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -79,6 +80,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             });
         }
+
+        public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
         public void MoveActionUp(ActionEditorControlViewModelBase actionViewModel)
         {
@@ -172,8 +175,6 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             return actions;
         }
-
-        public virtual Task<Dictionary<string, string>> GetUniqueSpecialIdentifiers() { return Task.FromResult(new Dictionary<string, string>()); }
 
         private async Task AddActionViewModel(ActionEditorControlViewModelBase editorViewModel)
         {
