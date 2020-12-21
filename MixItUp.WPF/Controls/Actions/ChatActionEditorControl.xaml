@@ -9,10 +9,7 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:ActionEditorControlBase.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -33,10 +30,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SendAsStreamer}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SendAsStreamer}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding SendAsStreamer}" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Whisper}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Whisper}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="6" IsChecked="{Binding IsWhisper}" VerticalAlignment="Center" />
 
             <TextBox Grid.Column="8" Text="{Binding WhisperUsername}" IsEnabled="{Binding IsWhisper}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WhisperUserOptional}" />

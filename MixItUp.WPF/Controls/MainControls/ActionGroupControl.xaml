@@ -18,7 +18,6 @@
 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:GroupedCommandsMainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:GroupedCommandsMainControlBase.Resources>
     
@@ -38,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
         </Grid>

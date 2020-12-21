@@ -12,7 +12,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Controls:LoadingControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 

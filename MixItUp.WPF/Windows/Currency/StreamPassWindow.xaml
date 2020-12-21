@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeStreamPass}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>

@@ -11,7 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -47,10 +46,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MakeGloballyUsable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MakeGloballyUsable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="3" IsChecked="{Binding MakeGloballyUsable}" />
 
-            <TextBlock Grid.Column="5" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IsMathExpression}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="5" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IsMathExpression}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="7" IsChecked="{Binding ShouldProcessMath}" />
         </Grid>
     </Grid>

@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeInventory}" Height="600" Width="900">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -165,7 +164,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <ToggleButton Grid.Column="2" IsChecked="{Binding ShopEnabled}" />
 
                                 <TextBox Grid.Column="4" Text="{Binding ShopCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -208,7 +207,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <ToggleButton Grid.Column="2" IsChecked="{Binding TradeEnabled}" />
 
                                 <TextBox Grid.Column="4" Text="{Binding TradeCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TradeCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />

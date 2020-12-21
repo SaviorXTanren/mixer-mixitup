@@ -12,7 +12,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -41,7 +40,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding CaseSensitive}" />
 
             <ComboBox Grid.Column="4" ItemsSource="{Binding OperatorTypes}" SelectedItem="{Binding SelectedOperatorType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Operator}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">

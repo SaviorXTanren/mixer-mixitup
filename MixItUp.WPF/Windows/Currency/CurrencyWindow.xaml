@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeCurrencyRank}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -77,10 +76,10 @@
 
                     <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRankName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="210" />
 
-                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsPrimary}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsPrimary}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="4" IsChecked="{Binding IsPrimary}" Margin="0,4,0,0" />
 
-                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsRankSystem}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsRankSystem}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="8" IsChecked="{Binding IsRank}" Margin="0,4,0,0" />
 
                     <TextBox Grid.Column="10" Text="{Binding MaxAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />

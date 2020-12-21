@@ -19,7 +19,6 @@
 
              d:DesignHeight="500" d:DesignWidth="600">
     <local:MainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
     
@@ -87,10 +86,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RequireClaim}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RequireClaim}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                     <CheckBox Grid.Column="2" IsChecked="{Binding RequireClaim}" />
 
-                    <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowPastWinners}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowPastWinners}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                     <CheckBox Grid.Column="6" IsChecked="{Binding AllowPastWinners}" />
                 </Grid>
 
@@ -131,7 +130,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TimeLeft}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TimeLeft}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding TimeLeft}" />
             </Grid>
@@ -143,7 +142,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Winner}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Winner}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding WinnerUsername}" />
             </Grid>
@@ -156,7 +155,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EnteredUsers}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EnteredUsers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <DataGrid ItemsSource="{Binding EnteredUsers}" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>

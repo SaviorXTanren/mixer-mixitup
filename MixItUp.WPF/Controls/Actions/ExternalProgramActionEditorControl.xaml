@@ -11,7 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -53,13 +52,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowWindow}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowWindow}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="2" IsChecked="{Binding ShowWindow}" VerticalAlignment="Bottom" />
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="6" IsChecked="{Binding WaitForFinish}" VerticalAlignment="Bottom" />
 
-            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SaveOutput}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SaveOutput}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="10" IsChecked="{Binding SaveOutput}" IsEnabled="{Binding WaitForFinish}" VerticalAlignment="Bottom" />
         </Grid>
     </Grid>

@@ -11,7 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -70,7 +69,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.MuteSelf}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.MuteSelf}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding MuteSelf}" />
         </Grid>
 
@@ -81,7 +80,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.DeafenSelf}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.DeafenSelf}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="2" IsChecked="{Binding DeafenSelf}" />
         </Grid>
     </Grid>

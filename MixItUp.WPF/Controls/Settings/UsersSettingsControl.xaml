@@ -12,7 +12,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:SettingsControlBase.Resources>
     <Grid Margin="20">
@@ -41,7 +40,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,15,0,0" Text="{Binding Source={x:Static resx:Resources.RegularStatusOnlineViewingTime}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,15,0,0" Text="{Binding Source={x:Static resx:Resources.RegularStatusOnlineViewingTime}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <TextBox Grid.Column="2" Text="{Binding RegularMinimumHours}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredHours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MinWidth="100" />
         </Grid>
 

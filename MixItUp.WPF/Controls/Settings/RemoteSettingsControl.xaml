@@ -10,9 +10,6 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,7 +17,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ApprovedDevices}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ApprovedDevices}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
         <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
             <ItemsControl ItemsSource="{Binding Connections}" HorizontalAlignment="Center">

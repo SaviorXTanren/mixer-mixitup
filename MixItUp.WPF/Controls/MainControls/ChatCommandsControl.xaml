@@ -22,7 +22,6 @@
 
              d:DesignHeight="600" d:DesignWidth="800">
     <local:GroupedCommandsMainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:GroupedCommandsMainControlBase.Resources>
@@ -51,7 +50,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                 <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
             </Grid>

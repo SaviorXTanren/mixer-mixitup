@@ -16,9 +16,6 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                           
              d:DesignHeight="700" d:DesignWidth="600">
-    <local:MainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:MainControlBase.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -50,7 +47,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Version}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                        <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Version}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                         <TextBlock Grid.Column="2" x:Name="VersionTextBlock" />
                     </Grid>
 

@@ -12,7 +12,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="500">
     <local:MainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
     <Grid Margin="10">

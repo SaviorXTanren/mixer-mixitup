@@ -11,7 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -36,7 +35,7 @@
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LanguageToTranslateTo}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowProfanity}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowProfanity}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="4" IsChecked="{Binding AllowProfanity}" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="6" VerticalAlignment="Center">

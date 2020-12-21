@@ -12,7 +12,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:CommandEditorDetailsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:CommandEditorDetailsControlBase.Resources>
@@ -60,13 +59,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeExclamation}" IsEnabled="{Binding IncludeExclamationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <ToggleButton Grid.Column="6" IsChecked="{Binding Wildcards}" />
 
-                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <ToggleButton Grid.Column="10" IsChecked="{Binding Unlocked}" />
             </Grid>
         </Grid>

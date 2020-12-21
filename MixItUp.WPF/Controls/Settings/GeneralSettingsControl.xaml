@@ -11,9 +11,6 @@
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding OptOutOfDataTracking}" />

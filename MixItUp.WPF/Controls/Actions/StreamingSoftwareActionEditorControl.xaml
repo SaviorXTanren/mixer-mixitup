@@ -11,7 +11,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:ActionEditorControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:ActionEditorControlBase.Resources>
@@ -84,7 +83,7 @@
 
                 <TextBox Grid.Column="2" Text="{Binding SourceName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SourceName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <ToggleButton Grid.Column="6" IsChecked="{Binding SourceVisible}" VerticalAlignment="Center"/>
             </Grid>
 

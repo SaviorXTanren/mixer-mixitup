@@ -19,8 +19,6 @@
                           
              d:DesignHeight="700" d:DesignWidth="600">
     <local:MainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
     <Grid Margin="10">
@@ -39,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <TextBox x:Name="UsernameFilterTextBox" Grid.Column="2" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
 

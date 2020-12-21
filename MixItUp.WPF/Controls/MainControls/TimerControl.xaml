@@ -19,7 +19,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:GroupedCommandsMainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
     </local:GroupedCommandsMainControlBase.Resources>
 
     <Grid Margin="10">
@@ -38,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
         </Grid>
@@ -95,7 +94,7 @@
 
             <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
             <ToggleButton Grid.Column="8" IsChecked="{Binding DisableAllTimers}" />
 
         </Grid>

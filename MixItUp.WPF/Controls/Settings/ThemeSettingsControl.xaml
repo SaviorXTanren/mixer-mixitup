@@ -10,10 +10,6 @@
              xmlns:GenericSettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings.Generic"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:SettingsControlBase.Resources>
-
     <Grid Margin="20">
         <StackPanel>
             <GenericSettingsControls:GenericColorComboBoxSettingsOptionControl DataContext="{Binding ColorScheme}" />
