@@ -25,11 +25,7 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
         }
         private bool deleteChatMessageWhenRun;
-
-        public bool ShowDeleteChatMessage { get { return !ChannelSession.Settings.DeleteChatCommandsWhenRun; } }
-
-        public bool ShowDontDeleteChatMessage { get { return ChannelSession.Settings.DeleteChatCommandsWhenRun; } }
-
+        
         public SettingsRequirementViewModel() { }
 
         public SettingsRequirementViewModel(SettingsRequirementModel requirement)

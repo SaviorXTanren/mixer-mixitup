@@ -12062,6 +12062,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up has build in Command locking functionality which ensures
+        ///only 1 command type (Chat, Interactive, etc) can run at the same time
+        ///and ensures that each command finishes in the order it was run in.
+        ///This option will allow you to disable locking on this command. Be aware
+        ///that this could cause some unforeseen issues, so please use with caution..
+        /// </summary>
+        public static string UnlockCommandHelpText {
+            get {
+                return ResourceManager.GetString("UnlockCommandHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unmod User.
         /// </summary>
         public static string UnmodUser {
