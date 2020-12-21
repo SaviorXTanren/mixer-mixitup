@@ -419,7 +419,7 @@ namespace MixItUp.Base.Services
                         this.userEntranceCommands.Add(message.User.ID);
                         if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
                         {
-                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform));
+                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                         }
                     }
 
