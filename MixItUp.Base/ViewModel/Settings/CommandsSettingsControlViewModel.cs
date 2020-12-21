@@ -13,6 +13,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public GenericToggleSettingsOptionControlViewModel AllowCommandWhispering { get; set; }
         public GenericToggleSettingsOptionControlViewModel IgnoreBotAccount { get; set; }
+        public GenericToggleSettingsOptionControlViewModel IncludeUsernameWithRequirementErrors { get; set; }
         public GenericToggleSettingsOptionControlViewModel DeleteChatCommandsWhenRun { get; set; }
         public GenericToggleSettingsOptionControlViewModel UnlockAllCommandTypes { get; set; }
 
@@ -27,6 +28,9 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.IgnoreBotAccount = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.IgnoreYourBotAccountForCommands,
                 ChannelSession.Settings.IgnoreBotAccountCommands, (value) => { ChannelSession.Settings.IgnoreBotAccountCommands = value; });
+
+            this.IncludeUsernameWithRequirementErrors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.IncludeUsernameWithRequirementErrors,
+                ChannelSession.Settings.IncludeUsernameWithRequirementErrors, (value) => { ChannelSession.Settings.IncludeUsernameWithRequirementErrors = value; });
 
             this.DeleteChatCommandsWhenRun = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DeleteChatCommandsWhenRun,
                 ChannelSession.Settings.DeleteChatCommandsWhenRun, (value) => { ChannelSession.Settings.DeleteChatCommandsWhenRun = value; });

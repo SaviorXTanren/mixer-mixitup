@@ -85,7 +85,7 @@ namespace MixItUp.Base.Model.Requirements
 
                 if (this.performs.Count < this.Amount)
                 {
-                    await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count));
+                    await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count));
                     return false;
                 }
 

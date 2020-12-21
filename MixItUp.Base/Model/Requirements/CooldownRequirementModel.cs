@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.Requirements
             int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
             if (totalSeconds > 0)
             {
-                await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
+                await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
                 return false;
             }
             return true;

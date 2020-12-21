@@ -6480,6 +6480,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Username With Requirement Errors.
+        /// </summary>
+        public static string IncludeUsernameWithRequirementErrors {
+            get {
+                return ResourceManager.GetString("IncludeUsernameWithRequirementErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must sign in to a different account than your Streamer account..
         /// </summary>
         public static string IncorrectBotAccount {

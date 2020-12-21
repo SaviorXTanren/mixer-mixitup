@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
                     {
-                        await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }
@@ -101,7 +101,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (rankSystem.GetRank(parameters.User.Data) != rank)
                     {
-                        await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }
@@ -110,7 +110,7 @@ namespace MixItUp.Base.Model.Requirements
                     RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
                     if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
                     {
-                        await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name));
+                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name));
                         return false;
                     }
                 }

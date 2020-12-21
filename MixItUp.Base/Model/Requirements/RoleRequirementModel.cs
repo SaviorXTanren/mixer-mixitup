@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Requirements
                         }
                     }
                 }
-                await this.SendErrorMessage();
+                await this.SendErrorMessage(parameters);
                 return false;
             }
 
@@ -59,14 +59,14 @@ namespace MixItUp.Base.Model.Requirements
             {
                 if (parameters.User.SubscribeTier < this.SubscriberTier)
                 {
-                    await this.SendErrorMessage();
+                    await this.SendErrorMessage(parameters);
                     return false;
                 }
             }
             return true;
         }
 
-        private async Task SendErrorMessage()
+        private async Task SendErrorMessage(CommandParametersModel parameters)
         {
             string role = EnumLocalizationHelper.GetLocalizedName(this.Role);
             if (this.Role == UserRoleEnum.Subscriber)
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 role = tierText + " " + role;
             }
-            await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+            await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }
     }
 }
