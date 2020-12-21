@@ -3697,6 +3697,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Action: Missing line to write.
+        /// </summary>
+        public static string FileActionMissingLineToWrite {
+            get {
+                return ResourceManager.GetString("FileActionMissingLineToWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Action: Missing text to save.
         /// </summary>
         public static string FileActionMissingTextToSave {
@@ -6570,6 +6579,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert In File At Random Line.
+        /// </summary>
+        public static string InsertInFileAtRandomLine {
+            get {
+                return ResourceManager.GetString("InsertInFileAtRandomLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert In File At Specific Line.
+        /// </summary>
+        public static string InsertInFileAtSpecificLine {
+            get {
+                return ResourceManager.GetString("InsertInFileAtSpecificLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installation Folder.
         /// </summary>
         public static string InstallationFolder {
@@ -7101,11 +7128,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Line # To Read.
+        ///   Looks up a localized string similar to Line #.
         /// </summary>
-        public static string LineNumberToRead {
+        public static string LineNumber {
             get {
-                return ResourceManager.GetString("LineNumberToRead", resourceCulture);
+                return ResourceManager.GetString("LineNumber", resourceCulture);
             }
         }
         

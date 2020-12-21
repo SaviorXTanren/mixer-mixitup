@@ -21,10 +21,26 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowSaveToFileGrid");
                 this.NotifyPropertyChanged("ShowReadFromFileGrid");
+                this.NotifyPropertyChanged("ShowLineToWrite");
                 this.NotifyPropertyChanged("ShowLineToRead");
             }
         }
         private FileActionTypeEnum selectedActionType;
+
+        public bool ShowSaveToFileGrid
+        {
+            get
+            {
+                return this.SelectedActionType == FileActionTypeEnum.SaveToFile || this.SelectedActionType == FileActionTypeEnum.AppendToFile ||
+                    this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.selectedActionType == FileActionTypeEnum.InsertInFileAtRandomLine;
+            }
+        }
+
+        public bool ShowReadFromFileGrid { get { return !this.ShowSaveToFileGrid; } }
+
+        public bool ShowLineToWrite { get { return this.SelectedActionType == FileActionTypeEnum.InsertInFileAtSpecificLine; } }
+
+        public bool ShowLineToRead { get { return this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile; } }
 
         public string FilePath
         {
@@ -37,44 +53,27 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string filePath;
 
-        public bool ShowSaveToFileGrid { get { return this.SelectedActionType == FileActionTypeEnum.SaveToFile || this.SelectedActionType == FileActionTypeEnum.AppendToFile; } }
-
-        public string TextToSave
+        public string LineIndex
         {
-            get { return this.textToSave; }
+            get { return this.lineIndex; }
             set
             {
-                this.textToSave = value;
+                this.lineIndex = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string textToSave;
+        private string lineIndex;
 
-        public bool ShowReadFromFileGrid { get { return !this.ShowSaveToFileGrid; } }
-
-        public string LineToRead
+        public string TransferText
         {
-            get { return this.lineToRead; }
+            get { return this.transferText; }
             set
             {
-                this.lineToRead = value;
+                this.transferText = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private string lineToRead;
-
-        public bool ShowLineToRead { get { return this.SelectedActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.SelectedActionType == FileActionTypeEnum.RemoveSpecificLineFromFile; } }
-
-        public string SpecialIdentifier
-        {
-            get { return this.specialIdentifier; }
-            set
-            {
-                this.specialIdentifier = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string specialIdentifier;
+        private string transferText;
 
         public FileActionEditorControlViewModel(FileActionModel action)
             : base(action)
@@ -83,14 +82,18 @@ namespace MixItUp.Base.ViewModel.Actions
             this.FilePath = action.FilePath;
             if (this.ShowSaveToFileGrid)
             {
-                this.TextToSave = action.TransferText;
+                this.TransferText = action.TransferText;
+                if (this.ShowLineToWrite)
+                {
+                    this.LineIndex = action.LineIndex;
+                }
             }
             else if (this.ShowReadFromFileGrid)
             {
-                this.SpecialIdentifier = action.TransferText;
+                this.TransferText = action.TransferText;
                 if (this.ShowLineToRead)
                 {
-                    this.lineToRead = action.LineIndex;
+                    this.LineIndex = action.LineIndex;
                 }
             }
         }
@@ -106,21 +109,29 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (this.ShowSaveToFileGrid)
             {
-                if (string.IsNullOrEmpty(this.TextToSave))
+                if (string.IsNullOrEmpty(this.TransferText))
                 {
                     return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingTextToSave));
+                }
+
+                if (this.ShowLineToWrite)
+                {
+                    if (string.IsNullOrEmpty(this.LineIndex))
+                    {
+                        return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingLineToWrite));
+                    }
                 }
             }
             else if (this.ShowReadFromFileGrid)
             {
-                if (string.IsNullOrEmpty(this.SpecialIdentifier))
+                if (string.IsNullOrEmpty(this.TransferText))
                 {
                     return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionInvalidSpecialIdentifier));
                 }
 
                 if (this.ShowLineToRead)
                 {
-                    if (string.IsNullOrEmpty(this.LineToRead))
+                    if (string.IsNullOrEmpty(this.LineIndex))
                     {
                         return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingLineToRead));
                     }
@@ -132,15 +143,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (this.ShowSaveToFileGrid)
-            {
-                return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.TextToSave));
-            }
-            else if (this.ShowReadFromFileGrid)
-            {
-                return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.SpecialIdentifier, this.LineToRead));
-            }
-            return Task.FromResult<ActionModelBase>(null);
+            return Task.FromResult<ActionModelBase>(new FileActionModel(this.SelectedActionType, this.FilePath, this.TransferText, this.LineIndex));
         }
     }
 }

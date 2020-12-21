@@ -64,7 +64,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="SpecificLineTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumberToRead}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" Width="100" Margin="0,0,10,0" />
+            <TextBox Grid.Column="0" x:Name="SpecificLineTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" Width="100" Margin="0,0,10,0" />
 
             <TextBox Grid.Column="1" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

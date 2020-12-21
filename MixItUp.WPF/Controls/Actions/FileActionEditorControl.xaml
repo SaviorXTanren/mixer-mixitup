@@ -44,7 +44,14 @@
         </Grid>
 
         <Grid Grid.Row="4" Visibility="{Binding ShowSaveToFileGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBox Text="{Binding TextToSave}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextToSave}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Text="{Binding LineIndex}" Visibility="{Binding ShowLineToWrite, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" Margin="0,0,10,0" />
+
+            <TextBox Grid.Column="1" Text="{Binding TransferText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextToSave}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4" Visibility="{Binding ShowReadFromFileGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -53,9 +60,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding LineToRead}" Visibility="{Binding ShowLineToRead, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumberToRead}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" Margin="0,0,10,0" />
+            <TextBox Grid.Column="0" Text="{Binding LineIndex}" Visibility="{Binding ShowLineToRead, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" Margin="0,0,10,0" />
 
-            <TextBox Grid.Column="1" Text="{Binding SpecialIdentifier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="1" Text="{Binding TransferText}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionEditorControlBase>

@@ -1233,9 +1233,6 @@
   <data name="Lime" xml:space="preserve">
     <value>Lime</value>
   </data>
-  <data name="LineNumberToRead" xml:space="preserve">
-    <value>Line # To Read</value>
-  </data>
   <data name="LinkBlocking" xml:space="preserve">
     <value>Link Blocking</value>
   </data>
@@ -4555,6 +4552,18 @@ that this could cause some unforeseen issues, so please use with caution.</value
   </data>
   <data name="DescriptionOptional" xml:space="preserve">
     <value>Description (Optional)</value>
+  </data>
+  <data name="FileActionMissingLineToWrite" xml:space="preserve">
+    <value>File Action: Missing line to write</value>
+  </data>
+  <data name="InsertInFileAtRandomLine" xml:space="preserve">
+    <value>Insert In File At Random Line</value>
+  </data>
+  <data name="InsertInFileAtSpecificLine" xml:space="preserve">
+    <value>Insert In File At Specific Line</value>
+  </data>
+  <data name="LineNumber" xml:space="preserve">
+    <value>Line #</value>
   </data>
   <data name="StreamMarkerCreatedMessage" xml:space="preserve">
     <value>Stream Marker Created: {0}</value>

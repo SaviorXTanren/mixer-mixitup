@@ -16,6 +16,8 @@ namespace MixItUp.Base.Model.Actions
         ReadRandomLineFromFile,
         RemoveSpecificLineFromFile,
         RemoveRandomLineFromFile,
+        InsertInFileAtSpecificLine,
+        InsertInFileAtRandomLine
     }
 
     [DataContract]
@@ -56,84 +58,112 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-            if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile)
-            {
-                filePath = filePath.ToFilePathString();
+            filePath = filePath.ToFilePathString();
 
-                string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
-                textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, parameters);
-                if (this.ActionType == FileActionTypeEnum.SaveToFile)
+            string textToWrite = string.Empty;
+            string textToRead = string.Empty;
+            List<string> lines = new List<string>();
+
+            if (this.ActionType == FileActionTypeEnum.SaveToFile || this.ActionType == FileActionTypeEnum.AppendToFile ||
+                this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+            {
+                textToWrite = await this.GetTextToSave(parameters);
+            }
+
+            if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
+                this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+            {
+                textToRead = await ChannelSession.Services.FileService.ReadFile(filePath);
+            }
+
+            if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+            {
+                if (!string.IsNullOrEmpty(textToRead))
                 {
-                    await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
+                    lines = new List<string>(textToRead.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
                 }
-                else if (this.ActionType == FileActionTypeEnum.AppendToFile)
+
+                int lineIndex = 0;
+                if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
+                    this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine)
                 {
-                    string dataToWrite = textToWrite;
-                    if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(filePath)))
+                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
+                    if (!int.TryParse(lineToRead, out lineIndex))
                     {
-                        dataToWrite = Environment.NewLine + dataToWrite;
+                        return;
                     }
-                    await ChannelSession.Services.FileService.AppendFile(filePath, dataToWrite);
+                    lineIndex = lineIndex - 1;
+                }
+                else if (this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
+                    this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+                {
+                    lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
+                }
+
+                if (lineIndex >= 0)
+                {
+                    if (this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+                    {
+                        if (this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine)
+                        {
+                            lineIndex = Math.Min(lines.Count, lineIndex);
+                        }
+                        lines.Insert(lineIndex, textToWrite);
+                    }
+                    else
+                    {
+                        if (lines.Count > lineIndex)
+                        {
+                            if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                                this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
+                            {
+                                textToRead = lines[lineIndex];
+                            }
+
+                            if (this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
+                            {
+                                lines.RemoveAt(lineIndex);
+                            }
+                        }
+                    }
                 }
             }
-            else
+
+            if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
+                this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
             {
                 parameters.SpecialIdentifiers.Remove(this.TransferText);
-
-                string data = await ChannelSession.Services.FileService.ReadFile(filePath);
-                if (!string.IsNullOrEmpty(data))
-                {
-                    if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
-                        this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
-                    {
-                        List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
-                        if (lines.Count > 0)
-                        {
-                            int lineIndex = -1;
-                            if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
-                            {
-                                if (!string.IsNullOrEmpty(this.LineIndex))
-                                {
-                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndex, parameters);
-                                    if (int.TryParse(lineToRead, out lineIndex))
-                                    {
-                                        lineIndex = lineIndex - 1;
-                                        if (lineIndex >= 0 && lineIndex < lines.Count)
-                                        {
-                                            data = lines[lineIndex];
-                                        }
-                                        else
-                                        {
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
-                                data = lines[lineIndex];
-                            }
-
-                            if (this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
-                            {
-                                if (lineIndex >= 0)
-                                {
-                                    lines.RemoveAt(lineIndex);
-                                    await ChannelSession.Services.FileService.SaveFile(filePath, string.Join(Environment.NewLine, lines));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-
-                    data = await this.ReplaceStringWithSpecialModifiers(data, parameters);
-                    parameters.SpecialIdentifiers[this.TransferText] = data;
-                }
+                parameters.SpecialIdentifiers[this.TransferText] = textToRead;
             }
+
+            if (this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+            {
+                textToWrite = string.Join(Environment.NewLine, lines);
+            }
+
+            if (this.ActionType == FileActionTypeEnum.SaveToFile ||
+                this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
+                this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
+            {
+                await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
+            }
+
+            if (this.ActionType == FileActionTypeEnum.AppendToFile)
+            {
+                await ChannelSession.Services.FileService.AppendFile(filePath, textToWrite);
+            }
+        }
+
+        private async Task<string> GetTextToSave(CommandParametersModel parameters)
+        {
+            string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
+            return await this.ReplaceStringWithSpecialModifiers(textToWrite, parameters);
         }
     }
 }
