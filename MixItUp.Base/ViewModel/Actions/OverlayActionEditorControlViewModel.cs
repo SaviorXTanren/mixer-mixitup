@@ -278,6 +278,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.SelectedOverlayEndpoint = action.OverlayName;
             }
+            else
+            {
+                this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
+            }
 
             if (action.WidgetID != Guid.Empty)
             {
@@ -339,10 +343,7 @@ namespace MixItUp.Base.ViewModel.Actions
         public OverlayActionEditorControlViewModel()
             : base()
         {
-            if (this.OverlayEnabled && this.OverlayEndpoints.Count() == 1)
-            {
-                this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
-            }
+            this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
         }
 
         public override Task<Result> Validate()
