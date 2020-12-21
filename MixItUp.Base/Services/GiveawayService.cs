@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -267,26 +267,23 @@ namespace MixItUp.Base.Services
 
                     if (await ChannelSession.Settings.GiveawayRequirementsSet.Validate(parameters))
                     {
-                        // TODO
-                        //if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
-                        //{
-                        //    int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                        //    if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount, requireAmount: true))
-                        //    {
-                        //        await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
-                        //        return;
-                        //    }
-                        //}
+                        foreach (CurrencyRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Currency)
+                        {
+                            int totalAmount = requirement.MinAmount * entries;
+                            if (!await requirement.ValidateAmount(message.User, totalAmount))
+                            {
+                                return;
+                            }
+                        }
 
-                        //if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
-                        //{
-                        //    int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
-                        //    if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount, requireAmount: true))
-                        //    {
-                        //        await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
-                        //        return;
-                        //    }
-                        //}
+                        foreach (InventoryRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Inventory)
+                        {
+                            int totalAmount = requirement.Amount * entries;
+                            if (!await requirement.ValidateAmount(message.User, totalAmount))
+                            {
+                                return;
+                            }
+                        }
 
                         if (!this.enteredUsers.ContainsKey(message.User.ID))
                         {

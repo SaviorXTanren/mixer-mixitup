@@ -31,7 +31,10 @@ namespace MixItUp.Base.Model.Requirements
 
             if (requirements.Currency != null)
             {
-                this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
+                if (requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
+                {
+                    this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
+                }
             }
 
             if (requirements.Rank != null)

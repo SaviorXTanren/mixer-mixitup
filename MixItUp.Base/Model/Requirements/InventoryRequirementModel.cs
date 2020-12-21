@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
@@ -75,13 +76,7 @@ namespace MixItUp.Base.Model.Requirements
                 return false;
             }
 
-            if (!parameters.User.Data.IsCurrencyRankExempt && !inventory.HasAmount(parameters.User.Data, item.ID, this.Amount))
-            {
-                await this.SendChatMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, item.Name));
-                return false;
-            }
-
-            return true;
+            return await this.ValidateAmount(parameters.User, this.Amount);
         }
 
         public override Task Perform(CommandParametersModel parameters)
@@ -102,6 +97,16 @@ namespace MixItUp.Base.Model.Requirements
                 inventory.AddAmount(parameters.User.Data, this.ItemID, this.Amount);
             }
             return Task.FromResult(0);
+        }
+
+        public async Task<bool> ValidateAmount(UserViewModel user, int amount)
+        {
+            if (!user.Data.IsCurrencyRankExempt && !this.Inventory.HasAmount(user.Data, this.ItemID, amount))
+            {
+                await this.SendChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name));
+                return false;
+            }
+            return true;
         }
     }
 }

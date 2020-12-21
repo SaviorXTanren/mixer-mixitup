@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace MixItUp.Base.Model.Requirements
 {
     public enum CurrencyRequirementTypeEnum
     {
-        NoCost,
         RequiredAmount,
         MinimumOnly,
         MinimumAndMaximum
@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Requirements
         public Guid CurrencyID { get; set; }
 
         [DataMember]
-        public CurrencyRequirementTypeEnum RequirementType { get; set; } = CurrencyRequirementTypeEnum.NoCost;
+        public CurrencyRequirementTypeEnum RequirementType { get; set; } = CurrencyRequirementTypeEnum.RequiredAmount;
 
         [DataMember]
         public int MinAmount { get; set; }
@@ -48,7 +48,6 @@ namespace MixItUp.Base.Model.Requirements
             this.MaxAmount = requirement.MaximumAmount;
             switch (requirement.RequirementType)
             {
-                case ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost: this.RequirementType = CurrencyRequirementTypeEnum.NoCost; break;
                 case ViewModel.Requirement.CurrencyRequirementTypeEnum.RequiredAmount: this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount; break;
                 case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumOnly: this.RequirementType = CurrencyRequirementTypeEnum.MinimumOnly; break;
                 case ViewModel.Requirement.CurrencyRequirementTypeEnum.MinimumAndMaximum: this.RequirementType = CurrencyRequirementTypeEnum.MinimumAndMaximum; break;
@@ -72,11 +71,6 @@ namespace MixItUp.Base.Model.Requirements
 
         public override async Task<bool> Validate(CommandParametersModel parameters)
         {
-            if (this.RequirementType == CurrencyRequirementTypeEnum.NoCost)
-            {
-                return true;
-            }
-
             CurrencyModel currency = this.Currency;
             if (currency == null)
             {
@@ -85,7 +79,7 @@ namespace MixItUp.Base.Model.Requirements
 
             if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                return await this.ValidateAmount(parameters, currency, this.MinAmount);
+                return await this.ValidateAmount(parameters.User, this.MinAmount);
             }
             else
             {
@@ -97,7 +91,7 @@ namespace MixItUp.Base.Model.Requirements
                         await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.MinAmount, currency.Name));
                         return false;
                     }
-                    return await this.ValidateAmount(parameters, currency, amount);
+                    return await this.ValidateAmount(parameters.User, amount);
                 }
                 else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
@@ -106,7 +100,7 @@ namespace MixItUp.Base.Model.Requirements
                         await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.MinAmount, this.MaxAmount, currency.Name));
                         return false;
                     }
-                    return await this.ValidateAmount(parameters, currency, amount);
+                    return await this.ValidateAmount(parameters.User, amount);
                 }
             }
             return false;
@@ -114,23 +108,20 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task Perform(CommandParametersModel parameters)
         {
-            if (this.RequirementType != CurrencyRequirementTypeEnum.NoCost)
+            CurrencyModel currency = this.Currency;
+            if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                CurrencyModel currency = this.Currency;
-                if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
+                if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
                 {
-                    if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                    {
-                        currency.SubtractAmount(parameters.User.Data, this.MinAmount);
-                    }
-                    else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
-                    {
-                        currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                    }
-                    else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
-                    {
-                        currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                    }
+                    currency.SubtractAmount(parameters.User.Data, this.MinAmount);
+                }
+                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
+                }
+                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                 }
             }
             return Task.FromResult(0);
@@ -138,23 +129,20 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task Refund(CommandParametersModel parameters)
         {
-            if (this.RequirementType != CurrencyRequirementTypeEnum.NoCost)
+            CurrencyModel currency = this.Currency;
+            if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
-                CurrencyModel currency = this.Currency;
-                if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
+                if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
                 {
-                    if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                    {
-                        currency.AddAmount(parameters.User.Data, this.MinAmount);
-                    }
-                    else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
-                    {
-                        currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                    }
-                    else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
-                    {
-                        currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                    }
+                    currency.AddAmount(parameters.User.Data, this.MinAmount);
+                }
+                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
+                }
+                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                 }
             }
             return Task.FromResult(0);
@@ -162,11 +150,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public int GetVariableAmount(CommandParametersModel parameters)
         {
-            if (this.RequirementType == CurrencyRequirementTypeEnum.NoCost)
-            {
-                return 0;
-            }
-            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 return this.MinAmount;
             }
@@ -190,11 +174,11 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        protected async Task<bool> ValidateAmount(CommandParametersModel parameters, CurrencyModel currency, int amount)
+        public async Task<bool> ValidateAmount(UserViewModel user, int amount)
         {
-            if (!parameters.User.Data.IsCurrencyRankExempt && !currency.HasAmount(parameters.User.Data, amount))
+            if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
             {
-                await this.SendChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, currency.Name));
+                await this.SendChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
                 return false;
             }
             return true;
