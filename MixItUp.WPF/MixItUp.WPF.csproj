@@ -641,6 +641,9 @@
     <Compile Include="Controls\Commands\TwitchChannelPointsCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TwitchChannelPointsCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\UnlockCommandControl.xaml.cs">
+      <DependentUpon>UnlockCommandControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
@@ -909,9 +912,6 @@
     </Compile>
     <Compile Include="Controls\Requirements\SettingsRequirementControl.xaml.cs">
       <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Requirements\SimpleSettingsRequirementControl.xaml.cs">
-      <DependentUpon>SimpleSettingsRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirements\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
@@ -1514,6 +1514,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Commands\UnlockCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1867,10 +1871,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirements\SettingsRequirementControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Requirements\SimpleSettingsRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

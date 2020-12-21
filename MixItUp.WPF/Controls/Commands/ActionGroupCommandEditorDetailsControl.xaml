@@ -20,13 +20,17 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-        <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,10,0,0" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Column="4" IsChecked="{Binding Unlocked}" Margin="0,10,0,0" />
+        <local:UnlockCommandControl Grid.Column="2" />
+
+        <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunOneRandomly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Column="6" IsChecked="{Binding RunOneRandomly}" />
     </Grid>
 </local:CommandEditorDetailsControlBase>

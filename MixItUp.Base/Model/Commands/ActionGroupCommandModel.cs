@@ -13,15 +13,20 @@ namespace MixItUp.Base.Model.Commands
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
-        public bool IsRandomized { get; set; }
+        public bool RunOneRandomly { get; set; }
 
-        public ActionGroupCommandModel(string name) : base(name, CommandTypeEnum.ActionGroup) { }
+        public ActionGroupCommandModel(string name, bool runOneRandomly)
+            : base(name, CommandTypeEnum.ActionGroup)
+        {
+            this.RunOneRandomly = runOneRandomly;
+        }
 
         internal ActionGroupCommandModel(MixItUp.Base.Commands.ActionGroupCommand command)
             : base(command)
         {
             this.Name = command.Name;
             this.Type = CommandTypeEnum.ActionGroup;
+            this.RunOneRandomly = command.IsRandomized;
         }
 
         protected ActionGroupCommandModel() : base() { }
@@ -30,7 +35,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.IsRandomized)
+            if (this.RunOneRandomly)
             {
                 await CommandModelBase.RunActions(new List<ActionModelBase>() { this.Actions.Random() }, parameters);
             }

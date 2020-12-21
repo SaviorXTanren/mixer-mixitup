@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.existingCommand = existingCommand;
 
             this.Name = this.existingCommand.Name;
-            this.Unlocked = unlocked;
+            this.Unlocked = this.existingCommand.Unlocked;
             this.Requirements = new RequirementsSetViewModel(this.existingCommand.Requirements);
         }
 
@@ -146,6 +146,8 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
         }
+
+        public virtual bool CanBeUnlocked { get { return true; } }
 
         public virtual bool AddRequirementsToCommand { get { return false; } }
 

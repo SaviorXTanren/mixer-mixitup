@@ -55,8 +55,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
@@ -65,8 +63,7 @@
                 <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <ToggleButton Grid.Column="6" IsChecked="{Binding Wildcards}" />
 
-                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UnlockCommand}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                <ToggleButton Grid.Column="10" IsChecked="{Binding Unlocked}" />
+                <local:UnlockCommandControl Grid.Column="8" />
             </Grid>
         </Grid>
 
