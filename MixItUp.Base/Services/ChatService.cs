@@ -157,21 +157,24 @@ namespace MixItUp.Base.Services
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+            if (!string.IsNullOrEmpty(message))
             {
-                await this.TwitchChatService.SendMessage(message, sendAsStreamer);
-
-                if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    UserViewModel user = ChannelSession.GetCurrentUser();
-                    await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                    await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+
+                    if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                    {
+                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                    }
                 }
             }
         }
 
         public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false)
         {
-            if (user != null)
+            if (user != null && !string.IsNullOrEmpty(message))
             {
                 if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && this.TwitchChatService != null)
                 {
