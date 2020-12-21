@@ -1951,6 +1951,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy From Existing Command.
+        /// </summary>
+        public static string ConditionalCommandCopyFromExistingCommand {
+            get {
+                return ResourceManager.GetString("ConditionalCommandCopyFromExistingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete this command?.
         /// </summary>
         public static string ConfirmDeleteCommand {
@@ -6426,7 +6435,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Import Actions to File.
+        ///   Looks up a localized string similar to Import Actions From File.
         /// </summary>
         public static string ImportActions {
             get {

@@ -181,14 +181,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             this.ImportActionsCommand = this.CreateCommand(async (parameter) =>
             {
-                CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile();
-                if (command != null)
-                {
-                    foreach (ActionModelBase action in command.Actions)
-                    {
-                        await this.ActionEditorList.AddAction(action);
-                    }
-                }
+                await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile());
             });
 
             foreach (ActionModelBase subAction in subActions)
@@ -216,6 +209,17 @@ namespace MixItUp.Base.ViewModel.Actions
                 return new Result(results.All(r => !r.Success));
             }
             return new Result();
+        }
+
+        public async Task ImportActionsFromCommand(CommandModelBase command)
+        {
+            if (command != null)
+            {
+                foreach (ActionModelBase action in command.Actions)
+                {
+                    await this.ActionEditorList.AddAction(action);
+                }
+            }
         }
 
         protected override async Task<ActionModelBase> GetActionInternal()

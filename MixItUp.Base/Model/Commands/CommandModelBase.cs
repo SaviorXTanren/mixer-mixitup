@@ -45,6 +45,15 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
+        public static IEnumerable<CommandTypeEnum> GetSelectableCommandTypes()
+        {
+            List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
+            types.Remove(CommandTypeEnum.PreMade);
+            types.Remove(CommandTypeEnum.UserOnlyChat);
+            types.Remove(CommandTypeEnum.Custom);
+            return types;
+        }
+
         public static async Task RunActions(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
         {
             List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);

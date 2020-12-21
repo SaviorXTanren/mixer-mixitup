@@ -1084,7 +1084,7 @@
     <value>Image</value>
   </data>
   <data name="ImportActions" xml:space="preserve">
-    <value>Import Actions to File</value>
+    <value>Import Actions From File</value>
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Import Data</value>
@@ -4531,6 +4531,9 @@ only 1 command type (Chat, Interactive, etc) can run at the same time
 and ensures that each command finishes in the order it was run in.
 This option will allow you to disable locking on this command. Be aware
 that this could cause some unforeseen issues, so please use with caution.</value>
+  </data>
+  <data name="ConditionalCommandCopyFromExistingCommand" xml:space="preserve">
+    <value>Copy From Existing Command</value>
   </data>
   <data name="IncludeUsernameWithRequirementErrors" xml:space="preserve">
     <value>Include Username With Requirement Errors</value>

@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Dialogs;
@@ -42,8 +41,10 @@ namespace MixItUp.WPF.Controls.Dashboard
             if (await this.viewModel.CanSelectCommands())
             {
                 CommandSelectorDialogControl dialogControl = new CommandSelectorDialogControl();
-                await DialogHelper.ShowCustom(dialogControl);
-                return dialogControl.Command;
+                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && dialogControl.ViewModel.SelectedCommand != null)
+                {
+                    return dialogControl.ViewModel.SelectedCommand;
+                }
             }
             return null;
         }
