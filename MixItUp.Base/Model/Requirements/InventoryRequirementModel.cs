@@ -79,14 +79,14 @@ namespace MixItUp.Base.Model.Requirements
             return await this.ValidateAmount(parameters.User, this.Amount);
         }
 
-        public override Task Perform(CommandParametersModel parameters)
+        public override async Task Perform(CommandParametersModel parameters)
         {
+            await base.Perform(parameters);
             InventoryModel inventory = this.Inventory;
             if (inventory != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
                 inventory.SubtractAmount(parameters.User.Data, this.ItemID, this.Amount);
             }
-            return Task.FromResult(0);
         }
 
         public override Task Refund(CommandParametersModel parameters)
@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Inventory.HasAmount(user.Data, this.ItemID, amount))
             {
-                await this.SendChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name));
+                await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name));
                 return false;
             }
             return true;

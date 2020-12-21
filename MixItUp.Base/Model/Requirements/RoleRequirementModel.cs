@@ -80,7 +80,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 role = tierText + " " + role;
             }
-            await this.SendChatMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+            await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }
     }
 }

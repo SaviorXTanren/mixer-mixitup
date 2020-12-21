@@ -103,14 +103,15 @@ namespace MixItUp.Base.Model.Requirements
             int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
             if (totalSeconds > 0)
             {
-                await this.SendChatMessage(string.Format("This command is currently on cooldown, please wait another {0} second(s).", totalSeconds));
+                await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
                 return false;
             }
             return true;
         }
 
-        public override Task Perform(CommandParametersModel parameters)
+        public override async Task Perform(CommandParametersModel parameters)
         {
+            await base.Perform(parameters);
             if (this.Type == CooldownTypeEnum.Standard)
             {
                 this.globalCooldown = DateTimeOffset.Now;
@@ -126,7 +127,6 @@ namespace MixItUp.Base.Model.Requirements
             {
                 this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now;
             }
-            return Task.FromResult(0);
         }
 
         public override Task Refund(CommandParametersModel parameters)

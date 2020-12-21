@@ -2122,6 +2122,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command is currently on cooldown, please wait another {0} second(s)..
+        /// </summary>
+        public static string CooldownRequirementOnCooldown {
+            get {
+                return ResourceManager.GetString("CooldownRequirementOnCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cooldown (Seconds).
         /// </summary>
         public static string CooldownSeconds {

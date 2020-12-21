@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (amount < this.MinAmount)
                     {
-                        await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.MinAmount, currency.Name));
+                        await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.MinAmount, currency.Name));
                         return false;
                     }
                     return await this.ValidateAmount(parameters.User, amount);
@@ -97,7 +97,7 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (amount < this.MinAmount || amount > this.MaxAmount)
                     {
-                        await this.SendChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.MinAmount, this.MaxAmount, currency.Name));
+                        await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.MinAmount, this.MaxAmount, currency.Name));
                         return false;
                     }
                     return await this.ValidateAmount(parameters.User, amount);
@@ -106,8 +106,9 @@ namespace MixItUp.Base.Model.Requirements
             return false;
         }
 
-        public override Task Perform(CommandParametersModel parameters)
+        public override async Task Perform(CommandParametersModel parameters)
         {
+            await base.Perform(parameters);
             CurrencyModel currency = this.Currency;
             if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
             {
@@ -124,7 +125,6 @@ namespace MixItUp.Base.Model.Requirements
                     currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
                 }
             }
-            return Task.FromResult(0);
         }
 
         public override Task Refund(CommandParametersModel parameters)
@@ -178,7 +178,7 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
             {
-                await this.SendChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
+                await this.SendErrorChatMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
                 return false;
             }
             return true;

@@ -85,7 +85,7 @@ namespace MixItUp.Base.Model.Requirements
 
                 if (this.performs.Count < this.Amount)
                 {
-                    await this.SendChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
+                    await this.SendErrorChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
                     return false;
                 }
 
@@ -95,11 +95,11 @@ namespace MixItUp.Base.Model.Requirements
             return true;
         }
 
-        public override Task Perform(CommandParametersModel parameters)
+        public override async Task Perform(CommandParametersModel parameters)
         {
+            await base.Perform(parameters);
             this.performs.Clear();
             this.performParameters.Clear();
-            return Task.FromResult(0);
         }
     }
 }
