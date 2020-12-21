@@ -692,7 +692,7 @@ namespace MixItUp.Base.Services
             SettingsRequirementModel settings = command.Requirements.Settings;
             if (settings != null)
             {
-                if (settings != null && settings.DeleteChatMessageWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !settings.DontDeleteChatMessageWhenRun))
+                if (settings != null && settings.ShouldChatMessageBeDeletedWhenRun)
                 {
                     await this.DeleteMessage(message);
                 }
