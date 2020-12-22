@@ -146,7 +146,9 @@ namespace MixItUp.Base.Services.External
 
         public Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSoftwareSourceDimensionsModel()); }
 
-        public async Task StartStopStream() { await this.Send(new XSplitPacket("startStopStream", JObject.FromObject(new XSplitOutput() { outputName = "Beam" }))); }
+        public Task StartStopStream() { return Task.FromResult(0); }
+
+        public Task StartStopRecording() { return Task.FromResult(0); }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
         public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }

@@ -34,6 +34,8 @@ namespace MixItUp.Base.Model.Actions
         SceneCollection,
 
         SourceFilterVisibility,
+
+        StartStopRecording,
     }
 
     [DataContract]
@@ -149,16 +151,6 @@ namespace MixItUp.Base.Model.Actions
             action.ActionType = StreamingSoftwareActionTypeEnum.SourceDimensions;
             action.SourceDimensions = sourceDimensions;
             return action;
-        }
-
-        public static StreamingSoftwareActionModel CreateStartStopStreamAction(StreamingSoftwareTypeEnum softwareType)
-        {
-            return new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.StartStopStream);
-        }
-
-        public static StreamingSoftwareActionModel CreateSaveReplayBufferAction(StreamingSoftwareTypeEnum softwareType)
-        {
-            return new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SaveReplayBuffer);
         }
 
         public static StreamingSoftwareActionModel CreateSceneCollectionAction(StreamingSoftwareTypeEnum softwareType, string sceneCollectionName)
@@ -282,6 +274,10 @@ namespace MixItUp.Base.Model.Actions
                     if (this.ActionType == StreamingSoftwareActionTypeEnum.StartStopStream)
                     {
                         await ssService.StartStopStream();
+                    }
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.StartStopRecording)
+                    {
+                        await ssService.StartStopRecording();
                     }
                     else if (this.ActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
                     {

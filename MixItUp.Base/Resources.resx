@@ -4580,6 +4580,9 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="SourceFilterVisibility" xml:space="preserve">
     <value>Source Filter Visibility</value>
   </data>
+  <data name="StartStopRecording" xml:space="preserve">
+    <value>Start/Stop Recording</value>
+  </data>
   <data name="StreamingSoftwareActionMissingFilter" xml:space="preserve">
     <value>Streaming Software: Missing filter</value>
   </data>

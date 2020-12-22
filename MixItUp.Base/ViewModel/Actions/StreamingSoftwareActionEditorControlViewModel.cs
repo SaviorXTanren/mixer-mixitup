@@ -57,9 +57,23 @@ namespace MixItUp.Base.ViewModel.Actions
             get
             {
                 StreamingSoftwareTypeEnum streamingSoftware = this.GetCurrentlySelectedStreamingSoftwareType();
-                if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
+                if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.StartStopStream)
                 {
                     if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        return true;
+                    }
+                }
+                else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SaveReplayBuffer)
+                {
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        return true;
+                    }
+                }
+                else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.StartStopRecording)
+                {
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
                     {
                         return true;
                     }
@@ -416,7 +430,7 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceFilterVisibilityAction(this.SelectedStreamingSoftwareType, this.SourceName, this.FilterName, this.FilterVisible));
             }
-            return Task.FromResult<ActionModelBase>(null);
+            return Task.FromResult<ActionModelBase>(new StreamingSoftwareActionModel(this.SelectedStreamingSoftwareType, this.SelectedActionType));
         }
 
         private StreamingSoftwareTypeEnum GetCurrentlySelectedStreamingSoftwareType()

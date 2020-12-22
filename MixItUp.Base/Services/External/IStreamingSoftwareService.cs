@@ -23,6 +23,7 @@ namespace MixItUp.Base.Services.External
         Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName);
 
         Task StartStopStream();
+        Task StartStopRecording();
 
         Task SaveReplayBuffer();
         Task<bool> StartReplayBuffer();

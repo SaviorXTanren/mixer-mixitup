@@ -186,15 +186,16 @@ namespace MixItUp.WPF.Services
         {
             await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                OutputStatus status = this.OBSWebsocket.GetStreamingStatus();
-                if (status.IsStreaming)
-                {
-                    this.OBSWebsocket.StopStreaming();
-                }
-                else
-                {
-                    this.OBSWebsocket.StartStreaming();
-                }
+                this.OBSWebsocket.StartStopStreaming();
+                return true;
+            });
+        }
+
+        public async Task StartStopRecording()
+        {
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                this.OBSWebsocket.StartStopRecording();
                 return true;
             });
         }

@@ -10926,6 +10926,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start/Stop Recording.
+        /// </summary>
+        public static string StartStopRecording {
+            get {
+                return ResourceManager.GetString("StartStopRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start/Stop Stream.
         /// </summary>
         public static string StartStopStream {

@@ -312,15 +312,11 @@ namespace MixItUp.Base.Services.External
             return null;
         }
 
-        public async Task StartStopStream()
-        {
-            await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
-        }
+        public async Task StartStopStream() { await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService")); }
 
-        public async Task SaveReplayBuffer()
-        {
-            await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService"));
-        }
+        public Task StartStopRecording() { return Task.FromResult(0); }
+
+        public async Task SaveReplayBuffer() { await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService")); }
 
         public async Task<bool> StartReplayBuffer()
         {
