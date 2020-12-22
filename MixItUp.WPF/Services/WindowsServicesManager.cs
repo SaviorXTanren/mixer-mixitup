@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Services
             this.Moderation = new ModerationService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
-            this.TimerService = new TimerService();
+            this.Timers = new TimerService();
             this.GameQueueService = new GameQueueService();
             this.Image = new WindowsImageService();
             this.AudioService = new WindowsAudioService();

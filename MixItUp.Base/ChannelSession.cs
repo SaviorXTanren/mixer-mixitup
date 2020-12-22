@@ -571,7 +571,7 @@ namespace MixItUp.Base
                             }
                             ChannelSession.Services.Chat.RebuildCommandTriggers();
 
-                            await ChannelSession.Services.TimerService.Initialize();
+                            await ChannelSession.Services.Timers.Initialize();
                             await ChannelSession.Services.Moderation.Initialize();
                         }
                         catch (Exception ex)

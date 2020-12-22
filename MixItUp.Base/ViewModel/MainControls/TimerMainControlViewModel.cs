@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 ChannelSession.Settings.DisableAllTimers = value;
                 this.NotifyPropertyChanged();
 
-                ChannelSession.Services.TimerService.RebuildTimerGroups().Wait();
+                ChannelSession.Services.Timers.RebuildTimerGroups().Wait();
             }
         }
 
