@@ -314,7 +314,7 @@ namespace MixItUp.Base.Services.External
 
         public async Task StartStopStream() { await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService")); }
 
-        public Task StartStopRecording() { return Task.FromResult(0); }
+        public async Task StartStopRecording() { await this.SendAndReceive(new StreamlabsOBSRequest("toggleRecording", "StreamingService")); }
 
         public async Task SaveReplayBuffer() { await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService")); }
 
