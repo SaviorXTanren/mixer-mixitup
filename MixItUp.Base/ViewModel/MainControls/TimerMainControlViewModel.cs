@@ -29,6 +29,16 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
+        public bool RandomizeTimers
+        {
+            get { return ChannelSession.Settings.RandomizeTimers; }
+            set
+            {
+                ChannelSession.Settings.RandomizeTimers = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public bool DisableAllTimers
         {
             get { return ChannelSession.Settings.DisableAllTimers; }
@@ -36,6 +46,8 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 ChannelSession.Settings.DisableAllTimers = value;
                 this.NotifyPropertyChanged();
+
+                ChannelSession.Services.TimerService.RebuildTimerGroups().Wait();
             }
         }
 

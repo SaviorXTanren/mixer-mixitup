@@ -9135,6 +9135,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Randomize Timers.
+        /// </summary>
+        public static string RandomizeTimers {
+            get {
+                return ResourceManager.GetString("RandomizeTimers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Random Streamer.
         /// </summary>
         public static string RandomStreamer {

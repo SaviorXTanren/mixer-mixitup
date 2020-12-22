@@ -4571,4 +4571,7 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="StreamMarkerDescriptionMustBe140CharactersOrLess" xml:space="preserve">
     <value>Stream Marker description must be 140 characters or less</value>
   </data>
+  <data name="RandomizeTimers" xml:space="preserve">
+    <value>Randomize Timers</value>
+  </data>
 </root>

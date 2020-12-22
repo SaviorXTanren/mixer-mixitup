@@ -84,7 +84,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -94,10 +98,11 @@
 
             <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
-            <ToggleButton Grid.Column="8" IsChecked="{Binding DisableAllTimers}" />
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.RandomizeTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="8" IsChecked="{Binding RandomizeTimers}" />
 
+            <TextBlock Grid.Column="10" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="12" IsChecked="{Binding DisableAllTimers}" />
         </Grid>
-
     </Grid>
 </local:GroupedCommandsMainControlBase>

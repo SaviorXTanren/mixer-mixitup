@@ -280,6 +280,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int TimerCommandsMinimumMessages { get; set; } = 10;
         [DataMember]
+        public bool RandomizeTimers { get; set; }
+        [DataMember]
         public bool DisableAllTimers { get; set; }
 
         #endregion Timers
