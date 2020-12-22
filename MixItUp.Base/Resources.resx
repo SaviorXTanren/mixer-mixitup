@@ -4574,4 +4574,13 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="RandomizeTimers" xml:space="preserve">
     <value>Randomize Timers</value>
   </data>
+  <data name="FilterName" xml:space="preserve">
+    <value>Filter Name</value>
+  </data>
+  <data name="SourceFilterVisibility" xml:space="preserve">
+    <value>Source Filter Visibility</value>
+  </data>
+  <data name="StreamingSoftwareActionMissingFilter" xml:space="preserve">
+    <value>Streaming Software: Missing filter</value>
+  </data>
 </root>

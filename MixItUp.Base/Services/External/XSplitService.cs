@@ -135,6 +135,8 @@ namespace MixItUp.Base.Services.External
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
         }
 
+        public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.FromResult(0); }
+
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
@@ -144,10 +146,7 @@ namespace MixItUp.Base.Services.External
 
         public Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSoftwareSourceDimensionsModel()); }
 
-        public async Task StartStopStream()
-        {
-            await this.Send(new XSplitPacket("startStopStream", JObject.FromObject(new XSplitOutput() { outputName = "Beam" })));
-        }
+        public async Task StartStopStream() { await this.Send(new XSplitPacket("startStopStream", JObject.FromObject(new XSplitOutput() { outputName = "Beam" }))); }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
         public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }

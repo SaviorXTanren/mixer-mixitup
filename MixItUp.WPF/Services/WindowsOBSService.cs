@@ -115,6 +115,18 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility)
+        {
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                Logger.Log(LogLevel.Debug, "Setting source filter visibility - " + sourceName + " - " + filterName);
+
+                this.OBSWebsocket.SetSourceFilterVisibility(sourceName, filterName, visibility);
+
+                return true;
+            });
+        }
+
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             Logger.Log(LogLevel.Debug, "Setting web browser URL - " + sourceName);
@@ -198,7 +210,7 @@ namespace MixItUp.WPF.Services
                 }
                 catch (Exception ex)
                 {
-                    if (ex.Message.Equals("replay buffer already active"))
+                    if (ex.Message.Equals("replay buffer already active") || ex.Message.Equals("replay buffer disabled in settings"))
                     {
                         return true;
                     }

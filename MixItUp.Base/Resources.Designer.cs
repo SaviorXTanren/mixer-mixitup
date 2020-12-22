@@ -3760,6 +3760,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Name.
+        /// </summary>
+        public static string FilterName {
+            get {
+                return ResourceManager.GetString("FilterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find Channel To Raid.
         /// </summary>
         public static string FindChannelToRaid {
@@ -10692,6 +10701,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source Filter Visibility.
+        /// </summary>
+        public static string SourceFilterVisibility {
+            get {
+                return ResourceManager.GetString("SourceFilterVisibility", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source Name.
         /// </summary>
         public static string SourceName {
@@ -11048,6 +11066,15 @@ namespace MixItUp.Base {
         public static string StreamingSoftware {
             get {
                 return ResourceManager.GetString("StreamingSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software: Missing filter.
+        /// </summary>
+        public static string StreamingSoftwareActionMissingFilter {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareActionMissingFilter", resourceCulture);
             }
         }
         

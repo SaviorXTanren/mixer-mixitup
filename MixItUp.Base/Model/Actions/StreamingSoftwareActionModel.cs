@@ -32,6 +32,8 @@ namespace MixItUp.Base.Model.Actions
         SaveReplayBuffer,
 
         SceneCollection,
+
+        SourceFilterVisibility,
     }
 
     [DataContract]
@@ -104,6 +106,15 @@ namespace MixItUp.Base.Model.Actions
             StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SourceVisibility);
             action.ParentName = sceneName;
             action.ItemName = sourceName;
+            action.Visible = sourceVisible;
+            return action;
+        }
+
+        public static StreamingSoftwareActionModel CreateSourceFilterVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, string filterName, bool sourceVisible)
+        {
+            StreamingSoftwareActionModel action = new StreamingSoftwareActionModel(softwareType, StreamingSoftwareActionTypeEnum.SourceFilterVisibility);
+            action.ParentName = sourceName;
+            action.ItemName = filterName;
             action.Visible = sourceVisible;
             return action;
         }
@@ -276,9 +287,19 @@ namespace MixItUp.Base.Model.Actions
                     {
                         await ssService.SaveReplayBuffer();
                     }
-                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.Scene && !string.IsNullOrEmpty(name))
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.Scene)
                     {
-                        await ssService.ShowScene(name);
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            await ssService.ShowScene(name);
+                        }
+                    }
+                    else if (this.ActionType == StreamingSoftwareActionTypeEnum.SourceFilterVisibility)
+                    {
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(parentName))
+                        {
+                            await ssService.SetSourceFilterVisibility(parentName, name, this.Visible);
+                        }
                     }
                     else if (!string.IsNullOrEmpty(name))
                     {

@@ -148,5 +148,26 @@
                 <Button Grid.Column="4" Grid.Row="2" Command="{Binding SourceGetCurrentDimensionsCommand}" Content="{x:Static resx:Resources.GetCurrent}"/>
             </Grid>
         </Grid>
+
+        <Grid Grid.Row="3" Visibility="{Binding ShowSourceFilterGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding SourceName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SourceName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="2" Text="{Binding FilterName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilterName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="6" IsChecked="{Binding FilterVisible}" VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
     </Grid>
 </local:ActionEditorControlBase>

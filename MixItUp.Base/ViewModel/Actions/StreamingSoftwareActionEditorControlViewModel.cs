@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -24,7 +25,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private StreamingSoftwareTypeEnum selectedStreamingSoftwareType;
 
-        public IEnumerable<StreamingSoftwareActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<StreamingSoftwareActionTypeEnum>(); } }
+        public IEnumerable<StreamingSoftwareActionTypeEnum> ActionTypes { get { return EnumHelper.GetEnumList<StreamingSoftwareActionTypeEnum>().OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s)); } }
 
         public StreamingSoftwareActionTypeEnum SelectedActionType
         {
@@ -40,6 +41,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowTextSourceGrid");
                 this.NotifyPropertyChanged("ShowWebBrowserSourceGrid");
                 this.NotifyPropertyChanged("ShowSourceDimensionsGrid");
+                this.NotifyPropertyChanged("ShowSourceFilterGrid");
             }
         }
         private StreamingSoftwareActionTypeEnum selectedActionType;
@@ -72,6 +74,13 @@ namespace MixItUp.Base.ViewModel.Actions
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceDimensions)
                 {
                     if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        return true;
+                    }
+                }
+                else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceFilterVisibility)
+                {
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
                     {
                         return true;
                     }
@@ -226,6 +235,30 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand SourceGetCurrentDimensionsCommand { get; private set; }
 
+        public bool ShowSourceFilterGrid { get { return this.SelectedActionType == StreamingSoftwareActionTypeEnum.SourceFilterVisibility; } }
+
+        public string FilterName
+        {
+            get { return this.filterName; }
+            set
+            {
+                this.filterName = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string filterName;
+
+        public bool FilterVisible
+        {
+            get { return this.filterVisible; }
+            set
+            {
+                this.filterVisible = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool filterVisible;
+
         public StreamingSoftwareActionEditorControlViewModel(StreamingSoftwareActionModel action)
             : base(action)
         {
@@ -261,6 +294,12 @@ namespace MixItUp.Base.ViewModel.Actions
                     this.SourceXScale = action.SourceDimensions.XScale;
                     this.SourceYScale = action.SourceDimensions.YScale;
                 }
+            }
+            else if (this.ShowSourceFilterGrid)
+            {
+                this.SourceName = action.ParentName;
+                this.FilterName = action.ItemName;
+                this.FilterVisible = action.Visible;
             }
         }
 
@@ -328,6 +367,18 @@ namespace MixItUp.Base.ViewModel.Actions
 
                 }
             }
+            else if (this.ShowSourceFilterGrid)
+            {
+                if (string.IsNullOrEmpty(this.SourceName))
+                {
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.StreamingSoftwareActionMissingSource));
+                }
+
+                if (string.IsNullOrEmpty(this.FilterName))
+                {
+                    return Task.FromResult(new Result(MixItUp.Base.Resources.StreamingSoftwareActionMissingFilter));
+                }
+            }
             return Task.FromResult(new Result());
         }
 
@@ -360,6 +411,10 @@ namespace MixItUp.Base.ViewModel.Actions
                 {
                     return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceVisibilityAction(this.SelectedStreamingSoftwareType, this.SceneName, this.SourceName, this.SourceVisible));
                 }
+            }
+            else if (this.ShowSourceFilterGrid)
+            {
+                return Task.FromResult<ActionModelBase>(StreamingSoftwareActionModel.CreateSourceFilterVisibilityAction(this.SelectedStreamingSoftwareType, this.SourceName, this.FilterName, this.FilterVisible));
             }
             return Task.FromResult<ActionModelBase>(null);
         }
