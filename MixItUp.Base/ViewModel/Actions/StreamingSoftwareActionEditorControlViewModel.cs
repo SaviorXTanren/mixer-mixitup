@@ -21,6 +21,9 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedStreamingSoftwareType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("OBSStudioNotEnabled");
+                this.NotifyPropertyChanged("XSplitNotEnabled");
+                this.NotifyPropertyChanged("StreamlabsOBSNotEnabled");
             }
         }
         private StreamingSoftwareTypeEnum selectedStreamingSoftwareType;
@@ -73,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
                 else if (this.SelectedActionType == StreamingSoftwareActionTypeEnum.StartStopRecording)
                 {
-                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit || streamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    if (streamingSoftware == StreamingSoftwareTypeEnum.XSplit)
                     {
                         return true;
                     }

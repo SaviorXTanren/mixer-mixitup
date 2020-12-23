@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
-    public class OBSStudioServiceControlViewModel : ServiceControlViewModelBase
+    public class OBSStudioServiceControlViewModel : StreamingServiceControlViewModelBase
     {
         public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
 
@@ -39,6 +39,7 @@ namespace MixItUp.Base.ViewModel.Services
                 if (result.Success)
                 {
                     this.IsConnected = true;
+                    this.ChangeDefaultStreamingSoftware();
                 }
                 else
                 {

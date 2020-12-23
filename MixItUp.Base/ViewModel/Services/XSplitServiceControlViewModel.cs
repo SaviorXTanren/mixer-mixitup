@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
-    public class XSplitServiceControlViewModel : ServiceControlViewModelBase
+    public class XSplitServiceControlViewModel : StreamingServiceControlViewModelBase
     {
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
@@ -22,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Services
                 {
                     this.IsConnected = true;
                     ChannelSession.Settings.EnableXSplitConnection = true;
+                    this.ChangeDefaultStreamingSoftware();
                 }
                 else
                 {

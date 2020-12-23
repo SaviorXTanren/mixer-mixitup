@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
 {
-    public class StreamlabsOBSServiceControlViewModel : ServiceControlViewModelBase
+    public class StreamlabsOBSServiceControlViewModel : StreamingServiceControlViewModelBase
     {
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
@@ -21,6 +21,7 @@ namespace MixItUp.Base.ViewModel.Services
                 {
                     this.IsConnected = true;
                     ChannelSession.Settings.EnableStreamlabsOBSConnection = true;
+                    this.ChangeDefaultStreamingSoftware();
                 }
                 else
                 {
