@@ -164,14 +164,14 @@ namespace MixItUp.Base.ViewModel.Games
             this.TimeLimit = 60;
             this.KingTimeLimit = 300;
             this.ThiefPlayerPercentage = 50;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseStartedExample, this.PrimaryCurrencyName));
             this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.KnightUserCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandTreasureDefenseKnightUserExample, whisper: true);
             this.ThiefUserCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandTreasureDefenseThiefUserExample, whisper: true);
             this.KingUserCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandTreasureDefenseKingUserExample);
-            this.KnightSelectedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseKnightSelectedExample, currency.Name));
-            this.ThiefSelectedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseThiefSelectedExample, currency.Name));
+            this.KnightSelectedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseKnightSelectedExample, this.PrimaryCurrencyName));
+            this.ThiefSelectedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandTreasureDefenseThiefSelectedExample, this.PrimaryCurrencyName));
         }
 
         public override Task<CommandModelBase> CreateNewCommand()

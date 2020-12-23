@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;
-            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandStealWinExample, currency.Name)));
+            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandStealWinExample, this.PrimaryCurrencyName)));
             this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandStealLoseExample);
         }
 

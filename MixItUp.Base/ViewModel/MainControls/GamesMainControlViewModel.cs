@@ -8,8 +8,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class GamesMainControlViewModel : WindowControlViewModelBase
     {
-        public bool CurrenciesExist { get { return ChannelSession.Settings.Currency.Count() > 0; } }
-        public bool NoCurrenciesMade { get { return !this.CurrenciesExist; } }
+        public bool NoCurrenciesExist { get { return ChannelSession.Settings.Currency.Count() == 0; } }
+
         public CurrencyModel PrimaryCurrency
         {
             get
@@ -34,8 +34,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.GameCommands.Add(gameCommand);
             }
-
-            this.NotifyPropertyChanges();
+            this.NotifyPropertyChanged("NoCurrenciesExist");
         }
 
         protected override Task OnLoadedInternal()
@@ -48,12 +47,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.Refresh();
             return base.OnVisibleInternal();
-        }
-
-        private void NotifyPropertyChanges()
-        {
-            this.NotifyPropertyChanged("NoCurrenciesMade");
-            this.NotifyPropertyChanged("CurrenciesExist");
         }
     }
 }

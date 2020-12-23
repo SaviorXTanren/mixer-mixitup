@@ -116,11 +116,13 @@ namespace MixItUp.Base.ViewModel.Games
             this.ProbabilityPercentage = 40;
             this.PayoutMinimumPercentage = 25;
             this.PayoutMaximumPercentage = 75;
-            this.SuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherWinExample, currency.Name));
-            this.FailureCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherLoseExample, currency.Name));
+            this.SuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherWinExample, this.PrimaryCurrencyName));
+            this.FailureCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherLoseExample, this.PrimaryCurrencyName));
             this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
-            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherStatusExample, currency.Name));
+            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandCoinPusherStatusExample, this.PrimaryCurrencyName));
         }
+
+        public override bool RequirePrimaryCurrency { get { return true; } }
 
         public override Task<CommandModelBase> CreateNewCommand()
         {

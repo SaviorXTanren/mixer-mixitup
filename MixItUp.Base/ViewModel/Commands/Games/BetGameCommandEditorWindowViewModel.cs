@@ -177,7 +177,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, this.PrimaryCurrencyName));
             this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.BetsClosedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandBetBetsClosedExample);

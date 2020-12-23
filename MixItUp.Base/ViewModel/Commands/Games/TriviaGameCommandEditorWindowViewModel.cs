@@ -227,9 +227,9 @@ namespace MixItUp.Base.ViewModel.Games
             this.WinAmount = 100;
             this.TimeLimit = 30;
             this.UseRandomOnlineQuestions = true;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, this.PrimaryCurrencyName));
             this.UserJoinCommand = this.CreateBasicCommand();
-            this.CorrectAnswerCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, currency.Name));
+            this.CorrectAnswerCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBetStartedExample, this.PrimaryCurrencyName));
             this.UserSuccessCommand = this.CreateBasicCommand();
             this.UserFailureCommand = this.CreateBasicCommand();
 

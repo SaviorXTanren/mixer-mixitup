@@ -127,12 +127,12 @@ namespace MixItUp.Base.ViewModel.Games
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.MaxWinners = 1;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteStartedExample, this.PrimaryCurrencyName));
             this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.UserSuccessCommand = this.CreateBasicCommand();
             this.UserFailureCommand = this.CreateBasicCommand();
-            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteGameCompleteExample, currency.Name));
+            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRussianRouletteGameCompleteExample, this.PrimaryCurrencyName));
         }
 
         public override Task<CommandModelBase> CreateNewCommand()

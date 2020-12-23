@@ -119,7 +119,14 @@ namespace MixItUp.Base.ViewModel.Games
             this.UserSelectionRandom = true;
             this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHotPotatoStartedExample);
             this.TossPotatoCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHotPotatoPassedExample);
-            this.PotatoExplodeCommand = this.CreateBasicChatCurrencyCommand(string.Format(MixItUp.Base.Resources.GameCommandHotPotatoExplodedExample, 100, currency.Name), currency, "100");
+            if (currency != null)
+            {
+                this.PotatoExplodeCommand = this.CreateBasicChatCurrencyCommand(string.Format(MixItUp.Base.Resources.GameCommandHotPotatoExplodedExample, 100, this.PrimaryCurrencyName), currency, "100");
+            }
+            else
+            {
+                this.PotatoExplodeCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHotPotatoExplodedExample, 100, this.PrimaryCurrencyName));
+            }
         }
 
         public override Task<CommandModelBase> CreateNewCommand()

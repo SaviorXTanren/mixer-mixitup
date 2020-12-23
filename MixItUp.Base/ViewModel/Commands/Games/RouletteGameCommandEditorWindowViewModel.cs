@@ -184,12 +184,12 @@ namespace MixItUp.Base.ViewModel.Games
             this.SelectedBetType = RouletteGameCommandBetType.NumberRange;
             this.BetOptionsNumberRangeLow = 1;
             this.BetOptionsNumberRangeHigh = 9;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteStartedExample, this.PrimaryCurrencyName));
             this.UserJoinCommand = this.CreateBasicCommand();
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.UserSuccessOutcome = new GameOutcomeViewModel(string.Empty, 0, 200);
             this.UserFailureCommand = this.CreateBasicCommand();
-            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteGameCompleteExample, currency.Name));
+            this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandRouletteGameCompleteExample, this.PrimaryCurrencyName));
         }
 
         public IEnumerable<string> BetOptionsCustomList { get { return (!string.IsNullOrEmpty(this.BetOptionsCustom)) ? this.BetOptionsCustom.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }

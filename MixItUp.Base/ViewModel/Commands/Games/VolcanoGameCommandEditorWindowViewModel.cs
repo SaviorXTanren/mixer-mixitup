@@ -244,13 +244,15 @@ namespace MixItUp.Base.ViewModel.Games
             this.PayoutProbability = 25;
             this.PayoutMinimumPercentage = 50;
             this.PayoutMaximumPercentage = 75;
-            this.PayoutCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoPayoutExample, currency.Name));
+            this.PayoutCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoPayoutExample, this.PrimaryCurrencyName));
             this.CollectArgument = MixItUp.Base.Resources.GameCommandVolcanoCollectArgumentExample;
             this.CollectTimeLimit = 60;
             this.CollectMinimumPercentage = 25;
             this.CollectMaximumPercentage = 50;
-            this.CollectCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoCollectExample, currency.Name));
+            this.CollectCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandVolcanoCollectExample, this.PrimaryCurrencyName));
         }
+
+        public override bool RequirePrimaryCurrency { get { return true; } }
 
         public override Task<CommandModelBase> CreateNewCommand()
         {

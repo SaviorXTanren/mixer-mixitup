@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.WordScramblePrepareCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScramblePrepareExample);
             this.WordScrambleBeginCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScrambleBeginExample);
-            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandWordScrambleUserSuccessExample, currency.Name));
+            this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandWordScrambleUserSuccessExample, this.PrimaryCurrencyName));
             this.UserFailureCommand = this.CreateBasicCommand();
 
             this.SetUICommands();

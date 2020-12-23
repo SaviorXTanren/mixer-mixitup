@@ -167,11 +167,11 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.UserSuccessOutcome = new GameOutcomeViewModel(string.Empty, 50, 200);
             this.UserFailureCommand = this.CreateBasicCommand();
-            this.AllSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistAllSucceedExample, currency.Name));
-            this.TopThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistTopThirdsSucceedExample, currency.Name));
-            this.MiddleThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistMiddleThirdsSucceedExample, currency.Name));
-            this.LowThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistLowThirdsSucceedExample, currency.Name));
-            this.NoneSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistNoneSucceedExample, currency.Name));
+            this.AllSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistAllSucceedExample, this.PrimaryCurrencyName));
+            this.TopThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistTopThirdsSucceedExample, this.PrimaryCurrencyName));
+            this.MiddleThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistMiddleThirdsSucceedExample, this.PrimaryCurrencyName));
+            this.LowThirdsSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistLowThirdsSucceedExample, this.PrimaryCurrencyName));
+            this.NoneSucceedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHeistNoneSucceedExample, this.PrimaryCurrencyName));
         }
 
         public override Task<CommandModelBase> CreateNewCommand()

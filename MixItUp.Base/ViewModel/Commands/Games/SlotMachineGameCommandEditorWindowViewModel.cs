@@ -137,9 +137,9 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.Symbols = "X O $";
             this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSlotMachineLoseExample);
-            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(500, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "O", "O", "O"));
-            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "$", "O", "$"));
-            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(150, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, currency.Name)), "X", "$", "O", anyOrder: true));
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(500, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "O", "O", "O"));
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "$", "O", "$"));
+            this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(150, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "X", "$", "O", anyOrder: true));
         }
 
         public IEnumerable<string> SymbolsList { get { return (!string.IsNullOrEmpty(this.Symbols)) ? this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }

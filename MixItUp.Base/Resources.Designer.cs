@@ -4888,6 +4888,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least 1 currency requirement must be set.
+        /// </summary>
+        public static string GameCommandRequiresAtLeast1CurrencyRequirement {
+            get {
+                return ResourceManager.GetString("GameCommandRequiresAtLeast1CurrencyRequirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The probability for the role {0} does not add up to 100 across all outcomes.
         /// </summary>
         public static string GameCommandRoleProbabilityNotEqualTo100 {
@@ -6008,6 +6017,15 @@ namespace MixItUp.Base {
         public static string Games {
             get {
                 return ResourceManager.GetString("Games", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ** No Currencies detected, some games require a currency **.
+        /// </summary>
+        public static string GamesNoCurrenciesExist {
+            get {
+                return ResourceManager.GetString("GamesNoCurrenciesExist", resourceCulture);
             }
         }
         

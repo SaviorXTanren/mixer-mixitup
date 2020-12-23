@@ -126,14 +126,16 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.CombinationLength = 3;
             this.InitialAmount = 100;
-            this.SuccessfulCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxSuccessfulExample, currency.Name));
+            this.SuccessfulCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxSuccessfulExample, this.PrimaryCurrencyName));
             this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandLockBoxFailureExample);
             this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
-            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxStatusExample, currency.Name));
+            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxStatusExample, this.PrimaryCurrencyName));
             this.InspectionArgument = MixItUp.Base.Resources.GameCommandLockBoxInspectionArgmentExample;
             this.InspectionCost = 10;
             this.InspectionCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandLockBoxInspectionExample);
         }
+
+        public override bool RequirePrimaryCurrency { get { return true; } }
 
         public override Task<CommandModelBase> CreateNewCommand()
         {

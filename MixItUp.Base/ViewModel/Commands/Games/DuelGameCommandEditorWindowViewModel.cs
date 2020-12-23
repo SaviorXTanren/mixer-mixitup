@@ -103,9 +103,9 @@ namespace MixItUp.Base.ViewModel.Games
             this.TimeLimit = 60;
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;
-            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelStartedExample, currency.Name));
+            this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelStartedExample, this.PrimaryCurrencyName));
             this.NotAcceptedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelNotAcceptedExample);
-            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelSuccessExample, currency.Name)));
+            this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandDuelSuccessExample, this.PrimaryCurrencyName)));
             this.FailedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandDuelFailureExample);
         }
 

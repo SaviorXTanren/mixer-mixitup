@@ -19,37 +19,34 @@
     <local:MainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
-    
+
     <Grid>
-        <Grid Visibility="{Binding NoCurrenciesMade, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Style="{StaticResource HeaderTextBlock}" Text="{x:Static resx:Resources.GameCommandAtLeast1Currency}" />
-        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
 
-        <Grid Visibility="{Binding CurrenciesExist, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-            </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.GamesNoCurrenciesExist}" Visibility="{Binding NoCurrenciesExist, Converter={StaticResource BooleanToVisibilityConverter}}" FontWeight="ExtraBold" TextDecorations="Underline" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,10,0" />
 
-            <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
-                    <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="200" Width="*" />
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+        <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="200" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button Click="AddGameButton_Click" Width="100" Content="{x:Static resx:Resources.NewGame}" />
-            </Grid>
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
+            <Button Click="AddGameButton_Click" Width="100" Content="{x:Static resx:Resources.NewGame}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

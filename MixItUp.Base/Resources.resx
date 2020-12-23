@@ -4589,6 +4589,12 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="CurrencyDoesNotExist" xml:space="preserve">
     <value>Currency does not exist</value>
   </data>
+  <data name="GameCommandRequiresAtLeast1CurrencyRequirement" xml:space="preserve">
+    <value>At least 1 currency requirement must be set</value>
+  </data>
+  <data name="GamesNoCurrenciesExist" xml:space="preserve">
+    <value>** No Currencies detected, some games require a currency **</value>
+  </data>
   <data name="InventoryDoesNotExist" xml:space="preserve">
     <value>Inventory does not exist</value>
   </data>

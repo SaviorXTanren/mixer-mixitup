@@ -141,6 +141,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
+        public override bool RequirePrimaryCurrency { get { return true; } }
+
         public override Task<CommandModelBase> CreateNewCommand()
         {
             return Task.FromResult<CommandModelBase>(new HangmanGameCommandModel(this.Name, this.GetChatTriggers(), this.MaxFailures, this.InitialAmount, this.CustomWordsFilePath,

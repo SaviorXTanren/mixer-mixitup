@@ -208,12 +208,18 @@ namespace MixItUp.Base.ViewModel.Games
         public ICommand AddOutcomeCommand { get; set; }
         public ICommand DeleteOutcomeCommand { get; set; }
 
+        protected string PrimaryCurrencyName { get; private set; } = "________";
+
         public GameCommandEditorWindowViewModelBase(GameCommandModelBase existingCommand) : base(existingCommand) { this.SetUICommands(); }
 
         public GameCommandEditorWindowViewModelBase(CurrencyModel currency)
             : base(CommandTypeEnum.Game)
         {
-            this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
+            if (currency != null)
+            {
+                this.PrimaryCurrencyName = currency.Name;
+                this.Requirements.Currency.Add(new CurrencyRequirementModel(currency, CurrencyRequirementTypeEnum.RequiredAmount, 10, 100));
+            }
             this.SetUICommands();
         }
 
@@ -221,12 +227,22 @@ namespace MixItUp.Base.ViewModel.Games
 
         public override bool CheckActionCount { get { return false; } }
 
+        public virtual bool RequirePrimaryCurrency { get { return false; } }
+
         public override async Task<Result> Validate()
         {
             Result result = await base.Validate();
             if (!result.Success)
             {
                 return result;
+            }
+
+            if (this.RequirePrimaryCurrency)
+            {
+                if (this.Requirements.Currency.Items.Count == 0)
+                {
+                    return new Result(MixItUp.Base.Resources.GameCommandRequiresAtLeast1CurrencyRequirement);
+                }
             }
 
             return new Result();
