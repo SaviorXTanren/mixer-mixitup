@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -73,18 +74,18 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             CurrencyModel rankSystem = this.RankSystem;
             if (rankSystem == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.RankSystemDoesNotExist));
             }
 
             RankModel rank = this.RequiredRank;
             if (rank == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.RankDoesNotExist));
             }
 
             if (!parameters.User.Data.IsCurrencyRankExempt)
@@ -93,16 +94,14 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
                     {
-                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
                     if (rankSystem.GetRank(parameters.User.Data) != rank)
                     {
-                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
@@ -110,13 +109,12 @@ namespace MixItUp.Base.Model.Requirements
                     RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
                     if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
                     {
-                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
     }
 }

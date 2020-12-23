@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -69,17 +70,17 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             CurrencyModel currency = this.Currency;
             if (currency == null)
             {
-                return true;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.CurrencyDoesNotExist));
             }
 
             if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                return await this.ValidateAmount(parameters.User, this.MinAmount);
+                return Task.FromResult(this.ValidateAmount(parameters.User, this.MinAmount));
             }
             else
             {
@@ -88,22 +89,20 @@ namespace MixItUp.Base.Model.Requirements
                 {
                     if (amount < this.MinAmount)
                     {
-                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.MinAmount, currency.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.MinAmount, currency.Name)));
                     }
-                    return await this.ValidateAmount(parameters.User, amount);
+                    return Task.FromResult(this.ValidateAmount(parameters.User, amount));
                 }
                 else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
                     if (amount < this.MinAmount || amount > this.MaxAmount)
                     {
-                        await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.MinAmount, this.MaxAmount, currency.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountBetween, this.MinAmount, this.MaxAmount, currency.Name)));
                     }
-                    return await this.ValidateAmount(parameters.User, amount);
+                    return Task.FromResult(this.ValidateAmount(parameters.User, amount));
                 }
             }
-            return false;
+            return Task.FromResult(new Result());
         }
 
         public override async Task Perform(CommandParametersModel parameters)
@@ -174,14 +173,13 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public async Task<bool> ValidateAmount(UserViewModel user, int amount)
+        public Result ValidateAmount(UserViewModel user, int amount)
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
             {
-                await this.SendErrorChatMessage(user, string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
-                return false;
+                return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
             }
-            return true;
+            return new Result();
         }
     }
 }

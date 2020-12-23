@@ -35,7 +35,7 @@ namespace MixItUp.Base.Model.Requirements
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             if (!parameters.User.HasPermissionsTo(this.Role))
             {
@@ -47,26 +47,24 @@ namespace MixItUp.Base.Model.Requirements
                         PatreonTier tier = parameters.User.PatreonTier;
                         if (tier != null && tier.BenefitIDs.Contains(benefit.ID))
                         {
-                            return true;
+                            return Task.FromResult(new Result());
                         }
                     }
                 }
-                await this.SendErrorMessage(parameters);
-                return false;
+                return Task.FromResult(this.CreateErrorMessage(parameters));
             }
 
             if (this.Role == UserRoleEnum.Subscriber && !parameters.User.ExceedsPermissions(this.Role))
             {
                 if (parameters.User.SubscribeTier < this.SubscriberTier)
                 {
-                    await this.SendErrorMessage(parameters);
-                    return false;
+                    return Task.FromResult(this.CreateErrorMessage(parameters));
                 }
             }
-            return true;
+            return Task.FromResult(new Result());
         }
 
-        private async Task SendErrorMessage(CommandParametersModel parameters)
+        private Result CreateErrorMessage(CommandParametersModel parameters)
         {
             string role = EnumLocalizationHelper.GetLocalizedName(this.Role);
             if (this.Role == UserRoleEnum.Subscriber)
@@ -80,7 +78,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 role = tierText + " " + role;
             }
-            await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+            return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }
     }
 }

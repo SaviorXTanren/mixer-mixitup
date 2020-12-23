@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
@@ -11,7 +12,7 @@ namespace MixItUp.Base.Model.Requirements
     {
         protected DateTimeOffset errorCooldown = DateTimeOffset.MinValue;
 
-        public virtual Task<bool> Validate(CommandParametersModel parameters) { return Task.FromResult(true); }
+        public virtual Task<Result> Validate(CommandParametersModel parameters) { return Task.FromResult(new Result()); }
 
         public virtual Task Perform(CommandParametersModel parameters)
         {
@@ -23,12 +24,13 @@ namespace MixItUp.Base.Model.Requirements
 
         public virtual void Reset() { }
 
-        protected async Task SendErrorChatMessage(UserViewModel user, string message)
+        public async Task SendErrorChatMessage(UserViewModel user, Result result)
         {
             if (this.errorCooldown <= DateTimeOffset.Now)
             {
                 if (ChannelSession.Services.Chat != null)
                 {
+                    string message = result.ToString();
                     if (ChannelSession.Settings.IncludeUsernameWithRequirementErrors)
                     {
                         message = $"@{user.Username}: {message}";

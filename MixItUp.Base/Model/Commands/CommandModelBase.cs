@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -238,10 +239,8 @@ namespace MixItUp.Base.Model.Commands
         {
             if (this.Requirements != null)
             {
-                if (!await this.Requirements.Validate(parameters))
-                {
-                    return false;
-                }
+                Result result = await this.Requirements.Validate(parameters);
+                return result.Success;
             }
             return true;
         }

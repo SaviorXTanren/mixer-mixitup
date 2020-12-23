@@ -4586,4 +4586,19 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="StreamingSoftwareActionMissingFilter" xml:space="preserve">
     <value>Streaming Software: Missing filter</value>
   </data>
+  <data name="CurrencyDoesNotExist" xml:space="preserve">
+    <value>Currency does not exist</value>
+  </data>
+  <data name="InventoryDoesNotExist" xml:space="preserve">
+    <value>Inventory does not exist</value>
+  </data>
+  <data name="InventoryItemDoesNotExist" xml:space="preserve">
+    <value>Inventory Item does not exist</value>
+  </data>
+  <data name="RankDoesNotExist" xml:space="preserve">
+    <value>Rank does not exist</value>
+  </data>
+  <data name="RankSystemDoesNotExist" xml:space="preserve">
+    <value>Rank System does not exist</value>
+  </data>
 </root>

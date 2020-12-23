@@ -70,6 +70,8 @@ namespace MixItUp.Base.Util
             }
             this.Message = stringBuilder.ToString();
         }
+
+        public override string ToString() { return (!string.IsNullOrEmpty(this.Message)) ? this.Message : string.Empty; }
     }
 
     public class Result<T> : Result

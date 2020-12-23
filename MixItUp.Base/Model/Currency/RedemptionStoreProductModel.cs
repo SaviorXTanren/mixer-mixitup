@@ -136,7 +136,8 @@ namespace MixItUp.Base.Model.Currency
                     }
                 }
 
-                if (await product.Requirements.Validate(new CommandParametersModel(user, arguments)))
+                Result result = await product.Requirements.Validate(new CommandParametersModel(user, arguments));
+                if (result.Success)
                 {
                     await product.Requirements.Perform(new CommandParametersModel(user, arguments));
                     foreach (CommandParametersModel u in product.Requirements.GetPerformingUsers(new CommandParametersModel(user, arguments)))

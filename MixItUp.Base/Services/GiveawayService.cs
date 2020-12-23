@@ -265,13 +265,16 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (await ChannelSession.Settings.GiveawayRequirementsSet.Validate(parameters))
+                    Result result = await ChannelSession.Settings.GiveawayRequirementsSet.Validate(parameters);
+                    if (result.Success)
                     {
                         foreach (CurrencyRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Currency)
                         {
                             int totalAmount = requirement.MinAmount * entries;
-                            if (!await requirement.ValidateAmount(message.User, totalAmount))
+                            result = requirement.ValidateAmount(message.User, totalAmount);
+                            if (!result.Success)
                             {
+                                await requirement.SendErrorChatMessage(message.User, result);
                                 return;
                             }
                         }
@@ -279,8 +282,10 @@ namespace MixItUp.Base.Services
                         foreach (InventoryRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Inventory)
                         {
                             int totalAmount = requirement.Amount * entries;
-                            if (!await requirement.ValidateAmount(message.User, totalAmount))
+                            result = requirement.ValidateAmount(message.User, totalAmount);
+                            if (!result.Success)
                             {
+                                await requirement.SendErrorChatMessage(message.User, result);
                                 return;
                             }
                         }

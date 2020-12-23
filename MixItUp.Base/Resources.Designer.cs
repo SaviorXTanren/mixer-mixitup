@@ -2284,6 +2284,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency does not exist.
+        /// </summary>
+        public static string CurrencyDoesNotExist {
+            get {
+                return ResourceManager.GetString("CurrencyDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency/Rank.
         /// </summary>
         public static string CurrencyRank {
@@ -6624,6 +6633,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inventory does not exist.
+        /// </summary>
+        public static string InventoryDoesNotExist {
+            get {
+                return ResourceManager.GetString("InventoryDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inventory Item does not exist.
+        /// </summary>
+        public static string InventoryItemDoesNotExist {
+            get {
+                return ResourceManager.GetString("InventoryItemDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shop Items Bought.
         /// </summary>
         public static string InventoryItemsBoughtCommandName {
@@ -9171,6 +9198,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rank does not exist.
+        /// </summary>
+        public static string RankDoesNotExist {
+            get {
+                return ResourceManager.GetString("RankDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rank Minimum.
         /// </summary>
         public static string RankMinimum {
@@ -9221,6 +9257,15 @@ namespace MixItUp.Base {
         public static string RankSystem {
             get {
                 return ResourceManager.GetString("RankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rank System does not exist.
+        /// </summary>
+        public static string RankSystemDoesNotExist {
+            get {
+                return ResourceManager.GetString("RankSystemDoesNotExist", resourceCulture);
             }
         }
         

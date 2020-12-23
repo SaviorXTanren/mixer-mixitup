@@ -93,16 +93,20 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (command.IsEnabled)
                 {
-                    RoleRequirementModel role = command.Requirements.Role;
-                    if (role == null || await role.Validate(parameters))
+                    RoleRequirementModel roleRequirement = command.Requirements.Role;
+                    if (roleRequirement != null)
                     {
-                        if (command.IncludeExclamation)
+                        Result result = await roleRequirement.Validate(parameters);
+                        if (result.Success)
                         {
-                            commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
-                        }
-                        else
-                        {
-                            commandTriggers.AddRange(command.Triggers);
+                            if (command.IncludeExclamation)
+                            {
+                                commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                            }
+                            else
+                            {
+                                commandTriggers.AddRange(command.Triggers);
+                            }
                         }
                     }
                 }
@@ -131,10 +135,14 @@ namespace MixItUp.Base.Model.Commands
             {
                 if (command.IsEnabled)
                 {
-                    RoleRequirementModel role = command.Requirements.Role;
-                    if (role == null || await role.Validate(parameters))
+                    RoleRequirementModel roleRequirement = command.Requirements.Role;
+                    if (roleRequirement != null)
                     {
-                        commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                        Result result = await roleRequirement.Validate(parameters);
+                        if (result.Success)
+                        {
+                            commandTriggers.AddRange(command.Triggers.Select(c => $"!{c}"));
+                        }
                     }
                 }
             }

@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Model.Requirements
             return users;
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             if (this.IsEnabled)
             {
@@ -85,14 +85,13 @@ namespace MixItUp.Base.Model.Requirements
 
                 if (this.performs.Count < this.Amount)
                 {
-                    await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count));
-                    return false;
+                    return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count)));
                 }
 
                 this.lastApplicableUsers.Clear();
                 this.lastApplicableUsers.AddRange(this.performs.Keys);
             }
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override async Task Perform(CommandParametersModel parameters)

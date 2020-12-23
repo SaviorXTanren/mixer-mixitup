@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -62,21 +63,21 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             InventoryModel inventory = this.Inventory;
             if (inventory == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.InventoryDoesNotExist));
             }
 
             InventoryItemModel item = this.Item;
             if (item == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.InventoryItemDoesNotExist));
             }
 
-            return await this.ValidateAmount(parameters.User, this.Amount);
+            return Task.FromResult(this.ValidateAmount(parameters.User, this.Amount));
         }
 
         public override async Task Perform(CommandParametersModel parameters)
@@ -99,14 +100,13 @@ namespace MixItUp.Base.Model.Requirements
             return Task.FromResult(0);
         }
 
-        public async Task<bool> ValidateAmount(UserViewModel user, int amount)
+        public Result ValidateAmount(UserViewModel user, int amount)
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Inventory.HasAmount(user.Data, this.ItemID, amount))
             {
-                await this.SendErrorChatMessage(user, string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name));
-                return false;
+                return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Item.Name));
             }
-            return true;
+            return new Result();
         }
     }
 }

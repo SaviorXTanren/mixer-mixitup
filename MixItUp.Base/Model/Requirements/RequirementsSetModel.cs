@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,16 +78,18 @@ namespace MixItUp.Base.Model.Requirements
 
         public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
 
-        public async Task<bool> Validate(CommandParametersModel parameters)
+        public async Task<Result> Validate(CommandParametersModel parameters)
         {
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                if (!await requirement.Validate(parameters))
+                Result result = await requirement.Validate(parameters);
+                if (!result.Success)
                 {
-                    return false;
+                    await requirement.SendErrorChatMessage(parameters.User, result);
+                    return result;
                 }
             }
-            return true;
+            return new Result();
         }
 
         public async Task Perform(CommandParametersModel parameters)

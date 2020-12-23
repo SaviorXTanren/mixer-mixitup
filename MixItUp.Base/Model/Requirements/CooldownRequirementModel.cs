@@ -77,7 +77,7 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(CommandParametersModel parameters)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             int amount = this.Amount;
             TimeSpan timeLeft = new TimeSpan(0, 0, -1);
@@ -103,10 +103,9 @@ namespace MixItUp.Base.Model.Requirements
             int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
             if (totalSeconds > 0)
             {
-                await this.SendErrorChatMessage(parameters.User, string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
-                return false;
+                return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds)));
             }
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override async Task Perform(CommandParametersModel parameters)
