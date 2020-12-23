@@ -306,20 +306,6 @@ namespace MixItUp.Base.Util
                 IStreamingSoftwareService ssService = null;
                 switch (ChannelSession.Settings.DefaultStreamingSoftware)
                 {
-                    case Model.Actions.StreamingSoftwareTypeEnum.DefaultSetting:
-                        if (ChannelSession.Services.OBSStudio != null && ChannelSession.Services.OBSStudio.IsConnected && ChannelSession.Services.OBSStudio.IsEnabled)
-                        {
-                            ssService = ChannelSession.Services.OBSStudio;
-                        }
-                        else if (ChannelSession.Services.StreamlabsOBS != null && ChannelSession.Services.StreamlabsOBS.IsConnected && ChannelSession.Services.StreamlabsOBS.IsEnabled)
-                        {
-                            ssService = ChannelSession.Services.StreamlabsOBS;
-                        }
-                        else if (ChannelSession.Services.XSplit != null && ChannelSession.Services.XSplit.IsConnected && ChannelSession.Services.XSplit.IsEnabled)
-                        {
-                            ssService = ChannelSession.Services.XSplit;
-                        }
-                        break;
                     case Model.Actions.StreamingSoftwareTypeEnum.OBSStudio:
                         ssService = ChannelSession.Services.OBSStudio;
                         break;
