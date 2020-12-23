@@ -326,6 +326,11 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier("streamcurrentscene", currentScene);
             }
 
+            if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+            {
+                this.ReplaceSpecialIdentifier("gamequeuetotal", ChannelSession.Services.GameQueueService.Queue.Count().ToString());
+            }
+
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier))
