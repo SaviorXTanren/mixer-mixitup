@@ -727,9 +727,6 @@
     <Compile Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml.cs">
       <DependentUpon>OverlayChatMessagesListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayClipPlaybackItemControl.xaml.cs">
-      <DependentUpon>OverlayClipPlaybackItemControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Overlay\OverlayEndCreditsItemControl.xaml.cs">
       <DependentUpon>OverlayEndCreditsItemControl.xaml</DependentUpon>
     </Compile>
@@ -1621,10 +1618,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayChatMessagesListItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayClipPlaybackItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
