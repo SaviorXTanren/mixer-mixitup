@@ -1,14 +1,14 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [Obsolete]
     [DataContract]
     public class OverlayClipPlaybackItemModel : OverlayFileItemModelBase
     {
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.Platform = StreamingPlatformTypeEnum.All;
             this.Effects.Duration = this.Duration = 3;
-            this.lastClipURL = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/Clips/TestClipImage.png";
+            this.lastClipURL = "https://clips.twitch.tv/embed?clip=HotAmazonianKoupreyNotATK&parent=localhost";
 
             return Task.FromResult(0);
         }

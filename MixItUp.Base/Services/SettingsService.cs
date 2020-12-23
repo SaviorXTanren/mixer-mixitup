@@ -523,6 +523,14 @@ namespace MixItUp.Base.Services
 
                 newSettings.GiveawayRequirementsSet = new RequirementsSetModel(oldSettings.GiveawayRequirements);
 
+                foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.ToList())
+                {
+                    if (widget.Item is OverlayClipPlaybackItemModel)
+                    {
+                        ChannelSession.Settings.OverlayWidgets.Remove(widget);
+                    }
+                }
+
                 await ChannelSession.Services.Settings.Save(newSettings);
             }
             await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
