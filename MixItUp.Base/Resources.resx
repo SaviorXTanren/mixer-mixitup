@@ -4610,4 +4610,7 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
     <value>Target user does not have the correct amount</value>
   </data>
+  <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
+    <value>Primary currency must be set to Minimum Only</value>
+  </data>
 </root>

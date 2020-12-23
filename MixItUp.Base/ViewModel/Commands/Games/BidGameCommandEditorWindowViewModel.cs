@@ -1,10 +1,12 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Games
@@ -23,17 +25,6 @@ namespace MixItUp.Base.ViewModel.Games
             }
         }
         private UserRoleEnum selectedStarterRole;
-
-        public int InitialAmount
-        {
-            get { return this.initialAmount; }
-            set
-            {
-                this.initialAmount = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private int initialAmount;
 
         public int TimeLimit
         {
@@ -94,7 +85,6 @@ namespace MixItUp.Base.ViewModel.Games
             : base(command)
         {
             this.SelectedStarterRole = command.StarterRole;
-            this.InitialAmount = command.InitialAmount;
             this.TimeLimit = command.TimeLimit;
             this.StartedCommand = command.StartedCommand;
             this.NewTopBidderCommand = command.NewTopBidderCommand;
@@ -106,7 +96,6 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.SelectedStarterRole = UserRoleEnum.Mod;
-            this.InitialAmount = 100;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidStartedExample, this.PrimaryCurrencyName));
             this.NewTopBidderCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidNewTopBidderExample, this.PrimaryCurrencyName));
@@ -118,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Games
 
         public override Task<CommandModelBase> CreateNewCommand()
         {
-            return Task.FromResult<CommandModelBase>(new BidGameCommandModel(this.Name, this.GetChatTriggers(), this.SelectedStarterRole, this.InitialAmount, this.TimeLimit, this.StartedCommand, this.NewTopBidderCommand,
+            return Task.FromResult<CommandModelBase>(new BidGameCommandModel(this.Name, this.GetChatTriggers(), this.SelectedStarterRole, this.TimeLimit, this.StartedCommand, this.NewTopBidderCommand,
                 this.NotEnoughPlayersCommand, this.GameCompleteCommand));
         }
 
@@ -127,7 +116,6 @@ namespace MixItUp.Base.ViewModel.Games
             await base.UpdateExistingCommand(command);
             BidGameCommandModel gCommand = (BidGameCommandModel)command;
             gCommand.StarterRole = this.SelectedStarterRole;
-            gCommand.InitialAmount = this.InitialAmount;
             gCommand.TimeLimit = this.timeLimit;
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.NewTopBidderCommand = this.NewTopBidderCommand;
@@ -143,14 +131,21 @@ namespace MixItUp.Base.ViewModel.Games
                 return result;
             }
 
-            if (this.InitialAmount < 0)
-            {
-                return new Result(MixItUp.Base.Resources.GameCommandInitialAmountMustBePositive);
-            }
-
             if (this.TimeLimit < 0)
             {
                 return new Result(MixItUp.Base.Resources.GameCommandTimeLimitMustBePositive);
+            }
+
+            if (this.Requirements.Currency.Items.Count > 0)
+            {
+                if (this.Requirements.Currency.Items.First().SelectedRequirementType != CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    return new Result(MixItUp.Base.Resources.GameCommandBidPrimaryCurrencyMustBeMinimumOnly);
+                }
+            }
+            else
+            {
+                return new Result(MixItUp.Base.Resources.GameCommandRequiresAtLeast1CurrencyRequirement);
             }
 
             return new Result();

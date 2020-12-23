@@ -32,6 +32,9 @@ namespace MixItUp.Base.Model.Requirements
         [DataMember]
         public int MaxAmount { get; set; }
 
+        [JsonIgnore]
+        private int temporaryAmount { get; set; } = -1;
+
         public CurrencyRequirementModel(CurrencyModel currency, int amount) : this(currency, CurrencyRequirementTypeEnum.RequiredAmount, amount, 0) { }
 
         public CurrencyRequirementModel(CurrencyModel currency, CurrencyRequirementTypeEnum requirementType, int minAmount, int maxAmount)
@@ -78,7 +81,11 @@ namespace MixItUp.Base.Model.Requirements
                 return Task.FromResult(new Result(MixItUp.Base.Resources.CurrencyDoesNotExist));
             }
 
-            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.HasTemporaryAmount())
+            {
+                return Task.FromResult(this.ValidateAmount(parameters.User, this.temporaryAmount));
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 return Task.FromResult(this.ValidateAmount(parameters.User, this.MinAmount));
             }
@@ -108,7 +115,11 @@ namespace MixItUp.Base.Model.Requirements
         public override async Task Perform(CommandParametersModel parameters)
         {
             await base.Perform(parameters);
-            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.HasTemporaryAmount())
+            {
+                this.AddSubtractAmount(parameters.User, this.temporaryAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 this.AddSubtractAmount(parameters.User, this.MinAmount);
             }
@@ -120,7 +131,11 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task Refund(CommandParametersModel parameters)
         {
-            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.HasTemporaryAmount())
+            {
+                this.AddSubtractAmount(parameters.User, -this.temporaryAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 this.AddSubtractAmount(parameters.User, -this.MinAmount);
             }
@@ -133,7 +148,11 @@ namespace MixItUp.Base.Model.Requirements
 
         public int GetAmount(CommandParametersModel parameters)
         {
-            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.HasTemporaryAmount())
+            {
+                return this.temporaryAmount;
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 return this.MinAmount;
             }
@@ -181,5 +200,11 @@ namespace MixItUp.Base.Model.Requirements
                 }
             }
         }
+
+        public void SetTemporaryAmount(int amount) { this.temporaryAmount = amount; }
+
+        public void ResetTemporaryAmount() { this.SetTemporaryAmount(-1); }
+
+        public bool HasTemporaryAmount() { return this.temporaryAmount >= 0; }
     }
 }

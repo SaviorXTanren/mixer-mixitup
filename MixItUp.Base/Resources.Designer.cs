@@ -4095,6 +4095,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Primary currency must be set to Minimum Only.
+        /// </summary>
+        public static string GameCommandBidPrimaryCurrencyMustBeMinimumOnly {
+            get {
+                return ResourceManager.GetString("GameCommandBidPrimaryCurrencyMustBeMinimumOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @$username has started a bidding war starting at $gamebet {0} for...______________! Type !bid &lt;AMOUNT&gt; in chat to outbid them!.
         /// </summary>
         public static string GameCommandBidStartedExample {

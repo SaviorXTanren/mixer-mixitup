@@ -3,6 +3,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +15,6 @@ namespace MixItUp.Base.Model.Commands.Games
     {
         [DataMember]
         public UserRoleEnum StarterRole { get; set; }
-        [DataMember]
-        public int InitialAmount { get; set; }
         [DataMember]
         public int TimeLimit { get; set; }
 
@@ -39,12 +38,11 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private int lastBidAmount;
 
-        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int initialAmount, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
+        public BidGameCommandModel(string name, HashSet<string> triggers, UserRoleEnum starterRole, int timeLimit, CustomCommandModel startedCommand, CustomCommandModel newTopBidderCommand,
             CustomCommandModel notEnoughPlayersCommand, CustomCommandModel gameCompleteCommand)
             : base(name, triggers, GameCommandTypeEnum.Bid)
         {
             this.StarterRole = starterRole;
-            this.InitialAmount = initialAmount;
             this.TimeLimit = timeLimit;
             this.StartedCommand = startedCommand;
             this.NewTopBidderCommand = newTopBidderCommand;
@@ -56,12 +54,17 @@ namespace MixItUp.Base.Model.Commands.Games
             : base(command, GameCommandTypeEnum.Bid)
         {
             this.StarterRole = command.GameStarterRequirement.MixerRole;
-            this.InitialAmount = 0;
             this.TimeLimit = command.TimeLimit;
             this.StartedCommand = new CustomCommandModel(command.StartedCommand) { IsEmbedded = true };
             this.NewTopBidderCommand = new CustomCommandModel(command.UserJoinCommand) { IsEmbedded = true };
             this.NotEnoughPlayersCommand = new CustomCommandModel(command.NotEnoughPlayersCommand) { IsEmbedded = true };
             this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
+
+            if (this.Requirements.Currency.Count() == 0)
+            {
+                this.Requirements.Requirements.Add(new CurrencyRequirementModel(ChannelSession.Settings.Currency.Values.First(c => !c.IsRank), CurrencyRequirementTypeEnum.MinimumOnly, 0, 0));
+            }
+            this.Requirements.Currency.First().RequirementType = CurrencyRequirementTypeEnum.MinimumOnly;
         }
 
         private BidGameCommandModel() { }
@@ -87,10 +90,10 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (parameters.User.HasPermissionsTo(this.StarterRole))
                 {
                     this.gameActive = true;
-                    this.lastBidAmount = this.InitialAmount;
+                    this.lastBidAmount = this.GetPrimaryCurrencyRequirement().GetAmount(parameters);
 
                     this.runParameters = parameters;
-                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.InitialAmount.ToString();
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.lastBidAmount.ToString();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
@@ -127,7 +130,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.PerformPrimarySetPayout(this.lastBidParameters.User, this.lastBidAmount);
 
                 this.lastBidParameters = parameters;
-                this.lastBidAmount = betAmount;
+                this.lastBidAmount = this.GetPrimaryBetAmount(parameters);
 
                 await this.NewTopBidderCommand.Perform(parameters);
                 this.ResetCooldown();
