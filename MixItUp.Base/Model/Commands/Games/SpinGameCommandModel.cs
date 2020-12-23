@@ -35,7 +35,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await this.PerformOutcome(parameters, this.SelectRandomOutcome(parameters.User, this.Outcomes), this.GetBetAmount(parameters));
+            await this.PerformOutcome(parameters, this.SelectRandomOutcome(parameters.User, this.Outcomes));
         }
     }
 }

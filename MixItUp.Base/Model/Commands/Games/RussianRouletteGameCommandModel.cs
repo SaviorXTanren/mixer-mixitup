@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (this.runParameters == null)
             {
-                this.runBetAmount = this.GetBetAmount(parameters);
+                this.runBetAmount = this.GetPrimaryBetAmount(parameters);
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
 
@@ -122,9 +122,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     foreach (CommandParametersModel winner in winners)
                     {
-                        this.CurrencyRequirement.Currency.AddAmount(winner.User.Data, individualPayout);
-
-                        this.PerformPayout(winner, individualPayout);
+                        this.PerformPrimarySetPayout(winner.User, individualPayout);
                         winner.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
                         await this.UserSuccessCommand.Perform(winner);
                     }

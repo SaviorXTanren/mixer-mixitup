@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == 1)
             {
-                this.TotalAmount += this.GetBetAmount(parameters);
+                this.TotalAmount += this.GetPrimaryBetAmount(parameters);
                 char letter = parameters.Arguments.ElementAt(0).ToUpper().First();
                 if (this.CurrentWord.Contains(letter))
                 {
@@ -120,7 +120,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.CurrentWord.All(c => this.SuccessfulGuesses.Contains(c)))
                     {
-                        this.PerformPayout(parameters, this.TotalAmount);
+                        this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         await this.GameWonCommand.Perform(parameters);
                         await this.ClearData();
                     }

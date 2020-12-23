@@ -52,40 +52,33 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            int betAmount = this.GetBetAmount(parameters);
-            if (betAmount > 0)
+            await this.SetSelectedUser(this.PlayerSelectionType, parameters);
+            if (parameters.TargetUser != null)
             {
-                await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-                if (parameters.TargetUser != null)
+                if (this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {
-                    if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                    int betAmount = this.GetPrimaryBetAmount(parameters);
+                    parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
+                    if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                     {
-                        parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
-                        if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
-                        {
-                            this.CurrencyRequirement.Currency.AddAmount(parameters.User.Data, betAmount);
-                            this.CurrencyRequirement.Currency.SubtractAmount(parameters.TargetUser.Data, betAmount);
-                            await this.SuccessfulOutcome.Command.Perform(parameters);
-                        }
-                        else
-                        {
-                            await this.FailedCommand.Perform(parameters);
-                        }
-                        return;
+                        this.PerformPrimarySetPayout(parameters.User, betAmount * 2);
+                        this.PerformPrimarySetPayout(parameters.TargetUser, -betAmount);
+                        await this.SuccessfulOutcome.Command.Perform(parameters);
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount);
+                        await this.FailedCommand.Perform(parameters);
                     }
+                    return;
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount);
                 }
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandInvalidBetAmount);
+                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
             }
             await this.Requirements.Refund(parameters);
         }

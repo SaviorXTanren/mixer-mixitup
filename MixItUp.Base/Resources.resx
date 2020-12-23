@@ -4601,4 +4601,7 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="RankSystemDoesNotExist" xml:space="preserve">
     <value>Rank System does not exist</value>
   </data>
+  <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
+    <value>Target user does not have the correct amount</value>
+  </data>
 </root>

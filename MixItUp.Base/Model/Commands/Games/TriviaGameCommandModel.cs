@@ -90,8 +90,6 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
-        private int runBetAmount;
-        [JsonIgnore]
         private TriviaGameQuestionModel question;
         [JsonIgnore]
         private Dictionary<int, string> numbersToAnswers = new Dictionary<int, string>();
@@ -144,7 +142,6 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            this.runBetAmount = this.GetBetAmount(parameters);
             this.runParameters = parameters;
 
             bool useCustomQuestion = (RandomHelper.GenerateProbability() >= 50);
@@ -222,7 +219,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (kvp.Value == correctAnswerNumber)
                 {
                     winners.Add(participant);
-                    this.PerformPayout(participant, this.WinAmount);
+                    this.PerformPrimarySetPayout(participant.User, this.WinAmount);
                     await this.UserSuccessCommand.Perform(participant);
                 }
                 else
@@ -250,7 +247,6 @@ namespace MixItUp.Base.Model.Commands.Games
         private void ClearData()
         {
             this.runParameters = null;
-            this.runBetAmount = 0;
             this.question = null;
             this.numbersToAnswers.Clear();
             this.runUsers.Clear();

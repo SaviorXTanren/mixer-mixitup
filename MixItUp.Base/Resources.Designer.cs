@@ -11574,6 +11574,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Target user does not have the correct amount.
+        /// </summary>
+        public static string TargetUserDoesNotHaveAmount {
+            get {
+                return ResourceManager.GetString("TargetUserDoesNotHaveAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Target User (Optional).
         /// </summary>
         public static string TargetUserOptional {

@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Requirements
             }
             else
             {
-                int amount = this.GetVariableAmount(parameters);
+                int amount = this.GetAmount(parameters);
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
                 {
                     if (amount < this.MinAmount)
@@ -108,46 +108,30 @@ namespace MixItUp.Base.Model.Requirements
         public override async Task Perform(CommandParametersModel parameters)
         {
             await base.Perform(parameters);
-            CurrencyModel currency = this.Currency;
-            if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
+            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                {
-                    currency.SubtractAmount(parameters.User.Data, this.MinAmount);
-                }
-                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
-                {
-                    currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                }
-                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
-                {
-                    currency.SubtractAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                }
+                this.AddSubtractAmount(parameters.User, this.MinAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly || this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                this.AddSubtractAmount(parameters.User, this.GetAmount(parameters));
             }
         }
 
         public override Task Refund(CommandParametersModel parameters)
         {
-            CurrencyModel currency = this.Currency;
-            if (currency != null && !parameters.User.Data.IsCurrencyRankExempt)
+            if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                {
-                    currency.AddAmount(parameters.User.Data, this.MinAmount);
-                }
-                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
-                {
-                    currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                }
-                else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
-                {
-                    currency.AddAmount(parameters.User.Data, this.GetVariableAmount(parameters));
-                }
+                this.AddSubtractAmount(parameters.User, -this.MinAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly || this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                this.AddSubtractAmount(parameters.User, -this.GetAmount(parameters));
             }
             return Task.FromResult(0);
         }
 
-        public int GetVariableAmount(CommandParametersModel parameters)
+        public int GetAmount(CommandParametersModel parameters)
         {
             if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
@@ -180,6 +164,22 @@ namespace MixItUp.Base.Model.Requirements
                 return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
             }
             return new Result();
+        }
+
+        public void AddSubtractAmount(UserViewModel user, int amount)
+        {
+            CurrencyModel currency = this.Currency;
+            if (currency != null && !user.Data.IsCurrencyRankExempt)
+            {
+                if (amount > 0)
+                {
+                    currency.AddAmount(user.Data, amount);
+                }
+                else if (amount < 0)
+                {
+                    currency.SubtractAmount(user.Data, amount);
+                }
+            }
         }
     }
 }

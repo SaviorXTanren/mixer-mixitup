@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
-        private int runBetAmount;
+        private CommandParametersModel targetParameters;
         [JsonIgnore]
         private CancellationTokenSource runCancellationTokenSource;
 
@@ -74,70 +74,63 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (this.runCancellationTokenSource == null)
             {
-                int betAmount = this.GetBetAmount(parameters);
-                if (betAmount > 0)
+                await this.SetSelectedUser(this.PlayerSelectionType, parameters);
+                if (parameters.TargetUser != null)
                 {
-                    await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-                    if (parameters.TargetUser != null)
+                    if (this.ValidateTargetUserPrimaryBetAmount(parameters))
                     {
-                        if (this.CurrencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
-                        {
-                            this.runParameters = parameters;
-                            this.runBetAmount = betAmount;
+                        this.runParameters = parameters;
 
-                            this.runCancellationTokenSource = new CancellationTokenSource();
+                        this.runCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            AsyncRunner.RunAsyncBackground(async(cancellationToken) =>
-                            {
-                                await Task.Delay(this.TimeLimit * 1000);
+                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                        {
+                            await Task.Delay(this.TimeLimit * 1000);
 
-                                if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
-                                {
-                                    this.gameActive = false;
-                                    await this.NotAcceptedCommand.Perform(parameters);
-                                    await this.Requirements.Refund(parameters);
-                                }
-                                await this.CooldownRequirement.Perform(parameters);
-                                this.ClearData();
-                            }, this.runCancellationTokenSource.Token);
+                            if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
+                            {
+                                this.gameActive = false;
+                                await this.NotAcceptedCommand.Perform(parameters);
+                                await this.Requirements.Refund(parameters);
+                            }
+                            await this.CooldownRequirement.Perform(parameters);
+                            this.ClearData();
+                        }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                            this.gameActive = true;
-                            await this.StartedCommand.Perform(parameters);
-                            this.ResetCooldown();
-                            return;
-                        }
-                        else
-                        {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount);
-                        }
+                        this.gameActive = true;
+                        await this.StartedCommand.Perform(parameters);
+                        this.ResetCooldown();
+                        return;
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TargetUserDoesNotHaveAmount);
                     }
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandInvalidBetAmount);
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
                 }
             }
             else
             {
                 if (this.runParameters != null && parameters.User == this.runParameters.TargetUser)
                 {
+                    this.targetParameters = parameters;
+
                     this.gameActive = false;
-                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.runBetAmount.ToString();
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
-                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.User.Data, this.runBetAmount);
-                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
+                        this.PerformPrimaryMultiplierPayout(this.runParameters, 2);
+                        this.PerformPrimaryMultiplierPayout(this.targetParameters, -2);
                         await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
-                        this.CurrencyRequirement.Currency.AddAmount(this.runParameters.TargetUser.Data, this.runBetAmount);
-                        this.CurrencyRequirement.Currency.SubtractAmount(this.runParameters.User.Data, this.runBetAmount);
+                        this.PerformPrimaryMultiplierPayout(this.targetParameters, 2);
+                        this.PerformPrimaryMultiplierPayout(this.runParameters, -2);
                         await this.FailedCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);
@@ -155,7 +148,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.gameActive = false;
             this.runParameters = null;
-            this.runBetAmount = 0;
+            this.targetParameters = null;
             try
             {
                 if (this.runCancellationTokenSource != null)

@@ -44,8 +44,6 @@ namespace MixItUp.Base.Model.Commands.Games
         [JsonIgnore]
         private CommandParametersModel runParameters;
         [JsonIgnore]
-        private int runBetAmount;
-        [JsonIgnore]
         private Dictionary<UserViewModel, CommandParametersModel> runUsers = new Dictionary<UserViewModel, CommandParametersModel>();
 
         public HeistGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, CustomCommandModel startedCommand,
@@ -107,7 +105,6 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (this.runParameters == null)
             {
-                this.runBetAmount = this.GetBetAmount(parameters);
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
 
@@ -132,12 +129,10 @@ namespace MixItUp.Base.Model.Commands.Games
                     List<CommandParametersModel> winners = new List<CommandParametersModel>();
                     foreach (CommandParametersModel participant in this.runUsers.Values.ToList())
                     {
-                        int betAmount = this.GetBetAmount(participant);
-                        participant.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
                         if (this.GenerateProbability() <= this.UserSuccessOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                         {
                             winners.Add(participant);
-                            this.PerformOutcome(participant, this.UserSuccessOutcome, betAmount);
+                            this.PerformOutcome(participant, this.UserSuccessOutcome);
                         }
                         else
                         {
@@ -195,7 +190,6 @@ namespace MixItUp.Base.Model.Commands.Games
         private void ClearData()
         {
             this.runParameters = null;
-            this.runBetAmount = 0;
             this.runUsers.Clear();
         }
     }

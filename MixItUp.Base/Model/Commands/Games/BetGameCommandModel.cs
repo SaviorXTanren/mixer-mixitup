@@ -115,7 +115,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             foreach (CommandParametersModel winner in this.runUserSelections.Where(kvp => kvp.Value == answer).Select(kvp => this.runUsers[kvp.Key]))
                             {
                                 winner.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
-                                await this.PerformOutcome(winner, winningOutcome, this.GetBetAmount(parameters));
+                                await this.PerformOutcome(winner, winningOutcome);
                             }
 
                             this.ClearData();

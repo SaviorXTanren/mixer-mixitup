@@ -121,12 +121,12 @@ namespace MixItUp.Base.Model.Commands.Games
             return null;
         }
 
-        public int GetPayout(UserViewModel user, int betAmount)
+        public int GetPayoutMultiplier(UserViewModel user)
         {
             RoleProbabilityPayoutModel roleProbabilityPayout = this.GetRoleProbabilityPayout(user);
             if (roleProbabilityPayout != null)
             {
-                return Convert.ToInt32(Convert.ToDouble(betAmount) * (roleProbabilityPayout.Payout / 100.0));
+                return Convert.ToInt32(roleProbabilityPayout.Payout / 100.0);
             }
             return 0;
         }
@@ -167,17 +167,9 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override bool DoesCommandHaveWork { get { return true; } }
 
-        public CurrencyRequirementModel CurrencyRequirement { get { return (CurrencyRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is CurrencyRequirementModel); } }
-
         public CooldownRequirementModel CooldownRequirement { get { return (CooldownRequirementModel)this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
 
         public virtual IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>(); }
-
-        protected int GetBetAmount(CommandParametersModel parameters)
-        {
-            CurrencyRequirementModel currencyRequirement = this.CurrencyRequirement;
-            return (currencyRequirement != null) ? currencyRequirement.GetVariableAmount(parameters) : 0;
-        }
 
         protected void ResetCooldown() { this.CooldownRequirement.Reset(); }
 
@@ -210,7 +202,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<IEnumerable<CommandParametersModel>> PerformRequirements(CommandParametersModel parameters)
         {
-            parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetBetAmount(parameters).ToString();
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
             return await base.PerformRequirements(parameters);
         }
 
@@ -220,6 +212,26 @@ namespace MixItUp.Base.Model.Commands.Games
         }
 
         protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+
+        protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
+
+        protected int GetPrimaryBetAmount(CommandParametersModel parameters)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            return (currencyRequirement != null) ? currencyRequirement.GetAmount(parameters) : 0;
+        }
+
+        protected bool ValidateTargetUserPrimaryBetAmount(CommandParametersModel parameters)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, this.GetPrimaryBetAmount(parameters)) : false;
+        }
+
+        protected bool ValidatePrimaryCurrencyAmount(CommandParametersModel parameters, int amount)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.User.Data, amount) : false;
+        }
 
         protected GameOutcomeModel SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcomeModel> outcomes)
         {
@@ -240,18 +252,33 @@ namespace MixItUp.Base.Model.Commands.Games
             return outcomes.Last();
         }
 
-        protected async Task PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome, int betAmount)
+        protected async Task PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
         {
-            int payout = outcome.GetPayout(parameters.User, betAmount);
-            this.PerformPayout(parameters, payout);
-            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
+            this.PerformPrimaryMultiplierPayout(parameters, outcome.GetPayoutMultiplier(parameters.User));
+            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
             if (outcome.Command != null)
             {
                 await outcome.Command.Perform(parameters);
             }
         }
 
-        protected void PerformPayout(CommandParametersModel parameters, int payout) { this.CurrencyRequirement.Currency.AddAmount(parameters.User.Data, payout); }
+        protected void PerformPrimarySetPayout(UserViewModel user, int payout)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            if (currencyRequirement != null)
+            {
+                currencyRequirement.AddSubtractAmount(user, payout);
+            }
+        }
+
+        protected void PerformPrimaryMultiplierPayout(CommandParametersModel parameters, double payoutPercentage)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            if (currencyRequirement != null)
+            {
+                currencyRequirement.AddSubtractAmount(parameters.User, (int)(currencyRequirement.GetAmount(parameters) * payoutPercentage));
+            }
+        }
 
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {

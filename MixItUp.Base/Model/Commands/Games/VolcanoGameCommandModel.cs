@@ -138,7 +138,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.collectUsers.Add(parameters.User);
                         int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectMinimumPercentage, this.CollectMaximumPercentage);
-                        this.PerformPayout(parameters, payout);
+                        this.PerformPrimarySetPayout(parameters.User, payout);
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
                         await this.CollectCommand.Perform(parameters);
@@ -178,8 +178,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            int betAmount = this.GetBetAmount(parameters);
-            this.TotalAmount += betAmount;
+            this.TotalAmount += this.GetPrimaryBetAmount(parameters);
             parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
 
             if (this.TotalAmount >= this.Stage3MinimumAmount)
@@ -188,7 +187,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     this.collectUsers.Add(parameters.User);
                     int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage);
-                    this.PerformPayout(parameters, payout);
+                    this.PerformPrimarySetPayout(parameters.User, payout);
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

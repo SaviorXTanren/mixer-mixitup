@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (outcome.ValidateSymbols(symbols))
                 {
-                    await this.PerformOutcome(parameters, outcome, this.GetBetAmount(parameters));
+                    await this.PerformOutcome(parameters, outcome);
                     return;
                 }
             }

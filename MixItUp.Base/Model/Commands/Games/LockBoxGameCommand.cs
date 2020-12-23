@@ -96,9 +96,9 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.InspectionArgument, StringComparison.CurrentCultureIgnoreCase))
             {
-                if (this.CurrencyRequirement.Currency.HasAmount(parameters.User.Data, this.InspectionCost))
+                if (this.ValidatePrimaryCurrencyAmount(parameters, this.InspectionCost))
                 {
-                    this.CurrencyRequirement.Currency.SubtractAmount(parameters.User.Data, this.InspectionCost);
+                    this.PerformPrimarySetPayout(parameters.User, -this.InspectionCost);
                     this.TotalAmount += this.InspectionCost;
 
                     string currentCombinationString = this.CurrentCombination.ToString();
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.CurrencyRequirement.Currency.Name));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GetPrimaryCurrencyRequirement().Currency.Name));
                 }
                 return false;
             }
@@ -125,11 +125,11 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (int.TryParse(parameters.Arguments[0], out int guess) && guess > 0)
                 {
-                    this.TotalAmount += this.GetBetAmount(parameters);
+                    this.TotalAmount += this.GetPrimaryBetAmount(parameters);
                     this.AddSpecialIdentifiersToParameters(parameters);
                     if (guess == this.CurrentCombination)
                     {
-                        this.PerformPayout(parameters, this.TotalAmount);
+                        this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         this.ClearData();
                         await this.SuccessfulCommand.Perform(parameters);
                     }

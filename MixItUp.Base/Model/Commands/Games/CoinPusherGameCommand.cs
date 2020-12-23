@@ -84,13 +84,13 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            int betAmount = this.GetBetAmount(parameters);
+            int betAmount = this.GetPrimaryBetAmount(parameters);
             this.TotalAmount += betAmount;
 
             if (this.TotalAmount >= this.MinimumAmountForPayout && this.GenerateProbability() <= this.ProbabilityPercentage)
             {
                 int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage);
-                this.PerformPayout(parameters, payout);
+                this.PerformPrimarySetPayout(parameters.User, payout);
                 this.TotalAmount -= payout;
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();

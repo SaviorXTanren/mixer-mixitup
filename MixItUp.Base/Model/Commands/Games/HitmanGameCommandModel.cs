@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (this.runParameters == null)
             {
-                this.runBetAmount = this.GetBetAmount(parameters);
+                this.runBetAmount = this.GetPrimaryBetAmount(parameters);
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
 
@@ -177,7 +177,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 this.gameActive = false;
                 int payout = this.runBetAmount * this.runUsers.Count;
-                this.PerformPayout(new CommandParametersModel(message.User), payout);
+                this.PerformPrimarySetPayout(message.User, payout);
 
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                 this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;

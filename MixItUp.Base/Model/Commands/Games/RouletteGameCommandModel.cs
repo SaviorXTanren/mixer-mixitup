@@ -155,7 +155,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             if (string.Equals(winningBetType, parameters.Arguments[0], StringComparison.CurrentCultureIgnoreCase))
                             {
                                 winners.Add(parameters);
-                                this.PerformOutcome(parameters, this.UserSuccessOutcome, this.GetBetAmount(parameters));
+                                this.PerformOutcome(parameters, this.UserSuccessOutcome);
                             }
                             else
                             {

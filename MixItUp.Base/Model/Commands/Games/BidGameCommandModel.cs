@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -120,10 +121,10 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            int betAmount = this.GetBetAmount(parameters);
+            int betAmount = this.GetPrimaryBetAmount(parameters);
             if (betAmount > this.lastBidAmount)
             {
-                await this.Requirements.Refund(this.lastBidParameters);
+                this.PerformPrimarySetPayout(this.lastBidParameters.User, this.lastBidAmount);
 
                 this.lastBidParameters = parameters;
                 this.lastBidAmount = betAmount;
@@ -133,7 +134,11 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, this.CurrencyRequirement.Currency.Name));
+                CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+                if (currencyRequirement != null)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, currencyRequirement.Currency.Name));
+                }
                 await this.Requirements.Refund(parameters);
             }
         }
