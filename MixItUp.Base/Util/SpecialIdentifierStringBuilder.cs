@@ -274,6 +274,11 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(CommandParametersModel parameters)
         {
+            if (!this.text.Contains(SpecialIdentifierHeader))
+            {
+                return;
+            }
+
             foreach (var kvp in parameters.SpecialIdentifiers)
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
