@@ -637,6 +637,12 @@ namespace MixItUp.Base.ViewModel.User
             {
                 return true;
             }
+
+            if (ChannelSession.Settings.ExplicitUserRoleRequirements)
+            {
+                return this.UserRoles.Contains(checkRole);
+            }
+
             return this.PrimaryRole >= checkRole;
         }
 

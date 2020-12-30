@@ -3454,6 +3454,26 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Explicit User Role Requirements.
+        /// </summary>
+        public static string ExplicitUserRoleRequirements {
+            get {
+                return ResourceManager.GetString("ExplicitUserRoleRequirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default, all user role requirements are hiearchy-based. This means that if a user has a role that is the requirement OR they have a role that is higher than the requirement, they will not be blocked by it. For example, if a role requirement is set to Subscriber, the user must either be a Subscriber or have a role that is higher on the list such as Mod or Channel Editor.
+        ///
+        ///This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string ExplicitUserRoleRequirementsTooltip {
+            get {
+                return ResourceManager.GetString("ExplicitUserRoleRequirementsTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Actions to File.
         /// </summary>
         public static string ExportActions {

@@ -4613,6 +4613,14 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
     <value>Primary currency must be set to Minimum Only</value>
   </data>
+  <data name="ExplicitUserRoleRequirements" xml:space="preserve">
+    <value>Explicit User Role Requirements</value>
+  </data>
+  <data name="ExplicitUserRoleRequirementsTooltip" xml:space="preserve">
+    <value>By default, all user role requirements are hiearchy-based. This means that if a user has a role that is the requirement OR they have a role that is higher than the requirement, they will not be blocked by it. For example, if a role requirement is set to Subscriber, the user must either be a Subscriber or have a role that is higher on the list such as Mod or Channel Editor.
+
+This setting will change all role requirements to be explicit and require that the user has that role in order to pass the check. For example, if a role requirement is set to Subscriber, the only way a user can pass the check is to specifically be a Subscriber.</value>
+  </data>
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Requirement Errors Cooldown Amount</value>
   </data>

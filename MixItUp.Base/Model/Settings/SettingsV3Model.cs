@@ -252,6 +252,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int RegularUserMinimumHours { get; set; }
         [DataMember]
+        public bool ExplicitUserRoleRequirements { get; set; }
+        [DataMember]
         public List<UserTitleModel> UserTitles { get; set; } = new List<UserTitleModel>();
 
         #endregion Users

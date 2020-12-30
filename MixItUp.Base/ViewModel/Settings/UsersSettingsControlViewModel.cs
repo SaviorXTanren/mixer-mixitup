@@ -58,6 +58,8 @@ namespace MixItUp.Base.ViewModel.Settings
             }
         }
 
+        public GenericToggleSettingsOptionControlViewModel ExplicitUserRoleRequirements { get; set; }
+
         public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>();
 
         public string TitleName
@@ -114,6 +116,9 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public UsersSettingsControlViewModel()
         {
+            this.ExplicitUserRoleRequirements = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ExplicitUserRoleRequirements,
+                ChannelSession.Settings.ExplicitUserRoleRequirements, (value) => { ChannelSession.Settings.ExplicitUserRoleRequirements = value; }, MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
+
             this.ClearMixerUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearMixerUserDataHeader, MixItUp.Base.Resources.ClearMixerUserData, this.CreateCommand(async (parameter) =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllMixerUserDataWarning))
