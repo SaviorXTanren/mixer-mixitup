@@ -44,30 +44,34 @@ namespace MixItUp.Base.ViewModel.MainControls
                 groupSettings = ChannelSession.Settings.CommandGroups[command.GroupName];
             }
 
-            for (int i = 0; i < this.CommandGroups.Count; i++)
+            CommandGroupControlViewModel viewModel = new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command });
+            if (groupSettings != null)
             {
-                if (string.Compare(groupSettings.Name, this.CommandGroups[i].DisplayName, ignoreCase: true) < 0)
+                for (int i = 0; i < this.CommandGroups.Count; i++)
                 {
-                    this.CommandGroups.Insert(i, new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command }));
-                    return;
+                    if (string.Compare(groupSettings.Name, this.CommandGroups[i].DisplayName, ignoreCase: true) < 0)
+                    {
+                        this.CommandGroups.Insert(i, viewModel);
+                        return;
+                    }
                 }
             }
-            this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, new List<CommandModelBase>() { command }));
+            this.CommandGroups.Add(viewModel);
         }
 
         public void RemoveCommand(CommandModelBase command)
         {
-            CommandGroupControlViewModel group = null;
-            foreach (CommandGroupControlViewModel g in this.CommandGroups)
+            foreach (CommandGroupControlViewModel group in this.CommandGroups)
             {
-                group = g;
-                group.RemoveCommand(command);
-                break;
-            }
-
-            if (group != null && !group.HasCommands)
-            {
-                this.CommandGroups.Remove(group);
+                if (group.HasCommand(command))
+                {
+                    group.RemoveCommand(command);
+                    if (!group.HasCommands)
+                    {
+                        this.CommandGroups.Remove(group);
+                    }
+                    return;
+                }
             }
         }
 

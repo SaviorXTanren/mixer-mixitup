@@ -73,6 +73,8 @@ namespace MixItUp.Base.ViewModel.Commands
             this.RefreshCommands();
         }
 
+        public bool HasCommand(CommandModelBase command) { return this.Commands.Contains(command); }
+
         public void AddCommand(CommandModelBase command)
         {
             if (this.commandLookup.ContainsKey(command.ID))
