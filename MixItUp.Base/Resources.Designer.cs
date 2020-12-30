@@ -9603,6 +9603,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Requirement Errors Cooldown Amount.
+        /// </summary>
+        public static string RequirementErrorsCooldownAmount {
+            get {
+                return ResourceManager.GetString("RequirementErrorsCooldownAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won&apos;t be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times..
+        /// </summary>
+        public static string RequirementErrorsCooldownAmountTooltip {
+            get {
+                return ResourceManager.GetString("RequirementErrorsCooldownAmountTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Re-run the New User Wizard.
         /// </summary>
         public static string ReRunNewUserWizard {

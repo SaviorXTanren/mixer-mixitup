@@ -169,11 +169,14 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool IgnoreBotAccountCommands { get; set; }
         [DataMember]
-        public bool IncludeUsernameWithRequirementErrors { get; set; }
-        [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
         [DataMember]
         public bool UnlockAllCommands { get; set; }
+
+        [DataMember]
+        public int RequirementErrorsCooldownAmount { get; set; } = 10;
+        [DataMember]
+        public bool IncludeUsernameWithRequirementErrors { get; set; }
 
         [DataMember]
         public int TwitchMassGiftedSubsFilterAmount { get; set; } = 1;

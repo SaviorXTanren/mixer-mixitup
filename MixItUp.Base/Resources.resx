@@ -4613,4 +4613,10 @@ that this could cause some unforeseen issues, so please use with caution.</value
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
     <value>Primary currency must be set to Minimum Only</value>
   </data>
+  <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
+    <value>Requirement Errors Cooldown Amount</value>
+  </data>
+  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
+    <value>When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won't be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times.</value>
+  </data>
 </root>

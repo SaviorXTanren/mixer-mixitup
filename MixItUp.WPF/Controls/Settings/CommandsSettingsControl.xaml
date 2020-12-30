@@ -14,9 +14,13 @@
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AllowCommandWhispering}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IgnoreBotAccount}" />
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DeleteChatCommandsWhenRun}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UnlockAllCommandTypes}" />
+
+            <Separator Margin="10" />
+
+            <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownAmount}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
 
             <Separator Margin="10" />
 

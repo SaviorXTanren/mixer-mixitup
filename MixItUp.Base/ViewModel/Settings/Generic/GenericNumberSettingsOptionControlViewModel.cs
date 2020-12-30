@@ -9,8 +9,11 @@ namespace MixItUp.Base.ViewModel.Settings.Generic
             get { return this.value; }
             set
             {
-                this.value = value;
-                this.valueSetter(value);
+                if (value >= 0)
+                {
+                    this.value = value;
+                    this.valueSetter(value);
+                }
                 this.NotifyPropertyChanged();
             }
         }
