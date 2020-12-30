@@ -49,6 +49,20 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private string name;
 
+        public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList(); } }
+
+        public string SelectedCommandGroup
+        {
+            get { return this.selectedCommandGroup; }
+            set
+            {
+                this.selectedCommandGroup = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("CommandGroupTimerInterval");
+            }
+        }
+        private string selectedCommandGroup;
+
         public bool Unlocked
         {
             get { return this.unlocked; }
@@ -77,6 +91,7 @@ namespace MixItUp.Base.ViewModel.Commands
             this.existingCommand = existingCommand;
 
             this.Name = this.existingCommand.Name;
+            this.SelectedCommandGroup = this.existingCommand.GroupName;
             this.Unlocked = this.existingCommand.Unlocked;
             this.Requirements = new RequirementsSetViewModel(this.existingCommand.Requirements);
         }
@@ -209,6 +224,20 @@ namespace MixItUp.Base.ViewModel.Commands
             }
             command.Unlocked = this.Unlocked;
 
+            if (!string.IsNullOrEmpty(this.SelectedCommandGroup))
+            {
+                if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.SelectedCommandGroup))
+                {
+                    ChannelSession.Settings.CommandGroups[this.SelectedCommandGroup] = new CommandGroupSettingsModel(this.SelectedCommandGroup);
+                }
+                command.GroupName = this.SelectedCommandGroup;
+                await this.UpdateCommandGroup();
+            }
+            else
+            {
+                command.GroupName = null;
+            }
+
             if (this.AddRequirementsToCommand)
             {
                 command.Requirements = this.Requirements.GetRequirements();
@@ -222,6 +251,17 @@ namespace MixItUp.Base.ViewModel.Commands
             command.Actions = new List<ActionModelBase>(actions);
 
             return command;
+        }
+
+        protected virtual Task UpdateCommandGroup() { return Task.FromResult(0); }
+
+        protected CommandGroupSettingsModel GetCommandGroup()
+        {
+            if (!string.IsNullOrEmpty(this.SelectedCommandGroup) && ChannelSession.Settings.CommandGroups.ContainsKey(this.SelectedCommandGroup))
+            {
+                return ChannelSession.Settings.CommandGroups[this.SelectedCommandGroup];
+            }
+            return null;
         }
 
         private async Task<bool> CheckForResultErrors(IEnumerable<Result> results)

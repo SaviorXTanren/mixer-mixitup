@@ -6,6 +6,25 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TimerCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
+        public int CommandGroupTimerInterval
+        {
+            get
+            {
+                CommandGroupSettingsModel commandGroup = this.GetCommandGroup();
+                if (commandGroup != null && commandGroup.TimerInterval != this.commandGroupTimerInterval)
+                {
+                    this.commandGroupTimerInterval = commandGroup.TimerInterval;
+                }
+                return this.commandGroupTimerInterval;
+            }
+            set
+            {
+                this.commandGroupTimerInterval = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int commandGroupTimerInterval;
+
         public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand) { }
 
         public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
@@ -26,6 +45,17 @@ namespace MixItUp.Base.ViewModel.Commands
             ChannelSession.TimerCommands.Remove((TimerCommandModel)this.existingCommand);
             ChannelSession.TimerCommands.Add((TimerCommandModel)command);
             return Task.FromResult(0);
+        }
+
+        protected override async Task UpdateCommandGroup()
+        {
+            await base.UpdateCommandGroup();
+
+            CommandGroupSettingsModel commandGroup = this.GetCommandGroup();
+            if (commandGroup != null)
+            {
+                commandGroup.TimerInterval = this.CommandGroupTimerInterval;
+            }
         }
     }
 }

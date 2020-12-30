@@ -22,15 +22,19 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-        <local:UnlockCommandControl Grid.Column="2" />
+        <ComboBox Grid.Column="2" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" />
 
-        <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunOneRandomly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-        <ToggleButton Grid.Column="6" IsChecked="{Binding RunOneRandomly}" />
+        <local:UnlockCommandControl Grid.Column="4" />
+
+        <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RunOneRandomly}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+        <ToggleButton Grid.Column="8" IsChecked="{Binding RunOneRandomly}" />
     </Grid>
 </local:CommandEditorDetailsControlBase>

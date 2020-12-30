@@ -121,6 +121,7 @@ namespace MixItUp.Base.Model.Commands
         protected CommandModelBase(MixItUp.Base.Commands.CommandBase command)
         {
             this.ID = command.ID;
+            this.GroupName = command.GroupName;
             this.IsEnabled = command.IsEnabled;
             this.Unlocked = command.Unlocked;
 
@@ -147,7 +148,9 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual IEnumerable<string> GetFullTriggers() { return this.Triggers; }
 
-        protected bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
+        public CommandGroupSettingsModel CommandGroupSettings { get { return (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(this.GroupName)) ? ChannelSession.Settings.CommandGroups[this.GroupName] : null; } }
+
+        public bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
