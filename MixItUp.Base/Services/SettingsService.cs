@@ -523,11 +523,11 @@ namespace MixItUp.Base.Services
 
                 newSettings.GiveawayRequirementsSet = new RequirementsSetModel(oldSettings.GiveawayRequirements);
 
-                foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.ToList())
+                foreach (OverlayWidgetModel widget in newSettings.OverlayWidgets.ToList())
                 {
                     if (widget.Item is OverlayClipPlaybackItemModel)
                     {
-                        ChannelSession.Settings.OverlayWidgets.Remove(widget);
+                        newSettings.OverlayWidgets.Remove(widget);
                     }
                 }
 
