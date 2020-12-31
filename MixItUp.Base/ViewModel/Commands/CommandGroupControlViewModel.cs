@@ -17,36 +17,30 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public bool IsMinimized
         {
-            get { return (this.GroupSettings != null) ? this.GroupSettings.IsMinimized : false; }
+            get { return this.isMinimized; }
             set
             {
-                if (this.GroupSettings != null)
-                {
-                    this.GroupSettings.IsMinimized = value;
-                }
-            }
-        }
-
-        public bool IsEnabled
-        {
-            get { return this.Commands.Any(c => c.IsEnabled); }
-            set
-            {
-                bool newIsEnabledState = !this.IsEnabled;
-
-                foreach (CommandModelBase command in ChannelSession.AllCommands)
-                {
-                    if (this.GroupName.Equals(command.GroupName))
-                    {
-                        command.IsEnabled = newIsEnabledState;
-                    }
-                }
-
-                this.RefreshCommands();
-
+                this.isMinimized = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private bool isMinimized = true;
+
+        public bool IsEnabled
+        {
+            get { return this.isEnabled; }
+            set
+            {
+                bool newIsEnabledState = !this.IsEnabled;
+                foreach (CommandModelBase command in this.Commands)
+                {
+                    command.IsEnabled = newIsEnabledState;
+                }
+                this.RefreshCommands();
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool isEnabled;
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
@@ -113,6 +107,9 @@ namespace MixItUp.Base.ViewModel.Commands
                 this.Commands.SortedInsert(command);
             }
             this.NotifyPropertyChanged("HasCommands");
+
+            this.isEnabled = this.Commands.Any(c => c.IsEnabled);
+            this.NotifyPropertyChanged("IsEnabled");
         }
     }
 }

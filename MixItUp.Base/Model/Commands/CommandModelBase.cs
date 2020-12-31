@@ -32,8 +32,6 @@ namespace MixItUp.Base.Model.Commands
     {
         [DataMember]
         public string Name { get; set; }
-        [DataMember]
-        public bool IsMinimized { get; set; }
 
         [DataMember]
         public int TimerInterval { get; set; }
@@ -41,6 +39,12 @@ namespace MixItUp.Base.Model.Commands
         public CommandGroupSettingsModel() { }
 
         public CommandGroupSettingsModel(string name) { this.Name = name; }
+
+        internal CommandGroupSettingsModel(MixItUp.Base.Commands.CommandGroupSettings oldGroupSettings)
+        {
+            this.Name = oldGroupSettings.Name;
+            this.TimerInterval = oldGroupSettings.TimerInterval;
+        }
     }
 
     [DataContract]

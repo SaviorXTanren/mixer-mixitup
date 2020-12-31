@@ -417,6 +417,11 @@ namespace MixItUp.Base.Services
                     newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;
                 }
 
+                foreach (var kvp in oldSettings.CommandGroups)
+                {
+                    newSettings.CommandGroups[kvp.Key] = new CommandGroupSettingsModel(kvp.Value);
+                }
+
                 foreach (ChatCommand command in oldSettings.ChatCommands)
                 {
                     newSettings.SetCommand(new ChatCommandModel(command));
