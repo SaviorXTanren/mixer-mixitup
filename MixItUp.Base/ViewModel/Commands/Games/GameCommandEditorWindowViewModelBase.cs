@@ -6,7 +6,6 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
-using MixItUp.Base.ViewModel.Requirements;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -58,9 +57,9 @@ namespace MixItUp.Base.ViewModel.Games
             this.Payout = payout;
         }
 
-        public RoleProbabilityPayoutViewModel(RoleProbabilityPayoutModel model) : this(model.Role, model.Probability, model.Payout) { }
+        public RoleProbabilityPayoutViewModel(RoleProbabilityPayoutModel model) : this(model.Role, model.Probability, model.Payout * 100) { }
 
-        public RoleProbabilityPayoutModel GetModel() { return new RoleProbabilityPayoutModel(this.Role, this.Probability, this.Payout); }
+        public RoleProbabilityPayoutModel GetModel() { return new RoleProbabilityPayoutModel(this.Role, this.Probability, ((double)this.Payout) / 100.0); }
     }
 
     public class GameOutcomeViewModel : NotifyPropertyChangedBase
