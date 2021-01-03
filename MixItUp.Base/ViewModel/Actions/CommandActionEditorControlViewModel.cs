@@ -90,6 +90,17 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string commandArguments;
 
+        public bool WaitForCommandToFinish
+        {
+            get { return this.waitForCommandToFinish; }
+            set
+            {
+                this.waitForCommandToFinish = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool waitForCommandToFinish = true;
+
         public bool ShowCommandGroupsSection { get { return this.SelectedActionType == CommandActionTypeEnum.EnableCommandGroup || this.SelectedActionType == CommandActionTypeEnum.DisableCommandGroup; } }
 
         public IEnumerable<string> CommandGroups { get { return ChannelSession.Settings.CommandGroups.Keys.ToList(); } }
@@ -113,6 +124,8 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.SelectedCommandType = action.Command.Type;
                 this.SelectedCommand = action.Command;
+                this.CommandArguments = action.Arguments;
+                this.WaitForCommandToFinish = action.WaitForCommandToFinish;
             }
             else if (this.ShowCommandGroupsSection)
             {
@@ -145,7 +158,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.ShowCommandsSection)
             {
-                return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType, this.SelectedCommand, this.CommandArguments));
+                return Task.FromResult<ActionModelBase>(new CommandActionModel(this.SelectedActionType, this.SelectedCommand, this.CommandArguments, this.WaitForCommandToFinish));
             }
             else if (this.ShowCommandGroupsSection)
             {

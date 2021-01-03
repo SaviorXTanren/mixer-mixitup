@@ -29,11 +29,13 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string Arguments { get; set; }
+        [DataMember]
+        public bool WaitForCommandToFinish { get; set; }
 
         [DataMember]
         public string CommandGroupName { get; set; }
 
-        public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments)
+        public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments, bool waitForCommandToFinish)
             : base(ActionTypeEnum.Command)
         {
             this.ActionType = commandActionType;
@@ -48,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
                 this.PreMadeType = null;
             }
             this.Arguments = commandArguments;
+            this.WaitForCommandToFinish = waitForCommandToFinish;
         }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, string groupName)
@@ -64,6 +67,7 @@ namespace MixItUp.Base.Model.Actions
             this.CommandID = action.CommandID;
             this.PreMadeType = action.PreMadeType;
             this.Arguments = action.CommandArguments;
+            this.WaitForCommandToFinish = false;
             this.CommandGroupName = action.GroupName;
         }
 
@@ -111,6 +115,7 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CommandParametersModel copyParameters = parameters.Duplicate();
+                    copyParameters.WaitForCommandToFinish = this.WaitForCommandToFinish;
                     copyParameters.DontLockCommand = true;
                     await command.Perform(copyParameters);
                 }

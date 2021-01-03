@@ -55,7 +55,20 @@
                 <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding SelectedCommand}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
-            <TextBox Grid.Row="2" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.CommandActionWaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
+                <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForCommandToFinish}" VerticalAlignment="Center" />
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowCommandGroupsSection, Converter={StaticResource BooleanToVisibilityConverter}}">

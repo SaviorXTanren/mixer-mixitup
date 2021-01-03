@@ -1861,6 +1861,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wait Until Complete.
+        /// </summary>
+        public static string CommandActionWaitUntilComplete {
+            get {
+                return ResourceManager.GetString("CommandActionWaitUntilComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Group.
         /// </summary>
         public static string CommandGroup {
