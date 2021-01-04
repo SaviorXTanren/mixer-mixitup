@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static async Task<CommandModelBase> ImportCommandFromFile()
         {
-            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*.{0})|*.{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
             if (!string.IsNullOrEmpty(fileName))
             {
                 return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
