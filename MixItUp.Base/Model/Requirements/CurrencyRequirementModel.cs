@@ -24,7 +24,7 @@ namespace MixItUp.Base.Model.Requirements
         public Guid CurrencyID { get; set; }
 
         [DataMember]
-        public CurrencyRequirementTypeEnum RequirementType { get; set; } = CurrencyRequirementTypeEnum.RequiredAmount;
+        public CurrencyRequirementTypeEnum RequirementType { get; set; }
 
         [DataMember]
         public int MinAmount { get; set; }
@@ -40,7 +40,7 @@ namespace MixItUp.Base.Model.Requirements
         public CurrencyRequirementModel(CurrencyModel currency, CurrencyRequirementTypeEnum requirementType, int minAmount, int maxAmount)
         {
             this.CurrencyID = currency.ID;
-            this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
+            this.RequirementType = requirementType;
             this.MinAmount = minAmount;
             this.MaxAmount = maxAmount;
         }
