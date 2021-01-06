@@ -177,16 +177,18 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (!string.IsNullOrEmpty(this.runHitmanName) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runHitmanName, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
             {
+                CommandParametersModel winner = this.runUsers[message.User];
+
                 this.gameActive = false;
                 int payout = this.runBetAmount * this.runUsers.Count;
                 this.PerformPrimarySetPayout(message.User, payout);
 
-                this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
-                this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
+                winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
+                winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
 
                 await this.CooldownRequirement.Perform(this.runParameters);
                 this.ClearData();
-                await this.UserSuccessCommand.Perform(this.runUsers[message.User]);
+                await this.UserSuccessCommand.Perform(winner);
             }
         }
 
