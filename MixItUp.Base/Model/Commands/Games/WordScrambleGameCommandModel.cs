@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -173,18 +174,27 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
-            if (!string.IsNullOrEmpty(this.runWord) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runWord, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
+            try
             {
-                int payout = this.runBetAmount * this.runUsers.Count;
-                this.PerformPrimarySetPayout(message.User, payout);
+                if (!string.IsNullOrEmpty(this.runWord) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runWord, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    CommandParametersModel winner = this.runUsers[message.User];
 
-                this.runUsers[message.User].SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
-                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
-                this.runUsers[message.User].SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
+                    int payout = this.runBetAmount * this.runUsers.Count;
+                    this.PerformPrimarySetPayout(message.User, payout);
 
-                await this.CooldownRequirement.Perform(this.runParameters);
-                this.ClearData();
-                await this.UserSuccessCommand.Perform(this.runUsers[message.User]);
+                    winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
+                    winner.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
+                    winner.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
+
+                    await this.CooldownRequirement.Perform(this.runParameters);
+                    this.ClearData();
+                    await this.UserSuccessCommand.Perform(winner);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

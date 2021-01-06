@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -236,11 +238,19 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
-            if (!this.runUsers.ContainsKey(message.User) && !string.IsNullOrEmpty(message.PlainTextMessage) && int.TryParse(message.PlainTextMessage, out int choice) && this.numbersToAnswers.ContainsKey(choice))
+            try
             {
-                this.runUsers[message.User] = new CommandParametersModel(message.User, message.Platform, message.ToArguments());
-                this.runUserSelections[message.User] = choice;
-                await this.UserJoinCommand.Perform(this.runUsers[message.User]);
+                if (!this.runUsers.ContainsKey(message.User) && !string.IsNullOrEmpty(message.PlainTextMessage) && int.TryParse(message.PlainTextMessage, out int choice) && this.numbersToAnswers.ContainsKey(choice))
+                {
+                    CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, message.ToArguments());
+                    this.runUsers[message.User] = parameters;
+                    this.runUserSelections[message.User] = choice;
+                    await this.UserJoinCommand.Perform(parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

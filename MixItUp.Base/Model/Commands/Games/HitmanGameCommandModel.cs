@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -175,20 +176,27 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ViewModel.Chat.ChatMessageViewModel message)
         {
-            if (!string.IsNullOrEmpty(this.runHitmanName) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runHitmanName, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
+            try
             {
-                CommandParametersModel winner = this.runUsers[message.User];
+                if (!string.IsNullOrEmpty(this.runHitmanName) && this.runUsers.ContainsKey(message.User) && string.Equals(this.runHitmanName, message.PlainTextMessage, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    CommandParametersModel winner = this.runUsers[message.User];
 
-                this.gameActive = false;
-                int payout = this.runBetAmount * this.runUsers.Count;
-                this.PerformPrimarySetPayout(message.User, payout);
+                    this.gameActive = false;
+                    int payout = this.runBetAmount * this.runUsers.Count;
+                    this.PerformPrimarySetPayout(message.User, payout);
 
-                winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
-                winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
+                    winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
+                    winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
 
-                await this.CooldownRequirement.Perform(this.runParameters);
-                this.ClearData();
-                await this.UserSuccessCommand.Perform(winner);
+                    await this.CooldownRequirement.Perform(this.runParameters);
+                    this.ClearData();
+                    await this.UserSuccessCommand.Perform(winner);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
