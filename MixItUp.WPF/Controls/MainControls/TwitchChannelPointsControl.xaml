@@ -24,7 +24,7 @@
         <DataGrid Grid.Row="0" ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="175">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
