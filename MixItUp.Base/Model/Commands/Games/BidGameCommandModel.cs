@@ -127,7 +127,10 @@ namespace MixItUp.Base.Model.Commands.Games
             int betAmount = this.GetPrimaryBetAmount(parameters);
             if (betAmount > this.lastBidAmount)
             {
-                this.PerformPrimarySetPayout(this.lastBidParameters.User, this.lastBidAmount);
+                if (this.lastBidParameters != null)
+                {
+                    this.PerformPrimarySetPayout(this.lastBidParameters.User, this.lastBidAmount);
+                }
 
                 this.lastBidParameters = parameters;
                 this.lastBidAmount = this.GetPrimaryBetAmount(parameters);
