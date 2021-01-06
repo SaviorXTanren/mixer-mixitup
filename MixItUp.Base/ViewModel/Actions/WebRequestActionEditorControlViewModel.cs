@@ -61,10 +61,13 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.selectedResponseParseType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowPlainTextGrid");
                 this.NotifyPropertyChanged("ShowJSONGrid");
             }
         }
         public WebRequestResponseParseTypeEnum selectedResponseParseType;
+
+        public bool ShowPlainTextGrid { get { return this.SelectedResponseParseType == WebRequestResponseParseTypeEnum.PlainText; } }
 
         public bool ShowJSONGrid { get { return this.SelectedResponseParseType == WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers; } }
 

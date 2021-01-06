@@ -4639,4 +4639,10 @@ This setting will change all role requirements to be explicit and require that t
   <data name="CreateNewCommand" xml:space="preserve">
     <value>Create New Command</value>
   </data>
+  <data name="Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
 </root>
