@@ -42,6 +42,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding SelectedCommandType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -53,6 +55,10 @@
                 </ComboBox>
 
                 <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding SelectedCommand}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                <Button Grid.Column="4" x:Name="EditCommandButton" ToolTip="{x:Static resx:Resources.EditCommand}" Click="EditCommandButton_Click">
+                    <MaterialDesign:PackIcon Kind="Edit" Height="24" Width="24" Margin="-7,-10" Foreground="{StaticResource WhiteColor}" />
+                </Button>
             </Grid>
 
             <Grid Grid.Row="2">
