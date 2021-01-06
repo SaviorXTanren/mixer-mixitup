@@ -11,6 +11,14 @@
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+        Icon="./../../Logo.ico"
         Title="Command Editor" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
