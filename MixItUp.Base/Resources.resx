@@ -4630,4 +4630,10 @@ This setting will change all role requirements to be explicit and require that t
   <data name="CommandActionWaitUntilComplete" xml:space="preserve">
     <value>Wait Until Complete</value>
   </data>
+  <data name="GameCommandTriviaCorrectAnswerExample" xml:space="preserve">
+    <value>The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {0}!</value>
+  </data>
+  <data name="GameCommandTriviaStartedExample" xml:space="preserve">
+    <value>@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion: $gameanswers</value>
+  </data>
 </root>

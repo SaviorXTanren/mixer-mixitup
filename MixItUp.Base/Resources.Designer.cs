@@ -5517,6 +5517,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {0}!.
+        /// </summary>
+        public static string GameCommandTriviaCorrectAnswerExample {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaCorrectAnswerExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Questions.
         /// </summary>
         public static string GameCommandTriviaCustomQuestions {
@@ -5558,6 +5567,15 @@ namespace MixItUp.Base {
         public static string GameCommandTriviaQuestionMissing {
             get {
                 return ResourceManager.GetString("GameCommandTriviaQuestionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion: $gameanswers.
+        /// </summary>
+        public static string GameCommandTriviaStartedExample {
+            get {
+                return ResourceManager.GetString("GameCommandTriviaStartedExample", resourceCulture);
             }
         }
         
