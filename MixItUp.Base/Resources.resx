@@ -4636,4 +4636,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="GameCommandTriviaStartedExample" xml:space="preserve">
     <value>@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion: $gameanswers</value>
   </data>
+  <data name="CreateNewCommand" xml:space="preserve">
+    <value>Create New Command</value>
+  </data>
 </root>

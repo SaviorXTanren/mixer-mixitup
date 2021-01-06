@@ -2257,6 +2257,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create New Command.
+        /// </summary>
+        public static string CreateNewCommand {
+            get {
+                return ResourceManager.GetString("CreateNewCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cumulative Months Subbed.
         /// </summary>
         public static string CumulativeMonthsSubbed {

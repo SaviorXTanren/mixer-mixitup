@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Actions;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Actions;
 using MixItUp.WPF.Windows.Commands;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -13,6 +14,13 @@ namespace MixItUp.WPF.Controls.Actions
             InitializeComponent();
         }
 
+        private void AddCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.ActionGroup);
+            window.CommandSaved += Window_CommandSaved;
+            window.Show();
+        }
+
         private void EditCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             CommandActionEditorControlViewModel viewModel = (CommandActionEditorControlViewModel)this.DataContext;
@@ -20,6 +28,19 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 CommandEditorWindow window = new CommandEditorWindow(viewModel.SelectedCommand);
                 window.Show();
+            }
+        }
+
+        private void Window_CommandSaved(object sender, CommandModelBase command)
+        {
+            if (command != null)
+            {
+                CommandActionEditorControlViewModel viewModel = (CommandActionEditorControlViewModel)this.DataContext;
+                if (viewModel != null)
+                {
+                    viewModel.SelectedCommandType = command.Type;
+                    viewModel.SelectedCommand = command;
+                }
             }
         }
     }
