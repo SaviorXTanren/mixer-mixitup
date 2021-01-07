@@ -184,7 +184,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
             }
 
-            if (selectionType.HasFlag(GamePlayerSelectionType.Random))
+            if (parameters.TargetUser == null && selectionType.HasFlag(GamePlayerSelectionType.Random))
             {
                 parameters.TargetUser = this.GetRandomUser(parameters);
             }
