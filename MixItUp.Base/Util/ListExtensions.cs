@@ -39,8 +39,11 @@ namespace MixItUp.Base.Util
 
         public static T Random<T>(this IEnumerable<T> list)
         {
-            int index = RandomHelper.GenerateRandomNumber(0, list.Count());
-            return list.ElementAt(index);
+            if (list.Count() > 0)
+            {
+                return list.ElementAt(RandomHelper.GenerateRandomNumber(0, list.Count()));
+            }
+            return default(T);
         }
 
         public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> list, int size)
