@@ -117,22 +117,6 @@ namespace MixItUp.Base.Model.Requirements
             await base.Perform(parameters);
             if (this.HasTemporaryAmount())
             {
-                this.AddSubtractAmount(parameters.User, this.temporaryAmount);
-            }
-            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-            {
-                this.AddSubtractAmount(parameters.User, this.MinAmount);
-            }
-            else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly || this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
-            {
-                this.AddSubtractAmount(parameters.User, this.GetAmount(parameters));
-            }
-        }
-
-        public override Task Refund(CommandParametersModel parameters)
-        {
-            if (this.HasTemporaryAmount())
-            {
                 this.AddSubtractAmount(parameters.User, -this.temporaryAmount);
             }
             else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
@@ -142,6 +126,22 @@ namespace MixItUp.Base.Model.Requirements
             else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly || this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
             {
                 this.AddSubtractAmount(parameters.User, -this.GetAmount(parameters));
+            }
+        }
+
+        public override Task Refund(CommandParametersModel parameters)
+        {
+            if (this.HasTemporaryAmount())
+            {
+                this.AddSubtractAmount(parameters.User, this.temporaryAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                this.AddSubtractAmount(parameters.User, this.MinAmount);
+            }
+            else if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly || this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                this.AddSubtractAmount(parameters.User, this.GetAmount(parameters));
             }
             return Task.FromResult(0);
         }
