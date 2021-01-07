@@ -252,14 +252,19 @@ namespace MixItUp.Base.Model.Commands.Games
             return outcomes.Last();
         }
 
-        protected async Task PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
+        protected async Task<int> PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
         {
-            this.PerformPrimaryMultiplierPayout(parameters, outcome.GetPayoutMultiplier(parameters.User));
-            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
+            int payout = outcome.GetPayoutMultiplier(parameters.User);
+            this.PerformPrimaryMultiplierPayout(parameters, payout);
+
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
+            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
             if (outcome.Command != null)
             {
                 await outcome.Command.Perform(parameters);
             }
+
+            return payout;
         }
 
         protected void PerformPrimarySetPayout(UserViewModel user, int payout)

@@ -104,18 +104,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 return await base.ValidateRequirements(parameters);
             }
-
-            string validBetTypes = string.Empty;
-            if (this.BetType == RouletteGameCommandBetType.NumberRange)
-            {
-                IEnumerable<int> numbers = this.BetOptions.Select(s => int.Parse(s));
-                validBetTypes = numbers.Min() + "-" + numbers.Max();
-            }
-            else if (this.BetType == RouletteGameCommandBetType.Custom)
-            {
-                validBetTypes = string.Join(", ", this.BetOptions);
-            }
-            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, validBetTypes));
+            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, this.GetValidBetTypes()));
             return false;
         }
 
@@ -150,12 +139,14 @@ namespace MixItUp.Base.Model.Commands.Games
                         string winningBetType = this.BetOptions.Random();
 
                         List<CommandParametersModel> winners = new List<CommandParametersModel>();
+                        int totalPayout = 0;
                         foreach (CommandParametersModel participant in this.runUsers.Values.ToList())
                         {
-                            if (string.Equals(winningBetType, parameters.Arguments[0], StringComparison.CurrentCultureIgnoreCase))
+                            participant.SpecialIdentifiers[RouletteGameCommandModel.GameRouletteWinningBetTypeSpecialIdentifier] = winningBetType;
+                            if (string.Equals(winningBetType, participant.Arguments[0], StringComparison.CurrentCultureIgnoreCase))
                             {
-                                winners.Add(parameters);
-                                this.PerformOutcome(parameters, this.UserSuccessOutcome);
+                                winners.Add(participant);
+                                totalPayout += await this.PerformOutcome(participant, this.UserSuccessOutcome);
                             }
                             else
                             {
@@ -164,6 +155,9 @@ namespace MixItUp.Base.Model.Commands.Games
                         }
 
                         this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+                        this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = totalPayout.ToString();
+                        this.runParameters.SpecialIdentifiers[RouletteGameCommandModel.GameRouletteWinningBetTypeSpecialIdentifier] = winningBetType;
+
                         await this.GameCompleteCommand.Perform(this.runParameters);
 
                         await this.CooldownRequirement.Perform(this.runParameters);
@@ -171,10 +165,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                    this.runParameters.SpecialIdentifiers[RouletteGameCommandModel.GameRouletteValidBetTypesSpecialIdentifier] = this.GetValidBetTypes();
                     await this.StartedCommand.Perform(this.runParameters);
                 }
 
-                await this.UserJoinCommand.Perform(this.runParameters);
+                parameters.SpecialIdentifiers[RouletteGameCommandModel.GameRouletteBetTypeSpecialIdentifier] = betType;
+                await this.UserJoinCommand.Perform(parameters);
                 this.ResetCooldown();
                 return;
             }
@@ -189,6 +185,21 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.runParameters = null;
             this.runUsers.Clear();
+        }
+
+        private string GetValidBetTypes()
+        {
+            string validBetTypes = string.Empty;
+            if (this.BetType == RouletteGameCommandBetType.NumberRange)
+            {
+                IEnumerable<int> numbers = this.BetOptions.Select(s => int.Parse(s));
+                validBetTypes = numbers.Min() + "-" + numbers.Max();
+            }
+            else if (this.BetType == RouletteGameCommandBetType.Custom)
+            {
+                validBetTypes = string.Join(", ", this.BetOptions);
+            }
+            return validBetTypes;
         }
     }
 }
