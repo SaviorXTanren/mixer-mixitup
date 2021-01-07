@@ -134,6 +134,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
                     await this.GameCompleteCommand.Perform(this.runParameters);
 
                     await this.CooldownRequirement.Perform(this.runParameters);
@@ -149,7 +150,7 @@ namespace MixItUp.Base.Model.Commands.Games
             else if (this.runParameters != null && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
-                await this.UserJoinCommand.Perform(this.runParameters);
+                await this.UserJoinCommand.Perform(parameters);
                 this.ResetCooldown();
                 return;
             }
