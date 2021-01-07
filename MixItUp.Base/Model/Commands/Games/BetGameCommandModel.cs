@@ -106,11 +106,10 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             this.gameActive = false;
                             this.betsClosed = false;
-
-                            await this.GameCompleteCommand.Perform(this.runParameters);
-
                             GameOutcomeModel winningOutcome = this.BetOptions[answer - 1];
+
                             this.runParameters.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
+                            await this.GameCompleteCommand.Perform(this.runParameters);
 
                             foreach (CommandParametersModel winner in this.runUserSelections.Where(kvp => kvp.Value == answer).Select(kvp => this.runUsers[kvp.Key]))
                             {
