@@ -222,6 +222,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     winners.Add(participant);
                     this.PerformPrimarySetPayout(participant.User, this.WinAmount);
+                    participant.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
                     await this.UserSuccessCommand.Perform(participant);
                 }
                 else
@@ -231,6 +232,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
 
             this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
             await this.CorrectAnswerCommand.Perform(this.runParameters);
 
             this.ClearData();

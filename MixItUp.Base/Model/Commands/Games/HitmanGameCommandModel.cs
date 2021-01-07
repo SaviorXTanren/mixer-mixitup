@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Commands.Games
             else if (string.IsNullOrEmpty(this.runHitmanName) && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
-                await this.UserJoinCommand.Perform(this.runParameters);
+                await this.UserJoinCommand.Perform(parameters);
                 this.ResetCooldown();
                 return;
             }

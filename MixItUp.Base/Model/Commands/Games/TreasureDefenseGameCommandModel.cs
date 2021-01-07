@@ -199,6 +199,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         int payout = this.runBetAmount * this.runUsers.Count;
                         int individualPayout = payout / winnerParameters.Count();
                         this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
+                        this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
                         foreach (CommandParametersModel winner in winnerParameters)
                         {
                             this.PerformPrimarySetPayout(winner.User, individualPayout);
@@ -224,7 +225,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 else if (!this.runUsers.ContainsKey(parameters.User))
                 {
                     this.runUsers[parameters.User] = parameters;
-                    await this.UserJoinCommand.Perform(this.runParameters);
+                    await this.UserJoinCommand.Perform(parameters);
                     this.ResetCooldown();
                     return;
                 }
