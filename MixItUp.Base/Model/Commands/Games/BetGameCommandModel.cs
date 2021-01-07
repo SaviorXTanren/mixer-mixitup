@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runUsers[parameters.User] = parameters;
             this.runUserSelections[parameters.User] = choice;
 
-            await this.UserJoinCommand.Perform(this.runParameters);
+            await this.UserJoinCommand.Perform(parameters);
             this.ResetCooldown();
         }
 
