@@ -121,6 +121,10 @@ namespace MixItUp.Base.Model.Commands.Games
                             this.ClearData();
                             await this.CooldownRequirement.Perform(this.runParameters);
                         }
+                        else
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandBetInvalidSelection);
+                        }
                     }
                     else
                     {

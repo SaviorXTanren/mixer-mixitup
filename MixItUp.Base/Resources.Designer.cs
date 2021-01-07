@@ -4070,7 +4070,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The option number you selected is not answer.
+        ///   Looks up a localized string similar to The option number you selected is not valid.
         /// </summary>
         public static string GameCommandBetInvalidSelection {
             get {

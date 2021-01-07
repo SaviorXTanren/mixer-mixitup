@@ -3510,7 +3510,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Answer</value>
   </data>
   <data name="GameCommandBetInvalidSelection" xml:space="preserve">
-    <value>The option number you selected is not answer</value>
+    <value>The option number you selected is not valid</value>
   </data>
   <data name="GameCommandRouletteValidBetTypes" xml:space="preserve">
     <value>Valid Bet Types: {0}</value>
