@@ -196,7 +196,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 else if (amount < 0)
                 {
-                    currency.SubtractAmount(user.Data, amount);
+                    currency.SubtractAmount(user.Data, -amount);
                 }
             }
         }
