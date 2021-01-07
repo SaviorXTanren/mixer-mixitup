@@ -70,52 +70,11 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
-            if (this.runCancellationTokenSource == null)
+            if (this.runCancellationTokenSource != null && this.runParameters != null)
             {
-                await this.SetSelectedUser(this.PlayerSelectionType, parameters);
-                if (parameters.TargetUser != null)
-                {
-                    if (this.ValidateTargetUserPrimaryBetAmount(parameters))
-                    {
-                        this.runParameters = parameters;
-
-                        this.runCancellationTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
-                        {
-                            await Task.Delay(this.TimeLimit * 1000);
-
-                            if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
-                            {
-                                this.gameActive = false;
-                                await this.NotAcceptedCommand.Perform(parameters);
-                                await this.Requirements.Refund(parameters);
-                            }
-                            await this.CooldownRequirement.Perform(parameters);
-                            this.ClearData();
-                        }, this.runCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                        this.gameActive = true;
-                        await this.StartedCommand.Perform(parameters);
-                        this.ResetCooldown();
-                        return;
-                    }
-                    else
-                    {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TargetUserDoesNotHaveAmount);
-                    }
-                }
-                else
-                {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
-                }
-            }
-            else
-            {
-                if (this.runParameters != null && parameters.User == this.runParameters.TargetUser)
+                if (parameters.User == this.runParameters.TargetUser)
                 {
                     this.targetParameters = parameters;
 
@@ -124,24 +83,70 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
                         this.PerformPrimaryMultiplierPayout(this.runParameters, 2);
-                        this.PerformPrimaryMultiplierPayout(this.targetParameters, -2);
+                        this.PerformPrimaryMultiplierPayout(this.targetParameters, -1);
                         await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
-                        this.PerformPrimaryMultiplierPayout(this.targetParameters, 2);
-                        this.PerformPrimaryMultiplierPayout(this.runParameters, -2);
+                        this.PerformPrimaryMultiplierPayout(this.targetParameters, 1);
                         await this.FailedCommand.Perform(this.runParameters);
                     }
                     await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();
+                    return false;
                 }
                 else
                 {
                     await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                    return false;
                 }
             }
-            await this.Requirements.Refund(parameters);
+            else
+            {
+                return await base.ValidateRequirements(parameters);
+            }
+        }
+
+        protected override async Task PerformInternal(CommandParametersModel parameters)
+        {
+            await this.SetSelectedUser(this.PlayerSelectionType, parameters);
+            if (parameters.TargetUser != null)
+            {
+                if (this.ValidateTargetUserPrimaryBetAmount(parameters))
+                {
+                    this.runParameters = parameters;
+
+                    this.runCancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
+                    {
+                        await Task.Delay(this.TimeLimit * 1000);
+
+                        if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
+                        {
+                            this.gameActive = false;
+                            await this.NotAcceptedCommand.Perform(parameters);
+                            await this.Requirements.Refund(parameters);
+                        }
+                        await this.CooldownRequirement.Perform(parameters);
+                        this.ClearData();
+                    }, this.runCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    this.gameActive = true;
+                    await this.StartedCommand.Perform(parameters);
+                    this.ResetCooldown();
+                    return;
+                }
+                else
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TargetUserDoesNotHaveAmount);
+                }
+            }
+            else
+            {
+                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+            }
         }
 
         private void ClearData()
