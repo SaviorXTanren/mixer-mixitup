@@ -127,12 +127,13 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     List<CommandParametersModel> participants = new List<CommandParametersModel>();
                     List<CommandParametersModel> winners = new List<CommandParametersModel>();
+                    int totalPayout = 0;
                     foreach (CommandParametersModel participant in this.runUsers.Values.ToList())
-                    {
+                    {              
                         if (this.GenerateProbability() <= this.UserSuccessOutcome.GetRoleProbabilityPayout(parameters.User).Probability)
                         {
                             winners.Add(participant);
-                            this.PerformOutcome(participant, this.UserSuccessOutcome);
+                            totalPayout += await this.PerformOutcome(participant, this.UserSuccessOutcome);
                         }
                         else
                         {
@@ -141,6 +142,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = totalPayout.ToString();
                     double successRate = Convert.ToDouble(winners.Count) / Convert.ToDouble(this.runUsers.Count);
                     if (successRate == 1.0)
                     {
@@ -176,7 +178,7 @@ namespace MixItUp.Base.Model.Commands.Games
             else if (this.runParameters != null && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
-                await this.UserJoinCommand.Perform(this.runParameters);
+                await this.UserJoinCommand.Perform(parameters);
                 this.ResetCooldown();
                 return;
             }
