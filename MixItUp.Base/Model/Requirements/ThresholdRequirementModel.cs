@@ -23,11 +23,11 @@ namespace MixItUp.Base.Model.Requirements
 
         [JsonIgnore]
         private Dictionary<Guid, DateTimeOffset> performs = new Dictionary<Guid, DateTimeOffset>();
-
-        [JsonIgnore]
-        private List<Guid> lastApplicableUsers = new List<Guid>();
         [JsonIgnore]
         private Dictionary<Guid, CommandParametersModel> performParameters = new Dictionary<Guid, CommandParametersModel>();
+
+        [JsonIgnore]
+        private List<CommandParametersModel> applicablePerformParameters = new List<CommandParametersModel>();
 
         public ThresholdRequirementModel() { }
 
@@ -48,18 +48,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public bool IsEnabled { get { return this.Amount > 0; } }
 
-        public List<CommandParametersModel> GetApplicableUsers()
-        {
-            List<CommandParametersModel> users = new List<CommandParametersModel>();
-            foreach (Guid userID in this.lastApplicableUsers)
-            {
-                if (this.performParameters.ContainsKey(userID))
-                {
-                    users.Add(this.performParameters[userID]);
-                }
-            }
-            return users;
-        }
+        public IEnumerable<CommandParametersModel> GetApplicableUsers() { return this.applicablePerformParameters;  }
 
         public override Task<Result> Validate(CommandParametersModel parameters)
         {
@@ -88,17 +77,16 @@ namespace MixItUp.Base.Model.Requirements
                     return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count)));
                 }
 
-                this.lastApplicableUsers.Clear();
-                this.lastApplicableUsers.AddRange(this.performs.Keys);
+                this.applicablePerformParameters.Clear();
+                foreach (Guid key in this.performs.Keys)
+                {
+                    this.applicablePerformParameters.Add(this.performParameters[key]);
+                }
+
+                this.performs.Clear();
+                this.performParameters.Clear();
             }
             return Task.FromResult(new Result());
-        }
-
-        public override async Task Perform(CommandParametersModel parameters)
-        {
-            await base.Perform(parameters);
-            this.performs.Clear();
-            this.performParameters.Clear();
         }
     }
 }
