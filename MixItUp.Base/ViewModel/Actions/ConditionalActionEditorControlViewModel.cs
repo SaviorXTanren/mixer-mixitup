@@ -14,17 +14,12 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class ConditionalClauseViewModel : UIViewModelBase
     {
-        public ConditionalClauseModel Clause { get; set; }
-
         public ICommand DeleteCommand { get; set; }
 
         private ConditionalActionEditorControlViewModel viewModel;
 
-        public ConditionalClauseViewModel(ConditionalActionEditorControlViewModel viewModel) : this(new ConditionalClauseModel(), viewModel) { }
-
-        public ConditionalClauseViewModel(ConditionalClauseModel clause, ConditionalActionEditorControlViewModel viewModel)
+        public ConditionalClauseViewModel(ConditionalActionEditorControlViewModel viewModel)
         {
-            this.Clause = clause;
             this.viewModel = viewModel;
 
             this.DeleteCommand = this.CreateCommand((parameter) =>
@@ -32,6 +27,15 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.viewModel.Clauses.Remove(this);
                 return Task.FromResult(0);
             });
+        }
+
+        public ConditionalClauseViewModel(ConditionalClauseModel clause, ConditionalActionEditorControlViewModel viewModel)
+            : this(viewModel)
+        {
+            this.ComparisionType = clause.ComparisionType;
+            this.Value1 = clause.Value1;
+            this.Value2 = clause.Value2;
+            this.Value3 = clause.Value3;
         }
 
         public bool CanBeRemoved
@@ -49,16 +53,17 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ConditionalComparisionTypeEnum ComparisionType
         {
-            get { return this.Clause.ComparisionType; }
+            get { return this.comparisionType; }
             set
             {
-                this.Clause.ComparisionType = value;
+                this.comparisionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsValue2Definable");
                 this.NotifyPropertyChanged("IsBetweenOperatorSelected");
                 this.NotifyPropertyChanged("IsBetweenOperatorNotSelected");
             }
         }
+        private ConditionalComparisionTypeEnum comparisionType;
 
         public bool IsValue2Definable { get { return this.ComparisionType != ConditionalComparisionTypeEnum.Replaced && this.ComparisionType != ConditionalComparisionTypeEnum.NotReplaced; } }
 
@@ -67,31 +72,36 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public string Value1
         {
-            get { return this.Clause.Value1; }
+            get { return this.value1; }
             set
             {
-                this.Clause.Value1 = value;
+                this.value1 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string value1;
+
         public string Value2
         {
-            get { return this.Clause.Value2; }
+            get { return this.value2; }
             set
             {
-                this.Clause.Value2 = value;
+                this.value2 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string value2;
+
         public string Value3
         {
-            get { return this.Clause.Value3; }
+            get { return this.value3; }
             set
             {
-                this.Clause.Value3 = value;
+                this.value3 = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string value3;
 
         public bool Validate()
         {
@@ -108,6 +118,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 return !(string.IsNullOrEmpty(this.Value1) && string.IsNullOrEmpty(this.Value2));
             }
         }
+
+        public ConditionalClauseModel GetModel() { return new ConditionalClauseModel(this.ComparisionType, this.Value1, this.Value2, this.Value3); }
     }
 
     public class ConditionalActionEditorControlViewModel : ActionEditorControlViewModelBase
@@ -224,7 +236,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task<ActionModelBase> GetActionInternal()
         {
-            return new ConditionalActionModel(this.CaseSensitive, this.SelectedOperatorType, this.Clauses.Select(c => c.Clause), await this.ActionEditorList.GetActions());
+            return new ConditionalActionModel(this.CaseSensitive, this.SelectedOperatorType, this.Clauses.Select(c => c.GetModel()), await this.ActionEditorList.GetActions());
         }
     }
 }
