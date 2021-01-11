@@ -218,7 +218,7 @@ namespace MixItUp.Base.ViewModel.Actions
             IEnumerable<Result> results = await this.ActionEditorList.ValidateActions();
             if (results.Any(r => !r.Success))
             {
-                return new Result(results.All(r => !r.Success));
+                return new Result(results.Where(r => !r.Success));
             }
             return new Result();
         }
