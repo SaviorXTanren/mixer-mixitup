@@ -14,35 +14,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayStreamBossItemControl : OverlayItemControl
     {
-        private OverlayStreamBossItemViewModel viewModel;
-
         public OverlayStreamBossItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayStreamBossItemViewModel();
         }
 
-        public OverlayStreamBossItemControl(OverlayStreamBossItemModel item)
+        public OverlayStreamBossItemControl(OverlayStreamBossItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayStreamBossItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
@@ -69,13 +56,13 @@ namespace MixItUp.WPF.Controls.Overlay
             CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
             if (command != null)
             {
-                this.viewModel.NewBossCommand = null;
+                ((OverlayStreamBossItemViewModel)this.ViewModel).NewBossCommand = null;
             }
         }
 
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.viewModel.NewBossCommand = (CustomCommand)e;
+            ((OverlayStreamBossItemViewModel)this.ViewModel).NewBossCommand = (CustomCommand)e;
         }
     }
 }

@@ -14,30 +14,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayTimerItemControl : OverlayItemControl
     {
-        private OverlayTimerItemViewModel viewModel;
-
         public OverlayTimerItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayTimerItemViewModel();
         }
 
-        public OverlayTimerItemControl(OverlayTimerItemModel item)
+        public OverlayTimerItemControl(OverlayTimerItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayTimerItemViewModel(item);
+            this.ViewModel = viewModel;
         }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
@@ -64,13 +56,13 @@ namespace MixItUp.WPF.Controls.Overlay
             CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
             if (command != null)
             {
-                this.viewModel.TimerCompleteCommand = null;
+                ((OverlayTimerItemViewModel)this.ViewModel).TimerCompleteCommand = null;
             }
         }
 
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.viewModel.TimerCompleteCommand = (CustomCommand)e;
+            ((OverlayTimerItemViewModel)this.ViewModel).TimerCompleteCommand = (CustomCommand)e;
         }
     }
 }

@@ -2,9 +2,7 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -14,35 +12,15 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayProgressBarItemControl : OverlayItemControl
     {
-        private OverlayProgressBarItemViewModel viewModel;
-
         public OverlayProgressBarItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayProgressBarItemViewModel();
         }
 
-        public OverlayProgressBarItemControl(OverlayProgressBarItemModel item)
+        public OverlayProgressBarItemControl(OverlayProgressBarItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayProgressBarItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
-        }
-
-        protected override async Task OnLoaded()
-        {
-            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            this.ViewModel = viewModel;
         }
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
@@ -69,13 +47,13 @@ namespace MixItUp.WPF.Controls.Overlay
             CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
             if (command != null)
             {
-                this.viewModel.OnGoalReachedCommand = null;
+                ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = null;
             }
         }
 
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.viewModel.OnGoalReachedCommand = (CustomCommand)e;
+            ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = (CustomCommand)e;
         }
     }
 }

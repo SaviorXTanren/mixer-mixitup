@@ -1,6 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Overlay;
-using System.Threading.Tasks;
+﻿using MixItUp.Base.ViewModel.Overlay;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -9,40 +7,15 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayImageItemControl : OverlayItemControl
     {
-        private OverlayImageItemViewModel viewModel;
-
         public OverlayImageItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayImageItemViewModel();
         }
 
-        public OverlayImageItemControl(OverlayImageItemModel item)
+        public OverlayImageItemControl(OverlayImageItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayImageItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
-        }
-
-        protected override async Task OnLoaded()
-        {
-            if (this.DataContext is OverlayImageItemViewModel)
-            {
-                this.viewModel = (OverlayImageItemViewModel)this.DataContext;
-            }
-            else
-            {
-                this.DataContext = this.viewModel;
-            }
-            await this.viewModel.OnLoaded();
+            this.ViewModel = viewModel;
         }
     }
 }
