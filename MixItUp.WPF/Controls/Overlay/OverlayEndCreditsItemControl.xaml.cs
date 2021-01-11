@@ -28,14 +28,6 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override void SetItem(OverlayItemModelBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayEndCreditsItemViewModel((OverlayEndCreditsItemModel)item);
-            }
-        }
-
         public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();

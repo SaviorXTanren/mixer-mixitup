@@ -32,19 +32,6 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override void SetItem(OverlayItemModelBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTimerItemViewModel((OverlayTimerItemModel)item);
-            }
-        }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
-        }
-
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
