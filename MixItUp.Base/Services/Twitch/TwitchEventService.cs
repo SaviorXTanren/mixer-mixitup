@@ -390,7 +390,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (streamStartCheckTime != DateTimeOffset.MaxValue)
                 {
-                    DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                    DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
                     Logger.Log(LogLevel.Debug, "Check for stream start: " + startTime + " - " + streamStartCheckTime);
                     if (startTime > streamStartCheckTime)
                     {
@@ -733,6 +733,7 @@ namespace MixItUp.Base.Services.Twitch
                 trigger.SpecialIdentifiers["usersubmonthsgifted"] = giftedSubEvent.MonthsGifted.ToString();
                 trigger.SpecialIdentifiers["isanonymous"] = giftedSubEvent.IsAnonymous.ToString();
                 trigger.Arguments.Add(giftedSubEvent.Receiver.Username);
+                trigger.TargetUser = giftedSubEvent.Receiver;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, giftedSubEvent.Gifter, string.Format("{0} Gifted A {1} Subscription To {2}", giftedSubEvent.Gifter.Username, giftedSubEvent.PlanTier, giftedSubEvent.Receiver.Username), ChannelSession.Settings.AlertGiftedSubColor));

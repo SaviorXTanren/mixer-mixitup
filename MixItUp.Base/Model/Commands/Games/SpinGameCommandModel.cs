@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Outcomes = new List<GameOutcomeModel>(outcomes);
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal SpinGameCommandModel(Base.Commands.SpinGameCommand command)
             : base(command, GameCommandTypeEnum.Spin)
         {
@@ -28,6 +29,7 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             this.Outcomes = new List<GameOutcomeModel>(command.Outcomes.Select(o => new GameOutcomeModel(o)));
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private SpinGameCommandModel() { }
 

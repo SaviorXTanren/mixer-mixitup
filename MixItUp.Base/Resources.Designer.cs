@@ -2086,7 +2086,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consumables (Currency/Rank/Inventory).
+        ///   Looks up a localized string similar to Currency/Rank/Inventory.
         /// </summary>
         public static string ConsumablesCurrencyRankEtc {
             get {
@@ -8615,6 +8615,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Leader.
+        /// </summary>
+        public static string OverlayLeaderboardNewLeader {
+            get {
+                return ResourceManager.GetString("OverlayLeaderboardNewLeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlays.
         /// </summary>
         public static string Overlays {
@@ -9106,6 +9115,15 @@ namespace MixItUp.Base {
         public static string ProgressBar {
             get {
                 return ResourceManager.GetString("ProgressBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Goal Reached.
+        /// </summary>
+        public static string ProgressBarGoalReached {
+            get {
+                return ResourceManager.GetString("ProgressBarGoalReached", resourceCulture);
             }
         }
         
@@ -11180,6 +11198,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Stream Boss.
+        /// </summary>
+        public static string StreamBossNewStreamBoss {
+            get {
+                return ResourceManager.GetString("StreamBossNewStreamBoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream Clip Playback.
         /// </summary>
         public static string StreamClip {
@@ -12040,6 +12067,15 @@ namespace MixItUp.Base {
         public static string Timers {
             get {
                 return ResourceManager.GetString("Timers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timer Complete.
+        /// </summary>
+        public static string TimerTimerComplete {
+            get {
+                return ResourceManager.GetString("TimerTimerComplete", resourceCulture);
             }
         }
         

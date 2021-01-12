@@ -1,14 +1,10 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.MainControls;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
-using MixItUp.WPF.Windows.Commands;
-using MixItUp.WPF.Util;
-using MixItUp.Base.Model.Commands;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -29,17 +25,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DataContext = this.viewModel = new GiveawayMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
             return base.InitializeInternal();
-        }
-
-        private void GiveawayCommand_EditClicked(object sender, RoutedEventArgs e)
-        {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
         }
 
         private void GiveawayStartedReminderCommand_EditClicked(object sender, RoutedEventArgs e)

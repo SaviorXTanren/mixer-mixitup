@@ -223,7 +223,7 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+            DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
             if (startTime > DateTimeOffset.MinValue)
             {
                 TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
@@ -709,7 +709,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
-                if (!CommandBase.IsValidCommandString(commandTrigger))
+                if (!ChatCommandModel.IsValidCommandTrigger(commandTrigger))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Command trigger contain an invalid character");
                     return;
@@ -913,12 +913,12 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments != null && parameters.Arguments.Count() == 1)
             {
                 UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(parameters.Arguments.First().Replace("@", ""), parameters.User.Platform);
-                if (targetUser != null && LinkMixerAccountChatCommand.LinkedAccounts.ContainsKey(targetUser.ID))
+                if (targetUser != null && LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.ContainsKey(targetUser.ID))
                 {
-                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountChatCommand.LinkedAccounts[targetUser.ID]);
+                    UserDataModel mixerUserData = ChannelSession.Settings.GetUserData(LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts[targetUser.ID]);
                     if (mixerUserData != null)
                     {
-                        LinkMixerAccountChatCommand.LinkedAccounts.Remove(targetUser.ID);
+                        LinkMixerAccountPreMadeChatCommandModel.LinkedAccounts.Remove(targetUser.ID);
                         targetUser.Data.MergeData(mixerUserData);
 
                         ChannelSession.Settings.UserData.Remove(mixerUserData.ID);

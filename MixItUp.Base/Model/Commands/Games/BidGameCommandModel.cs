@@ -50,6 +50,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal BidGameCommandModel(Base.Commands.BidGameCommand command)
             : base(command, GameCommandTypeEnum.Bid)
         {
@@ -66,6 +67,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             this.Requirements.Currency.First().RequirementType = CurrencyRequirementTypeEnum.MinimumOnly;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private BidGameCommandModel() { }
 

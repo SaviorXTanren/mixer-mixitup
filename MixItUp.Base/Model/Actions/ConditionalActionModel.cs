@@ -84,6 +84,7 @@ namespace MixItUp.Base.Model.Actions
             this.Actions = new List<ActionModelBase>(actions);
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ConditionalActionModel(MixItUp.Base.Actions.ConditionalAction action, ActionModelBase subAction)
             : base(ActionTypeEnum.Conditional)
         {
@@ -100,6 +101,7 @@ namespace MixItUp.Base.Model.Actions
                 this.Actions.Add(subAction);
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private ConditionalActionModel() { }
 

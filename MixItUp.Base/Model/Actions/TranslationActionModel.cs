@@ -27,6 +27,7 @@ namespace MixItUp.Base.Model.Actions
             this.Text = text;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal TranslationActionModel(MixItUp.Base.Actions.TranslationAction action)
             : base(ActionTypeEnum.Translation)
         {
@@ -34,6 +35,7 @@ namespace MixItUp.Base.Model.Actions
             this.AllowProfanity = action.AllowProfanity;
             this.Text = action.Text;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private TranslationActionModel() { }
 

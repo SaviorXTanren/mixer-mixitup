@@ -751,6 +751,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserTimeout);
                 trigger.Arguments.Add("@" + user.Username);
+                trigger.TargetUser = user;
                 trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -760,6 +761,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan);
                 trigger.Arguments.Add("@" + user.Username);
+                trigger.TargetUser = user;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.Username), ChannelSession.Settings.AlertModerationColor));

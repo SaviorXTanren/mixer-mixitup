@@ -47,6 +47,7 @@ namespace MixItUp.Base.Model.Actions
             this.JSONToSpecialIdentifiers = jsonToSpecialIdentifiers;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal WebRequestActionModel(MixItUp.Base.Actions.WebRequestAction action)
             : base(ActionTypeEnum.WebRequest)
         {
@@ -61,6 +62,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ResponseType = WebRequestResponseParseTypeEnum.PlainText;
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private WebRequestActionModel() { }
 

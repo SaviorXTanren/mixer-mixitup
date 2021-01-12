@@ -1,8 +1,8 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.ViewModel.Currency;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,15 +67,25 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        protected void CommandButtonsControl_EditClicked(object sender, RoutedEventArgs e)
+        private void ShopBuyCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.ShopBuyCommand = command; };
+            window.Show();
+        }
+
+        private void ShopSellCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.ShopSellCommand = command; };
+            window.Show();
+        }
+
+        private void TradeCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.TradeCommand = command; };
+            window.Show();
         }
     }
 }

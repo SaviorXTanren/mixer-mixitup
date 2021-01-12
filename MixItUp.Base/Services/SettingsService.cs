@@ -81,14 +81,9 @@ namespace MixItUp.Base.Services
                     }
                     v2SettingsUpgradeNeeded = true;
 
-                    SettingsV2Model setting = null;
                     try
                     {
-                        setting = await SettingsV2Upgrader.UpgradeSettingsToLatest(filePath);
-                        if (setting != null)
-                        {
-                            await SettingsV3Upgrader.UpgradeV2ToV3(filePath);
-                        }
+                        await SettingsV3Upgrader.UpgradeV2ToV3(filePath);
                     }
                     catch (Exception ex)
                     {
@@ -318,7 +313,7 @@ namespace MixItUp.Base.Services
                 int currentVersion = -1;
                 if (!string.IsNullOrEmpty(settingsFile))
                 {
-                    currentVersion = await SettingsV2Upgrader.GetSettingsVersion(settingsFile);
+                    currentVersion = await SettingsV3Upgrader.GetSettingsVersion(settingsFile);
                 }
 
                 if (currentVersion == -1)
@@ -534,6 +529,26 @@ namespace MixItUp.Base.Services
                     {
                         newSettings.OverlayWidgets.Remove(widget);
                     }
+                    else if (widget.Item is OverlayLeaderboardListItemModel)
+                    {
+                        ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel(((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand);
+                        ((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand = null;
+                    }
+                    else if (widget.Item is OverlayProgressBarItemModel)
+                    {
+                        ((OverlayProgressBarItemModel)widget.Item).ProgressGoalReachedCommand = new CustomCommandModel(((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand);
+                        ((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand = null;
+                    }
+                    else if (widget.Item is OverlayStreamBossItemModel)
+                    {
+                        ((OverlayStreamBossItemModel)widget.Item).StreamBossChangedCommand = new CustomCommandModel(((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand);
+                        ((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand = null;
+                    }
+                    else if (widget.Item is OverlayTimerItemModel)
+                    {
+                        ((OverlayTimerItemModel)widget.Item).TimerFinishedCommand = new CustomCommandModel(((OverlayTimerItemModel)widget.Item).TimerCompleteCommand);
+                        ((OverlayTimerItemModel)widget.Item).TimerCompleteCommand = null;
+                    }
                 }
 
                 await ChannelSession.Services.Settings.Save(newSettings);
@@ -581,221 +596,13 @@ namespace MixItUp.Base.Services
             return (int)settingsJObj["Version"];
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         private static Guid ImportCustomCommand(SettingsV3Model settings, CustomCommand oldCommand)
         {
             CustomCommandModel newCommand = new CustomCommandModel(oldCommand);
             settings.SetCommand(newCommand);
             return newCommand.ID;
         }
-    }
-
-#pragma warning disable CS0612 // Type or member is obsolete
-    public static class SettingsV2Upgrader
-    {
-        public static async Task<SettingsV2Model> UpgradeSettingsToLatest(string filePath)
-        {
-            int currentVersion = await GetSettingsVersion(filePath);
-            if (currentVersion < 0)
-            {
-                // Settings file is invalid, we can't use this
-                return null;
-            }
-            else if (currentVersion > SettingsV2Model.LatestVersion)
-            {
-                // Future build, like a preview build, we can't load this
-                return null;
-            }
-            else if (currentVersion < SettingsV2Model.LatestVersion)
-            {
-                if (currentVersion < 43)
-                {
-                    await SettingsV2Upgrader.Version43Upgrade(filePath);
-                }
-                if (currentVersion < 44)
-                {
-                    await SettingsV2Upgrader.Version44Upgrade(filePath);
-                }
-            }
-            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-            settings.Version = SettingsV2Model.LatestVersion;
-            return settings;
-        }
-
-        public static async Task<int> GetSettingsVersion(string filePath)
-        {
-            string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
-            if (string.IsNullOrEmpty(fileData))
-            {
-                return -1;
-            }
-            JObject settingsJObj = JObject.Parse(fileData);
-            return (int)settingsJObj["Version"];
-        }
-
-        public static async Task Version44Upgrade(string filePath)
-        {
-            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-            await settings.Initialize();
-
-            if (settings.ChatShowUserJoinLeave)
-            {
-                settings.AlertUserJoinLeaveColor = settings.ChatUserJoinLeaveColorScheme;
-            }
-
-            if (settings.ChatShowEventAlerts)
-            {
-                settings.AlertBitsCheeredColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertChannelPointsColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertFollowColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertGiftedSubColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertHostColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertMassGiftedSubColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertModerationColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertRaidColor = settings.ChatEventAlertsColorScheme;
-                settings.AlertSubColor = settings.ChatEventAlertsColorScheme;
-            }
-
-            await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        public static async Task Version43Upgrade(string filePath)
-        {
-            SettingsV2Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-            await settings.Initialize();
-
-            if (settings.IsStreamer)
-            {
-                List<EventCommand> eventCommandsToAdd = new List<EventCommand>();
-                List<EventCommand> eventCommandsToRemove = new List<EventCommand>();
-                foreach (EventCommand command in settings.EventCommands)
-                {
-                    EventCommand newCommand = null;
-                    switch (command.EventCommandType)
-                    {
-                        case EventTypeEnum.MixerChannelEmbersUsed:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelBitsCheered);
-                            break;
-                        case EventTypeEnum.MixerChannelFollowed:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelFollowed);
-                            break;
-                        case EventTypeEnum.MixerChannelHosted:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelRaided);
-                            break;
-                        case EventTypeEnum.MixerChannelResubscribed:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelResubscribed);
-                            break;
-                        case EventTypeEnum.MixerChannelStreamStart:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStart);
-                            break;
-                        case EventTypeEnum.MixerChannelStreamStop:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelStreamStop);
-                            break;
-                        case EventTypeEnum.MixerChannelSubscribed:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscribed);
-                            break;
-                        case EventTypeEnum.MixerChannelSubscriptionGifted:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted);
-                            break;
-                        case EventTypeEnum.MixerChannelUnfollowed:
-                            newCommand = new EventCommand(EventTypeEnum.TwitchChannelUnfollowed);
-                            break;
-                    }
-
-                    if (newCommand != null)
-                    {
-                        eventCommandsToAdd.Add(newCommand);
-                        eventCommandsToRemove.Add(command);
-
-                        newCommand.Actions.AddRange(command.Actions);
-                        newCommand.Unlocked = command.Unlocked;
-                        newCommand.IsEnabled = command.IsEnabled;
-                    }
-                }
-
-                foreach (EventCommand command in eventCommandsToRemove)
-                {
-                    settings.EventCommands.Remove(command);
-                }
-                foreach (EventCommand command in eventCommandsToAdd)
-                {
-                    settings.EventCommands.Add(command);
-                }
-
-                settings.StreamElementsOAuthToken = null;
-                settings.StreamJarOAuthToken = null;
-                settings.StreamlabsOAuthToken = null;
-                settings.TipeeeStreamOAuthToken = null;
-                settings.TreatStreamOAuthToken = null;
-            }
-
-            await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static IEnumerable<CommandBase> GetAllCommands(SettingsV2Model settings)
-        {
-            List<CommandBase> commands = new List<CommandBase>();
-
-            commands.AddRange(settings.ChatCommands);
-            commands.AddRange(settings.EventCommands);
-            commands.AddRange(settings.TimerCommands);
-            commands.AddRange(settings.ActionGroupCommands);
-            commands.AddRange(settings.GameCommands);
-            commands.AddRange(settings.TwitchChannelPointsCommands);
-            commands.AddRange(settings.CustomCommands.Values);
-
-            foreach (UserDataModel userData in settings.UserData.Values)
-            {
-                commands.AddRange(userData.CustomCommands);
-                if (userData.EntranceCommand != null)
-                {
-                    commands.Add(userData.EntranceCommand);
-                }
-            }
-
-            foreach (GameCommandBase gameCommand in settings.GameCommands)
-            {
-                commands.AddRange(gameCommand.GetAllInnerCommands());
-            }
-
-            foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
-            {
-                if (widget.Item is OverlayStreamBossItemModel)
-                {
-                    OverlayStreamBossItemModel item = ((OverlayStreamBossItemModel)widget.Item);
-                    if (item.NewStreamBossCommand != null)
-                    {
-                        commands.Add(item.NewStreamBossCommand);
-                    }
-                }
-                else if (widget.Item is OverlayProgressBarItemModel)
-                {
-                    OverlayProgressBarItemModel item = ((OverlayProgressBarItemModel)widget.Item);
-                    if (item.GoalReachedCommand != null)
-                    {
-                        commands.Add(item.GoalReachedCommand);
-                    }
-                }
-                else if (widget.Item is OverlayTimerItemModel)
-                {
-                    OverlayTimerItemModel item = ((OverlayTimerItemModel)widget.Item);
-                    if (item.TimerCompleteCommand != null)
-                    {
-                        commands.Add(item.TimerCompleteCommand);
-                    }
-                }
-            }
-
-            commands.Add(settings.GameQueueUserJoinedCommand);
-            commands.Add(settings.GameQueueUserSelectedCommand);
-            commands.Add(settings.GiveawayStartedReminderCommand);
-            commands.Add(settings.GiveawayUserJoinedCommand);
-            commands.Add(settings.GiveawayWinnerSelectedCommand);
-            commands.Add(settings.ModerationStrike1Command);
-            commands.Add(settings.ModerationStrike2Command);
-            commands.Add(settings.ModerationStrike3Command);
-
-            return commands.Where(c => c != null);
-        }
-    }
 #pragma warning restore CS0612 // Type or member is obsolete
+    }
 }

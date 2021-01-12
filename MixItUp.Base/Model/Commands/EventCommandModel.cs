@@ -121,6 +121,7 @@ namespace MixItUp.Base.Model.Commands
 
         public EventCommandModel(EventTypeEnum eventType) : base(eventType.ToString(), CommandTypeEnum.Event) { this.EventType = eventType; }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal EventCommandModel(MixItUp.Base.Commands.EventCommand command)
             : base(command)
         {
@@ -128,6 +129,7 @@ namespace MixItUp.Base.Model.Commands
             this.Type = CommandTypeEnum.Event;
             this.EventType = command.EventCommandType;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected EventCommandModel() : base() { }
 

@@ -29,6 +29,7 @@ namespace MixItUp.Base.Model.Actions
             this.OutputDevice = outputDevice;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal SoundActionModel(MixItUp.Base.Actions.SoundAction action)
             : base(ActionTypeEnum.Sound)
         {
@@ -36,6 +37,7 @@ namespace MixItUp.Base.Model.Actions
             this.VolumeScale = action.VolumeScale;
             this.OutputDevice = action.OutputDevice;
         }
+#pragma warning disable CS0612 // Type or member is obsolete
 
         private SoundActionModel() { }
 

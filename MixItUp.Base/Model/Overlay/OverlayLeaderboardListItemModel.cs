@@ -82,8 +82,31 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Guid CurrencyID { get; set; }
 
+        [Obsolete]
         [DataMember]
         public CustomCommand NewLeaderCommand { get; set; }
+
+        [DataMember]
+        public Guid LeaderChangedCommandID { get; set; }
+
+        [JsonIgnore]
+        public CommandModelBase LeaderChangedCommand
+        {
+            get { return ChannelSession.Settings.GetCommand(this.LeaderChangedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.LeaderChangedCommandID = value.ID;
+                    ChannelSession.Settings.SetCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.RemoveCommand(this.LeaderChangedCommandID);
+                    this.LeaderChangedCommandID = Guid.Empty;
+                }
+            }
+        }
 
         [DataMember]
         private List<OverlayListIndividualItemModel> lastItems { get; set; } = new List<OverlayListIndividualItemModel>();
@@ -99,26 +122,26 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CurrencyModel currency, CustomCommand newLeaderCommand)
-            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CurrencyModel currency, CommandModelBase leaderChangedCommand)
+            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, leaderChangedCommand)
         {
             this.CurrencyID = currency.ID;
         }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, BitsLeaderboardPeriodEnum dateRange, CustomCommand newLeaderCommand)
-            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, BitsLeaderboardPeriodEnum dateRange, CommandModelBase leaderChangedCommand)
+            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, leaderChangedCommand)
         {
             this.BitsLeaderboardDateRange = dateRange;
         }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CustomCommand newLeaderCommand)
+            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CommandModelBase leaderChangedCommand)
             : base(OverlayItemModelTypeEnum.Leaderboard, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
         {
             this.LeaderboardType = leaderboardType;
-            this.NewLeaderCommand = newLeaderCommand;
+            this.LeaderChangedCommand = leaderChangedCommand;
         }
 
         [JsonIgnore]
@@ -340,7 +363,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.Items.Add(newItem);
                 }
 
-                if (this.NewLeaderCommand != null)
+                if (this.LeaderChangedCommand != null)
                 {
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
                     if (this.lastItems.Count() > 0 && updatedList.Count() > 0)
@@ -349,7 +372,7 @@ namespace MixItUp.Base.Model.Overlay
                         UserViewModel current = updatedList.First().GetUser();
                         if (previous != null && current != null && !previous.ID.Equals(current.ID))
                         {
-                            await this.NewLeaderCommand.Perform(current, arguments: new string[] { previous.Username });
+                            await this.LeaderChangedCommand.Perform(new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
                         }
                     }
                 }

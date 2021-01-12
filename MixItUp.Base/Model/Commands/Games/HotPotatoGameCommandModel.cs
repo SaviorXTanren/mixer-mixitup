@@ -50,6 +50,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.PotatoExplodeCommand = potatoExplodeCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal HotPotatoGameCommandModel(Base.Commands.BeachBallGameCommand command)
             : base(command, GameCommandTypeEnum.HotPotato)
         {
@@ -73,6 +74,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.TossPotatoCommand = new CustomCommandModel(command.TossPotatoCommand) { IsEmbedded = true };
             this.PotatoExplodeCommand = new CustomCommandModel(command.PotatoExplodeCommand) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private HotPotatoGameCommandModel() { }
 

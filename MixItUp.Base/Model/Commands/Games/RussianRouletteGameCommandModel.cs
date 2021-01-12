@@ -55,6 +55,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal RussianRouletteGameCommandModel(Base.Commands.RussianRouletteGameCommand command)
             : base(command, GameCommandTypeEnum.RussianRoulette)
         {
@@ -68,6 +69,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
             this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private RussianRouletteGameCommandModel() { }
 

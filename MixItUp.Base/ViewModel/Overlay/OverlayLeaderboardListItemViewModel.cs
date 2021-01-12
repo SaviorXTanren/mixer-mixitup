@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
@@ -58,8 +58,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 
-        private CustomCommand newLeaderCommand;
-        public CustomCommand NewLeaderCommand
+        public CommandModelBase NewLeaderCommand
         {
             get { return this.newLeaderCommand; }
             set
@@ -70,6 +69,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged("DoesNotHaveNewLeaderCommand");
             }
         }
+        private CommandModelBase newLeaderCommand;
 
         public OverlayLeaderboardListItemViewModel()
             : base()
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayLeaderboardListItemViewModel(OverlayLeaderboardListItemModel item)
             : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Alignment, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
-            this.newLeaderCommand = item.NewLeaderCommand;
+            this.newLeaderCommand = item.LeaderChangedCommand;
             this.leaderboardType = item.LeaderboardType;
             if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
             {

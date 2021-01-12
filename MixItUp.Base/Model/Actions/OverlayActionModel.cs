@@ -36,6 +36,7 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWidget = showWidget;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal OverlayActionModel(MixItUp.Base.Actions.OverlayAction action)
             : base(ActionTypeEnum.Overlay)
         {
@@ -44,6 +45,7 @@ namespace MixItUp.Base.Model.Actions
             this.WidgetID = action.WidgetID;
             this.ShowWidget = action.ShowWidget;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private OverlayActionModel() { }
 

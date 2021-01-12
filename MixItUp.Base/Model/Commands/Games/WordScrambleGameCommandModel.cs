@@ -73,6 +73,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal WordScrambleGameCommandModel(Base.Commands.WordScrambleGameCommand command)
             : base(command, GameCommandTypeEnum.WordScramble)
         {
@@ -88,6 +89,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
             this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private WordScrambleGameCommandModel() { }
 

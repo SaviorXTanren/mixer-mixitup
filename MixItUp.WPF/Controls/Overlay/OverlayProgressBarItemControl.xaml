@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -92,10 +92,10 @@
 
         <GroupBox Header="On Goal Reached" Grid.Row="6" Width="200">
             <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                <Button Visibility="{Binding IsOnGoalReachedCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
-                
+                <Button x:Name="AddCommandButton" Visibility="{Binding IsOnGoalReachedCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+
                 <Grid Visibility="{Binding IsOnGoalReachedCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <CommandControls:CommandButtonsControl DataContext="{Binding OnGoalReachedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                    <CommandsControls:CommandListingButtonsControl x:Name="CommandButtons" DataContext="{Binding OnGoalReachedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
                 </Grid>
             </Grid>
         </GroupBox>

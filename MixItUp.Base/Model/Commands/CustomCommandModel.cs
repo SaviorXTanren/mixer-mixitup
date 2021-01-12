@@ -38,12 +38,14 @@ namespace MixItUp.Base.Model.Commands
 
         public CustomCommandModel(string name) : base(name, CommandTypeEnum.Custom) { }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CustomCommandModel(MixItUp.Base.Commands.CustomCommand command)
             : base(command)
         {
             this.Name = command.Name;
             this.Type = CommandTypeEnum.Custom;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected CustomCommandModel() : base() { }
 

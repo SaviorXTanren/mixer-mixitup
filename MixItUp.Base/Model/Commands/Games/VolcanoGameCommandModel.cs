@@ -89,6 +89,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CollectCommand = collectCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal VolcanoGameCommandModel(Base.Commands.VolcanoGameCommand command)
             : base(command, GameCommandTypeEnum.Volcano)
         {
@@ -111,6 +112,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.CollectMaximumPercentage = command.CollectPayoutPercentageMaximum;
             this.CollectCommand = new CustomCommandModel(command.CollectArgument) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private VolcanoGameCommandModel() { }
 

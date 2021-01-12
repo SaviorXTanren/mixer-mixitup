@@ -22,6 +22,38 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
+        public static bool DoesMessageMatchTriggers(ChatMessageViewModel message, IEnumerable<string> triggers, out IEnumerable<string> arguments)
+        {
+            arguments = null;
+            if (!string.IsNullOrEmpty(message.PlainTextMessage))
+            {
+                foreach (string trigger in triggers)
+                {
+                    if (string.Equals(message.PlainTextMessage, trigger, StringComparison.CurrentCultureIgnoreCase) || message.PlainTextMessage.StartsWith(trigger + " "))
+                    {
+                        arguments = message.PlainTextMessage.Replace(trigger, "").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, IEnumerable<string> triggers, out IEnumerable<string> arguments)
+        {
+            arguments = null;
+            foreach (string trigger in triggers)
+            {
+                Match match = Regex.Match(message.PlainTextMessage, string.Format(CommandWildcardMatchingRegexFormat, Regex.Escape(trigger)), RegexOptions.IgnoreCase);
+                if (match != null && match.Success)
+                {
+                    arguments = message.PlainTextMessage.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
@@ -34,6 +66,7 @@ namespace MixItUp.Base.Model.Commands
 
         public ChatCommandModel(string name, HashSet<string> triggers, bool includeExclamation, bool wildcards) : this(name, CommandTypeEnum.Chat, triggers, includeExclamation, wildcards) { }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ChatCommandModel(MixItUp.Base.Commands.ChatCommand command)
             : base(command)
         {
@@ -43,6 +76,7 @@ namespace MixItUp.Base.Model.Commands
             this.IncludeExclamation = command.IncludeExclamationInCommands;
             this.Wildcards = command.Wildcards;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected ChatCommandModel(string name, CommandTypeEnum type, HashSet<string> triggers, bool includeExclamation, bool wildcards)
             : base(name, type)
@@ -58,37 +92,9 @@ namespace MixItUp.Base.Model.Commands
 
         public override IEnumerable<string> GetFullTriggers() { return this.IncludeExclamation ? this.Triggers.Select(t => "!" + t) : this.Triggers; }
 
-        public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
-        {
-            arguments = null;
-            if (!string.IsNullOrEmpty(message.PlainTextMessage))
-            {
-                foreach (string trigger in this.GetFullTriggers())
-                {
-                    if (string.Equals(message.PlainTextMessage, trigger, StringComparison.CurrentCultureIgnoreCase) || message.PlainTextMessage.StartsWith(trigger + " "))
-                    {
-                        arguments = message.PlainTextMessage.Replace(trigger, "").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        public bool DoesMessageMatchTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments) { return ChatCommandModel.DoesMessageMatchTriggers(message, this.GetFullTriggers(), out arguments); }
 
-        public bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments)
-        {
-            arguments = null;
-            foreach (string trigger in this.Triggers)
-            {
-                Match match = Regex.Match(message.PlainTextMessage, string.Format(CommandWildcardMatchingRegexFormat, Regex.Escape(trigger)), RegexOptions.IgnoreCase);
-                if (match != null && match.Success)
-                {
-                    arguments = message.PlainTextMessage.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    return true;
-                }
-            }
-            return false;
-        }
+        public bool DoesMessageMatchWildcardTriggers(ChatMessageViewModel message, out IEnumerable<string> arguments) { return ChatCommandModel.DoesMessageMatchWildcardTriggers(message, this.Triggers, out arguments); }
     }
 
     [DataContract]
@@ -103,11 +109,13 @@ namespace MixItUp.Base.Model.Commands
             this.UserID = userID;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal UserOnlyChatCommandModel(MixItUp.Base.Commands.ChatCommand command, Guid userID)
             : base(command)
         {
             this.UserID = userID;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private UserOnlyChatCommandModel() { }
     }

@@ -123,6 +123,7 @@ namespace MixItUp.Base.Model.Actions
             this.Rate = rate;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal TextToSpeechActionModel(MixItUp.Base.Actions.TextToSpeechAction action)
             : base(ActionTypeEnum.TextToSpeech)
         {
@@ -132,6 +133,7 @@ namespace MixItUp.Base.Model.Actions
             this.Pitch = (int)(action.Pitch * 100);
             this.Rate = (int)(action.Rate * 100);
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private TextToSpeechActionModel() { }
 

@@ -49,6 +49,7 @@ namespace MixItUp.Base.Model.Actions
     [DataContract]
     public abstract class ActionModelBase
     {
+#pragma warning disable CS0612 // Type or member is obsolete
         internal static IEnumerable<ActionModelBase> UpgradeAction(Base.Actions.ActionBase action)
         {
             List<ActionModelBase> actions = new List<ActionModelBase>();
@@ -191,6 +192,7 @@ namespace MixItUp.Base.Model.Actions
             }
             return actions;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         [DataMember]
         public Guid ID { get; set; }
@@ -216,7 +218,7 @@ namespace MixItUp.Base.Model.Actions
 
         public virtual async Task TestPerform(Dictionary<string, string> specialIdentifiers)
         {
-            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers));
+            await this.Perform(new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers) { TargetUser = ChannelSession.GetCurrentUser() });
         }
 
         public async Task Perform(CommandParametersModel parameters)

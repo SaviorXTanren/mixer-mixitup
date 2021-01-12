@@ -1,8 +1,7 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Overlay;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -23,37 +22,36 @@ namespace MixItUp.WPF.Controls.Overlay
             this.ViewModel = viewModel;
         }
 
-        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayProgressBarItemModel.GoalReachedCommandName)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.ProgressBarGoalReached);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
 
         private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = null;
+                ((OverlayLeaderboardListItemViewModel)this.ViewModel).NewLeaderCommand = null;
             }
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = (CustomCommand)e;
+            ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = (CustomCommandModel)command;
         }
     }
 }

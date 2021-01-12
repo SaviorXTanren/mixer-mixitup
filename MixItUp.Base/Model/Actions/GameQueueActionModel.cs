@@ -42,6 +42,7 @@ namespace MixItUp.Base.Model.Actions
             this.TargetUsername = targetUsername;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal GameQueueActionModel(MixItUp.Base.Actions.GameQueueAction action)
             : base(ActionTypeEnum.GameQueue)
         {
@@ -49,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
             this.MinimumRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
             this.TargetUsername = action.TargetUsername;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private GameQueueActionModel() { }
 

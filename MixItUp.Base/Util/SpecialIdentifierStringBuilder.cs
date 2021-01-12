@@ -499,7 +499,7 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                     {
-                        DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                        DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
                         if (startTime > DateTimeOffset.MinValue)
                         {
                             TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);

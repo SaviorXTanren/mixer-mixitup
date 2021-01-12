@@ -66,6 +66,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameCompleteCommand = gameCompleteCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal BetGameCommandModel(Base.Commands.BetGameCommand command)
             : base(command, GameCommandTypeEnum.Bet)
         {
@@ -79,6 +80,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.BetsClosedCommand = new CustomCommandModel(command.BetsClosedCommand) { IsEmbedded = true };
             this.GameCompleteCommand = new CustomCommandModel(command.GameCompleteCommand) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private BetGameCommandModel() { }
 

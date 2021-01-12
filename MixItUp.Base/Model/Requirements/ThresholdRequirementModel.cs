@@ -38,6 +38,7 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = runForEachUser;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ThresholdRequirementModel(MixItUp.Base.ViewModel.Requirement.ThresholdRequirementViewModel requirement)
             : this()
         {
@@ -45,6 +46,7 @@ namespace MixItUp.Base.Model.Requirements
             this.TimeSpan = requirement.TimeSpan;
             this.RunForEachUser = false;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public bool IsEnabled { get { return this.Amount > 0; } }
 

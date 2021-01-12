@@ -27,6 +27,7 @@ namespace MixItUp.Base.Model.Actions
             this.WhisperUserName = whisperUserName;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ChatActionModel(MixItUp.Base.Actions.ChatAction action)
             : base(ActionTypeEnum.Chat)
         {
@@ -35,6 +36,7 @@ namespace MixItUp.Base.Model.Actions
             this.IsWhisper = action.IsWhisper;
             this.WhisperUserName = action.WhisperUserName;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private ChatActionModel() { }
 

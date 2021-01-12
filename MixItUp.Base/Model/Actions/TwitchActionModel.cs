@@ -86,6 +86,7 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = type;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal TwitchActionModel(MixItUp.Base.Actions.StreamingPlatformAction action)
             : base(ActionTypeEnum.Twitch)
         {
@@ -128,6 +129,7 @@ namespace MixItUp.Base.Model.Actions
                 this.Username = action.UserName;
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private TwitchActionModel() { }
 

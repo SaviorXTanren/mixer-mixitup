@@ -72,6 +72,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserFailureCommand = userFailureCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal HitmanGameCommandModel(Base.Commands.HitmanGameCommand command)
             : base(command, GameCommandTypeEnum.Hitman)
         {
@@ -87,6 +88,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.UserSuccessCommand = new CustomCommandModel(command.UserSuccessOutcome.Command) { IsEmbedded = true };
             this.UserFailureCommand = new CustomCommandModel(command.UserFailOutcome.Command) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private HitmanGameCommandModel() { }
 

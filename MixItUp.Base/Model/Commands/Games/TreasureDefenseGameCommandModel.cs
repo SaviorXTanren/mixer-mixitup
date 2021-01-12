@@ -80,6 +80,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.ThiefSelectedCommand = thiefSelectedCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal TreasureDefenseGameCommandModel(Base.Commands.TreasureDefenseGameCommand command)
             : base(command, GameCommandTypeEnum.TreasureDefense)
         {
@@ -96,6 +97,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.KnightSelectedCommand = new CustomCommandModel(command.KnightSelectedCommand) { IsEmbedded = true };
             this.ThiefSelectedCommand = new CustomCommandModel(command.ThiefSelectedCommand) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private TreasureDefenseGameCommandModel() { }
 

@@ -38,6 +38,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public CooldownRequirementModel() { }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CooldownRequirementModel(MixItUp.Base.ViewModel.Requirement.CooldownRequirementViewModel requirement)
             : this()
         {
@@ -45,6 +46,7 @@ namespace MixItUp.Base.Model.Requirements
             this.IndividualAmount = requirement.Amount;
             this.GroupName = requirement.GroupName;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public CooldownRequirementModel(CooldownTypeEnum type, int amount, string groupName = null)
         {

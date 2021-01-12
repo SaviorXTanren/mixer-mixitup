@@ -35,6 +35,7 @@ namespace MixItUp.Base.Model.Actions
             this.Variables = variables;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal OvrStreamActionModel(MixItUp.Base.Actions.OvrStreamAction action)
             : base(ActionTypeEnum.OvrStream)
         {
@@ -49,6 +50,7 @@ namespace MixItUp.Base.Model.Actions
             this.TitleName = action.TitleName;
             this.Variables = action.Variables;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private OvrStreamActionModel() { }
 

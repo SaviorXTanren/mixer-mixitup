@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.Import.ScorpBot;
-using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -179,18 +177,6 @@ namespace MixItUp.Base.Model.User
         public PatreonCampaignMember PatreonUser { get; set; } = null;
 
         public UserDataModel() { }
-
-        public UserDataModel(ScorpBotViewerModel viewer)
-        {
-            this.MixerID = viewer.MixerID;
-            this.MixerUsername = viewer.MixerUsername;
-            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-        }
-
-        public UserDataModel(StreamlabsChatBotViewerModel viewer)
-        {
-            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-        }
 
         [JsonIgnore]
         public StreamingPlatformTypeEnum Platform

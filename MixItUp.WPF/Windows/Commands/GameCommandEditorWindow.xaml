@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
-        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Commands"
         xmlns:Util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Commands"

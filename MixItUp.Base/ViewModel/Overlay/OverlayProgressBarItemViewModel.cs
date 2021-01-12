@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -150,7 +150,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 
-        public CustomCommand OnGoalReachedCommand
+        public CustomCommandModel OnGoalReachedCommand
         {
             get { return this.onGoalReachedCommand; }
             set
@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged("IsOnGoalReachedCommandNotSet");
             }
         }
-        private CustomCommand onGoalReachedCommand;
+        private CustomCommandModel onGoalReachedCommand;
 
         public bool IsOnGoalReachedCommandSet { get { return this.OnGoalReachedCommand != null; } }
         public bool IsOnGoalReachedCommandNotSet { get { return !this.IsOnGoalReachedCommandSet; } }
@@ -219,7 +219,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
             this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
-            this.OnGoalReachedCommand = item.GoalReachedCommand;
+            this.OnGoalReachedCommand = item.ProgressGoalReachedCommand;
 
             this.HTML = item.HTML;
         }

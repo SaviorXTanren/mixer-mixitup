@@ -35,6 +35,7 @@ namespace MixItUp.Base.Model.Actions
             this.SaveOutput = saveOutput;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ExternalProgramActionModel(MixItUp.Base.Actions.ExternalProgramAction action)
             : base(ActionTypeEnum.ExternalProgram)
         {
@@ -43,6 +44,7 @@ namespace MixItUp.Base.Model.Actions
             this.ShowWindow = action.ShowWindow;
             this.WaitForFinish = action.WaitForFinish;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private ExternalProgramActionModel() { }
 

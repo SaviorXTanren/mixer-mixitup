@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Settings
 {
+    [Obsolete]
     [DataContract]
     public class SettingsV2Model
     {

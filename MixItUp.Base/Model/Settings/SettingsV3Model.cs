@@ -11,7 +11,6 @@ using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
-using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;

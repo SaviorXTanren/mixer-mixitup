@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,6 +17,7 @@ namespace MixItUp.Base.Model.Requirements
 
         public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal RequirementsSetModel(MixItUp.Base.ViewModel.Requirement.RequirementViewModel requirements)
         {
             if (requirements.Role != null)
@@ -63,6 +63,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
 

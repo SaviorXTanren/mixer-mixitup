@@ -537,11 +537,11 @@ namespace MixItUp.Base.Services
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
                 {
-                    if (inventory.ShopEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.ShopCommand }, out arguments))
+                    if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
                     {
                         await inventory.PerformShopCommand(message.User, arguments, message.Platform);
                     }
-                    else if (inventory.TradeEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.TradeCommand }, out arguments))
+                    else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
                     {
                         string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
                         await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
@@ -550,11 +550,11 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.RedemptionStoreEnabled)
                 {
-                    if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
+                    if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
                     {
                         await RedemptionStorePurchaseModel.Purchase(message.User, arguments);
                     }
-                    else if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
+                    else if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
                     {
                         await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
                     }

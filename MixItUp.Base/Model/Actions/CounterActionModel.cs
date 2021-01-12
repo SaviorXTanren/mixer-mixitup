@@ -31,6 +31,7 @@ namespace MixItUp.Base.Model.Actions
             this.Amount = amount;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CounterActionModel(MixItUp.Base.Actions.CounterAction action)
             : base(ActionTypeEnum.Counter)
         {
@@ -40,6 +41,7 @@ namespace MixItUp.Base.Model.Actions
             else if (action.ResetAmount) { this.ActionType = CounterActionTypeEnum.Reset; }
             this.Amount = action.Amount;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private CounterActionModel() { }
 

@@ -194,6 +194,7 @@ namespace MixItUp.Base.Model.Actions
 
         private StreamingSoftwareActionModel() { }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal StreamingSoftwareActionModel(MixItUp.Base.Actions.StreamingSoftwareAction action)
             : base(ActionTypeEnum.StreamingSoftware)
         {
@@ -222,6 +223,7 @@ namespace MixItUp.Base.Model.Actions
                 this.SourceDimensions = new StreamingSoftwareSourceDimensionsModel(action.SourceDimensions.X, action.SourceDimensions.Y, action.SourceDimensions.Rotation, action.SourceDimensions.XScale, action.SourceDimensions.YScale);
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.StreamingSoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.StreamingSoftwareType; } }
 

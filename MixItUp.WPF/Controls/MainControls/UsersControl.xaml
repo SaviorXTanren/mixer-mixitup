@@ -7,10 +7,8 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             xmlns:CustomControls="clr-namespace:MixItUp.WPF.Controls.Command"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Medium"

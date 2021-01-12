@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 
@@ -50,7 +50,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string color;
 
-        public CustomCommand TimerCompleteCommand
+        public CustomCommandModel TimerCompleteCommand
         {
             get { return this.timerCompleteCommand; }
             set
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged("IsTimerCompleteCommandNotSet");
             }
         }
-        private CustomCommand timerCompleteCommand;
+        private CustomCommandModel timerCompleteCommand;
 
         public bool IsTimerCompleteCommandSet { get { return this.TimerCompleteCommand != null; } }
         public bool IsTimerCompleteCommandNotSet { get { return !this.IsTimerCompleteCommandSet; } }
@@ -83,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.HTML = item.HTML;
 
-            this.TimerCompleteCommand = item.TimerCompleteCommand;
+            this.TimerCompleteCommand = item.TimerFinishedCommand;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

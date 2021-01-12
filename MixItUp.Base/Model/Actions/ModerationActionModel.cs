@@ -42,6 +42,7 @@ namespace MixItUp.Base.Model.Actions
             this.ModerationReason = moderationReason;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ModerationActionModel(MixItUp.Base.Actions.ModerationAction action)
             : base(ActionTypeEnum.Moderation)
         {
@@ -64,6 +65,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ModerationReason = action.ModerationReason;
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private ModerationActionModel() { }
 

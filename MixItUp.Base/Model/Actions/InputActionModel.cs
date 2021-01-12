@@ -59,6 +59,7 @@ namespace MixItUp.Base.Model.Actions
             this.Alt = alt;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal InputActionModel(MixItUp.Base.Actions.InputAction action)
             : base(ActionTypeEnum.Input)
         {
@@ -69,6 +70,7 @@ namespace MixItUp.Base.Model.Actions
             this.Control = action.Control;
             this.Alt = action.Alt;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private InputActionModel() { }
 

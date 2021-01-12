@@ -30,8 +30,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayProgressBarItemModel : OverlayHTMLTemplateItemModelBase
     {
-        public const string GoalReachedCommandName = "Goal Reached";
-
         public const string HTMLTemplate =
             @"<div style=""position: absolute; background-color: {BACKGROUND_COLOR}; width: {BAR_WIDTH}px; height: {BAR_HEIGHT}px; transform: translate(-50%, -50%);"">
                 <div style=""position: absolute; background-color: {PROGRESS_COLOR}; width: {PROGRESS_WIDTH}px; height: {BAR_HEIGHT}px;""></div>
@@ -71,8 +69,31 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
+        [Obsolete]
         [DataMember]
         public CustomCommand GoalReachedCommand { get; set; }
+
+        [DataMember]
+        public Guid ProgressGoalReachedCommandID { get; set; }
+
+        [JsonIgnore]
+        public CustomCommandModel ProgressGoalReachedCommand
+        {
+            get { return (CustomCommandModel)ChannelSession.Settings.GetCommand(this.ProgressGoalReachedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.ProgressGoalReachedCommandID = value.ID;
+                    ChannelSession.Settings.SetCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.RemoveCommand(this.ProgressGoalReachedCommandID);
+                    this.ProgressGoalReachedCommandID = Guid.Empty;
+                }
+            }
+        }
 
         [DataMember]
         private DateTimeOffset LastReset { get; set; }
@@ -82,7 +103,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayProgressBarItemModel() : base() { }
 
         public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, double startAmount, double goalAmount, int resetAfterDays, string progressColor,
-            string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+            string backgroundColor, string textColor, string textFont, int width, int height, CustomCommandModel goalReachedCommand)
             : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, textFont, width, height, goalReachedCommand)
         {
             this.StartAmount = this.CurrentAmount = startAmount;
@@ -90,14 +111,14 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, string currentAmountCustom, string goalAmountCustom, int resetAfterDays,
-            string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+            string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommandModel goalReachedCommand)
             : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, textFont, width, height, goalReachedCommand)
         {
             this.CurrentAmountCustom = currentAmountCustom;
             this.GoalAmountCustom = goalAmountCustom;
         }
 
-        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommandModel goalReachedCommand)
             : base(OverlayItemModelTypeEnum.ProgressBar, htmlText)
         {
             this.ProgressBarType = progressBarType;
@@ -108,7 +129,7 @@ namespace MixItUp.Base.Model.Overlay
             this.TextFont = textFont;
             this.Width = width;
             this.Height = height;
-            this.GoalReachedCommand = goalReachedCommand;
+            this.ProgressGoalReachedCommand = goalReachedCommand;
             this.LastReset = DateTimeOffset.Now;
         }
 
@@ -213,9 +234,9 @@ namespace MixItUp.Base.Model.Overlay
                 if (!this.GoalReached && percentage >= 1.0)
                 {
                     this.GoalReached = true;
-                    if (this.GoalReachedCommand != null)
+                    if (this.ProgressGoalReachedCommand != null)
                     {
-                        await this.GoalReachedCommand.Perform();
+                        await this.ProgressGoalReachedCommand.Perform();
                     }
                 }
             }

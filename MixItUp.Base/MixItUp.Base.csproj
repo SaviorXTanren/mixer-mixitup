@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
-    <Compile Include="ViewModel\Command %28OLD%29\GameCommandWindowViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,6 +126,10 @@
     <EmbeddedResource Update="Resources.qps-ploc.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\Import\" />
   </ItemGroup>
 
 </Project>

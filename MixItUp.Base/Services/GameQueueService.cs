@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;

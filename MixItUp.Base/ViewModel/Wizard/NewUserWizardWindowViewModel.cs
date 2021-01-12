@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.Model.Import.ScorpBot;
-using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Accounts;
@@ -17,10 +15,6 @@ namespace MixItUp.Base.ViewModel.Wizard
     public class NewUserWizardWindowViewModel : UIViewModelBase
     {
         public bool WizardComplete { get; private set; }
-
-        public ScorpBotDataModel ScorpBot { get; private set; }
-
-        public StreamlabsChatBotDataModel StreamlabsChatBot { get; private set; }
 
         #region Intro Page
 
@@ -58,62 +52,6 @@ namespace MixItUp.Base.ViewModel.Wizard
         public StreamingPlatformAccountControlViewModel Twitch { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Twitch);
 
         #endregion Accounts Page
-
-        #region ScorpBot Page
-
-        public bool ScorpBotPageVisible
-        {
-            get { return this.scorpBotPageVisible; }
-            set
-            {
-                this.scorpBotPageVisible = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool scorpBotPageVisible;
-
-        public string ScorpBotDirectory
-        {
-            get { return this.scorpBotDirectory; }
-            set
-            {
-                this.scorpBotDirectory = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string scorpBotDirectory;
-
-        public ICommand ScorpBotDirectoryBrowseCommand { get; set; }
-
-        #endregion ScorpBot Page
-
-        #region Streamlabs Chatbot Page
-
-        public bool StreamlabsChatbotPageVisible
-        {
-            get { return this.streamlabsChatbotPageVisible; }
-            set
-            {
-                this.streamlabsChatbotPageVisible = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool streamlabsChatbotPageVisible;
-
-        public string StreamlabsChatbotDirectory
-        {
-            get { return this.streamlabsChatbotDirectory; }
-            set
-            {
-                this.streamlabsChatbotDirectory = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string streamlabsChatbotDirectory;
-
-        public ICommand StreamlabsChatbotDirectoryBrowseCommand { get; set; }
-
-        #endregion Streamlabs Chatbot Page
 
         #region Command & Actions Page
 
@@ -217,26 +155,6 @@ namespace MixItUp.Base.ViewModel.Wizard
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
 
-            this.ScorpBotDirectoryBrowseCommand = this.CreateCommand((parameter) =>
-            {
-                string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
-                if (!string.IsNullOrEmpty(folderPath))
-                {
-                    this.ScorpBotDirectory = folderPath;
-                }
-                return Task.FromResult(0);
-            });
-
-            this.StreamlabsChatbotDirectoryBrowseCommand = this.CreateCommand((parameter) =>
-            {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Excel File|*.xlsx");
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    this.StreamlabsChatbotDirectory = filePath;
-                }
-                return Task.FromResult(0);
-            });
-
             this.SetBackupLocationCommand = this.CreateCommand((parameter) =>
             {
                 string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
@@ -274,40 +192,6 @@ namespace MixItUp.Base.ViewModel.Wizard
                     }
 
                     this.StreamerAccountsPageVisible = false;
-                    //this.ScorpBotPageVisible = true;
-
-                    this.CommandActionsPageVisible = true;
-                }
-                else if (this.ScorpBotPageVisible)
-                {
-                    if (!string.IsNullOrEmpty(this.ScorpBotDirectory))
-                    {
-                        this.StatusMessage = "Gathering ScorpBot Data...";
-                        this.ScorpBot = await ScorpBotDataModel.GatherScorpBotData(this.ScorpBotDirectory);
-                        if (this.ScorpBot == null)
-                        {
-                            this.StatusMessage = "Failed to import ScorpBot data, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assistance.";
-                            return;
-                        }
-                    }
-
-                    this.ScorpBotPageVisible = false;
-                    this.StreamlabsChatbotPageVisible = true;
-                }
-                else if (this.StreamlabsChatbotPageVisible)
-                {
-                    if (!string.IsNullOrEmpty(this.StreamlabsChatbotDirectory))
-                    {
-                        this.StatusMessage = "Gathering Streamlabs ChatBot Data...";
-                        this.StreamlabsChatBot = await StreamlabsChatBotDataModel.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Twitch, this.StreamlabsChatbotDirectory);
-                        if (this.StreamlabsChatBot == null)
-                        {
-                            this.StatusMessage = "Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assistance.";
-                            return;
-                        }
-                    }
-
-                    this.StreamlabsChatbotPageVisible = false;
                     this.CommandActionsPageVisible = true;
                 }
                 else if (this.CommandActionsPageVisible)
@@ -321,16 +205,6 @@ namespace MixItUp.Base.ViewModel.Wizard
                     {
                         await DialogHelper.ShowMessage("Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.");
                         return;
-                    }
-
-                    if (this.ScorpBot != null)
-                    {
-                        this.ScorpBot.ImportSettings();
-                    }
-
-                    if (this.StreamlabsChatBot != null)
-                    {
-                        await this.StreamlabsChatBot.ImportSettings();
                     }
 
                     ChannelSession.Settings.ReRunWizard = false;
@@ -352,20 +226,9 @@ namespace MixItUp.Base.ViewModel.Wizard
                     this.IntroPageVisible = true;
                     this.CanBack = false;
                 }
-                else if (this.ScorpBotPageVisible)
-                {
-                    this.ScorpBotPageVisible = false;
-                    this.StreamerAccountsPageVisible = true;
-                }
-                else if (this.StreamlabsChatbotPageVisible)
-                {
-                    this.StreamlabsChatbotPageVisible = false;
-                    this.ScorpBotPageVisible = true;
-                }
                 else if (this.CommandActionsPageVisible)
                 {
                     this.CommandActionsPageVisible = false;
-                    //this.StreamlabsChatbotPageVisible = true;
                     this.StreamerAccountsPageVisible = true;
                 }
                 else if (this.FinalPageVisible)

@@ -40,11 +40,13 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandGroupSettingsModel(string name) { this.Name = name; }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CommandGroupSettingsModel(MixItUp.Base.Commands.CommandGroupSettings oldGroupSettings)
         {
             this.Name = oldGroupSettings.Name;
             this.TimerInterval = oldGroupSettings.TimerInterval;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     [DataContract]
@@ -122,6 +124,7 @@ namespace MixItUp.Base.Model.Commands
             this.Type = type;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         protected CommandModelBase(MixItUp.Base.Commands.CommandBase command)
         {
             this.ID = command.ID;
@@ -135,13 +138,12 @@ namespace MixItUp.Base.Model.Commands
                 this.Requirements = new RequirementsSetModel(pCommand.Requirements);
             }
 
-#pragma warning disable CS0612 // Type or member is obsolete
             foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
             {
                 this.Actions.AddRange(ActionModelBase.UpgradeAction(action));
             }
-#pragma warning restore CS0612 // Type or member is obsolete
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected CommandModelBase() { }
 

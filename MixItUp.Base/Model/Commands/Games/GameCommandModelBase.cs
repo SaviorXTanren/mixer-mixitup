@@ -84,6 +84,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.Command = command;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal GameOutcomeModel(Base.Commands.GameOutcome outcome)
         {
             this.Name = outcome.Name;
@@ -108,6 +109,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
             }
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected GameOutcomeModel() { }
 
@@ -154,12 +156,14 @@ namespace MixItUp.Base.Model.Commands.Games
             this.GameType = gameType;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal GameCommandModelBase(Base.Commands.GameCommandBase command, GameCommandTypeEnum gameType)
             : this(command.Name, command.Commands, gameType)
         {
             this.IsEnabled = command.IsEnabled;
             this.Requirements = new RequirementsSetModel(command.Requirements);
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         protected GameCommandModelBase() : base() { }
 

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using System;
@@ -120,20 +120,20 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public NotificationsSettingsControlViewModel()
         {
-            string defaultAudioOption = SoundAction.DefaultAudioDevice;
+            string defaultAudioOption = SoundActionModel.DefaultAudioDevice;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationsAudioOutput))
             {
                 defaultAudioOption = ChannelSession.Settings.NotificationsAudioOutput;
             }
 
             List<string> audioOptions = new List<string>();
-            audioOptions.Add(SoundAction.DefaultAudioDevice);
+            audioOptions.Add(SoundActionModel.DefaultAudioDevice);
             audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
 
             this.NotificationsAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
                 audioOptions, defaultAudioOption, (value) =>
                 {
-                    if (value.Equals(SoundAction.DefaultAudioDevice))
+                    if (value.Equals(SoundActionModel.DefaultAudioDevice))
                     {
                         ChannelSession.Settings.NotificationsAudioOutput = null;
                     }

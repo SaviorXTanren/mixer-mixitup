@@ -36,12 +36,14 @@ namespace MixItUp.Base.Model.Requirements
             this.MatchType = matchType;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal RankRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
         {
             this.RankSystemID = requirement.CurrencyID;
             this.RankName = requirement.RankName;
             this.MatchType = (requirement.MustEqual) ? RankRequirementMatchTypeEnum.EqualTo : RankRequirementMatchTypeEnum.GreaterThanOrEqualTo;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         [JsonIgnore]
         public CurrencyModel RankSystem

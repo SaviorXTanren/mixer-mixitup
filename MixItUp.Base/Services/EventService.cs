@@ -200,6 +200,7 @@ namespace MixItUp.Base.Services
         public UserViewModel User { get; set; }
         public List<string> Arguments { get; set; } = new List<string>();
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();
+        public UserViewModel TargetUser { get; set; }
 
         public EventTrigger(EventTypeEnum type)
         {
@@ -346,7 +347,7 @@ namespace MixItUp.Base.Services
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
 
-                    await command.Perform(new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers));
+                    await command.Perform(new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
                 }
             }
         }

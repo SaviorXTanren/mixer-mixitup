@@ -3189,7 +3189,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Consumables</value>
   </data>
   <data name="ConsumablesCurrencyRankEtc" xml:space="preserve">
-    <value>Consumables (Currency/Rank/Inventory)</value>
+    <value>Currency/Rank/Inventory</value>
   </data>
   <data name="Item" xml:space="preserve">
     <value>Item</value>
@@ -4644,5 +4644,17 @@ This setting will change all role requirements to be explicit and require that t
   </data>
   <data name="Output" xml:space="preserve">
     <value>Output</value>
+  </data>
+  <data name="OverlayLeaderboardNewLeader" xml:space="preserve">
+    <value>New Leader</value>
+  </data>
+  <data name="ProgressBarGoalReached" xml:space="preserve">
+    <value>Goal Reached</value>
+  </data>
+  <data name="StreamBossNewStreamBoss" xml:space="preserve">
+    <value>New Stream Boss</value>
+  </data>
+  <data name="TimerTimerComplete" xml:space="preserve">
+    <value>Timer Complete</value>
   </data>
 </root>

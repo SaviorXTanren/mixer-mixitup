@@ -66,6 +66,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.NoneSucceedCommand = noneSucceedCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal HeistGameCommandModel(Base.Commands.HeistGameCommand command)
             : base(command, GameCommandTypeEnum.Heist)
         {
@@ -82,6 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.LowThirdsSucceedCommand = new CustomCommandModel(command.LowThirdsSucceedCommand) { IsEmbedded = true };
             this.NoneSucceedCommand = new CustomCommandModel(command.NoneSucceedCommand) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private HeistGameCommandModel() { }
 

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -205,7 +205,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         protected OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation;
 
-        public CustomCommand NewBossCommand
+        public CustomCommandModel NewBossCommand
         {
             get { return this.newBossCommand; }
             set
@@ -216,7 +216,7 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged("IsNewBossCommandCommandNotSet");
             }
         }
-        private CustomCommand newBossCommand;
+        private CustomCommandModel newBossCommand;
 
         public bool IsNewBossCommandCommandSet { get { return this.NewBossCommand != null; } }
         public bool IsNewBossCommandCommandNotSet { get { return !this.IsNewBossCommandCommandSet; } }
@@ -267,7 +267,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
 
-            this.NewBossCommand = item.NewStreamBossCommand;
+            this.NewBossCommand = item.StreamBossChangedCommand;
 
             this.HTML = item.HTML;
         }

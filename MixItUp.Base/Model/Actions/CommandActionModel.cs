@@ -60,6 +60,7 @@ namespace MixItUp.Base.Model.Actions
             this.CommandGroupName = groupName;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CommandActionModel(MixItUp.Base.Actions.CommandAction action)
             : base(ActionTypeEnum.Command)
         {
@@ -70,6 +71,7 @@ namespace MixItUp.Base.Model.Actions
             this.WaitForCommandToFinish = false;
             this.CommandGroupName = action.GroupName;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private CommandActionModel() { }
 

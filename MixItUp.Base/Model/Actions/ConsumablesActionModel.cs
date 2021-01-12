@@ -84,6 +84,7 @@ namespace MixItUp.Base.Model.Actions
             this.DeductFromUser = deductFromUser;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal ConsumablesActionModel(MixItUp.Base.Actions.CurrencyAction action)
             : base(ActionTypeEnum.Consumables)
         {
@@ -97,6 +98,7 @@ namespace MixItUp.Base.Model.Actions
             this.UsersToApplyTo = action.RoleRequirement;
             this.DeductFromUser = action.DeductFromUser;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private ConsumablesActionModel() { }
 

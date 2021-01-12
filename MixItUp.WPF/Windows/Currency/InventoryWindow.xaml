@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -180,11 +180,11 @@
                                 </Grid.ColumnDefinitions>
 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsBought}" Grid.Column="0">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopBuyCommandButtonsControl" DataContext="{Binding ShopBuyCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandsControls:CommandListingButtonsControl x:Name="ShopBuyCommand" DataContext="{Binding ShopBuyCommand}" HorizontalAlignment="Center" EditClicked="ShopBuyCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                                 </GroupBox>
 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsSold}" Grid.Column="2">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopSellCommandButtonsControl" DataContext="{Binding ShopSellCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandsControls:CommandListingButtonsControl x:Name="ShopSellCommand" DataContext="{Binding ShopSellCommand}" HorizontalAlignment="Center" EditClicked="ShopSellCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                                 </GroupBox>
                             </Grid>
                         </Grid>
@@ -215,7 +215,7 @@
                             </Grid>
 
                             <GroupBox Header="{x:Static resx:Resources.ItemsTraded}" Grid.Row="2" HorizontalAlignment="Center">
-                                <CommandControls:CommandButtonsControl x:Name="TradeCommandButtonsControl" DataContext="{Binding TradeCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                <CommandsControls:CommandListingButtonsControl x:Name="TradeCommand" DataContext="{Binding TradeCommand}" HorizontalAlignment="Center" EditClicked="TradeCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
                         </Grid>
                     </GroupBox>

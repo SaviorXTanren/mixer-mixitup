@@ -27,11 +27,13 @@ namespace MixItUp.Base.Model.Actions
             this.ActionType = type;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal StreamlabsActionModel(MixItUp.Base.Actions.StreamlabsAction action)
             : base(ActionTypeEnum.Streamlabs)
         {
             this.ActionType = (StreamlabsActionTypeEnum)(int)action.StreamlabType;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private StreamlabsActionModel() { }
 

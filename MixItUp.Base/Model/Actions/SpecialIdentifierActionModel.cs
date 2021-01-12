@@ -35,6 +35,7 @@ namespace MixItUp.Base.Model.Actions
             this.ShouldProcessMath = shouldProcessMath;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal SpecialIdentifierActionModel(MixItUp.Base.Actions.SpecialIdentifierAction action)
             : base(ActionTypeEnum.SpecialIdentifier)
         {
@@ -43,6 +44,7 @@ namespace MixItUp.Base.Model.Actions
             this.MakeGloballyUsable = action.MakeGloballyUsable;
             this.ShouldProcessMath = action.SpecialIdentifierShouldProcessMath;
         }
+#pragma warning disable CS0612 // Type or member is obsolete
 
         private SpecialIdentifierActionModel() { }
 

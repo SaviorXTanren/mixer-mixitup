@@ -44,6 +44,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusCommand = statusCommand;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
         internal CoinPusherGameCommandModel(Base.Commands.CoinPusherGameCommand command)
             : base(command, GameCommandTypeEnum.CoinPusher)
         {
@@ -56,6 +57,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.StatusArgument = command.StatusArgument;
             this.StatusCommand = new CustomCommandModel(command.StatusArgument) { IsEmbedded = true };
         }
+#pragma warning restore CS0612 // Type or member is obsolete
 
         private CoinPusherGameCommandModel() { }
 
