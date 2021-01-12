@@ -22,7 +22,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RewardName}" />
+        <ComboBox Grid.Column="0" ItemsSource="{Binding ChannelPointRewards}" Text="{Binding Name}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RewardName}" />
 
         <local:UnlockCommandControl Grid.Column="2" />
     </Grid>

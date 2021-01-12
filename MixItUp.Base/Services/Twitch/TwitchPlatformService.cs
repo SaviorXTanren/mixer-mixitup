@@ -277,5 +277,7 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetChannelChatBadges(NewAPI.Users.UserModel channel) { return await this.RunAsync(this.Connection.NewAPI.Chat.GetChannelChatBadges(channel)); }
 
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetGlobalChatBadges() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalChatBadges()); }
+
+        public async Task<IEnumerable<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> GetCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
     }
 }
