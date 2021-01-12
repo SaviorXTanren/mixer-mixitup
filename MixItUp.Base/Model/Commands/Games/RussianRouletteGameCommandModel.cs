@@ -135,6 +135,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         await this.UserFailureCommand.Perform(loser);
                     }
 
+                    this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count.ToString();
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
                     await this.GameCompleteCommand.Perform(this.runParameters);
