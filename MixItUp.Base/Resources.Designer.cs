@@ -13256,6 +13256,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Web Request Action: Duplicate JSON parameter.
+        /// </summary>
+        public static string WebRequestActionDuplicateJSONParameter {
+            get {
+                return ResourceManager.GetString("WebRequestActionDuplicateJSONParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Web Request Action: Invalid JSON Special Identifier.
         /// </summary>
         public static string WebRequestActionInvalidJSONSpecialIdentifier {

@@ -110,6 +110,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (this.ShowJSONGrid)
             {
+                HashSet<string> parameters = new HashSet<string>();
                 foreach (WebRequestActionJSONToSpecialIdentifierViewModel jsonParameter in this.JSONParameters)
                 {
                     if (string.IsNullOrEmpty(jsonParameter.JSONParameterName) || string.IsNullOrEmpty(jsonParameter.SpecialIdentifierName))
@@ -122,6 +123,12 @@ namespace MixItUp.Base.ViewModel.Actions
                     {
                         return Task.FromResult(new Result(MixItUp.Base.Resources.WebRequestActionInvalidJSONSpecialIdentifier));
                     }
+
+                    if (parameters.Contains(jsonParameter.JSONParameterName))
+                    {
+                        return Task.FromResult(new Result(MixItUp.Base.Resources.WebRequestActionDuplicateJSONParameter));
+                    }
+                    parameters.Add(jsonParameter.JSONParameterName);
                 }
             }
 
@@ -132,7 +139,12 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (this.ShowJSONGrid)
             {
-                return Task.FromResult<ActionModelBase>(new WebRequestActionModel(this.RequestURL, this.JSONParameters.ToDictionary(j => j.JSONParameterName, j => j.SpecialIdentifierName)));
+                Dictionary<string, string> jsonParameters = new Dictionary<string, string>();
+                foreach (WebRequestActionJSONToSpecialIdentifierViewModel jsonParameter in this.JSONParameters)
+                {
+                    jsonParameters[jsonParameter.JSONParameterName] = jsonParameter.SpecialIdentifierName;
+                }
+                return Task.FromResult<ActionModelBase>(new WebRequestActionModel(this.RequestURL, jsonParameters));
             }
             else
             {
