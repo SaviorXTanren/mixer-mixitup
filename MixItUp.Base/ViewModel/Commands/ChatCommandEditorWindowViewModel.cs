@@ -82,8 +82,8 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 this.Triggers = string.Join(" ", existingCommand.Triggers);
             }
-            this.IncludeExclamation = existingCommand.IncludeExclamation;
             this.Wildcards = existingCommand.Wildcards;
+            this.IncludeExclamation = existingCommand.IncludeExclamation;
         }
 
         public ChatCommandEditorWindowViewModel(CommandTypeEnum commandType) : base(commandType) { }
