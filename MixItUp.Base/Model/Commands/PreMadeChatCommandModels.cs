@@ -227,7 +227,7 @@ namespace MixItUp.Base.Model.Commands
             if (startTime > DateTimeOffset.MinValue)
             {
                 TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
-                await ChannelSession.Services.Chat.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + (int)duration.TotalHours + duration.ToString("\\:mm"));
+                await ChannelSession.Services.Chat.SendMessage("Start Time: " + startTime.ToCorrectLocalTime().ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + (int)duration.TotalHours + duration.ToString("\\:mm"));
             }
             else
             {
