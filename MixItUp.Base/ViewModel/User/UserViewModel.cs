@@ -726,12 +726,12 @@ namespace MixItUp.Base.ViewModel.User
 
             if (this.Data.TwitchBadges != null)
             {
-                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                if (this.HasTwitchBadge("global_mod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.TwitchUserRoles.Add(UserRoleEnum.Staff); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Staff); }
+                if (this.HasTwitchBadge("global_mod")) { this.TwitchUserRoles.Add(UserRoleEnum.GlobalMod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.GlobalMod); }
                 if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
                 if (this.IsTwitchSubscriber) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Premium); } else { this.UserRoles.Remove(UserRoleEnum.Premium); }
-                if (this.HasTwitchBadge("vip")) { this.UserRoles.Add(UserRoleEnum.VIP); } else { this.UserRoles.Remove(UserRoleEnum.VIP); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
+                if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null)
                 {
