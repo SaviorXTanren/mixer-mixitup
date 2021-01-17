@@ -621,7 +621,7 @@ namespace MixItUp.Base.Model.Currency
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
                     {
                         int amount = 1;
-                        IEnumerable<string> itemArgs = arguments.ToList();
+                        IEnumerable<string> itemArgs = arguments.Skip(1);
                         InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
