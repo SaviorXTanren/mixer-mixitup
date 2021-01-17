@@ -161,6 +161,9 @@ namespace MixItUp.Base.Model.Currency
         public Guid ItemsTradedCommandID { get; set; }
 
         [JsonIgnore]
+        private DateTimeOffset shopListCooldown = DateTimeOffset.MinValue;
+
+        [JsonIgnore]
         private InventoryTradeModel tradeSender = null;
         [JsonIgnore]
         private InventoryTradeModel tradeReceiver = null;
@@ -389,6 +392,14 @@ namespace MixItUp.Base.Model.Currency
                         string arg1 = arguments.ElementAt(0);
                         if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
+                            if (this.shopListCooldown > DateTimeOffset.Now)
+                            {
+                                int totalSeconds = (int)Math.Ceiling((this.shopListCooldown - DateTimeOffset.Now).TotalSeconds);
+                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
+                                return;
+                            }
+                            this.shopListCooldown = DateTimeOffset.Now.AddSeconds(10);
+
                             List<string> items = new List<string>();
                             foreach (InventoryItemModel item in this.Items.Values)
                             {
