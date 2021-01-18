@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -27,7 +28,7 @@ namespace MixItUp.Base.Services
         Task MoveDown(UserViewModel user);
 
         Task SelectFirst();
-        Task SelectFirstType(UserRoleEnum userRole);
+        Task SelectFirstType(RoleRequirementModel roleRequirement);
         Task SelectRandom();
 
         int GetUserPosition(UserViewModel user);
@@ -131,11 +132,12 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task SelectFirstType(UserRoleEnum userRole)
+        public async Task SelectFirstType(RoleRequirementModel roleRequirement)
         {
             foreach (UserViewModel user in this.queue.ToList())
             {
-                if (user.HasPermissionsTo(userRole))
+                Result result = await roleRequirement.Validate(new CommandParametersModel(user));
+                if (result.Success)
                 {
                     this.queue.Remove(user);
                     await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
@@ -29,16 +30,16 @@ namespace MixItUp.Base.Model.Actions
         public GameQueueActionType ActionType { get; set; }
 
         [DataMember]
-        public UserRoleEnum MinimumRole { get; set; }
+        public RoleRequirementModel RoleRequirement { get; set; }
 
         [DataMember]
         public string TargetUsername { get; set; }
 
-        public GameQueueActionModel(GameQueueActionType gameQueueType, UserRoleEnum minimumRole = UserRoleEnum.User, string targetUsername = null)
+        public GameQueueActionModel(GameQueueActionType gameQueueType, RoleRequirementModel roleRequirement = null, string targetUsername = null)
             : base(ActionTypeEnum.GameQueue)
         {
             this.ActionType = gameQueueType;
-            this.MinimumRole = minimumRole;
+            this.RoleRequirement = roleRequirement;
             this.TargetUsername = targetUsername;
         }
 
@@ -47,7 +48,7 @@ namespace MixItUp.Base.Model.Actions
             : base(ActionTypeEnum.GameQueue)
         {
             this.ActionType = (GameQueueActionType)(int)action.GameQueueType;
-            this.MinimumRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
+            this.RoleRequirement = (action.RoleRequirement != null) ? new RoleRequirementModel(action.RoleRequirement) : null;
             this.TargetUsername = action.TargetUsername;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -125,7 +126,14 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == GameQueueActionType.SelectFirstType)
                 {
-                    await ChannelSession.Services.GameQueueService.SelectFirstType(this.MinimumRole);
+                    if (this.RoleRequirement != null)
+                    {
+                        await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.GameQueueService.SelectFirst();
+                    }
                 }
                 else if (this.ActionType == GameQueueActionType.ClearQueue)
                 {
