@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
@@ -71,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                this.SelectedUserRole = action.MinimumRole;
+                this.SelectedUserRole = (action.RoleRequirement != null) ? action.RoleRequirement.Role : UserRoleEnum.User;
             }
         }
 
@@ -85,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Actions
             }
             else if (this.ShowUserRoles)
             {
-                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, minimumRole: this.SelectedUserRole));
+                return Task.FromResult<ActionModelBase>(new GameQueueActionModel(this.SelectedActionType, roleRequirement: new RoleRequirementModel(this.SelectedUserRole)));
             }
             else
             {
