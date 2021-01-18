@@ -531,23 +531,35 @@ namespace MixItUp.Base.Services
                     }
                     else if (widget.Item is OverlayLeaderboardListItemModel)
                     {
-                        ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel();
-                        ((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand = null;
+                        if (((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand != null)
+                        {
+                            ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel(((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand);
+                            ((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand = null;
+                        }
                     }
                     else if (widget.Item is OverlayProgressBarItemModel)
                     {
-                        ((OverlayProgressBarItemModel)widget.Item).ProgressGoalReachedCommand = new CustomCommandModel(((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand);
-                        ((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand = null;
+                        if (((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand != null)
+                        {
+                            ((OverlayProgressBarItemModel)widget.Item).ProgressGoalReachedCommand = new CustomCommandModel(((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand);
+                            ((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand = null;
+                        }
                     }
                     else if (widget.Item is OverlayStreamBossItemModel)
                     {
-                        ((OverlayStreamBossItemModel)widget.Item).StreamBossChangedCommand = new CustomCommandModel(((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand);
-                        ((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand = null;
+                        if (((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand != null)
+                        {
+                            ((OverlayStreamBossItemModel)widget.Item).StreamBossChangedCommand = new CustomCommandModel(((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand);
+                            ((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand = null;
+                        }
                     }
                     else if (widget.Item is OverlayTimerItemModel)
                     {
-                        ((OverlayTimerItemModel)widget.Item).TimerFinishedCommand = new CustomCommandModel(((OverlayTimerItemModel)widget.Item).TimerCompleteCommand);
-                        ((OverlayTimerItemModel)widget.Item).TimerCompleteCommand = null;
+                        if (((OverlayTimerItemModel)widget.Item).TimerCompleteCommand != null)
+                        {
+                            ((OverlayTimerItemModel)widget.Item).TimerFinishedCommand = new CustomCommandModel(((OverlayTimerItemModel)widget.Item).TimerCompleteCommand);
+                            ((OverlayTimerItemModel)widget.Item).TimerCompleteCommand = null;
+                        }
                     }
                 }
 
