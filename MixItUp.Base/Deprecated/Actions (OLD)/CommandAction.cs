@@ -32,7 +32,7 @@ namespace MixItUp.Base.Actions
         public Guid CommandID { get; set; }
 
         [DataMember]
-        public Type PreMadeType { get; set; }
+        public string PreMadeType { get; set; }
 
         [DataMember]
         public string CommandArguments { get; set; }

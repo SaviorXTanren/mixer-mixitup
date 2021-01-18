@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Model\Import\**" />
     <Compile Remove="ViewModel\Command %2528OLD%2529\**" />
+    <EmbeddedResource Remove="Model\Import\**" />
     <EmbeddedResource Remove="ViewModel\Command %2528OLD%2529\**" />
+    <None Remove="Model\Import\**" />
     <None Remove="ViewModel\Command %2528OLD%2529\**" />
   </ItemGroup>
 
@@ -126,10 +129,6 @@
     <EmbeddedResource Update="Resources.qps-ploc.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Model\Import\" />
   </ItemGroup>
 
 </Project>

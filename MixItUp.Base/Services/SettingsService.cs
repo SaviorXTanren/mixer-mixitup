@@ -531,7 +531,7 @@ namespace MixItUp.Base.Services
                     }
                     else if (widget.Item is OverlayLeaderboardListItemModel)
                     {
-                        ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel(((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand);
+                        ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel();
                         ((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand = null;
                     }
                     else if (widget.Item is OverlayProgressBarItemModel)

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +67,23 @@ namespace MixItUp.Base.Model.Actions
         {
             this.ActionType = (CommandActionTypeEnum)(int)action.CommandActionType;
             this.CommandID = action.CommandID;
-            this.PreMadeType = action.PreMadeType;
+            if (!string.IsNullOrEmpty(action.PreMadeType))
+            {
+                string typeName = action.PreMadeType.Replace("ChatCommand", "PreMadeChatCommandModel");
+                typeName = typeName.Replace("MixItUp.Base.Commands", "MixItUp.Base.Model.Commands");
+                try
+                {
+                    Type type = System.Type.GetType(typeName);
+                    if (type != null)
+                    {
+                        this.PreMadeType = type;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
             this.Arguments = action.CommandArguments;
             this.WaitForCommandToFinish = false;
             this.CommandGroupName = action.GroupName;
