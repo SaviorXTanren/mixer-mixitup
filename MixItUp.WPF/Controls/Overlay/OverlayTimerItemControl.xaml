@@ -32,6 +32,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
             <TextBox Grid.Column="0" Text="{Binding TotalLengthString}" MaterialDesign:HintAssist.Hint="Length (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
@@ -41,6 +43,8 @@
             <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
             <ComboBox Grid.Column="6" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
+            
+            <ComboBox Grid.Column="8" ItemsSource="{Binding SampleTimeFormatsStrings}" Text="{Binding Format}" MaterialDesign:HintAssist.Hint="Time Format" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
         </Grid>
 
         <GroupBox Header="On Timer Completed" Grid.Row="2" Width="200">

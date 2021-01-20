@@ -27,6 +27,8 @@ namespace MixItUp.Base.Model.Overlay
         public string TextFont { get; set; }
         [DataMember]
         public int TextSize { get; set; }
+        [DataMember]
+        public string TimeFormat { get; set; }
 
         [DataMember]
         public CustomCommand TimerCompleteCommand { get; set; }
@@ -39,13 +41,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTimerItemModel() : base() { }
 
-        public OverlayTimerItemModel(string html, int totalLength, string textColor, string textFont, int textSize, CustomCommand timerCompleteCommand)
+        public OverlayTimerItemModel(string html, int totalLength, string textColor, string textFont, int textSize, string timeFormat, CustomCommand timerCompleteCommand)
             : base(OverlayItemModelTypeEnum.Timer, html)
         {
             this.TotalLength = totalLength;
             this.TextColor = textColor;
             this.TextFont = textFont;
             this.TextSize = textSize;
+            this.TimeFormat = timeFormat;
             this.TimerCompleteCommand = timerCompleteCommand;
         }
 
@@ -81,7 +84,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_COLOR"] = this.TextColor;
             replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
-            replacementSets["TIME"] = TimeSpan.FromSeconds(this.timeLeft).ToString("hh\\:mm\\:ss");
+            replacementSets["TIME"] = TimeSpan.FromSeconds(this.timeLeft).ToString(timeFormat);
 
             return replacementSets;
         }
