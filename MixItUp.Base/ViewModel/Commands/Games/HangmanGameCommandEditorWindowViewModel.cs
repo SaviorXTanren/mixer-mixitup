@@ -133,10 +133,10 @@ namespace MixItUp.Base.ViewModel.Games
             this.InitialAmount = 100;
             this.SuccessfulGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanSuccessfulGuessExample);
             this.FailedGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanFailedGuessExample);
-            this.GameWonCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanGameWonExample);
-            this.GameLostCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanGameLostExample);
+            this.GameWonCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHangmanGameWonExample, this.PrimaryCurrencyName));
+            this.GameLostCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHangmanGameLostExample, this.PrimaryCurrencyName));
             this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
-            this.StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanStatusExample);
+            this.StatusCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHangmanStatusExample, this.PrimaryCurrencyName));
 
             this.SetUICommands();
         }
