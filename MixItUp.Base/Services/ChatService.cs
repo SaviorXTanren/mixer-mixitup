@@ -286,9 +286,9 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    foreach (string trigger in command.Triggers)
+                    foreach (string trigger in command.GetFullTriggers())
                     {
-                        string t = (command.IncludeExclamation) ? "!" + trigger.ToLower() : trigger.ToLower();
+                        string t = trigger.ToLower();
                         this.triggersToCommands[t] = command;
                         this.longestTrigger = Math.Max(this.longestTrigger, t.Length);
                     }
@@ -488,10 +488,9 @@ namespace MixItUp.Base.Services
                                 }
                                 else
                                 {
-                                    foreach (string trigger in command.Triggers)
+                                    foreach (string trigger in command.GetFullTriggers())
                                     {
-                                        string t = (command.IncludeExclamation) ? "!" + trigger.ToLower() : trigger.ToLower();
-                                        userOnlyTriggersToCommands[t] = command;
+                                        userOnlyTriggersToCommands[trigger.ToLower()] = command;
                                     }
                                 }
                             }
@@ -543,7 +542,6 @@ namespace MixItUp.Base.Services
                     }
                     else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
                     {
-                        string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
                         await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
                     }
                 }
