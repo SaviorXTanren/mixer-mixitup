@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_COLOR"] = this.TextColor;
             replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
-            replacementSets["TIME"] = TimeSpan.FromSeconds(this.timeLeft).ToString(timeFormat);
+            replacementSets["TIME"] = TimeSpan.FromSeconds(this.timeLeft).ToString(this.TimeFormat);
 
             return replacementSets;
         }
