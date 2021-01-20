@@ -93,7 +93,8 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, 1);
                         await this.FailedCommand.Perform(this.runParameters);
                     }
-                    await this.CooldownRequirement.Perform(this.runParameters);
+
+                    await this.PerformCooldown(this.runParameters);
                     this.ClearData();
                     return false;
                 }
@@ -129,15 +130,14 @@ namespace MixItUp.Base.Model.Commands.Games
                             this.gameActive = false;
                             await this.NotAcceptedCommand.Perform(parameters);
                             await this.Requirements.Refund(parameters);
+                            await this.PerformCooldown(parameters);
                         }
-                        await this.CooldownRequirement.Perform(parameters);
                         this.ClearData();
                     }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     this.gameActive = true;
                     await this.StartedCommand.Perform(parameters);
-                    this.ResetCooldown();
                     return;
                 }
             }

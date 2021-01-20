@@ -216,6 +216,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 await this.Stage1DepositCommand.Perform(parameters);
             }
+            await this.PerformCooldown(parameters);
         }
 
         private void ClearData()

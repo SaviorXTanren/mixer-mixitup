@@ -113,7 +113,7 @@ namespace MixItUp.Base.Model.Commands.Games
                                 this.gameActive = false;
                                 await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
 
-                                this.CooldownRequirement.Perform(this.startParameters);
+                                await this.PerformCooldown(this.startParameters);
                                 this.ClearData();
                             }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -130,7 +130,6 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
 
                     this.lastTossParameters = parameters;
-                    this.ResetCooldown();
                     return;
                 }
                 else
@@ -163,7 +162,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     this.gameActive = false;
                     await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
-                    this.CooldownRequirement.Perform(this.startParameters);
+                    await this.PerformCooldown(this.lastTossParameters);
                     this.ClearData();
                 }
             }, this.lastHitCancellationTokenSource.Token);

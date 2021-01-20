@@ -71,6 +71,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         await this.FailedCommand.Perform(parameters);
                     }
+                    await this.PerformCooldown(parameters);
                     return;
                 }
             }

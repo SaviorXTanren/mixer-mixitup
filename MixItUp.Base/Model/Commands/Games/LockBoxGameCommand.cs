@@ -141,6 +141,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             (guess < this.CurrentCombination) ? MixItUp.Base.Resources.GameCommandLockBoxLow : MixItUp.Base.Resources.GameCommandLockBoxHigh;
                         await this.FailureCommand.Perform(parameters);
                     }
+                    await this.PerformCooldown(parameters);
                     return;
                 }
                 else

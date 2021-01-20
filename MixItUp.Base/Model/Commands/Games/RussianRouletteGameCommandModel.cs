@@ -106,7 +106,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await this.Requirements.Refund(kvp.Value);
                         }
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                         return;
                     }
@@ -140,21 +140,19 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
                     await this.GameCompleteCommand.Perform(this.runParameters);
 
-                    await this.CooldownRequirement.Perform(this.runParameters);
+                    await this.PerformCooldown(this.runParameters);
                     this.ClearData();
                 }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
-                this.ResetCooldown();
                 return;
             }
             else if (this.runParameters != null && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
                 await this.UserJoinCommand.Perform(parameters);
-                this.ResetCooldown();
                 return;
             }
             else

@@ -111,6 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
             symbols.Add(this.Symbols[this.GenerateRandomNumber(this.Symbols.Count)]);
             parameters.SpecialIdentifiers[SlotMachineGameCommandModel.GameSlotsOutcomeSpecialIdentifier] = string.Join(" ", symbols);
 
+            await this.PerformCooldown(parameters);
             foreach (SlotMachineGameOutcomeModel outcome in this.Outcomes)
             {
                 if (outcome.ValidateSymbols(symbols))

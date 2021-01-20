@@ -129,7 +129,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await this.Requirements.Refund(kvp.Value);
                         }
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                         return;
                     }
@@ -152,7 +152,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
                         this.UserFailureCommand.Perform(this.runParameters);
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                     }
                     this.gameActive = false;
                     this.ClearData();
@@ -162,14 +162,12 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.gameActive = true;
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
-                this.ResetCooldown();
                 return;
             }
             else if (string.IsNullOrEmpty(this.runHitmanName) && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
                 await this.UserJoinCommand.Perform(parameters);
-                this.ResetCooldown();
                 return;
             }
             else
@@ -194,7 +192,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
 
-                    await this.CooldownRequirement.Perform(this.runParameters);
+                    await this.PerformCooldown(this.runParameters);
                     this.ClearData();
                     await this.UserSuccessCommand.Perform(winner);
                 }

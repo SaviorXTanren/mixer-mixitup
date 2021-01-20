@@ -136,7 +136,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await this.Requirements.Refund(kvp.Value);
                         }
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                         return;
                     }
@@ -173,7 +173,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.gameActive && this.runParameters != null)
                     {
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                     }
                     this.gameActive = false;
@@ -183,7 +183,6 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.gameActive = true;
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
-                this.ResetCooldown();
                 return;
             }
             else if (this.runParameters != null)
@@ -217,7 +216,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         {
                             await this.ThiefSelectedCommand.Perform(parameters);
                         }
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                     }
                     else
@@ -229,7 +228,6 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     this.runUsers[parameters.User] = parameters;
                     await this.UserJoinCommand.Perform(parameters);
-                    this.ResetCooldown();
                     return;
                 }
             }

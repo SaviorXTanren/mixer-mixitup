@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             await this.NotEnoughPlayersCommand.Perform(this.runParameters);
                         }
 
-                        this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -138,7 +138,6 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.lastBidAmount = this.GetPrimaryBetAmount(parameters);
 
                 await this.NewTopBidderCommand.Perform(parameters);
-                this.ResetCooldown();
             }
             else
             {

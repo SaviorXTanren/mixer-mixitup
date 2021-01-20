@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             {
                                 await this.Requirements.Refund(kvp.Value);
                             }
-                            await this.CooldownRequirement.Perform(this.runParameters);
+                            await this.PerformCooldown(this.runParameters);
                             this.ClearData();
                             return;
                         }
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                         await this.GameCompleteCommand.Perform(this.runParameters);
 
-                        await this.CooldownRequirement.Perform(this.runParameters);
+                        await this.PerformCooldown(this.runParameters);
                         this.ClearData();
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -174,7 +174,6 @@ namespace MixItUp.Base.Model.Commands.Games
 
                 parameters.SpecialIdentifiers[RouletteGameCommandModel.GameRouletteBetTypeSpecialIdentifier] = betType;
                 await this.UserJoinCommand.Perform(parameters);
-                this.ResetCooldown();
                 return;
             }
             else

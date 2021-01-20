@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -93,14 +94,17 @@ namespace MixItUp.Base.Model.Requirements
             return new Result();
         }
 
-        public async Task Perform(CommandParametersModel parameters)
+        public async Task Perform(CommandParametersModel parameters, HashSet<Type> requirementsToSkip = null)
         {
             IEnumerable<CommandParametersModel> users = this.GetRequirementUsers(parameters);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                foreach (CommandParametersModel u in users)
+                if (requirementsToSkip == null || !requirementsToSkip.Contains(requirement.GetType()))
                 {
-                    await requirement.Perform(u);
+                    foreach (CommandParametersModel u in users)
+                    {
+                        await requirement.Perform(u);
+                    }
                 }
             }
         }

@@ -240,6 +240,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
             await this.CorrectAnswerCommand.Perform(this.runParameters);
 
+            await this.PerformCooldown(this.runParameters);
             this.ClearData();
         }
 

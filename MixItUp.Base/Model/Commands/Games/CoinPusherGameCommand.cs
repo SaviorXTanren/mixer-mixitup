@@ -104,6 +104,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 await this.FailureCommand.Perform(parameters);
             }
+            await this.PerformCooldown(parameters);
         }
     }
 }

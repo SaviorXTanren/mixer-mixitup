@@ -190,18 +190,24 @@ namespace MixItUp.Base.Model.Commands
                     {
                         return;
                     }
-                    IEnumerable<CommandParametersModel> parameterList = await this.PerformRequirements(parameters);
+
+                    List<CommandParametersModel> users = new List<CommandParametersModel>() { parameters };
+                    if (this.Requirements != null)
+                    {
+                        await this.PerformRequirements(parameters);
+                        users = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
+                    }
 
                     this.TrackTelemetry();
 
                     if (parameters.WaitForCommandToFinish)
                     {
-                        await this.PerformTask(parameterList, lockPerformed);
+                        await this.PerformTask(users, lockPerformed);
                     }
                     else
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => await this.PerformTask(parameterList, lockPerformed));
+                        Task.Run(async () => await this.PerformTask(users, lockPerformed));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
@@ -254,15 +260,9 @@ namespace MixItUp.Base.Model.Commands
             return true;
         }
 
-        protected virtual async Task<IEnumerable<CommandParametersModel>> PerformRequirements(CommandParametersModel parameters)
+        protected virtual async Task PerformRequirements(CommandParametersModel parameters)
         {
-            List<CommandParametersModel> users = new List<CommandParametersModel>() { parameters };
-            if (this.Requirements != null)
-            {
-                await this.Requirements.Perform(parameters);
-                users = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
-            }
-            return users;
+            await this.Requirements.Perform(parameters);
         }
 
         protected virtual async Task PerformInternal(CommandParametersModel parameters)

@@ -119,8 +119,8 @@ namespace MixItUp.Base.Model.Commands.Games
                                 await this.PerformOutcome(winner, winningOutcome);
                             }
 
+                            await this.PerformCooldown(this.runParameters);
                             this.ClearData();
-                            await this.CooldownRequirement.Perform(this.runParameters);
                         }
                         else
                         {
@@ -168,7 +168,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             {
                                 await this.Requirements.Refund(kvp.Value);
                             }
-                            await this.CooldownRequirement.Perform(this.runParameters);
+                            await this.PerformCooldown(this.runParameters);
                             this.ClearData();
                             return;
                         }
@@ -193,7 +193,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runUserSelections[parameters.User] = choice;
 
             await this.UserJoinCommand.Perform(parameters);
-            this.ResetCooldown();
+            await this.PerformCooldown(parameters);
         }
 
         private void ClearData()
