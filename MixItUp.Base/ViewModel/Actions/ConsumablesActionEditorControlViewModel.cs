@@ -205,7 +205,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public override Task<Result> Validate()
         {
-            if (this.SelectedConsumable == null)
+            if (this.SelectedConsumable == null || this.SelectedConsumable.ID == Guid.Empty)
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ConsumableActionSelectConsumable));
             }
@@ -214,7 +214,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 if (this.SelectedActionType != ConsumablesActionTypeEnum.ResetForAllUsers && this.SelectedActionType != ConsumablesActionTypeEnum.ResetForUser)
                 {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.ConsumableActionSelectInventoryItem));
+                    if (string.IsNullOrEmpty(this.InventoryItemName))
+                    {
+                        return Task.FromResult(new Result(MixItUp.Base.Resources.ConsumableActionSelectInventoryItem));
+                    }
                 }
             }
 
