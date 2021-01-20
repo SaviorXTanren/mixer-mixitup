@@ -142,16 +142,19 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await this.HitmanAppearsCommand.Perform(this.runParameters);
 
-                    await Task.Delay(this.HitmanTimeLimit * 1000);
+                    for (int i = 0; i < this.HitmanTimeLimit && this.gameActive; i++)
+                    {
+                        await Task.Delay(1000);
+                    }
 
                     GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
                     if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
                         this.UserFailureCommand.Perform(this.runParameters);
+                        await this.CooldownRequirement.Perform(this.runParameters);
                     }
                     this.gameActive = false;
-                    await this.CooldownRequirement.Perform(this.runParameters);
                     this.ClearData();
                 }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
