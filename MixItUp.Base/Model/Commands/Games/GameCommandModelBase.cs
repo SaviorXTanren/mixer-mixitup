@@ -123,12 +123,12 @@ namespace MixItUp.Base.Model.Commands.Games
             return null;
         }
 
-        public int GetPayoutMultiplier(UserViewModel user)
+        public double GetPayoutMultiplier(UserViewModel user)
         {
             RoleProbabilityPayoutModel roleProbabilityPayout = this.GetRoleProbabilityPayout(user);
             if (roleProbabilityPayout != null)
             {
-                return Convert.ToInt32(roleProbabilityPayout.Payout / 100.0);
+                return roleProbabilityPayout.Payout;
             }
             return 0;
         }
@@ -273,9 +273,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected async Task<int> PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
         {
-            int payout = outcome.GetPayoutMultiplier(parameters.User);
-            this.PerformPrimaryMultiplierPayout(parameters, payout);
-
+            int payout = this.PerformPrimaryMultiplierPayout(parameters, outcome.GetPayoutMultiplier(parameters.User));
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
             parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
             if (outcome.Command != null)
@@ -295,13 +293,16 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected void PerformPrimaryMultiplierPayout(CommandParametersModel parameters, double payoutPercentage)
+        protected int PerformPrimaryMultiplierPayout(CommandParametersModel parameters, double payoutPercentage)
         {
+            int payout = 0;
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             if (currencyRequirement != null)
             {
-                currencyRequirement.AddSubtractAmount(parameters.User, (int)(currencyRequirement.GetAmount(parameters) * payoutPercentage));
+                payout = (int)(currencyRequirement.GetAmount(parameters) * payoutPercentage);
+                currencyRequirement.AddSubtractAmount(parameters.User, payout);
             }
+            return payout;
         }
 
         protected async Task<string> GetRandomWord(string customWordsFilePath)
