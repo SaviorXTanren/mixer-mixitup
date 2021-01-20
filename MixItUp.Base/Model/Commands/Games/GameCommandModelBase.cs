@@ -239,9 +239,11 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     return true;
                 }
+
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
+                return false;
             }
-            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
-            return false;
+            return true;
         }
 
         protected bool ValidatePrimaryCurrencyAmount(CommandParametersModel parameters, int amount)
