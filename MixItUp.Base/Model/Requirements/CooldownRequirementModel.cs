@@ -81,31 +81,33 @@ namespace MixItUp.Base.Model.Requirements
 
         public override Task<Result> Validate(CommandParametersModel parameters)
         {
-            int amount = this.Amount;
-            TimeSpan timeLeft = new TimeSpan(0, 0, -1);
+            DateTimeOffset cooldownTime = DateTimeOffset.MinValue;
             if (this.Type == CooldownTypeEnum.Standard)
             {
-                timeLeft = this.globalCooldown.AddSeconds(amount) - DateTimeOffset.Now;
+                cooldownTime = this.globalCooldown;
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
                 if (!string.IsNullOrEmpty(this.GroupName) && CooldownRequirementModel.groupCooldowns.ContainsKey(this.GroupName))
                 {
-                    timeLeft = CooldownRequirementModel.groupCooldowns[this.GroupName].AddSeconds(amount) - DateTimeOffset.Now;
+                    cooldownTime = CooldownRequirementModel.groupCooldowns[this.GroupName];
                 }
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 if (this.individualCooldowns.ContainsKey(parameters.User.ID))
                 {
-                    timeLeft = this.individualCooldowns[parameters.User.ID].AddSeconds(amount) - DateTimeOffset.Now;
+                    cooldownTime = this.individualCooldowns[parameters.User.ID];
                 }
             }
 
-            int totalSeconds = (int)Math.Ceiling(timeLeft.TotalSeconds);
-            if (totalSeconds > 0)
+            if (cooldownTime > DateTimeOffset.Now)
             {
-                return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds)));
+                int totalSeconds = (int)Math.Ceiling((cooldownTime - DateTimeOffset.Now).TotalSeconds);
+                if (totalSeconds > 0)
+                {
+                    return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds)));
+                }
             }
             return Task.FromResult(new Result());
         }
@@ -113,20 +115,22 @@ namespace MixItUp.Base.Model.Requirements
         public override async Task Perform(CommandParametersModel parameters)
         {
             await base.Perform(parameters);
+
+            int amount = this.Amount;
             if (this.Type == CooldownTypeEnum.Standard)
             {
-                this.globalCooldown = DateTimeOffset.Now;
+                this.globalCooldown = DateTimeOffset.Now.AddSeconds(amount);
             }
             else if (this.Type == CooldownTypeEnum.Group)
             {
                 if (!string.IsNullOrEmpty(this.GroupName))
                 {
-                    CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
+                    CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.AddSeconds(amount);
                 }
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now;
+                this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now.AddSeconds(amount);
             }
         }
 
