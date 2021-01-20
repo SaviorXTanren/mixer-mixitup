@@ -226,10 +226,22 @@ namespace MixItUp.Base.Model.Commands.Games
             return (currencyRequirement != null) ? currencyRequirement.GetAmount(parameters) : 0;
         }
 
-        protected bool ValidateTargetUserPrimaryBetAmount(CommandParametersModel parameters)
+        protected async Task<bool> ValidateTargetUserPrimaryBetAmount(CommandParametersModel parameters)
         {
+            string currencyName = string.Empty;
+            int betAmount = this.GetPrimaryBetAmount(parameters);
+
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
-            return (currencyRequirement != null) ? currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, this.GetPrimaryBetAmount(parameters)) : false;
+            if (currencyRequirement != null)
+            {
+                currencyName = currencyRequirement.Currency?.Name;
+                if (currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
+                {
+                    return true;
+                }
+            }
+            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
+            return false;
         }
 
         protected bool ValidatePrimaryCurrencyAmount(CommandParametersModel parameters, int amount)

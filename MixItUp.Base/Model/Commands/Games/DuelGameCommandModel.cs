@@ -114,7 +114,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
             if (parameters.TargetUser != null)
             {
-                if (this.ValidateTargetUserPrimaryBetAmount(parameters))
+                if (await this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {
                     this.runParameters = parameters;
 
@@ -139,10 +139,6 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.StartedCommand.Perform(parameters);
                     this.ResetCooldown();
                     return;
-                }
-                else
-                {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TargetUserDoesNotHaveAmount);
                 }
             }
             else

@@ -57,7 +57,7 @@ namespace MixItUp.Base.Model.Commands.Games
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
             if (parameters.TargetUser != null)
             {
-                if (this.ValidateTargetUserPrimaryBetAmount(parameters))
+                if (await this.ValidateTargetUserPrimaryBetAmount(parameters))
                 {
                     int betAmount = this.GetPrimaryBetAmount(parameters);
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = betAmount.ToString();
@@ -72,10 +72,6 @@ namespace MixItUp.Base.Model.Commands.Games
                         await this.FailedCommand.Perform(parameters);
                     }
                     return;
-                }
-                else
-                {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount);
                 }
             }
             else
