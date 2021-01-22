@@ -123,16 +123,16 @@ namespace MixItUp.Base.Model.Commands.Games
                         participants.Remove(winner);
                     }
 
+                    foreach (CommandParametersModel loser in participants)
+                    {
+                        await this.UserFailureCommand.Perform(loser);
+                    }
+
                     foreach (CommandParametersModel winner in winners)
                     {
                         this.PerformPrimarySetPayout(winner.User, individualPayout);
                         winner.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
                         await this.UserSuccessCommand.Perform(winner);
-                    }
-
-                    foreach (CommandParametersModel loser in participants)
-                    {
-                        await this.UserFailureCommand.Perform(loser);
                     }
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count.ToString();
