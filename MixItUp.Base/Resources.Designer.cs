@@ -3996,7 +3996,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A game is already underway.
+        ///   Looks up a localized string similar to A game is already underway..
         /// </summary>
         public static string GameCommandAlreadyUnderway {
             get {

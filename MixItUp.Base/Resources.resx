@@ -3480,7 +3480,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>The user does not have {0} {1}</value>
   </data>
   <data name="GameCommandAlreadyUnderway" xml:space="preserve">
-    <value>A game is already underway</value>
+    <value>A game is already underway.</value>
   </data>
   <data name="GameCommandHangmanNotLetter" xml:space="preserve">
     <value>The argument must be a valid letter</value>
