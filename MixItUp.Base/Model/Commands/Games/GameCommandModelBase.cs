@@ -33,6 +33,7 @@ namespace MixItUp.Base.Model.Commands.Games
         WordScramble
     }
 
+    [Flags]
     public enum GamePlayerSelectionType
     {
         [Obsolete]
@@ -335,6 +336,15 @@ namespace MixItUp.Base.Model.Commands.Games
             int minAmount = Convert.ToInt32(amount * minimumPercentage);
             int maxAmount = Convert.ToInt32(amount * maximumPercentage);
             return this.GenerateRandomNumber(minAmount, maxAmount);
+        }
+
+        protected async Task DelayNoThrow(int millisecondDelay, CancellationToken token)
+        {
+            try
+            {
+                await Task.Delay(millisecondDelay, token);
+            }
+            catch { }
         }
     }
 }

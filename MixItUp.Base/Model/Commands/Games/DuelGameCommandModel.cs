@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
-                        await Task.Delay(this.TimeLimit * 1000);
+                        await DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
 
                         if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
                         {
