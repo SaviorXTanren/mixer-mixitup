@@ -4491,7 +4491,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @$username has started a game of Heist! Type !heist &lt;AMOUNT&gt; to join in!.
+        ///   Looks up a localized string similar to @$username has started a game of Heist! Type !heist to join in!.
         /// </summary>
         public static string GameCommandHeistStartedExample {
             get {

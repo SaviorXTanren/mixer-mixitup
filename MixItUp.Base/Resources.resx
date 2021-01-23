@@ -4127,7 +4127,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!</value>
   </data>
   <data name="GameCommandHeistStartedExample" xml:space="preserve">
-    <value>@$username has started a game of Heist! Type !heist &lt;AMOUNT&gt; to join in!</value>
+    <value>@$username has started a game of Heist! Type !heist to join in!</value>
   </data>
   <data name="GameCommandHeistTopThirdsSucceed" xml:space="preserve">
     <value>99% - 66% Succeed</value>
