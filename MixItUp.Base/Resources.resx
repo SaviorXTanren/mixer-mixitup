@@ -3830,7 +3830,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Symbols</value>
   </data>
   <data name="GameCommandBidGameCompleteExample" xml:space="preserve">
-    <value>$gamewinners won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize...</value>
+    <value>@$username won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize...</value>
   </data>
   <data name="GameCommandBidNewTopBidder" xml:space="preserve">
     <value>New Top Bidder</value>

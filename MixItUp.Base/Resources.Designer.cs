@@ -4104,7 +4104,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to $gamewinners won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize....
+        ///   Looks up a localized string similar to @$username won the bidding war with a bid of $gamebet {0}! Listen closely for how to claim your prize....
         /// </summary>
         public static string GameCommandBidGameCompleteExample {
             get {
