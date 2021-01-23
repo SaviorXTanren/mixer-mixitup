@@ -28,7 +28,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumAmountForPayout}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding MinimumAmountForPayout}" Width="100" />
+                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumAmountForPayout}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding MinimumAmountForPayout}" MinWidth="100" />
 
                 <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProbabilityPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ProbabilityPercentage}" Width="80" />
 

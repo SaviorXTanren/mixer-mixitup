@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (!this.collectUsers.Contains(parameters.User))
                     {
                         this.collectUsers.Add(parameters.User);
-                        int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectMinimumPercentage, this.CollectMaximumPercentage);
+                        int payout = this.GenerateRandomNumber(this.TotalAmount, this.CollectMinimumPercentage / 100.0d, this.CollectMaximumPercentage / 100.0d);
                         this.PerformPrimarySetPayout(parameters.User, payout);
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
@@ -188,7 +188,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (this.GenerateProbability() <= this.PayoutProbability)
                 {
                     this.collectUsers.Add(parameters.User);
-                    int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage, this.PayoutMaximumPercentage);
+                    int payout = this.GenerateRandomNumber(this.TotalAmount, this.PayoutMinimumPercentage / 100.0d, this.PayoutMaximumPercentage / 100.0d);
                     this.PerformPrimarySetPayout(parameters.User, payout);
                     parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
 
