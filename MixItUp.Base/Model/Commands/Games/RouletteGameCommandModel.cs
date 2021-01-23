@@ -102,7 +102,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
-            if (parameters.Arguments.Count > 0 && this.BetOptions.Contains(parameters.Arguments[0].ToLower()))
+            if (parameters.Arguments.Count > 0 && IsValidBetTypes(parameters.Arguments[0]))
             {
                 return await base.ValidateRequirements(parameters);
             }
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                     {
-                        await Task.Delay(this.TimeLimit * 1000);
+                        await DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
 
                         if (this.runUsers.Count < this.MinimumParticipants)
                         {
@@ -202,6 +202,25 @@ namespace MixItUp.Base.Model.Commands.Games
                 validBetTypes = string.Join(", ", this.BetOptions);
             }
             return validBetTypes;
+        }
+
+        private bool IsValidBetTypes(string value)
+        {
+            if (this.BetType == RouletteGameCommandBetType.NumberRange)
+            {
+                var min = int.Parse(this.BetOptions.ElementAt(0));
+                var max = int.Parse(this.BetOptions.ElementAt(1));
+                if (int.TryParse(value, out var intValue))
+                {
+                    return intValue >= min && intValue <= max;
+                }
+            }
+            else if (this.BetType == RouletteGameCommandBetType.Custom)
+            {
+                return this.BetOptions.Contains(value, StringComparer.InvariantCultureIgnoreCase);
+            }
+
+            return false;
         }
     }
 }

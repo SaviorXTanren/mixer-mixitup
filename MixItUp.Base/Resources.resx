@@ -4040,7 +4040,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout {0}</value>
   </data>
   <data name="GameCommandRouletteStartedExample" xml:space="preserve">
-    <value>@$username has started a game of roulette! Type !roulette &lt;BET TYPE&gt; &lt;AMOUNT&gt; in chat to play! Valid Bet Types: $gamevalidbettypes</value>
+    <value>@$username has started a game of roulette! Type !roulette &lt;BET TYPE&gt; in chat to play! Valid Bet Types: $gamevalidbettypes</value>
   </data>
   <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
     <value>@$username won $gamepayout {0}!</value>
