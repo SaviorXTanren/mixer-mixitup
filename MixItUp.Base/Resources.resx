@@ -3510,7 +3510,8 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>Answer</value>
   </data>
   <data name="GameCommandBetInvalidSelection" xml:space="preserve">
-    <value>The option number you selected is not valid</value>
+    <value>{0}: The option number you selected is not valid.</value>
+    <comment>{0} is the username</comment>
   </data>
   <data name="GameCommandRouletteValidBetTypes" xml:space="preserve">
     <value>Valid Bet Types: {0}</value>
@@ -3545,10 +3546,9 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandBetDescription" xml:space="preserve">
     <value>The Bet game allows a user to start a bet amongst all users over which option is correct. Each user who participates must specify which options you expect to win and how much they wish to bet. Once the time limit is completed, a user can specify what the correct answer is to the bet and all correct users will be rewarded. Additionally, you can specify what user roles can start &amp; answer this game to ensure it isn't abused, such as Moderators or higher only.</value>
   </data>
-  <data name="GameCommandBetExample" xml:space="preserve">
-    <value>EX: !bet
-EX: !bet &lt;OPTION #&gt; 100
-EX: !bet answer &lt;OPTION #&gt;</value>
+  <data name="GameCommandBetAnswerExample" xml:space="preserve">
+    <value>EX: {0} answer &lt;OPTION #&gt;</value>
+    <comment>{0} will be the command trigger</comment>
   </data>
   <data name="Bid" xml:space="preserve">
     <value>Bid</value>

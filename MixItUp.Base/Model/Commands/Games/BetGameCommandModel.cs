@@ -100,11 +100,14 @@ namespace MixItUp.Base.Model.Commands.Games
         {
             if (this.gameActive)
             {
-                if (this.betsClosed && parameters.Arguments.Count() == 2 && string.Equals(parameters.Arguments[0], MixItUp.Base.Resources.Answer, StringComparison.CurrentCultureIgnoreCase))
+                if (this.betsClosed)
                 {
                     if (parameters.User.HasPermissionsTo(this.StarterRole))
                     {
-                        if (int.TryParse(parameters.Arguments[1], out int answer) && answer > 0 && answer <= this.BetOptions.Count)
+                        // At least to arguments
+                        //      1st must be "answer"
+                        //      2nd must be a number from 1 to option count
+                        if (parameters.Arguments.Count == 2 && string.Equals(parameters.Arguments[0], MixItUp.Base.Resources.Answer, StringComparison.CurrentCultureIgnoreCase) && int.TryParse(parameters.Arguments[1], out int answer) && answer > 0 && answer <= this.BetOptions.Count)
                         {
                             this.gameActive = false;
                             this.betsClosed = false;
@@ -124,7 +127,8 @@ namespace MixItUp.Base.Model.Commands.Games
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandBetInvalidSelection);
+                            string trigger = this.GetFullTriggers().FirstOrDefault() ?? "!bet";
+                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
                         }
                     }
                     else
@@ -134,11 +138,11 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
                 else
                 {
-                    if (int.TryParse(parameters.Arguments[0], out int choice) && choice > 0 && choice <= this.BetOptions.Count)
+                    if (parameters.Arguments.Count > 0 && int.TryParse(parameters.Arguments[0], out int choice) && choice > 0 && choice <= this.BetOptions.Count)
                     {
                         return await base.ValidateRequirements(parameters);
                     }
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandBetInvalidSelection);
+                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
                 }
             }
             else
@@ -153,6 +157,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     foreach (GameOutcomeModel betOption in this.BetOptions)
                     {
                         betOptions.Add($"{i}) {betOption.Name}");
+                        i++;
                     }
                     this.runParameters.SpecialIdentifiers[BetGameCommandModel.GameBetOptionsSpecialIdentifier] = string.Join(", ", betOptions);
 

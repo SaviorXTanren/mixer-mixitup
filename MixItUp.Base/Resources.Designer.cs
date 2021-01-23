@@ -4023,6 +4023,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EX: {0} answer &lt;OPTION #&gt;.
+        /// </summary>
+        public static string GameCommandBetAnswerExample {
+            get {
+                return ResourceManager.GetString("GameCommandBetAnswerExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bets Closed.
         /// </summary>
         public static string GameCommandBetBetsClosed {
@@ -4050,17 +4059,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EX: !bet
-        ///EX: !bet &lt;OPTION #&gt; 100
-        ///EX: !bet answer &lt;OPTION #&gt;.
-        /// </summary>
-        public static string GameCommandBetExample {
-            get {
-                return ResourceManager.GetString("GameCommandBetExample", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to $gamebetwinningoption was the winning choice!.
         /// </summary>
         public static string GameCommandBetGameCompleteExample {
@@ -4070,7 +4068,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The option number you selected is not valid.
+        ///   Looks up a localized string similar to {0}: The option number you selected is not valid..
         /// </summary>
         public static string GameCommandBetInvalidSelection {
             get {
