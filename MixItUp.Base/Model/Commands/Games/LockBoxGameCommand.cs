@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length != this.CombinationLength)
+            if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == this.CombinationLength)
             {
                 if (int.TryParse(parameters.Arguments[0], out int guess) && guess > 0)
                 {
@@ -131,8 +131,11 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.AddSpecialIdentifiersToParameters(parameters);
                     if (guess == this.CurrentCombination)
                     {
+                        parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.TotalAmount.ToString();
+
                         this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         this.ClearData();
+
                         await this.SuccessfulCommand.Perform(parameters);
                     }
                     else
@@ -159,10 +162,14 @@ namespace MixItUp.Base.Model.Commands.Games
         private void ClearData()
         {
             this.CurrentCombination = 0;
+
+            string digits = string.Empty;
             for (int i = 0; i < this.CombinationLength; i++)
             {
-                this.CurrentCombination += this.GenerateRandomNumber(10) * i;
+                digits += this.GenerateRandomNumber(10).ToString();
             }
+            this.CurrentCombination = int.Parse(digits);
+
             this.TotalAmount = this.InitialAmount;
         }
 
