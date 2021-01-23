@@ -36,7 +36,7 @@
             <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Whisper}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
             <ToggleButton Grid.Column="6" IsChecked="{Binding IsWhisper}" VerticalAlignment="Center" />
 
-            <TextBox Grid.Column="8" Text="{Binding WhisperUsername}" IsEnabled="{Binding IsWhisper}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WhisperUserOptional}" />
+            <TextBox Grid.Column="8" Text="{Binding WhisperUserName}" IsEnabled="{Binding IsWhisper}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WhisperUserOptional}" />
         </Grid>
 
         <TextBox Grid.Row="2" Text="{Binding ChatText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessage}" />

@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.HitmanApproachingCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanApproachingExample);
             this.HitmanAppearsCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanAppearsExample);
             this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandHitmanUserSuccessExample, this.PrimaryCurrencyName));
-            this.UserFailureCommand = this.CreateBasicCommand();
+            this.UserFailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHitmanUserFailureExample);
 
             this.SetUICommands();
         }

@@ -4660,4 +4660,10 @@ This setting will change all role requirements to be explicit and require that t
   <data name="WebRequestActionDuplicateJSONParameter" xml:space="preserve">
     <value>Web Request Action: Duplicate JSON parameter</value>
   </data>
+  <data name="GameCommandHitmanTimeLimit" xml:space="preserve">
+    <value>Hitman Time Limit</value>
+  </data>
+  <data name="GameCommandHitmanUserFailureExample" xml:space="preserve">
+    <value>No one was able to stop the hitman! Everyone loses!</value>
+  </data>
 </root>

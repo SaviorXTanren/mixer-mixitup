@@ -118,7 +118,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
-                    await Task.Delay(this.TimeLimit * 1000);
+                    await DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
 
                     this.runParameters.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName = await this.GetRandomWord(this.CustomWordsFilePath);
 
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await this.HitmanApproachingCommand.Perform(this.runParameters);
 
-                    await Task.Delay(5000);
+                    await DelayNoThrow(5000, cancellationToken);
 
                     GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
@@ -144,7 +144,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     for (int i = 0; i < this.HitmanTimeLimit && this.gameActive; i++)
                     {
-                        await Task.Delay(1000);
+                        await DelayNoThrow(1000, cancellationToken);
                     }
 
                     GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;

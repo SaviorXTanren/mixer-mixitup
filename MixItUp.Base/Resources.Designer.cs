@@ -4581,6 +4581,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hitman Time Limit.
+        /// </summary>
+        public static string GameCommandHitmanTimeLimit {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanTimeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No one was able to stop the hitman! Everyone loses!.
+        /// </summary>
+        public static string GameCommandHitmanUserFailureExample {
+            get {
+                return ResourceManager.GetString("GameCommandHitmanUserFailureExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @$username got hitman $gamehitmanname and walked away with a bounty of $gamepayout {0}!.
         /// </summary>
         public static string GameCommandHitmanUserSuccessExample {

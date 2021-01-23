@@ -43,7 +43,7 @@
 
                     <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding TimeLimit}" Width="55" />
 
-                    <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandWordScrambleTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WordScrambleTimeLimit}" Width="110" />
+                    <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandHitmanTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding HitmanTimeLimit}" Width="110" />
                 </Grid>
             </GroupBox>
 
