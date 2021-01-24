@@ -54,6 +54,8 @@ namespace MixItUp.Base.Model.Commands.Games
         private string runWord;
         [JsonIgnore]
         private string runWordScrambled;
+        [JsonIgnore]
+        private CancellationTokenSource runCancellationTokenSource;
 
         public WordScrambleGameCommandModel(string name, HashSet<string> triggers, int minimumParticipants, int timeLimit, int wordScrambleTimeLimit, string customWordsFilePath,
             CustomCommandModel startedCommand, CustomCommandModel userJoinCommand, CustomCommandModel notEnoughPlayersCommand,
@@ -108,19 +110,25 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.runWord == null)
+            if (string.IsNullOrEmpty(this.runWord))
             {
+                this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
                 this.runBetAmount = this.GetPrimaryBetAmount(parameters);
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
                 this.GetPrimaryCurrencyRequirement().SetTemporaryAmount(this.runBetAmount);
+                this.runCancellationTokenSource = new CancellationTokenSource();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
-                    await Task.Delay(this.TimeLimit * 1000);
+                    await DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
+                    if (cancellationToken != null && cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
-                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord = await this.GetRandomWord(this.CustomWordsFilePath);
+                    this.runParameters.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
                     this.runParameters.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled = this.runWord.Shuffle();
 
                     if (this.runUsers.Count < this.MinimumParticipants)
@@ -137,13 +145,21 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await this.WordScramblePrepareCommand.Perform(this.runParameters);
 
-                    await Task.Delay(5000);
+                    await DelayNoThrow(5000, cancellationToken);
+                    if (cancellationToken != null && cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
                     GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
                     await this.WordScrambleBeginCommand.Perform(this.runParameters);
 
-                    await Task.Delay(this.WordScrambleTimeLimit * 1000);
+                    await DelayNoThrow(this.WordScrambleTimeLimit * 1000, cancellationToken);
+                    if (cancellationToken != null && cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
 
                     GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
 
@@ -153,14 +169,14 @@ namespace MixItUp.Base.Model.Commands.Games
                         await this.PerformCooldown(this.runParameters);
                     }
                     this.ClearData();
-                }, new CancellationToken());
+                }, this.runCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 await this.StartedCommand.Perform(this.runParameters);
                 await this.UserJoinCommand.Perform(this.runParameters);
                 return;
             }
-            else if (string.IsNullOrEmpty(this.runWord) && !this.runUsers.ContainsKey(parameters.User))
+            else if (!this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
                 await this.UserJoinCommand.Perform(parameters);
@@ -207,6 +223,15 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runWordScrambled = null;
             this.runUsers.Clear();
             this.GetPrimaryCurrencyRequirement().ResetTemporaryAmount();
+            try
+            {
+                if (this.runCancellationTokenSource != null)
+                {
+                    this.runCancellationTokenSource.Cancel();
+                }
+            }
+            catch (Exception) { }
+            this.runCancellationTokenSource = null;
         }
     }
 }

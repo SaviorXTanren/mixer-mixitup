@@ -5958,6 +5958,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No one correctly guessed the word &quot;$gamewordscrambleanswer&quot;..
+        /// </summary>
+        public static string GameCommandWordScrambleUserFailureExample {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleUserFailureExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to @$username correctly guessed the word &quot;$gamewordscrambleanswer&quot; and walked away with a bounty of $gamepayout {0}!.
         /// </summary>
         public static string GameCommandWordScrambleUserSuccessExample {

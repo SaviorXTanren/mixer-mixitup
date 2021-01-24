@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Games
             this.WordScramblePrepareCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScramblePrepareExample);
             this.WordScrambleBeginCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleWordScrambleBeginExample);
             this.UserSuccessCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandWordScrambleUserSuccessExample, this.PrimaryCurrencyName));
-            this.UserFailureCommand = this.CreateBasicCommand();
+            this.UserFailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandWordScrambleUserFailureExample);
 
             this.SetUICommands();
         }
