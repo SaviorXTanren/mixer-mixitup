@@ -127,7 +127,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
                 {
-                    await Task.Delay(this.TimeLimit * 1000);
+                    await DelayNoThrow(this.TimeLimit * 1000, cancellationToken);
 
                     if (this.runUsers.Count < this.MinimumParticipants)
                     {
@@ -169,7 +169,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     await this.KingUserCommand.Perform(shuffledParticipants.ElementAt(0));
 
-                    await Task.Delay(this.KingTimeLimit * 1000);
+                    await DelayNoThrow(this.KingTimeLimit * 1000, cancellationToken);
 
                     if (this.gameActive && this.runParameters != null)
                     {
@@ -189,7 +189,8 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (this.runUserTypes.Count > 0 && this.runUserTypes[parameters.User] == WinLosePlayerType.King)
                 {
-                    if (this.runUserTypes.ContainsKey(parameters.TargetUser))
+                    await parameters.SetTargetUser();
+                    if (parameters.TargetUser != null && this.runUserTypes.ContainsKey(parameters.TargetUser))
                     {
                         this.gameActive = false;
 
