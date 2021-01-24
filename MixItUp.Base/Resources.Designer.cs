@@ -5542,7 +5542,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The correct answer was $gamecorrectanswer! Everyone who guess it won $gamepayout {0}!.
+        ///   Looks up a localized string similar to The correct answer was $gamecorrectanswer! Everyone who guessed it won $gamepayout {0}!.
         /// </summary>
         public static string GameCommandTriviaCorrectAnswerExample {
             get {
