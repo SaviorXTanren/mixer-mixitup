@@ -96,7 +96,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0" Style="{StaticResource DefaultBorder}">
-                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" />
+                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" DataContext="{Binding ItemPosition}" Margin="10" />
                 </Border>
 
                 <Border Grid.Column="1" Style="{StaticResource DefaultBorder}">
