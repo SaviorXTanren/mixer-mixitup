@@ -635,6 +635,7 @@ namespace MixItUp.Base.Model.Settings
                         this.Commands[command.ID] = command;
                     }
                 });
+                this.Commands.ClearTracking();
 
                 ChannelSession.ChatCommands.Clear();
                 ChannelSession.EventCommands.Clear();
