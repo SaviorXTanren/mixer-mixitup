@@ -595,7 +595,7 @@ namespace MixItUp.Base.Model.Settings
                     CommandModelBase command = null;
                     CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
 
-                    string commandData = (string)data["Data"];
+                    string commandData = data["Data"].ToString();
                     if (type == CommandTypeEnum.Chat)
                     {
                         command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
