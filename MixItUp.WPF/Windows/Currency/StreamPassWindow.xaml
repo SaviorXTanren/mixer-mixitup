@@ -99,7 +99,7 @@
 
                             <TextBox Grid.Column="2" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                             <Button Grid.Column="6" Content="{x:Static resx:Resources.ManualReset}" Command="{Binding ManualResetCommand}" />
                         </Grid>
