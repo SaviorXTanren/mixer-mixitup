@@ -118,7 +118,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandTreasureDefenseKnightSelected}">
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandHeistAllSucceed}">
                 <CommandsControls:CommandListingButtonsControl x:Name="AllSucceedCommand" DataContext="{Binding AllSucceedCommand}" HorizontalAlignment="Center" EditClicked="AllSucceedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
