@@ -290,6 +290,21 @@ namespace MixItUp.Base.Services
                             }
                         }
 
+                        await ChannelSession.Settings.GiveawayRequirementsSet.Perform(parameters);
+                        // Do additional currency / inventory performs passed on how many additional entries they put in
+                        for (int i = 1; i < entries; i++)
+                        {
+                            foreach (CurrencyRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Currency)
+                            {
+                                await requirement.Perform(parameters);
+                            }
+
+                            foreach (InventoryRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Inventory)
+                            {
+                                await requirement.Perform(parameters);
+                            }
+                        }
+
                         if (!this.enteredUsers.ContainsKey(message.User.ID))
                         {
                             this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
