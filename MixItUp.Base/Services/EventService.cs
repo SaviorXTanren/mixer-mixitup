@@ -320,11 +320,11 @@ namespace MixItUp.Base.Services
         public bool CanPerformEvent(EventTrigger trigger)
         {
             UserViewModel user = (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser();
-            if (!EventService.singleUseTracking.Contains(trigger.Type))
+            if (EventService.singleUseTracking.Contains(trigger.Type) && this.userEventTracking.ContainsKey(trigger.Type))
             {
-                return true;
+                return !this.userEventTracking[trigger.Type].Contains(user.ID);
             }
-            return !this.userEventTracking[trigger.Type].Contains(user.ID);
+            return true;
         }
 
         public async Task PerformEvent(EventTrigger trigger)
@@ -339,7 +339,10 @@ namespace MixItUp.Base.Services
 
                 if (this.userEventTracking.ContainsKey(trigger.Type))
                 {
-                    this.userEventTracking[trigger.Type].Add(user.ID);
+                    lock (this.userEventTracking)
+                    {
+                        this.userEventTracking[trigger.Type].Add(user.ID);
+                    }
                 }
 
                 EventCommandModel command = this.GetEventCommand(trigger.Type);
