@@ -1,13 +1,10 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -28,42 +25,17 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string usernameFilter;
 
-        public bool LimitedResults
-        {
-            get { return this.limitedResults; }
-            set
-            {
-                this.limitedResults = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool limitedResults = false;
-
-        public ObservableCollection<UserDataModel> Users { get; private set; } = new ObservableCollection<UserDataModel>();
+        public SmartObservableCollection<UserDataModel> Users { get; private set; } = new SmartObservableCollection<UserDataModel>();
 
         public int SortColumnIndex
         {
             get { return this.sortColumnIndex; }
-            set
-            {
-                this.sortColumnIndex = value;
-                this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
-            }
         }
         private int sortColumnIndex = 0;
 
         public ListSortDirection SortDirection
         {
             get { return this.sortDirection; }
-            set
-            {
-                this.sortDirection = value;
-                this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
-            }
         }
         private ListSortDirection sortDirection = ListSortDirection.Ascending;
 
@@ -106,6 +78,17 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
+        public void SetSortColumnIndexAndDirection(int index, ListSortDirection direction)
+        {
+            this.sortColumnIndex = index;
+            this.sortDirection = direction;
+
+            this.NotifyPropertyChanged("SortColumnIndex");
+            this.NotifyPropertyChanged("SortDirection");
+
+            this.RefreshUsers();
+        }
+
         public void RefreshUsers()
         {
             try
@@ -116,10 +99,6 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     filter = this.UsernameFilter.ToLower();
                 }
-
-                this.LimitedResults = false;
-
-                this.Users.Clear();
 
                 IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
 
@@ -133,23 +112,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     data = data.Reverse();
                 }
 
-                foreach (var userData in data)
-                {
-                    if (string.IsNullOrEmpty(filter))
-                    {
-                        this.Users.Add(userData);
-                    }
-                    else if (!string.IsNullOrEmpty(userData.Username) && userData.Username.ToLower().Contains(filter))
-                    {
-                        this.Users.Add(userData);
-                    }
-
-                    if (this.Users.Count >= 200)
-                    {
-                        this.LimitedResults = true;
-                        break;
-                    }
-                }
+                this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

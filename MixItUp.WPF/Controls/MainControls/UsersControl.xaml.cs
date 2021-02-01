@@ -18,8 +18,6 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class UsersControl : MainControlBase
     {
-        private ObservableCollection<UserDataModel> userData = new ObservableCollection<UserDataModel>();
-
         private UsersMainControlViewModel viewModel;
 
         public UsersControl()
@@ -62,9 +60,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void UserDataGridView_Sorted(object sender, DataGridColumn column)
         {
-            this.viewModel.SortColumnIndex = this.UserDataGridView.Columns.IndexOf(column);
-            this.viewModel.SortDirection = column.SortDirection.GetValueOrDefault();
-            this.viewModel.RefreshUsers();
+            this.viewModel.SetSortColumnIndexAndDirection(this.UserDataGridView.Columns.IndexOf(column), column.SortDirection.GetValueOrDefault());
         }
 
         private void ImportUserDataButton_Click(object sender, RoutedEventArgs e)
