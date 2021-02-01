@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
@@ -22,23 +23,33 @@ namespace MixItUp.Base.Util
         {
         }
 
-        public void AddRange(IEnumerable<T> range)
+        public async Task AddRange(IEnumerable<T> range)
         {
-            foreach (var item in range)
+            lock (this.Items)
             {
-                Items.Add(item);
+                foreach (var item in range)
+                {
+                    this.Items.Add(item);
+                }
             }
 
-            this.OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-            this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-            this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return Task.FromResult(0);
+            });
         }
 
-        public void Reset(IEnumerable<T> range)
+        public async Task Reset(IEnumerable<T> range)
         {
-            this.Items.Clear();
+            lock (this.Items)
+            {
+                this.Items.Clear();
+            }
 
-            AddRange(range);
+            await AddRange(range);
         }
     }
 }

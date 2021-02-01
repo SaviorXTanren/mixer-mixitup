@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,8 +20,6 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.usernameFilter = value;
                 this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
             }
         }
         private string usernameFilter;
@@ -91,30 +90,50 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void RefreshUsers()
         {
-            try
+            _ = RefreshUsersAsync();
+        }
+
+        public async Task RefreshUsersAsync()
+        {
+            await Task.Run(async () =>
             {
-                string filter = null;
-
-                if (!string.IsNullOrEmpty(this.UsernameFilter))
+                await DispatcherHelper.InvokeDispatcher(() =>
                 {
-                    filter = this.UsernameFilter.ToLower();
-                }
+                    this.StartLoadingOperation();
+                    return Task.CompletedTask;
+                });
 
-                IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
-
-                if (this.SortColumnIndex == 0) { data = data.OrderBy(u => u.Username); }
-                if (this.SortColumnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
-                if (this.SortColumnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
-                if (this.SortColumnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
-
-                if (this.SortDirection == ListSortDirection.Descending)
+                try
                 {
-                    data = data.Reverse();
-                }
+                    string filter = null;
 
-                this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+                    if (!string.IsNullOrEmpty(this.UsernameFilter))
+                    {
+                        filter = this.UsernameFilter.ToLower();
+                    }
+
+                    IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
+
+                    if (this.SortColumnIndex == 0) { data = data.OrderBy(u => u.Username); }
+                    if (this.SortColumnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
+                    if (this.SortColumnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
+                    if (this.SortColumnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
+
+                    if (this.SortDirection == ListSortDirection.Descending)
+                    {
+                        data = data.Reverse();
+                    }
+
+                    await this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+
+                await DispatcherHelper.InvokeDispatcher(() =>
+                {
+                    this.EndLoadingOperation();
+                    return Task.CompletedTask;
+                });
+            });
         }
 
         public async Task DeleteUser(UserDataModel user)

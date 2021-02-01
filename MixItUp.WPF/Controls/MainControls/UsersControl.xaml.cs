@@ -1,15 +1,12 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Windows.Users;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -19,9 +16,11 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class UsersControl : MainControlBase
     {
         private UsersMainControlViewModel viewModel;
+        private Timer textChangedTimer;
 
         public UsersControl()
         {
+            textChangedTimer = new Timer((e) => UpdateText(), null, Timeout.Infinite, Timeout.Infinite);
             InitializeComponent();
         }
 
@@ -37,9 +36,20 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.OnVisible();
         }
 
+        private async Task UpdateText()
+        {
+            await this.viewModel.RefreshUsersAsync();
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.UsernameFilterTextBox.Focus();
+                return Task.CompletedTask;
+            });
+        }
+
         private void UsernameFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.viewModel.UsernameFilter = this.UsernameFilterTextBox.Text;
+            textChangedTimer.Change(500, Timeout.Infinite);
         }
 
         private void UserEditButton_Click(object sender, RoutedEventArgs e)

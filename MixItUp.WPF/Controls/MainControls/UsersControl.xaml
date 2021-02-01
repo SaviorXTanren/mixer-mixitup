@@ -98,6 +98,10 @@
             </Border>
         </Grid>
 
+        <Grid Grid.Row="2" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
+        </Grid>
+
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
