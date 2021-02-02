@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Dashboard
@@ -26,8 +28,18 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                this.viewModel.MoveUpCommand.Execute(queueUser.user);
+                try
+                {
+                    QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
+                    if (queueUser != null)
+                    {
+                        this.viewModel.MoveUpCommand.Execute(queueUser.user);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -36,8 +48,18 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                this.viewModel.MoveDownCommand.Execute(queueUser.user);
+                try
+                {
+                    QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
+                    if (queueUser != null)
+                    {
+                        this.viewModel.MoveDownCommand.Execute(queueUser.user);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -46,8 +68,18 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             await this.Window.RunAsyncOperation(() =>
             {
-                QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
-                this.viewModel.DeleteCommand.Execute(queueUser.user);
+                try
+                {
+                    QueueUser queueUser = FrameworkElementHelpers.GetDataContext<QueueUser>(sender);
+                    if (queueUser != null)
+                    {
+                        this.viewModel.DeleteCommand.Execute(queueUser.user);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
                 return Task.FromResult(0);
             });
         }
