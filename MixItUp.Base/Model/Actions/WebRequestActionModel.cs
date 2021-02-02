@@ -91,7 +91,8 @@ namespace MixItUp.Base.Model.Actions
                                     {
                                         foreach (var kvp in this.JSONToSpecialIdentifiers)
                                         {
-                                            string[] splits = kvp.Key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                                            string key = await this.ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
+                                            string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
                                             if (splits.Count() > 0)
                                             {
                                                 JToken currentToken = jToken;
