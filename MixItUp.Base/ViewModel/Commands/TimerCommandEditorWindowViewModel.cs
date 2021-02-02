@@ -10,11 +10,6 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             get
             {
-                CommandGroupSettingsModel commandGroup = this.GetCommandGroup();
-                if (commandGroup != null && commandGroup.TimerInterval != this.commandGroupTimerInterval)
-                {
-                    this.commandGroupTimerInterval = commandGroup.TimerInterval;
-                }
                 return this.commandGroupTimerInterval;
             }
             set
@@ -25,7 +20,18 @@ namespace MixItUp.Base.ViewModel.Commands
         }
         private int commandGroupTimerInterval;
 
-        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand) { }
+        public bool IsCommandGroupTimerIntervalEnabled
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(SelectedCommandGroup);
+            }
+        }
+
+        public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand)
+        {
+            SelectedCommandGroupChanged();
+        }
 
         public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
 
@@ -55,6 +61,15 @@ namespace MixItUp.Base.ViewModel.Commands
             if (commandGroup != null)
             {
                 commandGroup.TimerInterval = this.CommandGroupTimerInterval;
+            }
+        }
+
+        protected override void SelectedCommandGroupChanged()
+        {
+            CommandGroupSettingsModel commandGroup = this.GetCommandGroup();
+            if (commandGroup != null && commandGroup.TimerInterval != this.commandGroupTimerInterval)
+            {
+                this.CommandGroupTimerInterval = commandGroup.TimerInterval;
             }
         }
     }

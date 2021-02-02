@@ -59,6 +59,9 @@ namespace MixItUp.Base.ViewModel.Commands
                 this.selectedCommandGroup = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("CommandGroupTimerInterval");
+                this.NotifyPropertyChanged("IsCommandGroupTimerIntervalEnabled");
+
+                SelectedCommandGroupChanged();
             }
         }
         private string selectedCommandGroup;
@@ -254,6 +257,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         protected virtual Task UpdateCommandGroup() { return Task.FromResult(0); }
+        protected virtual void SelectedCommandGroupChanged() {  }
 
         protected CommandGroupSettingsModel GetCommandGroup()
         {
