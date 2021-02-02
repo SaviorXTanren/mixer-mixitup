@@ -22,7 +22,7 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
@@ -41,13 +41,9 @@
 
         </Grid>
 
-        <Grid Grid.Row="1" Visibility="{Binding LimitedResults, Converter={StaticResource BooleanToVisibilityConverter}}" Height="30">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">** LIMITING TO FIRST 200 USERS **</TextBlock>
-        </Grid>
-
         <Grid Grid.Row="2" Margin="10,0">
             <Border Style="{StaticResource DefaultBorder}">
-                <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" ItemsSource="{Binding Users}" Sorted="UserDataGridView_Sorted" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" ItemsSource="{Binding Users}" EnableRowVirtualization="True" Sorted="UserDataGridView_Sorted" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                     <Controls:SortedDataGrid.Columns>
                         <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Platform}" Binding="{Binding Platform}" IsReadOnly="True" Width="100" />
@@ -100,6 +96,10 @@
                     </Controls:SortedDataGrid.Columns>
                 </Controls:SortedDataGrid>
             </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="10,0" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">

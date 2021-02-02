@@ -1,13 +1,11 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -22,48 +20,21 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 this.usernameFilter = value;
                 this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
             }
         }
         private string usernameFilter;
 
-        public bool LimitedResults
-        {
-            get { return this.limitedResults; }
-            set
-            {
-                this.limitedResults = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool limitedResults = false;
-
-        public ObservableCollection<UserDataModel> Users { get; private set; } = new ObservableCollection<UserDataModel>();
+        public SmartObservableCollection<UserDataModel> Users { get; private set; } = new SmartObservableCollection<UserDataModel>();
 
         public int SortColumnIndex
         {
             get { return this.sortColumnIndex; }
-            set
-            {
-                this.sortColumnIndex = value;
-                this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
-            }
         }
         private int sortColumnIndex = 0;
 
         public ListSortDirection SortDirection
         {
             get { return this.sortDirection; }
-            set
-            {
-                this.sortDirection = value;
-                this.NotifyPropertyChanged();
-
-                this.RefreshUsers();
-            }
         }
         private ListSortDirection sortDirection = ListSortDirection.Ascending;
 
@@ -106,52 +77,63 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
+        public void SetSortColumnIndexAndDirection(int index, ListSortDirection direction)
+        {
+            this.sortColumnIndex = index;
+            this.sortDirection = direction;
+
+            this.NotifyPropertyChanged("SortColumnIndex");
+            this.NotifyPropertyChanged("SortDirection");
+
+            this.RefreshUsers();
+        }
+
         public void RefreshUsers()
         {
-            try
+            _ = RefreshUsersAsync();
+        }
+
+        public async Task RefreshUsersAsync()
+        {
+            await Task.Run(async () =>
             {
-                string filter = null;
-
-                if (!string.IsNullOrEmpty(this.UsernameFilter))
+                await DispatcherHelper.InvokeDispatcher(() =>
                 {
-                    filter = this.UsernameFilter.ToLower();
-                }
+                    this.StartLoadingOperation();
+                    return Task.CompletedTask;
+                });
 
-                this.LimitedResults = false;
-
-                this.Users.Clear();
-
-                IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
-
-                if (this.SortColumnIndex == 0) { data = data.OrderBy(u => u.Username); }
-                if (this.SortColumnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
-                if (this.SortColumnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
-                if (this.SortColumnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
-
-                if (this.SortDirection == ListSortDirection.Descending)
+                try
                 {
-                    data = data.Reverse();
-                }
+                    string filter = null;
 
-                foreach (var userData in data)
-                {
-                    if (string.IsNullOrEmpty(filter))
+                    if (!string.IsNullOrEmpty(this.UsernameFilter))
                     {
-                        this.Users.Add(userData);
-                    }
-                    else if (!string.IsNullOrEmpty(userData.Username) && userData.Username.ToLower().Contains(filter))
-                    {
-                        this.Users.Add(userData);
+                        filter = this.UsernameFilter.ToLower();
                     }
 
-                    if (this.Users.Count >= 200)
+                    IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
+
+                    if (this.SortColumnIndex == 0) { data = data.OrderBy(u => u.Username); }
+                    if (this.SortColumnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
+                    if (this.SortColumnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
+                    if (this.SortColumnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
+
+                    if (this.SortDirection == ListSortDirection.Descending)
                     {
-                        this.LimitedResults = true;
-                        break;
+                        data = data.Reverse();
                     }
+
+                    await this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
                 }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
+
+                await DispatcherHelper.InvokeDispatcher(() =>
+                {
+                    this.EndLoadingOperation();
+                    return Task.CompletedTask;
+                });
+            });
         }
 
         public async Task DeleteUser(UserDataModel user)
