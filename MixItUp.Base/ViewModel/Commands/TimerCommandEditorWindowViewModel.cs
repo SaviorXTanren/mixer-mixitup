@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public TimerCommandEditorWindowViewModel(TimerCommandModel existingCommand) : base(existingCommand)
         {
-            SelectedCommandGroupChanged();
+            this.SelectedCommandGroupChanged();
         }
 
         public TimerCommandEditorWindowViewModel() : base(CommandTypeEnum.Timer) { }
@@ -41,6 +41,12 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
             }
+
+            if (this.CommandGroupTimerInterval < 0)
+            {
+                return Task.FromResult(new Result(MixItUp.Base.Resources.CommandGroupTimerIntervalMustBePositive));
+            }
+
             return Task.FromResult(new Result());
         }
 

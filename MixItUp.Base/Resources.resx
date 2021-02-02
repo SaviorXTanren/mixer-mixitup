@@ -4669,4 +4669,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="GameCommandWordScrambleUserFailureExample" xml:space="preserve">
     <value>No one correctly guessed the word "$gamewordscrambleanswer".</value>
   </data>
+  <data name="CommandGroupTimerIntervalMustBePositive" xml:space="preserve">
+    <value>Command Group Timer Interval must be a positive number or left blank</value>
+  </data>
 </root>

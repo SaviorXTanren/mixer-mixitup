@@ -1879,6 +1879,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command Group Timer Interval must be a positive number or left blank.
+        /// </summary>
+        public static string CommandGroupTimerIntervalMustBePositive {
+            get {
+                return ResourceManager.GetString("CommandGroupTimerIntervalMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least 1 action must be added to the command.
         /// </summary>
         public static string CommandMustHaveAtLeast1Action {
