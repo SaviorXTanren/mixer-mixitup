@@ -122,11 +122,11 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (command != null)
                 {
-                    IEnumerable<string> newArguments = null;
+                    List<string> newArguments = new List<string>();
                     if (!string.IsNullOrEmpty(this.Arguments))
                     {
                         string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.Arguments, parameters);
-                        newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                        newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     }
                     else
                     {
@@ -134,6 +134,7 @@ namespace MixItUp.Base.Model.Actions
                     }
 
                     CommandParametersModel copyParameters = parameters.Duplicate();
+                    copyParameters.Arguments = newArguments;
                     copyParameters.WaitForCommandToFinish = this.WaitForCommandToFinish;
                     copyParameters.DontLockCommand = true;
                     await command.Perform(copyParameters);
