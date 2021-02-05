@@ -225,7 +225,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL));
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL));
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     JObject payload = new JObject();
@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services.External
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TiltifySecret");
                     payload["code"] = authorizationCode;
-                    payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
+                    payload["redirect_uri"] = OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)

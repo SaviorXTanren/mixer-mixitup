@@ -31,6 +31,7 @@ namespace MixItUp.Base.Services.External
     public abstract class OAuthExternalServiceBase : OAuthRestServiceBase, IOAuthExternalService, IDisposable
     {
         public const string DEFAULT_OAUTH_LOCALHOST_URL = "http://localhost:8919/";
+        public const string HTTPS_OAUTH_REDIRECT_URL = "https://mixitupapp.com/oauthredirect/";
 
         public const string DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER = "code";
 
