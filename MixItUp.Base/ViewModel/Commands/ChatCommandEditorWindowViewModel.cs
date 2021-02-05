@@ -77,6 +77,12 @@ namespace MixItUp.Base.ViewModel.Commands
             if (existingCommand.Triggers.Any(t => t.Contains(' ')))
             {
                 this.Triggers = string.Join(";", existingCommand.Triggers);
+
+                // If this is the only trigger, we need to add a semi-colon to the end
+                if (existingCommand.Triggers.Count == 1)
+                {
+                    this.Triggers += ";";
+                }
             }
             else
             {
