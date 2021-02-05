@@ -76,9 +76,12 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }
-            if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftControl); }
-            if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftAlt); }
+            if (this.ActionType == InputActionTypeEnum.Press || this.ActionType == InputActionTypeEnum.Click)
+            {
+                if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }
+                if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftControl); }
+                if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftAlt); }
+            }
 
             await ChannelSession.Services.InputService.WaitForKeyToRegister();
 
@@ -94,7 +97,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == InputActionTypeEnum.Release)
                 {
-                    ChannelSession.Services.InputService.KeyDown(this.Key.GetValueOrDefault());
+                    ChannelSession.Services.InputService.KeyUp(this.Key.GetValueOrDefault());
                 }
             }
             else if (this.Mouse != null)
@@ -148,9 +151,12 @@ namespace MixItUp.Base.Model.Actions
 
             await ChannelSession.Services.InputService.WaitForKeyToRegister();
 
-            if (this.Shift) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftShift); }
-            if (this.Control) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftControl); }
-            if (this.Alt) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftAlt); }
+            if (this.ActionType == InputActionTypeEnum.Release || this.ActionType == InputActionTypeEnum.Click)
+            {
+                if (this.Shift) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftShift); }
+                if (this.Control) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftControl); }
+                if (this.Alt) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftAlt); }
+            }
         }
     }
 }
