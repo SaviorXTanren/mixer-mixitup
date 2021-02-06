@@ -212,9 +212,9 @@ namespace MixItUp.Base.Model.Commands
                     }
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
+            catch (Exception ex)
             {
+                Logger.Log(ex);
                 if (lockPerformed || this.CommandLockSemaphore.CurrentCount == 0)
                 {
                     this.CommandLockSemaphore.Release();
