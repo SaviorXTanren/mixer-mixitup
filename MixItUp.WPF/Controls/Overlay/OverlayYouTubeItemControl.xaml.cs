@@ -13,6 +13,7 @@ namespace MixItUp.WPF.Controls.Overlay
         }
 
         public OverlayYouTubeItemControl(OverlayYouTubeItemViewModel viewModel)
+             : this()
         {
             this.ViewModel = viewModel;
         }
