@@ -35,13 +35,12 @@
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
 
-                <ComboBox Grid.Column="2" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" />
+                <ComboBox Grid.Column="1" Margin="20,0,0,0" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" Visibility="{Binding ShowCommandGroupSelector, Converter={StaticResource BooleanToVisibilityConverter}}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" />
             </Grid>
 
             <TextBox Grid.Row="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />

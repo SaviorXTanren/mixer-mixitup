@@ -222,6 +222,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.SetUICommands();
         }
 
+        public override bool ShowCommandGroupSelector { get { return false; } }
+
         public override bool CanBeUnlocked { get { return false; } }
 
         public override bool CheckActionCount { get { return false; } }

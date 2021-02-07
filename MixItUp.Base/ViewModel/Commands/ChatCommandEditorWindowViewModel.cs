@@ -9,6 +9,8 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class ChatCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
+        public virtual bool ShowCommandGroupSelector { get { return true; } }
+
         public string Triggers
         {
             get { return this.triggers; }
@@ -173,6 +175,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
     public class UserOnlyChatCommandEditorWindowViewModel : ChatCommandEditorWindowViewModel
     {
+        public override bool ShowCommandGroupSelector { get { return false; } }
+
         public Guid UserID
         {
             get { return this.userID; }
