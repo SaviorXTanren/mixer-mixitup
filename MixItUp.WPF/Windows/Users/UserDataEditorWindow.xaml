@@ -195,7 +195,7 @@
                                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CommandsControls:CommandListingButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
+                                            <CommandsControls:CommandListingButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" EnableDisableToggled="UserOnlyChatCommandButtons_EnableDisableToggled" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

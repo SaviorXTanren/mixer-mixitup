@@ -74,7 +74,13 @@ namespace MixItUp.WPF.Windows.Users
             {
                 this.viewModel.RemoveUserOnlyChatCommand(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
                 await ChannelSession.SaveSettings();
+                ChannelSession.Services.Chat.RebuildCommandTriggers();
             });
+        }
+
+        private void UserOnlyChatCommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
         }
 
         private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)

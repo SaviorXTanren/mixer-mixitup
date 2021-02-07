@@ -59,6 +59,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                     this.viewModel.Refresh();
+                    ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             });
         }
