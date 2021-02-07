@@ -44,12 +44,13 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Item.Position);
 
-                if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetOverlayWidgetEditorControl(new OverlayHTMLItemControl(new OverlayHTMLItemViewModel((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item))); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayChatMessagesListItemControl(new OverlayChatMessagesListItemViewModel((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item))); }
+                if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayChatMessagesListItemControl(new OverlayChatMessagesListItemViewModel((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item))); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayEndCreditsItemModel) { this.SetOverlayWidgetEditorControl(new OverlayEndCreditsItemControl(new OverlayEndCreditsItemViewModel((OverlayEndCreditsItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayEventListItemControl(new OverlayEventListItemViewModel((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayGameQueueListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayGameQueueListItemControl(new OverlayGameQueueListItemViewModel((OverlayGameQueueListItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayProgressBarItemModel) { this.SetOverlayWidgetEditorControl(new OverlayProgressBarItemControl(new OverlayProgressBarItemViewModel((OverlayProgressBarItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayImageItemModel) { this.SetOverlayWidgetEditorControl(new OverlayImageItemControl(new OverlayImageItemViewModel((OverlayImageItemModel)this.viewModel.OverlayWidget.Item))); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetOverlayWidgetEditorControl(new OverlayHTMLItemControl(new OverlayHTMLItemViewModel((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboardListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayLeaderboardListItemControl(new OverlayLeaderboardListItemViewModel((OverlayLeaderboardListItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamBossItemModel) { this.SetOverlayWidgetEditorControl(new OverlayStreamBossItemControl(new OverlayStreamBossItemViewModel((OverlayStreamBossItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTextItemModel) { this.SetOverlayWidgetEditorControl(new OverlayTextItemControl(new OverlayTextItemViewModel((OverlayTextItemModel)this.viewModel.OverlayWidget.Item))); }
@@ -59,11 +60,11 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (this.viewModel.OverlayWidget.Item is OverlayVideoItemModel) { this.SetOverlayWidgetEditorControl(new OverlayVideoItemControl(new OverlayVideoItemViewModel((OverlayVideoItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayWebPageItemModel) { this.SetOverlayWidgetEditorControl(new OverlayWebPageItemControl(new OverlayWebPageItemViewModel((OverlayWebPageItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayYouTubeItemModel) { this.SetOverlayWidgetEditorControl(new OverlayYouTubeItemControl(new OverlayYouTubeItemViewModel((OverlayYouTubeItemModel)this.viewModel.OverlayWidget.Item))); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayEndCreditsItemModel) { this.SetOverlayWidgetEditorControl(new OverlayEndCreditsItemControl(new OverlayEndCreditsItemViewModel((OverlayEndCreditsItemModel)this.viewModel.OverlayWidget.Item))); }
             }
             else
             {
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ChatMessages, new OverlayChatMessagesListItemControl(new OverlayChatMessagesListItemViewModel()));
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EndCredits, new OverlayEndCreditsItemControl(new OverlayEndCreditsItemViewModel()));
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EventList, new OverlayEventListItemControl(new OverlayEventListItemViewModel()));
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.GameQueue, new OverlayGameQueueListItemControl(new OverlayGameQueueListItemViewModel()));
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ProgressBar, new OverlayProgressBarItemControl(new OverlayProgressBarItemViewModel()));
@@ -78,7 +79,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Video, new OverlayVideoItemControl(new OverlayVideoItemViewModel()));
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.WebPage, new OverlayWebPageItemControl(new OverlayWebPageItemViewModel()));
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.YouTube, new OverlayYouTubeItemControl(new OverlayYouTubeItemViewModel()));
-                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EndCredits, new OverlayEndCreditsItemControl(new OverlayEndCreditsItemViewModel()));
             }
         }
 
