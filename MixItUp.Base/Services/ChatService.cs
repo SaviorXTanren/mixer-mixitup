@@ -278,7 +278,7 @@ namespace MixItUp.Base.Services
             this.longestTrigger = 0;
             this.wildcardCommands.Clear();
             this.chatMenuCommands.Clear();
-            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
+            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
             {
                 if (command.Wildcards)
                 {

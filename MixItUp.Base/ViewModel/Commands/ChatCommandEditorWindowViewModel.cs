@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 triggers = new HashSet<string>(triggers.Select(t => "!" + t));
             }
 
-            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
+            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
             {
                 if (this.existingCommand != command)
                 {

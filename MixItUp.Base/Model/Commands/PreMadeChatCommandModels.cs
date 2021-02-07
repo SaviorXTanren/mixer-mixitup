@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Commands
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             List<string> commandTriggers = new List<string>();
-            foreach (ChatCommandModel command in ChannelSession.AllChatAccessibleCommands)
+            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
             {
                 if (command.IsEnabled)
                 {
@@ -715,7 +715,7 @@ namespace MixItUp.Base.Model.Commands
                     return;
                 }
 
-                foreach (CommandModelBase command in ChannelSession.AllChatAccessibleCommands)
+                foreach (CommandModelBase command in ChannelSession.AllEnabledChatAccessibleCommands)
                 {
                     if (command.IsEnabled)
                     {
@@ -774,7 +774,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
-                CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ChannelSession.AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");
@@ -831,7 +831,7 @@ namespace MixItUp.Base.Model.Commands
             {
                 string commandTrigger = parameters.Arguments.ElementAt(0).ToLower();
 
-                CommandModelBase command = ChannelSession.AllChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
+                CommandModelBase command = ChannelSession.AllEnabledChatAccessibleCommands.FirstOrDefault(c => c.Triggers.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                 if (command == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: Could not find any command with that trigger");

@@ -68,7 +68,7 @@ namespace MixItUp.Base
 
         public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
 
-        public static IEnumerable<CommandModelBase> AllChatAccessibleCommands
+        public static IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
             get
             {
@@ -85,11 +85,13 @@ namespace MixItUp.Base
             get
             {
                 List<CommandModelBase> commands = new List<CommandModelBase>();
-                commands.AddRange(ChannelSession.AllChatAccessibleCommands);
-                commands.AddRange(ChannelSession.EventCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.TimerCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.ActionGroupCommands.Where(c => c.IsEnabled));
-                commands.AddRange(ChannelSession.TwitchChannelPointsCommands.Where(c => c.IsEnabled));
+                commands.AddRange(ChannelSession.PreMadeChatCommands);
+                commands.AddRange(ChannelSession.ChatCommands);
+                commands.AddRange(ChannelSession.GameCommands);
+                commands.AddRange(ChannelSession.EventCommands);
+                commands.AddRange(ChannelSession.TimerCommands);
+                commands.AddRange(ChannelSession.ActionGroupCommands);
+                commands.AddRange(ChannelSession.TwitchChannelPointsCommands);
                 return commands;
             }
         }
