@@ -32,11 +32,11 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -47,9 +47,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
@@ -57,10 +55,10 @@
 
                 <TextBox Grid.Row="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GiveawayItem}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Row="2" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-
-                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
@@ -68,14 +66,16 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding TotalTime}" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalTimeMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-                    <TextBox Grid.Column="2" Text="{Binding ReminderTime}" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ReminderMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="2" Text="{Binding TotalTime}" Width="90" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalTimeMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="4" Text="{Binding MaxEntries}" Width="80" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxEntries}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="4" Text="{Binding ReminderTime}" Width="90" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ReminderMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Grid.Column="6" Text="{Binding MaxEntries}" Width="70" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxEntries}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
-                <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <Grid Grid.Row="4" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -93,9 +93,9 @@
                     <CheckBox Grid.Column="6" IsChecked="{Binding AllowPastWinners}" />
                 </Grid>
 
-                <RequirementsControls:RequirementsSetControl Grid.Row="8" DataContext="{Binding Requirements}" ShowSettings="False" Width="300" />
+                <RequirementsControls:RequirementsSetControl Grid.Row="6" DataContext="{Binding Requirements}" ShowSettings="False" Width="300" />
 
-                <Grid Grid.Row="10" HorizontalAlignment="Center">
+                <Grid Grid.Row="8" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
