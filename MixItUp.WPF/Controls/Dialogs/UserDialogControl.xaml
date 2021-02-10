@@ -72,31 +72,19 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="2" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Source={x:Static resx:Resources.Username}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
+                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Username}" />
 
-                    <Image Grid.Column="0" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
-                    <TextBlock Grid.Column="2" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
-
-                    <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
-                </Grid>
-
-                <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
 
-                <TextBlock Grid.Column="0" Grid.Row="4">Account Age:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="{Binding Source={x:Static resx:Resources.AccountAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
 
-                <TextBlock Grid.Column="0" Grid.Row="6">Watch Time:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding Data.ViewingTimeString}" />
 
-                <TextBlock Grid.Column="0" Grid.Row="8">Follow Age:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="8" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding FollowAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="10">Stream Info:</TextBlock>
@@ -117,24 +105,16 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="/Assets/Images/Sparks.png" Height="18" Width="18" Grid.Column="0" ToolTip="Sparks" />
-            <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
+           <MaterialDesign:PackIcon Kind="Coin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" ToolTip="Primary Currency" />
+            <TextBlock Grid.Column="2" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
 
-            <MaterialDesign:PackIcon Kind="Coin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="Primary Currency" />
-            <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
+            <MaterialDesign:PackIcon Kind="ShieldStar" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="Primary Rank" />
+            <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
 
-            <MaterialDesign:PackIcon Kind="ShieldStar" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" ToolTip="Primary Rank" />
-            <TextBlock Grid.Column="10" Text="{Binding Data.PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
-
-            <MaterialDesign:PackIcon Kind="Biohazard" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="12" Margin="0,-1,0,0" ToolTip="Moderation Strikes" />
-            <TextBlock Grid.Column="14" Text="{Binding Data.ModerationStrikes}" VerticalAlignment="Center" />
-
+            <MaterialDesign:PackIcon Kind="Biohazard" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" Margin="0,-1,0,0" ToolTip="Moderation Strikes" />
+            <TextBlock Grid.Column="10" Text="{Binding Data.ModerationStrikes}" VerticalAlignment="Center" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
