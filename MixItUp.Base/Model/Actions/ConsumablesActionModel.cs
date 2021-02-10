@@ -250,7 +250,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!inventory.HasAmount(parameters.User.Data, item, amountValue))
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item.Name));
                             return;
                         }
                         inventory.SubtractAmount(parameters.User.Data, item, amountValue);
