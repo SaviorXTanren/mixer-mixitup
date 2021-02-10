@@ -22,6 +22,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedActionType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowCommandsSection");
+                this.NotifyPropertyChanged("ShowCommandRunSection");
                 this.NotifyPropertyChanged("ShowCommandGroupsSection");
             }
         }
@@ -100,6 +101,8 @@ namespace MixItUp.Base.ViewModel.Actions
             }
         }
         private bool waitForCommandToFinish = true;
+
+        public bool ShowCommandRunSection { get { return this.SelectedActionType == CommandActionTypeEnum.RunCommand; } }
 
         public bool ShowCommandGroupsSection { get { return this.SelectedActionType == CommandActionTypeEnum.EnableCommandGroup || this.SelectedActionType == CommandActionTypeEnum.DisableCommandGroup; } }
 

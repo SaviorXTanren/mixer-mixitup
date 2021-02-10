@@ -33,7 +33,6 @@
         <Grid Grid.Row="2" Visibility="{Binding ShowCommandsSection, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -67,7 +66,7 @@
                 </Button>
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1" Visibility="{Binding ShowCommandRunSection, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
