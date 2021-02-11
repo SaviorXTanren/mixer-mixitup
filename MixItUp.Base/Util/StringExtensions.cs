@@ -41,13 +41,7 @@ namespace MixItUp.Base.Util
 
         public static string Shuffle(this string str)
         {
-            Random random = new Random();
-            var list = new SortedList<int, char>();
-            foreach (var c in str)
-            {
-                list.Add(random.Next(), c);
-            }
-            return new string(list.Values.ToArray());
+            return new string(str.ToCharArray().Shuffle().ToArray());
         }
 
         public static string AddNewLineEveryXCharacters(this string str, int lineLength)
