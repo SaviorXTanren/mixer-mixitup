@@ -156,6 +156,7 @@ namespace MixItUp.Base.Model.Actions
                     foreach (CommandModelBase cmd in commands)
                     {
                         cmd.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
+                        ChannelSession.Settings.Commands.ManualValueChanged(cmd.ID);
                     }
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }

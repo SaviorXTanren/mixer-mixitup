@@ -55,8 +55,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.EventCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    await ChannelSession.SaveSettings();
                     this.viewModel.RefreshCommands();
+                    await ChannelSession.SaveSettings();
                 }
             });
         }

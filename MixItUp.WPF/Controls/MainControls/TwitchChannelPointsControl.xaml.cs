@@ -53,8 +53,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.TwitchChannelPointsCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    await ChannelSession.SaveSettings();
                     this.viewModel.Refresh();
+                    await ChannelSession.SaveSettings();
                 }
             });
         }

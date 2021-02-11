@@ -35,6 +35,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 foreach (CommandModelBase command in this.Commands)
                 {
                     command.IsEnabled = newIsEnabledState;
+                    ChannelSession.Settings.Commands.ManualValueChanged(command.ID);
                 }
                 this.RefreshCommands();
                 this.NotifyPropertyChanged();

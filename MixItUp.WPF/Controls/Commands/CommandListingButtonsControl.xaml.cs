@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Currency;
 using MixItUp.Base.ViewModel.Games;
@@ -165,6 +166,7 @@ namespace MixItUp.WPF.Controls.Commands
             if (command != null)
             {
                 command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
+                ChannelSession.Settings.Commands.ManualValueChanged(command.ID);
             }
         }
     }
