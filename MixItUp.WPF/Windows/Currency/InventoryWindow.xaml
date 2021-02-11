@@ -82,9 +82,9 @@
                                 <DataGrid ItemsSource="{Binding Items}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.ItemName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.MaxAmount}" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.BuyPrice}" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="85" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.SellPrice}" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="85" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MaxAmount}" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" SortMemberPath="MaxAmount"/>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.BuyPrice}" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="85" SortMemberPath="BuyAmount"/>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.SellPrice}" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="85" SortMemberPath="SellAmount"/>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.SpecialIdentifierName}" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="160" />
                                         <DataGridTemplateColumn Width="110">
                                             <DataGridTemplateColumn.CellTemplate>
