@@ -52,25 +52,25 @@ namespace MixItUp.WPF.Windows.Currency
             this.viewModel.Ranks.Remove(rank);
         }
 
-        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        private void RankUpNewCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.UserRankChanged);
-            window.CommandSaved += Window_CommandSaved;
+            window.CommandSaved += RankUpWindow_CommandSaved;
             window.Show();
         }
 
-        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        private void RankUpCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
             CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
                 CommandEditorWindow window = new CommandEditorWindow(command);
-                window.CommandSaved += Window_CommandSaved;
+                window.CommandSaved += RankUpWindow_CommandSaved;
                 window.Show();
             }
         }
 
-        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        private async void RankUpCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
@@ -78,6 +78,38 @@ namespace MixItUp.WPF.Windows.Currency
                 if (command != null)
                 {
                     this.viewModel.RankChangedCommand = null;
+                    ChannelSession.Settings.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
+                }
+            });
+        }
+
+        private void RankDownNewCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.UserRankDown);
+            window.CommandSaved += RankDownWindow_CommandSaved;
+            window.Show();
+        }
+
+        private void RankDownCommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
+            if (command != null)
+            {
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += RankDownWindow_CommandSaved;
+                window.Show();
+            }
+        }
+
+        private async void RankDownCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
+                if (command != null)
+                {
+                    this.viewModel.RankDownCommand = null;
                     ChannelSession.Settings.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                 }
@@ -126,9 +158,14 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void Window_CommandSaved(object sender, CommandModelBase command)
+        private void RankUpWindow_CommandSaved(object sender, CommandModelBase command)
         {
             this.viewModel.RankChangedCommand = (CustomCommandModel)command;
+        }
+
+        private void RankDownWindow_CommandSaved(object sender, CommandModelBase command)
+        {
+            this.viewModel.RankDownCommand = (CustomCommandModel)command;
         }
     }
 }
