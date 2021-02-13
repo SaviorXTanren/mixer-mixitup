@@ -30,9 +30,14 @@ namespace MixItUp.Base.Util
         {
             Random random = new Random();
             var l = new SortedList<int, T>();
-            foreach (var i in list.ToList())
+            foreach (var i in list.ToArray())
             {
-                l.Add(random.Next(), i);
+                var key = random.Next();
+                while (l.ContainsKey(key))
+                {
+                    key = random.Next();
+                }
+                l.Add(key, i);
             }
             return l.Values;
         }

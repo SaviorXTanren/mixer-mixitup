@@ -334,6 +334,21 @@ namespace MixItUp.Base.ViewModel.Currency
         public bool HasRankChangedCommand { get { return this.RankChangedCommand != null; } }
         public bool DoesNotHaveRankChangedCommand { get { return !this.HasRankChangedCommand; } }
 
+        public CommandModelBase RankDownCommand
+        {
+            get { return this.rankDownCommand; }
+            set
+            {
+                this.rankDownCommand = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasRankDownCommand");
+                this.NotifyPropertyChanged("DoesNotHaveRankDownCommand");
+            }
+        }
+        private CommandModelBase rankDownCommand;
+        public bool HasRankDownCommand { get { return this.RankDownCommand != null; } }
+        public bool DoesNotHaveRankDownCommand { get { return !this.HasRankDownCommand; } }
+
         public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
@@ -440,6 +455,7 @@ namespace MixItUp.Base.ViewModel.Currency
             if (this.IsRank)
             {
                 this.RankChangedCommand = this.Currency.RankChangedCommand;
+                this.RankDownCommand = this.Currency.RankDownCommand;
                 foreach (RankModel rank in this.Currency.Ranks.OrderBy(r => r.Amount))
                 {
                     this.Ranks.Add(rank);
@@ -840,11 +856,13 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 this.Currency.Ranks = this.Ranks.ToList();
                 this.Currency.RankChangedCommand = this.RankChangedCommand;
+                this.Currency.RankDownCommand = this.RankDownCommand;
             }
             else
             {
                 this.Currency.Ranks.Clear();
                 this.Currency.RankChangedCommand = null;
+                this.Currency.RankDownCommand = null;
             }
 
             await ChannelSession.SaveSettings();

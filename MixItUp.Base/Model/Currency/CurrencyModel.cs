@@ -139,6 +139,8 @@ namespace MixItUp.Base.Model.Currency
         public List<RankModel> Ranks { get; set; } = new List<RankModel>();
         [DataMember]
         public Guid RankChangedCommandID { get; set; }
+        [DataMember]
+        public Guid RankDownCommandID { get; set; }
 
         [DataMember]
         public bool IsPrimary { get; set; }
@@ -232,6 +234,25 @@ namespace MixItUp.Base.Model.Currency
             }
         }
 
+        [JsonIgnore]
+        public CommandModelBase RankDownCommand
+        {
+            get { return ChannelSession.Settings.GetCommand(this.RankDownCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.RankDownCommandID = value.ID;
+                    ChannelSession.Settings.SetCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.RemoveCommand(this.RankDownCommandID);
+                    this.RankDownCommandID = Guid.Empty;
+                }
+            }
+        }
+
         public int GetAmount(UserDataModel user)
         {
             if (user.CurrencyAmounts.ContainsKey(this.ID))
@@ -248,10 +269,23 @@ namespace MixItUp.Base.Model.Currency
 
         public void SetAmount(UserDataModel user, int amount)
         {
+            RankModel prevRank = this.GetRank(user);
+
             user.CurrencyAmounts[this.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             if (ChannelSession.Settings != null)
             {
                 ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+            }
+
+            RankModel newRank = this.GetRank(user);
+
+            if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankChangedCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID))), new CancellationToken());
+            }
+            else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
+            {
+                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankDownCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID))), new CancellationToken());
             }
         }
 
@@ -259,16 +293,7 @@ namespace MixItUp.Base.Model.Currency
         {
             if (!user.IsCurrencyRankExempt && amount > 0)
             {
-                RankModel prevRank = this.GetRank(user);
-
                 this.SetAmount(user, this.GetAmount(user) + amount);
-
-                RankModel newRank = this.GetRank(user);
-
-                if (prevRank != newRank && this.RankChangedCommand != null)
-                {
-                    AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankChangedCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID))), new CancellationToken());
-                }
             }
         }
 

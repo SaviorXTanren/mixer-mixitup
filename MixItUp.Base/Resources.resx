@@ -1504,7 +1504,10 @@
     <value>On Subscribe</value>
   </data>
   <data name="OnUserRankChanged" xml:space="preserve">
-    <value>On User Rank Changed</value>
+    <value>On User Rank Up</value>
+  </data>
+  <data name="OnUserRankDown" xml:space="preserve">
+    <value>On User Rank Down</value>
   </data>
   <data name="Operator" xml:space="preserve">
     <value>Operator</value>
@@ -2353,7 +2356,10 @@
     <value>User-Only Chat Commands</value>
   </data>
   <data name="UserRankChanged" xml:space="preserve">
-    <value>User Rank Changed</value>
+    <value>User Rank Up</value>
+  </data>
+  <data name="UserRankDown" xml:space="preserve">
+    <value>User Rank Down</value>
   </data>
   <data name="UserRanks" xml:space="preserve">
     <value>User Ranks</value>

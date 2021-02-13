@@ -8496,11 +8496,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to On User Rank Changed.
+        ///   Looks up a localized string similar to On User Rank Up.
         /// </summary>
         public static string OnUserRankChanged {
             get {
                 return ResourceManager.GetString("OnUserRankChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On User Rank Down.
+        /// </summary>
+        public static string OnUserRankDown {
+            get {
+                return ResourceManager.GetString("OnUserRankDown", resourceCulture);
             }
         }
         
@@ -12804,11 +12813,20 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User Rank Changed.
+        ///   Looks up a localized string similar to User Rank Up.
         /// </summary>
         public static string UserRankChanged {
             get {
                 return ResourceManager.GetString("UserRankChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Rank Down.
+        /// </summary>
+        public static string UserRankDown {
+            get {
+                return ResourceManager.GetString("UserRankDown", resourceCulture);
             }
         }
         
