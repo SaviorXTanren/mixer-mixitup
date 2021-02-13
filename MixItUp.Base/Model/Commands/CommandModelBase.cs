@@ -188,6 +188,10 @@ namespace MixItUp.Base.Model.Commands
 
                     if (!await this.ValidateRequirements(parameters))
                     {
+                        if (lockPerformed)
+                        {
+                            this.CommandLockSemaphore.Release();
+                        }
                         return;
                     }
 
