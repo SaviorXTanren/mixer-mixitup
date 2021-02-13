@@ -173,55 +173,55 @@ namespace MixItUp.Base.Model.Commands
 
         public async Task Perform(CommandParametersModel parameters)
         {
-            bool lockPerformed = false;
-            try
+            if (this.IsEnabled && this.DoesCommandHaveWork)
             {
-                if (this.IsEnabled && this.DoesCommandHaveWork)
+                bool waitForFinish = parameters.WaitForCommandToFinish;
+                Task commandTask = Task.Run(async () =>
                 {
-                    Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
-
-                    if (!this.IsUnlocked && !parameters.DontLockCommand)
+                    bool lockPerformed = false;
+                    try
                     {
-                        lockPerformed = true;
-                        await this.CommandLockSemaphore.WaitAsync();
-                    }
+                        Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
-                    if (!await this.ValidateRequirements(parameters))
-                    {
-                        if (lockPerformed)
+                        if (!this.IsUnlocked && !parameters.DontLockCommand)
                         {
-                            this.CommandLockSemaphore.Release();
+                            lockPerformed = true;
+                            await this.CommandLockSemaphore.WaitAsync();
                         }
-                        return;
+
+                        if (await this.ValidateRequirements(parameters))
+                        {
+                            List<CommandParametersModel> runnerParameters = new List<CommandParametersModel>() { parameters };
+                            if (this.Requirements != null)
+                            {
+                                await this.PerformRequirements(parameters);
+                                runnerParameters = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
+                            }
+
+                            this.TrackTelemetry();
+
+                            foreach (CommandParametersModel p in runnerParameters)
+                            {
+                                p.WaitForCommandToFinish = true;
+                                p.User.Data.TotalCommandsRun++;
+                                await this.PerformInternal(p);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
                     }
 
-                    List<CommandParametersModel> users = new List<CommandParametersModel>() { parameters };
-                    if (this.Requirements != null)
+                    if (lockPerformed)
                     {
-                        await this.PerformRequirements(parameters);
-                        users = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
+                        this.CommandLockSemaphore.Release();
                     }
+                });
 
-                    this.TrackTelemetry();
-
-                    if (parameters.WaitForCommandToFinish)
-                    {
-                        await this.PerformTask(users, lockPerformed);
-                    }
-                    else
-                    {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => await this.PerformTask(users, lockPerformed));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                if (lockPerformed || this.CommandLockSemaphore.CurrentCount == 0)
+                if (waitForFinish)
                 {
-                    this.CommandLockSemaphore.Release();
+                    await commandTask;
                 }
             }
         }
@@ -275,28 +275,5 @@ namespace MixItUp.Base.Model.Commands
         }
 
         protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
-
-        private async Task PerformTask(IEnumerable<CommandParametersModel> parameterList, bool lockPerformed)
-        {
-            try
-            {
-                foreach (CommandParametersModel parameters in parameterList)
-                {
-                    parameters.WaitForCommandToFinish = true;
-                    parameters.User.Data.TotalCommandsRun++;
-                    await this.PerformInternal(parameters);
-                }
-            }
-            catch (TaskCanceledException) { }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                if (lockPerformed)
-                {
-                    lockPerformed = false;
-                    this.CommandLockSemaphore.Release();
-                }
-            }
-        }
     }
 }
