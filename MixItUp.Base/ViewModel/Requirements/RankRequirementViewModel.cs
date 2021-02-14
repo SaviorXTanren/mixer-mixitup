@@ -113,21 +113,19 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.SelectedMatchType = requirement.MatchType;
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.SelectedRankSystem == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidRankSystemMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidRankSystemMustBeSelected));
             }
 
             if (this.SelectedRank == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidRankMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidRankMustBeSelected));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()

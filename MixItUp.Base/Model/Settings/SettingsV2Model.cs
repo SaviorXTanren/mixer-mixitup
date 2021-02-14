@@ -10,7 +10,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -24,10 +24,11 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Settings
 {
+    [Obsolete]
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 44;
+        public const int LatestVersion = 45;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -72,8 +73,8 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel TwitchUserOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TwitchBotOAuthToken { get; set; }
-		[JsonProperty]
-		public string TwitchUserID { get; set; }
+        [JsonProperty]
+        public string TwitchUserID { get; set; }
         [JsonProperty]
         public string TwitchChannelID { get; set; }
 
@@ -553,13 +554,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         [Obsolete]
-        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
-        [DataMember]
-        [Obsolete]
-        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
-
-        [DataMember]
-        [Obsolete]
         public bool ChatShowUserJoinLeave { get; set; }
         [DataMember]
         [Obsolete]
@@ -655,39 +649,41 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
                 {
                     CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
+                    string commandData = (string)data["Data"];
                     if (type == CommandTypeEnum.Chat)
                     {
-                        this.ChatCommands.Add(JSONSerializerHelper.DeserializeFromString<ChatCommand>((string)data["Data"]));
+                        this.ChatCommands.Add(JSONSerializerHelper.DeserializeFromString<ChatCommand>(commandData));
                     }
                     else if (type == CommandTypeEnum.Event)
                     {
-                        this.EventCommands.Add(JSONSerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
+                        this.EventCommands.Add(JSONSerializerHelper.DeserializeFromString<EventCommand>(commandData));
                     }
                     else if (type == CommandTypeEnum.Timer)
                     {
-                        this.TimerCommands.Add(JSONSerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
+                        this.TimerCommands.Add(JSONSerializerHelper.DeserializeFromString<TimerCommand>(commandData));
                     }
                     else if (type == CommandTypeEnum.ActionGroup)
                     {
-                        this.ActionGroupCommands.Add(JSONSerializerHelper.DeserializeFromString<ActionGroupCommand>((string)data["Data"]));
+                        this.ActionGroupCommands.Add(JSONSerializerHelper.DeserializeFromString<ActionGroupCommand>(commandData));
                     }
                     else if (type == CommandTypeEnum.Game)
                     {
-                        this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
+                        commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
+                        this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>(commandData));
                     }
                     else if (type == CommandTypeEnum.TwitchChannelPoints)
                     {
-                        this.TwitchChannelPointsCommands.Add(JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommand>((string)data["Data"]));
+                        this.TwitchChannelPointsCommands.Add(JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommand>(commandData));
                     }
                     else if (type == CommandTypeEnum.Custom)
                     {
-                        CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>((string)data["Data"]);
+                        CustomCommand command = JSONSerializerHelper.DeserializeFromString<CustomCommand>(commandData);
                         this.CustomCommands[command.ID] = command;
                     }
 #pragma warning disable CS0612 // Type or member is obsolete
                     else if (type == CommandTypeEnum.Interactive)
                     {
-                        MixPlayCommand command = JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]);
+                        MixPlayCommand command = JSONSerializerHelper.DeserializeFromString<MixPlayCommand>(commandData);
                         if (command is MixPlayButtonCommand || command is MixPlayTextBoxCommand)
                         {
                             this.OldMixPlayCommands.Add(command);
@@ -973,13 +969,13 @@ namespace MixItUp.Base.Model.Settings
 
             if (this.GetCustomCommand(this.RedemptionStoreManualRedeemNeededCommandID) == null)
             {
-                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.ManualRedemptionNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
+                CustomCommand command = CustomCommand.BasicChatCommand(MixItUp.Base.Resources.RedemptionStoreManualRedeemNeededCommandName, "@$username just purchased $productname and needs to be manually redeemed");
                 this.RedemptionStoreManualRedeemNeededCommandID = command.ID;
                 this.SetCustomCommand(command);
             }
             if (this.GetCustomCommand(this.RedemptionStoreDefaultRedemptionCommandID) == null)
             {
-                CustomCommand command = CustomCommand.BasicChatCommand(RedemptionStorePurchaseModel.DefaultRedemptionCommandName, "@$username just redeemed $productname");
+                CustomCommand command = CustomCommand.BasicChatCommand(MixItUp.Base.Resources.RedemptionStoreDefaultRedemptionCommandName, "@$username just redeemed $productname");
                 this.RedemptionStoreDefaultRedemptionCommandID = command.ID;
                 this.SetCustomCommand(command);
             }

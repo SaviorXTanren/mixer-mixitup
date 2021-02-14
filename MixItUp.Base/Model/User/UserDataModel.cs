@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Model.Import.ScorpBot;
-using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +10,26 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
+    public enum UserRoleEnum
+    {
+        Banned,
+        User = 10,
+        Premium = 20,
+        Affiliate = 23,
+        Partner = 25,
+        Follower = 30,
+        Regular = 35,
+        VIP = 38,
+        Subscriber = 40,
+        GlobalMod = 48,
+        Mod = 50,
+        ChannelEditor = 55,
+        Staff = 60,
+        Streamer = 70,
+
+        Custom = 99,
+    }
+
     [DataContract]
     public class UserDataModel : IEquatable<UserDataModel>
     {
@@ -98,8 +115,15 @@ namespace MixItUp.Base.Model.User
         public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
+        public List<Guid> CustomCommandIDs { get; set; } = new List<Guid>();
+        [DataMember]
+        public Guid EntranceCommandID { get; set; }
+
+        [DataMember]
+        [Obsolete]
         public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
         [DataMember]
+        [Obsolete]
         public CustomCommand EntranceCommand { get; set; }
 
         [DataMember]
@@ -153,18 +177,6 @@ namespace MixItUp.Base.Model.User
         public PatreonCampaignMember PatreonUser { get; set; } = null;
 
         public UserDataModel() { }
-
-        public UserDataModel(ScorpBotViewerModel viewer)
-        {
-            this.MixerID = viewer.MixerID;
-            this.MixerUsername = viewer.MixerUsername;
-            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-        }
-
-        public UserDataModel(StreamlabsChatBotViewerModel viewer)
-        {
-            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-        }
 
         [JsonIgnore]
         public StreamingPlatformTypeEnum Platform
@@ -369,8 +381,8 @@ namespace MixItUp.Base.Model.User
             this.ViewingMinutes += other.ViewingMinutes;
             this.OfflineViewingMinutes += other.OfflineViewingMinutes;
 
-            this.CustomCommands = other.CustomCommands;
-            this.EntranceCommand = other.EntranceCommand;
+            this.CustomCommandIDs = other.CustomCommandIDs;
+            this.EntranceCommandID = other.EntranceCommandID;
 
             this.IsCurrencyRankExempt = other.IsCurrencyRankExempt;
             this.PatreonUserID = other.PatreonUserID;

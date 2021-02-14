@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -18,26 +20,6 @@ using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    public enum UserRoleEnum
-    {
-        Banned,
-        User = 10,
-        Premium = 20,
-        Affiliate = 23,
-        Partner = 25,
-        Follower = 30,
-        Regular = 35,
-        VIP = 38,
-        Subscriber = 40,
-        GlobalMod = 48,
-        Mod = 50,
-        ChannelEditor = 55,
-        Staff = 60,
-        Streamer = 70,
-
-        Custom = 99,
-    }
-
     public static class NewAPITwitchUserModelExtensions
     {
         public static bool IsAffiliate(this TwitchNewAPI.Users.UserModel twitchUser)
@@ -63,6 +45,8 @@ namespace MixItUp.Base.ViewModel.User
 
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
+        public const string UserDefaultColor = "MaterialDesignBody";
+
         public UserDataModel Data { get; private set; }
 
         public UserViewModel(string username)
@@ -211,8 +195,10 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public Guid ID { get { return this.Data.ID; } }
 
+        [JsonIgnore]
         public StreamingPlatformTypeEnum Platform
         {
             get
@@ -222,6 +208,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string PlatformID
         {
             get
@@ -231,6 +218,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string Username
         {
             get
@@ -240,8 +228,10 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public HashSet<UserRoleEnum> UserRoles { get { return this.Data.UserRoles; } }
 
+        [JsonIgnore]
         public string AvatarLink
         {
             get
@@ -250,6 +240,7 @@ namespace MixItUp.Base.ViewModel.User
                 return string.Empty;
             }
         }
+        [JsonIgnore]
         public bool ShowUserAvatar { get { return !ChannelSession.Settings.HideUserAvatar; } }
 
         public string Color
@@ -289,7 +280,7 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (string.IsNullOrEmpty(this.Data.Color))
                     {
-                        this.Data.Color = "MaterialDesignBody";
+                        this.Data.Color = UserViewModel.UserDefaultColor;
                     }
 
                     return this.Data.Color;
@@ -305,6 +296,7 @@ namespace MixItUp.Base.ViewModel.User
         }
         private object colorLock = new object();
 
+        [JsonIgnore]
         public string ChannelLink
         {
             get
@@ -359,9 +351,19 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
+
+                if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
+                {
+                    this.UserRoles.Remove(UserRoleEnum.Subscriber);
+                }
+                else
+                {
+                    this.UserRoles.Add(UserRoleEnum.Subscriber);
+                }
             }
         }
 
+        [JsonIgnore]
         public int SubscribeTier
         {
             get
@@ -374,6 +376,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string SubscribeTierString
         {
             get
@@ -383,6 +386,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string PlatformBadgeLink
         {
             get
@@ -392,6 +396,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public string SubscriberBadgeLink
         {
             get
@@ -404,6 +409,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public bool IsAnonymous
         {
             get
@@ -480,6 +486,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
+        [JsonIgnore]
         public string SortableID
         {
             get
@@ -572,14 +579,22 @@ namespace MixItUp.Base.ViewModel.User
         }
         private object rolesDisplayStringLock = new object();
 
+        [JsonIgnore]
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
+        [JsonIgnore]
         public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
+        [JsonIgnore]
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
+        [JsonIgnore]
         public bool ShowSubscriberBadge { get { return !ChannelSession.Settings.HideUserSubscriberBadge && this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
+        [JsonIgnore]
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+        [JsonIgnore]
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
+        [JsonIgnore]
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
+        [JsonIgnore]
         public int SubscribeMonths
         {
             get
@@ -591,11 +606,14 @@ namespace MixItUp.Base.ViewModel.User
                 return 0;
             }
         }
+        [JsonIgnore]
         public string LastSeenString { get { return (this.LastSeen != DateTimeOffset.MinValue) ? this.LastSeen.ToFriendlyDateTimeString() : "Unknown"; } }
 
         public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
+        [JsonIgnore]
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
+        [JsonIgnore]
         public PatreonTier PatreonTier
         {
             get
@@ -608,6 +626,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public bool IsSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber) || this.IsEquivalentToSubscriber(); } }
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)
@@ -618,6 +637,12 @@ namespace MixItUp.Base.ViewModel.User
             {
                 return true;
             }
+
+            if (ChannelSession.Settings.ExplicitUserRoleRequirements)
+            {
+                return this.UserRoles.Contains(checkRole);
+            }
+
             return this.PrimaryRole >= checkRole;
         }
 
@@ -694,16 +719,19 @@ namespace MixItUp.Base.ViewModel.User
             this.TwitchDisplayName = displayName;
             this.Data.TwitchBadges = badges;
             this.Data.TwitchBadgeInfo = badgeInfo;
-            this.Data.TwitchColor = color;
+            if (!string.IsNullOrEmpty(color))
+            {
+                this.Data.TwitchColor = color;
+            }
 
             if (this.Data.TwitchBadges != null)
             {
-                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                if (this.HasTwitchBadge("global_mod")) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (this.HasTwitchBadge("admin") || this.HasTwitchBadge("staff")) { this.TwitchUserRoles.Add(UserRoleEnum.Staff); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Staff); }
+                if (this.HasTwitchBadge("global_mod")) { this.TwitchUserRoles.Add(UserRoleEnum.GlobalMod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.GlobalMod); }
                 if (this.HasTwitchBadge("moderator")) { this.TwitchUserRoles.Add(UserRoleEnum.Mod); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Mod); }
                 if (this.IsTwitchSubscriber) { this.TwitchUserRoles.Add(UserRoleEnum.Subscriber); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Subscriber); }
-                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.UserRoles.Add(UserRoleEnum.Premium); } else { this.UserRoles.Remove(UserRoleEnum.Premium); }
-                if (this.HasTwitchBadge("vip")) { this.UserRoles.Add(UserRoleEnum.VIP); } else { this.UserRoles.Remove(UserRoleEnum.VIP); }
+                if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
+                if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null)
                 {
@@ -765,24 +793,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)
             {
-                if (ChannelSession.Settings.ModerationStrike1Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike1Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike1CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes == 2)
             {
-                if (ChannelSession.Settings.ModerationStrike2Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike2Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike2CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes >= 3)
             {
-                if (ChannelSession.Settings.ModerationStrike3Command != null)
-                {
-                    await ChannelSession.Settings.ModerationStrike3Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike3CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
             }
         }
 

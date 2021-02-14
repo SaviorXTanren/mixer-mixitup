@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Controls.Accounts;
+﻿using MixItUp.Base.ViewModel.Accounts;
 
 namespace MixItUp.WPF.Controls.Accounts
 {

@@ -23,7 +23,7 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<SettingsV2Model> streamerSettings = new ObservableCollection<SettingsV2Model>();
+        private ObservableCollection<SettingsV3Model> streamerSettings = new ObservableCollection<SettingsV3Model>();
 
         public LoginWindow()
         {
@@ -42,7 +42,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (SettingsV2Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
+            foreach (SettingsV3Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
             {
                 if (setting.IsStreamer)
                 {
@@ -53,8 +53,8 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new SettingsV2Model() { ID = Guid.Empty, Name = MixItUp.Base.Resources.NewStreamer });
-                if (this.streamerSettings.Count() == 2)
+                this.StreamerLoginButton.IsEnabled = true;
+                if (this.streamerSettings.Count == 1)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
                 }
@@ -63,7 +63,7 @@ namespace MixItUp.WPF
             if (ChannelSession.AppSettings.AutoLogInID != Guid.Empty)
             {
                 var allSettings = this.streamerSettings.ToList();
-                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.ID == ChannelSession.AppSettings.AutoLogInID);
+                SettingsV3Model autoLogInSettings = allSettings.FirstOrDefault(s => s.ID == ChannelSession.AppSettings.AutoLogInID);
                 if (autoLogInSettings != null)
                 {
                     await Task.Delay(5000);
@@ -97,43 +97,32 @@ namespace MixItUp.WPF
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (this.ExistingStreamerComboBox.Visibility == Visibility.Visible)
+                if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                 {
-                    if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
+                    SettingsV3Model setting = (SettingsV3Model)this.ExistingStreamerComboBox.SelectedItem;
+                    if (setting.ID != Guid.Empty)
                     {
-                        SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
-                        if (setting.ID == Guid.Empty)
+                        if (await this.ExistingSettingLogin(setting))
                         {
-                            await this.NewStreamerLogin();
-                        }
-                        else
-                        {
-                            if (await this.ExistingSettingLogin(setting))
+                            LoadingWindowBase newWindow = null;
+                            if (ChannelSession.Settings.ReRunWizard)
                             {
-                                LoadingWindowBase newWindow = null;
-                                if (ChannelSession.Settings.ReRunWizard)
-                                {
-                                    newWindow = new NewUserWizardWindow();
-                                }
-                                else
-                                {
-                                    newWindow = new MainWindow();
-                                }
-                                ShowMainWindow(newWindow);
-                                this.Hide();
-                                this.Close();
-                                return;
+                                newWindow = new NewUserWizardWindow();
                             }
+                            else
+                            {
+                                newWindow = new MainWindow();
+                            }
+                            ShowMainWindow(newWindow);
+                            this.Hide();
+                            this.Close();
+                            return;
                         }
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoStreamerAccount);
                     }
                 }
                 else
                 {
-                    await this.NewStreamerLogin();
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoStreamerAccount);
                 }
             });
         }
@@ -141,36 +130,15 @@ namespace MixItUp.WPF
         private async Task CheckForUpdates()
         {
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
-            if (this.currentUpdate != null)
+            if (this.currentUpdate != null && this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
             {
-                if (ChannelSession.AppSettings.PreviewProgram)
-                {
-                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
-                    if (previewUpdate != null && previewUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
-                    {
-                        this.currentUpdate = previewUpdate;
-                    }
-                }
-
-                if (ChannelSession.AppSettings.TestBuild)
-                {
-                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
-                    if (testUpdate != null && testUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
-                    {
-                        this.currentUpdate = testUpdate;
-                    }
-                }
-
-                if (this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
-                {
-                    updateFound = true;
-                    UpdateWindow window = new UpdateWindow(this.currentUpdate);
-                    window.Show();
-                }
+                updateFound = true;
+                UpdateWindow window = new UpdateWindow(this.currentUpdate);
+                window.Show();
             }
         }
 
-        private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
+        private async Task<bool> ExistingSettingLogin(SettingsV3Model setting)
         {
             Result result = await ChannelSession.ConnectUser(setting);
             if (result.Success)
@@ -187,7 +155,8 @@ namespace MixItUp.WPF
             return false;
         }
 
-        private async Task NewStreamerLogin()
+
+        private async void NewStreamerLoginButton_Click(object sender, RoutedEventArgs e)
         {
             if (await this.ShowLicenseAgreement())
             {

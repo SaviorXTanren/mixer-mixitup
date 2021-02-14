@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -161,6 +161,9 @@ namespace MixItUp.Base.Model.Currency
         public Guid ItemsTradedCommandID { get; set; }
 
         [JsonIgnore]
+        private DateTimeOffset shopListCooldown = DateTimeOffset.MinValue;
+
+        [JsonIgnore]
         private InventoryTradeModel tradeSender = null;
         [JsonIgnore]
         private InventoryTradeModel tradeReceiver = null;
@@ -190,57 +193,57 @@ namespace MixItUp.Base.Model.Currency
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
         [JsonIgnore]
-        public CustomCommand ItemsBoughtCommand
+        public CommandModelBase ItemsBoughtCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsBoughtCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsBoughtCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsBoughtCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsBoughtCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsBoughtCommandID);
                     this.ItemsBoughtCommandID = Guid.Empty;
                 }
             }
         }
 
         [JsonIgnore]
-        public CustomCommand ItemsSoldCommand
+        public CommandModelBase ItemsSoldCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsSoldCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsSoldCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsSoldCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsSoldCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsSoldCommandID);
                     this.ItemsSoldCommandID = Guid.Empty;
                 }
             }
         }
 
         [JsonIgnore]
-        public CustomCommand ItemsTradedCommand
+        public CommandModelBase ItemsTradedCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.ItemsTradedCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.ItemsTradedCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.ItemsTradedCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.ItemsTradedCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.ItemsTradedCommandID);
                     this.ItemsTradedCommandID = Guid.Empty;
                 }
             }
@@ -389,6 +392,14 @@ namespace MixItUp.Base.Model.Currency
                         string arg1 = arguments.ElementAt(0);
                         if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
+                            if (this.shopListCooldown > DateTimeOffset.Now)
+                            {
+                                int totalSeconds = (int)Math.Ceiling((this.shopListCooldown - DateTimeOffset.Now).TotalSeconds);
+                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CooldownRequirementOnCooldown, totalSeconds));
+                                return;
+                            }
+                            this.shopListCooldown = DateTimeOffset.Now.AddSeconds(10);
+
                             List<string> items = new List<string>();
                             foreach (InventoryItemModel item in this.Items.Values)
                             {
@@ -428,7 +439,7 @@ namespace MixItUp.Base.Model.Currency
                             }
 
                             int totalcost = 0;
-                            CustomCommand command = null;
+                            CommandModelBase command = null;
                             if (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 if (item.HasBuyAmount)
@@ -491,7 +502,7 @@ namespace MixItUp.Base.Model.Currency
                                 specialIdentifiers["itemname"] = item.Name;
                                 specialIdentifiers["itemcost"] = totalcost.ToString();
                                 specialIdentifiers["currencyname"] = currency.Name;
-                                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                                await command.Perform(new CommandParametersModel(user, arguments: arguments, specialIdentifiers: specialIdentifiers));
                             }
                             return;
                         }
@@ -533,7 +544,7 @@ namespace MixItUp.Base.Model.Currency
                     }
 
                     StringBuilder storeHelp = new StringBuilder();
-                    storeHelp.Append(this.ShopCommand + " list = Lists all the items available for buying/selling ** ");
+                    storeHelp.Append("USAGE: " + this.ShopCommand + " list = Lists all the items available for buying/selling ** ");
                     storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
                     storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
@@ -602,7 +613,7 @@ namespace MixItUp.Base.Model.Currency
 
                         this.tradeTimeCheckToken = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        AsyncRunner.RunBackgroundTask(this.tradeTimeCheckToken.Token, async (token) =>
+                        AsyncRunner.RunAsyncBackground(async (token) =>
                         {
                             await Task.Delay(60000);
                             if (!token.IsCancellationRequested)
@@ -612,7 +623,7 @@ namespace MixItUp.Base.Model.Currency
                                 this.tradeTimeCheckToken = null;
                                 await ChannelSession.Services.Chat.SendMessage("The trade could not be completed in time and was cancelled...");
                             }
-                        });
+                        }, this.tradeTimeCheckToken.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.Username, this.tradeReceiver.User.Username, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
@@ -621,7 +632,7 @@ namespace MixItUp.Base.Model.Currency
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
                     {
                         int amount = 1;
-                        IEnumerable<string> itemArgs = arguments.ToList();
+                        IEnumerable<string> itemArgs = arguments.Skip(1);
                         InventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
@@ -685,7 +696,7 @@ namespace MixItUp.Base.Model.Currency
                             specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
                             specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
                             specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
-                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.Username }, extraSpecialIdentifiers: specialIdentifiers);
+                            await this.ItemsTradedCommand.Perform(new CommandParametersModel(user, arguments: new string[] { this.tradeReceiver.User.Username }, specialIdentifiers: specialIdentifiers));
                         }
 
                         this.tradeSender = null;

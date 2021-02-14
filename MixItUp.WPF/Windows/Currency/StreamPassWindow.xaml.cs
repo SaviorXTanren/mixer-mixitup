@@ -1,13 +1,11 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Window.Currency;
-using MixItUp.WPF.Controls.Command;
+using MixItUp.Base.ViewModel.Currency;
+using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Controls.Dialogs;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Windows.Currency
 {
@@ -71,43 +69,30 @@ namespace MixItUp.WPF.Windows.Currency
         {
             if (await this.viewModel.ValidateAddingCustomLevelUpCommand())
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(string.Format("{0} - {1}", MixItUp.Base.Resources.LevelUp, this.viewModel.CustomLevelUpNumber))));
-                window.CommandSaveSuccessfully += CustomLevelUpWindow_CommandSaveSuccessfully;
+                CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, string.Format("{0} - {1}", MixItUp.Base.Resources.LevelUp, this.viewModel.CustomLevelUpNumber));
+                window.CommandSaved += CustomLevelUpWindow_CommandSaved;
                 window.Show();
             }
         }
 
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandButtonsControl button = (CommandButtonsControl)sender;
-            StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command.Command));
+            CommandEditorWindow window = new CommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
             window.Show();
         }
 
         private void LevelCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandButtonsControl button = (CommandButtonsControl)sender;
+            CommandListingButtonsControl button = (CommandListingButtonsControl)sender;
             StreamPassCustomLevelUpCommandViewModel command = (StreamPassCustomLevelUpCommandViewModel)button.DataContext;
             this.viewModel.DeleteCustomLevelUpCommand(command);
         }
 
-        private void DefaultLevelUpNewCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.LevelUp)));
-            window.CommandSaveSuccessfully += DefaultLevelUpWindow_CommandSaveSuccessfully;
-            window.Show();
-        }
-
         private void DefaultLevelUpCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.DefaultLevelUpCommand));
+            CommandEditorWindow window = new CommandEditorWindow(this.viewModel.DefaultLevelUpCommand);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
-        }
-
-        private void DefaultLevelUpCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.viewModel.DefaultLevelUpCommand = null;
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -133,15 +118,15 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void CustomLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void CustomLevelUpWindow_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.AddCustomLevelUpCommand((CustomCommand)e);
+            this.viewModel.AddCustomLevelUpCommand(command);
             this.viewModel.CustomLevelUpNumber = 0;
         }
 
-        private void DefaultLevelUpWindow_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.DefaultLevelUpCommand = (CustomCommand)e;
+            this.viewModel.DefaultLevelUpCommand = command;
         }
     }
 }

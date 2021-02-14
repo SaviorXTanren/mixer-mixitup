@@ -30,17 +30,25 @@ namespace MixItUp.Base.Util
         {
             Random random = new Random();
             var l = new SortedList<int, T>();
-            foreach (var i in list.ToList())
+            foreach (var i in list.ToArray())
             {
-                l.Add(random.Next(), i);
+                var key = random.Next();
+                while (l.ContainsKey(key))
+                {
+                    key = random.Next();
+                }
+                l.Add(key, i);
             }
             return l.Values;
         }
 
         public static T Random<T>(this IEnumerable<T> list)
         {
-            int index = RandomHelper.GenerateRandomNumber(0, list.Count());
-            return list.ElementAt(index);
+            if (list.Count() > 0)
+            {
+                return list.ElementAt(RandomHelper.GenerateRandomNumber(0, list.Count()));
+            }
+            return default(T);
         }
 
         public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> list, int size)
@@ -73,6 +81,22 @@ namespace MixItUp.Base.Util
                 {
                     result = t;
                     top = tValue;
+                }
+            }
+            return result;
+        }
+
+        public static T Bottom<T>(this IEnumerable<T> list, Func<T, int> selector)
+        {
+            T result = default(T);
+            int bottom = int.MaxValue;
+            foreach (T t in list)
+            {
+                int tValue = selector(t);
+                if (tValue < bottom)
+                {
+                    result = t;
+                    bottom = tValue;
                 }
             }
             return result;

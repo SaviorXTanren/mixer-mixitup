@@ -1,7 +1,8 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Dialogs;
 using System;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void GlobalEvents_OnQuoteAdded(object sender, UserQuoteViewModel quote)
+        private void GlobalEvents_OnQuoteAdded(object sender, UserQuoteModel quote)
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {

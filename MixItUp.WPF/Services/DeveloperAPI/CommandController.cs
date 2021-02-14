@@ -1,13 +1,13 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.API.Models;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Web.Http;
 
 namespace MixItUp.WPF.Services.DeveloperAPI
 {
@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPost]
         public Command Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
         {
-            CommandBase selectedCommand = FindCommand(commandID, out string category);
+            CommandModelBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            selectedCommand.Perform(arguments: arguments);
+            selectedCommand.Perform(new CommandParametersModel(null, arguments));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             return CommandFromCommandBase(selectedCommand, category);
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public Command Update(Guid commandID, [FromBody] Command commandData)
         {
-            CommandBase selectedCommand = FindCommand(commandID, out string category);
+            CommandModelBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -80,38 +80,45 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             return CommandFromCommandBase(selectedCommand, category);
         }
 
-        private CommandBase FindCommand(Guid commandId, out string category)
+        private CommandModelBase FindCommand(Guid commandId, out string category)
         {
             category = null;
-            CommandBase command = ChannelSession.Settings.ChatCommands.SingleOrDefault(c => c.ID == commandId);
+            CommandModelBase command = ChannelSession.ChatCommands.SingleOrDefault(c => c.ID == commandId);
             if (command !=null)
             {
                 category = "Chat";
                 return command;
             }
 
-            command = ChannelSession.Settings.EventCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ChannelSession.EventCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Event";
                 return command;
             }
 
-            command = ChannelSession.Settings.TimerCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ChannelSession.TimerCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Timer";
                 return command;
             }
 
-            command = ChannelSession.Settings.ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ChannelSession.TwitchChannelPointsCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "ChannelPoints";
+                return command;
+            }
+
+            command = ChannelSession.ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "ActionGroup";
                 return command;
             }
 
-            command = ChannelSession.Settings.GameCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ChannelSession.GameCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "Game";
@@ -131,24 +138,25 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         private List<Command> GetAllCommands()
         {
             List<Command> allCommands = new List<Command>();
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ChatCommands, "Chat"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.EventCommands, "Event"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.TimerCommands, "Timer"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ActionGroupCommands, "ActionGroup"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.GameCommands, "Game"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.ChatCommands, "Chat"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.EventCommands, "Event"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.TimerCommands, "Timer"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.TwitchChannelPointsCommands, "ChannelPoints"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.ActionGroupCommands, "ActionGroup"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.GameCommands, "Game"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.PreMadeChatCommands, "Pre-Made"));
             return allCommands;
         }
 
-        private IEnumerable<Command> CommandsFromCommandBases(IEnumerable<CommandBase> baseCommands, string category)
+        private IEnumerable<Command> CommandsFromCommandBases(IEnumerable<CommandModelBase> baseCommands, string category)
         {
-            foreach(CommandBase baseCommand in baseCommands)
+            foreach (CommandModelBase baseCommand in baseCommands)
             {
                 yield return CommandFromCommandBase(baseCommand, category);
             }
         }
 
-        private Command CommandFromCommandBase(CommandBase baseCommand, string category)
+        private Command CommandFromCommandBase(CommandModelBase baseCommand, string category)
         {
             return new Command
             {

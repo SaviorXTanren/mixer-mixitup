@@ -1,5 +1,6 @@
-﻿using MixItUp.Base.Model.Currency;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -35,6 +36,15 @@ namespace MixItUp.Base.Model.Requirements
             this.MatchType = matchType;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+        internal RankRequirementModel(MixItUp.Base.ViewModel.Requirement.CurrencyRequirementViewModel requirement)
+        {
+            this.RankSystemID = requirement.CurrencyID;
+            this.RankName = requirement.RankName;
+            this.MatchType = (requirement.MustEqual) ? RankRequirementMatchTypeEnum.EqualTo : RankRequirementMatchTypeEnum.GreaterThanOrEqualTo;
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
+
         [JsonIgnore]
         public CurrencyModel RankSystem
         {
@@ -66,50 +76,47 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             CurrencyModel rankSystem = this.RankSystem;
             if (rankSystem == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.RankSystemDoesNotExist));
             }
 
             RankModel rank = this.RequiredRank;
             if (rank == null)
             {
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.RankDoesNotExist));
             }
 
-            if (!user.Data.IsCurrencyRankExempt)
+            if (!parameters.User.Data.IsCurrencyRankExempt)
             {
                 if (this.MatchType == RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
                 {
-                    if (!rankSystem.HasAmount(user.Data, rank.Amount))
+                    if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
                     {
-                        await this.SendChatMessage(string.Format("You do not have the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
-                    if (rankSystem.GetRank(user.Data) != rank)
+                    if (rankSystem.GetRank(parameters.User.Data) != rank)
                     {
-                        await this.SendChatMessage(string.Format("You do not have the required rank of {0} to do this", rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
                 {
-                    RankModel nextRank = rankSystem.GetNextRank(user.Data);
-                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(user.Data, nextRank.Amount))
+                    RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
+                    if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
                     {
-                        await this.SendChatMessage(string.Format("You are over the required rank of {0} ({1} {2}) to do this", rank.Name, rank.Amount, rankSystem.Name));
-                        return false;
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name)));
                     }
                 }
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
     }
 }

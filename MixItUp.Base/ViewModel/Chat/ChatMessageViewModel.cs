@@ -103,6 +103,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public virtual bool ContainsOnlyEmotes() { return false; }
 
+        public IEnumerable<string> ToArguments() { return (!string.IsNullOrEmpty(this.PlainTextMessage)) ? this.PlainTextMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries) : null; }
+
         public async Task<bool> CheckForModeration()
         {
             if (this.User != null && !this.IsWhisper)
@@ -110,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!ChannelSession.Services.Moderation.DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
-                    await this.Delete(reason: "Chat/MixPlay Participation");
+                    await this.Delete(reason: "Chat Participation");
                     await ChannelSession.Services.Moderation.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
@@ -149,6 +151,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     {
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, moderator);
                         trigger.Arguments.Add(this.User.Username);
+                        trigger.TargetUser = this.User;
                         trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
                         trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
                         await ChannelSession.Services.Events.PerformEvent(trigger);

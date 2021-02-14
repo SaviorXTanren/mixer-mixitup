@@ -5,15 +5,41 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v0.5.7.3003:</h2>
+        <h2 style="color: #2e6c80;">v0.5.8.5:</h2>
         <ul>
-            <li>Discord actions now list announcement channels for community servers in the list of selectable channels</li>
-            <li>Adding Manual Reset option on Inventory editor window</li>
-            <li>Adjusting logic for handling timezone adjustment for Twitch dates &amp; times</li>
+            <li>Fixing bug with Permission value for Stream Pass not being respected properly when adding points to a user</li>
+            <li>Adjusting Tiltify service connectivity to use regular web browser window for authentication to work around changes to Tiltify page</li>
+            <li>Fixing bug with Notification volume settings not saving properly</li>
+            <li>Fixing bug with raids contributing to gifted subs statistics trackers</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.7.3001-3002:</h2>
+        <h2 style="color: #2e6c80;">v0.5.8.4:</h2>
+        <ul>
+            <li>Adding loop option to Overlay Video action and Overlay Video widget</li>
+            <li>Adding urlencode() processor function to Special Identifier action</li>
+            <li>Fixing bug with Tiltify team campaigns not properly being queried for donations when configured</li>
+            <li>Command filtering search now searches through group names and includes all commands that are part of said group</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.8.2:</h2>
+        <ul>
+            <li>Adjusting gifted sub logic to make sure other gifted sub-related work is run (Latest Special Identifiers, currency, etc), but only the event command & alert if it's not bundled under a mass gifted sub event</li>
+            <li>Adjusting follower detection logic to buffer scenario where we fail to get the most recent followers on initial load</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.8.1:</h2>
+        <ul>
+            <li>Adding $usercolor and $usertwitchcolor Special Identifiers</li>
+            <li>Moderation error message for chat participation now state the user's name who's message was deleted</li>
+            <li>Stream Pass level up commands now translate the Special Identifier for the user's level to match the level that the command occurred for</li>
+            <li>Streamer &amp; Bot accounts will now not show up for Leaderboard Overlay Widgets</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.8.0:</h2>
         <ul>
             <li>Large-scale re-working of Settings menu, adding new areas and moving various options to better locations</li>
             <li>Adding filtering option to Commands settings for Twitch Subscription Gifted &amp; Mass Subscriptions Gifted event commands to provide a better experience:</li>
@@ -46,13 +72,20 @@
             <ul>
                 <li>Dedicated audio device to use just for notifications</li>
             </ul>
+            <li>Adding the following options to the Users menu in Settings:</li>
+            <ul>
+                <li>Option to clear all Mixer user data permanently from your settings</li>
+                <li>Moving option to clear all user data from Advanced section to Users section</li>
+            </ul>
             <li>Automated settings backups will now default to the Mix It Up settings folder when enabled unless a location is set</li>
             <li>Users that are gifted a sub and choose to continue it by paying for the next month's sub will now trigger the Subscribed event command</li>
             <li>Adjusting Twitch Channel Points Redeemed event command & Channel Points commands to only translate $message if there is a valid message sent by the user and having it also passed in as arguments to the command</li>
             <li>Messages that are highlighted by the Twitch Channel Points Reward now show as highlighted in the Mix It Up chat UI</li>
+            <li>Discord actions now list announcement channels for community servers in the list of selectable channels</li>
+            <li>Adding Manual Reset option on Inventory editor window</li>
             <li>Fixing bug with Bit Cheermotes where individual, non-standard amounts did not display properly (EX: A single bit cheermote for 3 bits)</li>
             <li>Fixing bug with month computation where it would not include the interim month (EX: Someone has been subbed to you for 40 days, $usersubmonths should be 2)</li>
-            <li>Fixing crashing bug with date time conversion when detecting stream start</li>
+            <li>Adjusting logic for handling timezone adjustment for Twitch dates &amp; times</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
@@ -133,229 +166,6 @@
             <li>When restoring backed up settings, the restoration process will not occur after the application restarts to prevent an occassional locking state that can occur</li>
             <li>Updating Developer APIs to support querying information for Twitch users</li>
             <li>Adding the following new themes: Mixer, Twitch, Atl3m's Plexify, BlueLeprechaunTV</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1024:</h2>
-        <ul>
-            <li>Fixing issue with globalized string, date, and number formatting</li>
-            <li>Adding BlueLeprechaunTV theme</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1022-1023:</h2>
-        <ul>
-            <li>Updating Material Design UI framework to newer version. If you encounter any unknown crashes or notice any UI-related issues, please make sure to report them.</li>
-            <li>Adjusting process for using the Channel page to update your game by allowing for a free-form text field</li>
-            <ul>
-                <li>Users now simply type in the name of the game and it will be looked up when the Update button is clicked</li>
-                <li>Game searching on Twitch requires the name to match exactly with what it is called on Twitch</li>
-                <li>If a game is not found, then all other aspects of the channel will be updated and an error message will be shown</li>
-            </ul>
-            <li>Adding Atl3m's Plexify Theme</li>
-            <li>Fixing crashing bug when attempting to open User diaglog on Chat page due to removed icon image</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1019-1021:</h2>
-        <ul>
-            <li>Adding the ability to specify the required tier for Subscriber role for Role Usage Requirements</li>
-            <li>Adding missing authorization scopes for the ability to follow &amp; unfollow users</li>
-            <li>Patreon patrons that have their Twitch account link will now improve user account pairing process with Mix It Up</li>
-            <li>Adjusting logic for processing donations/tips from services to better match users based on their username</li>
-            <li>Fixing bug with Whisper Sound Notification &amp; Chat Whisper Received event commands not being properly triggered</li>
-            <li>Adding the displaying of VIP badge if the user is not a Subscriber</li>
-            <li>Updating Developer APIs to support querying information for Twitch users</li>
-            <li>Fixing crashing bug when refreshing user details for Patreon information</li>
-            <li>Fixing crashing bug that could occur when a user in your channel performed a myster sub gifting</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1018:</h2>
-        <ul>
-            <li>Fixing bug with Twitch Raid &amp; Mass Subscriptions Gifted event commands not being triggered properly when event occurs</li>
-            <li>Fixing bug with Twitch-based alert messages not having the proper user assigned to them</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1016-1017:</h2>
-        <ul>
-            <li>Adding Clip Playback option to Overlay Widgets</li>
-            <ul>
-                <li>Only clips that are created via the Clips action will trigger this</li>
-                <li>You are able to position &amp; size the video to any reasonable amount, though very small sizes may not work</li>
-                <li>Selecting the Muted will option will mute the video, otherwise it will play back at the default volume</li>
-                <li>Playback will occur for 30 seconds, which is the length of clips created via the Clips action</li>
-            </ul>
-            <li>Adding Changelog section to main UI to view the current changelog of the installed version</li>
-            <li>Re-enabling the Import Data option on the Users page</li>
-            <li>Adjusting the output format of data for the Export Data option on the Users page</li>
-            <li>Emotes that the you do not own will not appear in the Chat UI when another user has them in their message</li>
-            <li>Updating help page links for Channel Points, Stream Pass, &amp; Redemption Store features</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1015:</h2>
-        <ul>
-            <li>Large-scale adding, updating, &amp; removal of Special Identifiers: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers</a></li>
-            <li>The following is a summary of the changes made to Special Identifiers. Please see the link above for full details:</li>
-            <ul>
-                <li>$userage has been replaced by $useraccountage</li>
-                <li>Adding $usertotalbitscheered</li>
-                <li>Removing $userchannelid, $userchannellive, $userchannelfeatured, &amp; $usergameimage</li>
-                <li>Adding $userstreamtitle, $userstreamgame, $userstreamfollowercount, &amp; $userstreamviewscount</li>
-                <li>Adding $topXbitscheered____, $topbitscheereduser___, &amp; $topbitscheeredamount</li>
-                <li>All $uptime___ &amp; $start___ Special Identifiers have been replaced by $streamuptime___ &amp; $streamstart___</li>
-                <li>$streamagerating &amp; $streamhostcount have been removed</li>
-                <li>$streamtitle, $streamgame, $streamviewercount, &amp; $streamchattercount have been re-added</li>
-                <li>$streamfollowcount has been replaced by $streamfollowercount</li>
-                <li>$streamsubcount has been replaced by $streamsubscribercount</li>
-                <li>$streamviewertotal has been replaced by $streamviewscount</li>
-                <li>$featuredchannel &amp; $costreamusers have been removed</li>
-                <li>$randomuser___ &amp; $randomfolloweruser___ have been re-added</li>
-                <li>$randomsubuser___ has been replaced by $randomsubscriberuser___</li>
-            </ul>
-            <li>Adding $isanonymous Special Identifier to Twitch Channel Subscription Gifted event command to indicate whether it is an anonymous gifting</li>
-            <li>Adding $usersubmonthsgifted Special Identifier to Twitch Channel Subscription Gifted event command to indicate the amount of subscription months gifted to that user</li>
-            <li>Separating out references to Hosts vs Raids on areas such as Statistics &amp; Overlay Widgets</li>
-            <li>Adding support for Bits to Leaderboard Overlay Widget</li>
-            <li>Adding option to Advanced Settings to delete currently signed-in settings</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1014:</h2>
-        <ul>
-            <li>Regular chat messages &amp; whispers now have a 500 millisecond delay included after every message to decrease chance of messages being ignored when sent to Twitch</li>
-            <li>Re-adding Chat User Timeout &amp; Chat User Ban event commands</li>
-            <ul>
-                <li>Chat User Timeout: Does not indicate who performed the timeout, $targetuser___ is the person that received the timeout, $timeoutlength indicates the length of the timeout in seconds</li>
-                <li>Chat User Ban: Does not indicate who performed the ban, $targetuser___ is the person who was banned</li>
-            </ul>
-            <li>Re-adding support for emote intellisense pop-up in Chat UI</li>
-            <li>Adding VIP User and Un-VIP User options to Moderation action</li>
-            <li>Quotes will now properly populate the currently selected game on Twitch when created</li>
-            <li>Running the purchase command for the Redemption Store with no arguments will now list all products that are are infinite in quantity or have remaining quantity</li>
-            <li>Moderators will now show the Moderator badge next to their name in the Chat UI</li>
-            <li>Channel Editors will now be assigned the role, but only if they are assigned the role prior to launching Mix It Up</li>
-            <li>Adding Bits as a section to End Credits Overlay Widget</li>
-            <li>Removing Unban All Users option from Advanced Settings</li>
-            <li>For those that do read changelogs, we've included a little secret in this latest update. If you find it, let us know :)</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1013:</h2>
-        <ul>
-            <li>Our Wiki documentation for Events has been updated to reflect all currently available functionality within the app: <a href="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events">https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events</a></li>
-            <li>Adding support for FrankerFaceZ emotes in chat. This can be enabled in Settings -> Chat</li>
-            <li>Adding the display of Bit Badges to Chat users</li>
-            <li>Adding $subsgiftedlifetimeamount Special Identifier to Mass Subscriptions Gifted event command. This Special Identifier indicates the lifetime total of subs that the user has gifted in your channel.</li>
-            <li>Adding 500 millisecond timeout after a chat whisper is sent to decrease the chance of going over Twitch whisper limits</li>
-            <li>Disabling Chat User Purge, Chat User Timeout, &amp; Chat User Ban event commands until it can be determined whether the information exists to detect these events.</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1012:</h2>
-        <ul>
-            <li>Re-adding Channel page to main list</li>
-            <ul>
-                <li>The Channel Info section allows you to update yor stream title, game, and custom tags.</li>
-                <li>When updating your game, you must ensure the name you are typing correctly matches a game on Twitch, otherwise it will not be able to find the game properly and not update it.</li>
-                <li>The Find Channel To Raid section allows you to search for currently live channels based on various criteria. You will be able to see some quick-information about the channel and have the option to both open the channel in your web browser and to run the raid command on that channel.</li>
-            </ul>
-            <li>Chat messages containing Bit Cheermotes will now display the image of the Cheermote on the Chat page</li>
-            <li>The Bits Cheered event command now include the Special Identifier $message</li>
-            <ul>
-                <li>Not all bits cheered includes a message, as bits can also be cheered through extensions</li>
-                <li>If a message is included, it will only contains the regular text of the message and doesn't include any information about the individual bits themselves</li>
-            </ul>
-            <li>When restoring backed up settings, the restoration process will not occur after the application restarts to prevent an occassional locking state that can occur</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1011:</h2>
-        <ul>
-            <li>Adding the ability to specify the length of add to run for Streaming Platform action</li>
-            <li>Fixing bug where bot account's chat connection would be used for chat-related actions other than sending messages &amp; whispers</li>
-            <li>Fixing bug around age-based Special Identifiers that could cause all Special Identifier processing to fail if data was bad</li>
-            <li>Removing $latesthostviewercount &amp; $latesthostuser___ and adding $latestraidviewercount &amp; $latestraiduser___ Special Identifiers to better coincide with naming conventions</li>
-            <li>Removing functionality for Whisper All Alerts under Settings -> Chat</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1009-1010:</h2>
-        <ul>
-            <li>Re-adding service alert notifications for Twitch service incidents</li>
-            <li>Adjusting logic for detecting Twitch Channel Stream Start event to increase accuracy. As a result of this judgement, the event now has up to a 1 minute delay on triggering</li>
-            <li>Removing Twitch Channel Stream Stop event command until an accurate way of determining it can be discovered</li>
-            <li>The follow &amp; unfollow buttons on the Chat User pop-up dialog have been re-enabled</li>
-            <li>Newly created Game sub-command have now been adjusted to remove all chat whispers with the exception of the Treasure Defense game. If a game-sub command only contained a whisper chat action, the command will now be an empty command that can be optionally used</li>
-            <li>Fixing bug that prevented games &amp; other specialized commands from not running</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1008:</h2>
-        <ul>
-            <li>Adding Clips action to allow creation of clips on Twitch. Clips created are 30 seconds long and create the optional Special Identifier $clipurl for use</li>
-            <li>Bits have now been integrated into the following features:</li>
-            <ul>
-                <li>Stream Pass</li>
-                <li>Overlay Widgets</li>
-                <li>Statistics</li>
-            </ul>
-            <li>$usersubplanname Special Identifier added to Subscription, Resubscription, and Subscription Gifted event commands</li>
-            <ul>
-                <li>$usersubplan = Prime/Tier 1/Tier 2/Tier 3</li>
-                <li>$usersubplanname = The customized name in your channel for a specific sub tier</li>
-            </ul>
-            <li>Re-enabling $latest____ Special Identifiers</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1007:</h2>
-        <ul>
-            <li>Adding Twitch Channel Mass Subscriptions Gifted command</li>
-            <ul>
-                <li>Subscription Gifted = Performed for each user that is gifted a sub (EX: 10 Gifted Subs = Performed 10 times).</li>
-                <li>Mass Subscriptions Gifted = Performed only once for any amount of randomly gifted subs, $subsgiftedamount for total amount gifted</li>
-            </ul>
-            <li>Adding note of 1 minute delay for Followed event command on name</li>
-            <li>Fixing bug with time zone for uptime command</li>
-            <li>Various quality of life &amp; bug fixes</li>
-        </ul>
-
-        <h2 style="color: #2e6c80;">v0.5.6.1001-1006:</h2>
-        <ul>
-            <li>Adding support for Twitch &amp; the removal of support for Mixer</li>
-            <li>The following features have been removed and will not be returning:</li>
-            <ul>
-                <li>MixPlay</li>
-                <li>Mixer-specific event commands</li>
-                <li>Sparks, Embers, &amp; Milestones</li>
-                <li>Auto Hoster</li>
-            </ul>
-            <li>The following features are being temporarily removed and will be returning in some form after changes and/or investigation:</li>
-            <ul>
-                <li>Channels settings page &amp; Favorites</li>
-                <li>Mix It Up Store</li>
-                <li>Mix It Up Remote</li>
-                <li>$random___ Special Identifiers pertaining to users (EX: $randomuser, $randomfolloweruser, etc)</li>
-            </ul>
-            <li>The following features are being added:</li>
-            <ul>
-                <li>!linkmixeraccount &amp; !approvemixeraccount pre-made chat command to merge a user's data over to their Twitch account</li>
-                <li>Twitch Channel Points commands &amp; migration support from MixPlay commands</li>
-                <li>Twitch-specific event commands</li>
-            </ul>
-            <li>The following services will be automatically disconnected and must be manually reconnected to change from your Mixer account to your Twitch account: Streamlabs, StreamElements, TipeeeStream, TreatStream, StreamJar</li>
-            <li>All automated chat whispers from things such as error messages will now appear as regular chat messages. Anything that is specifically indicated to be a whisper by you, such as via a Chat action, will continue to be an actual whisper</li>
-            <li>All equivilent Mixer event commands will be automatically migrated to their corresponding Twitch event command</li>
-            <li>Fixing crashing bug with restoring backup settings</li>
-            <li>Fixing bug with Overlay actions not properly processing certain Special Identifiers</li>
-            <li>Re-enabling $usergame &amp; Special Identifier</li>
-            <li>Re-enabling title &amp; game-related pre-made chat commands</li>
-            <li>Fixing bug with Twitch Channel Points commands not loading properly when re-launched</li>
-            <li>Chat messages that exceed 510 characters are now broken up into multiple messages</li>
-            <li>Re-enabling !uptime command &amp; related Special Identifiers</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -212,6 +212,17 @@ namespace MixItUp.Base.Services.External
             }
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            var scene = await this.GetActiveScene();
+            if (scene == null)
+            {
+                return "Unknown";
+            }
+
+            return scene.Name;
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
@@ -222,6 +233,8 @@ namespace MixItUp.Base.Services.External
                 await this.SendAndReceive(request);
             }
         }
+
+        public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.FromResult(0); }
 
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
@@ -257,7 +270,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
+        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
@@ -282,12 +295,12 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
+        public async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName)
         {
             StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
-                return new StreamingSourceDimensions()
+                return new StreamingSoftwareSourceDimensionsModel()
                 {
                     X = (int)sceneItem.Transform.Position.X,
                     Y = (int)sceneItem.Transform.Position.Y,
@@ -299,15 +312,11 @@ namespace MixItUp.Base.Services.External
             return null;
         }
 
-        public async Task StartStopStream()
-        {
-            await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
-        }
+        public async Task StartStopStream() { await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService")); }
 
-        public async Task SaveReplayBuffer()
-        {
-            await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService"));
-        }
+        public async Task StartStopRecording() { await this.SendAndReceive(new StreamlabsOBSRequest("toggleRecording", "StreamingService")); }
+
+        public async Task SaveReplayBuffer() { await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService")); }
 
         public async Task<bool> StartReplayBuffer()
         {

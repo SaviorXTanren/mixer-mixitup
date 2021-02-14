@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Window;
+using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Windows.Dashboard;
 using System.Threading.Tasks;

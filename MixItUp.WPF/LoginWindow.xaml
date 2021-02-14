@@ -52,24 +52,14 @@
 
                     <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamerAccount}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Visibility="Collapsed" />
 
-                    <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="80" Height="30" Content="{x:Static resx:Resources.Login}" />
+                    <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" IsEnabled="False" Click="StreamerLoginButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="80" Height="30" Content="{x:Static resx:Resources.Login}" />
                 </Grid>
             </GroupBox>
 
             <Controls:StreamingPlatformStatusAlertControl Grid.Column="1" HorizontalAlignment="Center" />
 
-            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.Moderator}" Margin="0,8,0,8" Width="160">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock HorizontalAlignment="Center">Feature Deprecated</TextBlock>
-                    <TextBlock></TextBlock>
-                    <TextBlock HorizontalAlignment="Center">Please Use:</TextBlock>
-
-                    <TextBlock HorizontalAlignment="Center">
-                        <Hyperlink NavigateUri="https://www.twitch.tv/moderator" RequestNavigate="Hyperlink_RequestNavigate">
-                            <TextBlock Text="Twitch Mod View"/>
-                        </Hyperlink>
-                    </TextBlock>
-                </StackPanel>
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.NewStreamer}" Margin="0,8,0,8" Width="160">
+                <Button x:Name="NewStreamerLoginButton" Click="NewStreamerLoginButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="80" Height="30" Content="{x:Static resx:Resources.NewStreamer}" />
             </GroupBox>
 
         </Grid>

@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using MixItUp.Base.Model;
 using System.Windows;
 
 namespace MixItUp.Reporter
@@ -8,8 +8,11 @@ namespace MixItUp.Reporter
     /// </summary>
     public partial class App : Application
     {
-        public static uint MixerUserID { get; private set; }
         public static string LogFilePath { get; private set; }
+
+        public static StreamingPlatformTypeEnum PlatformType { get; private set; }
+        public static string UserID { get; private set; }
+        public static string Username { get; private set; }
 
         public App()
         {
@@ -23,15 +26,22 @@ namespace MixItUp.Reporter
         {
             if (e.Args.Length >= 1)
             {
-                if (uint.TryParse(e.Args[0], out uint id))
-                {
-                    App.MixerUserID = id;
-                }
+                App.LogFilePath = e.Args[0];
             }
 
-            if (e.Args.Length >= 2)
+            if (e.Args.Length >= 2 && int.TryParse(e.Args[1], out int platformID))
             {
-                App.LogFilePath = e.Args[1];
+                App.PlatformType = (StreamingPlatformTypeEnum)platformID;
+            }
+
+            if (e.Args.Length >= 3)
+            {
+                App.UserID = e.Args[2];
+            }
+
+            if (e.Args.Length >= 4)
+            {
+                App.Username = e.Args[3];
             }
         }
     }

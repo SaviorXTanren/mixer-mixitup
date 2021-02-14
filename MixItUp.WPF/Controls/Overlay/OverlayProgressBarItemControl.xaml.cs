@@ -1,10 +1,7 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Command;
-using System.Threading.Tasks;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -14,68 +11,47 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayProgressBarItemControl : OverlayItemControl
     {
-        private OverlayProgressBarItemViewModel viewModel;
-
         public OverlayProgressBarItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayProgressBarItemViewModel();
         }
 
-        public OverlayProgressBarItemControl(OverlayProgressBarItemModel item)
+        public OverlayProgressBarItemControl(OverlayProgressBarItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayProgressBarItemViewModel(item);
+            this.ViewModel = viewModel;
         }
 
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            return this.viewModel.GetOverlayItem();
-        }
-
-        protected override async Task OnLoaded()
-        {
-            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
-        }
-
-        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayProgressBarItemModel.GoalReachedCommandName)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.ProgressBarGoalReached);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
 
         private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                this.viewModel.OnGoalReachedCommand = null;
+                ((OverlayLeaderboardListItemViewModel)this.ViewModel).NewLeaderCommand = null;
             }
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.OnGoalReachedCommand = (CustomCommand)e;
+            ((OverlayProgressBarItemViewModel)this.ViewModel).OnGoalReachedCommand = (CustomCommandModel)command;
         }
     }
 }

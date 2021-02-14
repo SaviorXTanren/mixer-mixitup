@@ -673,7 +673,10 @@ namespace MixItUp.Base.Services.External
                     }
                     catch (Exception ex) { Logger.Log(ex); }
 
-                    AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                     this.TrackServiceTelemetry("Patreon");
                     return new Result();
                 }
@@ -685,7 +688,7 @@ namespace MixItUp.Base.Services.External
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
             IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
-            if (pledges.Count() > 0)
+            if (pledges != null && pledges.Count() > 0)
             {
                 this.members = pledges.ToList();
                 foreach (PatreonCampaignMember member in this.members)

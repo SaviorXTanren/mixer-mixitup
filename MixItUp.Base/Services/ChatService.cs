@@ -1,6 +1,9 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -33,7 +36,7 @@ namespace MixItUp.Base.Services
         event EventHandler DisplayUsersUpdated;
 
         event EventHandler ChatCommandsReprocessed;
-        IEnumerable<ChatCommand> ChatMenuCommands { get; }
+        IEnumerable<CommandModelBase> ChatMenuCommands { get; }
 
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
@@ -90,12 +93,14 @@ namespace MixItUp.Base.Services
         private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
-        public IEnumerable<ChatCommand> ChatMenuCommands { get { return this.chatMenuCommands; } }
-        private List<ChatCommand> chatMenuCommands = new List<ChatCommand>();
+        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        private List<CommandModelBase> chatMenuCommands = new List<CommandModelBase>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private LockedList<PermissionsCommandBase> chatCommands = new LockedList<PermissionsCommandBase>();
+        private Dictionary<string, CommandModelBase> triggersToCommands = new Dictionary<string, CommandModelBase>();
+        private int longestTrigger = 0;
+        private List<CommandModelBase> wildcardCommands = new List<CommandModelBase>();
 
         private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
 
@@ -145,26 +150,31 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+            if (!string.IsNullOrEmpty(message))
             {
-                await this.TwitchChatService.SendMessage(message, sendAsStreamer);
-
-                if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    UserViewModel user = ChannelSession.GetCurrentUser();
-                    await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                    await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+
+                    if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                    {
+                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        await this.AddMessage(new TwitchChatMessageViewModel(user, message));
+                    }
                 }
             }
         }
 
         public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false)
         {
-            if (user != null)
+            if (user != null && !string.IsNullOrEmpty(message))
             {
                 if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && this.TwitchChatService != null)
                 {
@@ -264,25 +274,31 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.chatCommands.Clear();
+            this.triggersToCommands.Clear();
+            this.longestTrigger = 0;
+            this.wildcardCommands.Clear();
             this.chatMenuCommands.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
+            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
             {
-                this.chatCommands.Add(command);
-                if (command.Requirements.Settings.ShowOnChatMenu)
+                if (command.Wildcards)
+                {
+                    this.wildcardCommands.Add(command);
+                }
+                else
+                {
+                    foreach (string trigger in command.GetFullTriggers())
+                    {
+                        string t = trigger.ToLower();
+                        this.triggersToCommands[t] = command;
+                        this.longestTrigger = Math.Max(this.longestTrigger, t.Length);
+                    }
+                }
+
+                SettingsRequirementModel settings = command.Requirements.Settings;
+                if (settings != null && settings.ShowOnChatContextMenu)
                 {
                     this.chatMenuCommands.Add(command);
                 }
-            }
-
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
-            {
-                this.chatCommands.Add(command);
-            }
-
-            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
-            {
-                this.chatCommands.Add(command);
             }
 
             this.ChatCommandsReprocessed(this, new EventArgs());
@@ -326,7 +342,7 @@ namespace MixItUp.Base.Services
 
             // Add message to chat list
             bool showMessage = true;
-            if (ChannelSession.Settings.HideBotMessages && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+            if (ChannelSession.Settings.HideBotMessages && message.User != null && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
             {
                 showMessage = false;
             }
@@ -361,7 +377,7 @@ namespace MixItUp.Base.Services
 
             // Post message processing
 
-            if (message is UserChatMessageViewModel)
+            if (message is UserChatMessageViewModel && message.User != null)
             {
                 if (message.IsWhisper && !message.IsStreamerOrBot)
                 {
@@ -401,12 +417,12 @@ namespace MixItUp.Base.Services
                         await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                     }
 
-                    if (!this.userEntranceCommands.Contains(message.User.ID))
+                    if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
                     {
                         this.userEntranceCommands.Add(message.User.ID);
-                        if (message.User.Data.EntranceCommand != null)
+                        if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
                         {
-                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
+                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
                         }
                     }
 
@@ -456,50 +472,87 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
-                    List<PermissionsCommandBase> commands = this.chatCommands.ToList();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
+                    bool commandTriggered = false;
+                    if (message.User.Data.CustomCommandIDs.Count > 0)
                     {
-                        commands.Add(command);
-                    }
-
-                    foreach (PermissionsCommandBase command in commands)
-                    {
-                        if (command.DoesTextMatchCommand(message.PlainTextMessage, out arguments))
+                        Dictionary<string, CommandModelBase> userOnlyTriggersToCommands = new Dictionary<string, CommandModelBase>();
+                        List<ChatCommandModel> userOnlyWildcardCommands = new List<ChatCommandModel>();
+                        foreach (Guid commandID in message.User.Data.CustomCommandIDs)
                         {
-                            if (command.IsEnabled)
+                            ChatCommandModel command = (ChatCommandModel)ChannelSession.Settings.GetCommand(commandID);
+                            if (command != null && command.IsEnabled)
                             {
-                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
-                                await command.Perform(message.User, message.Platform, arguments: arguments);
-                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                                if (command.Wildcards)
                                 {
-                                    await this.DeleteMessage(message);
+                                    userOnlyWildcardCommands.Add(command);
+                                }
+                                else
+                                {
+                                    foreach (string trigger in command.GetFullTriggers())
+                                    {
+                                        userOnlyTriggersToCommands[trigger.ToLower()] = command;
+                                    }
                                 }
                             }
-                            break;
                         }
+
+                        if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
+                        {
+                            foreach (ChatCommandModel command in userOnlyWildcardCommands)
+                            {
+                                if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
+                                {
+                                    await this.RunChatCommand(message, command, arguments);
+                                    commandTriggered = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
+                        {
+                            commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                        }
+                    }
+
+                    if (!commandTriggered)
+                    {
+                        foreach (ChatCommandModel command in this.wildcardCommands)
+                        {
+                            if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
+                            {
+                                await this.RunChatCommand(message, command, arguments);
+                                commandTriggered = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!commandTriggered)
+                    {
+                        commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
                     }
                 }
 
                 foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
                 {
-                    if (inventory.ShopEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.ShopCommand }, out arguments))
+                    if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
                     {
                         await inventory.PerformShopCommand(message.User, arguments, message.Platform);
                     }
-                    else if (inventory.TradeEnabled && CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { inventory.TradeCommand }, out arguments))
+                    else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
                     {
-                        string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
                         await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
                     }
                 }
 
                 if (ChannelSession.Settings.RedemptionStoreEnabled)
                 {
-                    if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
+                    if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
                     {
                         await RedemptionStorePurchaseModel.Purchase(message.User, arguments);
                     }
-                    else if (CommandBase.DoesTextMatchCommand(message.PlainTextMessage, CommandBase.CommandMatchingRegexFormat, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
+                    else if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
                     {
                         await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
                     }
@@ -609,6 +662,41 @@ namespace MixItUp.Base.Services
             foreach (AlertChatMessageViewModel alert in alerts)
             {
                 await ChannelSession.Services.Alerts.AddAlert(alert);
+            }
+        }
+
+        private async Task<bool> CheckForChatCommandAndRun(ChatMessageViewModel message, Dictionary<string, CommandModelBase> commands)
+        {
+            string[] messageParts = message.PlainTextMessage.Split(new char[] { ' ' });
+            for (int i = 0; i < messageParts.Length; i++)
+            {
+                string commandCheck = string.Join(" ", messageParts.Take(i + 1)).ToLower();
+                if (commandCheck.Length > this.longestTrigger)
+                {
+                    return false;
+                }
+
+                if (commands.ContainsKey(commandCheck))
+                {
+                    await this.RunChatCommand(message, commands[commandCheck], messageParts.Skip(i + 1));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task RunChatCommand(ChatMessageViewModel message, CommandModelBase command, IEnumerable<string> arguments)
+        {
+            Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
+            await command.Perform(new CommandParametersModel(message.User, message.Platform, arguments));
+
+            SettingsRequirementModel settings = command.Requirements.Settings;
+            if (settings != null)
+            {
+                if (settings != null && settings.ShouldChatMessageBeDeletedWhenRun)
+                {
+                    await this.DeleteMessage(message);
+                }
             }
         }
 

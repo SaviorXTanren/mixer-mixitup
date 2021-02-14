@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -36,6 +36,7 @@ namespace MixItUp.Base.Services
     public interface IModerationService
     {
         Task Initialize();
+        void RebuildCache();
 
         Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false);
         Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text);
@@ -50,8 +51,9 @@ namespace MixItUp.Base.Services
     {
         public const string ModerationReasonSpecialIdentifier = "moderationreason";
 
-        public const string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
-        public const string BannedWordWildcardRegexFormat = "\\S*";
+        public const string WordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
+        public const string WordWildcardRegex = "\\S*";
+        public static readonly string WordWildcardRegexEscaped = Regex.Escape(WordWildcardRegex);
 
         public static LockedList<string> CommunityFilteredWords { get; set; } = new LockedList<string>();
 
@@ -63,12 +65,38 @@ namespace MixItUp.Base.Services
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
         private static readonly Regex LinkRegex = new Regex(@"(?xi)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
 
+        private LockedList<string> communityWords = new LockedList<string>();
+        private LockedList<string> filteredWords = new LockedList<string>();
+        private LockedList<string> bannedWords = new LockedList<string>();
+
         public async Task Initialize()
         {
             if (ChannelSession.Services.FileService.FileExists(ModerationService.CommunityFilteredWordsFilePath))
             {
                 string text = await ChannelSession.Services.FileService.ReadFile(ModerationService.CommunityFilteredWordsFilePath);
                 ModerationService.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+
+                foreach (string word in ModerationService.CommunityFilteredWords)
+                {
+                    this.communityWords.Add(string.Format(WordRegexFormat, Regex.Escape(word)));
+                }
+            }
+
+            this.RebuildCache();
+        }
+
+        public void RebuildCache()
+        {
+            this.filteredWords.Clear();
+            foreach (string word in ChannelSession.Settings.FilteredWords)
+            {
+                this.filteredWords.Add(string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)));
+            }
+
+            this.bannedWords.Clear();
+            foreach (string word in ChannelSession.Settings.BannedWords)
+            {
+                this.bannedWords.Add(string.Format(WordRegexFormat, Regex.Escape(word).Replace(WordWildcardRegexEscaped, WordWildcardRegex)));
             }
         }
 
@@ -122,26 +150,26 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
-                    foreach (string word in ModerationService.CommunityFilteredWords)
+                    foreach (string word in this.communityWords)
                     {
-                        if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                         {
                             return "The previous message was deleted due to a filtered word";
                         }
                     }
                 }
 
-                foreach (string word in ChannelSession.Settings.FilteredWords)
+                foreach (string word in this.filteredWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                     {
                         return "The previous message was deleted due to a filtered word";
                     }
                 }
 
-                foreach (string word in ChannelSession.Settings.BannedWords)
+                foreach (string word in this.bannedWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                     {
                         await ChannelSession.Services.Chat.BanUser(user);
                         return "The previous message was deleted due to a banned Word";
@@ -338,6 +366,10 @@ namespace MixItUp.Base.Services
                 {
                     reason = "accounts older than 1 week";
                 }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountMonth)
+                {
+                    reason = "accounts older than 1 month";
+                }
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes)
                 {
                     reason = "viewers who have watched for 10 minutes";
@@ -361,15 +393,15 @@ namespace MixItUp.Base.Services
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.SendMessage(string.Format("@{0}: Your message has been deleted because only {1} can participate currently.", user.Username, reason), platform: user.Platform);
                 }
             }
         }
 
         private string PrepareTextForChecking(string text)
         {
-            string result = text.ToLower();
-            result = ChatAction.UserNameTagRegex.Replace(result, "");
+            string result = string.IsNullOrEmpty(text) ? string.Empty : text.ToLower();
+            result = ChatListControlViewModel.UserNameTagRegex.Replace(result, "");
             return result;
         }
 

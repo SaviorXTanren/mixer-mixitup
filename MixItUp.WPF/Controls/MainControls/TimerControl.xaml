@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
@@ -19,7 +19,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:GroupedCommandsMainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
     </local:GroupedCommandsMainControlBase.Resources>
 
     <Grid Margin="10">
@@ -38,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
         </Grid>
@@ -63,7 +62,7 @@
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="240" Width="240">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                    <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -85,7 +84,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -95,10 +98,11 @@
 
             <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center"/>
-            <ToggleButton Grid.Column="8" IsChecked="{Binding DisableAllTimers}" />
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.RandomizeTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="8" IsChecked="{Binding RandomizeTimers}" />
 
+            <TextBlock Grid.Column="10" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="12" IsChecked="{Binding DisableAllTimers}" />
         </Grid>
-
     </Grid>
 </local:GroupedCommandsMainControlBase>

@@ -54,21 +54,19 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.RunForEachUser = requirement.RunForEachUser;
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.TimeSpan < 0)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidThresholdTimeSpanMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidThresholdTimeSpanMustBeSpecified));
             }
 
             if (this.Amount < 0 || (this.TimeSpan > 0 && this.Amount == 0))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidThresholdUserAmountMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidThresholdUserAmountMustBeSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()

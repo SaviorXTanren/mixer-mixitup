@@ -1,0 +1,78 @@
+﻿<local:GameCommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.Games.BidGameCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <local:GameCommandEditorDetailsControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:GameCommandEditorDetailsControlBase.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandStartSettings}" HorizontalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding StarterRoles}" SelectedItem="{Binding SelectedStarterRole}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandStarterRole}" Width="120" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding TimeLimit}" Width="80" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandStarted}">
+                <CommandsControls:CommandListingButtonsControl x:Name="StartedCommand" DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="StartedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandBidNewTopBidder}">
+                <CommandsControls:CommandListingButtonsControl x:Name="NewTopBidderCommand" DataContext="{Binding NewTopBidderCommand}" HorizontalAlignment="Center" EditClicked="NewTopBidderCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandNotEnoughPlayers}">
+                <CommandsControls:CommandListingButtonsControl x:Name="NotEnoughPlayersCommand" DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="NotEnoughPlayersCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandGameComplete}">
+                <CommandsControls:CommandListingButtonsControl x:Name="GameCompleteCommand" DataContext="{Binding GameCompleteCommand}" HorizontalAlignment="Center" EditClicked="GameCompleteCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+    </Grid>
+</local:GameCommandEditorDetailsControlBase>

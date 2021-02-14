@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:RequirementsControls="clr-namespace:MixItUp.WPF.Controls.Requirements"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -22,7 +22,6 @@
         Icon="./../../Logo.ico"
         Title="Customize Redemption Store" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <ResourceDictionary x:Key="Themes">
@@ -86,7 +85,7 @@
                                                         <Button x:Name="CustomProductNewCommandButton" Click="CustomProductNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding CustomCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                                                         <Grid Visibility="{Binding CustomCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                            <CommandControls:CommandButtonsControl x:Name="CustomProductCommandButtons" EditClicked="CustomProductCommandButtons_EditClicked" DeleteClicked="CustomProductCommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                                                            <CommandsControls:CommandListingButtonsControl x:Name="CustomProductCommandButtons" EditClicked="CustomProductCommandButtons_EditClicked" DeleteClicked="CustomProductCommandButtons_DeleteClicked" />
                                                         </Grid>
                                                     </Grid>
                                                 </DataTemplate>
@@ -197,11 +196,11 @@
                         </Grid>
 
                         <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.ManualRedeemNeeded}" HorizontalAlignment="Center" Width="180">
-                            <CommandControls:CommandButtonsControl x:Name="ManualRedeemNeededCommandButtons" DataContext="{Binding ManualRedeemNeededCommand}" HorizontalAlignment="Center" EditClicked="ManualRedeemNeededCommandButtons_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandsControls:CommandListingButtonsControl x:Name="ManualRedeemNeededCommandButtons" DataContext="{Binding ManualRedeemNeededCommand}" HorizontalAlignment="Center" EditClicked="ManualRedeemNeededCommandButtons_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                         </GroupBox>
 
                         <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.DefaultRedemption}" HorizontalAlignment="Center" Width="180">
-                            <CommandControls:CommandButtonsControl x:Name="DefaultRedeemCommandButtons" DataContext="{Binding DefaultRedemptionCommand}" HorizontalAlignment="Center" EditClicked="DefaultRedeemCommandButtons_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandsControls:CommandListingButtonsControl x:Name="DefaultRedeemCommandButtons" DataContext="{Binding DefaultRedemptionCommand}" HorizontalAlignment="Center" EditClicked="DefaultRedeemCommandButtons_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                         </GroupBox>
                     </Grid>
                 </GroupBox>

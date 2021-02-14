@@ -48,7 +48,7 @@
             </Grid>
         </GroupBox.Header>
 
-        <WrapPanel Margin="5">
+        <WrapPanel Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
 
             <MaterialDesign:PopupBox x:Name="Role" ToggleContent="{StaticResource RolePopupBoxIcon}" Margin="6" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">

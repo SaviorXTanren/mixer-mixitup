@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeCurrencyRank}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -77,10 +76,10 @@
 
                     <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRankName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="210" />
 
-                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsPrimary}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsPrimary}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="4" IsChecked="{Binding IsPrimary}" Margin="0,4,0,0" />
 
-                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsRankSystem}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsRankSystem}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="8" IsChecked="{Binding IsRank}" Margin="0,4,0,0" />
 
                     <TextBox Grid.Column="10" Text="{Binding MaxAmount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
@@ -199,14 +198,14 @@
 
                 <Grid Grid.Row="6" Visibility="{Binding IsRank, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,20" HorizontalAlignment="Center">
                     <GroupBox Header="{x:Static resx:Resources.UserRanks}">
-                        <Grid Margin="10" HorizontalAlignment="Center">
+                        <Grid Margin="10" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200" Width="375">
+                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MinHeight="200" Width="375" MaxHeight="300">
                                 <DataGrid ItemsSource="{Binding Ranks}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
@@ -231,6 +230,8 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="20" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -250,10 +251,22 @@
                                 <Grid Grid.Row="4" HorizontalAlignment="Center">
                                     <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}" Width="230">
                                         <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                                            <Button x:Name="NewCommandButton" Visibility="{Binding DoesNotHaveRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+                                            <Button x:Name="RankUpNewCommandButton" Visibility="{Binding DoesNotHaveRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="RankUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
                                             <Grid Visibility="{Binding HasRankChangedCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding RankChangedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                <CommandsControls:CommandListingButtonsControl x:Name="RankUpCommandButtons" DataContext="{Binding RankChangedCommand}" HorizontalAlignment="Center" EditClicked="RankUpCommandButtons_EditClicked" DeleteClicked="RankUpCommandButtons_DeleteClicked" />
+                                            </Grid>
+                                        </Grid>
+                                    </GroupBox>
+                                </Grid>
+
+                                <Grid Grid.Row="6" HorizontalAlignment="Center">
+                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankDown}" Width="230">
+                                        <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
+                                            <Button x:Name="RankDownNewCommandButton" Visibility="{Binding DoesNotHaveRankDownCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="RankDownNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
+
+                                            <Grid Visibility="{Binding HasRankDownCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <CommandsControls:CommandListingButtonsControl x:Name="RankDownCommandButtons" DataContext="{Binding RankDownCommand}" HorizontalAlignment="Center" EditClicked="RankDownCommandButtons_EditClicked" DeleteClicked="RankDownCommandButtons_DeleteClicked" />
                                             </Grid>
                                         </Grid>
                                     </GroupBox>

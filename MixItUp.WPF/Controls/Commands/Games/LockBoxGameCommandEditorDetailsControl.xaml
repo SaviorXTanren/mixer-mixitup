@@ -1,0 +1,91 @@
+﻿<local:GameCommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.Games.LockBoxGameCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandStartSettings}" HorizontalAlignment="Center">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandInitialAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding InitialAmount}" Width="80" />
+
+                    <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandLockBoxCombinationLength}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CombinationLength}" Width="80" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.Win}">
+                <CommandsControls:CommandListingButtonsControl x:Name="SuccessCommand" DataContext="{Binding SuccessfulCommand}" HorizontalAlignment="Center" EditClicked="SuccessCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.Lose}">
+                <CommandsControls:CommandListingButtonsControl x:Name="FailureCommand" DataContext="{Binding FailureCommand}" HorizontalAlignment="Center" EditClicked="FailureCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.StatusInformation}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StatusArgument}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding StatusArgument}" Width="100" />
+
+                    <CommandsControls:CommandListingButtonsControl x:Name="StatusCommand" Grid.Column="2" DataContext="{Binding StatusCommand}" HorizontalAlignment="Center" EditClicked="StatusCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandLockBoxInspectionInformation}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandLockBoxInspectionArgument}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding InspectionArgument}" Width="100" />
+
+                    <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandLockBoxInspectionCost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding InspectionCost}" Width="100" />
+
+                    <CommandsControls:CommandListingButtonsControl x:Name="InspectionCommand" Grid.Column="4" DataContext="{Binding InspectionCommand}" HorizontalAlignment="Center" EditClicked="InspectionCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</local:GameCommandEditorDetailsControlBase>

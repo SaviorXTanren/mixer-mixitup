@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
@@ -16,8 +17,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayStreamBossItemModel : OverlayHTMLTemplateItemModelBase
     {
-        public const string NewStreamBossCommandName = "New Stream Boss";
-
         public const string HTMLTemplate =
         @"<table cellpadding=""10"" style=""border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px;"">
           <tbody>
@@ -99,10 +98,33 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public bool DamageTaken { get; set; }
 
+        [Obsolete]
         [DataMember]
         public CustomCommand NewStreamBossCommand { get; set; }
 
         [DataMember]
+        public Guid StreamBossChangedCommandID { get; set; }
+
+        [JsonIgnore]
+        public CustomCommandModel StreamBossChangedCommand
+        {
+            get { return (CustomCommandModel)ChannelSession.Settings.GetCommand(this.StreamBossChangedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.StreamBossChangedCommandID = value.ID;
+                    ChannelSession.Settings.SetCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.RemoveCommand(this.StreamBossChangedCommandID);
+                    this.StreamBossChangedCommandID = Guid.Empty;
+                }
+            }
+        }
+
+        [JsonIgnore]
         public UserViewModel CurrentBoss { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
@@ -118,7 +140,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamBossItemModel(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
             string progressColor, double followBonus, double hostBonus, double raidBonus, double subscriberBonus, double donationBonus, double bitsBonus, double healingBonus, double overkillBonus,
-            OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
+            OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommandModel streamBossChangedCommand)
             : base(OverlayItemModelTypeEnum.StreamBoss, htmlText)
         {
             this.StartingHealth = startingHealth;
@@ -139,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
             this.OverkillBonus = overkillBonus;
             this.DamageAnimation = damageAnimation;
             this.NewBossAnimation = newBossAnimation;
-            this.NewStreamBossCommand = newStreamBossCommand;
+            this.StreamBossChangedCommand = streamBossChangedCommand;
         }
 
         public override async Task Enable()
@@ -211,7 +233,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
             UserViewModel boss = null;
             int health = 0;
@@ -281,9 +303,9 @@ namespace MixItUp.Base.Model.Overlay
                     }
                     this.CurrentHealth = this.CurrentStartingHealth = newHealth;
 
-                    if (this.NewStreamBossCommand != null)
+                    if (this.StreamBossChangedCommand != null)
                     {
-                        await this.NewStreamBossCommand.Perform();
+                        await this.StreamBossChangedCommand.Perform();
                     }
                 }
 

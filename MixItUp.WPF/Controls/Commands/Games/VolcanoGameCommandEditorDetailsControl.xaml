@@ -1,0 +1,153 @@
+﻿<local:GameCommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.Games.VolcanoGameCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.StatusInformation}">
+                <Grid Margin="5">
+                    <TextBox MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StatusArgument}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding StatusArgument}" Width="150" VerticalAlignment="Center" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandVolcanoStage1}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandVolcanoDeposit}">
+                        <CommandsControls:CommandListingButtonsControl x:Name="Stage1DepositCommand" DataContext="{Binding Stage1DepositCommand}" HorizontalAlignment="Center" EditClicked="Stage1DepositCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandVolcanoStatus}">
+                        <CommandsControls:CommandListingButtonsControl x:Name="Stage1StatusCommand" DataContext="{Binding Stage1StatusCommand}" HorizontalAlignment="Center" EditClicked="Stage1StatusCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.GameCommandVolcanoStage2}" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandVolcanoMinimumAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Stage2MinimumAmount}" Width="150" VerticalAlignment="Center" />
+
+                <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandVolcanoDeposit}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="Stage2DepositCommand" DataContext="{Binding Stage2DepositCommand}" HorizontalAlignment="Center" EditClicked="Stage2DepositCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+
+                <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandVolcanoStatus}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="Stage2StatusCommand" DataContext="{Binding Stage2StatusCommand}" HorizontalAlignment="Center" EditClicked="Stage2StatusCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.GameCommandVolcanoStage3}" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandVolcanoMinimumAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Stage3MinimumAmount}" Width="150" VerticalAlignment="Center" />
+
+                <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandVolcanoDeposit}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="Stage3DepositCommand" DataContext="{Binding Stage3DepositCommand}" HorizontalAlignment="Center" EditClicked="Stage3DepositCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+
+                <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandVolcanoStatus}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="Stage3StatusCommand" DataContext="{Binding Stage3StatusCommand}" HorizontalAlignment="Center" EditClicked="Stage3StatusCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="6" Header="{x:Static resx:Resources.Payout}" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProbabilityPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutProbability}" Width="80" VerticalAlignment="Center" />
+
+                <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PayoutMinimumPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutMinimumPercentage}" Width="80" VerticalAlignment="Center" />
+
+                <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PayoutMaximumPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutMaximumPercentage}" Width="80" VerticalAlignment="Center" />
+
+                <GroupBox Grid.Column="6" Header="{x:Static resx:Resources.GameCommandPayout}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="PayoutCommand" DataContext="{Binding PayoutCommand}" HorizontalAlignment="Center" EditClicked="PayoutCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="8" Header="{x:Static resx:Resources.GameCommandVolcanoCollect}" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandVolcanoCollectArgument}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CollectArgument}" Width="80" VerticalAlignment="Center" />
+
+                <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CollectTimeLimit}" Width="80" VerticalAlignment="Center" />
+
+                <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PayoutMinimumPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CollectMinimumPercentage}" Width="80" VerticalAlignment="Center" />
+
+                <TextBox Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PayoutMaximumPercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CollectMaximumPercentage}" Width="80" VerticalAlignment="Center" />
+
+                <GroupBox Grid.Column="8" Header="{x:Static resx:Resources.GameCommandVolcanoCollect}">
+                    <CommandsControls:CommandListingButtonsControl x:Name="CollectCommand" DataContext="{Binding CollectCommand}" HorizontalAlignment="Center" EditClicked="CollectCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</local:GameCommandEditorDetailsControlBase>

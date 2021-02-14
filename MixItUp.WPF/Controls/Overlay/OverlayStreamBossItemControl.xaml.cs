@@ -1,9 +1,8 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
-using MixItUp.WPF.Controls.Command;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -14,68 +13,54 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayStreamBossItemControl : OverlayItemControl
     {
-        private OverlayStreamBossItemViewModel viewModel;
-
         public OverlayStreamBossItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayStreamBossItemViewModel();
         }
 
-        public OverlayStreamBossItemControl(OverlayStreamBossItemModel item)
+        public OverlayStreamBossItemControl(OverlayStreamBossItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayStreamBossItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
 
-        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayStreamBossItemModel.NewStreamBossCommandName)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.StreamBossNewStreamBoss);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
 
         private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                this.viewModel.NewBossCommand = null;
+                ((OverlayStreamBossItemViewModel)this.ViewModel).NewBossCommand = null;
             }
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.NewBossCommand = (CustomCommand)e;
+            ((OverlayStreamBossItemViewModel)this.ViewModel).NewBossCommand = (CustomCommandModel)command;
         }
     }
 }

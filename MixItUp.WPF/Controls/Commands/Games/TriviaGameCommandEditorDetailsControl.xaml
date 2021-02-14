@@ -1,0 +1,139 @@
+﻿<local:GameCommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.Games.TriviaGameCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandStartSettings}">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaWinAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WinAmount}" Width="90" />
+
+                    <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTimeLimit}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding TimeLimit}" Width="55" />
+
+                    <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.GameCommandTriviaUseRandomOnlineQuestions}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,0,0,3" />
+                    <ToggleButton Grid.Column="6" IsChecked="{Binding UseRandomOnlineQuestions}" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandStarted}">
+                <CommandsControls:CommandListingButtonsControl x:Name="StartedCommand" DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="StartedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.UserJoined}">
+                <CommandsControls:CommandListingButtonsControl x:Name="UserJoinCommand" DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="UserJoinCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandTriviaCorrectAnswer}">
+                <CommandsControls:CommandListingButtonsControl x:Name="CorrectAnswerCommand" DataContext="{Binding CorrectAnswerCommand}" HorizontalAlignment="Center" EditClicked="CorrectAnswerCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandUserWin}">
+                <CommandsControls:CommandListingButtonsControl x:Name="UserSuccessCommand" DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="UserSuccessCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandUserLose}">
+                <CommandsControls:CommandListingButtonsControl x:Name="UserFailureCommand" DataContext="{Binding UserFailureCommand}" HorizontalAlignment="Center" EditClicked="UserFailureCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <GroupBox Grid.Row="4">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.GameCommandTriviaCustomQuestions}" Foreground="{StaticResource WhiteColor}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
+
+                    <Button Grid.Column="2" Content="{x:Static resx:Resources.GameCommandTriviaAddQuestion}" Command="{Binding AddQuestionCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center" />
+                </Grid>
+            </GroupBox.Header>
+
+            <ItemsControl ItemsSource="{Binding CustomQuestions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaQuestion}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Question}" VerticalAlignment="Center" />
+
+                            <Grid Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBox Grid.Column="0" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaCorrectAnswer}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding CorrectAnswer}" Width="120" />
+
+                                <TextBox Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaWrongAnswer1}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WrongAnswer1}" Width="120" />
+
+                                <TextBox Grid.Column="0" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaWrongAnswer2}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WrongAnswer2}" Width="120" />
+
+                                <TextBox Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameCommandTriviaWrongAnswer3}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding WrongAnswer3}" Width="120" />
+                            </Grid>
+
+                            <Button x:Name="DeleteQuestionButton" Grid.Column="4" Click="DeleteQuestionButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
+                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+    </Grid>
+</local:GameCommandEditorDetailsControlBase>

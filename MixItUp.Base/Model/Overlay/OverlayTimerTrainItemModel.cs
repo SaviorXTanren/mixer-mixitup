@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -116,7 +117,9 @@ namespace MixItUp.Base.Model.Overlay
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-            AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 1000, this.TimerBackground);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunAsyncBackground(this.TimerBackground, this.backgroundThreadCancellationTokenSource.Token, 1000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await base.Enable();
         }
@@ -144,16 +147,16 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)
         {
-            await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
+            await base.PerformReplacements(jobj, parameters);
             if (this.timeLeft == 0)
             {
                 jobj["HTML"] = "";
             }
         }
 
-        protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 

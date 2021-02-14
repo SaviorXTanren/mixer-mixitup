@@ -22,10 +22,10 @@ namespace MixItUp.Base.Services
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
-        public ITimerService TimerService { get; protected set; }
+        public ITimerService Timers { get; protected set; }
         public IGameQueueService GameQueueService { get; protected set; }
         public IImageService Image { get; protected set; }
-        public ITranslationService TranslationService { get; protected set; }
+        public ITranslationService Translation { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }

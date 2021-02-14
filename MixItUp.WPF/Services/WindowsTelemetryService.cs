@@ -1,7 +1,7 @@
 ﻿using Microsoft.ApplicationInsights;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using PlayFab;

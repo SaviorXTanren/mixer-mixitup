@@ -8,7 +8,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -19,7 +19,6 @@
                           
              d:DesignHeight="700" d:DesignWidth="600">
     <local:MainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:MainControlBase.Resources>
     <Grid>
@@ -48,7 +47,7 @@
 
                             <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.FilteredBannedWords}"/>
 
-                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="FilteredWordsApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                         </Grid>
@@ -70,7 +69,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UseCommunityList}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.UseCommunityList}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                             <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
@@ -95,12 +94,12 @@
                                 <RowDefinition Height="165" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilteredWordsHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilteredWordsHeader}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource DefaultBorder}">
                                 <TextBox x:Name="FilteredWordsTextBox" Margin="5" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
                             </Border>
 
-                            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.BannedWords}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.BannedWords}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource DefaultBorder}">
                                 <TextBox x:Name="BannedWordsTextBox" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
                             </Border>
@@ -122,7 +121,7 @@
 
                             <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatTextModeration}"/>
 
-                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="ChatTextApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                         </Grid>
                     </GroupBox.Header>
@@ -142,7 +141,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MaxCaps}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MaxCaps}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -169,7 +168,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MaxPunctSymbolsEmotes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MaxPunctSymbolsEmotes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -223,7 +222,7 @@
 
                                 <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.LinkBlocking}"/>
 
-                                <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                                <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding Source={x:Static resx:Resources.ApplyStrikes}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                                 <ToggleButton x:Name="BlockLinksApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
                         </GroupBox.Header>
@@ -237,7 +236,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                             <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
@@ -253,7 +252,7 @@
 
                     <GroupBox Grid.Column="2">
                         <GroupBox.Header>
-                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatMixPlayParticipation}"/>
+                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatParticipation}"/>
                         </GroupBox.Header>
 
                         <Grid HorizontalAlignment="Center" Margin="5">
@@ -271,7 +270,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <ComboBox x:Name="ChatInteractiveParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -301,7 +300,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ResetStrikesOnLaunch}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ResetStrikesOnLaunch}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                             <ToggleButton x:Name="ResetStrikesOnLaunchToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                         </Grid>
@@ -315,16 +314,16 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OneStrikeCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OneStrikeCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="Strike1Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
 
-                            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.TwoStrikesCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.TwoStrikesCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="Strike2Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
 
-                            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.ThreeOrMoreStrikesCommand}" MinWidth="200">
-                                <CommandControls:CommandButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.ThreeOrMoreStrikesCommand}">
+                                <CommandsControls:CommandListingButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="Strike3Command_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
                         </Grid>
                     </Grid>

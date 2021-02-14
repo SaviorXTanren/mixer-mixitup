@@ -23,11 +23,11 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.SelectedGroupName = null;
             }
         }
-        private CooldownTypeEnum selectedType = CooldownTypeEnum.Individual;
+        private CooldownTypeEnum selectedType = CooldownTypeEnum.Standard;
 
         public bool IsGroupSelected { get { return this.SelectedType == CooldownTypeEnum.Group; } }
 
-        public IEnumerable<string> GroupNames { get { return ChannelSession.Settings.CooldownGroups.Keys.ToList(); } }
+        public IEnumerable<string> GroupNames { get { return ChannelSession.Settings.CooldownGroupAmounts.Keys.ToList(); } }
 
         public string SelectedGroupName
         {
@@ -37,9 +37,9 @@ namespace MixItUp.Base.ViewModel.Requirements
                 this.selectedGroupName = value;
                 this.NotifyPropertyChanged();
 
-                if (!string.IsNullOrEmpty(this.SelectedGroupName) && ChannelSession.Settings.CooldownGroups.ContainsKey(this.SelectedGroupName))
+                if (!string.IsNullOrEmpty(this.SelectedGroupName) && ChannelSession.Settings.CooldownGroupAmounts.ContainsKey(this.SelectedGroupName))
                 {
-                    this.Amount = ChannelSession.Settings.CooldownGroups[this.SelectedGroupName];
+                    this.Amount = ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName];
                 }
             }
         }
@@ -50,14 +50,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             get { return this.amount; }
             set
             {
-                if (this.amount >= 0)
-                {
-                    this.amount = value;
-                }
+                this.amount = value;
                 this.NotifyPropertyChanged();
             }
         }
-        private int amount = 0;
+        private int amount;
 
         public CooldownRequirementViewModel() { }
 
@@ -70,32 +67,30 @@ namespace MixItUp.Base.ViewModel.Requirements
             }
             else
             {
-                this.Amount = requirement.CooldownAmount;
+                this.Amount = requirement.Amount;
             }
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.Amount < 0)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCooldownAmountMustBeSpecified));
             }
 
             if (this.SelectedType == CooldownTypeEnum.Group && string.IsNullOrEmpty(this.SelectedGroupName))
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidCooldownGroupMustBeSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidCooldownGroupMustBeSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()
         {
             if (this.SelectedType == CooldownTypeEnum.Group)
             {
-                ChannelSession.Settings.CooldownGroups[this.SelectedGroupName] = this.Amount;
+                ChannelSession.Settings.CooldownGroupAmounts[this.SelectedGroupName] = this.Amount;
             }
             return new CooldownRequirementModel(this.SelectedType, this.Amount, this.SelectedGroupName);
         }

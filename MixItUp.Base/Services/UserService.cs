@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -28,6 +29,8 @@ namespace MixItUp.Base.Services
 
         IEnumerable<UserViewModel> GetAllWorkableUsers();
 
+        UserViewModel GetRandomUser(CommandParametersModel parameters);
+
         UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username);
 
         int Count();
@@ -56,7 +59,7 @@ namespace MixItUp.Base.Services
             UserViewModel user = null;
             if (!string.IsNullOrEmpty(username))
             {
-                username = username.ToLower().Replace("@", "");
+                username = username.ToLower().Replace("@", "").Trim();
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
                 {
                     if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
@@ -171,6 +174,14 @@ namespace MixItUp.Base.Services
         {
             IEnumerable<UserViewModel> results = this.GetAllUsers();
             return results.Where(u => !u.IgnoreForQueries);
+        }
+
+        public UserViewModel GetRandomUser(CommandParametersModel parameters)
+        {
+            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers());
+            results.Remove(parameters.User);
+            results.RemoveAll(u => !parameters.Platform.HasFlag(u.Platform));
+            return results.Random();
         }
 
         public UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username)

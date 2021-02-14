@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeStreamPass}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -100,7 +99,7 @@
 
                             <TextBox Grid.Column="2" Text="{Binding SubMultiplier}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubMultiplier}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" IsEnabled="{Binding IsOnlineRateTimeBased}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="4" Text="{Binding MinimumActiveRate}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                             <Button Grid.Column="6" Content="{x:Static resx:Resources.ManualReset}" Command="{Binding ManualResetCommand}" />
                         </Grid>
@@ -232,7 +231,7 @@
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Command}" Width="220">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <CommandControls:CommandButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" />
+                                                    <CommandsControls:CommandListingButtonsControl x:Name="LevelCommandButtons" HorizontalAlignment="Left" EditClicked="LevelCommandButtons_EditClicked" DeleteClicked="LevelCommandButtons_DeleteClicked" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -261,11 +260,7 @@
                             </Grid>
 
                             <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.DefaultLevelUpCommand}" HorizontalAlignment="Center" Width="220">
-                                <Grid>
-                                    <Button x:Name="DefaultLevelUpNewCommandButton" HorizontalAlignment="Center" Click="DefaultLevelUpNewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Visibility="{Binding DefaultLevelUpCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                                    <CommandControls:CommandButtonsControl x:Name="DefaultLevelUpCommandButtons" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" DeleteClicked="DefaultLevelUpCommandButtons_DeleteClicked" Visibility="{Binding DefaultLevelUpCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                </Grid>
+                                <CommandsControls:CommandListingButtonsControl DataContext="{Binding DefaultLevelUpCommand}" HorizontalAlignment="Center" EditClicked="DefaultLevelUpCommandButtons_EditClicked" HideDeleteButton="True" />
                             </GroupBox>
                         </Grid>
                     </Grid>

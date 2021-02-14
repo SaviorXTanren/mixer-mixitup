@@ -1,9 +1,8 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
-using MixItUp.WPF.Controls.Command;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Overlay;
+using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -14,58 +13,54 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayLeaderboardListItemControl : OverlayItemControl
     {
-        private OverlayLeaderboardListItemViewModel viewModel;
-        
         public OverlayLeaderboardListItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayLeaderboardListItemViewModel();
         }
 
-        public OverlayLeaderboardListItemControl(OverlayLeaderboardListItemModel item)
+        public OverlayLeaderboardListItemControl(OverlayLeaderboardListItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayLeaderboardListItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
 
-        private void CreateNewLeaderCommandButton_Click(object sender, RoutedEventArgs e)
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand("New Leader")));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.OverlayLeaderboardNewLeader);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            this.viewModel.NewLeaderCommand = (CustomCommand)e;
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
+            if (command != null)
+            {
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
+                window.Show();
+            }
         }
 
-        private void NewLeader_EditClicked(object sender, RoutedEventArgs e)
+        private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.viewModel.NewLeaderCommand));
-            window.Show();
+            CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
+            if (command != null)
+            {
+                ((OverlayLeaderboardListItemViewModel)this.ViewModel).NewLeaderCommand = null;
+            }
         }
 
-        private void NewLeaderCommand_DeleteClicked(object sender, RoutedEventArgs e)
+        private void Window_CommandSaved(object sender, CommandModelBase command)
         {
-            this.viewModel.NewLeaderCommand = null;
+            ((OverlayLeaderboardListItemViewModel)this.ViewModel).NewLeaderCommand = (CustomCommandModel)command;
         }
     }
 }

@@ -89,8 +89,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserQuoteViewModel> OnQuoteAdded;
-        public static void QuoteAdded(UserQuoteViewModel quote)
+        public static event EventHandler<UserQuoteModel> OnQuoteAdded;
+        public static void QuoteAdded(UserQuoteModel quote)
         {
             if (GlobalEvents.OnQuoteAdded != null)
             {
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Util
         public static event EventHandler<TwitchUserBitsCheeredModel> OnBitsOccurred;
         public static void BitsOccurred(TwitchUserBitsCheeredModel bitsCheer)
         {
-            if (GlobalEvents.OnDonationOccurred != null)
+            if (GlobalEvents.OnBitsOccurred != null)
             {
                 GlobalEvents.OnBitsOccurred(null, bitsCheer);
             }

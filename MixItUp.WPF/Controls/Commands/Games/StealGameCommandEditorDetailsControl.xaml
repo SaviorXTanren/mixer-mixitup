@@ -1,0 +1,82 @@
+﻿<local:GameCommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.Games.StealGameCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.UserSelection}">
+                <Grid HorizontalAlignment="Center" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Targeted}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,0,0,3" />
+                    <ToggleButton Grid.Column="2" IsChecked="{Binding UserSelectionTargeted}" />
+
+                    <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.Random}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" Margin="0,0,0,3" />
+                    <ToggleButton Grid.Column="6" IsChecked="{Binding UserSelectionRandom}" />
+
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.SuccessProbability}" DataContext="{Binding SuccessfulOutcome}">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserChancePercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserChance}" />
+
+                    <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubChancePercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubChance}" />
+
+                    <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModChancePercentage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModChance}" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.Win}">
+                <CommandsControls:CommandListingButtonsControl DataContext="{Binding SuccessfulOutcome}" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtons_CommandButtons" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.Lose}">
+                <CommandsControls:CommandListingButtonsControl x:Name="FailedCommand" DataContext="{Binding FailedCommand}" HorizontalAlignment="Center" EditClicked="FailedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+    </Grid>
+</local:GameCommandEditorDetailsControlBase>

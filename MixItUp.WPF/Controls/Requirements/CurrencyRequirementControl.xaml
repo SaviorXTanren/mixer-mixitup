@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirements"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -14,30 +15,54 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
              
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </UserControl.Resources>
+
     <Grid MinWidth="300" MinHeight="100">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ItemsControl Grid.Row="0" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
+        <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.CurrencyRequirement}" HorizontalAlignment="Center" TextDecorations="Underline" FontWeight="Bold" />
+
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="150" VerticalAlignment="Bottom" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Currency}" Width="170" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding RequirementTypes}" SelectedItem="{Binding SelectedRequirementType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Usage}" Width="150" VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                        <Button Grid.Column="4" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
+                        <TextBox Grid.Column="4" Text="{Binding MinAmount}" Visibility="{Binding ShowOnlyMin, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="4" Text="{Binding MinAmount}" Visibility="{Binding ShowMinAndMax, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinAmount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="6" Text="{Binding MaxAmount}" Visibility="{Binding ShowMinAndMax, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="8" Command="{Binding DeleteCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}" Style="{StaticResource MaterialDesignRaisedButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>
@@ -45,6 +70,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Button Grid.Row="2" Command="{Binding AddItemCommand}" Width="80" Style="{StaticResource MaterialDesignRaisedButton}" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
+        <Button Grid.Row="4" Command="{Binding AddItemCommand}" Width="80" Style="{StaticResource MaterialDesignRaisedButton}" Content="{x:Static resx:Resources.Add}" HorizontalAlignment="Center" />
     </Grid>
 </UserControl>

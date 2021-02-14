@@ -1,10 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Controls.Chat;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -111,7 +110,7 @@ namespace MixItUp.WPF.Controls.Chat
                 if (viewModel.ContextMenuChatCommands.Count() > 0)
                 {
                     this.ChatList.ContextMenu.Items.Add(new Separator());
-                    foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                    foreach (CommandModelBase command in viewModel.ContextMenuChatCommands)
                     {
                         MenuItem menuItem = new MenuItem();
                         menuItem.Header = command.Name;
@@ -359,10 +358,10 @@ namespace MixItUp.WPF.Controls.Chat
                     if (e.Source is MenuItem)
                     {
                         MenuItem menuItem = (MenuItem)e.Source;
-                        if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
+                        if (menuItem.DataContext != null && menuItem.DataContext is CommandModelBase)
                         {
-                            ChatCommand command = (ChatCommand)menuItem.DataContext;
-                            await command.Perform(message.Platform, arguments: new List<string>() { message.User.Username });
+                            CommandModelBase command = (CommandModelBase)menuItem.DataContext;
+                            await command.Perform(new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
                         }
                     }
                 }

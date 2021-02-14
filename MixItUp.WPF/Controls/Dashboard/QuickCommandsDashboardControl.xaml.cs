@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Controls.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Dialogs;
 using System.Threading.Tasks;
 
@@ -36,13 +36,15 @@ namespace MixItUp.WPF.Controls.Dashboard
 
         private async void EditCommandFiveButton_Click(object sender, System.Windows.RoutedEventArgs e) { this.viewModel.CommandFive = await this.ShowCommandSelector(); }
 
-        private async Task<CommandBase> ShowCommandSelector()
+        private async Task<CommandModelBase> ShowCommandSelector()
         {
             if (await this.viewModel.CanSelectCommands())
             {
                 CommandSelectorDialogControl dialogControl = new CommandSelectorDialogControl();
-                await DialogHelper.ShowCustom(dialogControl);
-                return dialogControl.Command;
+                if (bool.Equals(await DialogHelper.ShowCustom(dialogControl), true) && dialogControl.ViewModel.SelectedCommand != null)
+                {
+                    return dialogControl.ViewModel.SelectedCommand;
+                }
             }
             return null;
         }

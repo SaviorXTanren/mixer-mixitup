@@ -1,5 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.SignalR.Client;
@@ -174,7 +173,7 @@ namespace MixItUp.Base.Services
                         RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
                         if (clientConnection != null)
                         {
-                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(commandID));
+                            CommandModelBase command = ChannelSession.Settings.GetCommand(commandID);
                             if (command != null)
                             {
                                 await command.Perform();

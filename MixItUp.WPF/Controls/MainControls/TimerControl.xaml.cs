@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,12 +39,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            TimerCommand command = commandButtonsControl.GetCommandFromCommandButtons<TimerCommand>(sender);
+            TimerCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TimerCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
-                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
@@ -53,21 +52,21 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                TimerCommand command = commandButtonsControl.GetCommandFromCommandButtons<TimerCommand>(sender);
+                TimerCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TimerCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Settings.TimerCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
+                    ChannelSession.TimerCommands.Remove(command);
+                    ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
                 }
             });
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new TimerCommandDetailsControl());
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Timer);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 

@@ -1,0 +1,73 @@
+﻿<local:CommandEditorDetailsControlBase x:Class="MixItUp.WPF.Controls.Commands.ChatCommandEditorDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:RequirementsControls="clr-namespace:MixItUp.WPF.Controls.Requirements"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <local:CommandEditorDetailsControlBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:CommandEditorDetailsControlBase.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" />
+
+                <ComboBox Grid.Column="1" Margin="20,0,0,0" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" Visibility="{Binding ShowCommandGroupSelector, Converter={StaticResource BooleanToVisibilityConverter}}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" />
+            </Grid>
+
+            <TextBox Grid.Row="2" Text="{Binding Triggers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{Binding ChatTriggersHintText}" />
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="2" IsChecked="{Binding IncludeExclamation}" IsEnabled="{Binding IncludeExclamationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <ToggleButton Grid.Column="6" IsChecked="{Binding Wildcards}" />
+
+                <local:UnlockCommandControl Grid.Column="8" />
+            </Grid>
+        </Grid>
+
+        <RequirementsControls:RequirementsSetControl Grid.Column="2" DataContext="{Binding Requirements}" />
+    </Grid>
+</local:CommandEditorDetailsControlBase>

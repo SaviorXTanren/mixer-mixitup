@@ -178,7 +178,7 @@ namespace MixItUp.WPF.Services
 
         public async Task WaitForKeyToRegister()
         {
-            await Task.Delay(100);
+            await Task.Delay(250);
         }
 
         public bool RegisterHotKey(HotKeyModifiersEnum modifiers, InputKeyEnum key)

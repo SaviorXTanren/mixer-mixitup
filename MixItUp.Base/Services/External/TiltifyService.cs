@@ -190,8 +190,6 @@ namespace MixItUp.Base.Services.External
 
     public interface ITiltifyService : IOAuthExternalService
     {
-        Task<Result> Connect(string authorizationToken);
-
         Task<TiltifyUser> GetUser();
 
         Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
@@ -209,7 +207,6 @@ namespace MixItUp.Base.Services.External
 
         public const string ClientID = "aa6b19e3f472808a632fe5a1b26b8ab37e852c123f60fb431c8a15c40df07f25";
 
-        public const string ListeningURL = "https://localhost:8919/";
         public const string AuthorizationURL = "https://tiltify.com/oauth/authorize?client_id={0}&redirect_uri={1}&response_type=code";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -224,28 +221,24 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Tiltify"; } }
 
-        public override Task<Result> Connect()
-        {
-            return Task.FromResult(new Result(false));
-        }
-
-        public async Task<Result> Connect(string authorizationToken)
+        public override async Task<Result> Connect()
         {
             try
             {
-                if (!string.IsNullOrEmpty(authorizationToken))
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(TiltifyService.AuthorizationURL, TiltifyService.ClientID, OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TiltifySecret");
-                    payload["code"] = authorizationToken;
-                    payload["redirect_uri"] = TiltifyService.ListeningURL;
+                    payload["code"] = authorizationCode;
+                    payload["redirect_uri"] = OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
-                        token.authorizationCode = authorizationToken;
+                        token.authorizationCode = authorizationCode;
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
@@ -356,7 +349,10 @@ namespace MixItUp.Base.Services.External
             this.user = await this.GetUser();
             if (this.user != null)
             {
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                 this.TrackServiceTelemetry("Tiltify");
                 return new Result();
             }
@@ -372,6 +368,16 @@ namespace MixItUp.Base.Services.External
 
                 IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
                 campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
+                if (campaign == null)
+                {
+                    List<TiltifyCampaign> teamCampaigns = new List<TiltifyCampaign>();
+                    foreach (TiltifyTeam team in await ChannelSession.Services.Tiltify.GetUserTeams(user))
+                    {
+                        teamCampaigns.AddRange(await ChannelSession.Services.Tiltify.GetTeamCampaigns(team));
+                    }
+                    campaign = teamCampaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
+                }
+
                 if (campaign != null)
                 {
                     foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))

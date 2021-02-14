@@ -1,0 +1,57 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Commands.GameCommandEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Commands"
+        xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+        Icon="./../../Logo.ico"
+        Title="Command Editor" Height="600" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </Windows:LoadingWindowBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <CommandControls:ChatCommandEditorDetailsControl Grid.Row="0" />
+
+                <ContentControl x:Name="DetailsContentControl" Grid.Row="2" />
+
+                <Button Grid.Row="4" Command="{Binding SaveCommand}" HorizontalAlignment="Center" Width="80">
+                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                </Button>
+            </Grid>
+        </ScrollViewer>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+    </Grid>
+</Windows:LoadingWindowBase>

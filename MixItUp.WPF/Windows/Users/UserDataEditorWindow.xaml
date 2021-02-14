@@ -7,7 +7,7 @@
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -21,8 +21,6 @@
         Icon="./../../Logo.ico"
         Title="User Editing" Height="600" Width="600">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Windows:LoadingWindowBase.Resources>
 
@@ -86,7 +84,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBox Grid.Column="2" Width="50" Text="{Binding ViewingHours}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Hours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                                 <TextBox Grid.Column="4" Width="50" Text="{Binding ViewingMinutes}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                             </Grid>
@@ -114,7 +112,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBlock Grid.Column="2" Text="{Binding User.RolesDisplayString}" />
                             </Grid>
 
@@ -125,7 +123,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AccountAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AccountAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.AccountAgeString}" />
                             </Grid>
 
@@ -136,7 +134,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.FollowAgeString}" />
                             </Grid>
 
@@ -147,7 +145,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.SubscribeAgeString}" />
                             </Grid>
 
@@ -158,7 +156,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.LastSeen}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.LastSeen}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding User.LastSeenString}" />
                             </Grid>
                         </Grid>
@@ -197,7 +195,7 @@
                                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CommandControls:CommandButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
+                                            <CommandsControls:CommandListingButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" EnableDisableToggled="UserOnlyChatCommandButtons_EnableDisableToggled" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -225,11 +223,11 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CustomEntranceCommand}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CustomEntranceCommand}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
 
                             <Button x:Name="NewEntranceCommandButton" Grid.Column="2" Visibility="{Binding DoesNotHaveEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" />
                             <Grid Grid.Column="2"  Visibility="{Binding HasEntranceCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" DataContext="{Binding EntranceCommand}" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
+                                <CommandsControls:CommandListingButtonsControl x:Name="ExistingEntranceCommandButtons" DataContext="{Binding EntranceCommand}" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
                             </Grid>
                         </Grid>
 
@@ -240,7 +238,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                             <ToggleButton Grid.Column="2" IsChecked="{Binding User.Data.IsCurrencyRankExempt}" />
 
                         </Grid>
@@ -268,7 +266,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                                         <TextBlock Grid.Column="2" Text="{Binding Value}" />
                                     </Grid>
@@ -286,7 +284,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                                        <TextBlock Grid.Column="0" Text="{Binding Name, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                                         <TextBlock Grid.Column="2" Text="{Binding Value}" />
                                     </Grid>

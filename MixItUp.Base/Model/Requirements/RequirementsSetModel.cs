@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,38 +16,105 @@ namespace MixItUp.Base.Model.Requirements
 
         public RequirementsSetModel() { }
 
+        public RequirementsSetModel(IEnumerable<RequirementModelBase> requirements) { this.Requirements.AddRange(requirements); }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        internal RequirementsSetModel(MixItUp.Base.ViewModel.Requirement.RequirementViewModel requirements)
+        {
+            if (requirements.Role != null)
+            {
+                this.Requirements.Add(new RoleRequirementModel(requirements.Role));
+            }
+
+            if (requirements.Cooldown != null)
+            {
+                this.Requirements.Add(new CooldownRequirementModel(requirements.Cooldown));
+            }
+
+            if (requirements.Currency != null)
+            {
+                if (requirements.Currency.RequirementType != ViewModel.Requirement.CurrencyRequirementTypeEnum.NoCurrencyCost)
+                {
+                    this.Requirements.Add(new CurrencyRequirementModel(requirements.Currency));
+                }
+            }
+
+            if (requirements.Rank != null)
+            {
+                this.Requirements.Add(new RankRequirementModel(requirements.Rank));
+            }
+
+            if (requirements.Inventory != null)
+            {
+                this.Requirements.Add(new InventoryRequirementModel(requirements.Inventory));
+            }
+
+            if (requirements.Threshold != null)
+            {
+                this.Requirements.Add(new ThresholdRequirementModel(requirements.Threshold));
+            }
+
+            if (requirements.Settings != null)
+            {
+                this.Requirements.Add(new SettingsRequirementModel(requirements.Settings));
+                RoleRequirementModel role = this.Role;
+                if (role != null)
+                {
+                    role.PatreonBenefitID = requirements.Settings.PatreonBenefitIDRequirement;
+                }
+            }
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        public RoleRequirementModel Role { get { return (RoleRequirementModel)this.Requirements.FirstOrDefault(r => r is RoleRequirementModel); } }
+
+        public CooldownRequirementModel Cooldown { get { return (CooldownRequirementModel)this.Requirements.FirstOrDefault(r => r is CooldownRequirementModel); } }
+
+        public IEnumerable<CurrencyRequirementModel> Currency { get { return this.Requirements.Where(r => r is CurrencyRequirementModel).Select(r => (CurrencyRequirementModel)r); } }
+
+        public IEnumerable<RankRequirementModel> Rank { get { return this.Requirements.Where(r => r is RankRequirementModel).Select(r => (RankRequirementModel)r); } }
+
+        public IEnumerable<InventoryRequirementModel> Inventory { get { return this.Requirements.Where(r => r is InventoryRequirementModel).Select(r => (InventoryRequirementModel)r); } }
+
         public ThresholdRequirementModel Threshold { get { return (ThresholdRequirementModel)this.Requirements.FirstOrDefault(r => r is ThresholdRequirementModel); } }
 
-        public async Task<bool> Validate(UserViewModel user)
+        public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
+
+        public async Task<Result> Validate(CommandParametersModel parameters)
         {
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                if (!await requirement.Validate(user))
+                Result result = await requirement.Validate(parameters);
+                if (!result.Success)
                 {
-                    return false;
+                    await requirement.SendErrorChatMessage(parameters.User, result);
+                    return result;
                 }
             }
-            return true;
+            return new Result();
         }
 
-        public async Task Perform(UserViewModel user)
+        public async Task Perform(CommandParametersModel parameters, HashSet<Type> requirementsToSkip = null)
         {
-            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user);
+            IEnumerable<CommandParametersModel> users = this.GetRequirementUsers(parameters);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                foreach (UserViewModel u in users)
+                if (requirementsToSkip == null || !requirementsToSkip.Contains(requirement.GetType()))
                 {
-                    await requirement.Perform(u);
+                    foreach (CommandParametersModel u in users)
+                    {
+                        await requirement.Perform(u);
+                    }
                 }
             }
         }
 
-        public async Task Refund(UserViewModel user)
+        public async Task Refund(CommandParametersModel parameters)
         {
-            IEnumerable<UserViewModel> users = this.GetRequirementUsers(user);
+            IEnumerable<CommandParametersModel> users = this.GetRequirementUsers(parameters);
             foreach (RequirementModelBase requirement in this.Requirements)
             {
-                foreach (UserViewModel u in users)
+                foreach (CommandParametersModel u in users)
                 {
                     await requirement.Refund(u);
                 }
@@ -60,35 +129,43 @@ namespace MixItUp.Base.Model.Requirements
             }
         }
 
-        public IEnumerable<UserViewModel> GetPerformingUsers(UserViewModel user)
+        public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters)
         {
             ThresholdRequirementModel threshold = this.Threshold;
             if (threshold != null && threshold.IsEnabled && threshold.RunForEachUser)
             {
-                return this.GetRequirementUsers(user);
+                return this.GetRequirementUsers(parameters);
             }
             else
             {
-                return new List<UserViewModel>() { user };
+                return new List<CommandParametersModel>() { parameters };
             }
         }
 
-        public IEnumerable<UserViewModel> GetRequirementUsers(UserViewModel user)
+        public IEnumerable<CommandParametersModel> GetRequirementUsers(CommandParametersModel parameters)
         {
-            List<UserViewModel> users = new List<UserViewModel>();
+            List<CommandParametersModel> users = new List<CommandParametersModel>();
             ThresholdRequirementModel threshold = this.Threshold;
             if (threshold != null && threshold.IsEnabled)
             {
-                foreach (UserViewModel u in threshold.GetApplicableUsers())
+                foreach (CommandParametersModel u in threshold.GetApplicableUsers())
                 {
                     users.Add(u);
                 }
             }
             else
             {
-                users.Add(user);
+                users.Add(parameters);
             }
             return users;
+        }
+
+        public void AddBasicRequirements()
+        {
+            this.Requirements.Add(new RoleRequirementModel());
+            this.Requirements.Add(new CooldownRequirementModel());
+            this.Requirements.Add(new ThresholdRequirementModel());
+            this.Requirements.Add(new SettingsRequirementModel());
         }
     }
 }

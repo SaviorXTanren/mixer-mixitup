@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Model\Import\**" />
+    <Compile Remove="ViewModel\Command %2528OLD%2529\**" />
+    <EmbeddedResource Remove="Model\Import\**" />
+    <EmbeddedResource Remove="ViewModel\Command %2528OLD%2529\**" />
+    <None Remove="Model\Import\**" />
+    <None Remove="ViewModel\Command %2528OLD%2529\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Overlay\OverlayPage.html" />
     <None Remove="Overlay\webSocketWrapper.js" />
     <None Remove="XSplit\Mix It Up.html" />
@@ -32,7 +41,7 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="linqtotwitter" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.21" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.23" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 

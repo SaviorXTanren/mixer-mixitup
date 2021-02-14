@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+﻿using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
@@ -10,43 +9,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayTimerTrainItemControl : OverlayItemControl
     {
-        private OverlayTimerTrainItemViewModel viewModel;
-
         public OverlayTimerTrainItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayTimerTrainItemViewModel();
         }
 
-        public OverlayTimerTrainItemControl(OverlayTimerTrainItemModel item)
+        public OverlayTimerTrainItemControl(OverlayTimerTrainItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayTimerTrainItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override void SetItem(OverlayItemModelBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTimerTrainItemViewModel((OverlayTimerTrainItemModel)item);
-            }
-        }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -125,24 +125,30 @@ namespace MixItUp.Base.Services.External
             await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            return await Task.FromResult<string>("Not Yet Implemented");
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
         }
+
+        public Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility) { return Task.FromResult(0); }
 
         public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
         }
 
-        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
+        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions) { return Task.FromResult(0); }
 
-        public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
+        public Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSoftwareSourceDimensionsModel()); }
 
-        public async Task StartStopStream()
-        {
-            await this.Send(new XSplitPacket("startStopStream", JObject.FromObject(new XSplitOutput() { outputName = "Beam" })));
-        }
+        public Task StartStopStream() { return Task.FromResult(0); }
+
+        public Task StartStopRecording() { return Task.FromResult(0); }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
         public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }

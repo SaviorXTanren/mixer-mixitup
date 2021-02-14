@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Services
         {
             this.IsConnected = false;
 
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
                 if (this.OBSWebsocket.IsConnected)
@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Services
 
         public async Task Disconnect()
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 this.IsConnected = false;
                 if (this.OBSWebsocket != null)
@@ -77,7 +77,7 @@ namespace MixItUp.WPF.Services
 
         public async Task ShowScene(string sceneName)
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 Logger.Log(LogLevel.Debug, "Showing OBS Scene - " + sceneName);
 
@@ -87,13 +87,41 @@ namespace MixItUp.WPF.Services
             });
         }
 
+        public async Task<string> GetCurrentScene()
+        {
+            return await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                Logger.Log(LogLevel.Debug, "Getting Current OBS Scene");
+
+                var scene = this.OBSWebsocket.GetCurrentScene();
+                if (scene == null)
+                {
+                    return "Unknown";
+                }
+
+                return scene.Name;
+            });
+        }
+
         public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 Logger.Log(LogLevel.Debug, "Setting source visibility - " + sourceName);
 
                 this.OBSWebsocket.SetSourceRender(sourceName, visibility, sceneName);
+
+                return true;
+            });
+        }
+
+        public async Task SetSourceFilterVisibility(string sourceName, string filterName, bool visibility)
+        {
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                Logger.Log(LogLevel.Debug, "Setting source filter visibility - " + sourceName + " - " + filterName);
+
+                this.OBSWebsocket.SetSourceFilterVisibility(sourceName, filterName, visibility);
 
                 return true;
             });
@@ -105,7 +133,7 @@ namespace MixItUp.WPF.Services
 
             await this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName, sceneName);
                 properties.IsLocalFile = false;
@@ -116,9 +144,9 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
+        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSoftwareSourceDimensionsModel dimensions)
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 Logger.Log(LogLevel.Debug, "Setting source dimensions - " + sourceName);
 
@@ -129,9 +157,9 @@ namespace MixItUp.WPF.Services
             });
         }
 
-        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
+        public async Task<StreamingSoftwareSourceDimensionsModel> GetSourceDimensions(string sceneName, string sourceName)
         {
-            return await this.OBSCommandTimeoutWrapper(() =>
+            return await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 OBSScene scene;
                 if (!string.IsNullOrEmpty(sceneName))
@@ -147,7 +175,7 @@ namespace MixItUp.WPF.Services
                 {
                     if (item.SourceName.Equals(sourceName))
                     {
-                        return new StreamingSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
+                        return new StreamingSoftwareSourceDimensionsModel() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
                     }
                 }
                 return null;
@@ -156,24 +184,25 @@ namespace MixItUp.WPF.Services
 
         public async Task StartStopStream()
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
-                OutputStatus status = this.OBSWebsocket.GetStreamingStatus();
-                if (status.IsStreaming)
-                {
-                    this.OBSWebsocket.StopStreaming();
-                }
-                else
-                {
-                    this.OBSWebsocket.StartStreaming();
-                }
+                this.OBSWebsocket.StartStopStreaming();
+                return true;
+            });
+        }
+
+        public async Task StartStopRecording()
+        {
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
+            {
+                this.OBSWebsocket.StartStopRecording();
                 return true;
             });
         }
 
         public async Task<bool> StartReplayBuffer()
         {
-            return await this.OBSCommandTimeoutWrapper(() =>
+            return await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 try
                 {
@@ -182,7 +211,7 @@ namespace MixItUp.WPF.Services
                 }
                 catch (Exception ex)
                 {
-                    if (ex.Message.Equals("replay buffer already active"))
+                    if (ex.Message.Equals("replay buffer already active") || ex.Message.Equals("replay buffer disabled in settings"))
                     {
                         return true;
                     }
@@ -194,7 +223,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SaveReplayBuffer()
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 this.OBSWebsocket.SaveReplayBuffer();
                 return true;
@@ -203,7 +232,7 @@ namespace MixItUp.WPF.Services
 
         public async Task SetSceneCollection(string sceneCollectionName)
         {
-            await this.OBSCommandTimeoutWrapper(() =>
+            await this.OBSCommandTimeoutWrapper((cancellationToken) =>
             {
                 this.OBSWebsocket.SetCurrentSceneCollection(sceneCollectionName);
                 return true;
@@ -224,10 +253,10 @@ namespace MixItUp.WPF.Services
             while (!result.Success);
         }
 
-        private async Task<T> OBSCommandTimeoutWrapper<T>(Func<T> function, int timeout = CommandTimeoutInMilliseconds)
+        private async Task<T> OBSCommandTimeoutWrapper<T>(Func<CancellationToken, T> function, int timeout = CommandTimeoutInMilliseconds)
         {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            Task<T> task = AsyncRunner.RunSyncAsAsync(function, cancellationTokenSource.Token);
+            Task<T> task = AsyncRunner.RunAsyncBackground(function, cancellationTokenSource.Token);
             Task delay = Task.Delay(timeout);
             await Task.WhenAny(new Task[] { task, delay });
 
@@ -239,7 +268,11 @@ namespace MixItUp.WPF.Services
             {
                 cancellationTokenSource.Cancel();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunSyncAsAsync(() => this.OBSWebsocket_Disconnected(this, new EventArgs()), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) =>
+                {
+                    this.OBSWebsocket_Disconnected(this, new EventArgs());
+                    return true;
+                }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 return default(T);
             }

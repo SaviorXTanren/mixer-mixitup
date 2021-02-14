@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,7 @@ namespace MixItUp.Base.Services
         Task MoveDown(UserViewModel user);
 
         Task SelectFirst();
-        Task SelectFirstType(RoleRequirementViewModel requirement);
+        Task SelectFirstType(RoleRequirementModel roleRequirement);
         Task SelectRandom();
 
         int GetUserPosition(UserViewModel user);
@@ -39,6 +41,8 @@ namespace MixItUp.Base.Services
 
     public class GameQueueService : IGameQueueService
     {
+        private const string QueuePositionSpecialIdentifier = "queueposition";
+
         private LockedList<UserViewModel> queue = new LockedList<UserViewModel>();
 
         public GameQueueService() { }
@@ -81,7 +85,7 @@ namespace MixItUp.Base.Services
                 }
 
                 int position = this.queue.IndexOf(user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID).Perform(new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -91,7 +95,7 @@ namespace MixItUp.Base.Services
             if (await this.ValidateJoin(user))
             {
                 this.queue.Insert(0, user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID).Perform(new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -123,24 +127,25 @@ namespace MixItUp.Base.Services
             {
                 UserViewModel user = this.queue.ElementAt(0);
                 this.queue.Remove(user);
-                await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }
 
-        public async Task SelectFirstType(RoleRequirementViewModel requirement)
+        public async Task SelectFirstType(RoleRequirementModel roleRequirement)
         {
-            UserViewModel user = this.queue.FirstOrDefault(u => requirement.DoesMeetRequirement(u));
-            if (user != null)
+            foreach (UserViewModel user in this.queue.ToList())
             {
-                await this.SelectFirst();
+                Result result = await roleRequirement.Validate(new CommandParametersModel(user));
+                if (result.Success)
+                {
+                    this.queue.Remove(user);
+                    await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
+                    GlobalEvents.GameQueueUpdated();
+                    return;
+                }
             }
-            else
-            {
-                this.queue.Remove(user);
-                await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);
-                GlobalEvents.GameQueueUpdated();
-            }
+            await this.SelectFirst();
         }
 
         public async Task SelectRandom()
@@ -150,7 +155,7 @@ namespace MixItUp.Base.Services
                 int index = RandomHelper.GenerateRandomNumber(this.queue.Count());
                 UserViewModel user = this.queue.ElementAt(index);
                 this.queue.Remove(user);
-                await ChannelSession.Settings.GameQueueUserSelectedCommand.Perform(user);
+                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }

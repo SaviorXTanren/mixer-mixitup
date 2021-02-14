@@ -1,15 +1,12 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.User;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Windows.Users;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -18,12 +15,12 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class UsersControl : MainControlBase
     {
-        private ObservableCollection<UserDataModel> userData = new ObservableCollection<UserDataModel>();
-
         private UsersMainControlViewModel viewModel;
+        private Timer textChangedTimer;
 
         public UsersControl()
         {
+            textChangedTimer = new Timer((e) => UpdateText(), null, Timeout.Infinite, Timeout.Infinite);
             InitializeComponent();
         }
 
@@ -39,9 +36,20 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.OnVisible();
         }
 
+        private async Task UpdateText()
+        {
+            await this.viewModel.RefreshUsersAsync();
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.UsernameFilterTextBox.Focus();
+                return Task.CompletedTask;
+            });
+        }
+
         private void UsernameFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.viewModel.UsernameFilter = this.UsernameFilterTextBox.Text;
+            textChangedTimer.Change(500, Timeout.Infinite);
         }
 
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
@@ -62,9 +70,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void UserDataGridView_Sorted(object sender, DataGridColumn column)
         {
-            this.viewModel.SortColumnIndex = this.UserDataGridView.Columns.IndexOf(column);
-            this.viewModel.SortDirection = column.SortDirection.GetValueOrDefault();
-            this.viewModel.RefreshUsers();
+            this.viewModel.SetSortColumnIndexAndDirection(this.UserDataGridView.Columns.IndexOf(column), column.SortDirection.GetValueOrDefault());
         }
 
         private void ImportUserDataButton_Click(object sender, RoutedEventArgs e)

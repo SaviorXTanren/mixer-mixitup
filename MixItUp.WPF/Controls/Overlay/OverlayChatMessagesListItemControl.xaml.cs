@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+﻿using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
@@ -10,35 +9,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayChatMessagesListItemControl : OverlayItemControl
     {
-        private OverlayChatMessagesListItemViewModel viewModel;
-
         public OverlayChatMessagesListItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayChatMessagesListItemViewModel();
         }
 
-        public OverlayChatMessagesListItemControl(OverlayChatMessagesListItemModel item)
+        public OverlayChatMessagesListItemControl(OverlayChatMessagesListItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayChatMessagesListItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
+﻿using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.MainControls

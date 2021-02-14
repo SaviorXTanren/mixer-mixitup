@@ -44,6 +44,6 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <ComboBox Grid.Row="2" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title"  Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
+        <ComboBox Grid.Row="2" ItemsSource="{Binding PatreonBenefits}" SelectedItem="{Binding SelectedPatreonBenefit}" DisplayMemberPath="Title" Visibility="{Binding IsPatreonConnected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefit}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Margin="0,10,0,0" Width="120" />
     </Grid>
 </UserControl>

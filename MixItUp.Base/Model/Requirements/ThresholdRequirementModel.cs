@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,11 @@ namespace MixItUp.Base.Model.Requirements
 
         [JsonIgnore]
         private Dictionary<Guid, DateTimeOffset> performs = new Dictionary<Guid, DateTimeOffset>();
+        [JsonIgnore]
+        private Dictionary<Guid, CommandParametersModel> performParameters = new Dictionary<Guid, CommandParametersModel>();
 
         [JsonIgnore]
-        private List<Guid> lastApplicableUsers = new List<Guid>();
+        private List<CommandParametersModel> applicablePerformParameters = new List<CommandParametersModel>();
 
         public ThresholdRequirementModel() { }
 
@@ -35,27 +38,26 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = runForEachUser;
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+        internal ThresholdRequirementModel(MixItUp.Base.ViewModel.Requirement.ThresholdRequirementViewModel requirement)
+            : this()
+        {
+            this.Amount = requirement.Amount;
+            this.TimeSpan = requirement.TimeSpan;
+            this.RunForEachUser = false;
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
+
         public bool IsEnabled { get { return this.Amount > 0; } }
 
-        public List<UserViewModel> GetApplicableUsers()
-        {
-            List<UserViewModel> users = new List<UserViewModel>();
-            foreach (Guid userID in this.lastApplicableUsers)
-            {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
-                if (user != null)
-                {
-                    users.Add(user);
-                }
-            }
-            return users;
-        }
+        public IEnumerable<CommandParametersModel> GetApplicableUsers() { return this.applicablePerformParameters;  }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
             if (this.IsEnabled)
             {
-                this.performs[user.ID] = DateTimeOffset.Now;
+                this.performs[parameters.User.ID] = DateTimeOffset.Now;
+                this.performParameters[parameters.User.ID] = parameters;
 
                 DateTimeOffset cutoffDateTime = DateTimeOffset.MinValue;
                 if (this.TimeSpan > 0)
@@ -68,25 +70,25 @@ namespace MixItUp.Base.Model.Requirements
                     if (this.performs[key] < cutoffDateTime)
                     {
                         this.performs.Remove(key);
+                        this.performParameters.Remove(key);
                     }
                 }
 
                 if (this.performs.Count < this.Amount)
                 {
-                    await this.SendChatMessage(string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
-                    return false;
+                    return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.ThresholdRequirementNeedMore, this.Amount - this.performs.Count)));
                 }
 
-                this.lastApplicableUsers.Clear();
-                this.lastApplicableUsers.AddRange(this.performs.Keys);
-            }
-            return true;
-        }
+                this.applicablePerformParameters.Clear();
+                foreach (Guid key in this.performs.Keys)
+                {
+                    this.applicablePerformParameters.Add(this.performParameters[key]);
+                }
 
-        public override Task Perform(UserViewModel user)
-        {
-            this.performs.Clear();
-            return Task.FromResult(0);
+                this.performs.Clear();
+                this.performParameters.Clear();
+            }
+            return Task.FromResult(new Result());
         }
     }
 }

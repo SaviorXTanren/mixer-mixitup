@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Window.User;
+﻿using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Users

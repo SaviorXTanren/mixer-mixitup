@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:CommandModels="clr-namespace:MixItUp.Base.Commands;assembly=MixItUp.Base"
-             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Controls.Commands;assembly=MixItUp.Base"
+             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Commands;assembly=MixItUp.Base"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"
@@ -22,7 +22,6 @@
 
              d:DesignHeight="600" d:DesignWidth="800">
     <local:GroupedCommandsMainControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:GroupedCommandsMainControlBase.Resources>
@@ -51,7 +50,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
                 <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
             </Grid>
@@ -98,9 +97,9 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding TriggersString}" VerticalAlignment="Center" />
 
-                                <ComboBox Grid.Column="2" ItemsSource="{Binding PermissionsValues}" SelectedItem="{Binding SelectedPermission}" VerticalAlignment="Center">
+                                <ComboBox Grid.Column="2" ItemsSource="{Binding RoleValues}" SelectedItem="{Binding SelectedRole}" VerticalAlignment="Center">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -147,9 +146,9 @@
                                     <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
-                                            <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding CommandsString}" IsReadOnly="True" MinWidth="125" Width="125" />
-                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding UserRoleRequirement, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
-                                            <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" MinWidth="60" Width="60">
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="125" Width="125" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding Requirements.Role.Role, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
+                                            <DataGridTextColumn Binding="{Binding Requirements.Cooldown.IndividualAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
                                                         <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
@@ -159,7 +158,7 @@
                                             <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtonsControl_EnableDisableToggled" />
+                                                        <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtonsControl_EnableDisableToggled" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>

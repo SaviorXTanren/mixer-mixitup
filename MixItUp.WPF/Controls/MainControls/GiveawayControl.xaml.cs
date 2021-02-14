@@ -1,9 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -25,37 +24,28 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.DataContext = this.viewModel = new GiveawayMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
-            this.Requirements.HideThresholdRequirement();
-            this.Requirements.HideSettingsRequirement();
-            this.Requirements.SetRequirements(ChannelSession.Settings.GiveawayRequirements);
-
-            this.GiveawayStartReminderCommand.DataContext = ChannelSession.Settings.GiveawayStartedReminderCommand;
-            this.GiveawayUserJoinedCommand.DataContext = ChannelSession.Settings.GiveawayUserJoinedCommand;
-            this.GiveawayWinnerSelectedCommand.DataContext = ChannelSession.Settings.GiveawayWinnerSelectedCommand;
-
             return base.InitializeInternal();
         }
 
-        private void GiveawayCommand_EditClicked(object sender, RoutedEventArgs e)
+        private void GiveawayStartedReminderCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((GiveawayMainControlViewModel)this.DataContext).GiveawayStartedReminderCommand = command; };
+            window.Show();
         }
 
-        private async void StartGiveawayButton_Click(object sender, RoutedEventArgs e)
+        private void GiveawayUserJoinedCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            if (!await this.Requirements.Validate())
-            {
-                return;
-            }
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((GiveawayMainControlViewModel)this.DataContext).GiveawayUserJoinedCommand = command; };
+            window.Show();
+        }
 
-            ChannelSession.Settings.GiveawayRequirements = this.Requirements.GetRequirements();
-            this.viewModel.StartGiveawayCommand.Execute(null);
+        private void GiveawayWinnerSelectedCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            window.CommandSaved += (object s, CommandModelBase command) => { ((GiveawayMainControlViewModel)this.DataContext).GiveawayWinnerSelectedCommand = command; };
+            window.Show();
         }
     }
 }

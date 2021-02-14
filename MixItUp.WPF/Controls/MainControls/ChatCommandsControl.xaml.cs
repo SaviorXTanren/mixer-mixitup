@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Windows.Command;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.Base.ViewModel;
+using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Windows.Commands;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,13 +39,6 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.OnVisibilityChanged();
         }
 
-        protected override void Window_CommandSaveSuccessfully(object sender, CommandBase command)
-        {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
-
-            base.Window_CommandSaveSuccessfully(sender, command);
-        }
-
         private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             this.viewModel.NameFilter = this.NameFilterTextBox.Text;
@@ -53,12 +46,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
+            ChatCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ChatCommandModel>();
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
-                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+                CommandEditorWindow window = new CommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
@@ -67,15 +59,14 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
+                ChatCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ChatCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.Settings.ChatCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.viewModel.RemoveCommand(command);
-
+                    ChannelSession.ChatCommands.Remove(command);
+                    ChannelSession.Settings.RemoveCommand(command);
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    this.viewModel.RemoveCommand(command);
+                    await ChannelSession.SaveSettings();
                 }
             });
         }
@@ -87,8 +78,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl());
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Chat);
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 

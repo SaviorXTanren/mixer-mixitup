@@ -45,6 +45,6 @@
             <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Width="70" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <ComboBox Grid.Row="1" ItemsSource="{Binding GroupNames}" SelectedItem="{Binding SelectedGroupName}" Visibility="{Binding IsGroupSelected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupName}" Margin="0,20,0,0" Width="200" HorizontalAlignment="Left" />
+        <ComboBox Grid.Row="1" ItemsSource="{Binding GroupNames}" Text="{Binding SelectedGroupName}" IsEditable="True" Visibility="{Binding IsGroupSelected, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupName}" Margin="0,20,0,0" Width="200" HorizontalAlignment="Left" />
     </Grid>
 </UserControl>

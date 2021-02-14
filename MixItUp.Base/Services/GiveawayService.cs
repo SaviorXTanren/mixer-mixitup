@@ -1,7 +1,7 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
         public IEnumerable<GiveawayUser> Users { get { return this.enteredUsers.Values.ToList(); } }
         public UserViewModel Winner { get; private set; }
 
-        private ChatCommand giveawayCommand = null;
+        private ChatCommandModel giveawayCommand = null;
 
         private Dictionary<Guid, GiveawayUser> enteredUsers = new Dictionary<Guid, GiveawayUser>();
 
@@ -90,9 +90,9 @@ namespace MixItUp.Base.Services
             await ChannelSession.SaveSettings();
 
             this.IsRunning = true;
+            this.Winner = null;
 
-            this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
-            this.giveawayCommand.Requirements = ChannelSession.Settings.GiveawayRequirements;
+            this.giveawayCommand = new ChatCommandModel("Giveaway Command", new HashSet<string>() { ChannelSession.Settings.GiveawayCommand });
             if (ChannelSession.Settings.GiveawayAllowPastWinners)
             {
                 this.pastWinners.Clear();
@@ -108,7 +108,7 @@ namespace MixItUp.Base.Services
             Task.Run(async () => { await this.GiveawayTimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID).Perform(new CommandParametersModel(this.GetSpecialIdentifiers()));
 
             return null;
         }
@@ -123,7 +123,6 @@ namespace MixItUp.Base.Services
             }
 
             this.TimeLeft = 0;
-            this.Winner = null;
 
             this.giveawayCommand = null;
             this.enteredUsers.Clear();
@@ -153,7 +152,7 @@ namespace MixItUp.Base.Services
 
                     if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
-                        await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                        await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayStartedReminderCommandID).Perform(new CommandParametersModel(this.GetSpecialIdentifiers()));
                     }
 
                     if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
@@ -192,7 +191,7 @@ namespace MixItUp.Base.Services
 
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
-                            await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID).Perform(new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                             await this.End();
                             return;
                         }
@@ -234,8 +233,10 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesMessageMatchTriggers(message, out IEnumerable<string> arguments))
                 {
+                    CommandParametersModel parameters = new CommandParametersModel(message);
+                    parameters.Arguments = new List<string>(arguments);
                     int entries = 1;
 
                     if (pastWinners.Contains(message.User.ID))
@@ -264,25 +265,43 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (await this.giveawayCommand.CheckAllRequirements(message.User))
+                    Result result = await ChannelSession.Settings.GiveawayRequirementsSet.Validate(parameters);
+                    if (result.Success)
                     {
-                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                        foreach (CurrencyRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Currency)
                         {
-                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount, requireAmount: true))
+                            int totalAmount = requirement.MinAmount * entries;
+                            result = requirement.ValidateAmount(message.User, totalAmount);
+                            if (!result.Success)
                             {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                await requirement.SendErrorChatMessage(message.User, result);
                                 return;
                             }
                         }
 
-                        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
+                        foreach (InventoryRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Inventory)
                         {
-                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount, requireAmount: true))
+                            int totalAmount = requirement.Amount * entries;
+                            result = requirement.ValidateAmount(message.User, totalAmount);
+                            if (!result.Success)
                             {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                                await requirement.SendErrorChatMessage(message.User, result);
                                 return;
+                            }
+                        }
+
+                        await ChannelSession.Settings.GiveawayRequirementsSet.Perform(parameters);
+                        // Do additional currency / inventory performs passed on how many additional entries they put in
+                        for (int i = 1; i < entries; i++)
+                        {
+                            foreach (CurrencyRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Currency)
+                            {
+                                await requirement.Perform(parameters);
+                            }
+
+                            foreach (InventoryRequirementModel requirement in ChannelSession.Settings.GiveawayRequirementsSet.Inventory)
+                            {
+                                await requirement.Perform(parameters);
                             }
                         }
 
@@ -300,7 +319,7 @@ namespace MixItUp.Base.Services
                             specialIdentifiers["usergiveawayentries"] = entries.ToString();
                             specialIdentifiers["usergiveawaytotalentries"] = giveawayUser.Entries.ToString();
 
-                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                            await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID).Perform(new CommandParametersModel(message.User, arguments, specialIdentifiers));
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
@@ -308,7 +327,7 @@ namespace MixItUp.Base.Services
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                    await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID).Perform(new CommandParametersModel(this.Winner, this.GetSpecialIdentifiers()));
                     await this.End();
                 }
             }

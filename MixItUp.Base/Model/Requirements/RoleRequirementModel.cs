@@ -1,6 +1,7 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -20,6 +21,15 @@ namespace MixItUp.Base.Model.Requirements
 
         public RoleRequirementModel() { }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+        internal RoleRequirementModel(MixItUp.Base.ViewModel.Requirement.RoleRequirementViewModel requirement)
+            : this()
+        {
+            this.Role = requirement.MixerRole;
+            this.SubscriberTier = requirement.SubscriberTier;
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
+
         public RoleRequirementModel(UserRoleEnum role, int subscriberTier = 1, string patreonBenefitID = null)
         {
             this.Role = role;
@@ -27,38 +37,36 @@ namespace MixItUp.Base.Model.Requirements
             this.PatreonBenefitID = patreonBenefitID;
         }
 
-        public override async Task<bool> Validate(UserViewModel user)
+        public override Task<Result> Validate(CommandParametersModel parameters)
         {
-            if (!user.HasPermissionsTo(this.Role))
+            if (!parameters.User.HasPermissionsTo(this.Role))
             {
                 if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ChannelSession.Services.Patreon.IsConnected)
                 {
                     PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitID);
                     if (benefit != null)
                     {
-                        PatreonTier tier = user.PatreonTier;
+                        PatreonTier tier = parameters.User.PatreonTier;
                         if (tier != null && tier.BenefitIDs.Contains(benefit.ID))
                         {
-                            return true;
+                            return Task.FromResult(new Result());
                         }
                     }
                 }
-                await this.SendErrorMessage();
-                return false;
+                return Task.FromResult(this.CreateErrorMessage(parameters));
             }
 
-            if (this.Role == UserRoleEnum.Subscriber && !user.ExceedsPermissions(this.Role))
+            if (this.Role == UserRoleEnum.Subscriber && !parameters.User.ExceedsPermissions(this.Role))
             {
-                if (user.SubscribeTier < this.SubscriberTier)
+                if (parameters.User.SubscribeTier < this.SubscriberTier)
                 {
-                    await this.SendErrorMessage();
-                    return false;
+                    return Task.FromResult(this.CreateErrorMessage(parameters));
                 }
             }
-            return true;
+            return Task.FromResult(new Result());
         }
 
-        private async Task SendErrorMessage()
+        private Result CreateErrorMessage(CommandParametersModel parameters)
         {
             string role = EnumLocalizationHelper.GetLocalizedName(this.Role);
             if (this.Role == UserRoleEnum.Subscriber)
@@ -72,7 +80,7 @@ namespace MixItUp.Base.Model.Requirements
                 }
                 role = tierText + " " + role;
             }
-            await this.SendChatMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+            return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }
     }
 }

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -19,50 +19,34 @@
     <local:MainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
-    
+
     <Grid>
-        <Grid Visibility="{Binding NoCurrenciesMade, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Style="{StaticResource HeaderTextBlock}">At least 1 currency must be created before Games can be used</TextBlock>
-        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
 
-        <Grid Visibility="{Binding CurrenciesExist, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-            </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{x:Static resx:Resources.GamesNoCurrenciesExist}" Visibility="{Binding NoCurrenciesExist, Converter={StaticResource BooleanToVisibilityConverter}}" FontWeight="ExtraBold" TextDecorations="Underline" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,10,0" />
 
-            <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Name}" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,0,0" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Commands}" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding CommandsString}" Margin="5,0,0,0" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+        <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding TriggersString}" IsReadOnly="True" MinWidth="200" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CommandsControls:CommandListingButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button Click="AddGameButton_Click" Width="100">New Game</Button>
-            </Grid>
-
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
+            <Button Click="AddGameButton_Click" Width="100" Content="{x:Static resx:Resources.NewGame}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

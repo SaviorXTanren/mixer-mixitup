@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -121,19 +122,19 @@ namespace MixItUp.Base.Model.Currency
         }
 
         [JsonIgnore]
-        public CustomCommand DefaultLevelUpCommand
+        public CommandModelBase DefaultLevelUpCommand
         {
-            get { return ChannelSession.Settings.GetCustomCommand(this.DefaultLevelUpCommandID); }
+            get { return ChannelSession.Settings.GetCommand(this.DefaultLevelUpCommandID); }
             set
             {
                 if (value != null)
                 {
                     this.DefaultLevelUpCommandID = value.ID;
-                    ChannelSession.Settings.SetCustomCommand(value);
+                    ChannelSession.Settings.SetCommand(value);
                 }
                 else
                 {
-                    ChannelSession.Settings.CustomCommands.Remove(this.DefaultLevelUpCommandID);
+                    ChannelSession.Settings.RemoveCommand(this.DefaultLevelUpCommandID);
                     this.DefaultLevelUpCommandID = Guid.Empty;
                 }
             }
@@ -178,13 +179,27 @@ namespace MixItUp.Base.Model.Currency
                 {
                     for (int level = (currentLevel + 1); level <= newLevel; level++)
                     {
-                        if (this.CustomLevelUpCommands.ContainsKey(level) && ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]) != null)
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                         {
-                            ChannelSession.Settings.GetCustomCommand(this.CustomLevelUpCommands[level]).Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                            { this.UserLevelSpecialIdentifier, level.ToString() }
+                        };
+
+                        CommandModelBase command = null;
+                        if (this.CustomLevelUpCommands.ContainsKey(level))
+                        {
+                            command = ChannelSession.Settings.GetCommand(this.CustomLevelUpCommands[level]);
                         }
-                        else if (this.DefaultLevelUpCommand != null)
+
+                        if (command == null && this.DefaultLevelUpCommand != null && this.DefaultLevelUpCommand.IsEnabled)
                         {
-                            this.DefaultLevelUpCommand.Perform(ChannelSession.Services.User.GetUserByID(user.ID)).Wait();
+                            command = this.DefaultLevelUpCommand;
+                        }
+
+                        if (command != null)
+                        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            command.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID), specialIdentifiers: specialIdentifiers));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                     }
                 }
@@ -209,7 +224,7 @@ namespace MixItUp.Base.Model.Currency
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                 foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                 {
-                    if (!user.Data.IsCurrencyRankExempt && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
+                    if (!user.Data.IsCurrencyRankExempt && user.HasPermissionsTo(this.Permission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
                     {
                         if (user.Data.ViewingMinutes % this.ViewingRateMinutes == 0)
                         {
@@ -262,12 +277,12 @@ namespace MixItUp.Base.Model.Currency
         {
             if (id != Guid.Empty)
             {
-                CustomCommand command = ChannelSession.Settings.GetCustomCommand(id);
+                CustomCommandModel command = (CustomCommandModel)ChannelSession.Settings.GetCommand(id);
                 if (command != null)
                 {
-                    command = JSONSerializerHelper.DeserializeFromString<CustomCommand>(JSONSerializerHelper.SerializeToString(command));
+                    command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(JSONSerializerHelper.SerializeToString(command));
                     command.ID = Guid.NewGuid();
-                    ChannelSession.Settings.SetCustomCommand(command);
+                    ChannelSession.Settings.SetCommand(command);
                     return command.ID;
                 }
             }

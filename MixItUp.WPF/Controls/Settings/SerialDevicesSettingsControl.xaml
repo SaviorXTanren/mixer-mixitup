@@ -10,9 +10,6 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -31,7 +28,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
                 <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center">
@@ -86,10 +83,10 @@
 
                 <TextBox x:Name="BaudRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BaudRate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DTR}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DTR}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <CheckBox Grid.Column="6" x:Name="DTREnabledCheckBox" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RTS}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RTS}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
                 <CheckBox Grid.Column="10" x:Name="RTSEnabledCheckBox" VerticalAlignment="Center" />
 
                 <Button x:Name="AddSerialDeviceButton" Grid.Column="12" Click="AddSerialDeviceButton_Click" Content="{x:Static resx:Resources.Add}"/>

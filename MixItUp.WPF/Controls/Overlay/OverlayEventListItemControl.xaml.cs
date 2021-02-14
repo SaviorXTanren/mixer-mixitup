@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+﻿using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
@@ -10,35 +9,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayEventListItemControl : OverlayItemControl
     {
-        private OverlayEventListItemViewModel viewModel;
-
         public OverlayEventListItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayEventListItemViewModel();
         }
 
-        public OverlayEventListItemControl(OverlayEventListItemModel item)
+        public OverlayEventListItemControl(OverlayEventListItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayEventListItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
     }
 }

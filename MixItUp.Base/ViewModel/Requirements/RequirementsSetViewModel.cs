@@ -21,6 +21,8 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public ThresholdRequirementViewModel Threshold { get; set; } = new ThresholdRequirementViewModel();
 
+        public SettingsRequirementViewModel Settings { get; set; } = new SettingsRequirementViewModel();
+
         public IEnumerable<RequirementViewModelBase> Requirements
         {
             get
@@ -32,6 +34,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 requirements.AddRange(this.Rank.Items);
                 requirements.AddRange(this.Inventory.Items);
                 requirements.Add(this.Threshold);
+                requirements.Add(this.Settings);
                 return requirements;
             }
         }
@@ -76,29 +79,31 @@ namespace MixItUp.Base.ViewModel.Requirements
                 {
                     this.Threshold = new ThresholdRequirementViewModel((ThresholdRequirementModel)requirement);
                 }
+                else if (requirement is SettingsRequirementModel)
+                {
+                    this.Settings = new SettingsRequirementViewModel((SettingsRequirementModel)requirement);
+                }
             }
         }
 
-        public async Task<bool> Validate()
+        public async Task<IEnumerable<Result>> Validate()
         {
+            List<Result> results = new List<Result>();
             foreach (RequirementViewModelBase requirement in this.Requirements)
             {
-                if (!await requirement.Validate())
-                {
-                    return false;
-                }
+                results.Add(await requirement.Validate());
             }
-            return true;
+            return results;
         }
 
         public RequirementsSetModel GetRequirements()
         {
-            RequirementsSetModel requirements = new RequirementsSetModel();
+            List<RequirementModelBase> requirements = new List<RequirementModelBase>();
             foreach (RequirementViewModelBase requirement in this.Requirements)
             {
-                requirements.Requirements.Add(requirement.GetRequirement());
+                requirements.Add(requirement.GetRequirement());
             }
-            return requirements;
+            return new RequirementsSetModel(requirements);
         }
     }
 }

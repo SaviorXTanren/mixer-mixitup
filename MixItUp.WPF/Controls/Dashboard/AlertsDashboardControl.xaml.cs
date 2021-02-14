@@ -1,8 +1,9 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Controls.Dashboard;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.WPF.Controls.Chat;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                 if (viewModel.ContextMenuChatCommands.Count() > 0)
                 {
                     this.AlertsListView.ContextMenu.Items.Add(new Separator());
-                    foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                    foreach (CommandModelBase command in viewModel.ContextMenuChatCommands)
                     {
                         MenuItem menuItem = new MenuItem();
                         menuItem.Header = command.Name;
@@ -115,10 +116,10 @@ namespace MixItUp.WPF.Controls.Dashboard
                     if (e.Source is MenuItem)
                     {
                         MenuItem menuItem = (MenuItem)e.Source;
-                        if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
+                        if (menuItem.DataContext != null && menuItem.DataContext is ChatCommandModel)
                         {
-                            ChatCommand command = (ChatCommand)menuItem.DataContext;
-                            await command.Perform(message.Platform, arguments: new List<string>() { message.User.Username });
+                            ChatCommandModel command = (ChatCommandModel)menuItem.DataContext;
+                            await command.Perform(new CommandParametersModel(platform: message.Platform, arguments: new List<string>() { message.User.Username }) { TargetUser = message.User });
                         }
                     }
                 }

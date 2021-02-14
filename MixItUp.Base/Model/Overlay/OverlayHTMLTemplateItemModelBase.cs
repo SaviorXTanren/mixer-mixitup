@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -20,13 +21,13 @@ namespace MixItUp.Base.Model.Overlay
             this.HTML = html;
         }
 
-        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task PerformReplacements(JObject jobj, CommandParametersModel parameters)
         {
             if (jobj != null && jobj.ContainsKey("HTML"))
             {
-                jobj["HTML"] = this.PerformTemplateReplacements(jobj["HTML"].ToString(), await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers, platform));
+                jobj["HTML"] = this.PerformTemplateReplacements(jobj["HTML"].ToString(), await this.GetTemplateReplacements(parameters));
             }
-            await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers, platform);
+            await base.PerformReplacements(jobj, parameters);
         }
 
         protected string PerformTemplateReplacements(string text, Dictionary<string, string> templateReplacements)
@@ -38,7 +39,7 @@ namespace MixItUp.Base.Model.Overlay
             return text;
         }
 
-        protected virtual Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected virtual Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
             return Task.FromResult(new Dictionary<string, string>());
         }

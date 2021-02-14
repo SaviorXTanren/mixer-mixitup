@@ -48,7 +48,9 @@ namespace MixItUp.Reporter
 
                 await this.service.SendIssueReport(new IssueReportModel()
                 {
-                    MixerUserID = App.MixerUserID,
+                    Platform = App.PlatformType,
+                    UserID = App.UserID,
+                    Username = App.Username,
                     EmailAddress = this.ReplyEmailTextBox.Text,
                     Description = this.IssueDescriptionTextBox.Text,
                     LogContents = logContents,

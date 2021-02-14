@@ -13,7 +13,7 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="280" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="20" />
@@ -29,7 +29,7 @@
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap">The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources</TextBlock>
 
-            <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">OBS Studio 25.0 or higher is required and the OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder.</TextBlock>
+            <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">OBS Studio 25.0 or higher is required and you must run the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS WebSocket Installer</Hyperlink>.</TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">

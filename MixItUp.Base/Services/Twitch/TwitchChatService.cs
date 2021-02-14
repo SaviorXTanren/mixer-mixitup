@@ -184,7 +184,9 @@ namespace MixItUp.Base.Services.Twitch
 
                         await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
 
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         await Task.Delay(3000);
 
@@ -410,90 +412,90 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
                 }
-            }));
+            });
         }
 
         public async Task ClearMessages()
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
                 }
-            }));
+            });
         }
 
         public async Task ModUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task UnmodUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task TimeoutUser(UserViewModel user, int lengthInSeconds)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
                 }
-            }));
+            });
         }
 
         public async Task BanUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task UnbanUser(UserViewModel user)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
-            }));
+            });
         }
 
         public async Task RunCommercial(int lengthInSeconds)
         {
-            await this.RunAsync((Func<Task>)(async () =>
+            await AsyncRunner.RunAsync(async () =>
             {
                 if (this.userClient != null)
                 {
                     await this.userClient.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
                 }
-            }));
+            });
         }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
@@ -693,6 +695,14 @@ namespace MixItUp.Base.Services.Twitch
                             currency.AddAmount(user.Data, currency.OnHostBonus);
                         }
 
+                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                        {
+                            if (user.HasPermissionsTo(streamPass.Permission))
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                            }
+                        }
+
                         GlobalEvents.RaidOccurred(user, userNotice.RaidViewerCount);
 
                         trigger.SpecialIdentifiers["hostviewercount"] = userNotice.RaidViewerCount.ToString();
@@ -741,6 +751,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserTimeout);
                 trigger.Arguments.Add("@" + user.Username);
+                trigger.TargetUser = user;
                 trigger.SpecialIdentifiers["timeoutlength"] = chatClear.BanDuration.ToString();
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -750,6 +761,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan);
                 trigger.Arguments.Add("@" + user.Username);
+                trigger.TargetUser = user;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Banned", user.Username), ChannelSession.Settings.AlertModerationColor));

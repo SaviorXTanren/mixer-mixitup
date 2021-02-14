@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel.Controls.Overlay;
+﻿using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
@@ -10,35 +9,22 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayTickerTapeListItemControl : OverlayItemControl
     {
-        private OverlayTickerTapeListItemViewModel viewModel;
-
         public OverlayTickerTapeListItemControl()
         {
             InitializeComponent();
-
-            this.viewModel = new OverlayTickerTapeListItemViewModel();
         }
 
-        public OverlayTickerTapeListItemControl(OverlayTickerTapeListItemModel item)
+        public OverlayTickerTapeListItemControl(OverlayTickerTapeListItemViewModel viewModel)
+            : this()
         {
-            InitializeComponent();
-
-            this.viewModel = new OverlayTickerTapeListItemViewModel(item);
-        }
-
-        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override OverlayItemModelBase GetItem()
-        {
-            return this.viewModel.GetOverlayItem();
+            this.ViewModel = viewModel;
         }
 
         protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.DataContext = this.viewModel;
-            await this.viewModel.OnLoaded();
+            await base.OnLoaded();
         }
     }
 }

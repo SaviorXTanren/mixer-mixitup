@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.API;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -14,10 +13,10 @@ namespace MixItUp.Base.Services
     public interface IMixItUpService
     {
         Task<MixItUpUpdateModel> GetLatestUpdate();
+        Task<MixItUpUpdateModel> GetLatestPublicUpdate();
         Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
         Task<MixItUpUpdateModel> GetLatestTestUpdate();
 
-        Task SendUserFeatureEvent(UserFeatureEvent feature);
         Task SendIssueReport(IssueReportModel report);
     }
 
@@ -30,17 +29,37 @@ namespace MixItUp.Base.Services
 
         public MixItUpService() { }
 
-        public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
+        public async Task<MixItUpUpdateModel> GetLatestUpdate()
+        {
+            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestPublicUpdate();
+            if (update != null)
+            {
+                if (ChannelSession.AppSettings.PreviewProgram)
+                {
+                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
+                    if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
+                    {
+                        update = previewUpdate;
+                    }
+                }
+
+                // Remove this when we wish to re-enable Test Builds
+                ChannelSession.AppSettings.TestBuild = false;
+
+                if (ChannelSession.AppSettings.TestBuild)
+                {
+                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
+                    if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
+                    {
+                        update = testUpdate;
+                    }
+                }
+            }
+            return update;
+        }
+        public async Task<MixItUpUpdateModel> GetLatestPublicUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
         public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
         public async Task<MixItUpUpdateModel> GetLatestTestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/test"); }
-
-        public async Task SendUserFeatureEvent(UserFeatureEvent feature)
-        {
-            if (!ChannelSession.Settings.OptOutTracking && ChannelSession.Settings.FeatureMe)
-            {
-                await this.PostAsync("userfeature", feature);
-            }
-        }
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
 

@@ -5,6 +5,7 @@ namespace MixItUp.Base.Services
 {
     public interface IFileService
     {
+        string TextFileFilter();
         string ImageFileFilter();
         string MusicFileFilter();
         string VideoFileFilter();

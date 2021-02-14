@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Model.Commands;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -14,8 +13,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTimerItemModel : OverlayHTMLTemplateItemModelBase, IDisposable
     {
-        public const string TimerCompleteCommandName = "Timer Complete";
-
         public const string HTMLTemplate = @"<p style=""position: absolute; font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{TIME}</p>";
 
         [DataMember]
@@ -28,8 +25,31 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int TextSize { get; set; }
 
+        [Obsolete]
         [DataMember]
         public CustomCommand TimerCompleteCommand { get; set; }
+
+        [DataMember]
+        public Guid TimerFinishedCommandID { get; set; }
+
+        [JsonIgnore]
+        public CustomCommandModel TimerFinishedCommand
+        {
+            get { return (CustomCommandModel)ChannelSession.Settings.GetCommand(this.TimerFinishedCommandID); }
+            set
+            {
+                if (value != null)
+                {
+                    this.TimerFinishedCommandID = value.ID;
+                    ChannelSession.Settings.SetCommand(value);
+                }
+                else
+                {
+                    ChannelSession.Settings.RemoveCommand(this.TimerFinishedCommandID);
+                    this.TimerFinishedCommandID = Guid.Empty;
+                }
+            }
+        }
 
         [JsonIgnore]
         private int timeLeft;
@@ -39,14 +59,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayTimerItemModel() : base() { }
 
-        public OverlayTimerItemModel(string html, int totalLength, string textColor, string textFont, int textSize, CustomCommand timerCompleteCommand)
+        public OverlayTimerItemModel(string html, int totalLength, string textColor, string textFont, int textSize, CustomCommandModel timerFinishedCommand)
             : base(OverlayItemModelTypeEnum.Timer, html)
         {
             this.TotalLength = totalLength;
             this.TextColor = textColor;
             this.TextFont = textFont;
             this.TextSize = textSize;
-            this.TimerCompleteCommand = timerCompleteCommand;
+            this.TimerFinishedCommand = timerFinishedCommand;
         }
 
         public override async Task Enable()
@@ -74,9 +94,9 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, StreamingPlatformTypeEnum platform)
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(CommandParametersModel parameters)
         {
-            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers, platform);
+            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(parameters);
 
             replacementSets["TEXT_COLOR"] = this.TextColor;
             replacementSets["TEXT_FONT"] = this.TextFont;
@@ -101,9 +121,9 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.IsEnabled && !token.IsCancellationRequested)
                 {
-                    if (this.TimerCompleteCommand != null)
+                    if (this.TimerFinishedCommand != null)
                     {
-                        await this.TimerCompleteCommand.Perform();
+                        await this.TimerFinishedCommand.Perform();
                     }
                     await this.Disable();
                 }

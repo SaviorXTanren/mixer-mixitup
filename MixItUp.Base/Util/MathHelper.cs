@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Jace;
+using StreamingClient.Base.Util;
+using System;
 
 namespace MixItUp.Base.Util
 {
@@ -7,6 +9,38 @@ namespace MixItUp.Base.Util
         public static int Clamp(int number, int min, int max)
         {
             return Math.Min(Math.Max(number, min), max);
+        }
+
+        public static double ProcessMathEquation(string equation)
+        {
+            double result = 0;
+            try
+            {
+                equation = equation.Replace("random(", "customrandom(");
+
+                // Process Math
+                CalculationEngine engine = new CalculationEngine(new System.Globalization.CultureInfo("en-US"));
+                engine.AddFunction("customrandom", Random);
+                engine.AddFunction("randomrange", RandomRange);
+
+                result = engine.Calculate(equation);
+            }
+            catch (Exception ex)
+            {
+                // Calculation failed, log and set to 0
+                Logger.Log(ex);
+            }
+            return result;
+        }
+
+        private static double Random(double max)
+        {
+            return RandomHelper.GenerateRandomNumber(1, (int)max);
+        }
+
+        private static double RandomRange(double min, double max)
+        {
+            return RandomHelper.GenerateRandomNumber((int)min, (int)max);
         }
     }
 }

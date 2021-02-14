@@ -83,10 +83,7 @@ namespace MixItUp.Base.ViewModel.Requirements
             get { return this.amount; }
             set
             {
-                if (this.amount >= 0)
-                {
-                    this.amount = value;
-                }
+                this.amount = value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -115,27 +112,24 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.Amount = requirement.Amount;
         }
 
-        public override async Task<bool> Validate()
+        public override Task<Result> Validate()
         {
             if (this.SelectedInventory == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryMustBeSelected));
             }
 
             if (this.SelectedItem == null)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryItemMustBeSelected);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryItemMustBeSelected));
             }
 
-            if (this.Amount <= 0)
+            if (this.Amount < 0)
             {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.ValidInventoryItemAmountMustSpecified);
-                return false;
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ValidInventoryItemAmountMustSpecified));
             }
 
-            return true;
+            return Task.FromResult(new Result());
         }
 
         public override RequirementModelBase GetRequirement()

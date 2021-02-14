@@ -10,10 +10,6 @@
              xmlns:GenericSettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings.Generic"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <local:SettingsControlBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
-    </local:SettingsControlBase.Resources>
-
     <Grid Margin="20">
         <StackPanel>
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AllowCommandWhispering}" />
@@ -23,11 +19,16 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownAmount}" />
+            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
+
+            <Separator Margin="10" />
+
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding TwitchMassGiftedSubsFilterAmount}" />
 
             <Separator Margin="10" />
 
-            <TextBlock Margin="20,10" Text="{Binding Source={x:Static resx:Resources.HideActionsFromCommandEditor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock Margin="20,10" Text="{Binding Source={x:Static resx:Resources.HideActionsFromCommandEditor}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ItemsControl Margin="60,0,60,0" ItemsSource="{Binding HideActionsList}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

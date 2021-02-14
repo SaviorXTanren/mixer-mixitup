@@ -7,7 +7,7 @@
         xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -21,7 +21,6 @@
         Icon="./../../Logo.ico"
         Title="{x:Static resx:Resources.CustomizeInventory}" Height="600" Width="900">
     <Windows:LoadingWindowBase.Resources>
-        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -45,7 +44,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
@@ -74,18 +73,18 @@
                     <GroupBox Header="{x:Static resx:Resources.ItemList}" Grid.Column="2">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200">
+                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" MaxHeight="505">
                                 <DataGrid ItemsSource="{Binding Items}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.ItemName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.MaxAmount}" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.BuyPrice}" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="85" />
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.SellPrice}" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="85" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MaxAmount}" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" SortMemberPath="MaxAmount"/>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.BuyPrice}" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="85" SortMemberPath="BuyAmount"/>
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.SellPrice}" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="85" SortMemberPath="SellAmount"/>
                                         <DataGridTextColumn Header="{x:Static resx:Resources.SpecialIdentifierName}" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="160" />
                                         <DataGridTemplateColumn Width="110">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -165,7 +164,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <ToggleButton Grid.Column="2" IsChecked="{Binding ShopEnabled}" />
 
                                 <TextBox Grid.Column="4" Text="{Binding ShopCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ShopCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -181,11 +180,11 @@
                                 </Grid.ColumnDefinitions>
 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsBought}" Grid.Column="0">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopBuyCommandButtonsControl" DataContext="{Binding ShopBuyCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandsControls:CommandListingButtonsControl x:Name="ShopBuyCommand" DataContext="{Binding ShopBuyCommand}" HorizontalAlignment="Center" EditClicked="ShopBuyCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                                 </GroupBox>
 
                                 <GroupBox Header="{x:Static resx:Resources.ItemsSold}" Grid.Column="2">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopSellCommandButtonsControl" DataContext="{Binding ShopSellCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                                    <CommandsControls:CommandListingButtonsControl x:Name="ShopSellCommand" DataContext="{Binding ShopSellCommand}" HorizontalAlignment="Center" EditClicked="ShopSellCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                                 </GroupBox>
                             </Grid>
                         </Grid>
@@ -208,7 +207,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                                 <ToggleButton Grid.Column="2" IsChecked="{Binding TradeEnabled}" />
 
                                 <TextBox Grid.Column="4" Text="{Binding TradeCommandText}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TradeCommand}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -216,7 +215,7 @@
                             </Grid>
 
                             <GroupBox Header="{x:Static resx:Resources.ItemsTraded}" Grid.Row="2" HorizontalAlignment="Center">
-                                <CommandControls:CommandButtonsControl x:Name="TradeCommandButtonsControl" DataContext="{Binding TradeCommand}" HorizontalAlignment="Center" EditClicked="CommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                <CommandsControls:CommandListingButtonsControl x:Name="TradeCommand" DataContext="{Binding TradeCommand}" HorizontalAlignment="Center" EditClicked="TradeCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
                             </GroupBox>
                         </Grid>
                     </GroupBox>

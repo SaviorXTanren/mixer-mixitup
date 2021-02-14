@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel.Window.Wizard;
+﻿using MixItUp.Base.ViewModel.Wizard;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
