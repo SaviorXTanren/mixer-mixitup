@@ -5,6 +5,61 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.8.5001:</h2>
+        <ul>
+            <li>Command Updates:</li>
+            <ul>
+                <li>Updating command editor to include detailed error messages for command settings, requirements, and actions</li>
+                <li>Currency, Rank, &amp; Inventory requirements now support the ability to have multiple per command</li>
+                <li>Adding Run For Each User option to Threshold requirement to have command trigger for each user that participated in the Threshold requirement</li>
+                <li>Twitch Channel Points command editor now has drop-down in Name field that lists the names of all the custom Channel Point Rewards the user has created on Twitch</li>
+                <li>Each requirement's error messages now have a cooldown to how often they are shown in chat to help minimize on spam. The default value is 10 seconds and can be configured by going to Settings -> Commands</li>
+                <li>Adding the ability to enable/disable individual actions within a command</li>
+                <li>Adding settings option to include the name of the user that attempted to run the command when sending error messages</li>
+                <li>Adding Rank Down Command to Rank Systems</li>
+                <li>Adding 10 second cooldown in for "!shop list" command for Inventories</li>
+            </ul>
+            <li>Game Updates:</li>
+            <ul>
+                <li>All game commands have received internal re-working for logic</li>
+                <li>The Pickpocket game type functionality has been merged into the Steal game type</li>
+                <li>The Beach Ball game type functionality has been merged into the Hot Potato game type</li>
+                <li>The Vending Machine game type functionality has been merged into the Spin game type</li>
+            </ul>
+            <li>Action Updates:</li>
+            <ul>
+                <li>Conditional actions have been changed to allow for multiple actions to be run when they are triggered</li>
+                <li>When a command action is used, by default it will wait for the selected sub-command to finish before continuing on in the parent command. An option will</li>
+                <li>Adding option to Command Action to determine whether sub-command should wait to finish before proceeding on to next action</li>
+                <li>Adding buttons to Command Action to auto-create a new Action Group and edit the select command</li>
+                <li>The Streaming Platform action has been changed to the Twitch action</li>
+                <li>The Clips action has been moved into the Twitch action</li>
+                <li>The VIP User and Un-VIP User options have been moved from the Moderation action to the Twitch action</li>
+                <li>The Streaming Software action's source-based options can now handle folders and sub-items inside folders for OBS Studio. This may require re-installing the OBS web socket if you are running an older version.</li>
+                <li>Adding Source Filter Visibility option to Streaming Software action for OBS Studio</li>
+                <li>Currency actions now process Math equations in the Amount field</li>
+                <li>The Translation action now stores it's result into a Special Identifier called $translationresult and it's output options have been removed and instead replaced with their respective actions.</li>
+                <li>The Web Request action now stores it's result into a Special Identifier called $webrequestresult and it's output options have been removed and instead replaced with their respective actions.</li>
+                <li>External Program actions now have the ability to store their output into a Special Identifier called $externalprogramresult</li>
+                <li>Adding "Insert To File At Specific Line" option to File Action</li>
+                <li>Adding the ability to set a Stream Marker via the Twitch action</li>
+                <li>Adding the ability to process Special Identifiers for JSON Keys in Web Request Action</li>
+                <li>Adding length() function to Special Identifier action</li>
+            </ul>
+            <li>Special Identifier Updates:</li>
+            <ul>
+                <li>Adding $streamcurrentscene Special Identifier for name of the current scene in OBS Studio &amp; Streamlabs OBS</li>
+                <li>Adding $gamequeuetotal for the total number of users in the Game Queue</li>
+                <li>Adding $translationresult Special Identifier for the result of a Translation action</li>
+                <li>Adding $webrequestresult Special Identifier for the result of a Web Request action</li>
+                <li>Adding $externalprogramresult Special Identifier for the result of a External Program action when option is toggled</li>
+                <li>Adding $userisvip Special Identifier</li>
+                <li>Adding $gamewinnerscount Special Identifier</li>
+            </ul>
+            <li>Removing Clip Playback Overlay Widget due to changes with Twitch's clip playback system</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.8.5:</h2>
         <ul>
             <li>Fixing bug with Permission value for Stream Pass not being respected properly when adding points to a user</li>
