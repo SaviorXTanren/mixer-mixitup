@@ -533,7 +533,9 @@ namespace MixItUp.Base.Services
                     {
                         if (((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand != null)
                         {
-                            ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommand = new CustomCommandModel(((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand);
+                            CustomCommandModel command = new CustomCommandModel(((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand);
+                            newSettings.SetCommand(command);
+                            ((OverlayLeaderboardListItemModel)widget.Item).LeaderChangedCommandID = command.ID;
                             ((OverlayLeaderboardListItemModel)widget.Item).NewLeaderCommand = null;
                         }
                     }
@@ -541,7 +543,9 @@ namespace MixItUp.Base.Services
                     {
                         if (((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand != null)
                         {
-                            ((OverlayProgressBarItemModel)widget.Item).ProgressGoalReachedCommand = new CustomCommandModel(((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand);
+                            CustomCommandModel command = new CustomCommandModel(((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand);
+                            newSettings.SetCommand(command);
+                            ((OverlayProgressBarItemModel)widget.Item).ProgressGoalReachedCommandID = command.ID;
                             ((OverlayProgressBarItemModel)widget.Item).GoalReachedCommand = null;
                         }
                     }
@@ -549,7 +553,9 @@ namespace MixItUp.Base.Services
                     {
                         if (((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand != null)
                         {
-                            ((OverlayStreamBossItemModel)widget.Item).StreamBossChangedCommand = new CustomCommandModel(((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand);
+                            CustomCommandModel command = new CustomCommandModel(((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand);
+                            newSettings.SetCommand(command);
+                            ((OverlayStreamBossItemModel)widget.Item).StreamBossChangedCommandID = command.ID;
                             ((OverlayStreamBossItemModel)widget.Item).NewStreamBossCommand = null;
                         }
                     }
@@ -557,7 +563,9 @@ namespace MixItUp.Base.Services
                     {
                         if (((OverlayTimerItemModel)widget.Item).TimerCompleteCommand != null)
                         {
-                            ((OverlayTimerItemModel)widget.Item).TimerFinishedCommand = new CustomCommandModel(((OverlayTimerItemModel)widget.Item).TimerCompleteCommand);
+                            CustomCommandModel command = new CustomCommandModel(((OverlayTimerItemModel)widget.Item).TimerCompleteCommand);
+                            newSettings.SetCommand(command);
+                            ((OverlayTimerItemModel)widget.Item).TimerFinishedCommandID = command.ID;
                             ((OverlayTimerItemModel)widget.Item).TimerCompleteCommand = null;
                         }
                     }
