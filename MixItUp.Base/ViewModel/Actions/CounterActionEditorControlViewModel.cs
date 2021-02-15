@@ -110,8 +110,8 @@ namespace MixItUp.Base.ViewModel.Actions
                 ChannelSession.Settings.Counters[this.CounterName] = new CounterModel(this.CounterName);
             }
             CounterModel counter = ChannelSession.Settings.Counters[this.CounterName];
-            this.SaveToFile = counter.SaveToFile;
-            this.ResetOnLoad = counter.ResetOnLoad;
+            counter.SaveToFile = this.SaveToFile;
+            counter.ResetOnLoad = this.ResetOnLoad;
 
             return Task.FromResult<ActionModelBase>(new CounterActionModel(this.CounterName, this.SelectedActionType, this.Amount));
         }

@@ -30,6 +30,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SaveToFile}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
@@ -37,6 +39,12 @@
 
             <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.ResetOnLoad}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="6" IsChecked="{Binding ResetOnLoad}" ToolTip="{x:Static resx:Resources.ResetOnLoad}" />
+
+            <TextBlock Grid.Column="8" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Hyperlink x:Name="CounterFolderHyperlink" Click="CounterFolderHyperlink_Click">
+                    <TextBlock Text="{x:Static resx:Resources.CountersFolder}"/>
+                </Hyperlink>
+            </TextBlock>
 
         </Grid>
 

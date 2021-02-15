@@ -52,6 +52,8 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public abstract class CommandModelBase : IEquatable<CommandModelBase>, IComparable<CommandModelBase>
     {
+        public const string CommandNameSpecialIdentifier = "commandname";
+
         public static IEnumerable<CommandTypeEnum> GetSelectableCommandTypes()
         {
             List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
@@ -188,6 +190,8 @@ namespace MixItUp.Base.Model.Commands
                             lockPerformed = true;
                             await this.CommandLockSemaphore.WaitAsync();
                         }
+
+                        parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = this.Name;
 
                         if (await this.ValidateRequirements(parameters))
                         {
