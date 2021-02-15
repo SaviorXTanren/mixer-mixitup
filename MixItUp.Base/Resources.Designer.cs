@@ -10575,6 +10575,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Donations.
+        /// </summary>
+        public static string ShowDonations {
+            get {
+                return ResourceManager.GetString("ShowDonations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Event Alerts.
         /// </summary>
         public static string ShowEventAlerts {
