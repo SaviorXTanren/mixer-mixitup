@@ -225,6 +225,9 @@ namespace MixItUp.Base.ViewModel.Games
         public TriviaGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Trivia;
+            this.Triggers = MixItUp.Base.Resources.Trivia.ToLower();
+
             this.WinAmount = 100;
             this.TimeLimit = 30;
             this.UseRandomOnlineQuestions = true;

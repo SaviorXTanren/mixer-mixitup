@@ -160,6 +160,9 @@ namespace MixItUp.Base.ViewModel.Games
         public HeistGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Heist;
+            this.Triggers = MixItUp.Base.Resources.Heist.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHeistStartedExample);

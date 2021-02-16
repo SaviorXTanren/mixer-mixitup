@@ -174,6 +174,9 @@ namespace MixItUp.Base.ViewModel.Games
         public BetGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Bet;
+            this.Triggers = MixItUp.Base.Resources.Bet.ToLower();
+
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

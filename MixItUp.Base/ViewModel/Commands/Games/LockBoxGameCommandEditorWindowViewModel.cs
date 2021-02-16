@@ -124,6 +124,9 @@ namespace MixItUp.Base.ViewModel.Games
         public LockBoxGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.LockBox;
+            this.Triggers = MixItUp.Base.Resources.LockBox.ToLower();
+
             this.CombinationLength = 3;
             this.InitialAmount = 100;
             this.SuccessfulCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandLockBoxSuccessfulExample, this.PrimaryCurrencyName));

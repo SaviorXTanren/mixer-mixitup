@@ -153,6 +153,9 @@ namespace MixItUp.Base.ViewModel.Games
         public HitmanGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Hitman;
+            this.Triggers = MixItUp.Base.Resources.Hitman.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.HitmanTimeLimit = 30;
