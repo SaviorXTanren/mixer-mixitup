@@ -9,7 +9,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public abstract class GroupedCommandsMainControlViewModelBase : WindowControlViewModelBase
     {
+        public ObservableCollection<CommandModelBase> DefaultGroup { get; private set; }
+
         public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>();
+
+        public bool ShowList { get { return !this.ShowGroups; } }
+        public bool ShowGroups { get { return this.CommandGroups.Count > 1; } }
 
         public string NameFilter
         {
@@ -34,6 +39,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 if (string.Equals(group.GroupName, command.GroupName))
                 {
                     group.AddCommand(command);
+                    this.NotifyProperties();
                     return;
                 }
             }
@@ -52,11 +58,14 @@ namespace MixItUp.Base.ViewModel.MainControls
                     if (string.Compare(groupSettings.Name, this.CommandGroups[i].DisplayName, ignoreCase: true) < 0)
                     {
                         this.CommandGroups.Insert(i, viewModel);
+                        this.NotifyProperties();
                         return;
                     }
                 }
             }
+
             this.CommandGroups.Add(viewModel);
+            this.NotifyProperties();
         }
 
         public void RemoveCommand(CommandModelBase command)
@@ -70,9 +79,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         this.CommandGroups.Remove(group);
                     }
+                    this.NotifyProperties();
                     return;
                 }
             }
+
+            this.NotifyProperties();
         }
 
         public void FullRefresh()
@@ -89,6 +101,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, group));
             }
+            this.NotifyProperties();
         }
 
         protected abstract IEnumerable<CommandModelBase> GetCommands();
@@ -105,6 +118,18 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.FullRefresh();
             return base.OnVisibleInternal();
+        }
+
+        private void NotifyProperties()
+        {
+            CommandGroupControlViewModel defaultGroup = this.CommandGroups.FirstOrDefault(g => string.IsNullOrEmpty(g.GroupName));
+            if (defaultGroup != null)
+            {
+                this.DefaultGroup = defaultGroup.Commands;
+            }
+            this.NotifyPropertyChanged("DefaultGroup");
+            this.NotifyPropertyChanged("ShowList");
+            this.NotifyPropertyChanged("ShowGroups");
         }
     }
 }
