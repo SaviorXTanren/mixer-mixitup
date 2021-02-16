@@ -279,13 +279,19 @@ namespace MixItUp.Base.Model.Currency
 
             RankModel newRank = this.GetRank(user);
 
+            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+            if (userViewModel == null)
+            {
+                userViewModel = new UserViewModel(user);
+            }
+
             if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankChangedCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID))), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankChangedCommand.Perform(new CommandParametersModel(userViewModel)), new CancellationToken());
             }
             else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankDownCommand.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID))), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankDownCommand.Perform(new CommandParametersModel(userViewModel)), new CancellationToken());
             }
         }
 
