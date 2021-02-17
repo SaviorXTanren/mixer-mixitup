@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public abstract class GroupedCommandsMainControlViewModelBase : WindowControlViewModelBase
     {
-        public ObservableCollection<CommandModelBase> DefaultGroup { get; private set; }
+        public ObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
 
         public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>();
 
@@ -122,11 +122,6 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void NotifyProperties()
         {
-            CommandGroupControlViewModel defaultGroup = this.CommandGroups.FirstOrDefault(g => string.IsNullOrEmpty(g.GroupName));
-            if (defaultGroup != null)
-            {
-                this.DefaultGroup = defaultGroup.Commands;
-            }
             this.NotifyPropertyChanged("DefaultGroup");
             this.NotifyPropertyChanged("ShowList");
             this.NotifyPropertyChanged("ShowGroups");
