@@ -186,7 +186,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else if (wbAction.ResponseAction == Base.Actions.WebRequestResponseActionTypeEnum.SpecialIdentifier)
                     {
-                        actions.Add(new SpecialIdentifierActionModel(wbAction.SpecialIdentifierName, "$" + TranslationActionModel.ResponseSpecialIdentifier, false, false));
+                        actions.Add(new SpecialIdentifierActionModel(wbAction.SpecialIdentifierName, "$" + WebRequestActionModel.ResponseSpecialIdentifier, false, false));
                     }
                     break;
             }
