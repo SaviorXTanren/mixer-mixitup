@@ -104,7 +104,7 @@ namespace MixItUp.Base.Services
         {
             string reason = null;
 
-            if (user.IgnoreForQueries)
+            if (string.IsNullOrEmpty(text) || user.IgnoreForQueries)
             {
                 return reason;
             }
@@ -220,8 +220,11 @@ namespace MixItUp.Base.Services
                         count++;
                     }
 
-                    count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
-                    messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
+                    if (!string.IsNullOrEmpty(leftOverText))
+                    {
+                        count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
+                        messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
+                    }
 
                     if (ChannelSession.Settings.ModerationPunctuationBlockIsPercentage)
                     {
