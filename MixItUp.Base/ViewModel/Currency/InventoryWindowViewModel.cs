@@ -193,7 +193,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private CommandModelBase tradeCommand;
 
-        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values; } }
+        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values.ToList(); } }
         public CurrencyModel SelectedShopCurrency
         {
             get { return this.selectedShopCurrency; }

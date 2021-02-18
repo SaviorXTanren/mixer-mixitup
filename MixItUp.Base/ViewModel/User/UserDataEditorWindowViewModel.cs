@@ -8,6 +8,7 @@ using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -77,7 +78,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool DoesNotHaveEntranceCommand { get { return !this.HasEntranceCommand; } }
 
         public bool IsPatreonConnected { get { return ChannelSession.Services.Patreon.IsConnected; } }
-        public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ChannelSession.Services.Patreon.CampaignMembers; } }
+        public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ChannelSession.Services.Patreon.CampaignMembers.ToList(); } }
         public PatreonCampaignMember PatreonUser
         {
             get { return this.User.Data.PatreonUser; }

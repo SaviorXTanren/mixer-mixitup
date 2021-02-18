@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowShowHideWidgetGrid { get { return this.SelectedActionType == OverlayActionTypeEnum.ShowHideWidget; } }
 
-        public IEnumerable<OverlayWidgetModel> Widgets { get { return ChannelSession.Settings.OverlayWidgets; } }
+        public IEnumerable<OverlayWidgetModel> Widgets { get { return ChannelSession.Settings.OverlayWidgets.ToList(); } }
 
         public OverlayWidgetModel SelectedWidget
         {

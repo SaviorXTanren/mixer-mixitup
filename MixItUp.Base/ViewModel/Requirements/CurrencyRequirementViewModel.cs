@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -37,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
     public class CurrencyRequirementViewModel : RequirementViewModelBase
     {
-        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values; } }
+        public IEnumerable<CurrencyModel> Currencies { get { return ChannelSession.Settings.Currency.Values.ToList(); } }
 
         public CurrencyModel SelectedCurrency
         {
