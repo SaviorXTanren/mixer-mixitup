@@ -98,6 +98,7 @@ namespace MixItUp.Base.Services
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
+        private ReaderWriterLockSlim commandLock = new ReaderWriterLockSlim();
         private Dictionary<string, CommandModelBase> triggersToCommands = new Dictionary<string, CommandModelBase>();
         private int longestTrigger = 0;
         private List<CommandModelBase> wildcardCommands = new List<CommandModelBase>();
@@ -274,6 +275,8 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
+            this.commandLock.EnterWriteLock();
+
             this.triggersToCommands.Clear();
             this.longestTrigger = 0;
             this.wildcardCommands.Clear();
@@ -300,6 +303,8 @@ namespace MixItUp.Base.Services
                     this.chatMenuCommands.Add(command);
                 }
             }
+
+            this.commandLock.ExitWriteLock();
 
             this.ChatCommandsReprocessed(this, new EventArgs());
         }
@@ -472,6 +477,8 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
+                    this.commandLock.EnterReadLock();
+
                     bool commandTriggered = false;
                     if (message.User.Data.CustomCommandIDs.Count > 0)
                     {
@@ -557,6 +564,8 @@ namespace MixItUp.Base.Services
                         await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
                     }
                 }
+
+                this.commandLock.ExitReadLock();
 
                 GlobalEvents.ChatMessageReceived(message);
 
