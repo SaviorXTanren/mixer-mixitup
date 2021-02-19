@@ -2,6 +2,7 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -418,6 +419,11 @@ namespace MixItUp.Base.Services.Twitch
                             if (user == null)
                             {
                                 user = new UserViewModel(follow);
+                            }
+
+                            if (user.UserRoles.Contains(UserRoleEnum.Banned))
+                            {
+                                return;
                             }
 
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
