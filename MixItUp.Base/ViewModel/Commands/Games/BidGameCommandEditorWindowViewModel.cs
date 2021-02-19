@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> StarterRoles { get { return EnumHelper.GetEnumList<UserRoleEnum>(); } }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedStarterRole
         {

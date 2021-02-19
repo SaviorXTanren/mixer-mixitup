@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,18 +8,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class RoleRequirementViewModel : RequirementViewModelBase
     {
-        public static IEnumerable<UserRoleEnum> SelectableUserRoles()
-        {
-            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
-            roles.Remove(UserRoleEnum.GlobalMod);
-            roles.Remove(UserRoleEnum.Banned);
-            roles.Remove(UserRoleEnum.Custom);
-            return roles;
-        }
-
         private static PatreonBenefit NonePatreonBenefit = new PatreonBenefit() { ID = string.Empty, Title = "None" };
 
-        public IEnumerable<UserRoleEnum> Roles { get { return RoleRequirementViewModel.SelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> Roles { get { return UserDataModel.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedRole
         {

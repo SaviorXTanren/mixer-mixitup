@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,14 @@ namespace MixItUp.Base.Model.User
     [DataContract]
     public class UserDataModel : IEquatable<UserDataModel>
     {
+        public static IEnumerable<UserRoleEnum> GetSelectableUserRoles()
+        {
+            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
+            roles.Remove(UserRoleEnum.Banned);
+            roles.Remove(UserRoleEnum.Custom);
+            return roles;
+        }
+
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
 

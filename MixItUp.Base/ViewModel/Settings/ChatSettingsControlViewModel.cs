@@ -114,10 +114,7 @@ namespace MixItUp.Base.ViewModel.Settings
                     GlobalEvents.ChatVisualSettingsChanged();
                 });
 
-            List<UserRoleEnum> roles = new List<UserRoleEnum>(EnumHelper.GetEnumList<UserRoleEnum>());
-            roles.Remove(UserRoleEnum.Banned);
-            roles.Remove(UserRoleEnum.Custom);
-            foreach (UserRoleEnum role in roles.OrderBy(r => r))
+            foreach (UserRoleEnum role in UserDataModel.GetSelectableUserRoles().OrderBy(r => r))
             {
                 string name = EnumHelper.GetEnumName(role);
                 name = MixItUp.Base.Resources.ResourceManager.GetString(name) ?? name;
