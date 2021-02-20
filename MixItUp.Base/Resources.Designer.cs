@@ -12431,6 +12431,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to copy text to clipboard due to system error, please try manually re-typing the text..
+        /// </summary>
+        public static string UnableToCopyToClipboard {
+            get {
+                return ResourceManager.GetString("UnableToCopyToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unassigned.
         /// </summary>
         public static string Unassigned {

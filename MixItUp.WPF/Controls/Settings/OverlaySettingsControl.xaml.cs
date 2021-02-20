@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Settings;
-using StreamingClient.Base.Util;
-using System;
+using MixItUp.WPF.Util;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Settings
@@ -32,18 +30,11 @@ namespace MixItUp.WPF.Controls.Settings
             await this.InitializeInternal();
         }
 
-        private void CopyEndpointURLButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void CopyEndpointURLButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
             OverlayEndpointListingViewModel overlay = (OverlayEndpointListingViewModel)button.DataContext;
-            try
-            {
-                Clipboard.SetText(overlay.Address);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
+            await UIHelpers.CopyToClipboard(overlay.Address);
         }
     }
 }

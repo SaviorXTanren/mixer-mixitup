@@ -4681,4 +4681,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="ShowDonations" xml:space="preserve">
     <value>Show Donations</value>
   </data>
+  <data name="UnableToCopyToClipboard" xml:space="preserve">
+    <value>Unable to copy text to clipboard due to system error, please try manually re-typing the text.</value>
+  </data>
 </root>
