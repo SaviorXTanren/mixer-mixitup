@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -83,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Currency
             }
         }
         private string name;
-        public IEnumerable<UserRoleEnum> Permissions { get; private set; } = EnumHelper.GetEnumList<UserRoleEnum>();
+        public IEnumerable<UserRoleEnum> Permissions { get; private set; } = UserDataModel.GetSelectableUserRoles();
         public UserRoleEnum Permission
         {
             get { return this.permission; }

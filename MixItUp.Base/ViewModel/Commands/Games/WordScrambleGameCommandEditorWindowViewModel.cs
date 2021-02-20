@@ -153,6 +153,9 @@ namespace MixItUp.Base.ViewModel.Games
         public WordScrambleGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.WordScramble;
+            this.Triggers = MixItUp.Base.Resources.WordScramble.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.WordScrambleTimeLimit = 300;

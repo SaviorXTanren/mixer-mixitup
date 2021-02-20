@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Games
 {
     public class BidGameCommandEditorWindowViewModel : GameCommandEditorWindowViewModelBase
     {
-        public IEnumerable<UserRoleEnum> StarterRoles { get { return EnumHelper.GetEnumList<UserRoleEnum>(); } }
+        public IEnumerable<UserRoleEnum> StarterRoles { get { return UserDataModel.GetSelectableUserRoles(); } }
 
         public UserRoleEnum SelectedStarterRole
         {
@@ -95,6 +95,9 @@ namespace MixItUp.Base.ViewModel.Games
         public BidGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Bid;
+            this.Triggers = MixItUp.Base.Resources.Bid.ToLower();
+
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.TimeLimit = 60;
             this.StartedCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidStartedExample, this.PrimaryCurrencyName));

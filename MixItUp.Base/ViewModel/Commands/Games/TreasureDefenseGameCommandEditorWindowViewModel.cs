@@ -160,6 +160,9 @@ namespace MixItUp.Base.ViewModel.Games
         public TreasureDefenseGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.TreasureDefense;
+            this.Triggers = MixItUp.Base.Resources.TreasureDefense.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.KingTimeLimit = 300;

@@ -112,6 +112,9 @@ namespace MixItUp.Base.ViewModel.Games
         public CoinPusherGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.CoinPusher;
+            this.Triggers = MixItUp.Base.Resources.CoinPusher.ToLower();
+
             this.MinimumAmountForPayout = 1000;
             this.ProbabilityPercentage = 40;
             this.PayoutMinimumPercentage = 25;

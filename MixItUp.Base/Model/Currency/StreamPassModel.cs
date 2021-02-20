@@ -197,8 +197,13 @@ namespace MixItUp.Base.Model.Currency
 
                         if (command != null)
                         {
+                            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+                            if (userViewModel == null)
+                            {
+                                userViewModel = new UserViewModel(user);
+                            }
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform(new CommandParametersModel(ChannelSession.Services.User.GetUserByID(user.ID), specialIdentifiers: specialIdentifiers));
+                            command.Perform(new CommandParametersModel(userViewModel, specialIdentifiers: specialIdentifiers));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                     }

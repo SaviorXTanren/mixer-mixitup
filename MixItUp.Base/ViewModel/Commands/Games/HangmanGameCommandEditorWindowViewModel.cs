@@ -129,6 +129,9 @@ namespace MixItUp.Base.ViewModel.Games
         public HangmanGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Hangman;
+            this.Triggers = MixItUp.Base.Resources.Hangman.ToLower();
+
             this.MaxFailures = 5;
             this.InitialAmount = 100;
             this.SuccessfulGuessCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandHangmanSuccessfulGuessExample);

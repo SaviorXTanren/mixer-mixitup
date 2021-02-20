@@ -20,10 +20,14 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <ComboBox Grid.Column="0" ItemsSource="{Binding ChannelPointRewards}" Text="{Binding Name}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RewardName}" />
 
-        <local:UnlockCommandControl Grid.Column="2" />
+        <ComboBox Grid.Column="2" ItemsSource="{Binding CommandGroups}" Text="{Binding SelectedCommandGroup}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" />
+
+        <local:UnlockCommandControl Grid.Column="4" />
     </Grid>
 </local:CommandEditorDetailsControlBase>

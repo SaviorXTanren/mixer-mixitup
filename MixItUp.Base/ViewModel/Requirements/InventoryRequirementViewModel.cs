@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MixItUp.Base.Model.Currency;
@@ -36,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
     public class InventoryRequirementViewModel : RequirementViewModelBase
     {
-        public IEnumerable<InventoryModel> Inventories { get { return ChannelSession.Settings.Inventory.Values; } }
+        public IEnumerable<InventoryModel> Inventories { get { return ChannelSession.Settings.Inventory.Values.ToList(); } }
 
         public InventoryModel SelectedInventory
         {

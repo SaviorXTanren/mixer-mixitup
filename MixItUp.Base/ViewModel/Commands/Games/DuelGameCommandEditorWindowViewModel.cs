@@ -100,6 +100,9 @@ namespace MixItUp.Base.ViewModel.Games
         public DuelGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Duel;
+            this.Triggers = MixItUp.Base.Resources.Duel.ToLower();
+
             this.TimeLimit = 60;
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;

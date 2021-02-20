@@ -135,6 +135,9 @@ namespace MixItUp.Base.ViewModel.Games
         public SlotMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.SlotMachine;
+            this.Triggers = MixItUp.Base.Resources.SlotMachine.ToLower();
+
             this.Symbols = "X O $";
             this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSlotMachineLoseExample);
             this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(500, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "O", "O", "O"));

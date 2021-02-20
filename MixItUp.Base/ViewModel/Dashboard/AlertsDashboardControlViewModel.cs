@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Dashboard
@@ -12,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
     {
         public ObservableCollection<AlertChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<AlertChatMessageViewModel>();
 
-        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
+        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands.ToList(); } }
 
         public event EventHandler ContextMenuCommandsChanged = delegate { };
 

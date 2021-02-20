@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Serial; } }
 
-        public IEnumerable<SerialDeviceModel> Devices { get { return ChannelSession.Settings.SerialDevices; } }
+        public IEnumerable<SerialDeviceModel> Devices { get { return ChannelSession.Settings.SerialDevices.ToList(); } }
 
         public SerialDeviceModel SelectedDevice
         {

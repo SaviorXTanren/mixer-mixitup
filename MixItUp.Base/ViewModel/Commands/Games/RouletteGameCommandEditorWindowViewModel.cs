@@ -179,6 +179,9 @@ namespace MixItUp.Base.ViewModel.Games
         public RouletteGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Roulette;
+            this.Triggers = MixItUp.Base.Resources.Roulette.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.SelectedBetType = RouletteGameCommandBetType.NumberRange;

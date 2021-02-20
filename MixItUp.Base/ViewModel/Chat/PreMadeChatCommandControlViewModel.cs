@@ -15,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TriggersString { get { return this.command.TriggersString; } }
 
-        public IEnumerable<UserRoleEnum> RoleValues { get { return RoleRequirementViewModel.SelectableUserRoles(); } }
+        public IEnumerable<UserRoleEnum> RoleValues { get { return UserDataModel.GetSelectableUserRoles(); } }
         public UserRoleEnum SelectedRole
         {
             get { return this.command.Requirements.Role.Role; }

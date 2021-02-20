@@ -124,6 +124,9 @@ namespace MixItUp.Base.ViewModel.Games
         public RussianRouletteGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.RussianRoulette;
+            this.Triggers = MixItUp.Base.Resources.RussianRoulette.ToLower();
+
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
             this.MaxWinners = 1;

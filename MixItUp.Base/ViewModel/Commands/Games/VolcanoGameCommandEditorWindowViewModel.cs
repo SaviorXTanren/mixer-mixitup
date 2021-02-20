@@ -232,6 +232,9 @@ namespace MixItUp.Base.ViewModel.Games
         public VolcanoGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Volcano;
+            this.Triggers = MixItUp.Base.Resources.Volcano.ToLower();
+
             this.StatusArgument = MixItUp.Base.Resources.GameCommandStatusArgumentExample;
             this.Stage1DepositCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage1DepositExample);
             this.Stage1StatusCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandVolcanoStage1StatusExample);

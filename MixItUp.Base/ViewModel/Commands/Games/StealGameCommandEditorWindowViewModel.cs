@@ -64,6 +64,9 @@ namespace MixItUp.Base.ViewModel.Games
         public StealGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
+            this.Name = MixItUp.Base.Resources.Steal;
+            this.Triggers = MixItUp.Base.Resources.Steal.ToLower();
+
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;
             this.SuccessfulOutcome = new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 0, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandStealWinExample, this.PrimaryCurrencyName)));

@@ -31,10 +31,10 @@ namespace MixItUp.WPF.Controls.MainControls
             this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
             this.MaxPunctuationSymbolsEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
 
-            this.FilteredWordsExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
-            this.ChatTextModerationExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
-            this.BlockLinksExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
-            this.ChatParticipationExemptComboBox.ItemsSource = MixItUp.Base.ViewModel.Requirements.RoleRequirementViewModel.SelectableUserRoles();
+            this.FilteredWordsExemptComboBox.ItemsSource = UserDataModel.GetSelectableUserRoles();
+            this.ChatTextModerationExemptComboBox.ItemsSource = UserDataModel.GetSelectableUserRoles();
+            this.BlockLinksExemptComboBox.ItemsSource = UserDataModel.GetSelectableUserRoles();
+            this.ChatParticipationExemptComboBox.ItemsSource = UserDataModel.GetSelectableUserRoles();
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
             this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);

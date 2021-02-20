@@ -1,18 +1,20 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Controls.Commands;
 using MixItUp.WPF.Windows.Commands;
-using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for TwitchChannelPointsControl.xaml
     /// </summary>
-    public partial class TwitchChannelPointsControl : MainControlBase
+    public partial class TwitchChannelPointsControl : GroupedCommandsMainControlBase
     {
         private TwitchChannelPointsMainControlViewModel viewModel;
 
@@ -23,14 +25,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
-            this.DataContext = this.viewModel = new TwitchChannelPointsMainControlViewModel(this.Window.ViewModel);
+            this.DataContext = this.viewModel = new TwitchChannelPointsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            this.SetViewModel(this.viewModel);
             await this.viewModel.OnLoaded();
+
             await base.InitializeInternal();
         }
 
-        protected override async Task OnVisibilityChanged()
+        private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            await this.viewModel.OnVisible();
+            this.viewModel.NameFilter = this.NameFilterTextBox.Text;
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -39,7 +43,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (command != null)
             {
                 CommandEditorWindow window = new CommandEditorWindow(command);
-                window.Closed += Window_Closed;
+                window.CommandSaved += Window_CommandSaved;
                 window.Show();
             }
         }
@@ -53,22 +57,30 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.TwitchChannelPointsCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    this.viewModel.Refresh();
+                    this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                 }
             });
         }
 
-        private void AddRewardCommand_Click(object sender, RoutedEventArgs e)
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.TwitchChannelPoints);
-            window.Closed += Window_Closed;
+            window.CommandSaved += Window_CommandSaved;
             window.Show();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            this.viewModel.Refresh();
+            if (!e.Handled)
+            {
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
+            }
         }
     }
 }
