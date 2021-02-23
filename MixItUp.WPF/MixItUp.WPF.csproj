@@ -936,6 +936,7 @@
     <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\ColorBrushConverter.cs" />
+    <Compile Include="Util\UIHelpers.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Util\WPFDialogShower.cs" />
     <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">

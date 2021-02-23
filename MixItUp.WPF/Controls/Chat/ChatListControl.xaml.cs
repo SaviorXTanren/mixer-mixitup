@@ -5,6 +5,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -297,16 +298,12 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 0.3; }
 
-        private void MessageCopyMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void MessageCopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
             {
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
-                try
-                {
-                    Clipboard.SetText(message.PlainTextMessage);
-                }
-                catch (Exception ex) { Logger.Log(ex); }
+                await UIHelpers.CopyToClipboard(message.PlainTextMessage);
             }
         }
 

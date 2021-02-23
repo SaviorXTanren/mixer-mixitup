@@ -459,6 +459,7 @@ namespace MixItUp.Base.Services
                     return;
                 }
 
+                bool lockUsed = false;
                 IEnumerable<string> arguments = null;
                 if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                 {
@@ -478,6 +479,7 @@ namespace MixItUp.Base.Services
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
                     this.commandLock.EnterReadLock();
+                    lockUsed = true;
 
                     bool commandTriggered = false;
                     if (message.User.Data.CustomCommandIDs.Count > 0)
@@ -565,7 +567,10 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                this.commandLock.ExitReadLock();
+                if (lockUsed)
+                {
+                    this.commandLock.ExitReadLock();
+                }
 
                 GlobalEvents.ChatMessageReceived(message);
 
