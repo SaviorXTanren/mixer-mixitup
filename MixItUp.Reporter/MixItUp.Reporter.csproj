@@ -39,8 +39,8 @@
     <ApplicationIcon>..\MixItUp.WPF\Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Glimesh.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamingClientLibrary.Glimesh.1.0.0\lib\netstandard2.0\Glimesh.Base.dll</HintPath>
+    <Reference Include="Glimesh.Base, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClientLibrary.Glimesh.1.0.0.2\lib\netstandard2.0\Glimesh.Base.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.49.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.49.0\lib\net45\Google.Apis.dll</HintPath>
