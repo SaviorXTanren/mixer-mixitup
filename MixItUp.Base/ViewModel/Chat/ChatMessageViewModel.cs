@@ -135,9 +135,9 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!this.IsDeleted)
                 {
                     this.IsDeleted = true;
-                    if (moderator != null && !string.IsNullOrEmpty(moderator.Username))
+                    if (moderator != null && !string.IsNullOrEmpty(moderator.DisplayName))
                     {
-                        this.DeletedBy = moderator.Username;
+                        this.DeletedBy = moderator.DisplayName;
                     }
                     this.ModerationReason = reason;
 

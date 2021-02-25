@@ -73,7 +73,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Source={x:Static resx:Resources.Username}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
-                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Username}" />
+                <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding DisplayName}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
