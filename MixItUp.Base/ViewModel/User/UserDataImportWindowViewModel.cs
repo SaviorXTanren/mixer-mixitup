@@ -219,7 +219,7 @@ namespace MixItUp.Base.ViewModel.User
                                 UserDataModel user = null;
                                 if (twitchID > 0)
                                 {
-                                    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
+                                    user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
                                     if (user != null)
                                     {
                                         newUser = false;
@@ -239,7 +239,7 @@ namespace MixItUp.Base.ViewModel.User
                                     Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
                                     if (twitchUser != null)
                                     {
-                                        user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
+                                        user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
                                         if (user != null)
                                         {
                                             newUser = false;

@@ -169,7 +169,7 @@ namespace MixItUp.Base.Model.Overlay
                 foreach (UserSubscriptionModel subscriber in subscribers)
                 {
                     UserViewModel user = null;
-                    UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(subscriber.user.id);
+                    UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, subscriber.user.id);
                     if (userData != null)
                     {
                         user = new UserViewModel(userData);

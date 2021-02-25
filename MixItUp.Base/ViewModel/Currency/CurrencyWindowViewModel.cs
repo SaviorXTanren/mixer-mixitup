@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
@@ -610,7 +611,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
+                                            MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString());
                                             if (userData != null)
                                             {
                                                 user = new UserViewModel(userData);

@@ -524,9 +524,9 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
-        private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
+        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> PlatformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
         [JsonIgnore]
-        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> UsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
+        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> PlatformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
 
         #endregion Database Data
 
@@ -567,19 +567,30 @@ namespace MixItUp.Base.Model.Settings
 
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
-                    this.UsernameLookups[platform] = new Dictionary<string, Guid>();
+                    this.PlatformUserIDLookups[platform] = new Dictionary<string, Guid>();
+                    this.PlatformUsernameLookups[platform] = new Dictionary<string, Guid>();
                 }
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
                     UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                     this.UserData[userData.ID] = userData;
+
                     if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                     {
-                        this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                        this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
                         if (!string.IsNullOrEmpty(userData.TwitchUsername))
                         {
-                            this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
+                            this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
+                        }
+                    }
+
+                    if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                    {
+                        this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
+                        if (!string.IsNullOrEmpty(userData.GlimeshUsername))
+                        {
+                            this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
                         }
                     }
                 });
@@ -692,7 +703,7 @@ namespace MixItUp.Base.Model.Settings
         public void ClearMixerUserData()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
-            foreach (Guid id in this.UsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
+            foreach (Guid id in this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
             {
                 this.UserData.Remove(id);
             }
@@ -802,8 +813,8 @@ namespace MixItUp.Base.Model.Settings
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "TwitchID", u.TwitchID },
-                        { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", null }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
+                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
+                        { "TwitchID", u.TwitchID }, { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", u.GlimeshID }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
                 List<Guid> removedCommands = new List<Guid>();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
@@ -832,13 +843,13 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public UserDataModel GetUserDataByTwitchID(string twitchID)
+        public UserDataModel GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
         {
             lock (this.UserData)
             {
-                if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
+                if (!string.IsNullOrEmpty(platformID) && this.PlatformUserIDLookups[platform].ContainsKey(platformID))
                 {
-                    Guid id = this.TwitchUserIDLookups[twitchID];
+                    Guid id = this.PlatformUserIDLookups[platform][platformID];
                     if (this.UserData.ContainsKey(id))
                     {
                         return this.UserData[id];
@@ -867,9 +878,9 @@ namespace MixItUp.Base.Model.Settings
                 {
                     lock (this.UserData)
                     {
-                        if (this.UsernameLookups.ContainsKey(platform) && this.UsernameLookups[platform].ContainsKey(username.ToLowerInvariant()))
+                        if (this.PlatformUsernameLookups[platform].ContainsKey(username.ToLowerInvariant()))
                         {
-                            Guid id = this.UsernameLookups[platform][username.ToLowerInvariant()];
+                            Guid id = this.PlatformUsernameLookups[platform][username.ToLowerInvariant()];
                             if (this.UserData.ContainsKey(id))
                             {
                                 return this.UserData[id];
@@ -884,10 +895,8 @@ namespace MixItUp.Base.Model.Settings
         public void AddUserData(UserDataModel user)
         {
             this.UserData[user.ID] = user;
-            if (!string.IsNullOrEmpty(user.TwitchID))
-            {
-                this.TwitchUserIDLookups[user.TwitchID] = user.ID;
-            }
+            if (!string.IsNullOrEmpty(user.TwitchID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.GlimeshID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID; }
             this.UserData.ManualValueChanged(user.ID);
         }
 
@@ -903,7 +912,7 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            foreach (StreamingPlatformTypeEnum platform in EnumHelper.GetEnumList<StreamingPlatformTypeEnum>())
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
                 if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
                 {

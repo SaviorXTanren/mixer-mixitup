@@ -199,7 +199,7 @@ namespace MixItUp.Base.Services
                     UserDataModel userData = null;
                     if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && userData == null)
                     {
-                        userData = ChannelSession.Settings.GetUserDataByTwitchID(userID);
+                        userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
                     }
 
                     if (userData != null)

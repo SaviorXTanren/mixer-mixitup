@@ -907,7 +907,7 @@ namespace MixItUp.Base.Util
                     UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(bitsUser.user_id);
                     if (user == null)
                     {
-                        UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(bitsUser.user_id);
+                        UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                         if (userData == null)
                         {
                             user = new UserViewModel(new Twitch.Base.Models.NewAPI.Users.UserModel()

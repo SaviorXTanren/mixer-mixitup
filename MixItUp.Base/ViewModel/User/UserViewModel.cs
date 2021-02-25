@@ -182,7 +182,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!string.IsNullOrEmpty(twitchID))
             {
-                this.Data = ChannelSession.Settings.GetUserDataByTwitchID(twitchID);
+                this.Data = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID);
                 if (this.Data == null)
                 {
                     this.Data = new UserDataModel() { TwitchID = twitchID };

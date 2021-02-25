@@ -106,6 +106,22 @@ namespace MixItUp.Base.Model.User
 
         #endregion Twitch
 
+        #region Glimesh
+
+        [DataMember]
+        public string GlimeshID { get; set; }
+        [DataMember]
+        public string GlimeshUsername { get; set; }
+        [DataMember]
+        public string GlimeshDisplayName { get; set; }
+        [DataMember]
+        public string GlimeshAvatarLink { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> GlimeshUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+
+        #endregion Glimesh
+
         [DataMember]
         public Dictionary<Guid, int> CurrencyAmounts { get; set; } = new Dictionary<Guid, int>();
         [DataMember]
@@ -198,6 +214,7 @@ namespace MixItUp.Base.Model.User
                 if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
 #pragma warning restore CS0612 // Type or member is obsolete
                 if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
+                if (!string.IsNullOrEmpty(this.GlimeshID)) { platform = platform | StreamingPlatformTypeEnum.Glimesh; }
 
                 return platform;
             }
@@ -212,6 +229,7 @@ namespace MixItUp.Base.Model.User
                 if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
 #pragma warning restore CS0612 // Type or member is obsolete
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
+                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUsername; }
                 return string.Empty;
             }
         }
@@ -222,6 +240,7 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUserRoles; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }

@@ -82,7 +82,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             UserDataModel user = null;
             if (!string.IsNullOrEmpty(usernameOrID))
             {
-                user = ChannelSession.Settings.GetUserDataByTwitchID(usernameOrID);
+                user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, usernameOrID);
                 if (user == null)
                 {
                     user = ChannelSession.Settings.GetUserDataByUsername(StreamingPlatformTypeEnum.Twitch, usernameOrID);
