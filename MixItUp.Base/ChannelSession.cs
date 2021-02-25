@@ -96,8 +96,6 @@ namespace MixItUp.Base
             }
         }
 
-        public static bool IsStreamer { get { return ChannelSession.Settings.IsStreamer; } }
-
         public static async Task Initialize(ServicesManagerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
@@ -115,9 +113,9 @@ namespace MixItUp.Base
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
-        public static async Task<Result> ConnectTwitchUser(bool isStreamer)
+        public static async Task<Result> ConnectTwitchUser()
         {
-            Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser(isStreamer);
+            Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();
             if (result.Success)
             {
                 ChannelSession.TwitchUserConnection = result.Value;
@@ -175,7 +173,7 @@ namespace MixItUp.Base
             }
             else
             {
-                userResult = await ChannelSession.ConnectTwitchUser(ChannelSession.Settings.IsStreamer);
+                userResult = await ChannelSession.ConnectTwitchUser();
             }
 
             if (userResult.Success)
@@ -343,17 +341,17 @@ namespace MixItUp.Base
 
                             if (currentSettings.Any(s => !string.IsNullOrEmpty(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID) && string.Equals(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID, twitchChannelNew.id)))
                             {
-                                GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.display_name}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                                GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.login}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                                 return false;
                             }
 
-                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name, isStreamer: true);
+                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.login);
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.display_name} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.login} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
                             GlobalEvents.ShowMessageBox("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
                             ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
                             ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
@@ -361,7 +359,7 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
+                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.login;
 
                         ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = ChannelSession.TwitchUserNewAPI.id;
                         ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = ChannelSession.TwitchUserNewAPI.id;
@@ -412,177 +410,174 @@ namespace MixItUp.Base
                         return false;
                     }
 
-                    if (ChannelSession.IsStreamer)
+                    Result result = await ChannelSession.InitializeBotInternal();
+                    if (!result.Success)
                     {
-                        Result result = await ChannelSession.InitializeBotInternal();
-                        if (!result.Success)
-                        {
-                            await DialogHelper.ShowMessage("Failed to initialize Bot account");
-                            return false;
-                        }
+                        await DialogHelper.ShowMessage("Failed to initialize Bot account");
+                        return false;
+                    }
 
-                        try
-                        {
-                            // Connect External Services
-                            Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
-                            if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
-                            if (ChannelSession.Settings.StreamElementsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamElements] = ChannelSession.Settings.StreamElementsOAuthToken; }
-                            if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamJar] = ChannelSession.Settings.StreamJarOAuthToken; }
-                            if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TipeeeStream] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
-                            if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TreatStream] = ChannelSession.Settings.TreatStreamOAuthToken; }
-                            if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamloots] = ChannelSession.Settings.StreamlootsOAuthToken; }
-                            if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Tiltify] = ChannelSession.Settings.TiltifyOAuthToken; }
-                            if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.JustGiving] = ChannelSession.Settings.JustGivingOAuthToken; }
-                            if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.IFTTT] = ChannelSession.Settings.IFTTTOAuthToken; }
-                            if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ChannelSession.Services.ExtraLife] = new OAuthTokenModel(); }
-                            if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
-                            if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
-                            if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
-                            if (ChannelSession.Services.OBSStudio.IsEnabled) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
-                            if (ChannelSession.Services.StreamlabsOBS.IsEnabled) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
-                            if (ChannelSession.Services.XSplit.IsEnabled) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
-                            if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ChannelSession.Services.OvrStream] = null; }
-                            if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ChannelSession.Services.Overlay] = null; }
-                            if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ChannelSession.Services.DeveloperAPI] = null; }
+                    try
+                    {
+                        // Connect External Services
+                        Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
+                        if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
+                        if (ChannelSession.Settings.StreamElementsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamElements] = ChannelSession.Settings.StreamElementsOAuthToken; }
+                        if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamJar] = ChannelSession.Settings.StreamJarOAuthToken; }
+                        if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TipeeeStream] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
+                        if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TreatStream] = ChannelSession.Settings.TreatStreamOAuthToken; }
+                        if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamloots] = ChannelSession.Settings.StreamlootsOAuthToken; }
+                        if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Tiltify] = ChannelSession.Settings.TiltifyOAuthToken; }
+                        if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.JustGiving] = ChannelSession.Settings.JustGivingOAuthToken; }
+                        if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.IFTTT] = ChannelSession.Settings.IFTTTOAuthToken; }
+                        if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ChannelSession.Services.ExtraLife] = new OAuthTokenModel(); }
+                        if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
+                        if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
+                        if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
+                        if (ChannelSession.Services.OBSStudio.IsEnabled) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
+                        if (ChannelSession.Services.StreamlabsOBS.IsEnabled) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
+                        if (ChannelSession.Services.XSplit.IsEnabled) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
+                        if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ChannelSession.Services.OvrStream] = null; }
+                        if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ChannelSession.Services.Overlay] = null; }
+                        if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ChannelSession.Services.DeveloperAPI] = null; }
 
-                            if (externalServiceToConnect.Count > 0)
+                        if (externalServiceToConnect.Count > 0)
+                        {
+                            Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
+                            foreach (var kvp in externalServiceToConnect)
                             {
-                                Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
-                                foreach (var kvp in externalServiceToConnect)
-                                {
-                                    Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
-
-                                    try
-                                    {
-                                        if (kvp.Key is IOAuthExternalService && kvp.Value != null)
-                                        {
-                                            externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
-                                        }
-                                        else
-                                        {
-                                            externalServiceTasks[kvp.Key] = kvp.Key.Connect();
-                                        }
-                                    }
-                                    catch (Exception sex)
-                                    {
-                                        Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.Name);
-                                        Logger.Log(sex);
-                                    }
-                                }
+                                Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
 
                                 try
                                 {
-                                    await Task.WhenAll(externalServiceTasks.Values);
+                                    if (kvp.Key is IOAuthExternalService && kvp.Value != null)
+                                    {
+                                        externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
+                                    }
+                                    else
+                                    {
+                                        externalServiceTasks[kvp.Key] = kvp.Key.Connect();
+                                    }
                                 }
                                 catch (Exception sex)
                                 {
-                                    Logger.Log(LogLevel.Error, "Error in batch external service connection");
+                                    Logger.Log(LogLevel.Error, "Error in external service initial connection: " + kvp.Key.Name);
                                     Logger.Log(sex);
                                 }
+                            }
 
-                                List<IExternalService> failedServices = new List<IExternalService>();
-                                foreach (var kvp in externalServiceTasks)
+                            try
+                            {
+                                await Task.WhenAll(externalServiceTasks.Values);
+                            }
+                            catch (Exception sex)
+                            {
+                                Logger.Log(LogLevel.Error, "Error in batch external service connection");
+                                Logger.Log(sex);
+                            }
+
+                            List<IExternalService> failedServices = new List<IExternalService>();
+                            foreach (var kvp in externalServiceTasks)
+                            {
+                                try
                                 {
-                                    try
+                                    if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                                     {
-                                        if (kvp.Value.Result != null && !kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
+                                        Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+                                        result = await kvp.Key.Connect();
+                                        if (!result.Success)
                                         {
-                                            Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
-                                            result = await kvp.Key.Connect();
-                                            if (!result.Success)
-                                            {
-                                                failedServices.Add(kvp.Key);
-                                            }
+                                            failedServices.Add(kvp.Key);
                                         }
                                     }
-                                    catch (Exception sex)
-                                    {
-                                        Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.Name);
-                                        Logger.Log(sex);
-                                        failedServices.Add(kvp.Key);
-                                    }
                                 }
-
-                                if (failedServices.Count > 0)
+                                catch (Exception sex)
                                 {
-                                    Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
-
-                                    StringBuilder message = new StringBuilder();
-                                    message.AppendLine("The following services could not be connected:");
-                                    message.AppendLine();
-                                    foreach (IExternalService service in failedServices)
-                                    {
-                                        message.AppendLine(" - " + service.Name);
-                                    }
-                                    message.AppendLine();
-                                    message.Append("Please go to the Services page to reconnect them manually.");
-                                    await DialogHelper.ShowMessage(message.ToString());
+                                    Logger.Log(LogLevel.Error, "Error in external service failed re-connection: " + kvp.Key.Name);
+                                    Logger.Log(sex);
+                                    failedServices.Add(kvp.Key);
                                 }
                             }
+
+                            if (failedServices.Count > 0)
+                            {
+                                Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
+
+                                StringBuilder message = new StringBuilder();
+                                message.AppendLine("The following services could not be connected:");
+                                message.AppendLine();
+                                foreach (IExternalService service in failedServices)
+                                {
+                                    message.AppendLine(" - " + service.Name);
+                                }
+                                message.AppendLine();
+                                message.Append("Please go to the Services page to reconnect them manually.");
+                                await DialogHelper.ShowMessage(message.ToString());
+                            }
                         }
-                        catch (Exception ex)
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        Logger.Log(LogLevel.Error, "External Services - " + JSONSerializerHelper.SerializeToString(ex));
+                        await DialogHelper.ShowMessage("Failed to initialize external services. If this continues, please visit the Mix It Up Discord for assistance." +
+                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        return false;
+                    }
+
+                    try
+                    {
+                        //if (ChannelSession.Settings.RemoteHostConnection != null)
+                        //{
+                        //    await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
+                        //}
+
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            Logger.Log(ex);
-                            Logger.Log(LogLevel.Error, "External Services - " + JSONSerializerHelper.SerializeToString(ex));
-                            await DialogHelper.ShowMessage("Failed to initialize external services. If this continues, please visit the Mix It Up Discord for assistance." +
-                                Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
-                            return false;
+                            if (currency.ShouldBeReset())
+                            {
+                                await currency.Reset();
+                            }
                         }
 
-                        try
+                        if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
                         {
-                            //if (ChannelSession.Settings.RemoteHostConnection != null)
-                            //{
-                            //    await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                            //}
-
-                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                            foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
                             {
-                                if (currency.ShouldBeReset())
+                                if (userData.ModerationStrikes > 0)
                                 {
-                                    await currency.Reset();
+                                    userData.ModerationStrikes = 0;
+                                    ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
                                 }
                             }
-
-                            if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
-                            {
-                                foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
-                                {
-                                    if (userData.ModerationStrikes > 0)
-                                    {
-                                        userData.ModerationStrikes = 0;
-                                        ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
-                                    }
-                                }
-                            }
-
-                            ChannelSession.PreMadeChatCommands.Clear();
-                            foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
-                            {
-                                ChannelSession.PreMadeChatCommands.Add(command);
-                            }
-
-                            foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
-                            {
-                                PreMadeChatCommandModelBase command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                                if (command != null)
-                                {
-                                    command.UpdateFromSettings(commandSetting);
-                                }
-                            }
-                            ChannelSession.Services.Chat.RebuildCommandTriggers();
-
-                            await ChannelSession.Services.Timers.Initialize();
-                            await ChannelSession.Services.Moderation.Initialize();
                         }
-                        catch (Exception ex)
+
+                        ChannelSession.PreMadeChatCommands.Clear();
+                        foreach (PreMadeChatCommandModelBase command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommandModelBase>())
                         {
-                            Logger.Log(ex);
-                            Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
-                            await DialogHelper.ShowMessage("Failed to initialize streamer-based services. If this continues, please visit the Mix It Up Discord for assistance." +
-                                Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
-                            return false;
+                            ChannelSession.PreMadeChatCommands.Add(command);
                         }
+
+                        foreach (PreMadeChatCommandSettingsModel commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                        {
+                            PreMadeChatCommandModelBase command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                            if (command != null)
+                            {
+                                command.UpdateFromSettings(commandSetting);
+                            }
+                        }
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
+
+                        await ChannelSession.Services.Timers.Initialize();
+                        await ChannelSession.Services.Moderation.Initialize();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
+                        await DialogHelper.ShowMessage("Failed to initialize streamer-based services. If this continues, please visit the Mix It Up Discord for assistance." +
+                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        return false;
                     }
 
                     try

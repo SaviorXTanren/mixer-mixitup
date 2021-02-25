@@ -34,7 +34,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SettingsV3Model>> GetAllSettings();
 
-        Task<SettingsV3Model> Create(string name, bool isStreamer);
+        Task<SettingsV3Model> Create(string name);
 
         Task Initialize(SettingsV3Model settings);
 
@@ -189,9 +189,9 @@ namespace MixItUp.Base.Services
             return allSettings;
         }
 
-        public Task<SettingsV3Model> Create(string name, bool isStreamer)
+        public Task<SettingsV3Model> Create(string name)
         {
-            return Task.FromResult(new SettingsV3Model(name, isStreamer));
+            return Task.FromResult(new SettingsV3Model(name));
         }
 
         public async Task Initialize(SettingsV3Model settings)
@@ -257,10 +257,7 @@ namespace MixItUp.Base.Services
                     using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
                     {
                         zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
-                        if (settings.IsStreamer)
-                        {
-                            zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
-                        }
+                        zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
                     }
                 }
                 else
@@ -573,6 +570,7 @@ namespace MixItUp.Base.Services
 
                 await ChannelSession.Services.Settings.Save(newSettings);
             }
+
             await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
             await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsLocalBackupFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsLocalBackupFileName));
             await ChannelSession.Services.FileService.CopyFile(oldSettings.DatabaseFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.DatabaseFileName));
