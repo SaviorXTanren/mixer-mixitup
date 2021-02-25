@@ -46,8 +46,6 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.DataContext = this.user;
 
-                this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
-
                 UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ChannelSession.TwitchUserNewAPI);
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {

@@ -44,10 +44,7 @@ namespace MixItUp.WPF
 
             foreach (SettingsV3Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
             {
-                if (setting.IsStreamer)
-                {
-                    this.streamerSettings.Add(setting);
-                }
+                this.streamerSettings.Add(setting);
             }
 
             if (this.streamerSettings.Count > 0)

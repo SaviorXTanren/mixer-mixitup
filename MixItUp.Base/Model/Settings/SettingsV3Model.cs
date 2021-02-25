@@ -49,9 +49,6 @@ namespace MixItUp.Base.Model.Settings
         public string Name { get; set; }
 
         [DataMember]
-        public bool IsStreamer { get; set; }
-
-        [DataMember]
         public string TelemetryUserID { get; set; }
 
         [DataMember]
@@ -547,135 +544,131 @@ namespace MixItUp.Base.Model.Settings
 
         public SettingsV3Model() { }
 
-        public SettingsV3Model(string name, bool isStreamer = true)
+        public SettingsV3Model(string name)
             : this()
         {
             this.Name = name;
-            this.IsStreamer = isStreamer;
 
             this.InitializeMissingData();
         }
 
         public async Task Initialize()
         {
-            if (this.IsStreamer)
+            if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
             {
-                if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
+                await ChannelSession.Services.FileService.CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
+            }
+
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+            {
+                this.PlatformUserIDLookups[platform] = new Dictionary<string, Guid>();
+                this.PlatformUsernameLookups[platform] = new Dictionary<string, Guid>();
+            }
+
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+            {
+                UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
+                this.UserData[userData.ID] = userData;
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    await ChannelSession.Services.FileService.CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.TwitchUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
+                    }
                 }
 
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
                 {
-                    this.PlatformUserIDLookups[platform] = new Dictionary<string, Guid>();
-                    this.PlatformUsernameLookups[platform] = new Dictionary<string, Guid>();
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.GlimeshUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+            });
+            this.UserData.ClearTracking();
+
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+            {
+                DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
+                this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), dateTime, data["GameName"].ToString()));
+            });
+            this.Quotes.ClearTracking();
+
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
+            {
+                CommandModelBase command = null;
+                CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
+
+                string commandData = data["Data"].ToString();
+                if (type == CommandTypeEnum.Chat)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.Event)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.Timer)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.ActionGroup)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.Game)
+                {
+                    commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
+                    command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
+                }
+                else if (type == CommandTypeEnum.TwitchChannelPoints)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.Custom)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
+                }
+                else if (type == CommandTypeEnum.UserOnlyChat)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
                 }
 
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                if (command != null)
                 {
-                    UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
-                    this.UserData[userData.ID] = userData;
-
-                    if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
-                    {
-                        this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
-                        if (!string.IsNullOrEmpty(userData.TwitchUsername))
-                        {
-                            this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
-                        }
-                    }
-
-                    if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
-                    {
-                        this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
-                        if (!string.IsNullOrEmpty(userData.GlimeshUsername))
-                        {
-                            this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
-                        }
-                    }
-                });
-                this.UserData.ClearTracking();
-
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
-                {
-                    DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
-                    this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), dateTime, data["GameName"].ToString()));
-                });
-                this.Quotes.ClearTracking();
-
-                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
-                {
-                    CommandModelBase command = null;
-                    CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
-
-                    string commandData = data["Data"].ToString();
-                    if (type == CommandTypeEnum.Chat)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<ChatCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.Event)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<EventCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.Timer)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<TimerCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.ActionGroup)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<ActionGroupCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.Game)
-                    {
-                        commandData = commandData.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
-                        command = JSONSerializerHelper.DeserializeFromString<GameCommandModelBase>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.TwitchChannelPoints)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.Custom)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
-                    }
-                    else if (type == CommandTypeEnum.UserOnlyChat)
-                    {
-                        command = JSONSerializerHelper.DeserializeFromString<UserOnlyChatCommandModel>(commandData);
-                    }
-
-                    if (command != null)
-                    {
-                        this.Commands[command.ID] = command;
-                    }
-                });
-                this.Commands.ClearTracking();
-
-                ChannelSession.ChatCommands.Clear();
-                ChannelSession.EventCommands.Clear();
-                ChannelSession.TimerCommands.Clear();
-                ChannelSession.ActionGroupCommands.Clear();
-                ChannelSession.GameCommands.Clear();
-                ChannelSession.TwitchChannelPointsCommands.Clear();
-                foreach (CommandModelBase command in this.Commands.Values.ToList())
-                {
-                    if (command is ChatCommandModel)
-                    {
-                        if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
-                        else if (command is UserOnlyChatCommandModel) { }
-                        else { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
-                    }
-                    else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
-                    else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
-                    else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
-                    else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+                    this.Commands[command.ID] = command;
                 }
+            });
+            this.Commands.ClearTracking();
 
-                foreach (CounterModel counter in this.Counters.Values.ToList())
+            ChannelSession.ChatCommands.Clear();
+            ChannelSession.EventCommands.Clear();
+            ChannelSession.TimerCommands.Clear();
+            ChannelSession.ActionGroupCommands.Clear();
+            ChannelSession.GameCommands.Clear();
+            ChannelSession.TwitchChannelPointsCommands.Clear();
+            foreach (CommandModelBase command in this.Commands.Values.ToList())
+            {
+                if (command is ChatCommandModel)
                 {
-                    if (counter.ResetOnLoad)
-                    {
-                        await counter.ResetAmount();
-                    }
+                    if (command is GameCommandModelBase) { ChannelSession.GameCommands.Add((GameCommandModelBase)command); }
+                    else if (command is UserOnlyChatCommandModel) { }
+                    else { ChannelSession.ChatCommands.Add((ChatCommandModel)command); }
+                }
+                else if (command is EventCommandModel) { ChannelSession.EventCommands.Add((EventCommandModel)command); }
+                else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
+                else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
+                else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+            }
+
+            foreach (CounterModel counter in this.Counters.Values.ToList())
+            {
+                if (counter.ResetOnLoad)
+                {
+                    await counter.ResetAmount();
                 }
             }
 
@@ -689,12 +682,6 @@ namespace MixItUp.Base.Model.Settings
                 {
                     this.TelemetryUserID = Guid.NewGuid().ToString();
                 }
-            }
-
-            // Mod accounts cannot use this feature, forcefully disable on load
-            if (!this.IsStreamer)
-            {
-                this.TrackWhispererNumber = false;
             }
 
             this.InitializeMissingData();
@@ -806,29 +793,26 @@ namespace MixItUp.Base.Model.Settings
 
         public async Task SaveDatabaseData()
         {
-            if (this.IsStreamer)
-            {
-                IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+            IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
-                IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
+            IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
+                changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
                         { "TwitchID", u.TwitchID }, { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", u.GlimeshID }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
-                List<Guid> removedCommands = new List<Guid>();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
-                    this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
+            List<Guid> removedCommands = new List<Guid>();
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
+                this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
+                this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
-                    this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
+                this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
-                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
-            }
+            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
+                this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
         }
 
         public UserDataModel GetUserData(Guid id)

@@ -168,7 +168,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
+                        result = await ChannelSession.ConnectTwitchUser();
                         if (result.Success && ChannelSession.TwitchUserNewAPI != null)
                         {
                             this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
