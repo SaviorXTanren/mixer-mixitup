@@ -70,6 +70,24 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
+        private const int MaxMessageLength = 400;
+
+        public static string SplitLargeMessage(string message, out string subMessage)
+        {
+            subMessage = null;
+            if (message.Length >= MaxMessageLength)
+            {
+                string tempMessage = message.Substring(0, MaxMessageLength - 1);
+                int splitIndex = tempMessage.LastIndexOf(' ');
+                if (splitIndex > 0 && (splitIndex + 1) < message.Length)
+                {
+                    subMessage = message.Substring(splitIndex + 1);
+                    message = message.Substring(0, splitIndex);
+                }
+            }
+            return message;
+        }
+
         public ITwitchChatService TwitchChatService { get; private set; }
 
         public bool DisableChat { get; set; }
@@ -322,7 +340,7 @@ namespace MixItUp.Base.Services
                 {
                     if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
+                        UserViewModel activeUser = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
                         if (activeUser != null)
                         {
                             message.User = activeUser;

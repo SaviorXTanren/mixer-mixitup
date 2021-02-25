@@ -52,7 +52,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchSubEventModel(ChatUserNoticePacketModel userNotice)
         {
-            this.User = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+            this.User = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
             if (this.User == null)
             {
                 this.User = new UserViewModel(userNotice);
@@ -97,7 +97,7 @@ namespace MixItUp.Base.Services.Twitch
             this.Gifter = new UserViewModel("An Anonymous Gifter");
             if (!this.IsAnonymous)
             {
-                this.Gifter = ChannelSession.Services.User.GetUserByTwitchID(userNotice.UserID.ToString());
+                this.Gifter = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, userNotice.UserID.ToString());
                 if (this.Gifter == null)
                 {
                     this.Gifter = new UserViewModel(userNotice);
@@ -415,7 +415,7 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             this.follows.Add(follow.from_id);
 
-                            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
+                            UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, follow.from_id);
                             if (user == null)
                             {
                                 user = new UserViewModel(follow);
@@ -511,7 +511,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model packet)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
             if (user == null)
             {
                 user = new UserViewModel(packet);
@@ -550,7 +550,7 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
             if (user == null)
             {
                 user = new UserViewModel(packet);
@@ -607,13 +607,13 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel packet)
         {
-            UserViewModel gifter = packet.IsAnonymousGiftedSubscription ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            UserViewModel gifter = packet.IsAnonymousGiftedSubscription ? new UserViewModel("An Anonymous Gifter") : ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.user_id);
             if (gifter == null)
             {
                 gifter = new UserViewModel(packet);
             }
 
-            UserViewModel receiver = ChannelSession.Services.User.GetUserByTwitchID(packet.recipient_id);
+            UserViewModel receiver = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.recipient_id);
             if (receiver == null)
             {
                 receiver = new UserViewModel(new UserModel()
@@ -764,7 +764,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             PubSubChannelPointsRedeemedEventModel redemption = packet.redemption;
 
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(redemption.user.id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, redemption.user.id);
             if (user == null)
             {
                 user = new UserViewModel(redemption.user);
@@ -799,7 +799,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!string.IsNullOrEmpty(packet.body))
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.from_id.ToString());
+                UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, packet.from_id.ToString());
                 await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet, user));
             }
         }

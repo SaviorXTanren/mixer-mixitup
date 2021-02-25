@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
@@ -53,6 +54,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(TwitchBitsCheerViewModel bitsCheer) : this() { this.DataContext = bitsCheer; }
 
+        public ChatImageControl(GlimeshChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
@@ -89,6 +92,12 @@ namespace MixItUp.WPF.Controls.Chat
                         this.Image.ToolTip = this.AltText.Text = bitsCheer.Text;
                         this.Text.Visibility = Visibility.Visible;
                         this.Text.Text = bitsCheer.Amount.ToString();
+                    }
+                    else if (this.DataContext is GlimeshChatEmoteViewModel)
+                    {
+                        GlimeshChatEmoteViewModel emote = (GlimeshChatEmoteViewModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl(emote.Url);
+                        this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
                     else if (this.DataContext is string)
                     {

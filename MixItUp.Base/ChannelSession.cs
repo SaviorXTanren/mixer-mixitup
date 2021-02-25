@@ -6,6 +6,7 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -34,6 +35,12 @@ namespace MixItUp.Base
         public static TwitchNewAPI.Users.UserModel TwitchBotNewAPI { get; set; }
         public static TwitchNewAPI.Streams.StreamModel TwitchStreamNewAPI { get; set; }
         public static bool TwitchStreamIsLive { get { return ChannelSession.TwitchStreamV5 != null && ChannelSession.TwitchStreamV5.IsLive; } }
+
+        public static GlimeshPlatformService GlimeshUserConnection { get; private set; }
+        public static GlimeshPlatformService GlimeshBotConnection { get; private set; }
+        public static Glimesh.Base.Models.Users.UserModel GlimeshUser { get; private set; }
+        public static Glimesh.Base.Models.Channels.ChannelModel GlimeshChannel { get; private set; }
+        public static Glimesh.Base.Models.Users.UserModel GlimeshBot { get; private set; }
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
@@ -289,7 +296,7 @@ namespace MixItUp.Base
 
             if (ChannelSession.TwitchUserNewAPI != null)
             {
-                user = ChannelSession.Services.User.GetUserByTwitchID(ChannelSession.TwitchUserNewAPI.id);
+                user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ChannelSession.TwitchUserNewAPI.id);
                 if (user == null)
                 {
                     user = new UserViewModel(ChannelSession.TwitchUserNewAPI);

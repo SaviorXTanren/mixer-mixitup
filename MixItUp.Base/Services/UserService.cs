@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
+using GlimeshBase = Glimesh.Base;
 
 namespace MixItUp.Base.Services
 {
@@ -17,11 +18,13 @@ namespace MixItUp.Base.Services
 
         UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
 
-        UserViewModel GetUserByTwitchID(string id);
+        UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id);
 
         Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
 
-        Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin);
+        Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser);
+
+        Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username);
 
         void Clear();
 
@@ -42,8 +45,17 @@ namespace MixItUp.Base.Services
 
         private LockedDictionary<Guid, UserViewModel> usersByID = new LockedDictionary<Guid, UserViewModel>();
 
-        private LockedDictionary<string, UserViewModel> usersByTwitchID = new LockedDictionary<string, UserViewModel>();
-        private LockedDictionary<string, UserViewModel> usersByTwitchLogin = new LockedDictionary<string, UserViewModel>();
+        private LockedDictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> platformUserIDLookups { get; set; } = new LockedDictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
+        private LockedDictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> platformUsernameLookups { get; set; } = new LockedDictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
+
+        public UserService()
+        {
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+            {
+                this.platformUserIDLookups[platform] = new Dictionary<string, Guid>();
+                this.platformUsernameLookups[platform] = new Dictionary<string, Guid>();
+            }
+        }
 
         public UserViewModel GetUserByID(Guid id)
         {
@@ -56,26 +68,36 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
-            UserViewModel user = null;
             if (!string.IsNullOrEmpty(username))
             {
-                username = username.ToLower().Replace("@", "").Trim();
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) || platform == StreamingPlatformTypeEnum.None)
+                if (platform == StreamingPlatformTypeEnum.None)
                 {
-                    if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
+                    foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
                     {
-                        return user;
+                        UserViewModel user = this.GetUserByUsername(username, p);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                    }
+                }
+                else
+                {
+                    username = username.ToLower().Replace("@", "").Trim();
+                    if (this.platformUsernameLookups[platform].ContainsKey(username))
+                    {
+                        return this.GetUserByID(this.platformUsernameLookups[platform][username]);
                     }
                 }
             }
-            return user;
+            return null;
         }
 
-        public UserViewModel GetUserByTwitchID(string id)
+        public UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id)
         {
-            if (!string.IsNullOrEmpty(id) && this.usersByTwitchID.TryGetValue(id, out UserViewModel user))
+            if (this.platformUserIDLookups[platform].ContainsKey(id))
             {
-                return user;
+                return this.GetUserByID(this.platformUserIDLookups[platform][id]);
             }
             return null;
         }
@@ -84,10 +106,25 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
             {
-                UserViewModel user = new UserViewModel(twitchChatUser);
-                if (this.usersByTwitchID.ContainsKey(twitchChatUser.id))
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchChatUser.id);
+                if (user != null)
                 {
-                    user = this.usersByTwitchID[twitchChatUser.id];
+                    user = new UserViewModel(twitchChatUser);
+                }
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
+        public async Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser)
+        {
+            if (!string.IsNullOrEmpty(glimeshChatUser.id) && !string.IsNullOrEmpty(glimeshChatUser.username))
+            {
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, glimeshChatUser.id);
+                if (user != null)
+                {
+                    user = new UserViewModel(glimeshChatUser);
                 }
                 await this.AddOrUpdateUser(user);
                 return user;
@@ -103,8 +140,8 @@ namespace MixItUp.Base.Services
 
                 if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
                 {
-                    this.usersByTwitchID[user.TwitchID] = user;
-                    this.usersByTwitchLogin[user.TwitchUsername] = user;
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
@@ -137,35 +174,50 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin)
+        public async Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username)
         {
-            if (!string.IsNullOrEmpty(twitchLogin) && this.usersByTwitchLogin.TryGetValue(twitchLogin, out UserViewModel user))
+            if (!string.IsNullOrEmpty(username))
             {
-                await this.RemoveUser(user);
-                return user;
+                username = username.ToLower().Replace("@", "").Trim();
+                if (this.platformUsernameLookups[platform].ContainsKey(username))
+                {
+                    UserViewModel user = this.GetUserByID(this.platformUsernameLookups[platform][username]);
+                    await this.RemoveUser(user);
+                    return user;
+                }
             }
             return null;
         }
 
         private async Task RemoveUser(UserViewModel user)
         {
-            this.usersByID.Remove(user.ID);
-
-            if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+            if (user != null)
             {
-                this.usersByTwitchID.Remove(user.TwitchID);
-                this.usersByTwitchLogin.Remove(user.TwitchUsername);
-            }
+                this.usersByID.Remove(user.ID);
 
-            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
+                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
+                }
+
+                await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
+            }
         }
 
         public void Clear()
         {
             this.usersByID.Clear();
 
-            this.usersByTwitchID.Clear();
-            this.usersByTwitchLogin.Clear();
+            foreach (var kvp in this.platformUserIDLookups)
+            {
+                kvp.Value.Clear();
+            }
+
+            foreach (var kvp in this.platformUsernameLookups)
+            {
+                kvp.Value.Clear();
+            }
         }
 
         public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }
@@ -189,19 +241,10 @@ namespace MixItUp.Base.Services
             UserViewModel user = null;
             if (!string.IsNullOrEmpty(userID))
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && user == null)
-                {
-                    user = ChannelSession.Services.User.GetUserByTwitchID(userID);
-                }
-
+                user = ChannelSession.Services.User.GetUserByPlatformID(platform, userID);
                 if (user == null)
                 {
-                    UserDataModel userData = null;
-                    if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && userData == null)
-                    {
-                        userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, userID);
-                    }
-
+                    UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(platform, userID);
                     if (userData != null)
                     {
                         user = new UserViewModel(userData);

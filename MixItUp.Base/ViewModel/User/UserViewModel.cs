@@ -169,18 +169,18 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message)
+        public UserViewModel(Glimesh.Base.Models.Users.UserModel user)
         {
-            this.SetUserData(StreamingPlatformTypeEnum.Twitch, message.User?.id);
+            this.SetUserData(StreamingPlatformTypeEnum.Glimesh, user.id);
 
-            this.GlimeshID = message.User?.id;
-            this.GlimeshUsername = message.User?.username;
-            this.GlimeshDisplayName = message.User?.displayname;
-            this.GlimeshAvatarLink = message.User?.FullAvatarURL;
-            this.AccountDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(message.User?.confirmedAt);
-
-            this.SetTwitchRoles();
+            this.GlimeshID = user.id;
+            this.GlimeshUsername = user.username;
+            this.GlimeshDisplayName = user.displayname;
+            this.GlimeshAvatarLink = user.FullAvatarURL;
+            this.AccountDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(user.confirmedAt);
         }
+
+        public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) : this(message.User) { }
 
         public UserViewModel(UserDataModel userData)
         {
@@ -1020,25 +1020,17 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshGlimeshUserDetails()
         {
-            //Glimesh.Base.Models.Users.UserModel glimeshUser = (!string.IsNullOrEmpty(this.GlimeshID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
-            //    : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
-            //if (glimeshUser != null)
-            //{
-            //    this.TwitchID = twitchUser.id;
-            //    this.TwitchUsername = twitchUser.login;
-            //    this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
-            //    this.TwitchAvatarLink = twitchUser.profile_image_url;
+            Glimesh.Base.Models.Users.UserModel glimeshUser = await ChannelSession.GlimeshUserConnection.GetUserByID(this.GlimeshID);
+            if (glimeshUser != null)
+            {
+                this.GlimeshID = glimeshUser.id;
+                this.GlimeshUsername = glimeshUser.username;
+                this.GlimeshDisplayName = glimeshUser.displayname ?? glimeshUser.username;
+                this.GlimeshAvatarLink = glimeshUser.FullAvatarURL;
 
-            //    if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
-            //    if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
-            //    if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-            //    if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
-
-            //    this.SetTwitchRoles();
-
-            //    this.Color = null;
-            //    this.RolesDisplayString = null;
-            //}
+                this.Color = null;
+                this.RolesDisplayString = null;
+            }
         }
 
         #endregion Glimesh Refresh Functions
