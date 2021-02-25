@@ -120,6 +120,13 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public HashSet<UserRoleEnum> GlimeshUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
+        [DataMember]
+        public DateTimeOffset? GlimeshAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? GlimeshFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? GlimeshSubscribeDate { get; set; }
+
         #endregion Glimesh
 
         [DataMember]

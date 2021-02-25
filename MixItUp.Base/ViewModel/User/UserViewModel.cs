@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.Clients.Chat;
-using Twitch.Base.Models.Clients.PubSub.Messages;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
@@ -51,14 +50,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(string username)
         {
-            this.SetUserData();
+            this.SetUserData(StreamingPlatformTypeEnum.None, null);
 
             this.UnassociatedUsername = username;
         }
 
         public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
         {
-            this.SetUserData(twitchID: twitchUser.id);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
 
             this.TwitchID = twitchUser.id;
             this.TwitchUsername = twitchUser.login;
@@ -70,7 +69,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(TwitchV5API.Users.UserModel twitchUser)
         {
-            this.SetUserData(twitchID: twitchUser.id);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
 
             this.TwitchID = twitchUser.id;
             this.TwitchUsername = twitchUser.name;
@@ -80,9 +79,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(ChatMessagePacketModel twitchMessage)
+        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatMessagePacketModel twitchMessage)
         {
-            this.SetUserData(twitchID: twitchMessage.UserID);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, twitchMessage.UserID);
 
             this.TwitchID = twitchMessage.UserID;
             this.TwitchUsername = twitchMessage.UserLogin;
@@ -91,9 +90,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(PubSubWhisperEventModel whisper)
+        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubWhisperEventModel whisper)
         {
-            this.SetUserData(twitchID: whisper.from_id.ToString());
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, whisper.from_id.ToString());
 
             this.TwitchID = whisper.from_id.ToString();
             this.TwitchUsername = whisper.tags.login;
@@ -102,9 +101,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(PubSubWhisperEventRecipientModel whisperRecipient)
+        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubWhisperEventRecipientModel whisperRecipient)
         {
-            this.SetUserData(twitchID: whisperRecipient.id.ToString());
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, whisperRecipient.id.ToString());
 
             this.TwitchID = whisperRecipient.id.ToString();
             this.TwitchUsername = whisperRecipient.username;
@@ -114,9 +113,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(ChatUserNoticePacketModel packet)
+        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatUserNoticePacketModel packet)
         {
-            this.SetUserData(twitchID: packet.UserID.ToString());
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.UserID.ToString());
 
             this.TwitchID = packet.UserID.ToString();
             this.TwitchUsername = !string.IsNullOrEmpty(packet.RaidUserLogin) ? packet.RaidUserLogin : packet.Login;
@@ -129,9 +128,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(ChatClearChatPacketModel packet)
+        public UserViewModel(Twitch.Base.Models.Clients.Chat.ChatClearChatPacketModel packet)
         {
-            this.SetUserData(twitchID: packet.UserID);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.UserID);
 
             this.TwitchID = packet.UserID;
             this.TwitchUsername = packet.UserLogin;
@@ -139,9 +138,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(PubSubBitsEventV2Model packet)
+        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubBitsEventV2Model packet)
         {
-            this.SetUserData(twitchID: packet.user_id);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.user_id);
 
             this.TwitchID = packet.user_id;
             this.TwitchDisplayName = this.TwitchUsername = packet.user_name;
@@ -149,9 +148,9 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(PubSubSubscriptionsEventModel packet)
+        public UserViewModel(Twitch.Base.Models.Clients.PubSub.Messages.PubSubSubscriptionsEventModel packet)
         {
-            this.SetUserData(twitchID: packet.user_id);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, packet.user_id);
 
             this.TwitchID = packet.user_id;
             this.TwitchUsername = packet.user_name;
@@ -160,12 +159,25 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(UserFollowModel follow)
+        public UserViewModel(Twitch.Base.Models.NewAPI.Users.UserFollowModel follow)
         {
-            this.SetUserData(twitchID: follow.from_id);
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, follow.from_id);
 
             this.TwitchID = follow.from_id;
             this.TwitchDisplayName = this.TwitchUsername = follow.from_name;
+
+            this.SetTwitchRoles();
+        }
+
+        public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.Twitch, message.User?.id);
+
+            this.GlimeshID = message.User?.id;
+            this.GlimeshUsername = message.User?.username;
+            this.GlimeshDisplayName = message.User?.displayname;
+            this.GlimeshAvatarLink = message.User?.FullAvatarURL;
+            this.AccountDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(message.User?.confirmedAt);
 
             this.SetTwitchRoles();
         }
@@ -178,21 +190,26 @@ namespace MixItUp.Base.ViewModel.User
         [Obsolete]
         public UserViewModel() { }
 
-        private void SetUserData(string twitchID = null)
+        private void SetUserData(StreamingPlatformTypeEnum platform, string userID)
         {
-            if (!string.IsNullOrEmpty(twitchID))
+            if (platform != StreamingPlatformTypeEnum.None && !string.IsNullOrEmpty(userID))
             {
-                this.Data = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID);
+                this.Data = ChannelSession.Settings.GetUserDataByPlatformID(platform, userID);
                 if (this.Data == null)
                 {
-                    this.Data = new UserDataModel() { TwitchID = twitchID };
+                    if (platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        this.Data = new UserDataModel() { TwitchID = userID };
+                    }
+                    else if (platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        this.Data = new UserDataModel() { GlimeshID = userID };
+                    }
                     ChannelSession.Settings.AddUserData(this.Data);
                 }
+                return;
             }
-            else
-            {
-                this.Data = new UserDataModel();
-            }
+            this.Data = new UserDataModel();
         }
 
         [JsonIgnore]
@@ -204,6 +221,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (!string.IsNullOrEmpty(this.TwitchID)) { return StreamingPlatformTypeEnum.Twitch; }
+                else if (!string.IsNullOrEmpty(this.GlimeshID)) { return StreamingPlatformTypeEnum.Glimesh; }
                 return StreamingPlatformTypeEnum.None;
             }
         }
@@ -214,6 +232,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchID; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshID; }
                 return null;
             }
         }
@@ -224,6 +243,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUsername; }
                 return this.UnassociatedUsername;
             }
         }
@@ -234,6 +254,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchDisplayName ?? this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshDisplayName ?? this.GlimeshUsername; }
                 return this.UnassociatedUsername;
             }
         }
@@ -247,6 +268,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshAvatarLink; }
                 return string.Empty;
             }
         }
@@ -312,6 +334,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return $"https://www.glimesh.tv/{this.Username}"; }
                 return string.Empty;
             }
         }
@@ -321,11 +344,13 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchAccountDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshAccountDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchAccountDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshAccountDate = value; }
             }
         }
 
@@ -334,11 +359,13 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchFollowDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshFollowDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchFollowDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshFollowDate = value; }
 
                 if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -356,11 +383,13 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscribeDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshSubscribeDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshSubscribeDate = value; }
 
                 if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -381,6 +410,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.IsPlatformSubscriber)
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscriberTier; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return 1; }
                 }
                 return 0;
             }
@@ -402,6 +432,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
                 return null;
             }
         }
@@ -425,7 +456,8 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.IsNullOrEmpty(this.TwitchID); }
-                return false;
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return string.IsNullOrEmpty(this.GlimeshID); }
+                return true;
             }
         }
 
@@ -475,6 +507,17 @@ namespace MixItUp.Base.ViewModel.User
         public ChatBadgeModel TwitchSpecialtyBadge { get; private set; }
 
         #endregion Twitch
+
+        #region Glimesh
+
+        public string GlimeshID { get { return this.Data.GlimeshID; } private set { this.Data.GlimeshID = value; } }
+        public string GlimeshUsername { get { return this.Data.GlimeshUsername; } private set { this.Data.GlimeshUsername = value; } }
+        public string GlimeshDisplayName { get { return this.Data.GlimeshDisplayName; } private set { this.Data.GlimeshDisplayName = value; } }
+        public string GlimeshAvatarLink { get { return this.Data.GlimeshAvatarLink; } private set { this.Data.GlimeshAvatarLink = value; } }
+
+        public HashSet<UserRoleEnum> GlimeshUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
+
+        #endregion Glimesh
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
@@ -690,6 +733,11 @@ namespace MixItUp.Base.ViewModel.User
                         await this.RefreshTwitchUserFollowDate();
                         await this.RefreshTwitchUserSubscribeDate();
                     }
+                    
+                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                    {
+                        await this.RefreshGlimeshUserDetails();
+                    }
 
                     this.SetCommonUserRoles();
 
@@ -881,7 +929,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public override string ToString() { return this.Username; }
 
-        #region Twitch Refresh
+        #region Twitch Refresh Functions
 
         private async Task RefreshTwitchUserDetails()
         {
@@ -966,7 +1014,34 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        #endregion Twitch Refresh
+        #endregion Twitch Refresh Functions
+
+        #region Glimesh Refresh Functions
+
+        private async Task RefreshGlimeshUserDetails()
+        {
+            //Glimesh.Base.Models.Users.UserModel glimeshUser = (!string.IsNullOrEmpty(this.GlimeshID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
+            //    : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+            //if (glimeshUser != null)
+            //{
+            //    this.TwitchID = twitchUser.id;
+            //    this.TwitchUsername = twitchUser.login;
+            //    this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
+            //    this.TwitchAvatarLink = twitchUser.profile_image_url;
+
+            //    if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
+            //    if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
+            //    if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+            //    if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+
+            //    this.SetTwitchRoles();
+
+            //    this.Color = null;
+            //    this.RolesDisplayString = null;
+            //}
+        }
+
+        #endregion Glimesh Refresh Functions
 
         private void SetCommonUserRoles()
         {
