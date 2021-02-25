@@ -41,7 +41,10 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="linqtotwitter" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="StreamingClientLibrary.Glimesh" Version="1.0.0" />
+    <PackageReference Include="StreamingClientLibrary.Trovo" Version="1.0.0" />
     <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.23" />
+    <PackageReference Include="StreamingClientLibrary.YouTube" Version="1.0.0.2" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 
