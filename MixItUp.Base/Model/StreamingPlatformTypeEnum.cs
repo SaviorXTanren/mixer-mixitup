@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model
         Mixer = 1,
         Twitch = 2,
         YouTube = 4,
+        Trovo = 8,
+        Glimesh = 16,
 
         All = 2147483647,
     }
@@ -21,7 +23,7 @@ namespace MixItUp.Base.Model
         public static IEnumerable<StreamingPlatformTypeEnum> Platforms { get; private set; } = new List<StreamingPlatformTypeEnum>()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
-            StreamingPlatformTypeEnum.Mixer, StreamingPlatformTypeEnum.Twitch, StreamingPlatformTypeEnum.YouTube
+            StreamingPlatformTypeEnum.Mixer, StreamingPlatformTypeEnum.Twitch, StreamingPlatformTypeEnum.YouTube, StreamingPlatformTypeEnum.Trovo, StreamingPlatformTypeEnum.Glimesh
 #pragma warning restore CS0612 // Type or member is obsolete
         };
     }

@@ -130,5 +130,5 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-
+  
 </Project>
