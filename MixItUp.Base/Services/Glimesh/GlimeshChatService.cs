@@ -33,8 +33,8 @@ namespace MixItUp.Base.Services.Glimesh
     {
         public event EventHandler<GlimeshChatMessageViewModel> OnMessageOccurred;
 
-        private ChatClient userClient;
-        private ChatClient botClient;
+        private ChatEventClient userClient;
+        private ChatEventClient botClient;
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
@@ -50,21 +50,21 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     try
                     {
-                        this.userClient = await ChatClient.CreateWithToken(ChannelSession.GlimeshUserConnection.Connection);
+                        this.userClient = await ChatEventClient.CreateWithToken(ChannelSession.GlimeshUserConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
                         }
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
-                        this.userClient.OnMessageReceived += UserClient_OnMessageReceived;
+                        this.userClient.OnChatMessageReceived += UserClient_OnChatMessageReceived;
 
                         if (await this.userClient.Connect())
                         {
                             return new Result("Failed to connect to Glimesh chat servers");
                         }
 
-                        if (await this.userClient.Join(ChannelSession.GlimeshChannel.id))
+                        if (await this.userClient.JoinChannelChat(ChannelSession.GlimeshChannel.id))
                         {
                             return new Result("Failed to join Glimesh channel chat");
                         }
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Services.Glimesh
                         this.userClient.OnSentOccurred -= Client_OnSentOccurred;
                     }
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
-                    this.userClient.OnMessageReceived -= UserClient_OnMessageReceived;
+                    this.userClient.OnChatMessageReceived -= UserClient_OnChatMessageReceived;
 
                     await this.userClient.Disconnect();
                 }
@@ -112,7 +112,7 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     try
                     {
-                        this.botClient = await ChatClient.CreateWithToken(ChannelSession.GlimeshBotConnection.Connection);
+                        this.botClient = await ChatEventClient.CreateWithToken(ChannelSession.GlimeshBotConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -123,11 +123,6 @@ namespace MixItUp.Base.Services.Glimesh
                         if (await this.botClient.Connect())
                         {
                             return new Result("Failed to connect to Glimesh chat servers");
-                        }
-
-                        if (await this.botClient.Join(ChannelSession.GlimeshChannel.id))
-                        {
-                            return new Result("Failed to join Glimesh channel chat");
                         }
 
                         return new Result();
@@ -168,7 +163,7 @@ namespace MixItUp.Base.Services.Glimesh
         {
             await this.messageSemaphore.WaitAndRelease(async () =>
             {
-                ChatClient client = this.GetChatClient(sendAsStreamer);
+                ChatEventClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
                     string subMessage = null;
@@ -228,14 +223,14 @@ namespace MixItUp.Base.Services.Glimesh
             });
         }
 
-        private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
+        private ChatEventClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
 
         private void Client_OnSentOccurred(object sender, string packet)
         {
             Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Sent: {0}", packet));
         }
 
-        private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
+        private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel message)
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
