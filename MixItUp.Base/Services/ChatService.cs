@@ -93,7 +93,7 @@ namespace MixItUp.Base.Services
         private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
-        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands.ToList(); } }
         private List<CommandModelBase> chatMenuCommands = new List<CommandModelBase>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
