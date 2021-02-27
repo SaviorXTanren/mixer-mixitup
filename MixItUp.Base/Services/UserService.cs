@@ -153,7 +153,7 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
-                else if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null && ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id.Equals(user.TwitchID))
+                else if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && ServiceManager.Get<TwitchSessionService>().BotNewAPI.id.Equals(user.TwitchID))
                 {
                     user.IgnoreForQueries = true;
                 }

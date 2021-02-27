@@ -38,14 +38,14 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            ClipCreationModel clipCreation = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CreateClip(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, this.IncludeDelay);
+            ClipCreationModel clipCreation = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateClip(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.IncludeDelay);
             if (clipCreation != null)
             {
                 for (int i = 0; i < 12; i++)
                 {
                     await Task.Delay(5000);
 
-                    ClipModel clip = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetClip(clipCreation);
+                    ClipModel clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipCreation);
                     if (clip != null && !string.IsNullOrEmpty(clip.url))
                     {
                         await this.ProcessClip(clip);

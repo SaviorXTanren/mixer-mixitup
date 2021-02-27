@@ -449,7 +449,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            if (ServiceContainer.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceContainer.Get<TwitchSessionService>().BotNewAPI?.id))
+            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceManager.Get<TwitchSessionService>().BotNewAPI?.id))
             {
                 return false;
             }

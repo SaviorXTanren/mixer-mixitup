@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login)); } }
+        public bool IsStreamerTagged { get { return Regex.IsMatch(this.PlainTextMessage.ToLower(), string.Format(TaggingRegexFormat, ServiceManager.Get<TwitchSessionService>().UserNewAPI.login)); } }
 
         public virtual bool IsStreamerOrBot
         {
@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     {
                         return true;
                     }
-                    else if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null && string.Equals(ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id, this.User.TwitchID, StringComparison.InvariantCultureIgnoreCase))
+                    else if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && string.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id, this.User.TwitchID, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }

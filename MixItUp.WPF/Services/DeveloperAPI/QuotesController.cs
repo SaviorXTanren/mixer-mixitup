@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             }
 
             var quoteText = quote.QuoteText.Trim(new char[] { ' ', '\'', '\"' });
-            UserQuoteModel newQuote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ServiceContainer.Get<TwitchSessionService>().ChannelV5?.game);
+            UserQuoteModel newQuote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ServiceManager.Get<TwitchSessionService>().ChannelV5?.game);
             ChannelSession.Settings.Quotes.Add(newQuote);
             await ChannelSession.SaveSettings();
 

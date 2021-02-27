@@ -112,9 +112,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
-            if (ServiceContainer.Get<TwitchSessionService>().StreamV5 != null)
+            if (ServiceManager.Get<TwitchSessionService>().StreamV5 != null)
             {
-                this.ViewersCount = ServiceContainer.Get<TwitchSessionService>().StreamV5.viewers;
+                this.ViewersCount = ServiceManager.Get<TwitchSessionService>().StreamV5.viewers;
             }
             this.ChattersCount = ChannelSession.Services.Chat.AllUsers.Count;
         }

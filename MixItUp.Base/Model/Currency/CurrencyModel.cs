@@ -349,19 +349,19 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
-                    int interval = ServiceContainer.Get<TwitchSessionService>().StreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    int interval = ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ServiceContainer.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
+                        bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
                         foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                int minutes = ServiceContainer.Get<TwitchSessionService>().StreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                int minutes = ServiceManager.Get<TwitchSessionService>().StreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    this.AddAmount(user.Data, ServiceContainer.Get<TwitchSessionService>().StreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    this.AddAmount(user.Data, ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         int bonus = 0;

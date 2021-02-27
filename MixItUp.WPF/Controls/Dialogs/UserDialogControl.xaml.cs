@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.DataContext = this.user;
 
-                UserFollowModel follow = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
+                UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ServiceManager.Get<TwitchSessionService>().UserNewAPI);
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;

@@ -743,13 +743,13 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV2Model.LatestVersion;
 
-            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
+            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null)
             {
-                this.TwitchUserOAuthToken = ServiceContainer.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchUserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
             }
-            if (ServiceContainer.Get<TwitchSessionService>().BotConnection != null)
+            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null)
             {
-                this.TwitchBotOAuthToken = ServiceContainer.Get<TwitchSessionService>().BotConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchBotOAuthToken = ServiceManager.Get<TwitchSessionService>().BotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)

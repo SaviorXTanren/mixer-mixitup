@@ -240,9 +240,9 @@ namespace MixItUp.Base.Util
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                 {
-                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                     if (argUserModel != null)
                     {
                         user = new UserViewModel(argUserModel);
@@ -497,7 +497,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
+                if (ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                 {
                     if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                     {
@@ -517,22 +517,22 @@ namespace MixItUp.Base.Util
                         }
                     }
 
-                    if (ServiceContainer.Get<TwitchSessionService>().StreamIsLive)
+                    if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceContainer.Get<TwitchSessionService>().StreamV5.viewers.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamV5.viewers.ToString());
                     }
-                    if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI != null)
+                    if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceContainer.Get<TwitchSessionService>().UserNewAPI.view_count.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI.view_count.ToString());
                     }
-                    if (ServiceContainer.Get<TwitchSessionService>().ChannelV5 != null)
+                    if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceContainer.Get<TwitchSessionService>().ChannelV5.status);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceContainer.Get<TwitchSessionService>().ChannelV5.game);
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceContainer.Get<TwitchSessionService>().ChannelV5.followers.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<TwitchSessionService>().ChannelV5.status);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "game", ServiceManager.Get<TwitchSessionService>().ChannelV5.game);
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followercount", ServiceManager.Get<TwitchSessionService>().ChannelV5.followers.ToString());
                         if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount"))
                         {
-                            long subCount = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetSubscriberCountV5(ServiceContainer.Get<TwitchSessionService>().ChannelV5);
+                            long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCountV5(ServiceManager.Get<TwitchSessionService>().ChannelV5);
                             this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                         }
                     }
@@ -840,7 +840,7 @@ namespace MixItUp.Base.Util
                 {
                     if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                     {
-                        Twitch.Base.Models.V5.Channel.ChannelModel channel = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetV5APIChannel(user.TwitchID);
+                        Twitch.Base.Models.V5.Channel.ChannelModel channel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5APIChannel(user.TwitchID);
                         if (channel != null)
                         {
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.status);
@@ -866,12 +866,12 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum period)
         {
-            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {
                     string result = "No users found.";
-                    BitsLeaderboardModel leaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
+                    BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, total);
                     if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                     {
                         IEnumerable<BitsLeaderboardUserModel> users = leaderboard.users.OrderBy(l => l.rank);
@@ -897,9 +897,9 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheered(BitsLeaderboardPeriodEnum period)
         {
-            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower()))
             {
-                BitsLeaderboardModel leaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, 1);
+                BitsLeaderboardModel leaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(period, 1);
                 if (leaderboard != null && leaderboard.users != null && leaderboard.users.Count > 0)
                 {
                     BitsLeaderboardUserModel bitsUser = leaderboard.users.OrderBy(u => u.rank).First();

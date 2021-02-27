@@ -165,7 +165,7 @@ namespace MixItUp.Base.Model.Overlay
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 this.userSubDates.Clear();
-                IEnumerable<UserSubscriptionModel> subscribers = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetSubscribersV5(ServiceContainer.Get<TwitchSessionService>().ChannelV5, int.MaxValue);
+                IEnumerable<UserSubscriptionModel> subscribers = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscribersV5(ServiceManager.Get<TwitchSessionService>().ChannelV5, int.MaxValue);
 
                 foreach (UserSubscriptionModel subscriber in subscribers)
                 {
@@ -238,19 +238,19 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.BitsLeaderboardDateRange)
                 {
                     case BitsLeaderboardPeriodEnum.Day:
-                        bitsLeaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Day, this.TotalToShow);
+                        bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Day, this.TotalToShow);
                         break;
                     case BitsLeaderboardPeriodEnum.Week:
-                        bitsLeaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Week, this.TotalToShow);
+                        bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Week, this.TotalToShow);
                         break;
                     case BitsLeaderboardPeriodEnum.Month:
-                        bitsLeaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Month, this.TotalToShow);
+                        bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Month, this.TotalToShow);
                         break;
                     case BitsLeaderboardPeriodEnum.Year:
-                        bitsLeaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Year, this.TotalToShow);
+                        bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.Year, this.TotalToShow);
                         break;
                     case BitsLeaderboardPeriodEnum.All:
-                        bitsLeaderboard = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.All, this.TotalToShow);
+                        bitsLeaderboard = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetBitsLeaderboard(BitsLeaderboardPeriodEnum.All, this.TotalToShow);
                         break;
                 }
                 this.lastQuery = DateTimeOffset.Now;
@@ -394,7 +394,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            if (ServiceContainer.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceContainer.Get<TwitchSessionService>().BotNewAPI?.id))
+            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceManager.Get<TwitchSessionService>().BotNewAPI?.id))
             {
                 return false;
             }

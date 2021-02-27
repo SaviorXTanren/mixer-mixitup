@@ -228,7 +228,7 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
+                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
                                         if (twitchUser != null)
                                         {
                                             UserViewModel userViewModel = new UserViewModel(twitchUser);
@@ -238,7 +238,7 @@ namespace MixItUp.Base.ViewModel.User
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
+                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
                                     if (twitchUser != null)
                                     {
                                         user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchUser.id);

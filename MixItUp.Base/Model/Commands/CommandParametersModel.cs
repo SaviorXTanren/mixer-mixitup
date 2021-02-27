@@ -19,9 +19,9 @@ namespace MixItUp.Base.Model.Commands
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
                 {
-                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                     if (twitchUser != null)
                     {
                         user = new UserViewModel(twitchUser);

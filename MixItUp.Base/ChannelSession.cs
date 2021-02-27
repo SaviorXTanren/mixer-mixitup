@@ -111,7 +111,7 @@ namespace MixItUp.Base
         {
             await ChannelSession.Services.Close();
 
-            await ServiceContainer.Get<TwitchSessionService>().Disconnect();
+            await ServiceManager.Get<TwitchSessionService>().Disconnect();
         }
 
         public static async Task SaveSettings()
@@ -125,12 +125,12 @@ namespace MixItUp.Base
 
             UserViewModel user = null;
 
-            if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI != null)
+            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
             {
-                user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceContainer.Get<TwitchSessionService>().UserNewAPI.id);
+                user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
                 if (user == null)
                 {
-                    user = new UserViewModel(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
+                    user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
                 }
             }
 
@@ -157,17 +157,17 @@ namespace MixItUp.Base
                 {
                     IEnumerable<SettingsV3Model> currentSettings = await ChannelSession.Services.Settings.GetAllSettings();
 
-                    if (currentSettings.Any(s => !string.IsNullOrEmpty(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID) && string.Equals(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID, ServiceContainer.Get<TwitchSessionService>().ChannelV5.id)))
+                    if (currentSettings.Any(s => !string.IsNullOrEmpty(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID) && string.Equals(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID, ServiceManager.Get<TwitchSessionService>().ChannelV5.id)))
                     {
-                        GlobalEvents.ShowMessageBox($"There already exists settings for the account {ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                        GlobalEvents.ShowMessageBox($"There already exists settings for the account {ServiceManager.Get<TwitchSessionService>().UserNewAPI.login}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
                         return false;
                     }
 
-                    ChannelSession.Settings = await ChannelSession.Services.Settings.Create(ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login);
+                    ChannelSession.Settings = await ChannelSession.Services.Settings.Create(ServiceManager.Get<TwitchSessionService>().UserNewAPI.login);
                 }
                 await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                ChannelSession.Settings.Name = ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login;
+                ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().UserNewAPI.login;
 
                 // Connect External Services
                 Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
@@ -335,7 +335,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceContainer.Get<TwitchSessionService>().UserNewAPI?.broadcaster_type);
+                ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().UserNewAPI?.broadcaster_type);
 
                 await ChannelSession.SaveSettings();
                 await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
@@ -366,30 +366,30 @@ namespace MixItUp.Base
             {
                 sessionBackgroundTimer++;
 
-                await ServiceContainer.Get<TwitchSessionService>().RefreshUser();
+                await ServiceManager.Get<TwitchSessionService>().RefreshUser();
 
-                await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
+                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
 
                 if (sessionBackgroundTimer >= 5)
                 {
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
 
-                    if (ServiceContainer.Get<TwitchSessionService>().StreamIsLive)
+                    if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                     {
                         try
                         {
                             string type = null;
-                            if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI.IsPartner())
+                            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsPartner())
                             {
                                 type = "Partner";
                             }
-                            else if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI.IsAffiliate())
+                            else if (ServiceManager.Get<TwitchSessionService>().UserNewAPI.IsAffiliate())
                             {
                                 type = "Affiliate";
                             }
-                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ServiceContainer.Get<TwitchSessionService>().StreamV5.viewers, ChannelSession.Services.Chat.AllUsers.Count,
-                                ServiceContainer.Get<TwitchSessionService>().StreamV5.game, ServiceContainer.Get<TwitchSessionService>().ChannelV5.views, ServiceContainer.Get<TwitchSessionService>().ChannelV5.followers);
+                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamV5.viewers, ChannelSession.Services.Chat.AllUsers.Count,
+                                ServiceManager.Get<TwitchSessionService>().StreamV5.game, ServiceManager.Get<TwitchSessionService>().ChannelV5.views, ServiceManager.Get<TwitchSessionService>().ChannelV5.followers);
                         }
                         catch (Exception ex)
                         {

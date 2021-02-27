@@ -139,7 +139,7 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV3Model setting)
         {
-            Result result = await ServiceContainer.Get<TwitchSessionService>().Connect(setting);
+            Result result = await ServiceManager.Get<TwitchSessionService>().Connect(setting);
             if (result.Success)
             {
                 if (await ChannelSession.InitializeSession())

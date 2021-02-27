@@ -620,7 +620,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                             }
                                             else
                                             {
-                                                UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(id.ToString());
+                                                UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(id.ToString());
                                                 if (twitchUser != null)
                                                 {
                                                     user = new UserViewModel(twitchUser);
@@ -629,7 +629,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
+                                            UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                                             if (twitchUser != null)
                                             {
                                                 user = new UserViewModel(twitchUser);
