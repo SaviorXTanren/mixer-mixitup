@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -56,7 +58,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, ServiceContainer.Get<TwitchSessionService>().ChannelV5?.game));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;

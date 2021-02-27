@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -36,14 +38,14 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.IncludeDelay);
+            ClipCreationModel clipCreation = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CreateClip(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, this.IncludeDelay);
             if (clipCreation != null)
             {
                 for (int i = 0; i < 12; i++)
                 {
                     await Task.Delay(5000);
 
-                    ClipModel clip = await ChannelSession.TwitchUserConnection.GetClip(clipCreation);
+                    ClipModel clip = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetClip(clipCreation);
                     if (clip != null && !string.IsNullOrEmpty(clip.url))
                     {
                         await this.ProcessClip(clip);

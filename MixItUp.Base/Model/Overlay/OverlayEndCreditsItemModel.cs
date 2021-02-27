@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -447,7 +449,7 @@ namespace MixItUp.Base.Model.Overlay
                 return false;
             }
 
-            if (ChannelSession.TwitchBotConnection != null && string.Equals(user.TwitchID, ChannelSession.TwitchBotNewAPI?.id))
+            if (ServiceContainer.Get<TwitchSessionService>().BotConnection != null && string.Equals(user.TwitchID, ServiceContainer.Get<TwitchSessionService>().BotNewAPI?.id))
             {
                 return false;
             }

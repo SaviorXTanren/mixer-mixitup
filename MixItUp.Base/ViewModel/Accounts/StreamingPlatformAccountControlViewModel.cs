@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -63,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ChannelSession.TwitchUserConnection != null; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceContainer.Get<TwitchSessionService>().UserConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) {  }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) {  }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) {  }
@@ -98,7 +100,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ChannelSession.TwitchBotConnection != null; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceContainer.Get<TwitchSessionService>().BotConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { }
@@ -112,10 +114,10 @@ namespace MixItUp.Base.ViewModel.Accounts
 
             if (this.IsUserAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchUserNewAPI != null)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceContainer.Get<TwitchSessionService>().UserNewAPI != null)
                 {
-                    this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                    this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.display_name;
+                    this.UserAccountAvatar = ServiceContainer.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
+                    this.UserAccountUsername = ServiceContainer.Get<TwitchSessionService>().UserNewAPI.display_name;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
@@ -133,10 +135,10 @@ namespace MixItUp.Base.ViewModel.Accounts
 
             if (this.IsBotAccountConnected)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchBotNewAPI != null)
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch && ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null)
                 {
-                    this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                    this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.display_name;
+                    this.BotAccountAvatar = ServiceContainer.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
+                    this.BotAccountUsername = ServiceContainer.Get<TwitchSessionService>().BotNewAPI.display_name;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
@@ -168,11 +170,11 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ChannelSession.ConnectTwitchUser();
-                        if (result.Success && ChannelSession.TwitchUserNewAPI != null)
+                        result = await ServiceContainer.Get<TwitchSessionService>().ConnectUser();
+                        if (result.Success && ServiceContainer.Get<TwitchSessionService>().UserNewAPI != null)
                         {
-                            this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
+                            this.UserAccountAvatar = ServiceContainer.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
+                            this.UserAccountUsername = ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login;
                         }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
@@ -205,7 +207,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        await ChannelSession.DisconnectTwitchBot();
+                        await ServiceContainer.Get<TwitchSessionService>().DisconnectBot();
                         ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
@@ -228,18 +230,18 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ChannelSession.ConnectTwitchBot();
+                        result = await ServiceContainer.Get<TwitchSessionService>().ConnectBot();
                         if (result.Success)
                         {
-                            if (ChannelSession.TwitchBotNewAPI.id.Equals(ChannelSession.TwitchUserNewAPI?.id))
+                            if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id.Equals(ServiceContainer.Get<TwitchSessionService>().UserNewAPI?.id))
                             {
-                                await ChannelSession.DisconnectTwitchBot();
+                                await ServiceContainer.Get<TwitchSessionService>().DisconnectBot();
                                 result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
                             }
-                            else if (ChannelSession.TwitchBotNewAPI != null)
+                            else if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null)
                             {
-                                this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                                this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
+                                this.BotAccountAvatar = ServiceContainer.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
+                                this.BotAccountUsername = ServiceContainer.Get<TwitchSessionService>().BotNewAPI.login;
                             }
                         }
                     }

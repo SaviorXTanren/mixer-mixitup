@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -137,7 +139,7 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV3Model setting)
         {
-            Result result = await ChannelSession.ConnectUser(setting);
+            Result result = await ServiceContainer.Get<TwitchSessionService>().Connect(setting);
             if (result.Success)
             {
                 if (await ChannelSession.InitializeSession())

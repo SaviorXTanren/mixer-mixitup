@@ -182,7 +182,7 @@ namespace MixItUp.Base.Services
                 {
                     await this.TwitchChatService.SendMessage(message, sendAsStreamer);
 
-                    if (sendAsStreamer || ChannelSession.TwitchBotConnection == null)
+                    if (sendAsStreamer || ServiceContainer.Get<TwitchSessionService>().BotConnection == null)
                     {
                         UserViewModel user = ChannelSession.GetCurrentUser();
                         await this.AddMessage(new TwitchChatMessageViewModel(user, message));
@@ -365,7 +365,7 @@ namespace MixItUp.Base.Services
 
             // Add message to chat list
             bool showMessage = true;
-            if (ChannelSession.Settings.HideBotMessages && message.User != null && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+            if (ChannelSession.Settings.HideBotMessages && message.User != null && ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id))
             {
                 showMessage = false;
             }
@@ -488,7 +488,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.IgnoreBotAccountCommands)
                     {
-                        if (ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+                        if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id))
                         {
                             return;
                         }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using GlimeshBase = Glimesh.Base;
+using MixItUp.Base.Services.Twitch;
 
 namespace MixItUp.Base.Services
 {
@@ -152,7 +153,7 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
-                else if (ChannelSession.TwitchBotNewAPI != null && ChannelSession.TwitchBotNewAPI.id.Equals(user.TwitchID))
+                else if (ServiceContainer.Get<TwitchSessionService>().BotNewAPI != null && ServiceContainer.Get<TwitchSessionService>().BotNewAPI.id.Equals(user.TwitchID))
                 {
                     user.IgnoreForQueries = true;
                 }

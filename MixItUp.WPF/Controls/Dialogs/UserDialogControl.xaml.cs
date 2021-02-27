@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 using Twitch.Base.Models.NewAPI.Users;
@@ -46,7 +48,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.DataContext = this.user;
 
-                UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ChannelSession.TwitchUserNewAPI);
+                UserFollowModel follow = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
                 if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                 {
                     this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;

@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -17,9 +19,9 @@ namespace MixItUp.Base.Model.Commands
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ChannelSession.TwitchUserConnection != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
                 {
-                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                     if (twitchUser != null)
                     {
                         user = new UserViewModel(twitchUser);

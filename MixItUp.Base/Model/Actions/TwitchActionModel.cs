@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
@@ -147,7 +149,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (this.ActionType == TwitchActionType.RunAd)
             {
-                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
+                AdResponseModel response = await ServiceContainer.Get<TwitchSessionService>().UserConnection.RunAd(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
                 if (response == null)
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
@@ -184,14 +186,14 @@ namespace MixItUp.Base.Model.Actions
             }
             else if (this.ActionType == TwitchActionType.Clip)
             {
-                ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.ClipIncludeDelay);
+                ClipCreationModel clipCreation = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CreateClip(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, this.ClipIncludeDelay);
                 if (clipCreation != null)
                 {
                     for (int i = 0; i < 12; i++)
                     {
                         await Task.Delay(5000);
 
-                        ClipModel clip = await ChannelSession.TwitchUserConnection.GetClip(clipCreation);
+                        ClipModel clip = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetClip(clipCreation);
                         if (clip != null && !string.IsNullOrEmpty(clip.url))
                         {
                             if (this.ShowInfoInChat)
@@ -216,7 +218,7 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
 
-                CreatedStreamMarkerModel streamMarker = await ChannelSession.TwitchUserConnection.CreateStreamMarker(ChannelSession.TwitchUserNewAPI, description);
+                CreatedStreamMarkerModel streamMarker = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CreateStreamMarker(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, description);
                 if (streamMarker != null)
                 {
                     if (this.ShowInfoInChat)

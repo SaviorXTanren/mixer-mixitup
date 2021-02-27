@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using MixItUp.Base.Services.Twitch;
 
 namespace MixItUp.Base.Model.Settings
 {
@@ -742,13 +743,13 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV2Model.LatestVersion;
 
-            if (ChannelSession.TwitchUserConnection != null)
+            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
             {
-                this.TwitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchUserOAuthToken = ServiceContainer.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
             }
-            if (ChannelSession.TwitchBotConnection != null)
+            if (ServiceContainer.Get<TwitchSessionService>().BotConnection != null)
             {
-                this.TwitchBotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+                this.TwitchBotOAuthToken = ServiceContainer.Get<TwitchSessionService>().BotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs.IsConnected)

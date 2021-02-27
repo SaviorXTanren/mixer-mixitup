@@ -2,6 +2,8 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -226,7 +228,7 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
+                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
                                         if (twitchUser != null)
                                         {
                                             UserViewModel userViewModel = new UserViewModel(twitchUser);
@@ -236,7 +238,7 @@ namespace MixItUp.Base.ViewModel.User
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
+                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
                                     if (twitchUser != null)
                                     {
                                         user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchUser.id);

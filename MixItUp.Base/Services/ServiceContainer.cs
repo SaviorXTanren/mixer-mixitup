@@ -9,10 +9,15 @@ namespace MixItUp.Base.Services
 
         public static void Add<T>(T service) { ServiceContainer.serviceContainer[service.GetType()] = service; }
 
+        public static bool Has<T>() { return ServiceContainer.serviceContainer.ContainsKey(typeof(T)); }
+
         public static T Get<T>()
         {
-            ServiceContainer.serviceContainer.TryGetValue(typeof(T), out object service);
-            return (T)service;
+            if (ServiceContainer.Has<T>())
+            {
+                return (T)ServiceContainer.serviceContainer[typeof(T)];
+            }
+            return default(T);
         }
 
         public static void Remove<T>(T service) { ServiceContainer.serviceContainer.Remove(service.GetType()); }

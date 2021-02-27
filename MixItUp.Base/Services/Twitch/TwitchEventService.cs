@@ -210,13 +210,13 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<Result> Connect()
         {
             this.IsConnected = false;
-            if (ChannelSession.TwitchUserConnection != null)
+            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
             {
                 return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
-                        this.pubSub = new PubSubClient(ChannelSession.TwitchUserConnection.Connection);
+                        this.pubSub = new PubSubClient(ServiceContainer.Get<TwitchSessionService>().UserConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Services.Twitch
                         List<PubSubListenTopicModel> topics = new List<PubSubListenTopicModel>();
                         foreach (PubSubTopicsEnum topic in TwitchEventService.topicTypes)
                         {
-                            topics.Add(new PubSubListenTopicModel(topic, (string)ChannelSession.TwitchUserNewAPI.id));
+                            topics.Add(new PubSubListenTopicModel(topic, (string)ServiceContainer.Get<TwitchSessionService>().UserNewAPI.id));
                         }
 
                         await this.pubSub.Listen(topics);
@@ -317,7 +317,7 @@ namespace MixItUp.Base.Services.Twitch
 
             if (subEvent.IsGiftedUpgrade)
             {
-                var subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, subEvent.User.GetTwitchV5APIUserModel());
+                var subscription = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CheckIfSubscribedV5(ServiceContainer.Get<TwitchSessionService>().ChannelV5, subEvent.User.GetTwitchV5APIUserModel());
                 if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
                 {
                     subEvent.PlanTier = TwitchEventService.GetSubTierNameFromText(subscription.sub_plan);
@@ -406,7 +406,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
 
-                IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchUserNewAPI, maxResult: 100);
+                IEnumerable<UserFollowModel> followers = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIFollowers(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, maxResult: 100);
                 if (this.follows.Count() > 0)
                 {
                     foreach (UserFollowModel follow in followers)

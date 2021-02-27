@@ -872,7 +872,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            if (ChannelSession.TwitchStreamIsLive)
+            if (ServiceContainer.Get<TwitchSessionService>().StreamIsLive)
             {
                 this.Data.ViewingMinutes++;
             }
@@ -933,8 +933,8 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserDetails()
         {
-            TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
-                : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+            TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(this.TwitchID)
+                : await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
             if (twitchUser != null)
             {
                 this.TwitchID = twitchUser.id;
@@ -957,12 +957,12 @@ namespace MixItUp.Base.ViewModel.User
         private void SetTwitchRoles()
         {
             this.TwitchUserRoles.Add(UserRoleEnum.User);
-            if (ChannelSession.TwitchUserNewAPI != null && ChannelSession.TwitchUserNewAPI.id.Equals(this.TwitchID))
+            if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI != null && ServiceContainer.Get<TwitchSessionService>().UserNewAPI.id.Equals(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            if (ChannelSession.TwitchChannelEditorsV5.Contains(this.TwitchID))
+            if (ServiceContainer.Get<TwitchSessionService>().ChannelEditorsV5.Contains(this.TwitchID))
             {
                 this.TwitchUserRoles.Add(UserRoleEnum.ChannelEditor);
             }
@@ -976,7 +976,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserAccountDate()
         {
-            TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
+            TwitchV5API.Users.UserModel twitchV5User = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetV5APIUserByLogin(this.TwitchUsername);
             if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at))
             {
                 this.AccountDate = TwitchPlatformService.GetTwitchDateTime(twitchV5User.created_at);
@@ -985,7 +985,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserFollowDate()
         {
-            UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchUserNewAPI, this.GetTwitchNewAPIUserModel());
+            UserFollowModel follow = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, this.GetTwitchNewAPIUserModel());
             if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
             {
                 this.FollowDate = TwitchPlatformService.GetTwitchDateTime(follow.followed_at);
@@ -998,9 +998,9 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserSubscribeDate()
         {
-            if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
+            if (ServiceContainer.Get<TwitchSessionService>().UserNewAPI.IsAffiliate() || ServiceContainer.Get<TwitchSessionService>().UserNewAPI.IsPartner())
             {
-                TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, this.GetTwitchV5APIUserModel());
+                TwitchV5API.Users.UserSubscriptionModel subscription = await ServiceContainer.Get<TwitchSessionService>().UserConnection.CheckIfSubscribedV5(ServiceContainer.Get<TwitchSessionService>().ChannelV5, this.GetTwitchV5APIUserModel());
                 if (subscription != null && !string.IsNullOrEmpty(subscription.created_at))
                 {
                     this.SubscribeDate = TwitchPlatformService.GetTwitchDateTime(subscription.created_at);

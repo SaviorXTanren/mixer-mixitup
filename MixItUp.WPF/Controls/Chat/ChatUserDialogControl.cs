@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -39,10 +41,10 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
-                            await ChannelSession.TwitchUserConnection.FollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                            await ServiceContainer.Get<TwitchSessionService>().UserConnection.FollowUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                             break;
                         case UserDialogResult.Unfollow:
-                            await ChannelSession.TwitchUserConnection.UnfollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                            await ServiceContainer.Get<TwitchSessionService>().UserConnection.UnfollowUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                             break;
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.DisplayName)))

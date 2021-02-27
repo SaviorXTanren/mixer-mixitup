@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -110,9 +112,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
-            if (ChannelSession.TwitchStreamV5 != null)
+            if (ServiceContainer.Get<TwitchSessionService>().StreamV5 != null)
             {
-                this.ViewersCount = ChannelSession.TwitchStreamV5.viewers;
+                this.ViewersCount = ServiceContainer.Get<TwitchSessionService>().StreamV5.viewers;
             }
             this.ChattersCount = ChannelSession.Services.Chat.AllUsers.Count;
         }

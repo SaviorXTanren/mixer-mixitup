@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> ConnectUser()
         {
-            if (ChannelSession.TwitchUserConnection != null)
+            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
             {
                 return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
@@ -150,7 +150,7 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        this.userClient = new ChatClient(ChannelSession.TwitchUserConnection.Connection);
+                        this.userClient = new ChatClient(ServiceContainer.Get<TwitchSessionService>().UserConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.userClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
+                        await this.userClient.Join(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(this.ChatterJoinLeaveBackground, this.cancellationTokenSource.Token, 2500);
@@ -238,7 +238,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> ConnectBot()
         {
-            if (ChannelSession.TwitchUserConnection != null)
+            if (ServiceContainer.Get<TwitchSessionService>().UserConnection != null)
             {
                 return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
@@ -246,7 +246,7 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         this.cancellationTokenSource = new CancellationTokenSource();
 
-                        this.botClient = new ChatClient(ChannelSession.TwitchBotConnection.Connection);
+                        this.botClient = new ChatClient(ServiceContainer.Get<TwitchSessionService>().BotConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.botClient.Join((UserModel)ChannelSession.TwitchUserNewAPI);
+                        await this.botClient.Join(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
 
                         await Task.Delay(3000);
 
@@ -310,30 +310,30 @@ namespace MixItUp.Base.Services.Twitch
 
             initializationTasks.Add(Task.Run(async() =>
             {
-                foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
+                foreach (EmoteModel emote in await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetEmotesForUserV5(ServiceContainer.Get<TwitchSessionService>().UserV5))
                 {
                     this.emotes[emote.code] = emote;
                 }
             }));
 
-            Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ChannelSession.TwitchUserConnection.GetGlobalChatBadges();
+            Task<IEnumerable<ChatBadgeSetModel>> globalChatBadgesTask = ServiceContainer.Get<TwitchSessionService>().UserConnection.GetGlobalChatBadges();
             initializationTasks.Add(globalChatBadgesTask);
-            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = ChannelSession.TwitchUserConnection.GetChannelChatBadges(ChannelSession.TwitchUserNewAPI);
+            Task<IEnumerable<ChatBadgeSetModel>> channelChatBadgesTask = ServiceContainer.Get<TwitchSessionService>().UserConnection.GetChannelChatBadges(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
             initializationTasks.Add(channelChatBadgesTask);
 
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
                 initializationTasks.Add(this.DownloadBetterTTVEmotes());
-                initializationTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchUserNewAPI.login));
+                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
             {
                 initializationTasks.Add(this.DownloadFrankerFaceZEmotes());
-                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ChannelSession.TwitchUserNewAPI.login));
+                initializationTasks.Add(this.DownloadFrankerFaceZEmotes(ServiceContainer.Get<TwitchSessionService>().UserNewAPI.login));
             }
 
-            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = ChannelSession.TwitchUserConnection.GetBitsCheermotes(ChannelSession.TwitchUserNewAPI);
+            Task<IEnumerable<BitsCheermoteModel>> cheermotesTask = ServiceContainer.Get<TwitchSessionService>().UserConnection.GetBitsCheermotes(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
             initializationTasks.Add(cheermotesTask);
 
             await Task.WhenAll(initializationTasks);
@@ -379,7 +379,7 @@ namespace MixItUp.Base.Services.Twitch
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, out subMessage);
-                        await client.SendMessage((UserModel)ChannelSession.TwitchUserNewAPI, message);
+                        await client.SendMessage(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -399,7 +399,7 @@ namespace MixItUp.Base.Services.Twitch
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, out subMessage);
-                        await client.SendWhisperMessage((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                        await client.SendWhisperMessage(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel(), message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -414,7 +414,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.DeleteMessage((UserModel)ChannelSession.TwitchUserNewAPI, message.ID);
+                    await this.userClient.DeleteMessage(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, message.ID);
                 }
             });
         }
@@ -425,7 +425,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.ClearChat((UserModel)ChannelSession.TwitchUserNewAPI);
+                    await this.userClient.ClearChat(ServiceContainer.Get<TwitchSessionService>().UserNewAPI);
                 }
             });
         }
@@ -436,7 +436,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.ModUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.ModUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }
@@ -447,7 +447,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.UnmodUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.UnmodUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }
@@ -458,7 +458,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.TimeoutUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
+                    await this.userClient.TimeoutUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
                 }
             });
         }
@@ -469,7 +469,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.BanUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }
@@ -480,7 +480,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.UnbanUser((UserModel)ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                    await this.userClient.UnbanUser(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }
@@ -491,7 +491,7 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.RunCommercial((UserModel)ChannelSession.TwitchUserNewAPI, lengthInSeconds);
+                    await this.userClient.RunCommercial(ServiceContainer.Get<TwitchSessionService>().UserNewAPI, lengthInSeconds);
                 }
             });
         }
@@ -517,7 +517,7 @@ namespace MixItUp.Base.Services.Twitch
                 List<UserViewModel> processedUsers = new List<UserViewModel>();
                 foreach (string chatUser in joinsToProcess)
                 {
-                    TwitchNewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(chatUser);
+                    TwitchNewAPI.Users.UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(chatUser);
                     if (twitchUser != null)
                     {
                         UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
@@ -766,7 +766,7 @@ namespace MixItUp.Base.Services.Twitch
                         UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster, StreamingPlatformTypeEnum.Twitch);
                         if (user == null)
                         {
-                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(hoster);
+                            UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(hoster);
                             if (twitchUser != null)
                             {
                                 user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
@@ -797,7 +797,7 @@ namespace MixItUp.Base.Services.Twitch
                     UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.UserID);
                     if (user == null)
                     {
-                        UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(message.UserLogin);
+                        UserModel twitchUser = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(message.UserLogin);
                         if (twitchUser != null)
                         {
                             user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);

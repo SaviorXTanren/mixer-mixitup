@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -52,9 +53,9 @@ namespace MixItUp.Base.Services
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.TwitchStreamV5 != null)
+                if (ServiceContainer.Get<TwitchSessionService>().StreamV5 != null)
                 {
-                    viewersCurrent = (int)ChannelSession.TwitchStreamV5.viewers;
+                    viewersCurrent = (int)ServiceContainer.Get<TwitchSessionService>().StreamV5.viewers;
                 }
 
                 numberStats.AddValue(viewersCurrent);

@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -175,13 +176,13 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ChannelSession.RefreshChannel();
-            if (ChannelSession.TwitchChannelV5 != null)
+            await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
+            if (ServiceContainer.Get<TwitchSessionService>().ChannelV5 != null)
             {
-                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(ChannelSession.TwitchChannelV5.game);
+                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(ServiceContainer.Get<TwitchSessionService>().ChannelV5.game);
                 if (details == null)
                 {
-                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(ChannelSession.TwitchChannelV5.game);
+                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(ServiceContainer.Get<TwitchSessionService>().ChannelV5.game);
                 }
 
                 if (details != null)
@@ -190,7 +191,7 @@ namespace MixItUp.Base.Model.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage("Game: " + ChannelSession.TwitchChannelV5.game);
+                    await ChannelSession.Services.Chat.SendMessage("Game: " + ServiceContainer.Get<TwitchSessionService>().ChannelV5.game);
                 }
             }
         }
@@ -202,8 +203,8 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ChannelSession.RefreshChannel();
-            await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ChannelSession.TwitchChannelV5.status);
+            await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
+            await ChannelSession.Services.Chat.SendMessage("Stream Title: " + ServiceContainer.Get<TwitchSessionService>().ChannelV5.status);
         }
     }
 
@@ -212,9 +213,9 @@ namespace MixItUp.Base.Model.Commands
         public static Task<DateTimeOffset> GetStartTime()
         {
             DateTimeOffset startTime = DateTimeOffset.MinValue;
-            if (ChannelSession.TwitchStreamIsLive)
+            if (ServiceContainer.Get<TwitchSessionService>().StreamIsLive)
             {
-                startTime = TwitchPlatformService.GetTwitchDateTime(ChannelSession.TwitchStreamV5.created_at).GetValueOrDefault();
+                startTime = TwitchPlatformService.GetTwitchDateTime(ServiceContainer.Get<TwitchSessionService>().StreamV5.created_at).GetValueOrDefault();
             }
             return Task.FromResult(startTime);
         }
@@ -366,7 +367,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game);
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ServiceContainer.Get<TwitchSessionService>().ChannelV5?.game);
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -496,10 +497,10 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ChannelSession.RefreshChannel();
-                if (ChannelSession.TwitchChannelV5 != null)
+                await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
+                if (ServiceContainer.Get<TwitchSessionService>().ChannelV5 != null)
                 {
-                    gameName = ChannelSession.TwitchChannelV5.game;
+                    gameName = ServiceContainer.Get<TwitchSessionService>().ChannelV5.game;
                 }
             }
 
@@ -597,10 +598,10 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ChannelSession.RefreshChannel();
-                if (ChannelSession.TwitchChannelV5 != null)
+                await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
+                if (ServiceContainer.Get<TwitchSessionService>().ChannelV5 != null)
                 {
-                    gameName = ChannelSession.TwitchChannelV5.game;
+                    gameName = ServiceContainer.Get<TwitchSessionService>().ChannelV5.game;
                 }
             }
 
@@ -625,8 +626,8 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments);
-                await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, status: name);
-                await ChannelSession.RefreshChannel();
+                await ServiceContainer.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceContainer.Get<TwitchSessionService>().ChannelV5, status: name);
+                await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
                 await ChannelSession.Services.Chat.SendMessage("Title Updated: " + name);
                 return;
             }
@@ -646,7 +647,7 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments).ToLower();
-                IEnumerable<Twitch.Base.Models.NewAPI.Games.GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(name);
+                IEnumerable<Twitch.Base.Models.NewAPI.Games.GameModel> games = await ServiceContainer.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByName(name);
                 if (games != null && games.Count() > 0)
                 {
                     Twitch.Base.Models.NewAPI.Games.GameModel game = games.FirstOrDefault(g => g.name.ToLower().Equals(name));
@@ -654,8 +655,8 @@ namespace MixItUp.Base.Model.Commands
                     {
                         game = games.First();
                     }
-                    await ChannelSession.TwitchUserConnection.UpdateV5Channel(ChannelSession.TwitchChannelV5, game: game);
-                    await ChannelSession.RefreshChannel();
+                    await ServiceContainer.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceContainer.Get<TwitchSessionService>().ChannelV5, game: game);
+                    await ServiceContainer.Get<TwitchSessionService>().RefreshChannel();
                     await ChannelSession.Services.Chat.SendMessage("Game Updated: " + game.name);
                     return;
                 }
