@@ -144,7 +144,12 @@ namespace MixItUp.WPF.Services
 
         private void TrySendEvent(Action eventAction)
         {
-            if (!ChannelSession.Settings.OptOutTracking && this.totalEventsSent < WindowsTelemetryService.MaxTelemetryEventsPerSession)
+            if (ChannelSession.Settings != null && ChannelSession.Settings.OptOutTracking)
+            {
+                return;
+            }
+
+            if (this.totalEventsSent < WindowsTelemetryService.MaxTelemetryEventsPerSession)
             {
                 eventAction();
                 this.totalEventsSent++;
