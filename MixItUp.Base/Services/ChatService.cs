@@ -331,18 +331,18 @@ namespace MixItUp.Base.Services
 
                 // Pre message processing
 
-            if (message is UserChatMessageViewModel)
-            {
-                if (message.User != null)
+                if (message is UserChatMessageViewModel)
                 {
-                    if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+                    if (message.User != null)
                     {
-                        UserViewModel activeUser = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
-                        if (activeUser != null)
+                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                         {
-                            message.User = activeUser;
+                            UserViewModel activeUser = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
+                            if (activeUser != null)
+                            {
+                                message.User = activeUser;
+                            }
                         }
-                    }
 
                         message.User.UpdateLastActivity();
                         if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
@@ -360,12 +360,12 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-            // Add message to chat list
-            bool showMessage = true;
-            if (ChannelSession.Settings.HideBotMessages && message.User != null && ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
-            {
-                showMessage = false;
-            }
+                // Add message to chat list
+                bool showMessage = true;
+                if (ChannelSession.Settings.HideBotMessages && message.User != null && ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                {
+                    showMessage = false;
+                }
 
                 if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
                 {
@@ -482,13 +482,13 @@ namespace MixItUp.Base.Services
                             return;
                         }
 
-                    if (ChannelSession.Settings.IgnoreBotAccountCommands)
-                    {
-                        if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                        if (ChannelSession.Settings.IgnoreBotAccountCommands)
                         {
-                            return;
+                            if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null && message.User.TwitchID.Equals(ServiceManager.Get<TwitchSessionService>().BotNewAPI.id))
+                            {
+                                return;
+                            }
                         }
-                    }
 
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
