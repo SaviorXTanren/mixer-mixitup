@@ -93,12 +93,11 @@ namespace MixItUp.Base.Services
         private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
-        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        public IEnumerable<CommandModelBase> ChatMenuCommands { get { return this.chatMenuCommands.ToList(); } }
         private List<CommandModelBase> chatMenuCommands = new List<CommandModelBase>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private ReaderWriterLockSlim commandLock = new ReaderWriterLockSlim();
         private Dictionary<string, CommandModelBase> triggersToCommands = new Dictionary<string, CommandModelBase>();
         private int longestTrigger = 0;
         private List<CommandModelBase> wildcardCommands = new List<CommandModelBase>();
@@ -275,8 +274,6 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.commandLock.EnterWriteLock();
-
             this.triggersToCommands.Clear();
             this.longestTrigger = 0;
             this.wildcardCommands.Clear();
@@ -304,210 +301,225 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            this.commandLock.ExitWriteLock();
-
             this.ChatCommandsReprocessed(this, new EventArgs());
         }
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            message.ProcessingStartTime = DateTimeOffset.Now;
-            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1} - {2}", message.ID.ToString(), message.ProcessingStartTime, message));
-
-            // Pre message processing
-
-            if (message is UserChatMessageViewModel)
+            try
             {
-                if (message.User != null)
-                {
-                    if (message.Platform == StreamingPlatformTypeEnum.Twitch)
-                    {
-                        UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
-                        if (activeUser != null)
-                        {
-                            message.User = activeUser;
-                        }
-                    }
+                message.ProcessingStartTime = DateTimeOffset.Now;
+                Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1} - {2}", message.ID.ToString(), message.ProcessingStartTime, message));
 
-                    message.User.UpdateLastActivity();
-                    if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
+                // Pre message processing
+
+                if (message is UserChatMessageViewModel)
+                {
+                    if (message.User != null)
                     {
-                        await this.whisperNumberLock.WaitAndRelease(() =>
+                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                         {
-                            if (!whisperMap.ContainsKey(message.User.ID))
+                            UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
+                            if (activeUser != null)
                             {
-                                whisperMap[message.User.ID] = whisperMap.Count + 1;
+                                message.User = activeUser;
                             }
-                            message.User.WhispererNumber = whisperMap[message.User.ID];
-                            return Task.FromResult(0);
-                        });
-                    }
-                }
-            }
-
-            // Add message to chat list
-            bool showMessage = true;
-            if (ChannelSession.Settings.HideBotMessages && message.User != null && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
-            {
-                showMessage = false;
-            }
-
-            if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
-            {
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.messagesLookup[message.ID] = message;
-                    if (showMessage)
-                    {
-                        if (ChannelSession.Settings.LatestChatAtTop)
-                        {
-                            this.Messages.Insert(0, message);
                         }
-                        else
+
+                        message.User.UpdateLastActivity();
+                        if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
                         {
-                            this.Messages.Add(message);
+                            await this.whisperNumberLock.WaitAndRelease(() =>
+                            {
+                                if (!whisperMap.ContainsKey(message.User.ID))
+                                {
+                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
+                                }
+                                message.User.WhispererNumber = whisperMap[message.User.ID];
+                                return Task.FromResult(0);
+                            });
                         }
                     }
-
-                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
-                    {
-                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                        this.messagesLookup.Remove(removedMessage.ID);
-                        this.Messages.Remove(removedMessage);
-                    }
-
-                    return Task.FromResult(0);
-                });
-            }
-
-            // Post message processing
-
-            if (message is UserChatMessageViewModel && message.User != null)
-            {
-                if (message.IsWhisper && !message.IsStreamerOrBot)
-                {
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
-                    {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
-                    }
-
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-
-                    // Don't send this if it's in response to another "You are whisperer #" message
-                    if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
-                    }
                 }
-                else
+
+                // Add message to chat list
+                bool showMessage = true;
+                if (ChannelSession.Settings.HideBotMessages && message.User != null && ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
                 {
-                    if (this.DisableChat)
+                    showMessage = false;
+                }
+
+                if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
+                {
+                    await DispatcherHelper.InvokeDispatcher(() =>
                     {
-                        Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
+                        this.messagesLookup[message.ID] = message;
+                        if (showMessage)
+                        {
+                            if (ChannelSession.Settings.LatestChatAtTop)
+                            {
+                                this.Messages.Insert(0, message);
+                            }
+                            else
+                            {
+                                this.Messages.Add(message);
+                            }
+                        }
+
+                        if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                        {
+                            ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                            this.messagesLookup.Remove(removedMessage.ID);
+                            this.Messages.Remove(removedMessage);
+                        }
+
+                        return Task.FromResult(0);
+                    });
+                }
+
+                // Post message processing
+
+                if (message is UserChatMessageViewModel && message.User != null)
+                {
+                    if (message.IsWhisper && !message.IsStreamerOrBot)
+                    {
+                        if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
+                        {
+                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                        }
+
+                        if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                        {
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
+                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                        }
+
+                        // Don't send this if it's in response to another "You are whisperer #" message
+                        if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
+                        }
+                    }
+                    else
+                    {
+                        if (this.DisableChat)
+                        {
+                            Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
+                            await this.DeleteMessage(message);
+                            return;
+                        }
+
+                        if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
+                        {
+                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                        }
+                        else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
+                        {
+                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                        }
+
+                        if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
+                        {
+                            this.userEntranceCommands.Add(message.User.ID);
+                            if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
+                            {
+                                await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(message.PlainTextMessage))
+                        {
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
+                            trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                        }
+
+                        message.User.Data.TotalChatMessageSent++;
+
+                        string primaryTaggedUsername = message.PrimaryTaggedUsername;
+                        if (!string.IsNullOrEmpty(primaryTaggedUsername))
+                        {
+                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                            if (primaryTaggedUser != null)
+                            {
+                                primaryTaggedUser.Data.TotalTimesTagged++;
+                            }
+                        }
+                    }
+
+                    await message.User.RefreshDetails();
+
+                    if (!message.IsWhisper && await message.CheckForModeration())
+                    {
                         await this.DeleteMessage(message);
                         return;
                     }
 
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
+                    IEnumerable<string> arguments = null;
+                    if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                     {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
-                    }
-                    else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
-                    {
-                        await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
-                    }
-
-                    if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
-                    {
-                        this.userEntranceCommands.Add(message.User.ID);
-                        if (ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID) != null)
-                        {
-                            await ChannelSession.Settings.GetCommand(message.User.Data.EntranceCommandID).Perform(new CommandParametersModel(message.User, message.Platform, message.ToArguments()));
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(message.PlainTextMessage))
-                    {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
-                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
-                    }
-
-                    message.User.Data.TotalChatMessageSent++;
-
-                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
-                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
-                    {
-                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
-                        if (primaryTaggedUser != null)
-                        {
-                            primaryTaggedUser.Data.TotalTimesTagged++;
-                        }
-                    }
-                }
-
-                await message.User.RefreshDetails();
-
-                if (!message.IsWhisper && await message.CheckForModeration())
-                {
-                    await this.DeleteMessage(message);
-                    return;
-                }
-
-                bool lockUsed = false;
-                IEnumerable<string> arguments = null;
-                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
-                {
-                    if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
-                    {
-                        return;
-                    }
-
-                    if (ChannelSession.Settings.IgnoreBotAccountCommands)
-                    {
-                        if (ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
+                        if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                         {
                             return;
                         }
-                    }
 
-                    Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
-
-                    this.commandLock.EnterReadLock();
-                    lockUsed = true;
-
-                    bool commandTriggered = false;
-                    if (message.User.Data.CustomCommandIDs.Count > 0)
-                    {
-                        Dictionary<string, CommandModelBase> userOnlyTriggersToCommands = new Dictionary<string, CommandModelBase>();
-                        List<ChatCommandModel> userOnlyWildcardCommands = new List<ChatCommandModel>();
-                        foreach (Guid commandID in message.User.Data.CustomCommandIDs)
+                        if (ChannelSession.Settings.IgnoreBotAccountCommands)
                         {
-                            ChatCommandModel command = (ChatCommandModel)ChannelSession.Settings.GetCommand(commandID);
-                            if (command != null && command.IsEnabled)
+                            if (ChannelSession.TwitchBotNewAPI != null && message.User.TwitchID.Equals(ChannelSession.TwitchBotNewAPI.id))
                             {
-                                if (command.Wildcards)
-                                {
-                                    userOnlyWildcardCommands.Add(command);
-                                }
-                                else
-                                {
-                                    foreach (string trigger in command.GetFullTriggers())
-                                    {
-                                        userOnlyTriggersToCommands[trigger.ToLower()] = command;
-                                    }
-                                }
+                                return;
                             }
                         }
 
-                        if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
+                        Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
+
+                        bool commandTriggered = false;
+                        if (message.User.Data.CustomCommandIDs.Count > 0)
                         {
-                            foreach (ChatCommandModel command in userOnlyWildcardCommands)
+                            Dictionary<string, CommandModelBase> userOnlyTriggersToCommands = new Dictionary<string, CommandModelBase>();
+                            List<ChatCommandModel> userOnlyWildcardCommands = new List<ChatCommandModel>();
+                            foreach (Guid commandID in message.User.Data.CustomCommandIDs)
+                            {
+                                ChatCommandModel command = (ChatCommandModel)ChannelSession.Settings.GetCommand(commandID);
+                                if (command != null && command.IsEnabled)
+                                {
+                                    if (command.Wildcards)
+                                    {
+                                        userOnlyWildcardCommands.Add(command);
+                                    }
+                                    else
+                                    {
+                                        foreach (string trigger in command.GetFullTriggers())
+                                        {
+                                            userOnlyTriggersToCommands[trigger.ToLower()] = command;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (!commandTriggered && userOnlyWildcardCommands.Count > 0)
+                            {
+                                foreach (ChatCommandModel command in userOnlyWildcardCommands)
+                                {
+                                    if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
+                                    {
+                                        await this.RunChatCommand(message, command, arguments);
+                                        commandTriggered = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
+                            {
+                                commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                            }
+                        }
+
+                        if (!commandTriggered)
+                        {
+                            foreach (ChatCommandModel command in this.wildcardCommands)
                             {
                                 if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
                                 {
@@ -518,69 +530,50 @@ namespace MixItUp.Base.Services
                             }
                         }
 
-                        if (!commandTriggered && userOnlyTriggersToCommands.Count > 0)
+                        if (!commandTriggered)
                         {
-                            commandTriggered = await this.CheckForChatCommandAndRun(message, userOnlyTriggersToCommands);
+                            commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
                         }
                     }
 
-                    if (!commandTriggered)
+                    foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
                     {
-                        foreach (ChatCommandModel command in this.wildcardCommands)
+                        if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
                         {
-                            if (command.DoesMessageMatchWildcardTriggers(message, out arguments))
-                            {
-                                await this.RunChatCommand(message, command, arguments);
-                                commandTriggered = true;
-                                break;
-                            }
+                            await inventory.PerformShopCommand(message.User, arguments, message.Platform);
+                        }
+                        else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
+                        {
+                            await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
                         }
                     }
 
-                    if (!commandTriggered)
+                    if (ChannelSession.Settings.RedemptionStoreEnabled)
                     {
-                        commandTriggered = await this.CheckForChatCommandAndRun(message, this.triggersToCommands);
+                        if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
+                        {
+                            await RedemptionStorePurchaseModel.Purchase(message.User, arguments);
+                        }
+                        else if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
+                        {
+                            await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
+                        }
                     }
+
+                    GlobalEvents.ChatMessageReceived(message);
+
+                    await this.WriteToChatEventLog(message);
                 }
 
-                foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values.ToList())
+                Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
+                if (message.ProcessingTime > 500)
                 {
-                    if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
-                    {
-                        await inventory.PerformShopCommand(message.User, arguments, message.Platform);
-                    }
-                    else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
-                    {
-                        await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
-                    }
+                    Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
                 }
-
-                if (ChannelSession.Settings.RedemptionStoreEnabled)
-                {
-                    if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreChatPurchaseCommand }, out arguments))
-                    {
-                        await RedemptionStorePurchaseModel.Purchase(message.User, arguments);
-                    }
-                    else if (ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { ChannelSession.Settings.RedemptionStoreModRedeemCommand }, out arguments))
-                    {
-                        await RedemptionStorePurchaseModel.Redeem(message.User, arguments);
-                    }
-                }
-
-                if (lockUsed)
-                {
-                    this.commandLock.ExitReadLock();
-                }
-
-                GlobalEvents.ChatMessageReceived(message);
-
-                await this.WriteToChatEventLog(message);
             }
-
-            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, message.ProcessingTime));
-            if (message.ProcessingTime > 500)
+            catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), message.ProcessingTime, message));
+                Logger.Log(ex);
             }
         }
 
@@ -628,7 +621,7 @@ namespace MixItUp.Base.Services
 
                 if (users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -667,7 +660,7 @@ namespace MixItUp.Base.Services
 
                     if (users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.AlertUserJoinLeaveColor));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.DisplayName), ChannelSession.Settings.AlertUserJoinLeaveColor));
                     }
                 }
             }

@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (command != null)
             {
                 CommandEditorWindow window = new CommandEditorWindow(command);
-                window.CommandSaved += Window_CommandSaved;
+                window.CommandSaved += TimerWindow_CommandSaved;
                 window.Show();
             }
         }
@@ -59,15 +59,28 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
+
+                    await ChannelSession.Services.Timers.RebuildTimerGroups();
                 }
             });
+        }
+
+        private async void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            await ChannelSession.Services.Timers.RebuildTimerGroups();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Timer);
-            window.CommandSaved += Window_CommandSaved;
+            window.CommandSaved += TimerWindow_CommandSaved;
             window.Show();
+        }
+
+        private async void TimerWindow_CommandSaved(object sender, CommandModelBase e)
+        {
+            await ChannelSession.Services.Timers.RebuildTimerGroups();
+            Window_CommandSaved(sender, e);
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

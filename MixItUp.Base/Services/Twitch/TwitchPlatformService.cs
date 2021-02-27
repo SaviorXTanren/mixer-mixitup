@@ -19,12 +19,12 @@ using V5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public interface ITwitchConnectionService
+    public interface ITwitchPlatformService
     {
 
     }
 
-    public class TwitchPlatformService : StreamingPlatformServiceBase, ITwitchConnectionService
+    public class TwitchPlatformService : StreamingPlatformServiceBase, ITwitchPlatformService
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
@@ -51,22 +51,6 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.user__edit,
             OAuthClientScopeEnum.user__edit__broadcast,
             OAuthClientScopeEnum.user__edit__follows,
-            OAuthClientScopeEnum.whispers__read,
-            OAuthClientScopeEnum.whispers__edit,
-        };
-
-        public static readonly List<OAuthClientScopeEnum> ModeratorScopes = new List<OAuthClientScopeEnum>()
-        {
-            OAuthClientScopeEnum.channel_editor,
-            OAuthClientScopeEnum.channel_read,
-
-            OAuthClientScopeEnum.user_read,
-
-            OAuthClientScopeEnum.bits__read,
-            OAuthClientScopeEnum.channel__moderate,
-            OAuthClientScopeEnum.chat__edit,
-            OAuthClientScopeEnum.chat__read,
-            OAuthClientScopeEnum.user__edit,
             OAuthClientScopeEnum.whispers__read,
             OAuthClientScopeEnum.whispers__edit,
         };
@@ -105,9 +89,9 @@ namespace MixItUp.Base.Services.Twitch
             return new Result<TwitchPlatformService>("Twitch OAuth token could not be used");
         }
 
-        public static async Task<Result<TwitchPlatformService>> ConnectUser(bool isStreamer)
+        public static async Task<Result<TwitchPlatformService>> ConnectUser()
         {
-            return await TwitchPlatformService.Connect(isStreamer ? TwitchPlatformService.StreamerScopes : TwitchPlatformService.ModeratorScopes);
+            return await TwitchPlatformService.Connect(TwitchPlatformService.StreamerScopes);
         }
 
         public static async Task<Result<TwitchPlatformService>> ConnectBot()

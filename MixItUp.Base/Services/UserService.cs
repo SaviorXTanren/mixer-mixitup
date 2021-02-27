@@ -168,7 +168,7 @@ namespace MixItUp.Base.Services
             this.usersByTwitchLogin.Clear();
         }
 
-        public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }
+        public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values.ToList(); }
 
         public IEnumerable<UserViewModel> GetAllWorkableUsers()
         {

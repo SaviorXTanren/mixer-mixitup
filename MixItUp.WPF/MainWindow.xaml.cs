@@ -103,15 +103,6 @@ namespace MixItUp.WPF
                 ChannelSession.Services.InputService.RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
             }
 
-            if (ChannelSession.Settings.IsStreamer)
-            {
-                this.Title += $" - {MixItUp.Base.Resources.Streamer}";
-            }
-            else
-            {
-                this.Title += $" - {MixItUp.Base.Resources.Moderator}";
-            }
-
             if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))
             {
                 this.Title += " - " + ChannelSession.Settings.Name;
@@ -122,31 +113,25 @@ namespace MixItUp.WPF
             await this.MainMenu.Initialize(this);
 
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Chat, new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
-            if (ChannelSession.Settings.IsStreamer)
-            {
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.OverlayWidgets, new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Games, new GamesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Giveaway, new GiveawayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Giveaways");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.GameQueue, new GameQueueControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Game-Queue");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Quotes, new QuoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Quotes");
-            }
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.OverlayWidgets, new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Games, new GamesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Giveaway, new GiveawayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Giveaways");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.GameQueue, new GameQueueControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Game-Queue");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Quotes, new QuoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Quotes");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Statistics, new StatisticsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Statistics");
-            if (ChannelSession.Settings.IsStreamer)
-            {
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
-            }
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
 

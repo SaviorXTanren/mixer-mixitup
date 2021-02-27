@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Actions
         {
             get
             {
-                return ChannelSession.AllCommands.Where(c => string.Equals(this.CommandGroupName, c.GroupName));
+                return ChannelSession.AllCommands.Where(c => string.Equals(this.CommandGroupName, c.GroupName)).ToList();
             }
         }
 

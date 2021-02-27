@@ -288,7 +288,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.Username, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.DisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             try
             {

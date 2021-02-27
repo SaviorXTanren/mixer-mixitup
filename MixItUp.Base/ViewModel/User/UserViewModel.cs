@@ -223,7 +223,17 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchVisualName; }
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
+                return this.UnassociatedUsername;
+            }
+        }
+
+        [JsonIgnore]
+        public string DisplayName
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchDisplayName ?? this.TwitchUsername; }
                 return this.UnassociatedUsername;
             }
         }
@@ -431,8 +441,6 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchAvatarLink { get { return this.Data.TwitchAvatarLink; } private set { this.Data.TwitchAvatarLink = value; } }
 
         public HashSet<UserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
-
-        public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.Data.TwitchDisplayName)) ? this.Data.TwitchDisplayName : this.Data.TwitchUsername; } }
 
         public int TwitchSubMonths
         {
