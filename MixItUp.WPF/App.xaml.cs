@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -197,9 +198,16 @@ namespace MixItUp.WPF
 
                 try
                 {
+                    StringBuilder sb = new StringBuilder();
+                    foreach (Exception e in ex.UnwrapException())
+                    {
+                        sb.AppendLine(e.ToString());
+                        sb.AppendLine();
+                    }
+
                     using (StreamWriter writer = File.AppendText(FileLoggerHandler.CurrentLogFilePath))
                     {
-                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + ex.ToString() + Environment.NewLine + Environment.StackTrace);
+                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + sb.ToString() + Environment.NewLine + Environment.StackTrace);
                     }
                 }
                 catch (Exception) { }

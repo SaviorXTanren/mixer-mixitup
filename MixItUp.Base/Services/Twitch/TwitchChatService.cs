@@ -110,7 +110,7 @@ namespace MixItUp.Base.Services.Twitch
         public IDictionary<string, ChatBadgeSetModel> ChatBadges { get { return this.chatBadges; } }
         private Dictionary<string, ChatBadgeSetModel> chatBadges = new Dictionary<string, ChatBadgeSetModel>();
 
-        public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes; } }
+        public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes.ToList(); } }
         private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };

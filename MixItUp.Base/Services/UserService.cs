@@ -221,7 +221,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }
+        public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values.ToList(); }
 
         public IEnumerable<UserViewModel> GetAllWorkableUsers()
         {
