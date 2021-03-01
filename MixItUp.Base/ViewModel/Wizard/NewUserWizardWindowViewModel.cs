@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Accounts;
@@ -201,9 +202,10 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
                 else if (this.FinalPageVisible)
                 {
-                    if (!await ChannelSession.InitializeSession())
+                    Result result = await ChannelSession.InitializeSession();
+                    if (!result.Success)
                     {
-                        await DialogHelper.ShowMessage("Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.");
+                        await DialogHelper.ShowMessage(result.Message);
                         return;
                     }
 
@@ -240,6 +242,15 @@ namespace MixItUp.Base.ViewModel.Wizard
                 this.StatusMessage = string.Empty;
                 return Task.FromResult(0);
             });
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            if (ChannelSession.Settings == null)
+            {
+                await ChannelSession.Connect(new SettingsV3Model());
+            }
+            await base.OnLoadedInternal();
         }
     }
 }

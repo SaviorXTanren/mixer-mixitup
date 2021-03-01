@@ -1,4 +1,6 @@
-﻿using StreamingClient.Base.Model.OAuth;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Runtime.Serialization;
 
@@ -23,12 +25,15 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public string ChannelID { get; set; }
 
-        [DataMember]
-        public bool IsEnabled { get; set; }
-
-        public StreamingPlatformAuthenticationSettingsModel() { }
+        private StreamingPlatformAuthenticationSettingsModel() { }
 
         public StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
+
+        public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
+        {
+            if (this.Type == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
+            return null;
+        }
 
         public override bool Equals(object obj)
         {

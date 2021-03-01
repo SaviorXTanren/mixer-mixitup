@@ -11,7 +11,7 @@ using TwitchV5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public class TwitchSessionService
+    public class TwitchSessionService : IStreamingPlatformSessionService
     {
         public TwitchPlatformService UserConnection { get; private set; }
         public TwitchPlatformService BotConnection { get; private set; }
@@ -24,7 +24,7 @@ namespace MixItUp.Base.Services.Twitch
         public TwitchNewAPI.Streams.StreamModel StreamNewAPI { get; set; }
         public bool StreamIsLive { get { return this.StreamV5 != null && this.StreamV5.IsLive; } }
 
-        public async Task<Result> ConnectUser()
+        public async Task<Result> ConnectUser(SettingsV3Model settings)
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();
             if (result.Success)
@@ -41,11 +41,13 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     return new Result("Failed to get V5 API Twitch user data");
                 }
+
+                this.SaveSettings(settings);
             }
             return result;
         }
 
-        public async Task<Result> ConnectBot()
+        public async Task<Result> ConnectBot(SettingsV3Model settings)
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectBot();
             if (result.Success)
@@ -61,156 +63,207 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     return await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
                 }
+
+                this.SaveSettings(settings);
             }
             return result;
         }
 
         public async Task<Result> Connect(SettingsV3Model settings)
         {
-            Result userResult = null;
-            Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
-            if (twitchResult.Success)
+            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken != null)
             {
-                this.UserConnection = twitchResult.Value;
-                userResult = twitchResult;
-            }
-            else
-            {
-                userResult = await this.ConnectUser();
-            }
+                Result userResult = null;
 
-            if (userResult.Success)
-            {
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
-
-                this.UserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
-                if (this.UserNewAPI == null)
+                Result<TwitchPlatformService> twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                if (twitchResult.Success)
                 {
-                    return new Result("Failed to get Twitch user data");
+                    this.UserConnection = twitchResult.Value;
+                    userResult = twitchResult;
+                }
+                else
+                {
+                    userResult = await this.ConnectUser(settings);
                 }
 
-                this.UserV5 = await this.UserConnection.GetV5APIUserByLogin(this.UserNewAPI.login);
-                if (this.UserV5 == null)
+                if (userResult.Success)
                 {
-                    return new Result("Failed to get V5 API Twitch user data");
-                }
-
-                if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
-                {
-                    twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
-                    if (twitchResult.Success)
+                    this.UserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
+                    if (this.UserNewAPI == null)
                     {
-                        this.BotConnection = twitchResult.Value;
-                        this.BotNewAPI = await this.BotConnection.GetNewAPICurrentUser();
-                        if (this.BotNewAPI == null)
+                        return new Result("Failed to get Twitch user data");
+                    }
+
+                    this.UserV5 = await this.UserConnection.GetV5APIUserByLogin(this.UserNewAPI.login);
+                    if (this.UserV5 == null)
+                    {
+                        return new Result("Failed to get V5 API Twitch user data");
+                    }
+
+                    if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
+                    {
+                        twitchResult = await TwitchPlatformService.Connect(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                        if (twitchResult.Success)
                         {
-                            return new Result("Failed to get Twitch bot data");
+                            this.BotConnection = twitchResult.Value;
+                            this.BotNewAPI = await this.BotConnection.GetNewAPICurrentUser();
+                            if (this.BotNewAPI == null)
+                            {
+                                return new Result("Failed to get Twitch bot data");
+                            }
+                        }
+                        else
+                        {
+
+                            return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
                         }
                     }
-                    else
-                    {
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
-                        return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
-                    }
                 }
-            }
-            else
-            {
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                else
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                    return userResult;
+                }
+
                 return userResult;
             }
-
-            return userResult;
+            return new Result();
         }
 
-        public async Task Disconnect()
+        public async Task DisconnectUser(SettingsV3Model settings)
+        {
+            await this.DisconnectBot(settings);
+
+            this.UserConnection = null;
+
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+        }
+
+        public Task DisconnectBot(SettingsV3Model settings)
+        {
+            this.BotConnection = null;
+
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
+            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = null;
+
+            return Task.FromResult(0);
+        }
+
+        public async Task<Result> InitializeUser(SettingsV3Model settings)
+        {
+            if (this.UserConnection != null)
+            {
+                try
+                {
+                    TwitchNewAPI.Users.UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
+                    TwitchV5API.Channel.ChannelModel twitchChannelv5 = await this.UserConnection.GetCurrentV5APIChannel();
+                    if (twitchChannelNew != null && twitchChannelv5 != null)
+                    {
+                        this.UserNewAPI = twitchChannelNew;
+                        this.ChannelV5 = twitchChannelv5;
+                        this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
+                        this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
+
+                        IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await this.UserConnection.GetV5APIChannelEditors(this.ChannelV5);
+                        if (channelEditors != null)
+                        {
+                            foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
+                            {
+                                this.ChannelEditorsV5.Add(channelEditor.id);
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserNewAPI.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
+                        {
+                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserNewAPI.login} - {this.UserNewAPI.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
+                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
+                            return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                        }
+
+                        this.SaveSettings(settings);
+
+                        TwitchChatService twitchChatService = new TwitchChatService();
+                        TwitchEventService twitchEventService = new TwitchEventService();
+
+                        List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
+                        twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
+                        twitchPlatformServiceTasks.Add(twitchEventService.Connect());
+
+                        await Task.WhenAll(twitchPlatformServiceTasks);
+
+                        if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
+                        {
+                            string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                            return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
+                        }
+
+                        await ChannelSession.Services.Chat.Initialize(twitchChatService);
+                        await ChannelSession.Services.Events.Initialize(twitchEventService);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    return new Result("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
+                        Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                }
+            }
+            return new Result();
+        }
+
+        public async Task<Result> InitializeBot(SettingsV3Model settings)
+        {
+            if (this.BotConnection != null)
+            {
+                Result result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                if (!result.Success)
+                {
+                    return result;
+                }
+            }
+            return new Result();
+        }
+
+        public async Task CloseUser(SettingsV3Model settings)
         {
             if (ChannelSession.Services.Chat.TwitchChatService != null)
             {
                 await ChannelSession.Services.Chat.TwitchChatService.DisconnectUser();
             }
-            await this.DisconnectBot();
         }
 
-        public async Task DisconnectBot()
+        public async Task CloseBot(SettingsV3Model settings)
         {
-            this.BotConnection = null;
             if (ChannelSession.Services.Chat.TwitchChatService != null)
             {
                 await ChannelSession.Services.Chat.TwitchChatService.DisconnectBot();
             }
         }
 
-        public async Task<Result> Initialize(SettingsV3Model settings)
+        public void SaveSettings(SettingsV3Model settings)
         {
-            try
+            if (this.UserConnection != null)
             {
-                TwitchNewAPI.Users.UserModel twitchChannelNew = await this.UserConnection.GetNewAPICurrentUser();
-                TwitchV5API.Channel.ChannelModel twitchChannelv5 = await this.UserConnection.GetCurrentV5APIChannel();
-                if (twitchChannelNew != null && twitchChannelv5 != null)
+                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                 {
-                    this.UserNewAPI = twitchChannelNew;
-                    this.ChannelV5 = twitchChannelv5;
-                    this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
-                    this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+                }
 
-                    IEnumerable<TwitchV5API.Users.UserModel> channelEditors = await this.UserConnection.GetV5APIChannelEditors(this.ChannelV5);
-                    if (channelEditors != null)
-                    {
-                        foreach (TwitchV5API.Users.UserModel channelEditor in channelEditors)
-                        {
-                            this.ChannelEditorsV5.Add(channelEditor.id);
-                        }
-                    }
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.UserNewAPI.id;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.UserNewAPI.id;
 
-                    if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserNewAPI.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
-                    {
-                        Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserNewAPI.login} - {this.UserNewAPI.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
-                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
-                        return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
-                    }
-
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = this.UserNewAPI.id;
-                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = this.UserNewAPI.id;
+                if (this.BotConnection != null)
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
                     if (this.BotNewAPI != null)
                     {
                         settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = this.BotNewAPI.id;
                     }
-
-                    TwitchChatService twitchChatService = new TwitchChatService();
-                    TwitchEventService twitchEventService = new TwitchEventService();
-
-                    List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
-                    twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
-                    twitchPlatformServiceTasks.Add(twitchEventService.Connect());
-
-                    await Task.WhenAll(twitchPlatformServiceTasks);
-
-                    if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
-                    {
-                        string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
-                    }
-
-                    await ChannelSession.Services.Chat.Initialize(twitchChatService);
-                    await ChannelSession.Services.Events.Initialize(twitchEventService);
-
-                    Result result = await this.InitializeBotInternal();
-                    if (!result.Success)
-                    {
-                        return new Result("Failed to initialize Bot account");
-                    }
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                return new Result("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
-                    Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
-            }
-            return new Result();
         }
 
         public async Task RefreshUser()
@@ -247,19 +300,6 @@ namespace MixItUp.Base.Services.Twitch
             {
                 this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
             }
-        }
-
-        public async Task<Result> InitializeBotInternal()
-        {
-            if (this.BotConnection != null)
-            {
-                Result result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
-                if (!result.Success)
-                {
-                    return result;
-                }
-            }
-            return new Result();
         }
     }
 }

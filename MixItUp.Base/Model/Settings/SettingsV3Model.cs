@@ -718,14 +718,7 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV3Model.LatestVersion;
 
-            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null)
-            {
-                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ServiceManager.Get<TwitchSessionService>().UserConnection.Connection.GetOAuthTokenCopy();
-            }
-            if (ServiceManager.Get<TwitchSessionService>().BotConnection != null)
-            {
-                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ServiceManager.Get<TwitchSessionService>().BotConnection.Connection.GetOAuthTokenCopy();
-            }
+            ServiceManager.Get<TwitchSessionService>().SaveSettings(this);
 
             if (ChannelSession.Services.Streamlabs.IsConnected)
             {
@@ -897,14 +890,6 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
-            {
-                if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
-                {
-                    this.StreamingPlatformAuthentications[platform] = new StreamingPlatformAuthenticationSettingsModel(platform);
-                }
-            }
-
             if (this.DashboardItems.Count < 4)
             {
                 this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };

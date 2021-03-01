@@ -34,8 +34,6 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SettingsV3Model>> GetAllSettings();
 
-        Task<SettingsV3Model> Create(string name);
-
         Task Initialize(SettingsV3Model settings);
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -187,11 +185,6 @@ namespace MixItUp.Base.Services
             }
 
             return allSettings;
-        }
-
-        public Task<SettingsV3Model> Create(string name)
-        {
-            return Task.FromResult(new SettingsV3Model(name));
         }
 
         public async Task Initialize(SettingsV3Model settings)
@@ -398,6 +391,7 @@ namespace MixItUp.Base.Services
                 SettingsV3Model newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV3Model>(settingsText, ignoreErrors: true);
                 await newSettings.Initialize();
 
+                newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = oldSettings.TwitchUserOAuthToken;
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = oldSettings.TwitchUserID;
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = oldSettings.TwitchChannelID;

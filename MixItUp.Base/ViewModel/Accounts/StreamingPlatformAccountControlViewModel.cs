@@ -170,7 +170,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ServiceManager.Get<TwitchSessionService>().ConnectUser();
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectUser(ChannelSession.Settings);
                         if (result.Success && ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
                         {
                             this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
@@ -207,8 +207,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        await ServiceManager.Get<TwitchSessionService>().DisconnectBot();
-                        ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
+                        await ServiceManager.Get<TwitchSessionService>().DisconnectBot(ChannelSession.Settings);
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
@@ -230,12 +229,12 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ServiceManager.Get<TwitchSessionService>().ConnectBot();
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectBot(ChannelSession.Settings);
                         if (result.Success)
                         {
                             if (ServiceManager.Get<TwitchSessionService>().BotNewAPI.id.Equals(ServiceManager.Get<TwitchSessionService>().UserNewAPI?.id))
                             {
-                                await ServiceManager.Get<TwitchSessionService>().DisconnectBot();
+                                await ServiceManager.Get<TwitchSessionService>().DisconnectBot(ChannelSession.Settings);
                                 result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
                             }
                             else if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null)

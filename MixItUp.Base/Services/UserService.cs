@@ -76,7 +76,7 @@ namespace MixItUp.Base.Services
                     foreach (StreamingPlatformTypeEnum p in StreamingPlatforms.Platforms)
                     {
                         UserViewModel user = this.GetUserByUsername(username, p);
-                        if (user != null)
+                        if (user == null)
                         {
                             return user;
                         }
@@ -108,7 +108,7 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
             {
                 UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchChatUser.id);
-                if (user != null)
+                if (user == null)
                 {
                     user = new UserViewModel(twitchChatUser);
                 }
@@ -123,7 +123,7 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(glimeshChatUser.id) && !string.IsNullOrEmpty(glimeshChatUser.username))
             {
                 UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, glimeshChatUser.id);
-                if (user != null)
+                if (user == null)
                 {
                     user = new UserViewModel(glimeshChatUser);
                 }
