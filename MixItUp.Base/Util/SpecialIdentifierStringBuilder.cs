@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -245,7 +246,16 @@ namespace MixItUp.Base.Util
                     Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                     if (argUserModel != null)
                     {
-                        user = new UserViewModel(argUserModel);
+                        return new UserViewModel(argUserModel);
+                    }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
+                {
+                    Glimesh.Base.Models.Users.UserModel argUserModel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                    if (argUserModel != null)
+                    {
+                        return new UserViewModel(argUserModel);
                     }
                 }
             }
@@ -497,33 +507,30 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                if (ServiceManager.Get<TwitchSessionService>().UserConnection != null)
+                if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
                 {
-                    if (this.ContainsSpecialIdentifier(StreamUptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StreamStartSpecialIdentifierHeader))
+                    DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
+                    if (startTime > DateTimeOffset.MinValue)
                     {
-                        DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
-                        if (startTime > DateTimeOffset.MinValue)
-                        {
-                            TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
 
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "datetime", startTime.ToString("g"));
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "date", startTime.ToString("d"));
-                            this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "time", startTime.ToString("t"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "datetime", startTime.ToString("g"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "date", startTime.ToString("d"));
+                        this.ReplaceSpecialIdentifier(StreamStartSpecialIdentifierHeader + "time", startTime.ToString("t"));
 
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "total", (int)duration.TotalHours + duration.ToString("\\:mm"));
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "hours", ((int)duration.TotalHours).ToString());
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
-                            this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
-                        }
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "total", (int)duration.TotalHours + duration.ToString("\\:mm"));
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "hours", ((int)duration.TotalHours).ToString());
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
+                        this.ReplaceSpecialIdentifier(StreamUptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
                     }
+                }
 
-                    if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
-                    {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamV5.viewers.ToString());
-                    }
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<TwitchSessionService>().StreamV5?.viewers.ToString());
                     if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
                     {
-                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI.view_count.ToString());
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewscount", ServiceManager.Get<TwitchSessionService>().UserNewAPI?.view_count.ToString());
                     }
                     if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
                     {
@@ -535,6 +542,15 @@ namespace MixItUp.Base.Util
                             long subCount = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetSubscriberCountV5(ServiceManager.Get<TwitchSessionService>().ChannelV5);
                             this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subscribercount", subCount.ToString());
                         }
+                    }
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                {
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "viewercount", ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers.ToString());
+                    if (ServiceManager.Get<GlimeshSessionService>().Channel != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", ServiceManager.Get<GlimeshSessionService>().Channel.title);
+                        // TODO
                     }
                 }
 
@@ -838,15 +854,23 @@ namespace MixItUp.Base.Util
                 string userStreamHeader = identifierHeader + UserSpecialIdentifierHeader + "stream";
                 if (this.ContainsSpecialIdentifier(userStreamHeader))
                 {
-                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
-                        Twitch.Base.Models.V5.Channel.ChannelModel channel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5APIChannel(user.TwitchID);
+                        Twitch.Base.Models.V5.Channel.ChannelModel channel = ServiceManager.Get<TwitchSessionService>().ChannelV5;
                         if (channel != null)
                         {
                             this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.status);
                             this.ReplaceSpecialIdentifier(userStreamHeader + "game", channel.game);
                             this.ReplaceSpecialIdentifier(userStreamHeader + "followercount", channel.followers.ToString());
                             this.ReplaceSpecialIdentifier(userStreamHeader + "viewscount", channel.views.ToString());
+                        }
+                    }
+                    else if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                    {
+                        Glimesh.Base.Models.Channels.ChannelModel channel = ServiceManager.Get<GlimeshSessionService>().Channel;
+                        if (channel != null)
+                        {
+                            this.ReplaceSpecialIdentifier(userStreamHeader + "title", channel.title);
                         }
                     }
                 }
@@ -866,7 +890,7 @@ namespace MixItUp.Base.Util
 
         private async Task HandleTopBitsCheeredRegex(BitsLeaderboardPeriodEnum period)
         {
-            if (ServiceManager.Get<TwitchSessionService>().UserConnection != null && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower()))
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredRegexSpecialIdentifier + period.ToString().ToLower(), async (total) =>
                 {

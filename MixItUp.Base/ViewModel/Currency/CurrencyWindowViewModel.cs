@@ -620,6 +620,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                             }
                                             else
                                             {
+                                                // TODO
                                                 UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(id.ToString());
                                                 if (twitchUser != null)
                                                 {
@@ -629,6 +630,7 @@ namespace MixItUp.Base.ViewModel.Currency
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
+                                            // TODO
                                             UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                                             if (twitchUser != null)
                                             {

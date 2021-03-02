@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -56,6 +57,10 @@ namespace MixItUp.Base.Services
                 if (ServiceManager.Get<TwitchSessionService>().StreamV5 != null)
                 {
                     viewersCurrent = (int)ServiceManager.Get<TwitchSessionService>().StreamV5.viewers;
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+                {
+                    viewersCurrent = (int)ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers;
                 }
 
                 numberStats.AddValue(viewersCurrent);

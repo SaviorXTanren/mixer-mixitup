@@ -37,15 +37,17 @@ namespace MixItUp.Base.ViewModel.Commands
 
         protected override async Task OnLoadedInternal()
         {
-            IEnumerable<CustomChannelPointRewardModel> customChannelPointRewards = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
-            if (customChannelPointRewards != null)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                foreach (CustomChannelPointRewardModel customChannelPointReward in customChannelPointRewards)
+                IEnumerable<CustomChannelPointRewardModel> customChannelPointRewards = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                if (customChannelPointRewards != null)
                 {
-                    this.ChannelPointRewards.Add(customChannelPointReward.title);
+                    foreach (CustomChannelPointRewardModel customChannelPointReward in customChannelPointRewards)
+                    {
+                        this.ChannelPointRewards.Add(customChannelPointReward.title);
+                    }
                 }
             }
-
             await base.OnLoadedInternal();
         }
     }

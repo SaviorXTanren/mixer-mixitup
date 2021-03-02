@@ -667,6 +667,7 @@ namespace MixItUp.Base.Model.Commands
                     await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
                     await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name);
                 }
+                // TODO
             }
             else
             {
@@ -693,6 +694,7 @@ namespace MixItUp.Base.Model.Commands
                         game = games.First();
                     }
 
+                    // TODO
                     if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                     {
                         await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceManager.Get<TwitchSessionService>().ChannelV5, game: game);

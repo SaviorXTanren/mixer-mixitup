@@ -148,8 +148,11 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                this.CurrentAmount = ServiceManager.Get<TwitchSessionService>().ChannelV5.followers;
-
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    this.CurrentAmount = ServiceManager.Get<TwitchSessionService>().ChannelV5.followers;
+                }
+                // TODO
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
@@ -54,16 +55,15 @@ namespace MixItUp.Base.ViewModel.MainControls
         public QuotesMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.AddQuoteCommand = this.CreateCommand((parameter) =>
+            this.AddQuoteCommand = this.CreateCommand(async (parameter) =>
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, ServiceManager.Get<TwitchSessionService>().ChannelV5?.game));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGame()));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;
                 }
-                return Task.FromResult(0);
             });
 
             this.ExportQuotesCommand = this.CreateCommand(async (parameter) =>

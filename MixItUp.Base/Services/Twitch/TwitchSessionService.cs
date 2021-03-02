@@ -180,23 +180,25 @@ namespace MixItUp.Base.Services.Twitch
                             return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
                         }
 
-                        TwitchChatService twitchChatService = new TwitchChatService();
-                        TwitchEventService twitchEventService = new TwitchEventService();
+                        TwitchChatService chatService = new TwitchChatService();
+                        TwitchEventService eventService = new TwitchEventService();
 
-                        List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
-                        twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
-                        twitchPlatformServiceTasks.Add(twitchEventService.Connect());
+                        List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+                        platformServiceTasks.Add(chatService.ConnectUser());
+                        platformServiceTasks.Add(eventService.Connect());
 
-                        await Task.WhenAll(twitchPlatformServiceTasks);
+                        await Task.WhenAll(platformServiceTasks);
 
-                        if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
+                        if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
-                            string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                            string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
 
-                        ServiceManager.Add<ITwitchChatService>(twitchChatService);
-                        ServiceManager.Add<ITwitchEventService>(twitchEventService);
+                        ServiceManager.Add<ITwitchChatService>(chatService);
+                        ServiceManager.Add<ITwitchEventService>(eventService);
+
+                        await ServiceManager.Get<ITwitchChatService>().Initialize();
                     }
                 }
                 catch (Exception ex)
@@ -211,7 +213,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null)
+            if (this.BotConnection != null && ServiceManager.Get<TwitchChatService>() != null)
             {
                 Result result = await ServiceManager.Get<ITwitchChatService>().ConnectBot();
                 if (!result.Success)

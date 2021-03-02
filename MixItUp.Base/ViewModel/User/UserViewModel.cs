@@ -873,6 +873,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
+            // TODO
             if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
             {
                 this.Data.ViewingMinutes++;

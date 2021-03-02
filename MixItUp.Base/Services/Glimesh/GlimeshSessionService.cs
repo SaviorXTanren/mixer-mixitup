@@ -5,6 +5,8 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Glimesh
@@ -143,20 +145,20 @@ namespace MixItUp.Base.Services.Glimesh
                             return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
                         }
 
-                        //TwitchChatService twitchChatService = new TwitchChatService();
-                        //TwitchEventService twitchEventService = new TwitchEventService();
+                        GlimeshChatService chatService = new GlimeshChatService();
 
-                        //List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
-                        //twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
-                        //twitchPlatformServiceTasks.Add(twitchEventService.Connect());
+                        List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
+                        platformServiceTasks.Add(chatService.ConnectUser());
 
-                        //await Task.WhenAll(twitchPlatformServiceTasks);
+                        await Task.WhenAll(platformServiceTasks);
 
-                        //if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
-                        //{
-                        //    string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                        //    return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
-                        //}
+                        if (platformServiceTasks.Any(c => !c.Result.Success))
+                        {
+                            string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                            return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
+                        }
+
+                        ServiceManager.Add<GlimeshChatService>(chatService);
                     }
                 }
                 catch (Exception ex)
@@ -171,36 +173,31 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null)
+            if (this.BotConnection != null && ServiceManager.Get<GlimeshChatService>() != null)
             {
-                //Result result = await ServiceManager.Get<ITwitchChatService>().ConnectBot();
-                //if (!result.Success)
-                //{
-                //    return result;
-                //}
+                Result result = await ServiceManager.Get<GlimeshChatService>().ConnectBot();
+                if (!result.Success)
+                {
+                    return result;
+                }
             }
             return new Result();
         }
 
         public async Task CloseUser(SettingsV3Model settings)
         {
-            //if (ServiceManager.Get<TwitchChatService>() != null)
-            //{
-            //    await ServiceManager.Get<TwitchChatService>().DisconnectUser();
-            //}
-
-            //if (ServiceManager.Get<TwitchEventService>() != null)
-            //{
-            //    await ServiceManager.Get<TwitchEventService>().Disconnect();
-            //}
+            if (ServiceManager.Get<GlimeshChatService>() != null)
+            {
+                await ServiceManager.Get<GlimeshChatService>().DisconnectUser();
+            }
         }
 
         public async Task CloseBot(SettingsV3Model settings)
         {
-            //if (ServiceManager.Get<TwitchChatService>() != null)
-            //{
-            //    await ServiceManager.Get<TwitchChatService>().DisconnectBot();
-            //}
+            if (ServiceManager.Get<GlimeshChatService>() != null)
+            {
+                await ServiceManager.Get<GlimeshChatService>().DisconnectBot();
+            }
         }
 
         public void SaveSettings(SettingsV3Model settings)

@@ -1,9 +1,9 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -141,8 +141,6 @@ namespace MixItUp.Base.Services
                 ServiceManager.Get<ITwitchChatService>().OnMessageOccurred += TwitchChatService_OnMessageOccurred;
                 ServiceManager.Get<ITwitchChatService>().OnUsersJoinOccurred += TwitchChatService_OnUsersJoinOccurred;
                 ServiceManager.Get<ITwitchChatService>().OnUsersLeaveOccurred += TwitchChatService_OnUsersLeaveOccurred;
-
-                await ServiceManager.Get<ITwitchChatService>().Initialize();
             }
 
             await DispatcherHelper.InvokeDispatcher(() =>
@@ -171,7 +169,7 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(message))
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<ITwitchChatService>() != null)
                 {
                     await ServiceManager.Get<ITwitchChatService>().SendMessage(message, sendAsStreamer);
 
@@ -180,6 +178,11 @@ namespace MixItUp.Base.Services
                         UserViewModel user = ChannelSession.GetCurrentUser();
                         await this.AddMessage(new TwitchChatMessageViewModel(user, message));
                     }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                {
+                    await ServiceManager.Get<GlimeshChatService>().SendMessage(message, sendAsStreamer);
                 }
             }
         }
@@ -250,6 +253,7 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
             }
+            // TODO
         }
 
         public async Task ModUser(UserViewModel user)
@@ -274,6 +278,11 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<ITwitchChatService>().BanUser(user);
             }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
+            {
+                await ServiceManager.Get<GlimeshChatService>().BanUser(user);
+            }
         }
 
         public async Task UnbanUser(UserViewModel user)
@@ -281,6 +290,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await ServiceManager.Get<ITwitchChatService>().UnbanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
+            {
+                await ServiceManager.Get<GlimeshChatService>().UnbanUser(user);
             }
         }
 
@@ -338,6 +352,14 @@ namespace MixItUp.Base.Services
                         if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                         {
                             UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
+                            if (activeUser != null)
+                            {
+                                message.User = activeUser;
+                            }
+                        }
+                        else if (message.Platform == StreamingPlatformTypeEnum.Glimesh)
+                        {
+                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User.GlimeshID);
                             if (activeUser != null)
                             {
                                 message.User = activeUser;
@@ -488,6 +510,7 @@ namespace MixItUp.Base.Services
                             {
                                 return;
                             }
+                            // TODO
                         }
 
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
@@ -745,6 +768,7 @@ namespace MixItUp.Base.Services
             return Task.FromResult(0);
         }
 
+        // TODO
         #region Twitch Event
 
         private async void TwitchChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)

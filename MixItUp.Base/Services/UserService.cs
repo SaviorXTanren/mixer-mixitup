@@ -157,6 +157,7 @@ namespace MixItUp.Base.Services
                 {
                     user.IgnoreForQueries = true;
                 }
+                // TODO
                 else
                 {
                     user.IgnoreForQueries = false;

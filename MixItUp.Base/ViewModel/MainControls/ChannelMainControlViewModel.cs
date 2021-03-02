@@ -203,6 +203,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.UpdateChannelInformationCommand = this.CreateCommand(async (parameter) =>
             {
+                // TODO
+
                 bool failedToFindGame = false;
                 if (this.currentGame != null && !string.IsNullOrEmpty(this.GameName) && this.GameName.Length > 3 && !string.Equals(this.currentGame.name, this.GameName, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -232,6 +234,8 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.SearchFindChannelToRaidCommand = this.CreateCommand(async (parameter) =>
             {
+                // TODO
+
                 this.SearchFindChannelToRaidResults.Clear();
 
                 List<SearchFindChannelToRaidItemViewModel> results = new List<SearchFindChannelToRaidItemViewModel>();
@@ -364,55 +368,67 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private async Task RefreshChannelInformation()
         {
-            this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
-            if (this.ChannelInformation != null)
+            // TODO
+
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!string.IsNullOrEmpty(this.ChannelInformation.title))
+                this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                if (this.ChannelInformation != null)
                 {
-                    this.Title = this.ChannelInformation.title;
-                    if (!ChannelSession.Settings.RecentStreamTitles.Contains(this.ChannelInformation.title))
+                    if (!string.IsNullOrEmpty(this.ChannelInformation.title))
                     {
-                        ChannelSession.Settings.RecentStreamTitles.Insert(0, this.ChannelInformation.title);
-                        while (ChannelSession.Settings.RecentStreamTitles.Count > 5)
+                        this.Title = this.ChannelInformation.title;
+                        if (!ChannelSession.Settings.RecentStreamTitles.Contains(this.ChannelInformation.title))
                         {
-                            ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            ChannelSession.Settings.RecentStreamTitles.Insert(0, this.ChannelInformation.title);
+                            while (ChannelSession.Settings.RecentStreamTitles.Count > 5)
+                            {
+                                ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            }
                         }
                     }
-                }
 
-                if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
-                {
-                    this.currentGame = new GameModel()
+                    if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
                     {
-                        id = this.ChannelInformation.game_id,
-                        name = this.ChannelInformation.game_name
-                    };
-
-                    this.GameName = this.currentGame.name;
-
-                    if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
-                    {
-                        ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
-                        while (ChannelSession.Settings.RecentStreamGames.Count > 5)
+                        this.currentGame = new GameModel()
                         {
-                            ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            id = this.ChannelInformation.game_id,
+                            name = this.ChannelInformation.game_name
+                        };
+
+                        this.GameName = this.currentGame.name;
+
+                        if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
+                        {
+                            ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
+                            while (ChannelSession.Settings.RecentStreamGames.Count > 5)
+                            {
+                                ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            }
                         }
                     }
                 }
             }
 
             this.CustomTags.Clear();
-            foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
+            
+            // TODO
+
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!tag.is_auto)
+                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
                 {
-                    TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
-                    if (tagViewModel != null)
+                    if (!tag.is_auto)
                     {
-                        this.CustomTags.Add(tagViewModel);
+                        TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
+                        if (tagViewModel != null)
+                        {
+                            this.CustomTags.Add(tagViewModel);
+                        }
                     }
                 }
             }
+
             this.NotifyPropertyChanged("CanAddMoreTags");
         }
     }

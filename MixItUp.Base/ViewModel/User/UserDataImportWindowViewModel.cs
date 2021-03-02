@@ -228,6 +228,7 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
+                                        // TODO
                                         Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
                                         if (twitchUser != null)
                                         {
@@ -238,6 +239,7 @@ namespace MixItUp.Base.ViewModel.User
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
+                                    // TODO
                                     Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
                                     if (twitchUser != null)
                                     {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Glimesh;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -19,7 +20,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool ShowChatUserList { get { return !ChannelSession.Settings.HideChatUserList; } }
 
-        public long ViewersCount
+        public int ViewersCount
         {
             get { return this.viewersCount; }
             set
@@ -28,9 +29,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private long viewersCount;
+        private int viewersCount;
 
-        public long ChattersCount
+        public int ChattersCount
         {
             get { return this.chattersCount; }
             set
@@ -39,7 +40,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private long chattersCount;
+        private int chattersCount;
 
         public string EnableDisableButtonText
         {
@@ -112,9 +113,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
-            if (ServiceManager.Get<TwitchSessionService>().StreamV5 != null)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamV5 != null)
             {
-                this.ViewersCount = ServiceManager.Get<TwitchSessionService>().StreamV5.viewers;
+                this.ViewersCount = (int)ServiceManager.Get<TwitchSessionService>().StreamV5.viewers;
+            }
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+            {
+                this.ViewersCount = ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers ?? 0;
             }
             this.ChattersCount = ServiceManager.Get<ChatService>().AllUsers.Count;
         }
