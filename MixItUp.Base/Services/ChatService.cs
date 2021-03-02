@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services
 
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
                 {
-                    await ServiceManager.Get<GlimeshChatService>().SendMessage(message, sendAsStreamer);
+                    await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
                 }
             }
         }
@@ -258,7 +258,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
             {
-                await ServiceManager.Get<GlimeshChatService>().BanUser(user);
+                await ServiceManager.Get<GlimeshChatEventService>().BanUser(user);
             }
         }
 
@@ -271,7 +271,7 @@ namespace MixItUp.Base.Services
 
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
             {
-                await ServiceManager.Get<GlimeshChatService>().UnbanUser(user);
+                await ServiceManager.Get<GlimeshChatEventService>().UnbanUser(user);
             }
         }
 

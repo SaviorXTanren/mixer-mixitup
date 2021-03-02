@@ -1,8 +1,11 @@
 ﻿using Glimesh.Base.Clients;
+using Glimesh.Base.Models.Clients.Channel;
 using Glimesh.Base.Models.Clients.Chat;
 using Glimesh.Base.Models.Users;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -12,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Glimesh
 {
-    public interface IGlimeshChatService
+    public interface IGlimeshChatEventService
     {
         Task<Result> ConnectUser();
         Task DisconnectUser();
@@ -29,14 +32,14 @@ namespace MixItUp.Base.Services.Glimesh
         Task UnbanUser(UserViewModel user);
     }
 
-    public class GlimeshChatService : StreamingPlatformServiceBase, IGlimeshChatService
+    public class GlimeshChatEventService : StreamingPlatformServiceBase, IGlimeshChatEventService
     {
         private ChatEventClient userClient;
         private ChatEventClient botClient;
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
-        public GlimeshChatService() { }
+        public GlimeshChatEventService() { }
 
         public override string Name { get { return "Glimesh Chat"; } }
 
@@ -55,7 +58,11 @@ namespace MixItUp.Base.Services.Glimesh
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
                         }
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
+
                         this.userClient.OnChatMessageReceived += UserClient_OnChatMessageReceived;
+
+                        this.userClient.OnChannelUpdated += UserClient_OnChannelUpdated;
+                        this.userClient.OnFollowOccurred += UserClient_OnFollowOccurred;
 
                         if (!await this.userClient.Connect())
                         {
@@ -65,6 +72,11 @@ namespace MixItUp.Base.Services.Glimesh
                         if (!await this.userClient.JoinChannelChat(ServiceManager.Get<GlimeshSessionService>().Channel?.id))
                         {
                             return new Result("Failed to join Glimesh channel chat");
+                        }
+
+                        if (!await this.userClient.JoinChannelEvents(ServiceManager.Get<GlimeshSessionService>().Channel?.id, ServiceManager.Get<GlimeshSessionService>().User?.id))
+                        {
+                            return new Result("Failed to join Glimesh channel events");
                         }
 
                         return new Result();
@@ -90,7 +102,11 @@ namespace MixItUp.Base.Services.Glimesh
                         this.userClient.OnSentOccurred -= Client_OnSentOccurred;
                     }
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
+
                     this.userClient.OnChatMessageReceived -= UserClient_OnChatMessageReceived;
+
+                    this.userClient.OnChannelUpdated -= UserClient_OnChannelUpdated;
+                    this.userClient.OnFollowOccurred -= UserClient_OnFollowOccurred;
 
                     await this.userClient.Disconnect();
                 }
@@ -242,6 +258,76 @@ namespace MixItUp.Base.Services.Glimesh
                     }
                 }
                 await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
+            }
+        }
+
+        private async void UserClient_OnChannelUpdated(object sender, ChannelUpdatePacketModel channel)
+        {
+            try
+            {
+                if (!ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && channel.Channel.IsLive)
+                {
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelStreamStart, ChannelSession.GetCurrentUser());
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                    }
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().Channel.IsLive && !channel.Channel.IsLive)
+                {
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelStreamStop, ChannelSession.GetCurrentUser());
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    {
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private async void UserClient_OnFollowOccurred(object sender, FollowPacketModel follow)
+        {
+            try
+            {
+                UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, follow.Follow.user.id);
+                if (user == null)
+                {
+                    user = new UserViewModel(follow.Follow.user);
+                }
+
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.GlimeshChannelFollowed, user);
+                if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                {
+                    user.FollowDate = DateTimeOffset.Now;
+
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
+
+                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                    {
+                        currency.AddAmount(user.Data, currency.OnFollowBonus);
+                    }
+
+                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                    {
+                        if (user.HasPermissionsTo(streamPass.Permission))
+                        {
+                            streamPass.AddAmount(user.Data, streamPass.FollowBonus);
+                        }
+                    }
+
+                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
+
+                    GlobalEvents.FollowOccurred(user);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Glimesh, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

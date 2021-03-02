@@ -164,7 +164,19 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Points Redeemed")]
         TwitchChannelPointsRedeemed = 271,
 
-        // 300
+        // 300 = YouTube
+
+        // 400 = Trovo
+
+        // 500 = Glimesh
+
+        [Name("Glimesh Channel Stream Start")]
+        GlimeshChannelStreamStart = 500,
+        [Name("Glimesh Channel Stream Stop")]
+        GlimeshChannelStreamStop = 501,
+
+        [Name("Glimesh Channel Followed")]
+        GlimeshChannelFollowed = 510,
 
         // External Services = 1000
 

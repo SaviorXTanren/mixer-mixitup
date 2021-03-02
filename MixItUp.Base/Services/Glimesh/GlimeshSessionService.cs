@@ -148,7 +148,7 @@ namespace MixItUp.Base.Services.Glimesh
                             }
                         }
 
-                        GlimeshChatService chatService = new GlimeshChatService();
+                        GlimeshChatEventService chatService = new GlimeshChatEventService();
 
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                         platformServiceTasks.Add(chatService.ConnectUser());
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Services.Glimesh
                             return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
 
-                        ServiceManager.Add<GlimeshChatService>(chatService);
+                        ServiceManager.Add<GlimeshChatEventService>(chatService);
                     }
                 }
                 catch (Exception ex)
@@ -176,9 +176,9 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Get<GlimeshChatService>() != null)
+            if (this.BotConnection != null && ServiceManager.Get<GlimeshChatEventService>() != null)
             {
-                Result result = await ServiceManager.Get<GlimeshChatService>().ConnectBot();
+                Result result = await ServiceManager.Get<GlimeshChatEventService>().ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -189,17 +189,17 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Get<GlimeshChatService>() != null)
+            if (ServiceManager.Get<GlimeshChatEventService>() != null)
             {
-                await ServiceManager.Get<GlimeshChatService>().DisconnectUser();
+                await ServiceManager.Get<GlimeshChatEventService>().DisconnectUser();
             }
         }
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Get<GlimeshChatService>() != null)
+            if (ServiceManager.Get<GlimeshChatEventService>() != null)
             {
-                await ServiceManager.Get<GlimeshChatService>().DisconnectBot();
+                await ServiceManager.Get<GlimeshChatEventService>().DisconnectBot();
             }
         }
 

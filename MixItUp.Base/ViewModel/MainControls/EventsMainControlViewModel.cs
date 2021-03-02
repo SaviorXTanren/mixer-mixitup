@@ -114,6 +114,10 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
 
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStart));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStop));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelFollowed));
+
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));
