@@ -261,7 +261,7 @@ namespace MixItUp.Base.Services.External
                     trigger.Type = EventTypeEnum.StreamlootsPackGifted;
                     trigger.Arguments.Add(giftee.Username);
                 }
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
 
                 GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
             }
@@ -289,13 +289,13 @@ namespace MixItUp.Base.Services.External
                 }
                 trigger.SpecialIdentifiers["streamlootsmessage"] = message;
 
-                await ChannelSession.Services.Events.PerformEvent(trigger);
+                await ServiceManager.Get<EventService>().PerformEvent(trigger);
             }
         }
 
         private UserViewModel GetUser(string username)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username);
             if (user == null)
             {
                 user = new UserViewModel(username);

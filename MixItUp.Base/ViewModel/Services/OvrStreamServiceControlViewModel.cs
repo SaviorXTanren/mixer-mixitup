@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -30,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
 
-                Result result = await ChannelSession.Services.OvrStream.Connect();
+                Result result = await ServiceManager.Get<IOvrStreamService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -43,11 +45,11 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.OvrStream.Disconnect();
+                await ServiceManager.Get<IOvrStreamService>().Disconnect();
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.OvrStream.IsConnected;
+            this.IsConnected = ServiceManager.Get<IOvrStreamService>().IsConnected;
         }
     }
 }

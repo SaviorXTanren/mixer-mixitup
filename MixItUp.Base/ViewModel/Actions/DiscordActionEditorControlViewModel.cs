@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -152,9 +153,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            if (ChannelSession.Services.Discord.IsConnected)
+            if (ServiceManager.Get<DiscordService>().IsConnected)
             {
-                foreach (DiscordChannel channel in await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server))
+                foreach (DiscordChannel channel in await ServiceManager.Get<DiscordService>().GetServerChannels(ServiceManager.Get<DiscordService>().Server))
                 {
                     this.Channels.Add(channel);
                 }

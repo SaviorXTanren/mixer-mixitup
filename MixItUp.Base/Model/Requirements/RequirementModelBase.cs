@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -28,14 +29,14 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (this.errorCooldown <= DateTimeOffset.Now)
             {
-                if (ChannelSession.Services.Chat != null)
+                if (ServiceManager.Get<ChatService>() != null)
                 {
                     string message = result.ToString();
                     if (ChannelSession.Settings.IncludeUsernameWithRequirementErrors)
                     {
                         message = $"@{user.Username}: {message}";
                     }
-                    await ChannelSession.Services.Chat.SendMessage(message);
+                    await ServiceManager.Get<ChatService>().SendMessage(message);
                     this.errorCooldown = DateTimeOffset.Now.AddSeconds(ChannelSession.Settings.RequirementErrorsCooldownAmount);
                 }
             }

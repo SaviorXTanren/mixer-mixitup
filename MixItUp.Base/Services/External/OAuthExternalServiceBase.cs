@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services.External
 
         protected abstract Task RefreshOAuthToken();
 
-        protected void TrackServiceTelemetry(string name) { ChannelSession.Services.Telemetry.TrackService(name); }
+        protected void TrackServiceTelemetry(string name) { ServiceManager.Get<ITelemetryService>().TrackService(name); }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

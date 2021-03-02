@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -86,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.AudioDevices.Add(SoundActionModel.DefaultAudioDevice);
             this.AudioDevices.Add(SoundActionModel.MixItUpOverlay);
-            foreach (string soundDevices in ChannelSession.Services.AudioService.GetOutputDevices())
+            foreach (string soundDevices in ServiceManager.Get<IAudioService>().GetOutputDevices())
             {
                 this.AudioDevices.Add(soundDevices);
             }

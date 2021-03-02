@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Requirements
         }
         private int subscriberTier = 1;
 
-        public bool IsPatreonConnected { get { return ChannelSession.Services.Patreon.IsConnected; } }
+        public bool IsPatreonConnected { get { return ServiceManager.Get<PatreonService>().IsConnected; } }
 
         public IEnumerable<PatreonBenefit> PatreonBenefits
         {
@@ -48,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Requirements
                 benefits.Add(RoleRequirementViewModel.NonePatreonBenefit);
                 if (this.IsPatreonConnected)
                 {
-                    benefits.AddRange(ChannelSession.Services.Patreon.Campaign.Benefits.Values.OrderBy(b => b.Title));
+                    benefits.AddRange(ServiceManager.Get<PatreonService>().Campaign.Benefits.Values.OrderBy(b => b.Title));
                 }
                 return benefits;
             }

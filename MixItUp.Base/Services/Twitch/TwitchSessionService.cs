@@ -59,9 +59,9 @@ namespace MixItUp.Base.Services.Twitch
                     return new Result("Failed to get Twitch bot data");
                 }
 
-                if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsUserConnected)
+                if (ServiceManager.Get<ChatService>().TwitchChatService != null && ServiceManager.Get<ChatService>().TwitchChatService.IsUserConnected)
                 {
-                    return await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                    return await ServiceManager.Get<ChatService>().TwitchChatService.ConnectBot();
                 }
 
                 this.SaveSettings(settings);
@@ -199,8 +199,8 @@ namespace MixItUp.Base.Services.Twitch
                             return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
 
-                        await ChannelSession.Services.Chat.Initialize(twitchChatService);
-                        await ChannelSession.Services.Events.Initialize(twitchEventService);
+                        await ServiceManager.Get<ChatService>().Initialize(twitchChatService);
+                        await ServiceManager.Get<EventService>().Initialize(twitchEventService);
                     }
                 }
                 catch (Exception ex)
@@ -217,7 +217,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (this.BotConnection != null)
             {
-                Result result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                Result result = await ServiceManager.Get<ChatService>().TwitchChatService.ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -228,17 +228,17 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task CloseUser(SettingsV3Model settings)
         {
-            if (ChannelSession.Services.Chat.TwitchChatService != null)
+            if (ServiceManager.Get<ChatService>().TwitchChatService != null)
             {
-                await ChannelSession.Services.Chat.TwitchChatService.DisconnectUser();
+                await ServiceManager.Get<ChatService>().TwitchChatService.DisconnectUser();
             }
         }
 
         public async Task CloseBot(SettingsV3Model settings)
         {
-            if (ChannelSession.Services.Chat.TwitchChatService != null)
+            if (ServiceManager.Get<ChatService>().TwitchChatService != null)
             {
-                await ChannelSession.Services.Chat.TwitchChatService.DisconnectBot();
+                await ServiceManager.Get<ChatService>().TwitchChatService.DisconnectBot();
             }
         }
 

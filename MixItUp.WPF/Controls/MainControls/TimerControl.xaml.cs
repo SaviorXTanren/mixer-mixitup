@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MixItUp.Base.Services;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -60,14 +61,14 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
 
-                    await ChannelSession.Services.Timers.RebuildTimerGroups();
+                    await ServiceManager.Get<TimerService>().RebuildTimerGroups();
                 }
             });
         }
 
         private async void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            await ChannelSession.Services.Timers.RebuildTimerGroups();
+            await ServiceManager.Get<TimerService>().RebuildTimerGroups();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
@@ -79,7 +80,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void TimerWindow_CommandSaved(object sender, CommandModelBase e)
         {
-            await ChannelSession.Services.Timers.RebuildTimerGroups();
+            await ServiceManager.Get<TimerService>().RebuildTimerGroups();
             Window_CommandSaved(sender, e);
         }
 

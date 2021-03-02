@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                Result result = await ChannelSession.Services.Patreon.Connect();
+                Result result = await ServiceManager.Get<PatreonService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -53,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.Patreon.Disconnect();
+                await ServiceManager.Get<PatreonService>().Disconnect();
 
                 ChannelSession.Settings.PatreonOAuthToken = null;
                 ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
@@ -61,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.Patreon.IsConnected;
+            this.IsConnected = ServiceManager.Get<PatreonService>().IsConnected;
         }
 
         protected override Task OnLoadedInternal()
@@ -77,9 +78,9 @@ namespace MixItUp.Base.ViewModel.Services
         public void RefreshTiers()
         {
             this.Tiers.Clear();
-            if (ChannelSession.Services.Patreon.Campaign != null && ChannelSession.Services.Patreon.Campaign.ActiveTiers != null)
+            if (ServiceManager.Get<PatreonService>().Campaign != null && ServiceManager.Get<PatreonService>().Campaign.ActiveTiers != null)
             {
-                foreach (PatreonTier tier in ChannelSession.Services.Patreon.Campaign.ActiveTiers)
+                foreach (PatreonTier tier in ServiceManager.Get<PatreonService>().Campaign.ActiveTiers)
                 {
                     this.Tiers.Add(tier);
                 }

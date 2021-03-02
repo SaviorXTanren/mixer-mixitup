@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -145,7 +146,7 @@ namespace MixItUp.Base.Model.Actions
                 if (command != null)
                 {
                     command.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommandGroup || this.ActionType == CommandActionTypeEnum.EnableCommandGroup)
@@ -158,7 +159,7 @@ namespace MixItUp.Base.Model.Actions
                         cmd.IsEnabled = (this.ActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
                         ChannelSession.Settings.Commands.ManualValueChanged(cmd.ID);
                     }
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                 }
             }
         }

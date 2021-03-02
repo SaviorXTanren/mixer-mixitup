@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
@@ -167,17 +168,17 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ConnectDeviceCommand = this.CreateCommand(async (parameter) =>
             {
-                if (ChannelSession.Settings.RemoteHostConnection == null || (!await ChannelSession.Services.RemoteService.ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
+                if (ChannelSession.Settings.RemoteHostConnection == null || (!await ServiceManager.Get<LocalStreamerRemoteService>().ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
                 {
-                    //ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.MixerChannel.token);
+                    //ChannelSession.Settings.RemoteHostConnection = await ServiceManager.Get<IRemoteService>().NewHost(ChannelSession.MixerChannel.token);
                     ChannelSession.Settings.RemoteClientConnections.Clear();
                 }
 
                 if (ChannelSession.Settings.RemoteHostConnection != null)
                 {
-                    if (!ChannelSession.Services.RemoteService.IsConnected)
+                    if (!ServiceManager.Get<LocalStreamerRemoteService>().IsConnected)
                     {
-                        if (!await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection))
+                        if (!await ServiceManager.Get<LocalStreamerRemoteService>().InitializeConnection(ChannelSession.Settings.RemoteHostConnection))
                         {
                             await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
                             return;
@@ -193,7 +194,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                             return;
                         }
 
-                        RemoteConnectionModel clientConnection = await ChannelSession.Services.RemoteService.ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode, rememberClient: true);
+                        RemoteConnectionModel clientConnection = await ServiceManager.Get<LocalStreamerRemoteService>().ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode, rememberClient: true);
                         if (clientConnection != null)
                         {
                             if (!clientConnection.IsTemporary)

@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -57,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CultureInfo language in await ChannelSession.Services.Translation.GetAvailableLanguages())
+            foreach (CultureInfo language in await ServiceManager.Get<TranslationService>().GetAvailableLanguages())
             {
                 this.Languages.Add(language);
             }

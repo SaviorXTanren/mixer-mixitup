@@ -592,7 +592,7 @@ namespace MixItUp.Base.Services.External
 
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    byte[] bytes = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    byte[] bytes = await ServiceManager.Get<IFileService>().ReadFileAsBytes(filePath);
                     if (bytes != null && bytes.Length > 0)
                     {
                         var fileContent = new ByteArrayContent(bytes);
@@ -673,8 +673,8 @@ namespace MixItUp.Base.Services.External
 
         public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
         public string ClientID { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
-        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.Services.Secrets.GetSecret("DiscordSecret"); } }
-        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.Services.Secrets.GetSecret("DiscordBotToken"); } }
+        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ServiceManager.Get<SecretsService>().GetSecret("DiscordSecret"); } }
+        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ServiceManager.Get<SecretsService>().GetSecret("DiscordBotToken"); } }
 
         public override async Task<Result> Connect()
         {
@@ -869,7 +869,7 @@ namespace MixItUp.Base.Services.External
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
             }
-            await ChannelSession.Services.Chat.SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
+            await ServiceManager.Get<ChatService>().SendMessage("The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
             return false;
         }
     }

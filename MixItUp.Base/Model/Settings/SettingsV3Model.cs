@@ -9,6 +9,7 @@ using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
@@ -555,9 +556,9 @@ namespace MixItUp.Base.Model.Settings
 
         public async Task Initialize()
         {
-            if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
+            if (!ServiceManager.Get<IFileService>().FileExists(this.DatabaseFilePath))
             {
-                await ChannelSession.Services.FileService.CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
+                await ServiceManager.Get<IFileService>().CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
             }
 
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
@@ -566,7 +567,7 @@ namespace MixItUp.Base.Model.Settings
                 this.PlatformUsernameLookups[platform] = new Dictionary<string, Guid>();
             }
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                 this.UserData[userData.ID] = userData;
@@ -591,14 +592,14 @@ namespace MixItUp.Base.Model.Settings
             });
             this.UserData.ClearTracking();
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
             {
                 DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
                 this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), dateTime, data["GameName"].ToString()));
             });
             this.Quotes.ClearTracking();
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
             {
                 CommandModelBase command = null;
                 CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
@@ -709,7 +710,7 @@ namespace MixItUp.Base.Model.Settings
         public async Task ClearAllUserData()
         {
             this.UserData.Clear();
-            await ChannelSession.Services.Database.Write(this.DatabaseFilePath, "DELETE FROM Users");
+            await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "DELETE FROM Users");
         }
 
         public void CopyLatestValues()
@@ -720,53 +721,53 @@ namespace MixItUp.Base.Model.Settings
 
             ServiceManager.Get<TwitchSessionService>().SaveSettings(this);
 
-            if (ChannelSession.Services.Streamlabs.IsConnected)
+            if (ServiceManager.Get<StreamlabsService>().IsConnected)
             {
-                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+                this.StreamlabsOAuthToken = ServiceManager.Get<StreamlabsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.StreamElements.IsConnected)
+            if (ServiceManager.Get<StreamElementsService>().IsConnected)
             {
-                this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
+                this.StreamElementsOAuthToken = ServiceManager.Get<StreamElementsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.StreamJar.IsConnected)
+            if (ServiceManager.Get<StreamJarService>().IsConnected)
             {
-                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+                this.StreamJarOAuthToken = ServiceManager.Get<StreamJarService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.TipeeeStream.IsConnected)
+            if (ServiceManager.Get<TipeeeStreamService>().IsConnected)
             {
-                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+                this.TipeeeStreamOAuthToken = ServiceManager.Get<TipeeeStreamService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.TreatStream.IsConnected)
+            if (ServiceManager.Get<TreatStreamService>().IsConnected)
             {
-                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+                this.TreatStreamOAuthToken = ServiceManager.Get<TreatStreamService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Streamloots.IsConnected)
+            if (ServiceManager.Get<StreamlootsService>().IsConnected)
             {
-                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+                this.StreamlootsOAuthToken = ServiceManager.Get<StreamlootsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Tiltify.IsConnected)
+            if (ServiceManager.Get<TiltifyService>().IsConnected)
             {
-                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
+                this.TiltifyOAuthToken = ServiceManager.Get<TiltifyService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Patreon.IsConnected)
+            if (ServiceManager.Get<PatreonService>().IsConnected)
             {
-                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+                this.PatreonOAuthToken = ServiceManager.Get<PatreonService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.IFTTT.IsConnected)
+            if (ServiceManager.Get<IFTTTService>().IsConnected)
             {
-                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
+                this.IFTTTOAuthToken = ServiceManager.Get<IFTTTService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.JustGiving.IsConnected)
+            if (ServiceManager.Get<JustGivingService>().IsConnected)
             {
-                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
+                this.JustGivingOAuthToken = ServiceManager.Get<JustGivingService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Discord.IsConnected)
+            if (ServiceManager.Get<DiscordService>().IsConnected)
             {
-                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+                this.DiscordOAuthToken = ServiceManager.Get<DiscordService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Twitter.IsConnected)
+            if (ServiceManager.Get<TwitterService>().IsConnected)
             {
-                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+                this.TwitterOAuthToken = ServiceManager.Get<TwitterService>().GetOAuthTokenCopy();
             }
 
             // Clear out unused Cooldown Groups and Command Groups
@@ -788,24 +789,24 @@ namespace MixItUp.Base.Model.Settings
         public async Task SaveDatabaseData()
         {
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
             IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
                 changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
                     { "TwitchID", u.TwitchID }, { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", u.GlimeshID }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
             List<Guid> removedCommands = new List<Guid>();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
                 this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                 this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
                 this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
         }
 

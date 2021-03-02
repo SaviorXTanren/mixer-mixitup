@@ -162,14 +162,14 @@ namespace MixItUp.Base.Services
                     user.IgnoreForQueries = false;
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                        await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
                     }
 
-                    if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
                     {
                         user.LastSeen = DateTimeOffset.Now;
                         user.Data.TotalStreamsWatched++;
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
+                        await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Services
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
                 }
 
-                await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
+                await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
             }
         }
 
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Services
             UserViewModel user = null;
             if (!string.IsNullOrEmpty(userID))
             {
-                user = ChannelSession.Services.User.GetUserByPlatformID(platform, userID);
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(platform, userID);
                 if (user == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(platform, userID);
@@ -255,7 +255,7 @@ namespace MixItUp.Base.Services
 
             if (user == null)
             {
-                user = ChannelSession.Services.User.GetUserByUsername(username);
+                user = ServiceManager.Get<UserService>().GetUserByUsername(username);
                 if (user == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserDataByUsername(platform, username);

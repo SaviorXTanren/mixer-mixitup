@@ -103,7 +103,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.UserDataFileBrowseCommand = this.CreateCommand((parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.UserDataFilePath = filePath;
@@ -152,7 +152,7 @@ namespace MixItUp.Base.ViewModel.User
                     string extension = Path.GetExtension(this.UserDataFilePath);
                     if (extension.Equals(".txt") || extension.Equals(".csv"))
                     {
-                        string fileContents = await ChannelSession.Services.FileService.ReadFile(this.UserDataFilePath);
+                        string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.UserDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
                         {
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))

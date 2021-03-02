@@ -158,7 +158,7 @@ namespace MixItUp.Base.ViewModel.Wizard
 
             this.SetBackupLocationCommand = this.CreateCommand((parameter) =>
             {
-                string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+                string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
                 {
                     this.SettingsBackupLocation = folderPath;

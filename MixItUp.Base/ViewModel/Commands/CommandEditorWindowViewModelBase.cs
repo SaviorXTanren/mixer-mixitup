@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Actions;
 using MixItUp.Base.ViewModel.Requirements;
@@ -7,7 +8,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public static async Task<CommandModelBase> ImportCommandFromFile()
         {
-            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+            string fileName = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
             if (!string.IsNullOrEmpty(fileName))
             {
                 return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
@@ -135,7 +135,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
                 {
-                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         await FileSerializerHelper.SerializeToFile(fileName, command);

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -59,7 +60,7 @@ namespace MixItUp.Base.Model.User
                 {
                     if (this.user == null)
                     {
-                        this.user = ChannelSession.Services.User.GetUserFullSearch(this.Platform, null, this.Username);
+                        this.user = ServiceManager.Get<UserService>().GetUserFullSearch(this.Platform, null, this.Username);
                     }
                 }
                 return this.user;

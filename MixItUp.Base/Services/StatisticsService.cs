@@ -64,10 +64,10 @@ namespace MixItUp.Base.Services
 
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel("Chatters", "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
-                if (ChannelSession.Services.User != null)
+                if (ServiceManager.Get<UserService>() != null)
                 {
                     TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                    numberStats.AddValue(ChannelSession.Services.User.Count());
+                    numberStats.AddValue(ServiceManager.Get<UserService>().Count());
                 }
                 return Task.FromResult(0);
             });
@@ -89,9 +89,9 @@ namespace MixItUp.Base.Services
                 StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
                 staticStats.ClearValues();
 
-                staticStats.AddValue(Resources.Subs, ChannelSession.Services.Statistics?.SubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Resubs, ChannelSession.Services.Statistics?.ResubscriberTracker?.Total.ToString() ?? "0");
-                staticStats.AddValue(Resources.Gifted, ChannelSession.Services.Statistics?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Subs, ServiceManager.Get<StatisticsService>()?.SubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Resubs, ServiceManager.Get<StatisticsService>()?.ResubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Gifted, ServiceManager.Get<StatisticsService>()?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
 
                 return Task.FromResult(0);
             });

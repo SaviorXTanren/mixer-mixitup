@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Services
     {
         public async Task Play(string filePath, int volume)
         {
-            await ChannelSession.Services.AudioService.Play(filePath, volume, null);
+            await ServiceManager.Get<IAudioService>().Play(filePath, volume, null);
         }
 
         public Task Play(string filePath, int volume, string deviceName)

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -198,7 +199,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
-            return ChannelSession.Services.User.GetRandomUser(parameters);
+            return ServiceManager.Get<UserService>().GetRandomUser(parameters);
         }
 
         protected override Task<bool> ValidateRequirements(CommandParametersModel parameters)
@@ -217,7 +218,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return base.PerformInternal(parameters);
         }
 
-        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+        protected override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.GetType().ToString()); }
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
@@ -241,7 +242,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     return true;
                 }
 
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
                 return false;
             }
             return true;
@@ -309,9 +310,9 @@ namespace MixItUp.Base.Model.Commands.Games
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {
             HashSet<string> wordsToUse = GameCommandModelBase.DefaultWords;
-            if (!string.IsNullOrEmpty(customWordsFilePath) && ChannelSession.Services.FileService.FileExists(customWordsFilePath))
+            if (!string.IsNullOrEmpty(customWordsFilePath) && ServiceManager.Get<IFileService>().FileExists(customWordsFilePath))
             {
-                string fileData = await ChannelSession.Services.FileService.ReadFile(customWordsFilePath);
+                string fileData = await ServiceManager.Get<IFileService>().ReadFile(customWordsFilePath);
                 if (!string.IsNullOrEmpty(fileData))
                 {
                     wordsToUse = new HashSet<string>();

@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -13,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                Result result = await ChannelSession.Services.Streamlabs.Connect();
+                Result result = await ServiceManager.Get<StreamlabsService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -26,14 +28,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.Streamlabs.Disconnect();
+                await ServiceManager.Get<StreamlabsService>().Disconnect();
 
                 ChannelSession.Settings.StreamlabsOAuthToken = null;
 
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.Streamlabs.IsConnected;
+            this.IsConnected = ServiceManager.Get<StreamlabsService>().IsConnected;
         }
     }
 }

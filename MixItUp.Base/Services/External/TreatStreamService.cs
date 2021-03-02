@@ -124,7 +124,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TreatStreamService.ClientID;
-                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TreatStreamSecret");
+                    payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TreatStreamSecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TreatStreamService.ListeningURL;
                     payload["scope"] = "userinfo";
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services.External
             {
                 JObject payload = new JObject();
                 payload["client_id"] = TreatStreamService.ClientID;
-                payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TreatStreamSecret");
+                payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TreatStreamSecret");
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["grant_type"] = "refresh_token";
 

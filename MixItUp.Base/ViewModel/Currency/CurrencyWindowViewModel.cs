@@ -565,10 +565,10 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     try
                     {
-                        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                        string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog();
                         if (!string.IsNullOrEmpty(filePath))
                         {
-                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
+                            string fileContents = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
@@ -678,7 +678,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.ExportToFileCommand = this.CreateCommand(async (parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Currency.Name + " Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
@@ -686,7 +686,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     {
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
                     }
-                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+                    await ServiceManager.Get<IFileService>().SaveFile(filePath, fileContents.ToString());
                 }
             });
 

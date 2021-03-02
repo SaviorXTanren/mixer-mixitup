@@ -281,7 +281,7 @@ namespace MixItUp.Base.Model.Currency
 
             RankModel newRank = this.GetRank(user);
 
-            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+            UserViewModel userViewModel = ServiceManager.Get<UserService>().GetUserByID(user.ID);
             if (userViewModel == null)
             {
                 userViewModel = new UserViewModel(user);
@@ -354,7 +354,7 @@ namespace MixItUp.Base.Model.Currency
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                         bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+                        foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {

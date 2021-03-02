@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using System;
@@ -256,7 +257,7 @@ namespace MixItUp.Base.ViewModel.Games
             GameCommandModelBase c = (GameCommandModelBase)command;
             ChannelSession.GameCommands.Remove(c);
             ChannelSession.GameCommands.Add(c);
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             return Task.FromResult(0);
         }
 

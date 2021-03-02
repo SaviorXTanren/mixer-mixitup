@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new InMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
                     },
                     GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
                     GetPin = () =>
@@ -117,7 +117,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new SingleUserInMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ServiceManager.Get<SecretsService>().GetSecret("TwitterSecret"),
 
                         AccessToken = token.accessToken,
                         AccessTokenSecret = token.refreshToken,
@@ -204,7 +204,7 @@ namespace MixItUp.Base.Services.External
                                 using (WebClient client = new WebClient())
                                 {
                                     var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
-                                    string mediaType = $"image/" + ChannelSession.Services.Image.GetImageFormat(bytes);
+                                    string mediaType = $"image/" + ServiceManager.Get<IImageService>().GetImageFormat(bytes);
                                     Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
                                     mediaIds.Add(media.MediaID);
                                 }

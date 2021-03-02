@@ -93,7 +93,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = StreamlabsService.ClientID;
-                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("StreamlabsSecret");
+                    payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("StreamlabsSecret");
                     payload["code"] = authorizationCode;
                     payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Services.External
                 JObject payload = new JObject();
                 payload["grant_type"] = "refresh_token";
                 payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("StreamlabsSecret");
+                payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("StreamlabsSecret");
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = OAuthExternalServiceBase.DEFAULT_OAUTH_LOCALHOST_URL;
 

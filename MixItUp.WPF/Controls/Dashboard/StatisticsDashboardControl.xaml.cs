@@ -1,4 +1,4 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.Base.Services;
 using MixItUp.WPF.Controls.Statistics;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -21,11 +21,11 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             this.StatisticsOverviewListView.ItemsSource = this.statisticControls;
 
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.ViewerTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.FollowTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.AllSubsTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.DonationsTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.BitsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ServiceManager.Get<StatisticsService>().ViewerTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ServiceManager.Get<StatisticsService>().FollowTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ServiceManager.Get<StatisticsService>().AllSubsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ServiceManager.Get<StatisticsService>().DonationsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ServiceManager.Get<StatisticsService>().BitsTracker));
 
             foreach (StatisticsOverviewControl statisticControl in this.statisticControls)
             {

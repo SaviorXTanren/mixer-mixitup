@@ -64,7 +64,7 @@ namespace MixItUp.Base.Services.Glimesh
         {
             try
             {
-                GlimeshConnection connection = await GlimeshConnection.ConnectViaLocalhostOAuthBrowser(GlimeshPlatformService.ClientID, ChannelSession.Services.Secrets.GetSecret("GlimeshSecret"),
+                GlimeshConnection connection = await GlimeshConnection.ConnectViaLocalhostOAuthBrowser(GlimeshPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("GlimeshSecret"),
                     scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {

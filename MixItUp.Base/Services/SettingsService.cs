@@ -268,7 +268,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                string tempFilePath = ChannelSession.Services.FileService.GetTempFolder();
+                string tempFilePath = ServiceManager.Get<IFileService>().GetTempFolder();
                 string tempFolder = Path.GetDirectoryName(tempFilePath);
 
                 string settingsFile = null;
@@ -385,7 +385,7 @@ namespace MixItUp.Base.Services
 
             if (oldSettings.IsStreamer)
             {
-                string settingsText = await ChannelSession.Services.FileService.ReadFile(filePath);
+                string settingsText = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                 settingsText = settingsText.Replace("MixItUp.Base.Model.Settings.SettingsV2Model, MixItUp.Base", "MixItUp.Base.Model.Settings.SettingsV3Model, MixItUp.Base");
                 settingsText = settingsText.Replace("MixItUp.Base.ViewModel.User.UserRoleEnum", "MixItUp.Base.Model.User.UserRoleEnum");
                 SettingsV3Model newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV3Model>(settingsText, ignoreErrors: true);
@@ -562,16 +562,16 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                await ChannelSession.Services.Settings.Save(newSettings);
+                await ServiceManager.Get<SettingsService>().Save(newSettings);
             }
 
-            await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
-            await ChannelSession.Services.FileService.CopyFile(oldSettings.SettingsLocalBackupFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsLocalBackupFileName));
-            await ChannelSession.Services.FileService.CopyFile(oldSettings.DatabaseFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.DatabaseFileName));
+            await ServiceManager.Get<IFileService>().CopyFile(oldSettings.SettingsFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsFileName));
+            await ServiceManager.Get<IFileService>().CopyFile(oldSettings.SettingsLocalBackupFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.SettingsLocalBackupFileName));
+            await ServiceManager.Get<IFileService>().CopyFile(oldSettings.DatabaseFilePath, Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old", oldSettings.DatabaseFileName));
 
-            await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsFilePath);
-            await ChannelSession.Services.FileService.DeleteFile(oldSettings.SettingsLocalBackupFilePath);
-            await ChannelSession.Services.FileService.DeleteFile(oldSettings.DatabaseFilePath);
+            await ServiceManager.Get<IFileService>().DeleteFile(oldSettings.SettingsFilePath);
+            await ServiceManager.Get<IFileService>().DeleteFile(oldSettings.SettingsLocalBackupFilePath);
+            await ServiceManager.Get<IFileService>().DeleteFile(oldSettings.DatabaseFilePath);
         }
 #pragma warning restore CS0612 // Type or member is obsolete
 
@@ -599,7 +599,7 @@ namespace MixItUp.Base.Services
 
         public static async Task<int> GetSettingsVersion(string filePath)
         {
-            string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
+            string fileData = await ServiceManager.Get<IFileService>().ReadFile(filePath);
             if (string.IsNullOrEmpty(fileData))
             {
                 return -1;

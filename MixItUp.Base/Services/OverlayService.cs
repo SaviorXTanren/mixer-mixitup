@@ -12,32 +12,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IOverlayService : IExternalService
-    {
-        event EventHandler OnOverlayConnectedOccurred;
-        event EventHandler<WebSocketCloseStatus> OnOverlayDisconnectedOccurred;
-
-        string DefaultOverlayName { get; }
-        int DefaultOverlayPort { get; }
-
-        IDictionary<string, int> AllOverlayNameAndPorts { get; }
-
-        Task<bool> AddOverlay(string name, int port);
-
-        Task RemoveOverlay(string name);
-
-        IOverlayEndpointService GetOverlay(string name);
-
-        IEnumerable<string> GetOverlayNames();
-
-        Task<int> TestConnections();
-
-        void StartBatching();
-
-        Task EndBatching();
-    }
-
-    public class OverlayService : IOverlayService, IDisposable
+    public class OverlayService : IExternalService, IDisposable
     {
         public event EventHandler OnOverlayConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnOverlayDisconnectedOccurred = delegate { };
@@ -60,7 +35,7 @@ namespace MixItUp.Base.Services
             get
             {
                 Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
-                results.Add(ChannelSession.Services.Overlay.DefaultOverlayName, ChannelSession.Services.Overlay.DefaultOverlayPort);
+                results.Add(ServiceManager.Get<OverlayService>().DefaultOverlayName, ServiceManager.Get<OverlayService>().DefaultOverlayPort);
                 return results;
             }
         }
@@ -87,7 +62,7 @@ namespace MixItUp.Base.Services
 
                 this.IsConnected = true;
                 ChannelSession.Settings.EnableOverlay = true;
-                ChannelSession.Services.Telemetry.TrackService("Overlay");
+                ServiceManager.Get<ITelemetryService>().TrackService("Overlay");
                 return new Result();
             }
             catch (Exception ex)

@@ -98,7 +98,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await ChannelSession.SaveSettings();
 
-                    ChannelSession.Services.Moderation.RebuildCache();
+                    ServiceManager.Get<ModerationService>().RebuildCache();
                 });
             }
         }

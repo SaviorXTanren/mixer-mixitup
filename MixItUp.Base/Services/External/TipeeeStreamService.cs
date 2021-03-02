@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TipeeeStreamService.ClientID;
-                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TipeeeStreamSecret");
+                    payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TipeeeStreamSecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
@@ -312,7 +312,7 @@ namespace MixItUp.Base.Services.External
             {
                 JObject payload = new JObject();
                 payload["client_id"] = TipeeeStreamService.ClientID;
-                payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TipeeeStreamSecret");
+                payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TipeeeStreamSecret");
                 payload["refresh_token"] = this.token.refreshToken;
 
                 this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);

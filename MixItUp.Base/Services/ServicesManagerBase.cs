@@ -27,10 +27,10 @@ namespace MixItUp.Base.Services
         public IImageService Image { get; protected set; }
         public ITranslationService Translation { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
-        public ISerialService SerialService { get; protected set; }
+        public SerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }
 
-        public IOverlayService Overlay { get; protected set; }
+        public OverlayService Overlay { get; protected set; }
         public IStreamingSoftwareService OBSStudio { get; protected set; }
         public IStreamingSoftwareService StreamlabsOBS { get; protected set; }
         public IStreamingSoftwareService XSplit { get; protected set; }

@@ -37,11 +37,11 @@ namespace MixItUp.Base.Services
                     return Task.FromResult(0);
                 });
 
-                await ChannelSession.Services.Chat.WriteToChatEventLog(alert);
+                await ServiceManager.Get<ChatService>().WriteToChatEventLog(alert);
 
                 if (!ChannelSession.Settings.OnlyShowAlertsInDashboard)
                 {
-                    await ChannelSession.Services.Chat.AddMessage(alert);
+                    await ServiceManager.Get<ChatService>().AddMessage(alert);
                 }
             }
         }

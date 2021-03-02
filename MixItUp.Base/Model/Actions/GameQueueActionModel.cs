@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -59,28 +60,28 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == GameQueueActionType.EnableDisableQueue)
             {
-                if (ChannelSession.Services.GameQueueService.IsEnabled)
+                if (ServiceManager.Get<GameQueueService>().IsEnabled)
                 {
-                    await ChannelSession.Services.GameQueueService.Disable();
+                    await ServiceManager.Get<GameQueueService>().Disable();
                 }
                 else
                 {
-                    await ChannelSession.Services.GameQueueService.Enable();
+                    await ServiceManager.Get<GameQueueService>().Enable();
                 }
             }
             else if (this.ActionType == GameQueueActionType.EnableQueue)
             {
-                await ChannelSession.Services.GameQueueService.Enable();
+                await ServiceManager.Get<GameQueueService>().Enable();
             }
             else if (this.ActionType == GameQueueActionType.DisableQueue)
             {
-                await ChannelSession.Services.GameQueueService.Disable();
+                await ServiceManager.Get<GameQueueService>().Disable();
             }
             else
             {
-                if (!ChannelSession.Services.GameQueueService.IsEnabled)
+                if (!ServiceManager.Get<GameQueueService>().IsEnabled)
                 {
-                    await ChannelSession.Services.Chat.SendMessage("The game queue is not currently enabled");
+                    await ServiceManager.Get<ChatService>().SendMessage("The game queue is not currently enabled");
                     return;
                 }
 
@@ -88,56 +89,56 @@ namespace MixItUp.Base.Model.Actions
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
+                    targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
                     if (targetUser == null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("The user could not be found");
+                        await ServiceManager.Get<ChatService>().SendMessage("The user could not be found");
                         return;
                     }
                 }
 
                 if (this.ActionType == GameQueueActionType.JoinQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.Join(targetUser);
+                    await ServiceManager.Get<GameQueueService>().Join(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.JoinFrontOfQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.JoinFront(targetUser);
+                    await ServiceManager.Get<GameQueueService>().JoinFront(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.QueuePosition)
                 {
-                    await ChannelSession.Services.GameQueueService.PrintUserPosition(targetUser);
+                    await ServiceManager.Get<GameQueueService>().PrintUserPosition(targetUser);
                 }
                 else if (this.ActionType == GameQueueActionType.QueueStatus)
                 {
-                    await ChannelSession.Services.GameQueueService.PrintStatus();
+                    await ServiceManager.Get<GameQueueService>().PrintStatus();
                 }
                 else if (this.ActionType == GameQueueActionType.LeaveQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.Leave(targetUser);
+                    await ServiceManager.Get<GameQueueService>().Leave(targetUser);
                 }
                 if (this.ActionType == GameQueueActionType.SelectFirst)
                 {
-                    await ChannelSession.Services.GameQueueService.SelectFirst();
+                    await ServiceManager.Get<GameQueueService>().SelectFirst();
                 }
                 else if (this.ActionType == GameQueueActionType.SelectRandom)
                 {
-                    await ChannelSession.Services.GameQueueService.SelectRandom();
+                    await ServiceManager.Get<GameQueueService>().SelectRandom();
                 }
                 else if (this.ActionType == GameQueueActionType.SelectFirstType)
                 {
                     if (this.RoleRequirement != null)
                     {
-                        await ChannelSession.Services.GameQueueService.SelectFirstType(this.RoleRequirement);
+                        await ServiceManager.Get<GameQueueService>().SelectFirstType(this.RoleRequirement);
                     }
                     else
                     {
-                        await ChannelSession.Services.GameQueueService.SelectFirst();
+                        await ServiceManager.Get<GameQueueService>().SelectFirst();
                     }
                 }
                 else if (this.ActionType == GameQueueActionType.ClearQueue)
                 {
-                    await ChannelSession.Services.GameQueueService.Clear();
+                    await ServiceManager.Get<GameQueueService>().Clear();
                 }
             }
         }

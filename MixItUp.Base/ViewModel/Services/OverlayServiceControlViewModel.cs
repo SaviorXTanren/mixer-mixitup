@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Windows.Input;
@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
-                Result result = await ChannelSession.Services.Overlay.Connect();
+                Result result = await ServiceManager.Get<OverlayService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -39,13 +39,13 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.Overlay.Disconnect();
+                await ServiceManager.Get<OverlayService>().Disconnect();
                 this.IsConnected = false;
             });
 
             this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
             {
-                int total = await ChannelSession.Services.Overlay.TestConnections();
+                int total = await ServiceManager.Get<OverlayService>().TestConnections();
                 if (total > 0)
                 {
                     await DialogHelper.ShowMessage("Overlay connection test successful!" + Environment.NewLine + Environment.NewLine + total + " overlays connected in total");
@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.IsConnected = ChannelSession.Services.Overlay.IsConnected;
+            this.IsConnected = ServiceManager.Get<OverlayService>().IsConnected;
         }
     }
 }

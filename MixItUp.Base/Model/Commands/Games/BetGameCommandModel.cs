@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -128,12 +129,12 @@ namespace MixItUp.Base.Model.Commands.Games
                         else
                         {
                             string trigger = this.GetFullTriggers().FirstOrDefault() ?? "!bet";
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
                     }
                 }
                 else
@@ -142,7 +143,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         return await base.ValidateRequirements(parameters);
                     }
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
                 }
             }
             else
@@ -186,7 +187,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.StartedCommand.Perform(parameters);
                     return false;
                 }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
             }
             return false;
         }

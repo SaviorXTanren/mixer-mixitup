@@ -139,7 +139,7 @@ namespace MixItUp.Base.Services
                         if (clientConnection != null)
                         {
                             await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Where(p => !p.IsStreamer || clientConnection.IsStreamer));
-                            ChannelSession.Services.Telemetry.TrackRemoteSendProfiles(connection.ID);
+                            ServiceManager.Get<ITelemetryService>().TrackRemoteSendProfiles(connection.ID);
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
@@ -155,7 +155,7 @@ namespace MixItUp.Base.Services
                             if (ChannelSession.Settings.RemoteProfileBoards.ContainsKey(profileID) && ChannelSession.Settings.RemoteProfileBoards[profileID].Boards.ContainsKey(boardID))
                             {
                                 await this.SendBoard(ChannelSession.Settings.RemoteProfileBoards[profileID].Boards[boardID]);
-                                ChannelSession.Services.Telemetry.TrackRemoteSendBoard(connection.ID, profileID, boardID);
+                                ServiceManager.Get<ITelemetryService>().TrackRemoteSendBoard(connection.ID, profileID, boardID);
                             }
                             else
                             {
@@ -184,12 +184,12 @@ namespace MixItUp.Base.Services
                 });
 
                 await this.Connect();
-                await this.Authenticate(connection.ID, ChannelSession.Services.Secrets.GetSecret("RemoteHostSecret"), connection.AccessToken);
+                await this.Authenticate(connection.ID, ServiceManager.Get<SecretsService>().GetSecret("RemoteHostSecret"), connection.AccessToken);
                 await Task.Delay(3000);
 
                 if (this.IsConnected)
                 {
-                    ChannelSession.Services.Telemetry.TrackRemoteAuthentication(connection.ID);
+                    ServiceManager.Get<ITelemetryService>().TrackRemoteAuthentication(connection.ID);
                 }
 
                 return this.IsConnected;

@@ -141,7 +141,7 @@ namespace MixItUp.Base.Services.External
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                        ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"), body);
+                        ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"), body);
                     if (this.token != null)
                     {
                         token.authorizationCode = authorizationCode;
@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services.External
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                    ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"), body);
+                    ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"), body);
             }
         }
 
@@ -231,7 +231,7 @@ namespace MixItUp.Base.Services.External
         {
             AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
             client.DefaultRequestHeaders.Add("x-app-id", JustGivingService.ClientID);
-            client.DefaultRequestHeaders.Add("x-application-key", ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"));
+            client.DefaultRequestHeaders.Add("x-application-key", ServiceManager.Get<SecretsService>().GetSecret("JustGivingSecret"));
             return client;
         }
 

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -28,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(UserRoleEnum.Mod))
             {
-                PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
+                PatreonBenefit benefit = ServiceManager.Get<PatreonService>().Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
                 if (benefit != null)
                 {
                     PatreonTier tier = user.PatreonTier;
@@ -42,12 +43,12 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement))
             {
-                PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
+                PatreonBenefit benefit = ServiceManager.Get<PatreonService>().Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
                 if (benefit != null)
                 {
-                    if (ChannelSession.Services.Chat != null)
+                    if (ServiceManager.Get<ChatService>() != null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
                     }
                 }
             }

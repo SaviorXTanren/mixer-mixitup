@@ -53,14 +53,14 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
-            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
+            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
         }
 
         private async Task ProcessClip(ClipModel clip)
         {
             if (this.ShowClipInfoInChat)
             {
-                await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clip.url);
+                await ServiceManager.Get<ChatService>().SendMessage("Clip Created: " + clip.url);
             }
             this.extraSpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 

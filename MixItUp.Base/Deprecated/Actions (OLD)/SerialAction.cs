@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -37,7 +39,7 @@ namespace MixItUp.Base.Actions
             SerialDeviceModel serialDevice = ChannelSession.Settings.SerialDevices.FirstOrDefault(sd => sd.PortName.Equals(this.PortName));
             if (serialDevice != null)
             {
-                await ChannelSession.Services.SerialService.SendMessage(serialDevice, this.Message);
+                await ServiceManager.Get<SerialService>().SendMessage(serialDevice, this.Message);
             }
         }
     }

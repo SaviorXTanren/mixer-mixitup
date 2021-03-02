@@ -669,9 +669,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (ChannelSession.Services.Patreon.IsConnected && this.PatreonUser != null)
+                if (ServiceManager.Get<PatreonService>().IsConnected && this.PatreonUser != null)
                 {
-                    return ChannelSession.Services.Patreon.Campaign.GetTier(this.PatreonUser.TierID);
+                    return ServiceManager.Get<PatreonService>().Campaign.GetTier(this.PatreonUser.TierID);
                 }
                 return null;
             }
@@ -701,10 +701,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsEquivalentToSubscriber()
         {
-            if (this.PatreonUser != null && ChannelSession.Services.Patreon.IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent))
+            if (this.PatreonUser != null && ServiceManager.Get<PatreonService>().IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent))
             {
                 PatreonTier userTier = this.PatreonTier;
-                PatreonTier equivalentTier = ChannelSession.Services.Patreon.Campaign.GetTier(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent);
+                PatreonTier equivalentTier = ServiceManager.Get<PatreonService>().Campaign.GetTier(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent);
                 if (userTier != null && equivalentTier != null && userTier.Amount >= equivalentTier.Amount)
                 {
                     return true;
@@ -789,7 +789,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
                 if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
-                if (ChannelSession.Services.Chat.TwitchChatService != null)
+                if (ServiceManager.Get<ChatService>().TwitchChatService != null)
                 {
                     if (this.HasTwitchBadge("staff")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("staff"); }
                     else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
@@ -828,12 +828,12 @@ namespace MixItUp.Base.ViewModel.User
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
-            if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges.ContainsKey(name))
+            if (ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges.ContainsKey(name))
             {
                 int versionID = this.GetTwitchBadgeVersion(name);
-                if (ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                if (ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
                 {
-                    return ChannelSession.Services.Chat.TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
                 }
             }
             return null;
@@ -1062,9 +1062,9 @@ namespace MixItUp.Base.ViewModel.User
         private Task RefreshExternalServiceDetails()
         {
             this.CustomRoles.Clear();
-            if (ChannelSession.Services.Patreon.IsConnected && this.PatreonUser == null)
+            if (ServiceManager.Get<PatreonService>().IsConnected && this.PatreonUser == null)
             {
-                IEnumerable<PatreonCampaignMember> campaignMembers = ChannelSession.Services.Patreon.CampaignMembers;
+                IEnumerable<PatreonCampaignMember> campaignMembers = ServiceManager.Get<PatreonService>().CampaignMembers;
 
                 PatreonCampaignMember patreonUser = null;
                 if (!string.IsNullOrEmpty(this.Data.PatreonUserID))

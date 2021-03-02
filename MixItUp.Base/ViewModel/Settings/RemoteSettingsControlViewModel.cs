@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
+using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.DeleteCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.RemoteService.RemoveClient(ChannelSession.Settings.RemoteHostConnection, this.Connection);
+                await ServiceManager.Get<LocalStreamerRemoteService>().RemoveClient(ChannelSession.Settings.RemoteHostConnection, this.Connection);
                 ChannelSession.Settings.RemoteClientConnections.Remove(this.Connection);
                 this.parent.RefreshList();
             });

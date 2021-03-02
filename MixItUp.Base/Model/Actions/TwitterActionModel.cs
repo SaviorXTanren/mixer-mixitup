@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using StreamingClient.Base.Util;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -66,7 +68,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.Twitter.IsConnected)
+            if (ServiceManager.Get<TwitterService>().IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
@@ -77,19 +79,19 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (TwitterActionModel.CheckIfTweetContainsTooManyTags(tweet))
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The tweet you specified can not be sent because it contains an @mention");
+                            await ServiceManager.Get<ChatService>().SendMessage("The tweet you specified can not be sent because it contains an @mention");
                             return;
                         }
 
-                        if (!await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath))
+                        if (!await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath))
                         {
-                            await ChannelSession.Services.Chat.SendMessage("The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
+                            await ServiceManager.Get<ChatService>().SendMessage("The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
                         }
                     }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    await ChannelSession.Services.Twitter.UpdateName(this.NameUpdate);
+                    await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
                 }
             }
         }

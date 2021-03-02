@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -42,7 +44,7 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.IFTTT.IsConnected)
+            if (ServiceManager.Get<IFTTTService>().IsConnected)
             {
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(this.EventValue1))
@@ -57,7 +59,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, parameters);
                 }
-                await ChannelSession.Services.IFTTT.SendTrigger(this.EventName, values);
+                await ServiceManager.Get<IFTTTService>().SendTrigger(this.EventName, values);
             }
         }
     }

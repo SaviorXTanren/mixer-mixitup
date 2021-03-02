@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Requirements;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -46,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.command.IsEnabled = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
-                ChannelSession.Services.Chat.RebuildCommandTriggers();
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
         }
 

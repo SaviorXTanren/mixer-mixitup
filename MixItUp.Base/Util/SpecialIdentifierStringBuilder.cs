@@ -237,7 +237,7 @@ namespace MixItUp.Base.Util
         public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
             string username = argument.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
+            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
             if (user == null)
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
@@ -314,13 +314,13 @@ namespace MixItUp.Base.Util
                 switch (ChannelSession.Settings.DefaultStreamingSoftware)
                 {
                     case Model.Actions.StreamingSoftwareTypeEnum.OBSStudio:
-                        ssService = ChannelSession.Services.OBSStudio;
+                        ssService = ServiceManager.Get<IOBSStudioService>();
                         break;
                     case Model.Actions.StreamingSoftwareTypeEnum.XSplit:
-                        ssService = ChannelSession.Services.XSplit;
+                        ssService = ServiceManager.Get<XSplitService>();
                         break;
                     case Model.Actions.StreamingSoftwareTypeEnum.StreamlabsOBS:
-                        ssService = ChannelSession.Services.StreamlabsOBS;
+                        ssService = ServiceManager.Get<StreamlabsOBSService>();
                         break;
                 }
 
@@ -334,9 +334,9 @@ namespace MixItUp.Base.Util
             }
 
             int gameQueueCount = 0;
-            if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+            if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
             {
-                gameQueueCount = ChannelSession.Services.GameQueueService.Queue.Count();
+                gameQueueCount = ServiceManager.Get<GameQueueService>().Queue.Count();
             }
             this.ReplaceSpecialIdentifier("gamequeuetotal", gameQueueCount.ToString());
 
@@ -386,7 +386,7 @@ namespace MixItUp.Base.Util
                 {
                     IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                     UserDataModel topUserData = applicableUsers.Top(u => u.ViewingMinutes);
-                    UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                    UserViewModel topUser = ServiceManager.Get<UserService>().GetUserByID(topUserData.ID);
                     if (topUser == null)
                     {
                         topUser = new UserViewModel(topUserData);
@@ -421,7 +421,7 @@ namespace MixItUp.Base.Util
                     {
                         IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
                         UserDataModel topUserData = applicableUsers.Top(u => currency.GetAmount(u));
-                        UserViewModel topUser = ChannelSession.Services.User.GetUserByID(topUserData.ID);
+                        UserViewModel topUser = ServiceManager.Get<UserService>().GetUserByID(topUserData.ID);
                         if (topUser == null)
                         {
                             topUser = new UserViewModel(topUserData);
@@ -453,9 +453,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ChannelSession.Services.Twitter.IsConnected && this.ContainsSpecialIdentifier("tweet"))
+            if (ServiceManager.Get<TwitterService>().IsConnected && this.ContainsSpecialIdentifier("tweet"))
             {
-                IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
+                IEnumerable<Tweet> tweets = await ServiceManager.Get<TwitterService>().GetLatestTweets();
                 if (tweets != null && tweets.Count() > 0)
                 {
                     Tweet latestTweet = tweets.FirstOrDefault();
@@ -480,15 +480,15 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ChannelSession.Services.ExtraLife.IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
+            if (ServiceManager.Get<ExtraLifeService>().IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
             {
-                ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam();
+                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam();
 
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
 
-                ExtraLifeTeamParticipant participant = await ChannelSession.Services.ExtraLife.GetParticipant();
+                ExtraLifeTeamParticipant participant = await ServiceManager.Get<ExtraLifeService>().GetParticipant();
 
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationgoal", participant.fundraisingGoal.ToString());
                 this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationcount", participant.numDonations.ToString());
@@ -538,7 +538,7 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ChannelSession.Services.Chat.AllUsers.Count.ToString());
+                this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "chattercount", ServiceManager.Get<MixItUp.Base.Services.ChatService>().AllUsers.Count.ToString());
             }
 
             if (this.ContainsSpecialIdentifier(UserSpecialIdentifierHeader))
@@ -625,7 +625,7 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
+                IEnumerable<UserViewModel> workableUsers = ServiceManager.Get<UserService>().GetAllWorkableUsers();
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
                     if (workableUsers != null && workableUsers.Count() > 0)
@@ -787,9 +787,9 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
                     string gameQueuePosition = "Not In Queue";
-                    if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+                    if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
-                        int position = ChannelSession.Services.GameQueueService.GetUserPosition(user);
+                        int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
                         if (position > 0)
                         {
                             gameQueuePosition = position.ToString();
@@ -851,7 +851,7 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (ChannelSession.Services.Patreon.IsConnected)
+                if (ServiceManager.Get<PatreonService>().IsConnected)
                 {
                     string tierName = "Not Subscribed";
                     PatreonTier tier = user.PatreonTier;
@@ -906,7 +906,7 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.TopBitsCheeredSpecialIdentifier + period.ToString().ToLower() + "amount", bitsUser.score.ToString());
 
-                    UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
+                    UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);
                     if (user == null)
                     {
                         UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, bitsUser.user_id);

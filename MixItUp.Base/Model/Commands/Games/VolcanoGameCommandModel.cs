@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -147,12 +148,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
                     }
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
                 }
                 return false;
             }

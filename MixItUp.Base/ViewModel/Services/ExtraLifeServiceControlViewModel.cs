@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -75,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Services
                     return;
                 }
 
-                Result result = await ChannelSession.Services.ExtraLife.Connect();
+                Result result = await ServiceManager.Get<ExtraLifeService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -88,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.ExtraLife.Disconnect();
+                await ServiceManager.Get<ExtraLifeService>().Disconnect();
 
                 ChannelSession.Settings.ExtraLifeTeamID = 0;
                 ChannelSession.Settings.ExtraLifeParticipantID = 0;
@@ -101,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Services
                 await this.GetTeamParticipants();
             });
 
-            this.IsConnected = ChannelSession.Services.ExtraLife.IsConnected;
+            this.IsConnected = ServiceManager.Get<ExtraLifeService>().IsConnected;
         }
 
         protected override async Task OnLoadedInternal()
@@ -123,10 +124,10 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 this.Participants.Clear();
 
-                ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam(this.ExtraLifeTeamID);
+                ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam(this.ExtraLifeTeamID);
                 if (team != null)
                 {
-                    IEnumerable<ExtraLifeTeamParticipant> ps = await ChannelSession.Services.ExtraLife.GetTeamParticipants(this.ExtraLifeTeamID);
+                    IEnumerable<ExtraLifeTeamParticipant> ps = await ServiceManager.Get<ExtraLifeService>().GetTeamParticipants(this.ExtraLifeTeamID);
                     foreach (ExtraLifeTeamParticipant participant in ps.OrderBy(p => p.displayName))
                     {
                         this.Participants.Add(participant);

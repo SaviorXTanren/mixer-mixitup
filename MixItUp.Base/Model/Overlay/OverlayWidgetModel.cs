@@ -116,8 +116,8 @@ namespace MixItUp.Base.Model.Overlay
 
         private IOverlayEndpointService GetOverlay()
         {
-            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.Overlay.DefaultOverlayName : this.OverlayName;
-            return ChannelSession.Services.Overlay.GetOverlay(overlayName);
+            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
+            return ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
         }
 
         private async void Item_OnChangeState(object sender, bool state)

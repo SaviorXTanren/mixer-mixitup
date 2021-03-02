@@ -1,5 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Statistics;
+﻿using MixItUp.Base.Model.Statistics;
+using MixItUp.Base.Services;
 using MixItUp.WPF.Controls.Statistics;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.StatisticsOverviewListView.ItemsSource = this.statisticOverviewControls;
-            foreach (StatisticDataTrackerModelBase statistic in ChannelSession.Services.Statistics.Statistics)
+            foreach (StatisticDataTrackerModelBase statistic in ServiceManager.Get<StatisticsService>().Statistics)
             {
                 this.statisticOverviewControls.Add(new StatisticsOverviewControl(statistic));
             }
@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.MainControls
         //{
         //    await this.Window.RunAsyncOperation(async () =>
         //    {
-        //        string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(string.Format("Stream Statistics - {0}.xls", ChannelSession.Services.Statistics.StartTime.ToString("MM-dd-yy HH-mm")));
+        //        string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(string.Format("Stream Statistics - {0}.xls", ServiceManager.Get<StatisticsService>().StartTime.ToString("MM-dd-yy HH-mm")));
         //        if (!string.IsNullOrEmpty(fileName))
         //        {
         //            bool result = await Task.Run(() =>
@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         //                        using (Workbook workbook = application.Workbooks.Add())
         //                        {
-        //                            foreach (StatisticDataTrackerModelBase statistic in ChannelSession.Services.Statistics.Statistics)
+        //                            foreach (StatisticDataTrackerModelBase statistic in ServiceManager.Get<StatisticsService>().Statistics)
         //                            {
         //                                using (Worksheet worksheet = (Worksheet)workbook.Worksheets.Add())
         //                                {

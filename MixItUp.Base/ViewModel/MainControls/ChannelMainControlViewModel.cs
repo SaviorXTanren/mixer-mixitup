@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.RaidChannelCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.Chat.SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                await ServiceManager.Get<ChatService>().SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             });
         }
 

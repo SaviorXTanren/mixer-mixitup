@@ -31,12 +31,12 @@ namespace MixItUp.Base.Services
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate()
         {
-            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestPublicUpdate();
+            MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestPublicUpdate();
             if (update != null)
             {
                 if (ChannelSession.AppSettings.PreviewProgram)
                 {
-                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
+                    MixItUpUpdateModel previewUpdate = await ServiceManager.Get<MixItUpService>().GetLatestPreviewUpdate();
                     if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
                     {
                         update = previewUpdate;
@@ -48,7 +48,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.AppSettings.TestBuild)
                 {
-                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
+                    MixItUpUpdateModel testUpdate = await ServiceManager.Get<MixItUpService>().GetLatestTestUpdate();
                     if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
                     {
                         update = testUpdate;

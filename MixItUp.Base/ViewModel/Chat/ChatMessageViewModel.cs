@@ -110,15 +110,15 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             if (this.User != null && !this.IsWhisper)
             {
-                if (!ChannelSession.Services.Moderation.DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
+                if (!ServiceManager.Get<ModerationService>().DoesUserMeetChatInteractiveParticipationRequirement(this.User, this))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
                     await this.Delete(reason: "Chat Participation");
-                    await ChannelSession.Services.Moderation.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
+                    await ServiceManager.Get<ModerationService>().SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                     return true;
                 }
 
-                string moderationReason = await ChannelSession.Services.Moderation.ShouldTextBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
+                string moderationReason = await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
                 if (!string.IsNullOrEmpty(moderationReason))
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
@@ -155,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         trigger.TargetUser = this.User;
                         trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
                         trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
-                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
                     }
                 }
             }

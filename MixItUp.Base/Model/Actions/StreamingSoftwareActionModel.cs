@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
@@ -80,16 +81,16 @@ namespace MixItUp.Base.Model.Actions
 
             if (softwareType == StreamingSoftwareTypeEnum.OBSStudio)
             {
-                if (ChannelSession.Services.OBSStudio.IsConnected || (await ChannelSession.Services.OBSStudio.Connect()).Success)
+                if (ServiceManager.Get<IOBSStudioService>().IsConnected || (await ServiceManager.Get<IOBSStudioService>().Connect()).Success)
                 {
-                    dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ServiceManager.Get<IOBSStudioService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
             else if (softwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
-                if (ChannelSession.Services.StreamlabsOBS.IsConnected || (await ChannelSession.Services.StreamlabsOBS.Connect()).Success)
+                if (ServiceManager.Get<StreamlabsOBSService>().IsConnected || (await ServiceManager.Get<StreamlabsOBSService>().Connect()).Success)
                 {
-                    dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(sceneName, sourceName);
+                    dimensions = await ServiceManager.Get<StreamlabsOBSService>().GetSourceDimensions(sceneName, sourceName);
                 }
             }
 
@@ -232,15 +233,15 @@ namespace MixItUp.Base.Model.Actions
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
-                ssService = ChannelSession.Services.OBSStudio;
+                ssService = ServiceManager.Get<IOBSStudioService>();
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
             {
-                ssService = ChannelSession.Services.XSplit;
+                ssService = ServiceManager.Get<XSplitService>();
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
-                ssService = ChannelSession.Services.StreamlabsOBS;
+                ssService = ServiceManager.Get<StreamlabsOBSService>();
             }
 
             if (ssService != null && ssService.IsEnabled)

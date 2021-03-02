@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using ovrstream_client_csharp;
@@ -38,7 +39,7 @@ namespace MixItUp.WPF.Services
                     GlobalEvents.ServiceReconnect("OvrStream");
 
                     this.IsConnected = true;
-                    ChannelSession.Services.Telemetry.TrackService("OvrStream");
+                    ServiceManager.Get<ITelemetryService>().TrackService("OvrStream");
 
                     return new Result();
                 }

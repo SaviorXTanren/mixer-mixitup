@@ -44,7 +44,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (SettingsV3Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
+            foreach (SettingsV3Model setting in (await ServiceManager.Get<SettingsService>().GetAllSettings()).OrderBy(s => s.Name))
             {
                 this.streamerSettings.Add(setting);
             }
@@ -128,7 +128,7 @@ namespace MixItUp.WPF
 
         private async Task CheckForUpdates()
         {
-            this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+            this.currentUpdate = await ServiceManager.Get<MixItUpService>().GetLatestUpdate();
             if (this.currentUpdate != null && this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
             {
                 updateFound = true;

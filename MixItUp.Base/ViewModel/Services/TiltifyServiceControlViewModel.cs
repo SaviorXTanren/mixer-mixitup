@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                Result result = await ChannelSession.Services.Tiltify.Connect();
+                Result result = await ServiceManager.Get<TiltifyService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.Tiltify.Disconnect();
+                await ServiceManager.Get<TiltifyService>().Disconnect();
 
                 ChannelSession.Settings.TiltifyOAuthToken = null;
                 ChannelSession.Settings.TiltifyCampaign = 0;
@@ -63,7 +64,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.Tiltify.IsConnected;
+            this.IsConnected = ServiceManager.Get<TiltifyService>().IsConnected;
         }
 
         protected override async Task OnLoadedInternal()
@@ -79,18 +80,18 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.Campaigns.Clear();
 
-            TiltifyUser user = await ChannelSession.Services.Tiltify.GetUser();
+            TiltifyUser user = await ServiceManager.Get<TiltifyService>().GetUser();
 
             Dictionary<int, TiltifyCampaign> campaignDictionary = new Dictionary<int, TiltifyCampaign>();
 
-            foreach (TiltifyCampaign campaign in await ChannelSession.Services.Tiltify.GetUserCampaigns(user))
+            foreach (TiltifyCampaign campaign in await ServiceManager.Get<TiltifyService>().GetUserCampaigns(user))
             {
                 campaignDictionary[campaign.ID] = campaign;
             }
 
-            foreach (TiltifyTeam team in await ChannelSession.Services.Tiltify.GetUserTeams(user))
+            foreach (TiltifyTeam team in await ServiceManager.Get<TiltifyService>().GetUserTeams(user))
             {
-                foreach (TiltifyCampaign campaign in await ChannelSession.Services.Tiltify.GetTeamCampaigns(team))
+                foreach (TiltifyCampaign campaign in await ServiceManager.Get<TiltifyService>().GetTeamCampaigns(team))
                 {
                     campaignDictionary[campaign.ID] = campaign;
                 }

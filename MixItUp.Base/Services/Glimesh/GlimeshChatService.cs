@@ -234,13 +234,13 @@ namespace MixItUp.Base.Services.Glimesh
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
+                UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
                     UserModel glimeshUser = await ChannelSession.GlimeshUserConnection.GetUserByName(message.User?.id);
                     if (glimeshUser != null)
                     {
-                        user = await ChannelSession.Services.User.AddOrUpdateUser(glimeshUser);
+                        user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
                     }
                 }
                 this.OnMessageOccurred?.Invoke(this, new GlimeshChatMessageViewModel(message, user));

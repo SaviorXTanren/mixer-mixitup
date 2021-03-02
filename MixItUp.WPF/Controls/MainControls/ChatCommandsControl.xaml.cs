@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MixItUp.Base.Services;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -64,7 +65,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.ChatCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
                 }
@@ -73,7 +74,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtonsControl_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

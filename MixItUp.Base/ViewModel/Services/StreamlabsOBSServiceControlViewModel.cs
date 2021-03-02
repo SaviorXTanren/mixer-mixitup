@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Windows.Input;
 
@@ -16,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
                 ChannelSession.Settings.EnableStreamlabsOBSConnection = false;
-                Result result = await ChannelSession.Services.StreamlabsOBS.Connect();
+                Result result = await ServiceManager.Get<StreamlabsOBSService>().Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
@@ -31,14 +32,14 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.StreamlabsOBS.Disconnect();
+                await ServiceManager.Get<StreamlabsOBSService>().Disconnect();
                 ChannelSession.Settings.EnableStreamlabsOBSConnection = false;
                 this.IsConnected = false;
             });
 
             this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await ChannelSession.Services.StreamlabsOBS.TestConnection())
+                if (await ServiceManager.Get<StreamlabsOBSService>().TestConnection())
                 {
                     await DialogHelper.ShowMessage("Streamlabs OBS connection test successful!");
                 }
@@ -48,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.IsConnected = ChannelSession.Services.StreamlabsOBS.IsConnected;
+            this.IsConnected = ServiceManager.Get<StreamlabsOBSService>().IsConnected;
         }
     }
 }

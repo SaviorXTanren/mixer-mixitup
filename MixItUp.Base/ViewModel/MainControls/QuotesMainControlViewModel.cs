@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ExportQuotesCommand = this.CreateCommand(async (parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("Quotes.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog("Quotes.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     List<List<string>> contents = new List<List<string>>();

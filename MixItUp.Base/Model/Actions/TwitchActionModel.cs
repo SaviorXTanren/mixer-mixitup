@@ -140,23 +140,23 @@ namespace MixItUp.Base.Model.Actions
             if (this.ActionType == TwitchActionType.Host)
             {
                 string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.Raid)
             {
                 string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             }
             else if (this.ActionType == TwitchActionType.RunAd)
             {
                 AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
                 if (response == null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
+                    await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later");
                 }
                 else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
                 {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
+                    await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message);
                 }
             }
             else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
@@ -165,7 +165,7 @@ namespace MixItUp.Base.Model.Actions
                 if (!string.IsNullOrEmpty(this.Username))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
+                    targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
                 }
                 else
                 {
@@ -176,11 +176,11 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (this.ActionType == TwitchActionType.VIPUser)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        await ServiceManager.Get<ChatService>().SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                     }
                     else if (this.ActionType == TwitchActionType.UnVIPUser)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        await ServiceManager.Get<ChatService>().SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                     }
                 }
             }
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Model.Actions
                         {
                             if (this.ShowInfoInChat)
                             {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url));
+                                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url));
                             }
                             parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
@@ -207,14 +207,14 @@ namespace MixItUp.Base.Model.Actions
                         }
                     }
                 }
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
             }
             else if (this.ActionType == TwitchActionType.StreamMarker)
             {
                 string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                 if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
                     return;
                 }
 
@@ -223,12 +223,12 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (this.ShowInfoInChat)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL));
                     }
                     parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
                     return;
                 }
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
             }
         }
     }

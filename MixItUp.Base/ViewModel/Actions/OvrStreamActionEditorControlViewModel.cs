@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
@@ -76,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private OvrStreamActionTypeEnum selectedActionType;
 
-        public bool OvrStreamNotEnabled { get { return !ChannelSession.Services.OvrStream.IsConnected; } }
+        public bool OvrStreamNotEnabled { get { return !ServiceManager.Get<IOvrStreamService>().IsConnected; } }
 
         public ObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ObservableCollection<OvrStreamTitle>();
 
@@ -143,9 +144,9 @@ namespace MixItUp.Base.ViewModel.Actions
                 return Task.FromResult(0);
             });
 
-            if (ChannelSession.Services.OvrStream.IsConnected)
+            if (ServiceManager.Get<IOvrStreamService>().IsConnected)
             {
-                IEnumerable<OvrStreamTitle> titles = await ChannelSession.Services.OvrStream.GetTitles();
+                IEnumerable<OvrStreamTitle> titles = await ServiceManager.Get<IOvrStreamService>().GetTitles();
                 if (titles != null)
                 {
                     foreach (OvrStreamTitle title in titles)

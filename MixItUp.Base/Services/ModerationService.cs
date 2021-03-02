@@ -71,9 +71,9 @@ namespace MixItUp.Base.Services
 
         public async Task Initialize()
         {
-            if (ChannelSession.Services.FileService.FileExists(ModerationService.CommunityFilteredWordsFilePath))
+            if (ServiceManager.Get<IFileService>().FileExists(ModerationService.CommunityFilteredWordsFilePath))
             {
-                string text = await ChannelSession.Services.FileService.ReadFile(ModerationService.CommunityFilteredWordsFilePath);
+                string text = await ServiceManager.Get<IFileService>().ReadFile(ModerationService.CommunityFilteredWordsFilePath);
                 ModerationService.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
 
                 foreach (string word in ModerationService.CommunityFilteredWords)
@@ -171,7 +171,7 @@ namespace MixItUp.Base.Services
                 {
                     if (Regex.IsMatch(text, word, RegexOptions.IgnoreCase))
                     {
-                        await ChannelSession.Services.Chat.BanUser(user);
+                        await ServiceManager.Get<ChatService>().BanUser(user);
                         return "The previous message was deleted due to a banned Word";
                     }
                 }
@@ -396,7 +396,7 @@ namespace MixItUp.Base.Services
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("@{0}: Your message has been deleted because only {1} can participate currently.", user.Username, reason), platform: user.Platform);
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0}: Your message has been deleted because only {1} can participate currently.", user.Username, reason), platform: user.Platform);
                 }
             }
         }

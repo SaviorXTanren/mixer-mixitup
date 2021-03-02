@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
@@ -94,16 +95,16 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
+            if (ServiceManager.Get<ChatService>() != null && ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
             {
                 InventoryModel inventory = this.GetInventory();
                 if (inventory != null && inventory.ItemExists(this.ItemID))
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} items to do this", this.Amount));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} items to do this", this.Amount));
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
-            await this.AddGameQueueUsers(ChannelSession.Services.GameQueueService.Queue);
+            await this.AddGameQueueUsers(ServiceManager.Get<GameQueueService>().Queue);
         }
 
         private async Task AddGameQueueUsers(IEnumerable<UserViewModel> users)

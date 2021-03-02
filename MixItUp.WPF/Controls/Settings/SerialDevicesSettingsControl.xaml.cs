@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Serial;
-using System.Collections.Generic;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
             this.portNames.Clear();
-            foreach (string portName in await ChannelSession.Services.SerialService.GetCurrentPortNames())
+            foreach (string portName in await ServiceManager.Get<SerialService>().GetCurrentPortNames())
             {
                 this.portNames.Add(portName);
             }

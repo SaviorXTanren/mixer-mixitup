@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -25,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Services
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
                 ChannelSession.Settings.EnableDeveloperAPI = false;
-                Result result = await ChannelSession.Services.DeveloperAPI.Connect();
+                Result result = await ServiceManager.Get<IDeveloperAPIService>().Connect();
                 if (result.Success)
                 {
                     ChannelSession.Settings.EnableDeveloperAPI = true;
@@ -39,12 +40,12 @@ namespace MixItUp.Base.ViewModel.Services
 
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.DeveloperAPI.Disconnect();
+                await ServiceManager.Get<IDeveloperAPIService>().Disconnect();
                 ChannelSession.Settings.EnableDeveloperAPI = false;
                 this.IsConnected = false;
             });
 
-            this.IsConnected = ChannelSession.Services.DeveloperAPI.IsConnected;
+            this.IsConnected = ServiceManager.Get<IDeveloperAPIService>().IsConnected;
         }
     }
 }

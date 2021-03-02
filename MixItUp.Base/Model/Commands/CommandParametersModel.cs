@@ -16,7 +16,7 @@ namespace MixItUp.Base.Model.Commands
         public static async Task<UserViewModel> SearchForUser(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
         {
             username = username.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
+            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
             if (user == null)
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)

@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
         {
             this.RebuildCommandTriggers();
 
-            await ChannelSession.Services.FileService.CreateDirectory(ChatEventLogDirectoryName);
+            await ServiceManager.Get<IFileService>().CreateDirectory(ChatEventLogDirectoryName);
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             List<ChatMessageViewModel> messagesToAdd = new List<ChatMessageViewModel>();
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services
 
         public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
+            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
             if (user != null)
             {
                 await this.Whisper(user, message, sendAsStreamer);
@@ -343,7 +343,7 @@ namespace MixItUp.Base.Services
                     {
                         if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                         {
-                            UserViewModel activeUser = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
+                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
                             if (activeUser != null)
                             {
                                 message.User = activeUser;
@@ -409,20 +409,20 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
                         {
-                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
                         if (!string.IsNullOrEmpty(message.PlainTextMessage))
                         {
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatWhisperReceived, message.User);
                             trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
                         }
 
                         // Don't send this if it's in response to another "You are whisperer #" message
                         if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0 && !message.PlainTextMessage.StartsWith("You are whisperer #", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            await ChannelSession.Services.Chat.Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
+                            await ServiceManager.Get<ChatService>().Whisper(message.User, $"You are whisperer #{message.User.WhispererNumber}.", sendAsStreamer: false);
                         }
                     }
                     else
@@ -436,11 +436,11 @@ namespace MixItUp.Base.Services
 
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsStreamerTagged)
                         {
-                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
                         else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
                         {
-                            await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
+                            await ServiceManager.Get<IAudioService>().Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume, ChannelSession.Settings.NotificationsAudioOutput);
                         }
 
                         if (message.User != null && !this.userEntranceCommands.Contains(message.User.ID))
@@ -456,7 +456,7 @@ namespace MixItUp.Base.Services
                         {
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
                             trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
                         }
 
                         message.User.Data.TotalChatMessageSent++;
@@ -464,7 +464,7 @@ namespace MixItUp.Base.Services
                         string primaryTaggedUsername = message.PrimaryTaggedUsername;
                         if (!string.IsNullOrEmpty(primaryTaggedUsername))
                         {
-                            UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
+                            UserViewModel primaryTaggedUser = ServiceManager.Get<UserService>().GetUserByUsername(primaryTaggedUsername, message.Platform);
                             if (primaryTaggedUser != null)
                             {
                                 primaryTaggedUser.Data.TotalTimesTagged++;
@@ -625,7 +625,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                    await ServiceManager.Get<IFileService>().AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
                 }
                 catch (Exception) { }
             }
@@ -652,7 +652,7 @@ namespace MixItUp.Base.Services
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await ChannelSession.Services.Alerts.AddAlert(alert);
+                await ServiceManager.Get<AlertsService>().AddAlert(alert);
             }
         }
 
@@ -692,7 +692,7 @@ namespace MixItUp.Base.Services
 
             foreach (AlertChatMessageViewModel alert in alerts)
             {
-                await ChannelSession.Services.Alerts.AddAlert(alert);
+                await ServiceManager.Get<AlertsService>().AddAlert(alert);
             }
         }
 
@@ -733,7 +733,7 @@ namespace MixItUp.Base.Services
 
         private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+            foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
             {
                 user.UpdateMinuteData();
             }

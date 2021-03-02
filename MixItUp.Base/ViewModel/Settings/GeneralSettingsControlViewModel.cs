@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -56,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             List<string> audioOptions = new List<string>();
             audioOptions.Add(SoundActionModel.DefaultAudioDevice);
-            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
+            audioOptions.AddRange(ServiceManager.Get<IAudioService>().GetOutputDevices());
 
             this.DefaultAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
                 audioOptions, defaultAudioOption, (value) =>

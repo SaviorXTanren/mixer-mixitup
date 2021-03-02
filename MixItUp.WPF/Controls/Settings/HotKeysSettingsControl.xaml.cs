@@ -140,7 +140,7 @@ namespace MixItUp.WPF.Controls.Settings
 
                 ChannelSession.Settings.HotKeys[hotKey.ToString()] = hotKey;
 
-                ChannelSession.Services.InputService.RegisterHotKey(hotKey.Modifiers, hotKey.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKey.Modifiers, hotKey.Key);
 
                 this.RefreshList();
             });
@@ -153,7 +153,7 @@ namespace MixItUp.WPF.Controls.Settings
             if (hotKey != null)
             {
                 ChannelSession.Settings.HotKeys.Remove(hotKey.HotKey.ToString());
-                ChannelSession.Services.InputService.UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
+                ServiceManager.Get<IInputService>().UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
             }
             this.RefreshList();
         }

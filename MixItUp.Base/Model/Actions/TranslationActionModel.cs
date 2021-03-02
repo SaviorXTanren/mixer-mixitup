@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -41,16 +43,16 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (ChannelSession.Services.Translation != null)
+            if (ServiceManager.Get<TranslationService>() != null)
             {
                 string text = await this.ReplaceStringWithSpecialModifiers(this.Text, parameters);
-                string translationResult = await ChannelSession.Services.Translation.Translate(this.Culture, text, this.AllowProfanity);
+                string translationResult = await ServiceManager.Get<TranslationService>().Translate(this.Culture, text, this.AllowProfanity);
                 if (string.IsNullOrEmpty(translationResult))
                 {
                     translationResult = this.Text;
                 }
 
-                if (!string.IsNullOrEmpty(translationResult) && string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(parameters.User, translationResult)))
+                if (!string.IsNullOrEmpty(translationResult) && string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(parameters.User, translationResult)))
                 {
                     parameters.SpecialIdentifiers[ResponseSpecialIdentifier] = translationResult;
                 }

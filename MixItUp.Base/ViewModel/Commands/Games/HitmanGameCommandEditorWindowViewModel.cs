@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -217,7 +218,7 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;

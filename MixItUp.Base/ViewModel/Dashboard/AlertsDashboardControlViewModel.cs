@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModels;
 using System;
@@ -13,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
     {
         public ObservableCollection<AlertChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<AlertChatMessageViewModel>();
 
-        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands.ToList(); } }
+        public IEnumerable<CommandModelBase> ContextMenuChatCommands { get { return ServiceManager.Get<ChatService>().ChatMenuCommands.ToList(); } }
 
         public event EventHandler ContextMenuCommandsChanged = delegate { };
 
@@ -23,8 +24,8 @@ namespace MixItUp.Base.ViewModel.Dashboard
         {
             await base.OnLoadedInternal();
 
-            this.Messages = ChannelSession.Services.Alerts.Alerts;
-            ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
+            this.Messages = ServiceManager.Get<AlertsService>().Alerts;
+            ServiceManager.Get<ChatService>().ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
         private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)

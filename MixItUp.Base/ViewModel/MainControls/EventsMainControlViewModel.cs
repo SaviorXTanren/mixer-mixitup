@@ -140,7 +140,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private EventCommandItemViewModel GetEventCommand(EventTypeEnum eventType)
         {
-            EventCommandModel command = ChannelSession.Services.Events.GetEventCommand(eventType);
+            EventCommandModel command = ServiceManager.Get<EventService>().GetEventCommand(eventType);
             if (command != null)
             {
                 return new EventCommandItemViewModel(command);

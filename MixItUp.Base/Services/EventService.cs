@@ -278,7 +278,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ChannelSession.Services.Events.PerformEvent(trigger);
+            await ServiceManager.Get<EventService>().PerformEvent(trigger);
 
             foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
             {
@@ -288,7 +288,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.DisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
+            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.All, trigger.User, string.Format("{0} Donated {1}", trigger.User.DisplayName, donation.AmountText), ChannelSession.Settings.AlertDonationColor));
 
             try
             {

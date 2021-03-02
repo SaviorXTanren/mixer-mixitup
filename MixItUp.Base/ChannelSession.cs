@@ -32,8 +32,6 @@ namespace MixItUp.Base
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
 
-        public static ServicesManagerBase Services { get; private set; }
-
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
 
@@ -90,36 +88,81 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task Initialize(ServicesManagerBase serviceHandler)
+        public static async Task Initialize()
         {
-            ChannelSession.Services = serviceHandler;
+            ServiceManager.Add(new SecretsService());
+
+            ServiceManager.Add(new SettingsService());
+            ServiceManager.Add(new MixItUpService());
+            ServiceManager.Add(new UserService());
+            ServiceManager.Add(new ChatService());
+            ServiceManager.Add(new EventService());
+            ServiceManager.Add(new AlertsService());
+            ServiceManager.Add(new StatisticsService());
+            ServiceManager.Add(new ModerationService());
+            ServiceManager.Add(new TimerService());
+            ServiceManager.Add(new GameQueueService());
+            ServiceManager.Add(new GiveawayService());
+            ServiceManager.Add(new TranslationService());
+            ServiceManager.Add(new SerialService());
+            ServiceManager.Add(new OverlayService());
+            ServiceManager.Add(new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub"));
+
+            ServiceManager.Add(new StreamlabsOBSService());
+            ServiceManager.Add(new XSplitService("http://localhost:8211/"));
+
+            ServiceManager.Add(new StreamElementsService());
+            ServiceManager.Add(new StreamJarService());
+            ServiceManager.Add(new StreamlootsService());
+            ServiceManager.Add(new JustGivingService());
+            ServiceManager.Add(new TiltifyService());
+            ServiceManager.Add(new ExtraLifeService());
+            ServiceManager.Add(new IFTTTService());
+            ServiceManager.Add(new PatreonService());
+            ServiceManager.Add(new DiscordService());
+            ServiceManager.Add(new TwitterService());
+
+            ServiceManager.Add(new TwitchSessionService());
+            ServiceManager.Add(new TwitchStatusService());
 
             try
             {
                 Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
                 if (mixItUpSecretsType != null)
                 {
-                    ChannelSession.Services.SetSecrets((SecretsService)Activator.CreateInstance(mixItUpSecretsType));
+                    ServiceManager.Add((SecretsService)Activator.CreateInstance(mixItUpSecretsType));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            ServiceManager.Add(new TwitchSessionService());
+            ServiceManager.Get<SettingsService>().Initialize();
 
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
         public static async Task Close()
         {
-            await ChannelSession.Services.Close();
+            foreach (IExternalService service in ServiceManager.GetAll<IExternalService>())
+            {
+                await service.Disconnect();
+            }
 
-            await ServiceManager.Get<TwitchSessionService>().CloseUser(ChannelSession.Settings);
-            await ServiceManager.Get<TwitchSessionService>().CloseBot(ChannelSession.Settings);
+            if (ChannelSession.Settings != null)
+            {
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                {
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
+                    {
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseUser(ChannelSession.Settings);
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseBot(ChannelSession.Settings);
+                    }
+                }
+            }
         }
 
         public static async Task SaveSettings()
         {
-            await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
+            await ServiceManager.Get<SettingsService>().Save(ChannelSession.Settings);
         }
 
         public static UserViewModel GetCurrentUser()
@@ -130,7 +173,7 @@ namespace MixItUp.Base
 
             if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
             {
-                user = ChannelSession.Services.User.GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
@@ -179,7 +222,7 @@ namespace MixItUp.Base
 
             try
             {
-                foreach (SettingsV3Model setting in await ChannelSession.Services.Settings.GetAllSettings())
+                foreach (SettingsV3Model setting in await ServiceManager.Get<SettingsService>().GetAllSettings())
                 {
                     if (ChannelSession.Settings.ID != setting.ID)
                     {
@@ -196,7 +239,7 @@ namespace MixItUp.Base
                     }
                 }
 
-                await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
+                await ServiceManager.Get<SettingsService>().Initialize(ChannelSession.Settings);
 
                 Result result = new Result();
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
@@ -217,25 +260,25 @@ namespace MixItUp.Base
 
                 // Connect External Services
                 Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
-                if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
-                if (ChannelSession.Settings.StreamElementsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamElements] = ChannelSession.Settings.StreamElementsOAuthToken; }
-                if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamJar] = ChannelSession.Settings.StreamJarOAuthToken; }
-                if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TipeeeStream] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
-                if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TreatStream] = ChannelSession.Settings.TreatStreamOAuthToken; }
-                if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamloots] = ChannelSession.Settings.StreamlootsOAuthToken; }
-                if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Tiltify] = ChannelSession.Settings.TiltifyOAuthToken; }
-                if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.JustGiving] = ChannelSession.Settings.JustGivingOAuthToken; }
-                if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.IFTTT] = ChannelSession.Settings.IFTTTOAuthToken; }
-                if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ChannelSession.Services.ExtraLife] = new OAuthTokenModel(); }
-                if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
-                if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
-                if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
-                if (ChannelSession.Services.OBSStudio.IsEnabled) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
-                if (ChannelSession.Services.StreamlabsOBS.IsEnabled) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
-                if (ChannelSession.Services.XSplit.IsEnabled) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
-                if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ChannelSession.Services.OvrStream] = null; }
-                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ChannelSession.Services.Overlay] = null; }
-                if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ChannelSession.Services.DeveloperAPI] = null; }
+                if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlabsService>()] = ChannelSession.Settings.StreamlabsOAuthToken; }
+                if (ChannelSession.Settings.StreamElementsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamElementsService>()] = ChannelSession.Settings.StreamElementsOAuthToken; }
+                if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamJarService>()] = ChannelSession.Settings.StreamJarOAuthToken; }
+                if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TipeeeStreamService>()] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
+                if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TreatStreamService>()] = ChannelSession.Settings.TreatStreamOAuthToken; }
+                if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<StreamlootsService>()] = ChannelSession.Settings.StreamlootsOAuthToken; }
+                if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TiltifyService>()] = ChannelSession.Settings.TiltifyOAuthToken; }
+                if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<JustGivingService>()] = ChannelSession.Settings.JustGivingOAuthToken; }
+                if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<IFTTTService>()] = ChannelSession.Settings.IFTTTOAuthToken; }
+                if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ServiceManager.Get<ExtraLifeService>()] = new OAuthTokenModel(); }
+                if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<PatreonService>()] = ChannelSession.Settings.PatreonOAuthToken; }
+                if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<DiscordService>()] = ChannelSession.Settings.DiscordOAuthToken; }
+                if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ServiceManager.Get<TwitterService>()] = ChannelSession.Settings.TwitterOAuthToken; }
+                if (ServiceManager.Get<IOBSStudioService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<IOBSStudioService>()] = null; }
+                if (ServiceManager.Get<StreamlabsOBSService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<StreamlabsOBSService>()] = null; }
+                if (ServiceManager.Get<XSplitService>().IsEnabled) { externalServiceToConnect[ServiceManager.Get<XSplitService>()] = null; }
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ServiceManager.Get<IOvrStreamService>()] = null; }
+                if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ServiceManager.Get<OverlayService>()] = null; }
+                if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ServiceManager.Get<IDeveloperAPIService>()] = null; }
 
                 if (externalServiceToConnect.Count > 0)
                 {
@@ -346,13 +389,13 @@ namespace MixItUp.Base
                         command.UpdateFromSettings(commandSetting);
                     }
                 }
-                ChannelSession.Services.Chat.RebuildCommandTriggers();
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
 
-                await ChannelSession.Services.Timers.Initialize();
-                await ChannelSession.Services.Moderation.Initialize();
-                ChannelSession.Services.Statistics.Initialize();
+                await ServiceManager.Get<TimerService>().Initialize();
+                await ServiceManager.Get<ModerationService>().Initialize();
+                ServiceManager.Get<StatisticsService>().Initialize();
 
-                ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
+                ServiceManager.Get<IInputService>().HotKeyPressed += InputService_HotKeyPressed;
 
                 foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values)
                 {
@@ -368,16 +411,16 @@ namespace MixItUp.Base
                 }
 
                 await ChannelSession.SaveSettings();
-                await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
-                await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
+                await ServiceManager.Get<SettingsService>().SaveLocalBackup(ChannelSession.Settings);
+                await ServiceManager.Get<SettingsService>().PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(SessionBackgroundTask, sessionBackgroundCancellationTokenSource.Token, 60000);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                await ChannelSession.Services.Telemetry.Connect();
-                ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
-                ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().UserNewAPI?.broadcaster_type);
+                await ServiceManager.Get<ITelemetryService>().Connect();
+                ServiceManager.Get<ITelemetryService>().SetUserID(ChannelSession.Settings.TelemetryUserID);
+                ServiceManager.Get<ITelemetryService>().TrackLogin(ChannelSession.Settings.TelemetryUserID, ServiceManager.Get<TwitchSessionService>().UserNewAPI?.broadcaster_type);
 
                 return new Result();
             }
@@ -423,7 +466,7 @@ namespace MixItUp.Base
                             {
                                 type = "Affiliate";
                             }
-                            ChannelSession.Services.Telemetry.TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamV5.viewers, ChannelSession.Services.Chat.AllUsers.Count,
+                            ServiceManager.Get<ITelemetryService>().TrackChannelMetrics(type, ServiceManager.Get<TwitchSessionService>().StreamV5.viewers, ServiceManager.Get<ChatService>().AllUsers.Count,
                                 ServiceManager.Get<TwitchSessionService>().StreamV5.game, ServiceManager.Get<TwitchSessionService>().ChannelV5.views, ServiceManager.Get<TwitchSessionService>().ChannelV5.followers);
                         }
                         catch (Exception ex)

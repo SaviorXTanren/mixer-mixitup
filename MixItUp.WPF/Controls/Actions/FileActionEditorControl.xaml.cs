@@ -1,4 +1,4 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Actions;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -20,11 +20,11 @@ namespace MixItUp.WPF.Controls.Actions
                 string filePath = null;
                 if (((FileActionEditorControlViewModel)this.DataContext).ShowSaveToFileGrid)
                 {
-                    filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("");
+                    filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog("");
                 }
                 else if (((FileActionEditorControlViewModel)this.DataContext).ShowReadFromFileGrid)
                 {
-                    filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                    filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog();
                 }
 
                 if (!string.IsNullOrEmpty(filePath))

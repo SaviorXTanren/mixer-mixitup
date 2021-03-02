@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -227,7 +228,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 Logger.Log(LogLevel.Debug, $"Starting action performing: {this}");
 
-                ChannelSession.Services.Telemetry.TrackAction(this.Type);
+                ServiceManager.Get<ITelemetryService>().TrackAction(this.Type);
 
                 await this.PerformInternal(parameters);
             }

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -99,7 +100,7 @@ namespace MixItUp.Base.Model.Currency
                         items.Add(product.Name);
                     }
                 }
-                await ChannelSession.Services.Chat.SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage("Products Available to Purchase: " + string.Join(", ", items), platform: user.Platform);
             }
             else
             {
@@ -107,9 +108,9 @@ namespace MixItUp.Base.Model.Currency
                 RedemptionStoreProductModel product = ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                 if (product == null)
                 {
-                    if (ChannelSession.Services.Chat != null)
+                    if (ServiceManager.Get<ChatService>() != null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
                     }
                     return;
                 }
@@ -118,9 +119,9 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (product.CurrentAmount <= 0)
                     {
-                        if (ChannelSession.Services.Chat != null)
+                        if (ServiceManager.Get<ChatService>() != null)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
                         }
                         return;
                     }
@@ -128,9 +129,9 @@ namespace MixItUp.Base.Model.Currency
                     ThresholdRequirementModel threshold = product.Requirements.Threshold;
                     if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
                     {
-                        if (ChannelSession.Services.Chat != null)
+                        if (ServiceManager.Get<ChatService>() != null)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
                         }
                         return;
                     }
@@ -176,9 +177,9 @@ namespace MixItUp.Base.Model.Currency
         {
             if (!user.HasPermissionsTo(UserRoleEnum.Mod))
             {
-                if (ChannelSession.Services.Chat != null)
+                if (ServiceManager.Get<ChatService>() != null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions);
                 }
                 return;
             }
@@ -198,7 +199,7 @@ namespace MixItUp.Base.Model.Currency
             else
             {
                 name = name.Replace("@", "");
-                UserViewModel purchaseUser = ChannelSession.Services.User.GetUserByUsername(name, user.Platform);
+                UserViewModel purchaseUser = ServiceManager.Get<UserService>().GetUserByUsername(name, user.Platform);
                 if (purchaseUser != null)
                 {
                     IEnumerable<RedemptionStorePurchaseModel> purchases = ChannelSession.Settings.RedemptionStorePurchases.ToList().Where(p => p.UserID == user.ID);
@@ -215,9 +216,9 @@ namespace MixItUp.Base.Model.Currency
             }
             else
             {
-                if (ChannelSession.Services.Chat != null)
+                if (ServiceManager.Get<ChatService>() != null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
                 }
             }
         }
@@ -265,7 +266,7 @@ namespace MixItUp.Base.Model.Currency
         {
             get
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(this.UserID);
+                UserViewModel user = ServiceManager.Get<UserService>().GetUserByID(this.UserID);
                 if (user == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);

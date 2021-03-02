@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -49,11 +51,11 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private StreamingSoftwareActionTypeEnum selectedActionType;
 
-        public bool OBSStudioNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.OBSStudio && !ChannelSession.Services.OBSStudio.IsConnected; } }
+        public bool OBSStudioNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.OBSStudio && !ServiceManager.Get<IOBSStudioService>().IsConnected; } }
 
-        public bool XSplitNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.XSplit && !ChannelSession.Services.XSplit.IsConnected; } }
+        public bool XSplitNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.XSplit && !ServiceManager.Get<XSplitService>().IsConnected; } }
 
-        public bool StreamlabsOBSNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.StreamlabsOBS && !ChannelSession.Services.StreamlabsOBS.IsConnected; } }
+        public bool StreamlabsOBSNotEnabled { get { return this.GetCurrentlySelectedStreamingSoftwareType() == StreamingSoftwareTypeEnum.StreamlabsOBS && !ServiceManager.Get<StreamlabsOBSService>().IsConnected; } }
 
         public bool ShowNotSupported
         {

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Services
 {
-    public class WindowsOBSService : IStreamingSoftwareService
+    public class WindowsOBSService : IOBSStudioService
     {
         private const int CommandTimeoutInMilliseconds = 2500;
         private const int ConnectTimeoutInMilliseconds = 5000;
@@ -51,7 +52,7 @@ namespace MixItUp.WPF.Services
                 await this.StartReplayBuffer();
                 this.Connected(this, new EventArgs());
                 ChannelSession.ReconnectionOccurred("OBS");
-                ChannelSession.Services.Telemetry.TrackService("OBS Studio");
+                ServiceManager.Get<ITelemetryService>().TrackService("OBS Studio");
                 return new Result();
             }
             return new Result("Failed to connect to OBS Studio web socket.");

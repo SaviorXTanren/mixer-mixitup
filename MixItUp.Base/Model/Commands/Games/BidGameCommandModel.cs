@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.StartedCommand.Perform(this.runParameters);
                     return false;
                 }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
             }
             return false;
         }
@@ -144,7 +145,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
                 if (currencyRequirement != null)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, currencyRequirement.Currency.Name));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, this.lastBidAmount, currencyRequirement.Currency.Name));
                 }
                 await this.Requirements.Refund(parameters);
             }

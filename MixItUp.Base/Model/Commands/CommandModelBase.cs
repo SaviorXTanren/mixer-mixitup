@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -69,18 +70,18 @@ namespace MixItUp.Base.Model.Commands
             for (int i = 0; i < actionsToRun.Count; i++)
             {
                 ActionModelBase action = actionsToRun[i];
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                 {
-                    ChannelSession.Services.Overlay.StartBatching();
+                    ServiceManager.Get<OverlayService>().StartBatching();
                 }
 
                 await action.Perform(parameters);
 
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
+                if (action is OverlayActionModel && ServiceManager.Get<OverlayService>().IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayActionModel))
                     {
-                        await ChannelSession.Services.Overlay.EndBatching();
+                        await ServiceManager.Get<OverlayService>().EndBatching();
                     }
                 }
             }
@@ -278,6 +279,6 @@ namespace MixItUp.Base.Model.Commands
             await CommandModelBase.RunActions(this.Actions, parameters);
         }
 
-        protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+        protected virtual void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type); }
     }
 }

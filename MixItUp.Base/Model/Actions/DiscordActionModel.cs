@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -63,22 +64,22 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (this.channel == null)
                 {
-                    this.channel = await ChannelSession.Services.Discord.GetChannel(this.ChannelID);
+                    this.channel = await ServiceManager.Get<DiscordService>().GetChannel(this.ChannelID);
                 }
 
                 if (this.channel != null)
                 {
                     string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
-                    await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
+                    await ServiceManager.Get<DiscordService>().CreateMessage(this.channel, message, this.FilePath);
                 }
             }
             else if (this.ActionType == DiscordActionTypeEnum.MuteSelf)
             {
-                await ChannelSession.Services.Discord.MuteServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
+                await ServiceManager.Get<DiscordService>().MuteServerMember(ServiceManager.Get<DiscordService>().Server, ServiceManager.Get<DiscordService>().User, this.ShouldMuteDeafen);
             }
             else if (this.ActionType == DiscordActionTypeEnum.DeafenSelf)
             {
-                await ChannelSession.Services.Discord.DeafenServerMember(ChannelSession.Services.Discord.Server, ChannelSession.Services.Discord.User, this.ShouldMuteDeafen);
+                await ServiceManager.Get<DiscordService>().DeafenServerMember(ServiceManager.Get<DiscordService>().Server, ServiceManager.Get<DiscordService>().User, this.ShouldMuteDeafen);
             }
         }
     }
