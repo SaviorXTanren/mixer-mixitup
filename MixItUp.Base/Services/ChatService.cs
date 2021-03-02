@@ -23,9 +23,7 @@ namespace MixItUp.Base.Services
 {
     public interface IChatService
     {
-        ITwitchChatService TwitchChatService { get; }
-
-        Task Initialize(ITwitchChatService twitchChatService);
+        Task Initialize();
 
         bool DisableChat { get; set; }
 
@@ -88,8 +86,6 @@ namespace MixItUp.Base.Services
             return message;
         }
 
-        public ITwitchChatService TwitchChatService { get; private set; }
-
         public bool DisableChat { get; set; }
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
@@ -131,7 +127,7 @@ namespace MixItUp.Base.Services
 
         public ChatService() { }
 
-        public async Task Initialize(ITwitchChatService twitchChatService)
+        public async Task Initialize()
         {
             this.RebuildCommandTriggers();
 
@@ -140,15 +136,13 @@ namespace MixItUp.Base.Services
 
             List<ChatMessageViewModel> messagesToAdd = new List<ChatMessageViewModel>();
 
-            if (twitchChatService != null)
+            if (ServiceManager.Get<ITwitchChatService>() != null)
             {
-                this.TwitchChatService = twitchChatService;
+                ServiceManager.Get<ITwitchChatService>().OnMessageOccurred += TwitchChatService_OnMessageOccurred;
+                ServiceManager.Get<ITwitchChatService>().OnUsersJoinOccurred += TwitchChatService_OnUsersJoinOccurred;
+                ServiceManager.Get<ITwitchChatService>().OnUsersLeaveOccurred += TwitchChatService_OnUsersLeaveOccurred;
 
-                this.TwitchChatService.OnMessageOccurred += TwitchChatService_OnMessageOccurred;
-                this.TwitchChatService.OnUsersJoinOccurred += TwitchChatService_OnUsersJoinOccurred;
-                this.TwitchChatService.OnUsersLeaveOccurred += TwitchChatService_OnUsersLeaveOccurred;
-
-                await this.TwitchChatService.Initialize();
+                await ServiceManager.Get<ITwitchChatService>().Initialize();
             }
 
             await DispatcherHelper.InvokeDispatcher(() =>
@@ -179,7 +173,7 @@ namespace MixItUp.Base.Services
             {
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+                    await ServiceManager.Get<ITwitchChatService>().SendMessage(message, sendAsStreamer);
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
@@ -194,9 +188,9 @@ namespace MixItUp.Base.Services
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
-                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && this.TwitchChatService != null)
+                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<ITwitchChatService>() != null)
                 {
-                    await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
+                    await ServiceManager.Get<ITwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
                 }
             }
         }
@@ -216,7 +210,7 @@ namespace MixItUp.Base.Services
             {
                 if (!string.IsNullOrEmpty(message.ID))
                 {
-                    await this.TwitchChatService.DeleteMessage(message);
+                    await ServiceManager.Get<ITwitchChatService>().DeleteMessage(message);
                 }
             }
 
@@ -239,14 +233,14 @@ namespace MixItUp.Base.Services
                 this.Messages.Clear();
                 return Task.FromResult(0);
             });
-            await this.TwitchChatService.ClearMessages();
+            await ServiceManager.Get<ITwitchChatService>().ClearMessages();
         }
 
         public async Task PurgeUser(UserViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.TimeoutUser(user, 1);
+                await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, 1);
             }
         }
 
@@ -254,7 +248,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.TimeoutUser(user, (int)durationInSeconds);
+                await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
             }
         }
 
@@ -262,7 +256,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.ModUser(user);
+                await ServiceManager.Get<ITwitchChatService>().ModUser(user);
             }
         }
 
@@ -270,7 +264,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.UnmodUser(user);
+                await ServiceManager.Get<ITwitchChatService>().UnmodUser(user);
             }
         }
 
@@ -278,7 +272,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.BanUser(user);
+                await ServiceManager.Get<ITwitchChatService>().BanUser(user);
             }
         }
 
@@ -286,7 +280,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.UnbanUser(user);
+                await ServiceManager.Get<ITwitchChatService>().UnbanUser(user);
             }
         }
 

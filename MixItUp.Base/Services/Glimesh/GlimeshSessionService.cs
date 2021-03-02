@@ -17,6 +17,8 @@ namespace MixItUp.Base.Services.Glimesh
         public ChannelModel Channel { get; private set; }
         public UserModel Bot { get; private set; }
 
+        public bool IsConnected { get { return this.UserConnection != null; } }
+
         public async Task<Result> ConnectUser(SettingsV3Model settings)
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectUser();
@@ -141,8 +143,6 @@ namespace MixItUp.Base.Services.Glimesh
                             return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
                         }
 
-                        this.SaveSettings(settings);
-
                         //TwitchChatService twitchChatService = new TwitchChatService();
                         //TwitchEventService twitchEventService = new TwitchEventService();
 
@@ -173,7 +173,7 @@ namespace MixItUp.Base.Services.Glimesh
         {
             if (this.BotConnection != null)
             {
-                //Result result = await ServiceManager.Get<ChatService>().TwitchChatService.ConnectBot();
+                //Result result = await ServiceManager.Get<ITwitchChatService>().ConnectBot();
                 //if (!result.Success)
                 //{
                 //    return result;

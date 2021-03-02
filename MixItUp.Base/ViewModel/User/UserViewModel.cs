@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -177,7 +178,7 @@ namespace MixItUp.Base.ViewModel.User
             this.GlimeshUsername = user.username;
             this.GlimeshDisplayName = user.displayname;
             this.GlimeshAvatarLink = user.FullAvatarURL;
-            this.AccountDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(user.confirmedAt);
+            this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
         }
 
         public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) : this(message.User) { }
@@ -789,7 +790,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
                 if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
-                if (ServiceManager.Get<ChatService>().TwitchChatService != null)
+                if (ServiceManager.Get<ITwitchChatService>() != null)
                 {
                     if (this.HasTwitchBadge("staff")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("staff"); }
                     else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
@@ -828,12 +829,12 @@ namespace MixItUp.Base.ViewModel.User
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
-            if (ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges.ContainsKey(name))
+            if (ServiceManager.Get<ITwitchChatService>().ChatBadges.ContainsKey(name))
             {
                 int versionID = this.GetTwitchBadgeVersion(name);
-                if (ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                if (ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
                 {
-                    return ServiceManager.Get<ChatService>().TwitchChatService.ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
                 }
             }
             return null;

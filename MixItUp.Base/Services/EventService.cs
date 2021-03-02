@@ -231,9 +231,7 @@ namespace MixItUp.Base.Services
 
     public interface IEventService
     {
-        ITwitchEventService TwitchEventService { get; }
-
-        Task Initialize(ITwitchEventService twitchEventService);
+        Task Initialize();
 
         EventCommandModel GetEventCommand(EventTypeEnum type);
 
@@ -300,11 +298,8 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public ITwitchEventService TwitchEventService { get; private set; }
-
-        public Task Initialize(ITwitchEventService twitchEventService)
+        public Task Initialize()
         {
-            this.TwitchEventService = twitchEventService;
             return Task.FromResult(0);
         }
 

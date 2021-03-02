@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -174,15 +175,31 @@ namespace MixItUp.Base.Model.Commands
     {
         public GamePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Game, "game", 5, UserRoleEnum.User) { }
 
+        public static async Task<string> GetCurrentGame()
+        {
+            string gameName = null;
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
+                gameName = ServiceManager.Get<TwitchSessionService>().ChannelV5.game;
+            }
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
+                //gameName = ServiceManager.Get<GlimeshSessionService>().Channel?
+            }
+            return gameName;
+        }
+
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-            if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
+            string gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
+            if (!string.IsNullOrEmpty(gameName))
             {
-                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(ServiceManager.Get<TwitchSessionService>().ChannelV5.game);
+                GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
                 if (details == null)
                 {
-                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(ServiceManager.Get<TwitchSessionService>().ChannelV5.game);
+                    details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(gameName);
                 }
 
                 if (details != null)
@@ -191,8 +208,12 @@ namespace MixItUp.Base.Model.Commands
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage("Game: " + ServiceManager.Get<TwitchSessionService>().ChannelV5.game);
+                    await ServiceManager.Get<ChatService>().SendMessage("Game: " + gameName);
                 }
+            }
+            else
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("No Game Found");
             }
         }
     }
@@ -203,21 +224,43 @@ namespace MixItUp.Base.Model.Commands
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-            await ServiceManager.Get<ChatService>().SendMessage("Stream Title: " + ServiceManager.Get<TwitchSessionService>().ChannelV5.status);
+            string title = null;
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
+                title = ServiceManager.Get<TwitchSessionService>().ChannelV5?.status;
+            }
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
+                title = ServiceManager.Get<GlimeshSessionService>().Channel?.title;
+            }
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                await ServiceManager.Get<ChatService>().SendMessage("Stream Title: " + title);
+            }
         }
     }
 
     public class UptimePreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public static Task<DateTimeOffset> GetStartTime()
+        public static async Task<DateTimeOffset> GetStartTime()
         {
-            DateTimeOffset startTime = DateTimeOffset.MinValue;
-            if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                startTime = TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().StreamV5.created_at).GetValueOrDefault();
+                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
+                if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                {
+                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().StreamV5.created_at).GetValueOrDefault();
+                }
             }
-            return Task.FromResult(startTime);
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
+                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.startedAt).GetValueOrDefault();
+            }
+            return DateTimeOffset.MinValue;
         }
 
         public UptimePreMadeChatCommandModel() : base(MixItUp.Base.Resources.Uptime, "uptime", 5, UserRoleEnum.User) { }
@@ -367,7 +410,7 @@ namespace MixItUp.Base.Model.Commands
                     string quoteText = quoteBuilder.ToString();
                     quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, ServiceManager.Get<TwitchSessionService>().ChannelV5?.game);
+                    UserQuoteModel quote = new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), quoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGame());
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
@@ -497,11 +540,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
-                {
-                    gameName = ServiceManager.Get<TwitchSessionService>().ChannelV5.game;
-                }
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
             }
 
             GameInformation details = await XboxGamePreMadeChatCommandModel.GetXboxGameInfo(gameName);
@@ -598,11 +637,7 @@ namespace MixItUp.Base.Model.Commands
             }
             else
             {
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                if (ServiceManager.Get<TwitchSessionService>().ChannelV5 != null)
-                {
-                    gameName = ServiceManager.Get<TwitchSessionService>().ChannelV5.game;
-                }
+                gameName = await GamePreMadeChatCommandModel.GetCurrentGame();
             }
 
             GameInformation details = await SteamGamePreMadeChatCommandModel.GetSteamGameInfo(gameName);
@@ -626,10 +661,12 @@ namespace MixItUp.Base.Model.Commands
             if (parameters.Arguments.Count() > 0)
             {
                 string name = string.Join(" ", parameters.Arguments);
-                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceManager.Get<TwitchSessionService>().ChannelV5, status: name);
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name);
-                return;
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceManager.Get<TwitchSessionService>().ChannelV5, status: name);
+                    await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
+                    await ServiceManager.Get<ChatService>().SendMessage("Title Updated: " + name);
+                }
             }
             else
             {
@@ -655,9 +692,13 @@ namespace MixItUp.Base.Model.Commands
                     {
                         game = games.First();
                     }
-                    await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceManager.Get<TwitchSessionService>().ChannelV5, game: game);
-                    await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
-                    await ServiceManager.Get<ChatService>().SendMessage("Game Updated: " + game.name);
+
+                    if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateV5Channel(ServiceManager.Get<TwitchSessionService>().ChannelV5, game: game);
+                        await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
+                        await ServiceManager.Get<ChatService>().SendMessage("Game Updated: " + game.name);
+                    }
                     return;
                 }
                 await ServiceManager.Get<ChatService>().SendMessage("We could not find a game with that name");

@@ -32,6 +32,15 @@ namespace MixItUp.Base.Services.Glimesh
             OAuthClientScopeEnum.chat,
         };
 
+        public static DateTimeOffset? GetGlimeshDateTime(string dateTime)
+        {
+            if (!string.IsNullOrEmpty(dateTime))
+            {
+                return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
+            }
+            return null;
+        }
+
         public static async Task<Result<GlimeshPlatformService>> Connect(OAuthTokenModel token)
         {
             try

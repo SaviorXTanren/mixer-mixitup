@@ -333,19 +333,23 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.PastGameNames.Add(game);
             }
 
-            List<TagViewModel> tags = new List<TagViewModel>();
-            foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTags())
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!tag.is_auto)
+                List<TagViewModel> tags = new List<TagViewModel>();
+                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTags())
                 {
-                    tags.Add(new TagViewModel(this, tag));
+                    if (!tag.is_auto)
+                    {
+                        tags.Add(new TagViewModel(this, tag));
+                    }
                 }
-            }
 
-            this.Tags.Clear();
-            foreach (TagViewModel tag in tags.OrderBy(t => t.Name))
-            {
-                this.Tags.Add(tag);
+                this.Tags.Clear();
+                foreach (TagViewModel tag in tags.OrderBy(t => t.Name))
+                {
+                    this.Tags.Add(tag);
+                }
+
             }
 
             await base.OnLoadedInternal();

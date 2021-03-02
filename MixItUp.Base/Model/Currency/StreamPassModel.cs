@@ -225,6 +225,7 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            // TODO
             DateTime date = DateTimeOffset.Now.Date;
             if (ServiceManager.Get<TwitchSessionService>().StreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {

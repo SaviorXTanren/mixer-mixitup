@@ -125,6 +125,8 @@ namespace MixItUp.Base
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchStatusService());
 
+            ServiceManager.Add(new GlimeshSessionService());
+
             try
             {
                 Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
@@ -151,7 +153,7 @@ namespace MixItUp.Base
             {
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
                         await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseUser(ChannelSession.Settings);
                         await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseBot(ChannelSession.Settings);
@@ -171,12 +173,20 @@ namespace MixItUp.Base
 
             UserViewModel user = null;
 
-            if (ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
                 user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, ServiceManager.Get<TwitchSessionService>().UserNewAPI.id);
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                }
+            }
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+            {
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
+                if (user == null)
+                {
+                    user = new UserViewModel(ServiceManager.Get<GlimeshSessionService>().User);
                 }
             }
 
@@ -244,7 +254,7 @@ namespace MixItUp.Base
                 Result result = new Result();
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
                         result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeUser(ChannelSession.Settings));
                         result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeBot(ChannelSession.Settings));
@@ -256,7 +266,18 @@ namespace MixItUp.Base
                     return result;
                 }
 
-                ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                {
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
+                    {
+                        ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().SaveSettings(ChannelSession.Settings);
+                    }
+                }
+
+                ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name ?? "Test";
+
+                await ServiceManager.Get<ChatService>().Initialize();
+                await ServiceManager.Get<EventService>().Initialize();
 
                 // Connect External Services
                 Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
@@ -441,7 +462,7 @@ namespace MixItUp.Base
 
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
                         await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().RefreshUser();
                         await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().RefreshChannel();
@@ -453,7 +474,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     sessionBackgroundTimer = 0;
 
-                    if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
+                    if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                     {
                         try
                         {

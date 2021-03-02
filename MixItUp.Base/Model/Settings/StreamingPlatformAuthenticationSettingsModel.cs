@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
@@ -36,6 +37,7 @@ namespace MixItUp.Base.Model.Settings
         public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
         {
             if (this.Type == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
             return null;
         }
 

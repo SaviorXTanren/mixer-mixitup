@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -24,7 +25,16 @@ namespace MixItUp.Base.Model.Commands
                     Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                     if (twitchUser != null)
                     {
-                        user = new UserViewModel(twitchUser);
+                        return new UserViewModel(twitchUser);
+                    }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
+                {
+                    Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
+                    if (glimeshUser != null)
+                    {
+                        return new UserViewModel(glimeshUser);
                     }
                 }
             }

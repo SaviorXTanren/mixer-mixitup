@@ -345,6 +345,7 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            // TODO
             if (this.IsActive)
             {
                 if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
