@@ -157,7 +157,7 @@ namespace MixItUp.Base
             Result result = new Result();
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
-                if (settings.StreamingPlatformAuthentications.ContainsKey(platform) && settings.StreamingPlatformAuthentications[platform].UserOAuthToken != null)
+                if (settings.StreamingPlatformAuthentications.ContainsKey(platform) && settings.StreamingPlatformAuthentications[platform].IsEnabled)
                 {
                     result.Combine(await settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().Connect(settings));
                 }
@@ -201,7 +201,7 @@ namespace MixItUp.Base
                 Result result = new Result();
                 foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
                 {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].UserOAuthToken != null)
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
                     {
                         result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeUser(ChannelSession.Settings));
                         result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeBot(ChannelSession.Settings));
@@ -390,17 +390,20 @@ namespace MixItUp.Base
             }
         }
 
-
-
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
                 sessionBackgroundTimer++;
 
-                await ServiceManager.Get<TwitchSessionService>().RefreshUser();
-
-                await ServiceManager.Get<TwitchSessionService>().RefreshChannel();
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                {
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].IsEnabled)
+                    {
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().RefreshUser();
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().RefreshChannel();
+                    }
+                }
 
                 if (sessionBackgroundTimer >= 5)
                 {

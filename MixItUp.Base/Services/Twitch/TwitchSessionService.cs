@@ -71,7 +71,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> Connect(SettingsV3Model settings)
         {
-            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken != null)
+            if (settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled)
             {
                 Result userResult = null;
 

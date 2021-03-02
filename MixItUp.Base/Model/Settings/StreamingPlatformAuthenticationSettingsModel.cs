@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
+using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Runtime.Serialization;
@@ -28,6 +29,9 @@ namespace MixItUp.Base.Model.Settings
         private StreamingPlatformAuthenticationSettingsModel() { }
 
         public StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum type) { this.Type = type; }
+
+        [JsonIgnore]
+        public bool IsEnabled { get { return this.UserOAuthToken != null; } }
 
         public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
         {
