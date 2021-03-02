@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services.Glimesh
 
         public bool IsConnected { get { return this.UserConnection != null; } }
 
-        public async Task<Result> ConnectUser(SettingsV3Model settings)
+        public async Task<Result> ConnectUser()
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectUser();
             if (result.Success)
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services.Glimesh
             return result;
         }
 
-        public async Task<Result> ConnectBot(SettingsV3Model settings)
+        public async Task<Result> ConnectBot()
         {
             Result<GlimeshPlatformService> result = await GlimeshPlatformService.ConnectBot();
             if (result.Success)
@@ -65,7 +65,7 @@ namespace MixItUp.Base.Services.Glimesh
                 }
                 else
                 {
-                    userResult = await this.ConnectUser(settings);
+                    userResult = await this.ConnectUser();
                 }
 
                 if (userResult.Success)
@@ -136,13 +136,16 @@ namespace MixItUp.Base.Services.Glimesh
                     {
                         this.Channel = channel;
 
-                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
+                        if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Glimesh))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.accessToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.refreshToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.expiresIn = 0;
-                            return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
+                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID) && !string.Equals(this.User.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID))
+                            {
+                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.User.username} - {this.User.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserID}");
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.accessToken = string.Empty;
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.refreshToken = string.Empty;
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Glimesh].UserOAuthToken.expiresIn = 0;
+                                return new Result("The account you are logged in as on Glimesh does not match the account for this settings. Please log in as the correct account on Glimesh.");
+                            }
                         }
 
                         GlimeshChatService chatService = new GlimeshChatService();
@@ -184,7 +187,7 @@ namespace MixItUp.Base.Services.Glimesh
             return new Result();
         }
 
-        public async Task CloseUser(SettingsV3Model settings)
+        public async Task CloseUser()
         {
             if (ServiceManager.Get<GlimeshChatService>() != null)
             {
@@ -192,7 +195,7 @@ namespace MixItUp.Base.Services.Glimesh
             }
         }
 
-        public async Task CloseBot(SettingsV3Model settings)
+        public async Task CloseBot()
         {
             if (ServiceManager.Get<GlimeshChatService>() != null)
             {

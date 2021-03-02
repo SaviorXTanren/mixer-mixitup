@@ -23,12 +23,6 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
-        public static GlimeshPlatformService GlimeshUserConnection { get; private set; }
-        public static GlimeshPlatformService GlimeshBotConnection { get; private set; }
-        public static Glimesh.Base.Models.Users.UserModel GlimeshUser { get; private set; }
-        public static Glimesh.Base.Models.Channels.ChannelModel GlimeshChannel { get; private set; }
-        public static Glimesh.Base.Models.Users.UserModel GlimeshBot { get; private set; }
-
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV3Model Settings { get; private set; }
 
@@ -155,8 +149,8 @@ namespace MixItUp.Base
                 {
                     if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
                     {
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseUser(ChannelSession.Settings);
-                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseBot(ChannelSession.Settings);
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseUser();
+                        await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().CloseBot();
                     }
                 }
             }
@@ -232,6 +226,39 @@ namespace MixItUp.Base
 
             try
             {
+                await ServiceManager.Get<SettingsService>().Initialize(ChannelSession.Settings);
+
+                Result result = new Result();
+                foreach (IStreamingPlatformSessionService streamingPlatformSessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+                {
+                    if (streamingPlatformSessionService.IsConnected)
+                    {
+                        result.Combine(await streamingPlatformSessionService.InitializeUser(ChannelSession.Settings));
+                        result.Combine(await streamingPlatformSessionService.InitializeBot(ChannelSession.Settings));
+                    }
+                }
+
+                if (!result.Success)
+                {
+                    return result;
+                }
+
+                foreach (IStreamingPlatformSessionService streamingPlatformSessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+                {
+                    if (streamingPlatformSessionService.IsConnected)
+                    {
+                        streamingPlatformSessionService.SaveSettings(ChannelSession.Settings);
+                    }
+                }
+
+                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
+                {
+                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
+                    {
+                        ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().SaveSettings(ChannelSession.Settings);
+                    }
+                }
+
                 foreach (SettingsV3Model setting in await ServiceManager.Get<SettingsService>().GetAllSettings())
                 {
                     if (ChannelSession.Settings.ID != setting.ID)
@@ -246,31 +273,6 @@ namespace MixItUp.Base
                                 }
                             }
                         }
-                    }
-                }
-
-                await ServiceManager.Get<SettingsService>().Initialize(ChannelSession.Settings);
-
-                Result result = new Result();
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
-                {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
-                    {
-                        result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeUser(ChannelSession.Settings));
-                        result.Combine(await ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().InitializeBot(ChannelSession.Settings));
-                    }
-                }
-
-                if (!result.Success)
-                {
-                    return result;
-                }
-
-                foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
-                {
-                    if (ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(platform) && ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().IsConnected)
-                    {
-                        ChannelSession.Settings.StreamingPlatformAuthentications[platform].GetStreamingPlatformSessionService().SaveSettings(ChannelSession.Settings);
                     }
                 }
 

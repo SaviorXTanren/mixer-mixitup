@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public bool IsConnected { get { return this.UserConnection != null; } }
 
-        public async Task<Result> ConnectUser(SettingsV3Model settings)
+        public async Task<Result> ConnectUser()
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectUser();
             if (result.Success)
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services.Twitch
             return result;
         }
 
-        public async Task<Result> ConnectBot(SettingsV3Model settings)
+        public async Task<Result> ConnectBot()
         {
             Result<TwitchPlatformService> result = await TwitchPlatformService.ConnectBot();
             if (result.Success)
@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else
                 {
-                    userResult = await this.ConnectUser(settings);
+                    userResult = await this.ConnectUser();
                 }
 
                 if (userResult.Success)
@@ -171,13 +171,16 @@ namespace MixItUp.Base.Services.Twitch
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserNewAPI.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
+                        if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                         {
-                            Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserNewAPI.login} - {this.UserNewAPI.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
-                            settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
-                            return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                            if (!string.IsNullOrEmpty(settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(this.UserNewAPI.id, settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
+                            {
+                                Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {this.UserNewAPI.login} - {this.UserNewAPI.id} - {settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
+                                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
+                                return new Result("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                            }
                         }
 
                         TwitchChatService chatService = new TwitchChatService();
@@ -224,7 +227,7 @@ namespace MixItUp.Base.Services.Twitch
             return new Result();
         }
 
-        public async Task CloseUser(SettingsV3Model settings)
+        public async Task CloseUser()
         {
             if (ServiceManager.Get<TwitchChatService>() != null)
             {
@@ -237,7 +240,7 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        public async Task CloseBot(SettingsV3Model settings)
+        public async Task CloseBot()
         {
             if (ServiceManager.Get<TwitchChatService>() != null)
             {

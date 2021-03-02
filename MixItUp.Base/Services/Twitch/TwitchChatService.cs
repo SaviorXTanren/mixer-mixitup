@@ -51,11 +51,6 @@ namespace MixItUp.Base.Services.Twitch
         IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
         IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
 
-        event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
-        event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
-
-        event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred;
-
         bool IsUserConnected { get; }
         bool IsBotConnected { get; }
 
@@ -112,11 +107,6 @@ namespace MixItUp.Base.Services.Twitch
 
         public IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get { return this.bitsCheermotes.ToList(); } }
         private List<TwitchBitsCheermoteViewModel> bitsCheermotes = new List<TwitchBitsCheermoteViewModel>();
-
-        public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
-        public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
-
-        public event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred = delegate { };
 
         private ChatClient userClient;
         private ChatClient botClient;
@@ -527,7 +517,7 @@ namespace MixItUp.Base.Services.Twitch
                         }
                     }
                 }
-                this.OnUsersJoinOccurred(this, processedUsers);
+                await ServiceManager.Get<ChatService>().UsersJoined(processedUsers);
             }
 
             List<string> leavesToProcess = new List<string>();
@@ -556,7 +546,7 @@ namespace MixItUp.Base.Services.Twitch
                         }
                     }
                 }
-                this.OnUsersLeaveOccurred(this, processedUsers);
+                await ServiceManager.Get<ChatService>().UsersLeft(processedUsers);
             }
         }
 
@@ -803,7 +793,7 @@ namespace MixItUp.Base.Services.Twitch
                             user = await ServiceManager.Get<UserService>().AddOrUpdateUser(twitchUser);
                         }
                     }
-                    this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message, user));
+                    await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
                 }
             }
         }

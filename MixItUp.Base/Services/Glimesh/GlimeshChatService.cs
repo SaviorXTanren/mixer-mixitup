@@ -31,8 +31,6 @@ namespace MixItUp.Base.Services.Glimesh
 
     public class GlimeshChatService : StreamingPlatformServiceBase, IGlimeshChatService
     {
-        public event EventHandler<GlimeshChatMessageViewModel> OnMessageOccurred;
-
         private ChatEventClient userClient;
         private ChatEventClient botClient;
 
@@ -44,13 +42,13 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<Result> ConnectUser()
         {
-            if (ChannelSession.GlimeshUserConnection != null)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
-                        this.userClient = await ChatEventClient.CreateWithToken(ChannelSession.GlimeshUserConnection.Connection);
+                        this.userClient = await ChatEventClient.CreateWithToken(ServiceManager.Get<GlimeshSessionService>().UserConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -59,12 +57,12 @@ namespace MixItUp.Base.Services.Glimesh
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
                         this.userClient.OnChatMessageReceived += UserClient_OnChatMessageReceived;
 
-                        if (await this.userClient.Connect())
+                        if (!await this.userClient.Connect())
                         {
                             return new Result("Failed to connect to Glimesh chat servers");
                         }
 
-                        if (await this.userClient.JoinChannelChat(ChannelSession.GlimeshChannel.id))
+                        if (!await this.userClient.JoinChannelChat(ServiceManager.Get<GlimeshSessionService>().Channel?.id))
                         {
                             return new Result("Failed to join Glimesh channel chat");
                         }
@@ -106,13 +104,13 @@ namespace MixItUp.Base.Services.Glimesh
 
         public async Task<Result> ConnectBot()
         {
-            if (ChannelSession.GlimeshBotConnection != null)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().BotConnection != null)
             {
                 return await this.AttemptConnect((Func<Task<Result>>)(async () =>
                 {
                     try
                     {
-                        this.botClient = await ChatEventClient.CreateWithToken(ChannelSession.GlimeshBotConnection.Connection);
+                        this.botClient = await ChatEventClient.CreateWithToken(ServiceManager.Get<GlimeshSessionService>().BotConnection.Connection);
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
@@ -120,7 +118,7 @@ namespace MixItUp.Base.Services.Glimesh
                         }
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
 
-                        if (await this.botClient.Connect())
+                        if (!await this.botClient.Connect())
                         {
                             return new Result("Failed to connect to Glimesh chat servers");
                         }
@@ -170,7 +168,7 @@ namespace MixItUp.Base.Services.Glimesh
                     do
                     {
                         message = ChatService.SplitLargeMessage(message, out subMessage);
-                        await client.SendMessage(ChannelSession.GlimeshChannel.id, message);
+                        await client.SendMessage(ServiceManager.Get<GlimeshSessionService>().Channel?.id, message);
                         message = subMessage;
                         await Task.Delay(500);
                     }
@@ -185,7 +183,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.ShortTimeoutUser(ChannelSession.GlimeshChannel.id, user.GlimeshID);
+                    await this.userClient.ShortTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
                 }
             });
         }
@@ -196,7 +194,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.LongTimeoutUser(ChannelSession.GlimeshChannel.id, user.GlimeshID);
+                    await this.userClient.LongTimeoutUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
                 }
             });
         }
@@ -207,7 +205,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.BanUser(ChannelSession.GlimeshChannel.id, user.GlimeshID);
+                    await this.userClient.BanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
                 }
             });
         }
@@ -218,7 +216,7 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (this.userClient != null)
                 {
-                    await this.userClient.UnbanUser(ChannelSession.GlimeshChannel.id, user.GlimeshID);
+                    await this.userClient.UnbanUser(ServiceManager.Get<GlimeshSessionService>().Channel?.id, user.GlimeshID);
                 }
             });
         }
@@ -237,13 +235,13 @@ namespace MixItUp.Base.Services.Glimesh
                 UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
-                    UserModel glimeshUser = await ChannelSession.GlimeshUserConnection.GetUserByName(message.User?.id);
+                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(message.User?.id);
                     if (glimeshUser != null)
                     {
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
                     }
                 }
-                this.OnMessageOccurred?.Invoke(this, new GlimeshChatMessageViewModel(message, user));
+                await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
             }
         }
 

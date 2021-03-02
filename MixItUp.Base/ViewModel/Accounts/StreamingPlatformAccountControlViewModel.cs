@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ServiceManager.Get<TwitchSessionService>().ConnectUser(ChannelSession.Settings);
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
                         {
                             this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
@@ -190,7 +190,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
-                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser(ChannelSession.Settings);
+                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
                             this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.FullAvatarURL;
@@ -237,7 +237,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
-                        result = await ServiceManager.Get<TwitchSessionService>().ConnectBot(ChannelSession.Settings);
+                        result = await ServiceManager.Get<TwitchSessionService>().ConnectBot();
                         if (result.Success)
                         {
                             if (ServiceManager.Get<TwitchSessionService>().BotNewAPI.id.Equals(ServiceManager.Get<TwitchSessionService>().UserNewAPI?.id))
@@ -262,7 +262,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
-                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectBot(ChannelSession.Settings);
+                        result = await ServiceManager.Get<GlimeshSessionService>().ConnectBot();
                         if (result.Success)
                         {
                             if (ServiceManager.Get<GlimeshSessionService>().Bot.id.Equals(ServiceManager.Get<GlimeshSessionService>().User?.id))

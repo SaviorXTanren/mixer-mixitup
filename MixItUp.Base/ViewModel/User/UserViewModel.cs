@@ -1022,16 +1022,19 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshGlimeshUserDetails()
         {
-            Glimesh.Base.Models.Users.UserModel glimeshUser = await ChannelSession.GlimeshUserConnection.GetUserByID(this.GlimeshID);
-            if (glimeshUser != null)
+            if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
-                this.GlimeshID = glimeshUser.id;
-                this.GlimeshUsername = glimeshUser.username;
-                this.GlimeshDisplayName = glimeshUser.displayname ?? glimeshUser.username;
-                this.GlimeshAvatarLink = glimeshUser.FullAvatarURL;
+                Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(this.GlimeshID);
+                if (glimeshUser != null)
+                {
+                    this.GlimeshID = glimeshUser.id;
+                    this.GlimeshUsername = glimeshUser.username;
+                    this.GlimeshDisplayName = glimeshUser.displayname ?? glimeshUser.username;
+                    this.GlimeshAvatarLink = glimeshUser.FullAvatarURL;
 
-                this.Color = null;
-                this.RolesDisplayString = null;
+                    this.Color = null;
+                    this.RolesDisplayString = null;
+                }
             }
         }
 

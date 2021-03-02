@@ -60,6 +60,9 @@ namespace MixItUp.Base.Services
         Task RemoveMessage(string messageID);
         Task RemoveMessage(ChatMessageViewModel message);
 
+        Task UsersJoined(IEnumerable<UserViewModel> users);
+        Task UsersLeft(IEnumerable<UserViewModel> users);
+
         Task WriteToChatEventLog(ChatMessageViewModel message);
     }
 
@@ -133,32 +136,6 @@ namespace MixItUp.Base.Services
 
             await ServiceManager.Get<IFileService>().CreateDirectory(ChatEventLogDirectoryName);
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
-
-            List<ChatMessageViewModel> messagesToAdd = new List<ChatMessageViewModel>();
-
-            if (ServiceManager.Get<ITwitchChatService>() != null)
-            {
-                ServiceManager.Get<ITwitchChatService>().OnMessageOccurred += TwitchChatService_OnMessageOccurred;
-                ServiceManager.Get<ITwitchChatService>().OnUsersJoinOccurred += TwitchChatService_OnUsersJoinOccurred;
-                ServiceManager.Get<ITwitchChatService>().OnUsersLeaveOccurred += TwitchChatService_OnUsersLeaveOccurred;
-            }
-
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                foreach (ChatMessageViewModel message in messagesToAdd)
-                {
-                    this.messagesLookup[message.ID] = message;
-                    if (ChannelSession.Settings.LatestChatAtTop)
-                    {
-                        this.Messages.Insert(0, message);
-                    }
-                    else
-                    {
-                        this.Messages.Add(message);
-                    }
-                }
-                return Task.FromResult(0);
-            });
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
@@ -636,19 +613,7 @@ namespace MixItUp.Base.Services
             });
         }
 
-        public async Task WriteToChatEventLog(ChatMessageViewModel message)
-        {
-            if (ChannelSession.Settings.SaveChatEventLogs)
-            {
-                try
-                {
-                    await ServiceManager.Get<IFileService>().AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
-                }
-                catch (Exception) { }
-            }
-        }
-
-        private async Task UsersJoined(IEnumerable<UserViewModel> users)
+        public async Task UsersJoined(IEnumerable<UserViewModel> users)
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
@@ -673,13 +638,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task UsersUpdated(IEnumerable<UserViewModel> users)
-        {
-            await this.UsersLeft(users);
-            await this.UsersJoined(users);
-        }
-
-        private async Task UsersLeft(IEnumerable<UserViewModel> users)
+        public async Task UsersLeft(IEnumerable<UserViewModel> users)
         {
             List<AlertChatMessageViewModel> alerts = new List<AlertChatMessageViewModel>();
 
@@ -710,6 +669,18 @@ namespace MixItUp.Base.Services
             foreach (AlertChatMessageViewModel alert in alerts)
             {
                 await ServiceManager.Get<AlertsService>().AddAlert(alert);
+            }
+        }
+
+        public async Task WriteToChatEventLog(ChatMessageViewModel message)
+        {
+            if (ChannelSession.Settings.SaveChatEventLogs)
+            {
+                try
+                {
+                    await ServiceManager.Get<IFileService>().AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                }
+                catch (Exception) { }
             }
         }
 
@@ -767,25 +738,5 @@ namespace MixItUp.Base.Services
 
             return Task.FromResult(0);
         }
-
-        // TODO
-        #region Twitch Event
-
-        private async void TwitchChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
-        {
-            await this.AddMessage(message);
-        }
-
-        private async void TwitchChatService_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)
-        {
-            await this.UsersJoined(users);
-        }
-
-        private async void TwitchChatService_OnUsersLeaveOccurred(object sender, IEnumerable<UserViewModel> users)
-        {
-            await this.UsersLeft(users);
-        }
-
-        #endregion Twitch Events
     }
 }
