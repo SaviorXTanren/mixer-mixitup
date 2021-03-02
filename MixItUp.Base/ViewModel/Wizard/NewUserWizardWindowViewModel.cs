@@ -52,6 +52,12 @@ namespace MixItUp.Base.ViewModel.Wizard
 
         public StreamingPlatformAccountControlViewModel Twitch { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Twitch);
 
+        public StreamingPlatformAccountControlViewModel YouTube { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.YouTube);
+
+        public StreamingPlatformAccountControlViewModel Trovo { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Trovo);
+
+        public StreamingPlatformAccountControlViewModel Glimesh { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Glimesh);
+
         #endregion Accounts Page
 
         #region Command & Actions Page
@@ -155,6 +161,12 @@ namespace MixItUp.Base.ViewModel.Wizard
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.YouTube.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.YouTube.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.Trovo.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.Trovo.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.Glimesh.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.Glimesh.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
 
             this.SetBackupLocationCommand = this.CreateCommand((parameter) =>
             {
@@ -186,9 +198,9 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
                 else if (this.StreamerAccountsPageVisible)
                 {
-                    if (!this.Twitch.IsUserAccountConnected)
+                    if (!this.Twitch.IsUserAccountConnected && !this.YouTube.IsUserAccountConnected && !this.Trovo.IsUserAccountConnected && !this.Glimesh.IsUserAccountConnected)
                     {
-                        this.StatusMessage = "Twitch Streamer account must be signed in.";
+                        this.StatusMessage = "At least 1 Streamer account must be signed in.";
                         return;
                     }
 
