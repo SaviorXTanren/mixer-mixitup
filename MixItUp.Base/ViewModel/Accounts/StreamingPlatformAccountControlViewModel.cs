@@ -152,8 +152,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
-                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
-                    this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
+                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
+                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
                 }
             }
 

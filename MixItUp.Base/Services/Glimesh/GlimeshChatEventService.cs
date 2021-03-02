@@ -17,6 +17,9 @@ namespace MixItUp.Base.Services.Glimesh
 {
     public interface IGlimeshChatEventService
     {
+        bool IsUserConnected { get; }
+        bool IsBotConnected { get; }
+
         Task<Result> ConnectUser();
         Task DisconnectUser();
 
@@ -42,6 +45,9 @@ namespace MixItUp.Base.Services.Glimesh
         public GlimeshChatEventService() { }
 
         public override string Name { get { return "Glimesh Chat"; } }
+
+        public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
+        public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
 
         public async Task<Result> ConnectUser()
         {
@@ -130,7 +136,7 @@ namespace MixItUp.Base.Services.Glimesh
 
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
-                            this.userClient.OnSentOccurred -= Client_OnSentOccurred;
+                            this.botClient.OnSentOccurred += Client_OnSentOccurred;
                         }
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
 
