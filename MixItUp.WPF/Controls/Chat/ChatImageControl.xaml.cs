@@ -96,8 +96,9 @@ namespace MixItUp.WPF.Controls.Chat
                     else if (this.DataContext is GlimeshChatEmoteViewModel)
                     {
                         GlimeshChatEmoteViewModel emote = (GlimeshChatEmoteViewModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.Url);
-                        this.Image.ToolTip = this.AltText.Text = emote.Name;
+                        this.SVGImage.Visibility = Visibility.Visible;
+                        this.SVGImage.ToolTip = this.AltText.Text = emote.Name;
+                        this.ResizeImage(this.SVGImage);
                     }
                     else if (this.DataContext is string)
                     {
@@ -107,7 +108,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                     if (this.Image.Source != null)
                     {
-                        this.Image.MaxWidth = this.Image.MaxHeight = this.Image.Width = this.Image.Height = ChannelSession.Settings.ChatFontSize * 2;
+                        this.ResizeImage(this.Image);
                     }
                 }
             }
@@ -128,5 +129,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
             return ChatImageControl.bitmapImages[url];
         }
+
+        private void ResizeImage(Image image) { image.MaxWidth = image.MaxHeight = image.Width = image.Height = ChannelSession.Settings.ChatFontSize * 2; }
     }
 }
