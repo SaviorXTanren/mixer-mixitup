@@ -41,8 +41,6 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     return new Result("Failed to get V5 API Twitch user data");
                 }
-
-                this.SaveSettings(settings);
             }
             return result;
         }
@@ -63,8 +61,6 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     return await ServiceManager.Get<ChatService>().TwitchChatService.ConnectBot();
                 }
-
-                this.SaveSettings(settings);
             }
             return result;
         }
@@ -228,17 +224,22 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task CloseUser(SettingsV3Model settings)
         {
-            if (ServiceManager.Get<ChatService>().TwitchChatService != null)
+            if (ServiceManager.Get<TwitchChatService>() != null)
             {
-                await ServiceManager.Get<ChatService>().TwitchChatService.DisconnectUser();
+                await ServiceManager.Get<TwitchChatService>().DisconnectUser();
+            }
+
+            if (ServiceManager.Get<TwitchEventService>() != null)
+            {
+                await ServiceManager.Get<TwitchEventService>().Disconnect();
             }
         }
 
         public async Task CloseBot(SettingsV3Model settings)
         {
-            if (ServiceManager.Get<ChatService>().TwitchChatService != null)
+            if (ServiceManager.Get<TwitchChatService>() != null)
             {
-                await ServiceManager.Get<ChatService>().TwitchChatService.DisconnectBot();
+                await ServiceManager.Get<TwitchChatService>().DisconnectBot();
             }
         }
 
@@ -268,7 +269,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task RefreshUser()
         {
-            if (this.UserNewAPI != null)
+            if (this.UserConnection != null)
             {
                 TwitchNewAPI.Users.UserModel twitchUserNewAPI = await this.UserConnection.GetNewAPICurrentUser();
                 if (twitchUserNewAPI != null)
@@ -286,19 +287,22 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task RefreshChannel()
         {
-            if (this.ChannelV5 != null)
+            if (this.UserConnection != null)
             {
-                TwitchV5API.Channel.ChannelModel twitchChannel = await this.UserConnection.GetV5APIChannel(this.ChannelV5.id);
-                if (twitchChannel != null)
+                if (this.ChannelV5 != null)
                 {
-                    this.ChannelV5 = twitchChannel;
-                    this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
+                    TwitchV5API.Channel.ChannelModel twitchChannel = await this.UserConnection.GetV5APIChannel(this.ChannelV5.id);
+                    if (twitchChannel != null)
+                    {
+                        this.ChannelV5 = twitchChannel;
+                        this.StreamV5 = await this.UserConnection.GetV5LiveStream(this.ChannelV5);
+                    }
                 }
-            }
 
-            if (this.UserNewAPI != null)
-            {
-                this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
+                if (this.UserNewAPI != null)
+                {
+                    this.StreamNewAPI = await this.UserConnection.GetStream(this.UserNewAPI);
+                }
             }
         }
     }
