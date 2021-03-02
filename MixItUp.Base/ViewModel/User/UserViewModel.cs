@@ -177,7 +177,7 @@ namespace MixItUp.Base.ViewModel.User
             this.GlimeshID = user.id;
             this.GlimeshUsername = user.username;
             this.GlimeshDisplayName = user.displayname;
-            this.GlimeshAvatarLink = user.FullAvatarURL;
+            this.GlimeshAvatarLink = user.avatarUrl;
             this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
         }
 
@@ -1030,7 +1030,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.GlimeshID = glimeshUser.id;
                     this.GlimeshUsername = glimeshUser.username;
                     this.GlimeshDisplayName = glimeshUser.displayname ?? glimeshUser.username;
-                    this.GlimeshAvatarLink = glimeshUser.FullAvatarURL;
+                    this.GlimeshAvatarLink = glimeshUser.avatarUrl;
 
                     this.Color = null;
                     this.RolesDisplayString = null;

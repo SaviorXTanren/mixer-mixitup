@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
-                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.FullAvatarURL;
+                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
                     this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.username;
                 }
             }
@@ -152,7 +152,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
-                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.FullAvatarURL;
+                    this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
                     this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
                 }
             }
@@ -193,7 +193,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.FullAvatarURL;
+                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
                             this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.username;
                         }
                     }
@@ -272,7 +272,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                             }
                             else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.FullAvatarURL;
+                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
                                 this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
                             }
                         }
