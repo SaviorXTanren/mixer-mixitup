@@ -32,6 +32,12 @@ namespace MixItUp.Base.Services.Glimesh
                 {
                     return new Result("Failed to get Glimesh user data");
                 }
+
+                this.Channel = await this.UserConnection.GetChannelByName(this.User.username);
+                if (this.Channel == null)
+                {
+                    return new Result("Failed to get Glimesh channel data");
+                }
             }
             return result;
         }
