@@ -34,7 +34,7 @@ namespace MixItUp.Base.Services
         int GetUserPosition(UserViewModel user);
         Task PrintUserPosition(UserViewModel user);
 
-        Task PrintStatus();
+        Task PrintStatus(CommandParametersModel parameters);
 
         Task Clear();
     }
@@ -171,15 +171,15 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are #{0} in the queue to play", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are #{0} in the queue to play", position), user.Platform);
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage("You are not currently in the queue to play");
+                await ServiceManager.Get<ChatService>().SendMessage("You are not currently in the queue to play", user.Platform);
             }
         }
 
-        public async Task PrintStatus()
+        public async Task PrintStatus(CommandParametersModel parameters)
         {
             StringBuilder message = new StringBuilder();
             message.Append(string.Format("There are currently {0} waiting to play.", this.queue.Count()));
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Services
                 message.Append(".");
             }
 
-            await ServiceManager.Get<ChatService>().SendMessage(message.ToString());
+            await ServiceManager.Get<ChatService>().SendMessage(message.ToString(), parameters.Platform);
         }
 
         public Task Clear()
@@ -213,7 +213,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are already #{0} in the queue", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are already #{0} in the queue", position), user.Platform);
                 return false;
             }
             return true;

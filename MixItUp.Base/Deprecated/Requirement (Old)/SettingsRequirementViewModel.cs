@@ -38,20 +38,5 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             return true;
         }
-
-        public async Task SendSettingsNotMetWhisper(UserViewModel user)
-        {
-            if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement))
-            {
-                PatreonBenefit benefit = ServiceManager.Get<PatreonService>().Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
-                if (benefit != null)
-                {
-                    if (ServiceManager.Get<ChatService>() != null)
-                    {
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
-                    }
-                }
-            }
-        }
     }
 }

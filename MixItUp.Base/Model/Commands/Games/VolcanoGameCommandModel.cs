@@ -148,12 +148,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected, parameters.Platform);
                     }
                 }
                 else
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway, parameters.Platform);
                 }
                 return false;
             }

@@ -129,12 +129,12 @@ namespace MixItUp.Base.Model.Commands.Games
                         else
                         {
                             string trigger = this.GetFullTriggers().FirstOrDefault() ?? "!bet";
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger), parameters.Platform);
                         }
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole), parameters.Platform);
                     }
                 }
                 else
@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         return await base.ValidateRequirements(parameters);
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username), parameters.Platform);
                 }
             }
             else
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     await this.StartedCommand.Perform(parameters);
                     return false;
                 }
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole), parameters.Platform);
             }
             return false;
         }

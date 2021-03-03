@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services
 
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
-        Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All);
+        Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false);
         Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false);
         Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
 
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false)
         {
             if (!string.IsNullOrEmpty(message))
             {
@@ -558,11 +558,11 @@ namespace MixItUp.Base.Services
                     {
                         if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
                         {
-                            await inventory.PerformShopCommand(message.User, arguments, message.Platform);
+                            await inventory.PerformShopCommand(message.User, arguments);
                         }
                         else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
                         {
-                            await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
+                            await inventory.PerformTradeCommand(message.User, arguments);
                         }
                     }
 

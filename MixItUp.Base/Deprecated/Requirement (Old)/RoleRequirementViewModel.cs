@@ -46,18 +46,5 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             return false;
         }
-
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            if (ServiceManager.Get<ChatService>() != null)
-            {
-                string role = EnumLocalizationHelper.GetLocalizedName(this.MixerRole);
-                if (this.MixerRole == UserRoleEnum.Subscriber && this.SubscriberTier > 0)
-                {
-                    role += " - " + RoleRequirementViewModel.SubTierNames[this.SubscriberTier - 1];
-                }
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
-            }
-        }
     }
 }

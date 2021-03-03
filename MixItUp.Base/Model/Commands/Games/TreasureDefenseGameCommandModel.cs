@@ -223,7 +223,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
                     }
                 }
                 else if (!this.runUsers.ContainsKey(parameters.User))
@@ -235,7 +235,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
             }
             await this.Requirements.Refund(parameters);
         }

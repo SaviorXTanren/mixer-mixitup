@@ -154,11 +154,11 @@ namespace MixItUp.Base.Model.Actions
                     AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
                     if (response == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later");
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later", parameters.Platform);
                     }
                     else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message);
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message, parameters.Platform);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
@@ -200,7 +200,7 @@ namespace MixItUp.Base.Model.Actions
                             {
                                 if (this.ShowInfoInChat)
                                 {
-                                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url));
+                                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url), parameters.Platform);
                                 }
                                 parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
 
@@ -209,14 +209,14 @@ namespace MixItUp.Base.Model.Actions
                             }
                         }
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed, parameters.Platform);
                 }
                 else if (this.ActionType == TwitchActionType.StreamMarker)
                 {
                     string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
                     if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess, parameters.Platform);
                         return;
                     }
 
@@ -225,12 +225,12 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ShowInfoInChat)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL), parameters.Platform);
                         }
                         parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
                         return;
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters.Platform);
                 }
             }
         }
