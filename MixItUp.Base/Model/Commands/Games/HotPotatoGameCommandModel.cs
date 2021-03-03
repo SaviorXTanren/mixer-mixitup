@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (this.gameActive && lastTargetUser != parameters.User)
             {
                 // The game is underway and it's not the user's turn
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
                 await this.Requirements.Refund(parameters);
                 return;
             }
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandCouldNotFindUser, parameters.Platform);
             }
 
             await this.Requirements.Refund(parameters);

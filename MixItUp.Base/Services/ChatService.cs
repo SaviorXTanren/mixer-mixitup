@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services
 
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
-        Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All);
+        Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false);
         Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false);
         Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
 
@@ -71,14 +71,12 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
-        private const int MaxMessageLength = 400;
-
-        public static string SplitLargeMessage(string message, out string subMessage)
+        public static string SplitLargeMessage(string message, int maxLength, out string subMessage)
         {
             subMessage = null;
-            if (message.Length >= MaxMessageLength)
+            if (message.Length >= maxLength)
             {
-                string tempMessage = message.Substring(0, MaxMessageLength - 1);
+                string tempMessage = message.Substring(0, maxLength - 1);
                 int splitIndex = tempMessage.LastIndexOf(' ');
                 if (splitIndex > 0 && (splitIndex + 1) < message.Length)
                 {
@@ -142,7 +140,7 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
+        public async Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false)
         {
             if (!string.IsNullOrEmpty(message))
             {
@@ -558,11 +556,11 @@ namespace MixItUp.Base.Services
                     {
                         if (inventory.ShopEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.ShopCommand }, out arguments))
                         {
-                            await inventory.PerformShopCommand(message.User, arguments, message.Platform);
+                            await inventory.PerformShopCommand(message.User, arguments);
                         }
                         else if (inventory.TradeEnabled && ChatCommandModel.DoesMessageMatchTriggers(message, new List<string>() { inventory.TradeCommand }, out arguments))
                         {
-                            await inventory.PerformTradeCommand(message.User, arguments, message.Platform);
+                            await inventory.PerformTradeCommand(message.User, arguments);
                         }
                     }
 

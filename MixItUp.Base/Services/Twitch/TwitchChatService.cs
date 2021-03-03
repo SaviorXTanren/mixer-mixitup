@@ -10,6 +10,7 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -92,6 +93,8 @@ namespace MixItUp.Base.Services.Twitch
         private const string RaidUserNoticeMessageTypeID = "raid";
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
+
+        private const int MaxMessageLength = 400;
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
@@ -314,7 +317,7 @@ namespace MixItUp.Base.Services.Twitch
             if (ChannelSession.Settings.ShowBetterTTVEmotes)
             {
                 initializationTasks.Add(this.DownloadBetterTTVEmotes());
-                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().UserNewAPI.login));
+                initializationTasks.Add(this.DownloadBetterTTVEmotes(ServiceManager.Get<TwitchSessionService>().UserNewAPI.id));
             }
 
             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
@@ -368,7 +371,7 @@ namespace MixItUp.Base.Services.Twitch
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendMessage(ServiceManager.Get<TwitchSessionService>().UserNewAPI, message);
                         message = subMessage;
                         await Task.Delay(500);
@@ -388,7 +391,7 @@ namespace MixItUp.Base.Services.Twitch
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendWhisperMessage(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel(), message);
                         message = subMessage;
                         await Task.Delay(500);
@@ -550,17 +553,41 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-        private async Task DownloadBetterTTVEmotes(string channelName = null)
+        private async Task DownloadBetterTTVEmotes(string twitchID = null)
         {
             try
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.betterttv.net/2/channels/" + channelName : "https://api.betterttv.net/2/emotes");
-                    if (jobj != null && jobj.ContainsKey("emotes"))
+                    List<BetterTTVEmoteModel> emotes = new List<BetterTTVEmoteModel>();
+
+                    HttpResponseMessage response = await client.GetAsync((!string.IsNullOrEmpty(twitchID)) ? "https://api.betterttv.net/3/cached/users/twitch/" + twitchID : "https://api.betterttv.net/3/cached/emotes/global");
+                    if (response.IsSuccessStatusCode)
                     {
-                        JArray array = (JArray)jobj["emotes"];
-                        foreach (BetterTTVEmoteModel emote in array.ToTypedArray<BetterTTVEmoteModel>())
+                        if (!string.IsNullOrEmpty(twitchID))
+                        {
+                            JObject jobj = await response.ProcessJObjectResponse();
+                            if (jobj != null)
+                            {
+                                JToken channelEmotes = jobj.SelectToken("channelEmotes");
+                                if (channelEmotes != null)
+                                {
+                                    emotes.AddRange(((JArray)channelEmotes).ToTypedArray<BetterTTVEmoteModel>());
+                                }
+
+                                JToken sharedEmotes = jobj.SelectToken("sharedEmotes");
+                                if (sharedEmotes != null)
+                                {
+                                    emotes.AddRange(((JArray)sharedEmotes).ToTypedArray<BetterTTVEmoteModel>());
+                                }
+                            }
+                        }
+                        else
+                        {
+                            emotes.AddRange(await response.ProcessResponse<List<BetterTTVEmoteModel>>());
+                        }
+
+                        foreach (BetterTTVEmoteModel emote in emotes)
                         {
                             this.betterTTVEmotes[emote.code] = emote;
                         }

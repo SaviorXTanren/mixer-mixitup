@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(message, this.SendAsStreamer);
+                await ServiceManager.Get<ChatService>().SendMessage(message, parameters.Platform, this.SendAsStreamer);
             }
         }
     }

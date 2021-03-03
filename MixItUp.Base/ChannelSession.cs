@@ -276,7 +276,18 @@ namespace MixItUp.Base
                     }
                 }
 
-                ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name ?? "Test";
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name;
+                }
+                else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>()?.User?.displayname;
+                }
+                else
+                {
+                    ChannelSession.Settings.Name = "Test";
+                }
 
                 await ServiceManager.Get<ChatService>().Initialize();
                 await ServiceManager.Get<EventService>().Initialize();

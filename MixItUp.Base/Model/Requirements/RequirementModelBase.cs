@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Requirements
                     {
                         message = $"@{user.Username}: {message}";
                     }
-                    await ServiceManager.Get<ChatService>().SendMessage(message);
+                    await ServiceManager.Get<ChatService>().SendMessage(message, user.Platform);
                     this.errorCooldown = DateTimeOffset.Now.AddSeconds(ChannelSession.Settings.RequirementErrorsCooldownAmount);
                 }
             }

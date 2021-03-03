@@ -48,94 +48,17 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public virtual async Task<bool> CheckCooldownRequirement(UserViewModel user)
-        {
-            if (!this.Requirements.DoesMeetCooldownRequirement(user))
-            {
-                await this.Requirements.Cooldown.SendNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
-        public virtual async Task<bool> CheckUserRoleRequirement(UserViewModel user)
-        {
-            if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
-            {
-                await this.Requirements.Role.SendNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
-        public virtual async Task<bool> CheckRankRequirement(UserViewModel user)
-        {
-            if (this.Requirements.Rank != null && this.Requirements.Rank.GetCurrency() != null)
-            {
-                if (!this.Requirements.Rank.DoesMeetRankRequirement(user.Data))
-                {
-                    await this.Requirements.Rank.SendRankNotMetWhisper(user);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public virtual async Task<bool> CheckCurrencyRequirement(UserViewModel user)
-        {
-            if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
-            {
-                if (!this.Requirements.Currency.DoesMeetCurrencyRequirement(user.Data))
-                {
-                    await this.Requirements.Currency.SendCurrencyNotMetWhisper(user);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public virtual async Task<bool> CheckInventoryRequirement(UserViewModel user)
-        {
-            if (!this.Requirements.DoesMeetInventoryRequirement(user))
-            {
-                await this.Requirements.Inventory.SendNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
-        public virtual async Task<bool> CheckSettingsRequirement(UserViewModel user)
-        {
-            if (!this.Requirements.DoesMeetSettingsRequirement(user))
-            {
-                await this.Requirements.Settings.SendSettingsNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
-        public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
-
-        public async Task<bool> CheckAllRequirements(UserViewModel user)
-        {
-            return await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
-                && await this.CheckCurrencyRequirement(user) && await this.CheckInventoryRequirement(user) && await this.CheckSettingsRequirement(user);
-        }
+        public void ResetCooldown(UserViewModel user) {  }
 
         protected override async Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            return await this.permissionsCheckSemaphore.WaitAndRelease(async () =>
+            return await this.permissionsCheckSemaphore.WaitAndRelease(() =>
             {
-                if (!await this.CheckAllRequirements(user))
-                {
-                    return false;
-                }
-
-                IEnumerable<UserViewModel> triggeringUsers = await this.Requirements.GetTriggeringUsers(this.Name, user);
+                IEnumerable<UserViewModel> triggeringUsers = new List<UserViewModel>();
                 if (triggeringUsers == null)
                 {
                     // The action did not trigger due to threshold requirements not being met
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 foreach (UserViewModel triggeringUser in triggeringUsers)
@@ -144,11 +67,9 @@ namespace MixItUp.Base.Commands
                     this.Requirements.TrySubtractCurrencyAmount(triggeringUser);
 
                     this.Requirements.TrySubtractInventoryAmount(triggeringUser);
-
-                    this.Requirements.UpdateCooldown(triggeringUser);
                 }
 
-                return true;
+                return Task.FromResult(true);
             });
         }
     }

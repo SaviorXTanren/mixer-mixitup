@@ -42,6 +42,8 @@ namespace MixItUp.Base.Services.Glimesh
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
+        private const int MaxMessageLength = 250;
+
         public GlimeshChatEventService() { }
 
         public override string Name { get { return "Glimesh Chat"; } }
@@ -62,6 +64,7 @@ namespace MixItUp.Base.Services.Glimesh
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
+                            this.userClient.OnTextReceivedOccurred += UserClient_OnTextReceivedOccurred;
                         }
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
 
@@ -106,6 +109,7 @@ namespace MixItUp.Base.Services.Glimesh
                     if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.userClient.OnSentOccurred -= Client_OnSentOccurred;
+                        this.userClient.OnTextReceivedOccurred -= UserClient_OnTextReceivedOccurred;
                     }
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
 
@@ -189,7 +193,7 @@ namespace MixItUp.Base.Services.Glimesh
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendMessage(ServiceManager.Get<GlimeshSessionService>().Channel?.id, message);
                         message = subMessage;
                         await Task.Delay(500);
@@ -248,6 +252,11 @@ namespace MixItUp.Base.Services.Glimesh
         private void Client_OnSentOccurred(object sender, string packet)
         {
             Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Sent: {0}", packet));
+        }
+
+        private void UserClient_OnTextReceivedOccurred(object sender, string packet)
+        {
+            Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Received: {0}", packet));
         }
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel message)

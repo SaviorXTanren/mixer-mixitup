@@ -242,7 +242,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     return true;
                 }
 
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount), parameters.Platform);
                 return false;
             }
             return true;

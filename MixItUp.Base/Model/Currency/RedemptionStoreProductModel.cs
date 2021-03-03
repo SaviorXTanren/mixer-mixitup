@@ -110,7 +110,7 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (ServiceManager.Get<ChatService>() != null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName);
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName, user.Platform);
                     }
                     return;
                 }
@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Currency
                     {
                         if (ServiceManager.Get<ChatService>() != null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts, user.Platform);
                         }
                         return;
                     }
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Model.Currency
                     {
                         if (ServiceManager.Get<ChatService>() != null)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts, user.Platform);
                         }
                         return;
                     }
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (ServiceManager.Get<ChatService>() != null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
                 }
                 return;
             }
@@ -218,7 +218,7 @@ namespace MixItUp.Base.Model.Currency
             {
                 if (ServiceManager.Get<ChatService>() != null)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName);
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName, user.Platform);
                 }
             }
         }

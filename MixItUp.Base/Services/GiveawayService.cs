@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -197,7 +198,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username), StreamingPlatformTypeEnum.All);
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -217,7 +218,7 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("There are no users that entered/left in the giveaway");
+                        await ServiceManager.Get<ChatService>().SendMessage("There are no users that entered/left in the giveaway", StreamingPlatformTypeEnum.All);
                         await this.End();
                         return;
                     }
@@ -241,7 +242,7 @@ namespace MixItUp.Base.Services
 
                     if (pastWinners.Contains(message.User.ID))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("You have already won a giveaway and can not enter this one");
+                        await ServiceManager.Get<ChatService>().SendMessage("You have already won a giveaway and can not enter this one", message.Platform);
                         return;
                     }
 
@@ -261,7 +262,7 @@ namespace MixItUp.Base.Services
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        await ServiceManager.Get<ChatService>().SendMessage(string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries), message.Platform);
                         return;
                     }
 

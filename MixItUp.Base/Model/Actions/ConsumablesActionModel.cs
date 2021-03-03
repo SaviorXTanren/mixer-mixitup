@@ -191,14 +191,14 @@ namespace MixItUp.Base.Model.Actions
 
                 if (!double.TryParse(amountTextValue, out double doubleAmount))
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CounterActionNotAValidAmount, amountTextValue, systemName));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CounterActionNotAValidAmount, amountTextValue, systemName), parameters.Platform);
                     return;
                 }
 
                 int amountValue = (int)Math.Ceiling(doubleAmount);
                 if (amountValue < 0)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName));
+                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCurrencyRequirementAmountGreaterThan, amountTextValue, systemName), parameters.Platform);
                     return;
                 }
 
@@ -219,7 +219,7 @@ namespace MixItUp.Base.Model.Actions
                         }
                         else
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound);
+                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.UserNotFound, parameters.Platform);
                             return;
                         }
                     }
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!currency.HasAmount(parameters.User.Data, amountValue))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName), parameters.Platform);
                             return;
                         }
                         currency.SubtractAmount(parameters.User.Data, amountValue);
@@ -251,7 +251,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!inventory.HasAmount(parameters.User.Data, item, amountValue))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item.Name));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, item.Name), parameters.Platform);
                             return;
                         }
                         inventory.SubtractAmount(parameters.User.Data, item, amountValue);
@@ -260,7 +260,7 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (!streamPass.HasAmount(parameters.User.Data, amountValue))
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName));
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amountValue, systemName), parameters.Platform);
                             return;
                         }
                         streamPass.SubtractAmount(parameters.User.Data, amountValue);

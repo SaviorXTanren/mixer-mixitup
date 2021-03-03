@@ -107,7 +107,7 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 return await base.ValidateRequirements(parameters);
             }
-            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, this.GetValidBetTypes()));
+            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, this.GetValidBetTypes()), parameters.Platform);
             return false;
         }
 
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway, parameters.Platform);
             }
             await this.Requirements.Refund(parameters);
         }

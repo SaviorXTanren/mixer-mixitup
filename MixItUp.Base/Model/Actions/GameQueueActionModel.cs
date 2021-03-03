@@ -81,7 +81,7 @@ namespace MixItUp.Base.Model.Actions
             {
                 if (!ServiceManager.Get<GameQueueService>().IsEnabled)
                 {
-                    await ServiceManager.Get<ChatService>().SendMessage("The game queue is not currently enabled");
+                    await ServiceManager.Get<ChatService>().SendMessage("The game queue is not currently enabled", parameters.Platform);
                     return;
                 }
 
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Actions
                     targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
                     if (targetUser == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("The user could not be found");
+                        await ServiceManager.Get<ChatService>().SendMessage("The user could not be found", parameters.Platform);
                         return;
                     }
                 }
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Actions
                 }
                 else if (this.ActionType == GameQueueActionType.QueueStatus)
                 {
-                    await ServiceManager.Get<GameQueueService>().PrintStatus();
+                    await ServiceManager.Get<GameQueueService>().PrintStatus(parameters);
                 }
                 else if (this.ActionType == GameQueueActionType.LeaveQueue)
                 {

@@ -93,22 +93,6 @@ namespace MixItUp.Base.ViewModel.Requirement
             return inventory.HasAmount(userData, this.ItemID, this.Amount);
         }
 
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            if (ServiceManager.Get<ChatService>() != null && ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
-            {
-                InventoryModel inventory = this.GetInventory();
-                if (inventory != null && inventory.ItemExists(this.ItemID))
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
-                }
-                else
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(string.Format("You do not have the required {0} items to do this", this.Amount));
-                }
-            }
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is InventoryRequirementViewModel)

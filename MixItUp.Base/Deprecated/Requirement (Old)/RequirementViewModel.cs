@@ -2,7 +2,6 @@
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -33,11 +32,9 @@ namespace MixItUp.Base.ViewModel.Requirement
         [JsonProperty]
         public SettingsRequirementViewModel Settings { get; set; }
 
-
         [JsonProperty]
         [Obsolete]
         public UserRoleEnum UserRole { get; set; }
-
 
         public RequirementViewModel()
         {
@@ -74,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.Cooldown != null)
             {
-                return this.Cooldown.DoesMeetRequirement(user);
+
             }
             return true;
         }
@@ -122,39 +119,6 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return this.Settings.DoesMeetRequirement(user);
             }
             return true;
-        }
-
-        public async Task<IEnumerable<UserViewModel>> GetTriggeringUsers(string commandName, UserViewModel user)
-        {
-            if (this.Threshold != null)
-            {
-                return await this.Threshold.GetTriggeringUsers(commandName, user);
-            }
-            return new UserViewModel[] { user };
-        }
-
-        public void UpdateCooldown(UserViewModel user)
-        {
-            if (this.Cooldown != null)
-            {
-                this.Cooldown.UpdateCooldown(user);
-            }
-        }
-
-        public void ResetCooldown(UserViewModel user)
-        {
-            if (this.Cooldown != null)
-            {
-                this.Cooldown.ResetCooldown(user);
-            }
-        }
-
-        public void ResetCooldown()
-        {
-            if (this.Cooldown != null)
-            {
-                this.Cooldown.ResetCooldown();
-            }
         }
 
         public bool TrySubtractCurrencyAmount(UserViewModel user, bool requireAmount = false)
