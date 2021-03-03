@@ -345,7 +345,7 @@ namespace MixItUp.Base
                                 return false;
                             }
 
-                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.login);
+                            ChannelSession.Settings = await ChannelSession.Services.Settings.Create(twitchChannelNew.display_name);
                         }
                         await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
