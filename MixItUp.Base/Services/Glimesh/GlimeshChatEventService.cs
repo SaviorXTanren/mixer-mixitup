@@ -42,6 +42,8 @@ namespace MixItUp.Base.Services.Glimesh
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
+        private const int MaxMessageLength = 250;
+
         public GlimeshChatEventService() { }
 
         public override string Name { get { return "Glimesh Chat"; } }
@@ -191,7 +193,7 @@ namespace MixItUp.Base.Services.Glimesh
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendMessage(ServiceManager.Get<GlimeshSessionService>().Channel?.id, message);
                         message = subMessage;
                         await Task.Delay(500);

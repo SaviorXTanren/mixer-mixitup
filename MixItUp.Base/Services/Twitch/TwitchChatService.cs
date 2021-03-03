@@ -94,6 +94,8 @@ namespace MixItUp.Base.Services.Twitch
         private const string SubMysteryGiftUserNoticeMessageTypeID = "submysterygift";
         private const string SubGiftPaidUpgradeUserNoticeMessageTypeID = "giftpaidupgrade";
 
+        private const int MaxMessageLength = 400;
+
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
 
@@ -369,7 +371,7 @@ namespace MixItUp.Base.Services.Twitch
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendMessage(ServiceManager.Get<TwitchSessionService>().UserNewAPI, message);
                         message = subMessage;
                         await Task.Delay(500);
@@ -389,7 +391,7 @@ namespace MixItUp.Base.Services.Twitch
                     string subMessage = null;
                     do
                     {
-                        message = ChatService.SplitLargeMessage(message, out subMessage);
+                        message = ChatService.SplitLargeMessage(message, MaxMessageLength, out subMessage);
                         await client.SendWhisperMessage(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel(), message);
                         message = subMessage;
                         await Task.Delay(500);

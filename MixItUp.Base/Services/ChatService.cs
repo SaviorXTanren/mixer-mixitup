@@ -71,14 +71,12 @@ namespace MixItUp.Base.Services
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
 
-        private const int MaxMessageLength = 400;
-
-        public static string SplitLargeMessage(string message, out string subMessage)
+        public static string SplitLargeMessage(string message, int maxLength, out string subMessage)
         {
             subMessage = null;
-            if (message.Length >= MaxMessageLength)
+            if (message.Length >= maxLength)
             {
-                string tempMessage = message.Substring(0, MaxMessageLength - 1);
+                string tempMessage = message.Substring(0, maxLength - 1);
                 int splitIndex = tempMessage.LastIndexOf(' ');
                 if (splitIndex > 0 && (splitIndex + 1) < message.Length)
                 {
