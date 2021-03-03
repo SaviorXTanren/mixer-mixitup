@@ -13,6 +13,7 @@
         </Grid.ColumnDefinitions>
 
         <Image x:Name="Image" Grid.Column="0" />
+        <Controls:GifImageControl x:Name="GifImage" Grid.Column="0" Visibility="Collapsed" />
         <Image x:Name="SVGImage" Grid.Column="0" Visibility="Collapsed" Source="{Binding Path=Url, Converter={svgc:SvgImageConverter}, Mode=OneWay}" />
         <TextBlock x:Name="Text" Grid.Column="1" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" />
         <TextBlock x:Name="AltText" Grid.Column="1" Visibility="Collapsed" Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>

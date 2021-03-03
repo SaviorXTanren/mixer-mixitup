@@ -11,7 +11,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,7 +31,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private int indexOfLastIntellisenseText;
 
-        private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
         private object itemsLock = new object();
 
         private List<object> defaultContextMenuItems = new List<object>();

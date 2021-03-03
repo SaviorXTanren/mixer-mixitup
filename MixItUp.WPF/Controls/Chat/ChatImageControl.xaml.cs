@@ -76,7 +76,14 @@ namespace MixItUp.WPF.Controls.Chat
                     else if (this.DataContext is BetterTTVEmoteModel)
                     {
                         BetterTTVEmoteModel emote = (BetterTTVEmoteModel)this.DataContext;
-                        this.Image.Source = await this.DownloadImageUrl(emote.url);
+                        if (emote.imageType.Equals("gif"))
+                        {
+                            this.ProcessGifImage(emote.url);
+                        }
+                        else
+                        {
+                            this.Image.Source = await this.DownloadImageUrl(emote.url);
+                        }
                         this.Image.ToolTip = this.AltText.Text = emote.code;
                     }
                     else if (this.DataContext is FrankerFaceZEmoteModel)
@@ -136,6 +143,15 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatImageControl.bitmapImages[url] = bitmap;
             }
             return ChatImageControl.bitmapImages[url];
+        }
+
+        private bool IsGifImage(string url) { return url.Contains(".gif"); }
+
+        private void ProcessGifImage(string url)
+        {
+            this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
+            this.GifImage.DataContext = url;
+            this.GifImage.Visibility = Visibility.Visible;
         }
 
         private void ResizeImage(Image image) { image.MaxWidth = image.MaxHeight = image.Width = image.Height = ChannelSession.Settings.ChatFontSize * 2; }
