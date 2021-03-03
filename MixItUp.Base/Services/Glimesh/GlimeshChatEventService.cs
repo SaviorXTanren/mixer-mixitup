@@ -62,6 +62,7 @@ namespace MixItUp.Base.Services.Glimesh
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
+                            this.userClient.OnTextReceivedOccurred += UserClient_OnTextReceivedOccurred;
                         }
                         this.userClient.OnDisconnectOccurred += UserClient_OnDisconnectOccurred;
 
@@ -106,6 +107,7 @@ namespace MixItUp.Base.Services.Glimesh
                     if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
                         this.userClient.OnSentOccurred -= Client_OnSentOccurred;
+                        this.userClient.OnTextReceivedOccurred -= UserClient_OnTextReceivedOccurred;
                     }
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
 
@@ -248,6 +250,11 @@ namespace MixItUp.Base.Services.Glimesh
         private void Client_OnSentOccurred(object sender, string packet)
         {
             Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Sent: {0}", packet));
+        }
+
+        private void UserClient_OnTextReceivedOccurred(object sender, string packet)
+        {
+            Logger.Log(LogLevel.Debug, string.Format("Glimesh Chat Packet Received: {0}", packet));
         }
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessagePacketModel message)
