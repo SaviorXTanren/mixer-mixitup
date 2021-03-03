@@ -179,6 +179,8 @@ namespace MixItUp.Base.ViewModel.User
             this.GlimeshDisplayName = user.displayname;
             this.GlimeshAvatarLink = user.avatarUrl;
             this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(user.confirmedAt);
+
+            this.SetGlimeshRoles();
         }
 
         public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) : this(message.User) { }
@@ -935,24 +937,27 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshTwitchUserDetails()
         {
-            TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(this.TwitchID)
-                : await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
-            if (twitchUser != null)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                this.TwitchID = twitchUser.id;
-                this.TwitchUsername = twitchUser.login;
-                this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
-                this.TwitchAvatarLink = twitchUser.profile_image_url;
+                TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(this.TwitchID)
+                    : await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+                if (twitchUser != null)
+                {
+                    this.TwitchID = twitchUser.id;
+                    this.TwitchUsername = twitchUser.login;
+                    this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
+                    this.TwitchAvatarLink = twitchUser.profile_image_url;
 
-                if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
-                if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
-                if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
-                if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                    if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
+                    if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
+                    if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+                    if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
 
-                this.SetTwitchRoles();
+                    this.SetTwitchRoles();
 
-                this.Color = null;
-                this.RolesDisplayString = null;
+                    this.Color = null;
+                    this.RolesDisplayString = null;
+                }
             }
         }
 
@@ -1035,7 +1040,19 @@ namespace MixItUp.Base.ViewModel.User
                     this.Color = null;
                     this.RolesDisplayString = null;
                 }
+
+                this.SetGlimeshRoles();
             }
+        }
+        private void SetGlimeshRoles()
+        {
+            this.GlimeshUserRoles.Add(UserRoleEnum.User);
+            if (ServiceManager.Get<GlimeshSessionService>().User != null && ServiceManager.Get<GlimeshSessionService>().User.id.Equals(this.GlimeshID))
+            {
+                this.GlimeshUserRoles.Add(UserRoleEnum.Streamer);
+            }
+
+            this.IsInChat = true;
         }
 
         #endregion Glimesh Refresh Functions
