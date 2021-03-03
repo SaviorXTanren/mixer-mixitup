@@ -13,5 +13,7 @@ namespace MixItUp.Base.ViewModel.Chat.Glimesh
             this.Name = token.text;
             this.Url = token.url;
         }
+
+        public bool IsGif { get { return this.Url.Contains(".gif"); } }
     }
 }

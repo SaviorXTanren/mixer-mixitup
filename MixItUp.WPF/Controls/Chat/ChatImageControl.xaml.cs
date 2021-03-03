@@ -96,9 +96,17 @@ namespace MixItUp.WPF.Controls.Chat
                     else if (this.DataContext is GlimeshChatEmoteViewModel)
                     {
                         GlimeshChatEmoteViewModel emote = (GlimeshChatEmoteViewModel)this.DataContext;
-                        this.SVGImage.Visibility = Visibility.Visible;
-                        this.SVGImage.ToolTip = this.AltText.Text = emote.Name;
-                        this.ResizeImage(this.SVGImage);
+                        if (emote.IsGif)
+                        {
+                            this.Image.Source = await this.DownloadImageUrl(emote.Url);
+                            this.Image.ToolTip = this.AltText.Text = emote.Name;
+                        }
+                        else
+                        {
+                            this.SVGImage.Visibility = Visibility.Visible;
+                            this.SVGImage.ToolTip = this.AltText.Text = emote.Name;
+                            this.ResizeImage(this.SVGImage);
+                        }
                     }
                     else if (this.DataContext is string)
                     {
