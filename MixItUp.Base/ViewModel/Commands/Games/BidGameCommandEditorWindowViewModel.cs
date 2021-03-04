@@ -105,7 +105,10 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandNotEnoughPlayersExample);
             this.GameCompleteCommand = this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandBidGameCompleteExample, this.PrimaryCurrencyName));
 
-            this.Requirements.Currency.Items.First().SelectedRequirementType = CurrencyRequirementTypeEnum.MinimumOnly;
+            if (this.Requirements.Currency.Items.Count > 0)
+            {
+                this.Requirements.Currency.Items.FirstOrDefault().SelectedRequirementType = CurrencyRequirementTypeEnum.MinimumOnly;
+            }
         }
 
         public override bool RequirePrimaryCurrency { get { return true; } }

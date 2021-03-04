@@ -252,13 +252,13 @@ namespace MixItUp.Base.Model.Commands
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
                 if (ServiceManager.Get<TwitchSessionService>().StreamIsLive)
                 {
-                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().StreamV5.created_at).GetValueOrDefault();
+                    return TwitchPlatformService.GetTwitchDateTime(ServiceManager.Get<TwitchSessionService>().StreamV5.created_at);
                 }
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 await ServiceManager.Get<GlimeshSessionService>().RefreshChannel();
-                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.startedAt).GetValueOrDefault();
+                return GlimeshPlatformService.GetGlimeshDateTime(ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.startedAt);
             }
             return DateTimeOffset.MinValue;
         }
