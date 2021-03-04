@@ -27,9 +27,9 @@ namespace MixItUp.WPF.Controls.Actions
             CommandActionEditorControlViewModel viewModel = (CommandActionEditorControlViewModel)this.DataContext;
             if (viewModel != null && viewModel.SelectedCommand != null)
             {
-                if (viewModel.SelectedCommand.Type == CommandTypeEnum.PreMade)
+                if (viewModel.SelectedCommand.Type == CommandTypeEnum.PreMade || viewModel.SelectedCommand.Type == CommandTypeEnum.Game)
                 {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.PreMadeCommandsCanNotBeEdited);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommandCannotBeEditedHere);
                 }
                 else
                 {

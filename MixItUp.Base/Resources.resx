@@ -4684,7 +4684,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="UnableToCopyToClipboard" xml:space="preserve">
     <value>Unable to copy text to clipboard due to system error, please try manually re-typing the text.</value>
   </data>
-  <data name="PreMadeCommandsCanNotBeEdited" xml:space="preserve">
-    <value>Pre-Made Commands can not be edited</value>
+  <data name="CommandCannotBeEditedHere" xml:space="preserve">
+    <value>The selected command can not be edited here</value>
   </data>
 </root>

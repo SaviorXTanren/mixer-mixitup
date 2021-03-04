@@ -19,6 +19,7 @@ namespace MixItUp.Base.Model.Commands
         Timer = 3,
         ActionGroup = 4,
         Game = 5,
+        [Obsolete]
         Remote = 6,
         TwitchChannelPoints = 7,
         PreMade = 8,

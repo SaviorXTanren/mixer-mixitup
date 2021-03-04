@@ -1870,6 +1870,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The selected command can not be edited here.
+        /// </summary>
+        public static string CommandCannotBeEditedHere {
+            get {
+                return ResourceManager.GetString("CommandCannotBeEditedHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Command Group.
         /// </summary>
         public static string CommandGroup {
@@ -9032,15 +9041,6 @@ namespace MixItUp.Base {
         public static string PreMadeCommands {
             get {
                 return ResourceManager.GetString("PreMadeCommands", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pre-Made Commands can not be edited.
-        /// </summary>
-        public static string PreMadeCommandsCanNotBeEdited {
-            get {
-                return ResourceManager.GetString("PreMadeCommandsCanNotBeEdited", resourceCulture);
             }
         }
         
