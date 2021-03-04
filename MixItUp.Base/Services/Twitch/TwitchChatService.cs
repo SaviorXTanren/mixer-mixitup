@@ -653,14 +653,28 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void UserClient_OnPingReceived(object sender, EventArgs e)
         {
-            Logger.Log(LogLevel.Debug, "Twitch User Client - Ping");
-            await this.userClient.Pong();
+            try
+            {
+                Logger.Log(LogLevel.Debug, "Twitch User Client - Ping");
+                await this.userClient.Pong();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private async void BotClient_OnPingReceived(object sender, EventArgs e)
         {
-            Logger.Log(LogLevel.Debug, "Twitch Bot Client - Ping");
-            await this.botClient.Pong();
+            try
+            {
+                Logger.Log(LogLevel.Debug, "Twitch Bot Client - Ping");
+                await this.botClient.Pong();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private async void UserClient_OnUserJoinReceived(object sender, ChatUserJoinPacketModel userJoin)
