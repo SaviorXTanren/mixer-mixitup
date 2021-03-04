@@ -155,7 +155,7 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshChatEventService>() != null)
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
                 }

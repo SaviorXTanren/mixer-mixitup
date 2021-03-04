@@ -96,7 +96,7 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id)
         {
-            if (this.platformUserIDLookups[platform].ContainsKey(id))
+            if (!string.IsNullOrEmpty(id) && this.platformUserIDLookups[platform].ContainsKey(id))
             {
                 return this.GetUserByID(this.platformUserIDLookups[platform][id]);
             }
