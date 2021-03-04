@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class PatreonServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<PatreonTier> Tiers { get; set; } = new ObservableCollection<PatreonTier>();
+        public ObservableCollection<PatreonTier> Tiers { get; set; } = new ObservableCollection<PatreonTier>().EnableSync();
 
         public PatreonTier SelectedTier
         {

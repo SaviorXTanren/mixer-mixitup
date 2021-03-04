@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string WinnerUsername { get { return ChannelSession.Services.GiveawayService.Winner?.DisplayName ?? string.Empty; } }
 
-        public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
+        public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>().EnableSync();
 
         public CommandModelBase GiveawayStartedReminderCommand
         {

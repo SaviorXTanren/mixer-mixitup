@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string filePath;
 
-        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>().EnableSync();
 
         public string SelectedAudioDevice
         {

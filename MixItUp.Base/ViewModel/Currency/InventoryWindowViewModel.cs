@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private int defaultItemMaxAmount;
 
-        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>();
+        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>().EnableSync();
 
         public InventoryItemModel SelectedItem
         {

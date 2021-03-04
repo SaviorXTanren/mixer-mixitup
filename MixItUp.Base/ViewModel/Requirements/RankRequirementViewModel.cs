@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class RankListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ObservableCollection<RankRequirementViewModel> Items { get; set; } = new ObservableCollection<RankRequirementViewModel>();
+        public ObservableCollection<RankRequirementViewModel> Items { get; set; } = new ObservableCollection<RankRequirementViewModel>().EnableSync();
 
         public ICommand AddItemCommand { get; private set; }
 

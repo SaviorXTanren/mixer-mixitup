@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowSendMessageGrid { get { return this.SelectedActionType == DiscordActionTypeEnum.SendMessage; } }
 
-        public ObservableCollection<DiscordChannel> Channels { get; set; } = new ObservableCollection<DiscordChannel>();
+        public ObservableCollection<DiscordChannel> Channels { get; set; } = new ObservableCollection<DiscordChannel>().EnableSync();
 
         public DiscordChannel SelectedChannel
         {
