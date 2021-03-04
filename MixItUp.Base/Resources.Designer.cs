@@ -9036,6 +9036,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pre-Made Commands can not be edited.
+        /// </summary>
+        public static string PreMadeCommandsCanNotBeEdited {
+            get {
+                return ResourceManager.GetString("PreMadeCommandsCanNotBeEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press.
         /// </summary>
         public static string Press {
