@@ -11,13 +11,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayLeaderboardListItemViewModel : OverlayListItemViewModelBase
     {
-        public IEnumerable<string> LeaderboardTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayLeaderboardListItemTypeEnum>();
-        public string LeaderboardTypeString
+        public IEnumerable<OverlayLeaderboardListItemTypeEnum> LeaderboardTypes { get; set; } = EnumHelper.GetEnumList<OverlayLeaderboardListItemTypeEnum>();
+        public OverlayLeaderboardListItemTypeEnum LeaderboardType
         {
-            get { return EnumHelper.GetEnumName(this.leaderboardType); }
+            get { return this.leaderboardType; }
             set
             {
-                this.leaderboardType = EnumHelper.GetEnumValueFromString<OverlayLeaderboardListItemTypeEnum>(value);
+                this.leaderboardType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsCurrencyRankType");
                 this.NotifyPropertyChanged("IsBitsType");
@@ -32,13 +32,13 @@ namespace MixItUp.Base.ViewModel.Overlay
         public bool HasNewLeaderCommand { get { return this.NewLeaderCommand != null; } }
         public bool DoesNotHaveNewLeaderCommand { get { return !this.HasNewLeaderCommand; } }
 
-        public IEnumerable<string> BitsDateStrings { get; set; } = EnumHelper.GetEnumNames<BitsLeaderboardPeriodEnum>();
-        public string BitsDateString
+        public IEnumerable<BitsLeaderboardPeriodEnum> BitsDates { get; set; } = EnumHelper.GetEnumList<BitsLeaderboardPeriodEnum>();
+        public BitsLeaderboardPeriodEnum BitsDate
         {
-            get { return EnumHelper.GetEnumName(this.bitsDate); }
+            get { return this.bitsDate; }
             set
             {
-                this.bitsDate = EnumHelper.GetEnumValueFromString<BitsLeaderboardPeriodEnum>(value);
+                this.bitsDate = value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public override OverlayItemModelBase GetOverlayItem()
         {
-            if (this.Validate() && !string.IsNullOrEmpty(this.LeaderboardTypeString))
+            if (this.Validate())
             {
                 this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
                 this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
@@ -113,11 +113,8 @@ namespace MixItUp.Base.ViewModel.Overlay
                 }
                 else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Bits)
                 {
-                    if (!string.IsNullOrEmpty(this.BitsDateString))
-                    {
-                        return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.bitsDate, this.NewLeaderCommand);
-                    }
+                    return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
+                        this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.bitsDate, this.NewLeaderCommand);
                 }
                 else
                 {

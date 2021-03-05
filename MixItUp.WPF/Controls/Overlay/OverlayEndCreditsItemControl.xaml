@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:OverlayItemControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,7 +33,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding SpeedStrings}" Text="{Binding SpeedString}" MaterialDesign:HintAssist.Hint="Scroll Speed" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Speeds}" Text="{Binding Speed}" MaterialDesign:HintAssist.Hint="Scroll Speed" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
         </Grid>
@@ -75,7 +85,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ItemTypeStrings}" Text="{Binding ItemTypeString}" MaterialDesign:HintAssist.Hint="Section Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="145" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ItemTypes}" Text="{Binding ItemType}" MaterialDesign:HintAssist.Hint="Section Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="145">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button Grid.Column="2" Command="{Binding AddItemCommand}" Content="{MaterialDesign:PackIcon Plus}" />
         </Grid>
 
