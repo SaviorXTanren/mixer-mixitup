@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class SerialDevicesSettingsControl : SettingsControlBase
     {
-        private ObservableCollection<string> portNames = new ObservableCollection<string>();
-        private ObservableCollection<SerialDeviceModel> serialDevices = new ObservableCollection<SerialDeviceModel>();
+        private ObservableCollection<string> portNames = new ObservableCollection<string>().EnableSync();
+        private ObservableCollection<SerialDeviceModel> serialDevices = new ObservableCollection<SerialDeviceModel>().EnableSync();
 
         public SerialDevicesSettingsControl()
         {

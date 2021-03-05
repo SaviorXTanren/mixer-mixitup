@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayWidgetModel OverlayWidget { get; private set; }
 
-        public ObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ObservableCollection<OverlayTypeListing>();
+        public ObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ObservableCollection<OverlayTypeListing>().EnableSync();
         public OverlayTypeListing SelectedOverlayType
         {
             get { return this.selectedOverlayType; }
@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public ObservableCollection<string> OverlayEndpoints { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> OverlayEndpoints { get; set; } = new ObservableCollection<string>().EnableSync();
 
         public string SelectedOverlayEndpoint
         {

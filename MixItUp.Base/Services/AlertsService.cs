@@ -15,7 +15,7 @@ namespace MixItUp.Base.Services
 
     public class AlertsService : IAlertsService
     {
-        public ObservableCollection<AlertChatMessageViewModel> Alerts { get; private set; } = new ObservableCollection<AlertChatMessageViewModel>();
+        public ObservableCollection<AlertChatMessageViewModel> Alerts { get; private set; } = new ObservableCollection<AlertChatMessageViewModel>().EnableSync();
         private LockedDictionary<string, AlertChatMessageViewModel> alertsLookup = new LockedDictionary<string, AlertChatMessageViewModel>();
 
         public async Task AddAlert(AlertChatMessageViewModel alert)

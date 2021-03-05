@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private string name;
 
-        public ObservableCollection<RoleProbabilityPayoutViewModel> RoleProbabilityPayouts { get; set; } = new ObservableCollection<RoleProbabilityPayoutViewModel>();
+        public ObservableCollection<RoleProbabilityPayoutViewModel> RoleProbabilityPayouts { get; set; } = new ObservableCollection<RoleProbabilityPayoutViewModel>().EnableSync();
 
         public int UserChance
         {
@@ -203,7 +203,7 @@ namespace MixItUp.Base.ViewModel.Games
 
     public abstract class GameCommandEditorWindowViewModelBase : ChatCommandEditorWindowViewModel
     {
-        public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>();
+        public ObservableCollection<GameOutcomeViewModel> Outcomes { get; set; } = new ObservableCollection<GameOutcomeViewModel>().EnableSync();
 
         public ICommand AddOutcomeCommand { get; set; }
         public ICommand DeleteOutcomeCommand { get; set; }

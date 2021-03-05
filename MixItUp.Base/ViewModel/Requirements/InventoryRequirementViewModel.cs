@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class InventoryListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ObservableCollection<InventoryRequirementViewModel>();
+        public ObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ObservableCollection<InventoryRequirementViewModel>().EnableSync();
 
         public ICommand AddItemCommand { get; private set; }
 

@@ -1,10 +1,9 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -53,7 +52,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ObservableCollection<UserOnlyChatCommandModel>();
+        public ObservableCollection<UserOnlyChatCommandModel> UserOnlyChatCommands { get; set; } = new ObservableCollection<UserOnlyChatCommandModel>().EnableSync();
         public bool HasUserOnlyChatCommands { get { return this.UserOnlyChatCommands.Count > 0; } }
 
         public CommandModelBase EntranceCommand
@@ -116,8 +115,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public ObservableCollection<UserMetricViewModel> Metrics1 { get; private set; } = new ObservableCollection<UserMetricViewModel>();
-        public ObservableCollection<UserMetricViewModel> Metrics2 { get; private set; } = new ObservableCollection<UserMetricViewModel>();
+        public ObservableCollection<UserMetricViewModel> Metrics1 { get; private set; } = new ObservableCollection<UserMetricViewModel>().EnableSync();
+        public ObservableCollection<UserMetricViewModel> Metrics2 { get; private set; } = new ObservableCollection<UserMetricViewModel>().EnableSync();
 
         public UserDataEditorWindowViewModel(UserDataModel user)
         {

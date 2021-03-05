@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool OvrStreamNotEnabled { get { return !ServiceManager.Get<IOvrStreamService>().IsConnected; } }
 
-        public ObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ObservableCollection<OvrStreamTitle>();
+        public ObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ObservableCollection<OvrStreamTitle>().EnableSync();
 
         public OvrStreamTitle SelectedTitle
         {
@@ -114,11 +114,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowVariablesGrid { get { return this.SelectedActionType == OvrStreamActionTypeEnum.PlayTitle || this.SelectedActionType == OvrStreamActionTypeEnum.UpdateVariables; } }
 
-        public ObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ObservableCollection<OvrStreamVariable>();
+        public ObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ObservableCollection<OvrStreamVariable>().EnableSync();
 
         public ICommand AddVariableCommand { get; private set; }
 
-        public ObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ObservableCollection<OvrStreamVariableViewModel>();
+        public ObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ObservableCollection<OvrStreamVariableViewModel>().EnableSync();
 
         public OvrStreamActionEditorControlViewModel(OvrStreamActionModel action)
             : base(action)

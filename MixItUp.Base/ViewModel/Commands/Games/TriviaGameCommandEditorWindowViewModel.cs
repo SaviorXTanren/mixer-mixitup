@@ -198,7 +198,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel userFailureCommand;
 
-        public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>();
+        public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>().EnableSync();
 
         public ICommand AddQuestionCommand { get; set; }
         public ICommand DeleteQuestionCommand { get; set; }
