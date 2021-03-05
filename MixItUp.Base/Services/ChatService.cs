@@ -74,7 +74,7 @@ namespace MixItUp.Base.Services
 
         public bool DisableChat { get; set; }
 
-        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
+        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>().EnableSync();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
         public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();
@@ -274,33 +274,39 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.triggersToCommands.Clear();
-            this.longestTrigger = 0;
-            this.wildcardCommands.Clear();
-            this.chatMenuCommands.Clear();
-            foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
+            try
             {
-                if (command.Wildcards)
+                this.triggersToCommands.Clear();
+                this.longestTrigger = 0;
+                this.wildcardCommands.Clear();
+                this.chatMenuCommands.Clear();
+                foreach (ChatCommandModel command in ChannelSession.AllEnabledChatAccessibleCommands)
                 {
-                    this.wildcardCommands.Add(command);
-                }
-                else
-                {
-                    foreach (string trigger in command.GetFullTriggers())
+                    if (command.Wildcards)
                     {
-                        string t = trigger.ToLower();
-                        this.triggersToCommands[t] = command;
-                        this.longestTrigger = Math.Max(this.longestTrigger, t.Length);
+                        this.wildcardCommands.Add(command);
+                    }
+                    else
+                    {
+                        foreach (string trigger in command.GetFullTriggers())
+                        {
+                            string t = trigger.ToLower();
+                            this.triggersToCommands[t] = command;
+                            this.longestTrigger = Math.Max(this.longestTrigger, t.Length);
+                        }
+                    }
+
+                    SettingsRequirementModel settings = command.Requirements.Settings;
+                    if (settings != null && settings.ShowOnChatContextMenu)
+                    {
+                        this.chatMenuCommands.Add(command);
                     }
                 }
-
-                SettingsRequirementModel settings = command.Requirements.Settings;
-                if (settings != null && settings.ShowOnChatContextMenu)
-                {
-                    this.chatMenuCommands.Add(command);
-                }
             }
-
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
             this.ChatCommandsReprocessed(this, new EventArgs());
         }
 

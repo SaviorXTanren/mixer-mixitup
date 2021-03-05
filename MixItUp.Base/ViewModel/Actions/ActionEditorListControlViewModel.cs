@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class ActionEditorListControlViewModel : UIViewModelBase
     {
-        public ObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ObservableCollection<ActionTypeEnum>();
+        public ObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ObservableCollection<ActionTypeEnum>().EnableSync();
         public ActionTypeEnum SelectedActionType
         {
             get { return this.selectedActionType; }
@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddCommand { get; private set; }
 
-        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
+        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>().EnableSync();
 
         public ActionEditorListControlViewModel()
         {

@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowSendMessageGrid { get { return this.SelectedActionType == DiscordActionTypeEnum.SendMessage; } }
 
-        public ObservableCollection<DiscordChannel> Channels { get; set; } = new ObservableCollection<DiscordChannel>();
+        public ObservableCollection<DiscordChannel> Channels { get; set; } = new ObservableCollection<DiscordChannel>().EnableSync();
 
         public DiscordChannel SelectedChannel
         {
@@ -156,7 +156,10 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 foreach (DiscordChannel channel in await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server))
                 {
-                    this.Channels.Add(channel);
+                    if (channel.Type == DiscordChannel.DiscordChannelTypeEnum.Announcements || channel.Type == DiscordChannel.DiscordChannelTypeEnum.Text)
+                    {
+                        this.Channels.Add(channel);
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(this.existingSelectedChannel))

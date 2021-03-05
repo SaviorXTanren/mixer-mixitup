@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class ChannelMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<string> PastTitles { get; private set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> PastTitles { get; private set; } = new ObservableCollection<string>().EnableSync();
 
         public string Title
         {
@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string title;
 
-        public ObservableCollection<string> PastGameNames { get; private set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> PastGameNames { get; private set; } = new ObservableCollection<string>().EnableSync();
 
         public string GameName
         {
@@ -143,7 +143,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string gameName;
 
-        public ObservableCollection<TagViewModel> Tags { get; private set; } = new ObservableCollection<TagViewModel>();
+        public ObservableCollection<TagViewModel> Tags { get; private set; } = new ObservableCollection<TagViewModel>().EnableSync();
 
         public TagViewModel Tag
         {
@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private TagViewModel tag;
 
-        public ObservableCollection<TagViewModel> CustomTags { get; private set; } = new ObservableCollection<TagViewModel>();
+        public ObservableCollection<TagViewModel> CustomTags { get; private set; } = new ObservableCollection<TagViewModel>().EnableSync();
 
         public ChannelInformationModel ChannelInformation { get; private set; }
 
@@ -181,7 +181,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ICommand SearchFindChannelToRaidCommand { get; private set; }
 
-        public ObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ObservableCollection<SearchFindChannelToRaidItemViewModel>();
+        public ObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ObservableCollection<SearchFindChannelToRaidItemViewModel>().EnableSync();
 
         private GameModel currentGame;
 

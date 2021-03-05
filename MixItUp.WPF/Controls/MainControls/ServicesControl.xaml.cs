@@ -1,4 +1,5 @@
-﻿using MixItUp.WPF.Controls.Services;
+﻿using MixItUp.Base.Util;
+using MixItUp.WPF.Controls.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ServicesControl : MainControlBase
     {
-        private ObservableCollection<UserControl> services = new ObservableCollection<UserControl>();
+        private ObservableCollection<UserControl> services = new ObservableCollection<UserControl>().EnableSync();
 
         public ServicesControl()
         {

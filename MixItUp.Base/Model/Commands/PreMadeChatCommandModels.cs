@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Commands
 
     public class CommandsPreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public CommandsPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Commands, "commands", 0, UserRoleEnum.User) { }
+        public CommandsPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Commands, "commands", 5, UserRoleEnum.User) { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Model.Commands
 
     public class GamesPreMadeChatCommandModel : PreMadeChatCommandModelBase
     {
-        public GamesPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Games, "games", 0, UserRoleEnum.User) { }
+        public GamesPreMadeChatCommandModel() : base(MixItUp.Base.Resources.Games, "games", 5, UserRoleEnum.User) { }
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {

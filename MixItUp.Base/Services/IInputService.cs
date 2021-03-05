@@ -191,9 +191,9 @@ namespace MixItUp.Base.Services
         Up = 0xC8,
         [Name("Down Arrow")]
         Down = 0xD0,
-        [Name("Left Arrow")]
-        Right = 0xCD,
         [Name("Right Arrow")]
+        Right = 0xCD,
+        [Name("Left Arrow")]
         Left = 0xCB,
     }
 

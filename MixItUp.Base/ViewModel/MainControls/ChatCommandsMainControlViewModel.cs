@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +25,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool PreMadeCommandSelected { get { return !this.CustomCommandsSelected; } }
 
-        public ObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ObservableCollection<PreMadeChatCommandControlViewModel>();
+        public ObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ObservableCollection<PreMadeChatCommandControlViewModel>().EnableSync();
         private List<PreMadeChatCommandControlViewModel> allPreMadeChatCommands = new List<PreMadeChatCommandControlViewModel>();
 
         public ICommand SwitchToPreMadeCommands { get; set; }

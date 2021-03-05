@@ -152,7 +152,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddClauseCommand { get; private set; }
 
-        public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
+        public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>().EnableSync();
 
         public ICommand ImportActionsCommand { get; private set; }
 

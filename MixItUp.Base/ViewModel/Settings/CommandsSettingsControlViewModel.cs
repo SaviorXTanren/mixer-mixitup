@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleNumberSettingsOptionControlViewModel TwitchMassGiftedSubsFilterAmount { get; set; }
 
-        public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>();
+        public ObservableCollection<GenericToggleSettingsOptionControlViewModel> HideActionsList { get; set; } = new ObservableCollection<GenericToggleSettingsOptionControlViewModel>().EnableSync();
 
         public CommandsSettingsControlViewModel()
         {
