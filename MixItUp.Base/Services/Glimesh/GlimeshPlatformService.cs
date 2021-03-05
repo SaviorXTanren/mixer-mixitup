@@ -38,7 +38,11 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (!string.IsNullOrEmpty(dateTime))
                 {
-                    return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
+                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
+                    if (result > DateTimeOffset.MinValue)
+                    {
+                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                    }
                 }
             }
             catch (Exception ex)
