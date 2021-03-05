@@ -75,6 +75,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task OnVisibilityChanged()
         {
+            // TODO: Fix this to not use GetEnumNames, that doens't support localization.
             this.CommandTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(CommandModelBase.GetSelectableCommandTypes());
             this.KeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 

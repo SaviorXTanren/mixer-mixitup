@@ -23,7 +23,6 @@ namespace MixItUp.Base.Model.Overlay
     {
         Subscribers,
         Donations,
-        [Name("Currency/Rank")]
         CurrencyRank,
         [Obsolete]
         Sparks,
