@@ -23,14 +23,14 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task InitializeInternal()
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
-            this.portNames.Clear();
+            await this.portNames.ClearAsync();
             foreach (string portName in await ChannelSession.Services.SerialService.GetCurrentPortNames())
             {
                 this.portNames.Add(portName);
             }
 
             this.SerialDevicesListView.ItemsSource = this.serialDevices;
-            this.serialDevices.Clear();
+            await this.serialDevices.ClearAsync();
             foreach (SerialDeviceModel serialDevice in ChannelSession.Settings.SerialDevices)
             {
                 this.serialDevices.Add(serialDevice);

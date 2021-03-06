@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshFundraisers()
         {
-            this.Fundraisers.Clear();
+            await this.Fundraisers.ClearAsync();
 
             IEnumerable<JustGivingFundraiser> fundraisers = await ChannelSession.Services.JustGiving.GetCurrentFundraisers();
             if (fundraisers != null)

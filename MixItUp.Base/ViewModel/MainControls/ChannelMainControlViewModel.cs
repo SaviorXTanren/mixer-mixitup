@@ -230,7 +230,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.SearchFindChannelToRaidCommand = this.CreateCommand(async (parameter) =>
             {
-                this.SearchFindChannelToRaidResults.Clear();
+                await this.SearchFindChannelToRaidResults.ClearAsync();
 
                 List<SearchFindChannelToRaidItemViewModel> results = new List<SearchFindChannelToRaidItemViewModel>();
 
@@ -340,7 +340,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            this.Tags.Clear();
+            await this.Tags.ClearAsync();
             foreach (TagViewModel tag in tags.OrderBy(t => t.Name))
             {
                 this.Tags.Add(tag);
@@ -395,7 +395,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            this.CustomTags.Clear();
+            await this.CustomTags.ClearAsync();
             foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTagsForChannel(ChannelSession.TwitchUserNewAPI))
             {
                 if (!tag.is_auto)

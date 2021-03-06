@@ -77,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshCampaigns()
         {
-            this.Campaigns.Clear();
+            await this.Campaigns.ClearAsync();
 
             TiltifyUser user = await ChannelSession.Services.Tiltify.GetUser();
 

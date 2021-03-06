@@ -215,12 +215,9 @@ namespace MixItUp.Base.Services
 
         public async Task ClearMessages()
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Clear();
-                this.Messages.Clear();
-                return Task.FromResult(0);
-            });
+            this.messagesLookup.Clear();
+            await this.Messages.ClearAsync();
+
             await this.TwitchChatService.ClearMessages();
         }
 

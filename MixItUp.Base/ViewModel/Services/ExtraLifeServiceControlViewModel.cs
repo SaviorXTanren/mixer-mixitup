@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Services
             }
             else
             {
-                this.Participants.Clear();
+                await this.Participants.ClearAsync();
 
                 ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam(this.ExtraLifeTeamID);
                 if (team != null)
