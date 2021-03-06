@@ -44,7 +44,7 @@ namespace MixItUp.Base.ViewModel.Services
                 Task.Run(async () =>
                 {
                     Result result = await ChannelSession.Services.Twitter.Connect();
-                    await DispatcherHelper.InvokeDispatcher(async () =>
+                    await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
                     {
                         if (result.Success)
                         {

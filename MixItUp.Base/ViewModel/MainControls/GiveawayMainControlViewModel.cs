@@ -202,7 +202,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (usersUpdated)
             {
                 await this.EnteredUsers.ClearAsync();
-                await DispatcherHelper.InvokeDispatcher(() =>
+                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
                 {
                     foreach (GiveawayUser user in ChannelSession.Services.GiveawayService.Users)
                     {

@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private async Task UpdateText()
         {
             await this.viewModel.RefreshUsersAsync();
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 this.UsernameFilterTextBox.Focus();
                 return Task.CompletedTask;

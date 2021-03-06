@@ -17,7 +17,7 @@ namespace MixItUp.Base.Util
 
         public async Task AddAsync(T item)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 base.Add(item);
                 return Task.FromResult(0);
@@ -28,7 +28,7 @@ namespace MixItUp.Base.Util
 
         public async Task ClearAsync()
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 base.Clear();
                 return Task.FromResult(0);
@@ -40,7 +40,7 @@ namespace MixItUp.Base.Util
         public async Task<IEnumerator<T>> GetEnumeratorAsync()
         {
             IEnumerator<T> result = null;
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 result = base.GetEnumerator();
                 return Task.FromResult(0);
@@ -53,7 +53,7 @@ namespace MixItUp.Base.Util
         public async Task<int> IndexOfAsync(T item)
         {
             int index = -1;
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 index = base.IndexOf(item);
                 return Task.FromResult(0);
@@ -65,7 +65,7 @@ namespace MixItUp.Base.Util
 
         public async Task InsertAsync(int index, T item)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 base.Insert(index, item);
                 return Task.FromResult(0);
@@ -77,7 +77,7 @@ namespace MixItUp.Base.Util
         public async Task<bool> RemoveAsync(T item)
         {
             bool result = false;
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 result = base.Remove(item);
                 return Task.FromResult(0);
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Util
 
         public async Task AddRangeAsync(IEnumerable<T> range)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 foreach (var item in range)
                 {

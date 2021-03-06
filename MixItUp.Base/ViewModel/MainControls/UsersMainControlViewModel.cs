@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await Task.Run(async () =>
             {
-                await DispatcherHelper.InvokeDispatcher(() =>
+                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
                 {
                     this.StartLoadingOperation();
                     return Task.CompletedTask;
@@ -129,7 +129,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
-                await DispatcherHelper.InvokeDispatcher(() =>
+                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
                 {
                     this.EndLoadingOperation();
                     return Task.CompletedTask;

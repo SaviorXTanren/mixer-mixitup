@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         private async void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
             await this.QueueUsers.ClearAsync();
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 int position = 1;
                 foreach (UserViewModel user in ChannelSession.Services.GameQueueService.Queue)
