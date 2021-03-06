@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class EventsMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<EventCommandItemViewModel> EventCommands { get; set; } = new ObservableCollection<EventCommandItemViewModel>().EnableSync();
+        public ObservableCollection<EventCommandItemViewModel> EventCommands { get; set; } = new ObservableCollection<EventCommandItemViewModel>();
 
         public EventsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)

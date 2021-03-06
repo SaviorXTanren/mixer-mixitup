@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class JustGivingServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<JustGivingFundraiser> Fundraisers { get; set; } = new ObservableCollection<JustGivingFundraiser>().EnableSync();
+        public ObservableCollection<JustGivingFundraiser> Fundraisers { get; set; } = new ObservableCollection<JustGivingFundraiser>();
 
         public JustGivingFundraiser SelectedFundraiser
         {

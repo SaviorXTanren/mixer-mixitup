@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class ExtraLifeServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ObservableCollection<ExtraLifeTeamParticipant>().EnableSync();
+        public ObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ObservableCollection<ExtraLifeTeamParticipant>();
 
         public int ExtraLifeTeamID
         {

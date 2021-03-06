@@ -179,7 +179,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         protected int itemTextSize;
 
-        public ObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ObservableCollection<OverlayEndCreditsSectionItemViewModel>().EnableSync();
+        public ObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ObservableCollection<OverlayEndCreditsSectionItemViewModel>();
 
         public ICommand AddItemCommand { get; set; }
 

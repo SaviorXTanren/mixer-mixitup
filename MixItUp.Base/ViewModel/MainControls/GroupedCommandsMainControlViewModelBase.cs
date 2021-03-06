@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +11,7 @@ namespace MixItUp.Base.ViewModel.MainControls
     {
         public ObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
 
-        public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>().EnableSync();
+        public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>();
 
         public bool ShowList { get { return !this.ShowGroups; } }
         public bool ShowGroups { get { return this.CommandGroups.Count > 1; } }

@@ -349,7 +349,7 @@ namespace MixItUp.Base.ViewModel.Currency
         public bool HasRankDownCommand { get { return this.RankDownCommand != null; } }
         public bool DoesNotHaveRankDownCommand { get { return !this.HasRankDownCommand; } }
 
-        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>().EnableSync();
+        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>();
 
         public string NewRankName
         {

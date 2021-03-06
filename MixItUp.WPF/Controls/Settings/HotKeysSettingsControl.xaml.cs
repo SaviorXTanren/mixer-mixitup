@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private const string PreMadeCommandType = "Pre-Made";
 
-        private ObservableCollection<HotKeyUI> hotKeys = new ObservableCollection<HotKeyUI>().EnableSync();
+        private ObservableCollection<HotKeyUI> hotKeys = new ObservableCollection<HotKeyUI>();
 
         public HotKeysSettingsControl()
         {

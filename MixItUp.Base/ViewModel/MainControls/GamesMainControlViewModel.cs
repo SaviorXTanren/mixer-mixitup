@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
-using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public ObservableCollection<GameCommandModelBase> GameCommands { get; private set; } = new ObservableCollection<GameCommandModelBase>().EnableSync();
+        public ObservableCollection<GameCommandModelBase> GameCommands { get; private set; } = new ObservableCollection<GameCommandModelBase>();
 
         public GamesMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

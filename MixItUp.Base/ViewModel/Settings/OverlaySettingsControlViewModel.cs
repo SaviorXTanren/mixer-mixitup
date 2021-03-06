@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
     public class OverlaySettingsControlViewModel : UIViewModelBase
     {
-        public ObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ObservableCollection<OverlayEndpointListingViewModel>().EnableSync();
+        public ObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ObservableCollection<OverlayEndpointListingViewModel>();
 
         public string NewEndpointName
         {

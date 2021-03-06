@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public bool OverlayEnabled { get { return ChannelSession.Settings.EnableOverlay; } }
         public bool OverlayNotEnabled { get { return !this.OverlayEnabled; } }
 
-        public ObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ObservableCollection<OverlayWidgetModel>().EnableSync();
+        public ObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ObservableCollection<OverlayWidgetModel>();
 
         public OverlayWidgetsMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

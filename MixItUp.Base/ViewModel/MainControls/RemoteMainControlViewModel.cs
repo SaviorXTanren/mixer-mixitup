@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private RemoteItemControlViewModelBase[,] items = new RemoteItemControlViewModelBase[RemoteBoardModel.BoardWidth, RemoteBoardModel.BoardHeight];
 
-        public ObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ObservableCollection<RemoteProfileViewModel>().EnableSync();
+        public ObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ObservableCollection<RemoteProfileViewModel>();
 
         public RemoteProfileViewModel Profile
         {

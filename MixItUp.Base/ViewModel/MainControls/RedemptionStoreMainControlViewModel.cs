@@ -88,7 +88,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class RedemptionStoreMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<RedemptionStorePurchaseViewModel> Purchases { get; private set; } = new ObservableCollection<RedemptionStorePurchaseViewModel>().EnableSync();
+        public ObservableCollection<RedemptionStorePurchaseViewModel> Purchases { get; private set; } = new ObservableCollection<RedemptionStorePurchaseViewModel>();
 
         public bool EnableRedemptionStore
         {

@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public ObservableCollection<QueueUser> QueueUsers { get; private set; } = new ObservableCollection<QueueUser>().EnableSync();
+        public ObservableCollection<QueueUser> QueueUsers { get; private set; } = new ObservableCollection<QueueUser>();
 
         public CommandModelBase GameQueueUserJoinedCommand
         {

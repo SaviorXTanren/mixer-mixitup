@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
-using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -57,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
     public class RemoteSettingsControlViewModel : ControlViewModelBase
     {
-        public ObservableCollection<RemoteConnectionUIViewModel> Connections { get; set; } = new ObservableCollection<RemoteConnectionUIViewModel>().EnableSync();
+        public ObservableCollection<RemoteConnectionUIViewModel> Connections { get; set; } = new ObservableCollection<RemoteConnectionUIViewModel>();
 
         public RemoteSettingsControlViewModel()
         {
