@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.Util
 {
-    public class SortableObservableCollection<T> : ObservableCollection<T> where T : IComparable<T>
+    public class SortableObservableCollection<T> : ThreadSafeObservableCollection<T> where T : IComparable<T>
     {
         public void SortedInsert(T newItem)
         {

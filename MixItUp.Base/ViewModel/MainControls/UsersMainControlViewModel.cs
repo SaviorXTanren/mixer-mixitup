@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string usernameFilter;
 
-        public SmartObservableCollection<UserDataModel> Users { get; private set; } = new SmartObservableCollection<UserDataModel>();
+        public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
 
         public int SortColumnIndex
         {
@@ -124,7 +124,8 @@ namespace MixItUp.Base.ViewModel.MainControls
                         data = data.Reverse();
                     }
 
-                    await this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
+                    await this.Users.ClearAsync();
+                    await this.Users.AddRangeAsync(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
