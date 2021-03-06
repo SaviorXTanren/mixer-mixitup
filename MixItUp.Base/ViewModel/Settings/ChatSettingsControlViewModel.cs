@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel HideUserSubscriberBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel HideUserSpecialtyBadge { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseCustomUsernameColors { get; set; }
-        public ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
+        public ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel> CustomUsernameColorsList { get; set; } = new ThreadSafeObservableCollection<GenericColorComboBoxSettingsOptionControlViewModel>();
 
         public ChatSettingsControlViewModel()
         {

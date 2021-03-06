@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class TiltifyServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ObservableCollection<TiltifyCampaign>();
+        public ThreadSafeObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ThreadSafeObservableCollection<TiltifyCampaign>();
 
         public TiltifyCampaign SelectedCampaign
         {

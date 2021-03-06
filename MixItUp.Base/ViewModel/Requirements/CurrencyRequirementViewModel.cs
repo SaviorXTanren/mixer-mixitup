@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class CurrencyListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ObservableCollection<CurrencyRequirementViewModel>();
+        public ThreadSafeObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRequirementViewModel>();
 
         public ICommand AddItemCommand { get; private set; }
 

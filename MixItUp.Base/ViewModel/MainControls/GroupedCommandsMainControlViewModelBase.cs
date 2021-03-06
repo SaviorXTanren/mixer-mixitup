@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,9 +9,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public abstract class GroupedCommandsMainControlViewModelBase : WindowControlViewModelBase
     {
-        public ObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
+        public ThreadSafeObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
 
-        public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>();
+        public ThreadSafeObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ThreadSafeObservableCollection<CommandGroupControlViewModel>();
 
         public bool ShowList { get { return !this.ShowGroups; } }
         public bool ShowGroups { get { return this.CommandGroups.Count > 1; } }

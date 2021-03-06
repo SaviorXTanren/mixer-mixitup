@@ -8,7 +8,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class StreamPassMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<StreamPassModel> StreamPasses { get; private set; } = new ObservableCollection<StreamPassModel>();
+        public ThreadSafeObservableCollection<StreamPassModel> StreamPasses { get; private set; } = new ThreadSafeObservableCollection<StreamPassModel>();
 
         public StreamPassMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

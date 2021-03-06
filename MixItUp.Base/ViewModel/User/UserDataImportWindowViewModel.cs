@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public ICommand UserDataFileBrowseCommand { get; private set; }
 
-        public ObservableCollection<UserDataImportColumnViewModel> Columns { get; private set; } = new ObservableCollection<UserDataImportColumnViewModel>();
+        public ThreadSafeObservableCollection<UserDataImportColumnViewModel> Columns { get; private set; } = new ThreadSafeObservableCollection<UserDataImportColumnViewModel>();
 
         private Dictionary<string, UserDataImportColumnViewModel> columnDictionary = new Dictionary<string, UserDataImportColumnViewModel>();
 

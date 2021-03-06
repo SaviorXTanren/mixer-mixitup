@@ -33,7 +33,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string addQuoteText;
 
-        public ObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ObservableCollection<UserQuoteViewModel>();
+        public ThreadSafeObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ThreadSafeObservableCollection<UserQuoteViewModel>();
 
         public string QuotesFormatText
         {

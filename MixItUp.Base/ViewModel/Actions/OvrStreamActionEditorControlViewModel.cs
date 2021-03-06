@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand DeleteVariableCommand { get; private set; }
 
-        public ObservableCollection<OvrStreamVariable> KnownVariables { get { return this.viewModel.KnownVariables; } set { } }
+        public ThreadSafeObservableCollection<OvrStreamVariable> KnownVariables { get { return this.viewModel.KnownVariables; } set { } }
 
         private OvrStreamActionEditorControlViewModel viewModel;
 
@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool OvrStreamNotEnabled { get { return !ChannelSession.Services.OvrStream.IsConnected; } }
 
-        public ObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ObservableCollection<OvrStreamTitle>();
+        public ThreadSafeObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ThreadSafeObservableCollection<OvrStreamTitle>();
 
         public OvrStreamTitle SelectedTitle
         {
@@ -113,11 +113,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowVariablesGrid { get { return this.SelectedActionType == OvrStreamActionTypeEnum.PlayTitle || this.SelectedActionType == OvrStreamActionTypeEnum.UpdateVariables; } }
 
-        public ObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ObservableCollection<OvrStreamVariable>();
+        public ThreadSafeObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ThreadSafeObservableCollection<OvrStreamVariable>();
 
         public ICommand AddVariableCommand { get; private set; }
 
-        public ObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ObservableCollection<OvrStreamVariableViewModel>();
+        public ThreadSafeObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ThreadSafeObservableCollection<OvrStreamVariableViewModel>();
 
         public OvrStreamActionEditorControlViewModel(OvrStreamActionModel action)
             : base(action)

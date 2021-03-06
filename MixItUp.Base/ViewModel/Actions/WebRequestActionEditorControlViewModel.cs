@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddJSONParameterCommand { get; private set; }
 
-        public ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel> JSONParameters { get; set; } = new ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel>();
+        public ThreadSafeObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel> JSONParameters { get; set; } = new ThreadSafeObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel>();
 
         public WebRequestActionEditorControlViewModel(WebRequestActionModel action)
             : base(action)

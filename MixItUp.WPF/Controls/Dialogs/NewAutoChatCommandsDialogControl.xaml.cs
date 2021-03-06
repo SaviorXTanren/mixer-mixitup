@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
@@ -11,7 +11,7 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class NewAutoChatCommandsDialogControl : UserControl
     {
-        public ObservableCollection<NewAutoChatCommandModel> commands = new ObservableCollection<NewAutoChatCommandModel>();
+        public ThreadSafeObservableCollection<NewAutoChatCommandModel> commands = new ThreadSafeObservableCollection<NewAutoChatCommandModel>();
 
         public NewAutoChatCommandsDialogControl(IEnumerable<NewAutoChatCommandModel> commands)
         {

@@ -231,7 +231,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private double bitsBonus = 1.5;
 
-        public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
+        public ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
         public int CustomLevelUpNumber
         {

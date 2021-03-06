@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Consumables; } }
 
-        public ObservableCollection<ConsumableViewModel> Consumables { get; set; } = new ObservableCollection<ConsumableViewModel>();
+        public ThreadSafeObservableCollection<ConsumableViewModel> Consumables { get; set; } = new ThreadSafeObservableCollection<ConsumableViewModel>();
 
         public ConsumableViewModel SelectedConsumable
         {

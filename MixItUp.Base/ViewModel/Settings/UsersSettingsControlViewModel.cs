@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleSettingsOptionControlViewModel ExplicitUserRoleRequirements { get; set; }
 
-        public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>();
+        public ThreadSafeObservableCollection<UserTitleViewModel> Titles { get; set; } = new ThreadSafeObservableCollection<UserTitleViewModel>();
 
         public string TitleName
         {

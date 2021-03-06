@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services
 
         bool DisableChat { get; set; }
 
-        ObservableCollection<ChatMessageViewModel> Messages { get; }
+        ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; }
 
         LockedDictionary<Guid, UserViewModel> AllUsers { get; }
         IEnumerable<UserViewModel> DisplayUsers { get; }
@@ -74,7 +74,7 @@ namespace MixItUp.Base.Services
 
         public bool DisableChat { get; set; }
 
-        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
+        public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ThreadSafeObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
         public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();

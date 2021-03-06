@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Translation; } }
 
-        public ObservableCollection<CultureInfo> Languages { get; private set; } = new ObservableCollection<CultureInfo>();
+        public ThreadSafeObservableCollection<CultureInfo> Languages { get; private set; } = new ThreadSafeObservableCollection<CultureInfo>();
 
         public CultureInfo SelectedLanguage
         {

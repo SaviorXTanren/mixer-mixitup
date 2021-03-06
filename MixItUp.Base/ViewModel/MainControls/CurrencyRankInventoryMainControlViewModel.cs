@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class CurrencyRankInventoryMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ObservableCollection<CurrencyRankInventoryContainerViewModel>();
+        public ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel>();
 
         public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 

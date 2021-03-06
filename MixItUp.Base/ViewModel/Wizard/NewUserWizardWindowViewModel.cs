@@ -96,7 +96,7 @@ namespace MixItUp.Base.ViewModel.Wizard
         private string settingsBackupLocation;
         public bool IsBackupLocationSet { get { return !string.IsNullOrEmpty(this.SettingsBackupLocation); } }
 
-        public ObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
+        public ThreadSafeObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ThreadSafeObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
         public SettingsBackupRateEnum SelectedSettingsBackupOption
         {
             get { return this.selectedSettingsBackupOption; }

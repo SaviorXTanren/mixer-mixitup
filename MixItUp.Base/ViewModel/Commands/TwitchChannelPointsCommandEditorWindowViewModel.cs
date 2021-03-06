@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ObservableCollection<string> ChannelPointRewards { get; set; } = new ObservableCollection<string>();
+        public ThreadSafeObservableCollection<string> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<string>();
 
         public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand) : base(existingCommand) { }
 
