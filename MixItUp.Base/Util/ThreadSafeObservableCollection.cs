@@ -85,6 +85,14 @@ namespace MixItUp.Base.Util
             return result;
         }
 
+        public void AddRange(IEnumerable<T> range)
+        {
+            foreach (var item in range)
+            {
+                base.Add(item);
+            }
+        }
+
         public async Task AddRangeAsync(IEnumerable<T> range)
         {
             await DispatcherHelper.InvokeDispatcher(() =>
