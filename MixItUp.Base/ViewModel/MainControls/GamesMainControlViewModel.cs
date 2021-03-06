@@ -29,11 +29,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.GameCommands.Clear();
-            foreach (GameCommandModelBase gameCommand in ChannelSession.GameCommands)
-            {
-                this.GameCommands.Add(gameCommand);
-            }
+            this.GameCommands.ClearAndAddRange(ChannelSession.GameCommands);
             this.NotifyPropertyChanged("NoCurrenciesExist");
         }
 

@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.ManualRedeemCommand = this.CreateCommand(async (parameter) =>
             {
                 await this.Purchase.Redeem();
-                await this.viewModel.Refresh();
+                this.viewModel.Refresh();
             });
 
             this.RefundCommand = this.CreateCommand(async (parameter) =>
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmRefundRedemptionStorePurchase))
                 {
                     await this.Purchase.Refund();
-                    await this.viewModel.Refresh();
+                    this.viewModel.Refresh();
                 }
             });
 
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteRedemptionStorePurchase))
                 {
                     this.Purchase.Remove();
-                    await this.viewModel.Refresh();
+                    this.viewModel.Refresh();
                 }
             });
         }
@@ -102,33 +102,24 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public RedemptionStoreMainControlViewModel(UIViewModelBase windowViewModel) : base(windowViewModel) { GlobalEvents.OnRedemptionStorePurchasesUpdated += GlobalEvents_OnRedemptionStorePurchasesUpdated; }
 
-        public async Task Refresh()
+        public void Refresh()
         {
             List<RedemptionStorePurchaseViewModel> purchases = new List<RedemptionStorePurchaseViewModel>(ChannelSession.Settings.RedemptionStorePurchases.ToList().Select(p => new RedemptionStorePurchaseViewModel(this, p)));
-            await this.Purchases.ClearAsync();
-
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
-            {
-                foreach (RedemptionStorePurchaseViewModel purchase in purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate))
-                {
-                    this.Purchases.Add(purchase);
-                }
-                return Task.FromResult(0);
-            });
+            this.Purchases.ClearAndAddRange(purchases.OrderByDescending(p => p.ManualRedeemNeeded).ThenBy(p => p.Purchase.PurchaseDate));
         }
 
         protected override async Task OnLoadedInternal()
         {
-            await this.Refresh();
+            this.Refresh();
             await base.OnVisibleInternal();
         }
 
         protected override async Task OnVisibleInternal()
         {
-            await this.Refresh();
+            this.Refresh();
             await base.OnVisibleInternal();
         }
 
-        private async void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { await this.Refresh(); }
+        private void GlobalEvents_OnRedemptionStorePurchasesUpdated(object sender, System.EventArgs e) { this.Refresh(); }
     }
 }

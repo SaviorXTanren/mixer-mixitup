@@ -197,7 +197,7 @@ namespace MixItUp.Base.Services
         public async Task ClearMessages()
         {
             this.messagesLookup.Clear();
-            await this.Messages.ClearAsync();
+            this.Messages.Clear();
 
             await this.TwitchChatService.ClearMessages();
         }
@@ -340,11 +340,11 @@ namespace MixItUp.Base.Services
                     {
                         if (ChannelSession.Settings.LatestChatAtTop)
                         {
-                            await this.Messages.InsertAsync(0, message);
+                            this.Messages.Insert(0, message);
                         }
                         else
                         {
-                            await this.Messages.AddAsync(message);
+                            this.Messages.Add(message);
                         }
                     }
 
@@ -352,7 +352,7 @@ namespace MixItUp.Base.Services
                     {
                         ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
                         this.messagesLookup.Remove(removedMessage.ID);
-                        await this.Messages.RemoveAsync(removedMessage);
+                        this.Messages.Remove(removedMessage);
                     }
                 }
 
@@ -564,10 +564,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task RemoveMessage(ChatMessageViewModel message)
+        public Task RemoveMessage(ChatMessageViewModel message)
         {
             this.messagesLookup.Remove(message.ID);
-            await this.Messages.RemoveAsync(message);
+            this.Messages.Remove(message);
+            return Task.FromResult(0);
         }
 
         public async Task WriteToChatEventLog(ChatMessageViewModel message)

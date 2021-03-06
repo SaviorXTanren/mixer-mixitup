@@ -197,19 +197,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        private async void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
+        private void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
         {
             if (usersUpdated)
             {
-                await this.EnteredUsers.ClearAsync();
-                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
-                {
-                    foreach (GiveawayUser user in ChannelSession.Services.GiveawayService.Users)
-                    {
-                        this.EnteredUsers.Add(user);
-                    }
-                    return Task.FromResult(0);
-                });
+                this.EnteredUsers.ClearAndAddRange(ChannelSession.Services.GiveawayService.Users);
             }
             this.NotifyPropertyChanges();
         }

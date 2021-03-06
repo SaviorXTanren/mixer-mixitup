@@ -339,11 +339,7 @@ namespace MixItUp.Base.ViewModel.Currency
         private void RefreshProducts()
         {
             List<RedemptionStoreProductViewModel> products = this.Products.ToList();
-            this.Products.Clear();
-            foreach (RedemptionStoreProductViewModel product in products.OrderBy(p => p.Name))
-            {
-                this.Products.Add(product);
-            }
+            this.Products.ClearAndAddRange(products.OrderBy(p => p.Name));
         }
     }
 }

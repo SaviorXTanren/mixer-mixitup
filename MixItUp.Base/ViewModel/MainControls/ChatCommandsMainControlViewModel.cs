@@ -82,11 +82,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override void FilterCommands()
         {
-            this.PreMadeChatCommands.Clear();
+            List<PreMadeChatCommandControlViewModel> commands = new List<PreMadeChatCommandControlViewModel>();
             foreach (PreMadeChatCommandControlViewModel command in ((string.IsNullOrEmpty(this.NameFilter)) ? this.allPreMadeChatCommands : this.allPreMadeChatCommands.Where(c => c.Name.ToLower().Contains(this.NameFilter.ToLower()))).OrderBy(c => c.Name))
             {
-                this.PreMadeChatCommands.Add(command);
+                commands.Add(command);
             }
+            this.PreMadeChatCommands.ClearAndAddRange(commands);
 
             base.FilterCommands();
         }

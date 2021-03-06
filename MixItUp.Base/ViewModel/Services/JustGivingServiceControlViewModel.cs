@@ -77,19 +77,12 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshFundraisers()
         {
-            await this.Fundraisers.ClearAsync();
-
             IEnumerable<JustGivingFundraiser> fundraisers = await ChannelSession.Services.JustGiving.GetCurrentFundraisers();
             if (fundraisers != null)
             {
-                foreach (JustGivingFundraiser fundraiser in fundraisers)
-                {
-                    if (fundraiser.IsActive)
-                    {
-                        this.Fundraisers.Add(fundraiser);
-                    }
-                }
+                fundraisers = fundraisers.Where(f => f.IsActive);
             }
+            this.Fundraisers.ClearAndAddRange(fundraisers);
         }
     }
 }

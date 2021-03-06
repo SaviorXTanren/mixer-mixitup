@@ -500,11 +500,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                 var tempRanks = this.Ranks.ToList();
 
-                await this.Ranks.ClearAsync();
-                foreach (RankModel rank in tempRanks.OrderBy(r => r.Amount))
-                {
-                    this.Ranks.Add(rank);
-                }
+                this.Ranks.ClearAndAddRange(tempRanks.OrderBy(r => r.Amount));
 
                 this.NewRankName = string.Empty;
                 this.NewRankAmount = 0;

@@ -77,8 +77,6 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshCampaigns()
         {
-            await this.Campaigns.ClearAsync();
-
             TiltifyUser user = await ChannelSession.Services.Tiltify.GetUser();
 
             Dictionary<int, TiltifyCampaign> campaignDictionary = new Dictionary<int, TiltifyCampaign>();
@@ -96,13 +94,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             }
 
-            foreach (TiltifyCampaign campaign in campaignDictionary.Values)
-            {
-                if (campaign.Ends > DateTimeOffset.Now)
-                {
-                    this.Campaigns.Add(campaign);
-                }
-            }
+            this.Campaigns.ClearAndAddRange(campaignDictionary.Values.Where(c => c.Ends > DateTimeOffset.Now));
         }
     }
 }

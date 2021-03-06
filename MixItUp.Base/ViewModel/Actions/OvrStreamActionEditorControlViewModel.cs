@@ -50,9 +50,10 @@ namespace MixItUp.Base.ViewModel.Actions
         public OvrStreamVariableViewModel(OvrStreamActionEditorControlViewModel viewModel)
         {
             this.viewModel = viewModel;
-            this.DeleteVariableCommand = this.CreateCommand(async (parameter) =>
+            this.DeleteVariableCommand = this.CreateCommand((parameter) =>
             {
-                await this.viewModel.Variables.RemoveAsync(this);
+                this.viewModel.Variables.Remove(this);
+                return Task.FromResult(0);
             });
         }
     }
@@ -87,13 +88,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedTitle = value;
                 this.NotifyPropertyChanged();
 
-                this.KnownVariables.Clear();
+
                 if (this.SelectedTitle != null)
                 {
-                    foreach (OvrStreamVariable variable in this.SelectedTitle.Variables)
-                    {
-                        this.KnownVariables.Add(variable);
-                    }
+                    this.KnownVariables.ClearAndAddRange(this.SelectedTitle.Variables);
+                }
+                else
+                {
+                    this.KnownVariables.Clear();
                 }
             }
         }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -124,8 +123,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                         data = data.Reverse();
                     }
 
-                    await this.Users.ClearAsync();
-                    await this.Users.AddRangeAsync(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
+                    this.Users.ClearAndAddRange(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 

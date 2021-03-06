@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -14,11 +13,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.StreamPasses.Clear();
-            foreach (StreamPassModel seasonPass in ChannelSession.Settings.StreamPass.Values)
-            {
-                this.StreamPasses.Add(seasonPass);
-            }
+            this.StreamPasses.ClearAndAddRange(ChannelSession.Settings.StreamPass.Values.ToList());
         }
 
         public async Task Copy(StreamPassModel streamPass)

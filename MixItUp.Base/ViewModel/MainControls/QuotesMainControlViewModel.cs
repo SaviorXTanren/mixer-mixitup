@@ -90,11 +90,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.Quotes.Clear();
-            foreach (UserQuoteModel quote in ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID))
-            {
-                this.Quotes.Add(new UserQuoteViewModel(quote));
-            }
+            this.Quotes.ClearAndAddRange(ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID).Select(q => new UserQuoteViewModel(q)));
         }
 
         public async Task RemoveQuote(UserQuoteViewModel quote)

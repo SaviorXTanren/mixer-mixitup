@@ -73,13 +73,10 @@ namespace MixItUp.Base.ViewModel.Settings
             });
         }
 
-        protected override async Task OnLoadedInternal()
+        protected override Task OnLoadedInternal()
         {
-            await this.Endpoints.ClearAsync();
-            foreach (var kvp in ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
-            {
-                this.Endpoints.Add(new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value));
-            }
+            this.Endpoints.ClearAndAddRange(ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value).Select(kvp => new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value)));
+            return Task.FromResult(0);
         }
     }
 }

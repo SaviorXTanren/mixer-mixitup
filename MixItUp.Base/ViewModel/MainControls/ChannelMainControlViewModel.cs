@@ -230,7 +230,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.SearchFindChannelToRaidCommand = this.CreateCommand(async (parameter) =>
             {
-                await this.SearchFindChannelToRaidResults.ClearAsync();
+                this.SearchFindChannelToRaidResults.Clear();
 
                 List<SearchFindChannelToRaidItemViewModel> results = new List<SearchFindChannelToRaidItemViewModel>();
 
@@ -340,11 +340,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            await this.Tags.ClearAsync();
-            foreach (TagViewModel tag in tags.OrderBy(t => t.Name))
-            {
-                this.Tags.Add(tag);
-            }
+            this.Tags.ClearAndAddRange(tags.OrderBy(t => t.Name));
 
             await base.OnLoadedInternal();
         }
@@ -395,7 +391,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            await this.CustomTags.ClearAsync();
+            List<TagViewModel> tags = new List<TagViewModel>();
             foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTagsForChannel(ChannelSession.TwitchUserNewAPI))
             {
                 if (!tag.is_auto)
@@ -403,10 +399,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                     TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
                     if (tagViewModel != null)
                     {
-                        this.CustomTags.Add(tagViewModel);
+                        tags.Add(tagViewModel);
                     }
                 }
             }
+            this.CustomTags.ClearAndAddRange(tags);
+
             this.NotifyPropertyChanged("CanAddMoreTags");
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -13,99 +14,89 @@ namespace MixItUp.Base.Util
 
         public ThreadSafeObservableCollection(List<T> list) : base(list) { }
 
-        public new void Add(T item) { base.Add(item); }
-
-        public async Task AddAsync(T item)
+        public new void Add(T item)
         {
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 base.Add(item);
-                return Task.FromResult(0);
             });
         }
 
-        public new void Clear() { base.Clear(); }
-
-        public async Task ClearAsync()
+        public new void Clear()
         {
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 base.Clear();
-                return Task.FromResult(0);
             });
         }
 
-        public new IEnumerator<T> GetEnumerator() { return base.GetEnumerator(); }
-
-        public async Task<IEnumerator<T>> GetEnumeratorAsync()
+        public new IEnumerator<T> GetEnumerator()
         {
             IEnumerator<T> result = null;
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 result = base.GetEnumerator();
-                return Task.FromResult(0);
             });
             return result;
         }
 
-        public new int IndexOf(T item) { return base.IndexOf(item); }
-
-        public async Task<int> IndexOfAsync(T item)
+        public new int IndexOf(T item)
         {
             int index = -1;
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 index = base.IndexOf(item);
-                return Task.FromResult(0);
             });
             return index;
         }
 
-        public new void Insert(int index, T item) { base.Insert(index, item); }
-
-        public async Task InsertAsync(int index, T item)
+        public new void Insert(int index, T item)
         {
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 base.Insert(index, item);
-                return Task.FromResult(0);
             });
         }
 
-        public new bool Remove(T item) { return base.Remove(item); }
-
-        public async Task<bool> RemoveAsync(T item)
+        public new bool Remove(T item)
         {
             bool result = false;
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
                 result = base.Remove(item);
-                return Task.FromResult(0);
             });
             return result;
         }
 
         public void AddRange(IEnumerable<T> range)
         {
-            foreach (var item in range)
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                base.Add(item);
-            }
+                this.AddRangeInternal(range);
+            });
         }
 
-        public async Task AddRangeAsync(IEnumerable<T> range)
+        public void ClearAndAddRange(IEnumerable<T> range)
         {
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                foreach (var item in range)
+                base.Clear();
+                this.AddRangeInternal(range);
+            });
+        }
+
+        private void AddRangeInternal(IEnumerable<T> range)
+        {
+            if (range != null)
+            {
+                foreach (var item in range.ToList())
                 {
                     base.Add(item);
                 }
+            }
 
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                return Task.FromResult(0);
-            });
+            this.OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            this.OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
         }
     }
 }

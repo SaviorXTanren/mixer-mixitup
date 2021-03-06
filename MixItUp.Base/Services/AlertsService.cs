@@ -22,13 +22,13 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(alert.Color))
             {
                 this.alertsLookup[alert.ID] = alert;
-                await this.Alerts.InsertAsync(0, alert);
+                this.Alerts.Insert(0, alert);
 
                 if (this.Alerts.Count > ChannelSession.Settings.MaxMessagesInChat)
                 {
                     AlertChatMessageViewModel removedAlert = this.Alerts.Last();
                     this.alertsLookup.Remove(removedAlert.ID);
-                    await this.Alerts.RemoveAsync(removedAlert);
+                    this.Alerts.Remove(removedAlert);
                 }
 
                 await ChannelSession.Services.Chat.WriteToChatEventLog(alert);

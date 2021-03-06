@@ -161,15 +161,16 @@ namespace MixItUp.Base.ViewModel.User
 
         public void RefreshUserOnlyChatCommands()
         {
-            this.UserOnlyChatCommands.Clear();
+            List<UserOnlyChatCommandModel> commands = new List<UserOnlyChatCommandModel>();
             foreach (Guid commandID in this.User.Data.CustomCommandIDs)
             {
                 UserOnlyChatCommandModel command = ChannelSession.Settings.GetCommand<UserOnlyChatCommandModel>(commandID);
                 if (command != null)
                 {
-                    this.UserOnlyChatCommands.Add(command);
+                    commands.Add(command);
                 }
             }
+            this.UserOnlyChatCommands.ClearAndAddRange(commands);
             this.NotifyPropertyChanged("HasUserOnlyChatCommands");
         }
     }

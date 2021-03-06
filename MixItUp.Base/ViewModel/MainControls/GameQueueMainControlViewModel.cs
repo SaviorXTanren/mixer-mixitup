@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -120,19 +121,16 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        private async void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
+        private void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
-            await this.QueueUsers.ClearAsync();
-            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
+            List<QueueUser> queue = new List<QueueUser>();
+            int position = 1;
+            foreach (UserViewModel user in ChannelSession.Services.GameQueueService.Queue)
             {
-                int position = 1;
-                foreach (UserViewModel user in ChannelSession.Services.GameQueueService.Queue)
-                {
-                    this.QueueUsers.Add(new QueueUser(user, position));
-                    position++;
-                }
-                return Task.FromResult(0);
-            });
+                queue.Add(new QueueUser(user, position));
+                position++;
+            }
+            this.QueueUsers.ClearAndAddRange(queue);
 
             this.NotifyPropertyChanges();
         }

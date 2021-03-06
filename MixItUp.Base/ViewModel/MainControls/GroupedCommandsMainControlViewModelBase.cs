@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void FullRefresh()
         {
-            this.CommandGroups.Clear();
+            List<CommandGroupControlViewModel> groups = new List<CommandGroupControlViewModel>();
             IEnumerable<CommandModelBase> commands = this.GetCommands();
             foreach (var group in commands.GroupBy(c => c.GroupName ?? "ZZZZZZZZZZZZZZZZZZZZZZZ").OrderBy(g => g.Key))
             {
@@ -99,8 +99,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     groupSettings = ChannelSession.Settings.CommandGroups[groupName];
                 }
-                this.CommandGroups.Add(new CommandGroupControlViewModel(groupSettings, group));
+                groups.Add(new CommandGroupControlViewModel(groupSettings, group));
             }
+            this.CommandGroups.ClearAndAddRange(groups);
             this.NotifyProperties();
         }
 

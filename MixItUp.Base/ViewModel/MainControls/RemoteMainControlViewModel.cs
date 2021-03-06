@@ -297,11 +297,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void RefreshProfiles()
         {
-            this.Profiles.Clear();
-            foreach (RemoteProfileModel profile in ChannelSession.Settings.RemoteProfiles)
-            {
-                this.Profiles.Add(new RemoteProfileViewModel(profile));
-            }
+            this.Profiles.ClearAndAddRange(ChannelSession.Settings.RemoteProfiles.Select(rp => new RemoteProfileViewModel(rp)));
         }
 
         public void ProfileSelected(RemoteProfileViewModel profile)

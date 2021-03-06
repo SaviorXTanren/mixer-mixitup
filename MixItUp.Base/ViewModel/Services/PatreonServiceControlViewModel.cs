@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,14 +77,12 @@ namespace MixItUp.Base.ViewModel.Services
 
         public void RefreshTiers()
         {
-            this.Tiers.Clear();
+            List<PatreonTier> tiers = new List<PatreonTier>();
             if (ChannelSession.Services.Patreon.Campaign != null && ChannelSession.Services.Patreon.Campaign.ActiveTiers != null)
             {
-                foreach (PatreonTier tier in ChannelSession.Services.Patreon.Campaign.ActiveTiers)
-                {
-                    this.Tiers.Add(tier);
-                }
+                tiers.AddRange(ChannelSession.Services.Patreon.Campaign.ActiveTiers);
             }
+            this.Tiers.ClearAndAddRange(tiers);
         }
     }
 }

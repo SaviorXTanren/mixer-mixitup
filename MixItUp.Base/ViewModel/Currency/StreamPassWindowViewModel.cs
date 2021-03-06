@@ -340,11 +340,7 @@ namespace MixItUp.Base.ViewModel.Currency
             List<StreamPassCustomLevelUpCommandViewModel> commands = this.CustomLevelUpCommands.ToList();
             commands.Add(new StreamPassCustomLevelUpCommandViewModel(this.savedCustomLevelUpNumber, command));
 
-            this.CustomLevelUpCommands.Clear();
-            foreach (StreamPassCustomLevelUpCommandViewModel c in commands.OrderBy(c => c.Level))
-            {
-                this.CustomLevelUpCommands.Add(c);
-            }
+            this.CustomLevelUpCommands.ClearAndAddRange(commands.OrderBy(c => c.Level));
         }
 
         public void DeleteCustomLevelUpCommand(StreamPassCustomLevelUpCommandViewModel command)

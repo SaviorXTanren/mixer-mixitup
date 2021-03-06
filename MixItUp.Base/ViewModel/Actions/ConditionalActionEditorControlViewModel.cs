@@ -21,9 +21,10 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.viewModel = viewModel;
 
-            this.DeleteCommand = this.CreateCommand(async (parameter) =>
+            this.DeleteCommand = this.CreateCommand((parameter) =>
             {
-                await this.viewModel.Clauses.RemoveAsync(this);
+                this.viewModel.Clauses.Remove(this);
+                return Task.FromResult(0);
             });
         }
 
