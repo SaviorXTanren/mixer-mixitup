@@ -120,8 +120,6 @@ namespace MixItUp.Base.Services
             await ChannelSession.Services.FileService.CreateDirectory(ChatEventLogDirectoryName);
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
-            List<ChatMessageViewModel> messagesToAdd = new List<ChatMessageViewModel>();
-
             if (twitchChatService != null)
             {
                 this.TwitchChatService = twitchChatService;
@@ -132,23 +130,6 @@ namespace MixItUp.Base.Services
 
                 await this.TwitchChatService.Initialize();
             }
-
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                foreach (ChatMessageViewModel message in messagesToAdd)
-                {
-                    this.messagesLookup[message.ID] = message;
-                    if (ChannelSession.Settings.LatestChatAtTop)
-                    {
-                        this.Messages.Insert(0, message);
-                    }
-                    else
-                    {
-                        this.Messages.Add(message);
-                    }
-                }
-                return Task.FromResult(0);
-            });
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             AsyncRunner.RunAsyncBackground(this.ProcessHoursCurrency, this.cancellationTokenSource.Token, 60000);
@@ -354,21 +335,21 @@ namespace MixItUp.Base.Services
 
                 if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
                 {
+                    this.messagesLookup[message.ID] = message;
+                    if (showMessage)
+                    {
+                        if (ChannelSession.Settings.LatestChatAtTop)
+                        {
+                            await this.Messages.InsertAsync(0, message);
+                        }
+                        else
+                        {
+                            await this.Messages.AddAsync(message);
+                        }
+                    }
+
                     await DispatcherHelper.InvokeDispatcher(() =>
                     {
-                        this.messagesLookup[message.ID] = message;
-                        if (showMessage)
-                        {
-                            if (ChannelSession.Settings.LatestChatAtTop)
-                            {
-                                this.Messages.Insert(0, message);
-                            }
-                            else
-                            {
-                                this.Messages.Add(message);
-                            }
-                        }
-
                         if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
                         {
                             ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
