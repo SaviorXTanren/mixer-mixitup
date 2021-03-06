@@ -5,7 +5,6 @@ using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,10 +21,9 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.viewModel = viewModel;
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(async (parameter) =>
             {
-                this.viewModel.Clauses.Remove(this);
-                return Task.FromResult(0);
+                await this.viewModel.Clauses.RemoveAsync(this);
             });
         }
 

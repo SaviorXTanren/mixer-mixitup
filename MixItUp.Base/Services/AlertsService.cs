@@ -24,17 +24,12 @@ namespace MixItUp.Base.Services
                 this.alertsLookup[alert.ID] = alert;
                 await this.Alerts.InsertAsync(0, alert);
 
-                await DispatcherHelper.InvokeDispatcher(() =>
+                if (this.Alerts.Count > ChannelSession.Settings.MaxMessagesInChat)
                 {
-                    if (this.Alerts.Count > ChannelSession.Settings.MaxMessagesInChat)
-                    {
-                        AlertChatMessageViewModel removedAlert = this.Alerts.Last();
-                        this.alertsLookup.Remove(removedAlert.ID);
-                        this.Alerts.Remove(removedAlert);
-                    }
-
-                    return Task.FromResult(0);
-                });
+                    AlertChatMessageViewModel removedAlert = this.Alerts.Last();
+                    this.alertsLookup.Remove(removedAlert.ID);
+                    await this.Alerts.RemoveAsync(removedAlert);
+                }
 
                 await ChannelSession.Services.Chat.WriteToChatEventLog(alert);
 

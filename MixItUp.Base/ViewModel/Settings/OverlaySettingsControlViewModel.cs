@@ -73,14 +73,13 @@ namespace MixItUp.Base.ViewModel.Settings
             });
         }
 
-        protected override Task OnLoadedInternal()
+        protected override async Task OnLoadedInternal()
         {
             await this.Endpoints.ClearAsync();
             foreach (var kvp in ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
             {
                 this.Endpoints.Add(new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value));
             }
-            return Task.FromResult(0);
         }
     }
 }

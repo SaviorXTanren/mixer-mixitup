@@ -348,17 +348,12 @@ namespace MixItUp.Base.Services
                         }
                     }
 
-                    await DispatcherHelper.InvokeDispatcher(() =>
+                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
                     {
-                        if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
-                        {
-                            ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                            this.messagesLookup.Remove(removedMessage.ID);
-                            this.Messages.Remove(removedMessage);
-                        }
-
-                        return Task.FromResult(0);
-                    });
+                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                        this.messagesLookup.Remove(removedMessage.ID);
+                        await this.Messages.RemoveAsync(removedMessage);
+                    }
                 }
 
                 // Post message processing
@@ -571,12 +566,8 @@ namespace MixItUp.Base.Services
 
         public async Task RemoveMessage(ChatMessageViewModel message)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Remove(message.ID);
-                this.Messages.Remove(message);
-                return Task.FromResult(0);
-            });
+            this.messagesLookup.Remove(message.ID);
+            await this.Messages.RemoveAsync(message);
         }
 
         public async Task WriteToChatEventLog(ChatMessageViewModel message)
