@@ -4687,4 +4687,82 @@ This setting will change all role requirements to be explicit and require that t
   <data name="CommandCannotBeEditedHere" xml:space="preserve">
     <value>The selected command can not be edited here</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Bits" xml:space="preserve">
+    <value>Bits</value>
+  </data>
+  <data name="Bottom" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="Center" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="Chatters" xml:space="preserve">
+    <value>Viewers</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Donations" xml:space="preserve">
+    <value>Donations</value>
+  </data>
+  <data name="Fast" xml:space="preserve">
+    <value>Fast</value>
+  </data>
+  <data name="Followers" xml:space="preserve">
+    <value>Followers</value>
+  </data>
+  <data name="FreeFormHTML" xml:space="preserve">
+    <value>Free Form HTML 1</value>
+  </data>
+  <data name="FreeFormHTML2" xml:space="preserve">
+    <value>Free Form HTML 2</value>
+  </data>
+  <data name="FreeFormHTML3" xml:space="preserve">
+    <value>Free Form HTML 3</value>
+  </data>
+  <data name="GiftedSubs" xml:space="preserve">
+    <value>Gifted Subs</value>
+  </data>
+  <data name="Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="Moderators" xml:space="preserve">
+    <value>Moderators</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="NewFollowers" xml:space="preserve">
+    <value>New Followers</value>
+  </data>
+  <data name="NewSubscribers" xml:space="preserve">
+    <value>New Subscribers</value>
+  </data>
+  <data name="Raids" xml:space="preserve">
+    <value>Raids</value>
+  </data>
+  <data name="Resubscribers" xml:space="preserve">
+    <value>Resubscribers</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Slow</value>
+  </data>
+  <data name="Subscribers" xml:space="preserve">
+    <value>Subscribers</value>
+  </data>
+  <data name="Top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
 </root>

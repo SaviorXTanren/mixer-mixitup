@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -57,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
     public class RemoteSettingsControlViewModel : ControlViewModelBase
     {
-        public ObservableCollection<RemoteConnectionUIViewModel> Connections { get; set; } = new ObservableCollection<RemoteConnectionUIViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<RemoteConnectionUIViewModel> Connections { get; set; } = new ThreadSafeObservableCollection<RemoteConnectionUIViewModel>();
 
         public RemoteSettingsControlViewModel()
         {
@@ -72,11 +73,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public void RefreshList()
         {
-            this.Connections.Clear();
-            foreach (RemoteConnectionModel connection in ChannelSession.Settings.RemoteClientConnections)
-            {
-                this.Connections.Add(new RemoteConnectionUIViewModel(this, connection));
-            }
+            this.Connections.ClearAndAddRange(ChannelSession.Settings.RemoteClientConnections.Select(c => new RemoteConnectionUIViewModel(this, c)));
         }
     }
 }

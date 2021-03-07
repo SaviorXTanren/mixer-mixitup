@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         public GenericComboBoxSettingsOptionControlViewModel<string> NotificationsAudioOutput { get; set; }
 
-        public ObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ObservableCollection<IndividualNotificationSettingViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<IndividualNotificationSettingViewModel> NotificationSounds { get; set; } = new ThreadSafeObservableCollection<IndividualNotificationSettingViewModel>();
 
         public NotificationsSettingsControlViewModel()
         {

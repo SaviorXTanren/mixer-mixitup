@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private RemoteItemControlViewModelBase[,] items = new RemoteItemControlViewModelBase[RemoteBoardModel.BoardWidth, RemoteBoardModel.BoardHeight];
 
-        public ObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ObservableCollection<RemoteProfileViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ThreadSafeObservableCollection<RemoteProfileViewModel>();
 
         public RemoteProfileViewModel Profile
         {
@@ -297,11 +297,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void RefreshProfiles()
         {
-            this.Profiles.Clear();
-            foreach (RemoteProfileModel profile in ChannelSession.Settings.RemoteProfiles)
-            {
-                this.Profiles.Add(new RemoteProfileViewModel(profile));
-            }
+            this.Profiles.ClearAndAddRange(ChannelSession.Settings.RemoteProfiles.Select(rp => new RemoteProfileViewModel(rp)));
         }
 
         public void ProfileSelected(RemoteProfileViewModel profile)

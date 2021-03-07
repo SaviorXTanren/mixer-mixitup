@@ -78,25 +78,25 @@ namespace MixItUp.Base.ViewModel.Overlay
 
     public class OverlayEndCreditsItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> ItemTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEndCreditsSectionTypeEnum>().OrderBy(s => s);
-        public string ItemTypeString
+        public IEnumerable<OverlayEndCreditsSectionTypeEnum> ItemTypes { get; set; } = EnumHelper.GetEnumList<OverlayEndCreditsSectionTypeEnum>().OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
+        public OverlayEndCreditsSectionTypeEnum ItemType
         {
-            get { return EnumHelper.GetEnumName(this.itemType); }
+            get { return this.itemType; }
             set
             {
-                this.itemType = EnumHelper.GetEnumValueFromString<OverlayEndCreditsSectionTypeEnum>(value);
+                this.itemType = value;
                 this.NotifyPropertyChanged();
             }
         }
         private OverlayEndCreditsSectionTypeEnum itemType;
 
-        public IEnumerable<string> SpeedStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEndCreditsSpeedEnum>();
-        public string SpeedString
+        public IEnumerable<OverlayEndCreditsSpeedEnum> Speeds { get; set; } = EnumHelper.GetEnumList<OverlayEndCreditsSpeedEnum>();
+        public OverlayEndCreditsSpeedEnum Speed
         {
-            get { return EnumHelper.GetEnumName(this.speed); }
+            get { return this.speed; }
             set
             {
-                this.speed = EnumHelper.GetEnumValueFromString<OverlayEndCreditsSpeedEnum>(value);
+                this.speed = value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -179,7 +179,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         protected int itemTextSize;
 
-        public ObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ObservableCollection<OverlayEndCreditsSectionItemViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<OverlayEndCreditsSectionItemViewModel> SectionItems { get; set; } = new ThreadSafeObservableCollection<OverlayEndCreditsSectionItemViewModel>();
 
         public ICommand AddItemCommand { get; set; }
 
@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.AddItemCommand = this.CreateCommand((parameter) =>
             {
                 this.SectionItems.Add(new OverlayEndCreditsSectionItemViewModel(this, this.itemType));
-                this.ItemTypeString = string.Empty;
+                this.ItemType = OverlayEndCreditsSectionTypeEnum.Chatters; // The first
                 return Task.FromResult(0);
             });
         }
@@ -218,10 +218,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.HTML = item.TitleTemplate;
 
-            foreach (var kvp in item.SectionTemplates)
-            {
-                this.SectionItems.Add(new OverlayEndCreditsSectionItemViewModel(this, kvp.Value));
-            }
+            this.SectionItems.AddRange(item.SectionTemplates.Select(kvp => new OverlayEndCreditsSectionItemViewModel(this, kvp.Value)));
         }
 
         public override OverlayItemModelBase GetOverlayItem()

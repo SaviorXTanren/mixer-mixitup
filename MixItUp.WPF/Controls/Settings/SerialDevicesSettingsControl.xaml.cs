@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Util;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -13,8 +12,8 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class SerialDevicesSettingsControl : SettingsControlBase
     {
-        private ObservableCollection<string> portNames = new ObservableCollection<string>().EnableSync();
-        private ObservableCollection<SerialDeviceModel> serialDevices = new ObservableCollection<SerialDeviceModel>().EnableSync();
+        private ThreadSafeObservableCollection<string> portNames = new ThreadSafeObservableCollection<string>();
+        private ThreadSafeObservableCollection<SerialDeviceModel> serialDevices = new ThreadSafeObservableCollection<SerialDeviceModel>();
 
         public SerialDevicesSettingsControl()
         {
@@ -25,17 +24,11 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
             this.portNames.Clear();
-            foreach (string portName in await ChannelSession.Services.SerialService.GetCurrentPortNames())
-            {
-                this.portNames.Add(portName);
-            }
+            this.portNames.AddRange(await ChannelSession.Services.SerialService.GetCurrentPortNames());
 
             this.SerialDevicesListView.ItemsSource = this.serialDevices;
             this.serialDevices.Clear();
-            foreach (SerialDeviceModel serialDevice in ChannelSession.Settings.SerialDevices)
-            {
-                this.serialDevices.Add(serialDevice);
-            }
+            this.serialDevices.AddRange(ChannelSession.Settings.SerialDevices);
 
             await base.InitializeInternal();
         }

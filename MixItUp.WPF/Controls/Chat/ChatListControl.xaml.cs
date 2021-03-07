@@ -98,7 +98,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 this.ChatList.ContextMenu.Items.Clear();
                 foreach (var item in this.defaultContextMenuItems)

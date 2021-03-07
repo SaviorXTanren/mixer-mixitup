@@ -84,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
     public class RedemptionStoreWindowViewModel : UIViewModelBase
     {
-        public ObservableCollection<RedemptionStoreProductViewModel> Products { get; set; } = new ObservableCollection<RedemptionStoreProductViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<RedemptionStoreProductViewModel> Products { get; set; } = new ThreadSafeObservableCollection<RedemptionStoreProductViewModel>();
 
         public string ProductName
         {
@@ -233,10 +233,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
         public RedemptionStoreWindowViewModel()
         {
-            foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().OrderBy(p => p.Name))
-            {
-                this.Products.Add(new RedemptionStoreProductViewModel(this, product));
-            }
+            this.Products.AddRange(ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().OrderBy(p => p.Name).Select(p => new RedemptionStoreProductViewModel(this, p)));
 
             this.ChatPurchaseCommand = ChannelSession.Settings.RedemptionStoreChatPurchaseCommand;
             this.ModRedeemCommand = ChannelSession.Settings.RedemptionStoreModRedeemCommand;
@@ -339,11 +336,7 @@ namespace MixItUp.Base.ViewModel.Currency
         private void RefreshProducts()
         {
             List<RedemptionStoreProductViewModel> products = this.Products.ToList();
-            this.Products.Clear();
-            foreach (RedemptionStoreProductViewModel product in products.OrderBy(p => p.Name))
-            {
-                this.Products.Add(product);
-            }
+            this.Products.ClearAndAddRange(products.OrderBy(p => p.Name));
         }
     }
 }

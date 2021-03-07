@@ -20,7 +20,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public UsersControl()
         {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             textChangedTimer = new Timer((e) => UpdateText(), null, Timeout.Infinite, Timeout.Infinite);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             InitializeComponent();
         }
 
@@ -39,7 +41,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private async Task UpdateText()
         {
             await this.viewModel.RefreshUsersAsync();
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 this.UsernameFilterTextBox.Focus();
                 return Task.CompletedTask;

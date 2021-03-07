@@ -198,7 +198,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel userFailureCommand;
 
-        public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ThreadSafeObservableCollection<TriviaGameQuestionViewModel>();
 
         public ICommand AddQuestionCommand { get; set; }
         public ICommand DeleteQuestionCommand { get; set; }
@@ -214,10 +214,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.CorrectAnswerCommand = command.CorrectAnswerCommand;
             this.UserSuccessCommand = command.UserSuccessCommand;
             this.UserFailureCommand = command.UserFailureCommand;
-            foreach (TriviaGameQuestionModel question in command.CustomQuestions)
-            {
-                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(question));
-            }
+
+            this.CustomQuestions.AddRange(command.CustomQuestions.Select(q => new TriviaGameQuestionViewModel(q)));
 
             this.SetUICommands();
         }

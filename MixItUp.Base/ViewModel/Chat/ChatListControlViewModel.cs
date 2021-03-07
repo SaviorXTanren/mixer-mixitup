@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Chat
         public static readonly Regex TimeoutRegex = new Regex(@"^/timeout @\w+ \d+$", RegexOptions.IgnoreCase);
         public static readonly Regex BanRegex = new Regex(@"^/ban @\w+$", RegexOptions.IgnoreCase);
 
-        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
+        public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; }
 
         public int AlternationCount { get { return (ChannelSession.Settings.UseAlternatingBackgroundColors) ? 2 : 1; } }
 

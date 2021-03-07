@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -24,7 +23,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string usernameFilter;
 
-        public SmartObservableCollection<UserDataModel> Users { get; private set; } = new SmartObservableCollection<UserDataModel>();
+        public ThreadSafeObservableCollection<UserDataModel> Users { get; private set; } = new ThreadSafeObservableCollection<UserDataModel>();
 
         public int SortColumnIndex
         {
@@ -97,7 +96,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await Task.Run(async () =>
             {
-                await DispatcherHelper.InvokeDispatcher(() =>
+                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
                 {
                     this.StartLoadingOperation();
                     return Task.CompletedTask;
@@ -124,11 +123,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                         data = data.Reverse();
                     }
 
-                    await this.Users.Reset(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
+                    this.Users.ClearAndAddRange(data.Where(u => string.IsNullOrEmpty(filter) || (u.Username != null && u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase))));
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
-                await DispatcherHelper.InvokeDispatcher(() =>
+                await DispatcherHelper.Dispatcher.InvokeAsync(() =>
                 {
                     this.EndLoadingOperation();
                     return Task.CompletedTask;

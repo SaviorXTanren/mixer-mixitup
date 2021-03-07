@@ -1,21 +1,23 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.Util
 {
-    public class SortableObservableCollection<T> : ObservableCollection<T> where T : IComparable<T>
+    public class SortableObservableCollection<T> : ThreadSafeObservableCollection<T> where T : IComparable<T>
     {
         public void SortedInsert(T newItem)
         {
-            for (int i = 0; i < this.Count; i++)
+            DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                if (this[i].CompareTo(newItem) >= 0)
+                for (int i = 0; i < this.Count; i++)
                 {
-                    this.Insert(i, newItem);
-                    return;
+                    if (this[i].CompareTo(newItem) >= 0)
+                    {
+                        this.InsertInternal(i, newItem);
+                        return;
+                    }
                 }
-            }
-            this.Add(newItem);
+                this.AddInternal(newItem);
+            });
         }
     }
 }

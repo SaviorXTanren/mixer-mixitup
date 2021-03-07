@@ -38,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
     public class OverlaySettingsControlViewModel : UIViewModelBase
     {
-        public ObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ObservableCollection<OverlayEndpointListingViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<OverlayEndpointListingViewModel> Endpoints { get; set; } = new ThreadSafeObservableCollection<OverlayEndpointListingViewModel>();
 
         public string NewEndpointName
         {
@@ -75,11 +75,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         protected override Task OnLoadedInternal()
         {
-            this.Endpoints.Clear();
-            foreach (var kvp in ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
-            {
-                this.Endpoints.Add(new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value));
-            }
+            this.Endpoints.ClearAndAddRange(ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value).Select(kvp => new OverlayEndpointListingViewModel(this, kvp.Key, kvp.Value)));
             return Task.FromResult(0);
         }
     }

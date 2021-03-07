@@ -231,7 +231,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private double bitsBonus = 1.5;
 
-        public ObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ObservableCollection<StreamPassCustomLevelUpCommandViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel> CustomLevelUpCommands { get; set; } = new ThreadSafeObservableCollection<StreamPassCustomLevelUpCommandViewModel>();
 
         public int CustomLevelUpNumber
         {
@@ -305,10 +305,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.DefaultLevelUpCommand.IsEnabled = false;
             }
 
-            foreach (var kvp in this.StreamPass.CustomLevelUpCommands)
-            {
-                this.CustomLevelUpCommands.Add(new StreamPassCustomLevelUpCommandViewModel(kvp.Key, kvp.Value));
-            }
+            this.CustomLevelUpCommands.AddRange(this.StreamPass.CustomLevelUpCommands.Select(kvp => new StreamPassCustomLevelUpCommandViewModel(kvp.Key, kvp.Value)));
         }
 
         public async Task<bool> ValidateAddingCustomLevelUpCommand()
@@ -340,11 +337,7 @@ namespace MixItUp.Base.ViewModel.Currency
             List<StreamPassCustomLevelUpCommandViewModel> commands = this.CustomLevelUpCommands.ToList();
             commands.Add(new StreamPassCustomLevelUpCommandViewModel(this.savedCustomLevelUpNumber, command));
 
-            this.CustomLevelUpCommands.Clear();
-            foreach (StreamPassCustomLevelUpCommandViewModel c in commands.OrderBy(c => c.Level))
-            {
-                this.CustomLevelUpCommands.Add(c);
-            }
+            this.CustomLevelUpCommands.ClearAndAddRange(commands.OrderBy(c => c.Level));
         }
 
         public void DeleteCustomLevelUpCommand(StreamPassCustomLevelUpCommandViewModel command)

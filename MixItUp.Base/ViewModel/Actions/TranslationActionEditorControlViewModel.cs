@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Translation; } }
 
-        public ObservableCollection<CultureInfo> Languages { get; private set; } = new ObservableCollection<CultureInfo>().EnableSync();
+        public ThreadSafeObservableCollection<CultureInfo> Languages { get; private set; } = new ThreadSafeObservableCollection<CultureInfo>();
 
         public CultureInfo SelectedLanguage
         {
@@ -57,10 +57,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CultureInfo language in await ChannelSession.Services.Translation.GetAvailableLanguages())
-            {
-                this.Languages.Add(language);
-            }
+            this.Languages.AddRange(await ChannelSession.Services.Translation.GetAvailableLanguages());
             this.NotifyPropertyChanged("SelectedLanguage");
             await base.OnLoadedInternal();
         }

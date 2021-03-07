@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class ChannelMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<string> PastTitles { get; private set; } = new ObservableCollection<string>().EnableSync();
+        public ThreadSafeObservableCollection<string> PastTitles { get; private set; } = new ThreadSafeObservableCollection<string>();
 
         public string Title
         {
@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string title;
 
-        public ObservableCollection<string> PastGameNames { get; private set; } = new ObservableCollection<string>().EnableSync();
+        public ThreadSafeObservableCollection<string> PastGameNames { get; private set; } = new ThreadSafeObservableCollection<string>();
 
         public string GameName
         {
@@ -143,7 +143,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string gameName;
 
-        public ObservableCollection<TagViewModel> Tags { get; private set; } = new ObservableCollection<TagViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<TagViewModel> Tags { get; private set; } = new ThreadSafeObservableCollection<TagViewModel>();
 
         public TagViewModel Tag
         {
@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private TagViewModel tag;
 
-        public ObservableCollection<TagViewModel> CustomTags { get; private set; } = new ObservableCollection<TagViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<TagViewModel> CustomTags { get; private set; } = new ThreadSafeObservableCollection<TagViewModel>();
 
         public ChannelInformationModel ChannelInformation { get; private set; }
 
@@ -181,7 +181,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public ICommand SearchFindChannelToRaidCommand { get; private set; }
 
-        public ObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ObservableCollection<SearchFindChannelToRaidItemViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<SearchFindChannelToRaidItemViewModel> SearchFindChannelToRaidResults { get; private set; } = new ThreadSafeObservableCollection<SearchFindChannelToRaidItemViewModel>();
 
         private GameModel currentGame;
 
@@ -306,10 +306,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
                 }
 
-                foreach (SearchFindChannelToRaidItemViewModel result in results.Take(10))
-                {
-                    this.SearchFindChannelToRaidResults.Add(result);
-                }
+                this.SearchFindChannelToRaidResults.AddRange(results.Take(10));
             });
         }
 
@@ -321,15 +318,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (string title in ChannelSession.Settings.RecentStreamTitles)
-            {
-                this.PastTitles.Add(title);
-            }
+            this.PastTitles.AddRange(ChannelSession.Settings.RecentStreamTitles);
 
-            foreach (string game in ChannelSession.Settings.RecentStreamGames)
-            {
-                this.PastGameNames.Add(game);
-            }
+            this.PastGameNames.AddRange(ChannelSession.Settings.RecentStreamGames);
 
             List<TagViewModel> tags = new List<TagViewModel>();
             foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTags())
@@ -340,11 +331,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            this.Tags.Clear();
-            foreach (TagViewModel tag in tags.OrderBy(t => t.Name))
-            {
-                this.Tags.Add(tag);
-            }
+            this.Tags.ClearAndAddRange(tags.OrderBy(t => t.Name));
 
             await base.OnLoadedInternal();
         }
@@ -395,7 +382,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             }
 
-            this.CustomTags.Clear();
+            List<TagViewModel> tags = new List<TagViewModel>();
             foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTagsForChannel(ChannelSession.TwitchUserNewAPI))
             {
                 if (!tag.is_auto)
@@ -403,10 +390,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                     TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
                     if (tagViewModel != null)
                     {
-                        this.CustomTags.Add(tagViewModel);
+                        tags.Add(tagViewModel);
                     }
                 }
             }
+            this.CustomTags.ClearAndAddRange(tags);
+
             this.NotifyPropertyChanged("CanAddMoreTags");
         }
     }

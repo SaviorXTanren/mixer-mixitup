@@ -8,13 +8,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayTickerTapeListItemViewModel : OverlayListItemViewModelBase
     {
-        public IEnumerable<string> TickerTapeTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayTickerTapeItemTypeEnum>();
-        public string TickerTapeTypeString
+        public IEnumerable<OverlayTickerTapeItemTypeEnum> TickerTapeTypes { get; set; } = EnumHelper.GetEnumList<OverlayTickerTapeItemTypeEnum>();
+        public OverlayTickerTapeItemTypeEnum TickerTapeType
         {
-            get { return EnumHelper.GetEnumName(this.tickerTapeType); }
+            get { return this.tickerTapeType; }
             set
             {
-                this.tickerTapeType = EnumHelper.GetEnumValueFromString<OverlayTickerTapeItemTypeEnum>(value);
+                this.tickerTapeType = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("ShowMinimumAmountRequiredToShow");
                 if (this.tickerTapeType == OverlayTickerTapeItemTypeEnum.Donations)

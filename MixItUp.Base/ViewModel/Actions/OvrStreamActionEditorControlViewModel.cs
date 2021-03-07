@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -36,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand DeleteVariableCommand { get; private set; }
 
-        public ObservableCollection<OvrStreamVariable> KnownVariables { get { return this.viewModel.KnownVariables; } set { } }
+        public ThreadSafeObservableCollection<OvrStreamVariable> KnownVariables { get { return this.viewModel.KnownVariables; } set { } }
 
         private OvrStreamActionEditorControlViewModel viewModel;
 
@@ -78,7 +79,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool OvrStreamNotEnabled { get { return !ChannelSession.Services.OvrStream.IsConnected; } }
 
-        public ObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ObservableCollection<OvrStreamTitle>().EnableSync();
+        public ThreadSafeObservableCollection<OvrStreamTitle> Titles { get; private set; } = new ThreadSafeObservableCollection<OvrStreamTitle>();
 
         public OvrStreamTitle SelectedTitle
         {
@@ -88,13 +89,14 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.selectedTitle = value;
                 this.NotifyPropertyChanged();
 
-                this.KnownVariables.Clear();
+
                 if (this.SelectedTitle != null)
                 {
-                    foreach (OvrStreamVariable variable in this.SelectedTitle.Variables)
-                    {
-                        this.KnownVariables.Add(variable);
-                    }
+                    this.KnownVariables.ClearAndAddRange(this.SelectedTitle.Variables);
+                }
+                else
+                {
+                    this.KnownVariables.Clear();
                 }
             }
         }
@@ -113,11 +115,11 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public bool ShowVariablesGrid { get { return this.SelectedActionType == OvrStreamActionTypeEnum.PlayTitle || this.SelectedActionType == OvrStreamActionTypeEnum.UpdateVariables; } }
 
-        public ObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ObservableCollection<OvrStreamVariable>().EnableSync();
+        public ThreadSafeObservableCollection<OvrStreamVariable> KnownVariables { get; private set; } = new ThreadSafeObservableCollection<OvrStreamVariable>();
 
         public ICommand AddVariableCommand { get; private set; }
 
-        public ObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ObservableCollection<OvrStreamVariableViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<OvrStreamVariableViewModel> Variables { get; private set; } = new ThreadSafeObservableCollection<OvrStreamVariableViewModel>();
 
         public OvrStreamActionEditorControlViewModel(OvrStreamActionModel action)
             : base(action)
@@ -126,10 +128,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.TitleName = action.TitleName;
             if (this.ShowVariablesGrid)
             {
-                foreach (var kvp in action.Variables)
-                {
-                    this.Variables.Add(new OvrStreamVariableViewModel(this, kvp.Key, kvp.Value));
-                }
+                this.Variables.AddRange(action.Variables.Select(kvp => new OvrStreamVariableViewModel(this, kvp.Key, kvp.Value)));
             }
         }
 
@@ -148,10 +147,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 IEnumerable<OvrStreamTitle> titles = await ChannelSession.Services.OvrStream.GetTitles();
                 if (titles != null)
                 {
-                    foreach (OvrStreamTitle title in titles)
-                    {
-                        this.Titles.Add(title);
-                    }
+                    this.Titles.AddRange(titles);
                 }
             }
             await base.OnLoadedInternal();

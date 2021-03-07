@@ -23,7 +23,7 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<SettingsV3Model> streamerSettings = new ObservableCollection<SettingsV3Model>().EnableSync();
+        private ObservableCollection<SettingsV3Model> streamerSettings = new ThreadSafeObservableCollection<SettingsV3Model>();
 
         public LoginWindow()
         {

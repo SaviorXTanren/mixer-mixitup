@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Statistics;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Dashboard
@@ -11,7 +10,7 @@ namespace MixItUp.WPF.Controls.Dashboard
     /// </summary>
     public partial class StatisticsDashboardControl : DashboardControlBase
     {
-        private ObservableCollection<StatisticsOverviewControl> statisticControls = new ObservableCollection<StatisticsOverviewControl>().EnableSync();
+        private ThreadSafeObservableCollection<StatisticsOverviewControl> statisticControls = new ThreadSafeObservableCollection<StatisticsOverviewControl>();
 
         public StatisticsDashboardControl()
         {

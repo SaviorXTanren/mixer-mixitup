@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class TiltifyServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ObservableCollection<TiltifyCampaign>().EnableSync();
+        public ThreadSafeObservableCollection<TiltifyCampaign> Campaigns { get; set; } = new ThreadSafeObservableCollection<TiltifyCampaign>();
 
         public TiltifyCampaign SelectedCampaign
         {
@@ -77,8 +77,6 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshCampaigns()
         {
-            this.Campaigns.Clear();
-
             TiltifyUser user = await ChannelSession.Services.Tiltify.GetUser();
 
             Dictionary<int, TiltifyCampaign> campaignDictionary = new Dictionary<int, TiltifyCampaign>();
@@ -96,13 +94,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             }
 
-            foreach (TiltifyCampaign campaign in campaignDictionary.Values)
-            {
-                if (campaign.Ends > DateTimeOffset.Now)
-                {
-                    this.Campaigns.Add(campaign);
-                }
-            }
+            this.Campaigns.ClearAndAddRange(campaignDictionary.Values.Where(c => c.Ends > DateTimeOffset.Now));
         }
     }
 }
