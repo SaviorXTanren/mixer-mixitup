@@ -214,10 +214,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.CorrectAnswerCommand = command.CorrectAnswerCommand;
             this.UserSuccessCommand = command.UserSuccessCommand;
             this.UserFailureCommand = command.UserFailureCommand;
-            foreach (TriviaGameQuestionModel question in command.CustomQuestions)
-            {
-                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(question));
-            }
+
+            this.CustomQuestions.AddRange(command.CustomQuestions.Select(q => new TriviaGameQuestionViewModel(q)));
 
             this.SetUICommands();
         }

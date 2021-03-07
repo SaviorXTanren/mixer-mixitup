@@ -165,10 +165,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
 
-            foreach (ConditionalClauseModel clause in action.Clauses)
-            {
-                this.Clauses.Add(new ConditionalClauseViewModel(clause, this));
-            }
+            this.Clauses.AddRange(action.Clauses.Select(c => new ConditionalClauseViewModel(c, this)));
 
             foreach (ActionModelBase subAction in action.Actions)
             {

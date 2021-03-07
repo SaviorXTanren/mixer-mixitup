@@ -57,10 +57,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (CultureInfo language in await ChannelSession.Services.Translation.GetAvailableLanguages())
-            {
-                this.Languages.Add(language);
-            }
+            this.Languages.AddRange(await ChannelSession.Services.Translation.GetAvailableLanguages());
             this.NotifyPropertyChanged("SelectedLanguage");
             await base.OnLoadedInternal();
         }

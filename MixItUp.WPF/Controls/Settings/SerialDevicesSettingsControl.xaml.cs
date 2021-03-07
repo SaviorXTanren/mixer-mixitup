@@ -24,17 +24,11 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
             this.portNames.Clear();
-            foreach (string portName in await ChannelSession.Services.SerialService.GetCurrentPortNames())
-            {
-                this.portNames.Add(portName);
-            }
+            this.portNames.AddRange(await ChannelSession.Services.SerialService.GetCurrentPortNames());
 
             this.SerialDevicesListView.ItemsSource = this.serialDevices;
             this.serialDevices.Clear();
-            foreach (SerialDeviceModel serialDevice in ChannelSession.Settings.SerialDevices)
-            {
-                this.serialDevices.Add(serialDevice);
-            }
+            this.serialDevices.AddRange(ChannelSession.Settings.SerialDevices);
 
             await base.InitializeInternal();
         }

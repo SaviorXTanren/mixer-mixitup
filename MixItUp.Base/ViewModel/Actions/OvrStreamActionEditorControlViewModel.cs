@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -127,10 +128,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.TitleName = action.TitleName;
             if (this.ShowVariablesGrid)
             {
-                foreach (var kvp in action.Variables)
-                {
-                    this.Variables.Add(new OvrStreamVariableViewModel(this, kvp.Key, kvp.Value));
-                }
+                this.Variables.AddRange(action.Variables.Select(kvp => new OvrStreamVariableViewModel(this, kvp.Key, kvp.Value)));
             }
         }
 
@@ -149,10 +147,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 IEnumerable<OvrStreamTitle> titles = await ChannelSession.Services.OvrStream.GetTitles();
                 if (titles != null)
                 {
-                    foreach (OvrStreamTitle title in titles)
-                    {
-                        this.Titles.Add(title);
-                    }
+                    this.Titles.AddRange(titles);
                 }
             }
             await base.OnLoadedInternal();

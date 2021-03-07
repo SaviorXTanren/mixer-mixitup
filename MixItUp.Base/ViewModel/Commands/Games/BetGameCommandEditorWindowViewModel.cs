@@ -165,10 +165,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
             this.BetsClosedCommand = command.BetsClosedCommand;
             this.GameCompleteCommand = command.GameCompleteCommand;
-            foreach (GameOutcomeModel outcome in command.BetOptions)
-            {
-                this.Outcomes.Add(new GameOutcomeViewModel(outcome));
-            }
+
+            this.Outcomes.AddRange(command.BetOptions.Select(o => new GameOutcomeViewModel(o)));
         }
 
         public BetGameCommandEditorWindowViewModel(CurrencyModel currency)

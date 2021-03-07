@@ -18,10 +18,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             InitializeComponent();
 
             this.NewCommandsItemsControl.ItemsSource = this.commands;
-            foreach (NewAutoChatCommandModel command in commands)
-            {
-                this.commands.Add(command);
-            }
+            this.commands.AddRange(commands);
         }
 
         public void AddSelectedCommands()

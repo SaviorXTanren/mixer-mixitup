@@ -154,13 +154,8 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             if (ChannelSession.Services.Discord.IsConnected)
             {
-                foreach (DiscordChannel channel in await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server))
-                {
-                    if (channel.Type == DiscordChannel.DiscordChannelTypeEnum.Announcements || channel.Type == DiscordChannel.DiscordChannelTypeEnum.Text)
-                    {
-                        this.Channels.Add(channel);
-                    }
-                }
+                List<DiscordChannel> channels = new List<DiscordChannel>(await ChannelSession.Services.Discord.GetServerChannels(ChannelSession.Services.Discord.Server));
+                this.Channels.AddRange(channels.Where(c => c.Type == DiscordChannel.DiscordChannelTypeEnum.Announcements || c.Type == DiscordChannel.DiscordChannelTypeEnum.Text));
 
                 if (!string.IsNullOrEmpty(this.existingSelectedChannel))
                 {

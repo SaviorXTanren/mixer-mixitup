@@ -82,10 +82,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SelectedResponseParseType = action.ResponseType;
             if (this.ShowJSONGrid)
             {
-                foreach (var kvp in action.JSONToSpecialIdentifiers)
-                {
-                    this.JSONParameters.Add(new WebRequestActionJSONToSpecialIdentifierViewModel(kvp.Key, kvp.Value, this));
-                }
+                this.JSONParameters.AddRange(action.JSONToSpecialIdentifiers.Select(kvp => new WebRequestActionJSONToSpecialIdentifierViewModel(kvp.Key, kvp.Value, this)));
             }
         }
 

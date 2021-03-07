@@ -251,18 +251,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private void LoadConsumables()
         {
-            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-            {
-                this.Consumables.Add(new ConsumableViewModel(currency));
-            }
-            foreach (InventoryModel inventory in ChannelSession.Settings.Inventory.Values)
-            {
-                this.Consumables.Add(new ConsumableViewModel(inventory));
-            }
-            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-            {
-                this.Consumables.Add(new ConsumableViewModel(streamPass));
-            }
+            this.Consumables.AddRange(ChannelSession.Settings.Currency.Values.Select(c => new ConsumableViewModel(c)));
+            this.Consumables.AddRange(ChannelSession.Settings.Inventory.Values.Select(i => new ConsumableViewModel(i)));
+            this.Consumables.AddRange(ChannelSession.Settings.StreamPass.Values.Select(s => new ConsumableViewModel(s)));
         }
     }
 }

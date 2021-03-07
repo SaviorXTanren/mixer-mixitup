@@ -86,10 +86,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.AudioDevices.Add(SoundActionModel.DefaultAudioDevice);
             this.AudioDevices.Add(SoundActionModel.MixItUpOverlay);
-            foreach (string soundDevices in ChannelSession.Services.AudioService.GetOutputDevices())
-            {
-                this.AudioDevices.Add(soundDevices);
-            }
+            this.AudioDevices.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
         }
     }
 }

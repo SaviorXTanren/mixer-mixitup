@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Statistics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -22,10 +22,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.StatisticsOverviewListView.ItemsSource = this.statisticOverviewControls;
-            foreach (StatisticDataTrackerModelBase statistic in ChannelSession.Services.Statistics.Statistics)
-            {
-                this.statisticOverviewControls.Add(new StatisticsOverviewControl(statistic));
-            }
+            this.statisticOverviewControls.AddRange(ChannelSession.Services.Statistics.Statistics.Select(s => new StatisticsOverviewControl(s)));
 
             return base.InitializeInternal();
         }

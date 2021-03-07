@@ -306,10 +306,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
                 }
 
-                foreach (SearchFindChannelToRaidItemViewModel result in results.Take(10))
-                {
-                    this.SearchFindChannelToRaidResults.Add(result);
-                }
+                this.SearchFindChannelToRaidResults.AddRange(results.Take(10));
             });
         }
 
@@ -321,15 +318,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override async Task OnLoadedInternal()
         {
-            foreach (string title in ChannelSession.Settings.RecentStreamTitles)
-            {
-                this.PastTitles.Add(title);
-            }
+            this.PastTitles.AddRange(ChannelSession.Settings.RecentStreamTitles);
 
-            foreach (string game in ChannelSession.Settings.RecentStreamGames)
-            {
-                this.PastGameNames.Add(game);
-            }
+            this.PastGameNames.AddRange(ChannelSession.Settings.RecentStreamGames);
 
             List<TagViewModel> tags = new List<TagViewModel>();
             foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTags())

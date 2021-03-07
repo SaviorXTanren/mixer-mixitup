@@ -233,10 +233,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
         public RedemptionStoreWindowViewModel()
         {
-            foreach (RedemptionStoreProductModel product in ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().OrderBy(p => p.Name))
-            {
-                this.Products.Add(new RedemptionStoreProductViewModel(this, product));
-            }
+            this.Products.AddRange(ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().OrderBy(p => p.Name).Select(p => new RedemptionStoreProductViewModel(this, p)));
 
             this.ChatPurchaseCommand = ChannelSession.Settings.RedemptionStoreChatPurchaseCommand;
             this.ModRedeemCommand = ChannelSession.Settings.RedemptionStoreModRedeemCommand;

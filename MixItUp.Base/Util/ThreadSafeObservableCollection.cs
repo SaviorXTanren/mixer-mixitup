@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
@@ -35,7 +34,7 @@ namespace MixItUp.Base.Util
             IEnumerator<T> result = null;
             DispatcherHelper.Dispatcher.Invoke(() =>
             {
-                result = base.GetEnumerator();
+                result = this.ToList().GetEnumerator();
             });
             return result;
         }
@@ -84,6 +83,10 @@ namespace MixItUp.Base.Util
                 this.AddRangeInternal(range);
             });
         }
+
+        protected void AddInternal(T item) { base.Add(item); }
+
+        protected void InsertInternal(int index, T item) { base.Insert(index, item); }
 
         private void AddRangeInternal(IEnumerable<T> range)
         {

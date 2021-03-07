@@ -38,10 +38,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 actionTypes.Remove(hiddenActions);
             }
 
-            foreach (ActionTypeEnum actionType in actionTypes.OrderBy(a => a.ToString()))
-            {
-                this.ActionTypes.Add(actionType);
-            }
+            this.ActionTypes.AddRange(actionTypes.OrderBy(a => a.ToString()));
 
             this.AddCommand = this.CreateCommand(async (parameter) =>
             {

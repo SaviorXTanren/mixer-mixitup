@@ -305,10 +305,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.DefaultLevelUpCommand.IsEnabled = false;
             }
 
-            foreach (var kvp in this.StreamPass.CustomLevelUpCommands)
-            {
-                this.CustomLevelUpCommands.Add(new StreamPassCustomLevelUpCommandViewModel(kvp.Key, kvp.Value));
-            }
+            this.CustomLevelUpCommands.AddRange(this.StreamPass.CustomLevelUpCommands.Select(kvp => new StreamPassCustomLevelUpCommandViewModel(kvp.Key, kvp.Value)));
         }
 
         public async Task<bool> ValidateAddingCustomLevelUpCommand()

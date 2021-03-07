@@ -218,10 +218,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.HTML = item.TitleTemplate;
 
-            foreach (var kvp in item.SectionTemplates)
-            {
-                this.SectionItems.Add(new OverlayEndCreditsSectionItemViewModel(this, kvp.Value));
-            }
+            this.SectionItems.AddRange(item.SectionTemplates.Select(kvp => new OverlayEndCreditsSectionItemViewModel(this, kvp.Value)));
         }
 
         public override OverlayItemModelBase GetOverlayItem()

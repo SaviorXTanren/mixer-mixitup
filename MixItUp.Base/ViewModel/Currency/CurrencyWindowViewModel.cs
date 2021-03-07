@@ -456,10 +456,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 this.RankChangedCommand = this.Currency.RankChangedCommand;
                 this.RankDownCommand = this.Currency.RankDownCommand;
-                foreach (RankModel rank in this.Currency.Ranks.OrderBy(r => r.Amount))
-                {
-                    this.Ranks.Add(rank);
-                }
+                this.Ranks.AddRange(this.Currency.Ranks.OrderBy(r => r.Amount));
             }
         }
 
