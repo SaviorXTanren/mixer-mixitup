@@ -324,21 +324,23 @@ namespace MixItUp.Base.Services
                 {
                     if (message.User != null)
                     {
+                        UserViewModel activeUser = null;
                         if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                         {
-                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
+                            activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
                         }
                         else if (message.Platform == StreamingPlatformTypeEnum.Glimesh)
                         {
-                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User.GlimeshID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
+                            activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User.GlimeshID);
+                        }
+
+                        if (activeUser != null)
+                        {
+                            message.User = activeUser;
+                        }
+                        else
+                        {
+                            await ServiceManager.Get<UserService>().AddOrUpdateUser(message.User);
                         }
 
                         message.User.UpdateLastActivity();

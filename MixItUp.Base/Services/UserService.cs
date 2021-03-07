@@ -16,21 +16,18 @@ namespace MixItUp.Base.Services
     public interface IUserService
     {
         UserViewModel GetUserByID(Guid id);
-
         UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
-
         UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id);
 
         Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
-
         Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser);
+        Task AddOrUpdateUser(UserViewModel user);
 
         Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username);
 
         void Clear();
 
         IEnumerable<UserViewModel> GetAllUsers();
-
         IEnumerable<UserViewModel> GetAllWorkableUsers();
 
         UserViewModel GetRandomUser(CommandParametersModel parameters);
@@ -133,7 +130,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        private async Task AddOrUpdateUser(UserViewModel user)
+        public async Task AddOrUpdateUser(UserViewModel user)
         {
             if (!user.IsAnonymous)
             {
@@ -143,6 +140,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshUsername] = user.ID;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
@@ -201,6 +204,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchID);
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
+                }
+
+                if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshUsername);
                 }
 
                 await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
