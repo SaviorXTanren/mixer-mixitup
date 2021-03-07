@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Actions
                 textToWrite = await this.GetTextToSave(parameters);
             }
 
-            if (this.ActionType == FileActionTypeEnum.ReadFromFile ||
+            if (this.ActionType == FileActionTypeEnum.ReadFromFile || this.ActionType == FileActionTypeEnum.AppendToFile ||
                 this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
@@ -158,6 +158,10 @@ namespace MixItUp.Base.Model.Actions
 
             if (this.ActionType == FileActionTypeEnum.AppendToFile)
             {
+                if (!string.IsNullOrEmpty(textToRead))
+                {
+                    textToWrite = Environment.NewLine + textToWrite;
+                }
                 await ChannelSession.Services.FileService.AppendFile(filePath, textToWrite);
             }
         }
