@@ -135,7 +135,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new InventoryRequirementModel(this.SelectedInventory, this.SelectedItem, this.Amount);
+            if (this.SelectedInventory != null && this.SelectedItem != null)
+            {
+                return new InventoryRequirementModel(this.SelectedInventory, this.SelectedItem, this.Amount);
+            }
+            return null;
         }
     }
 }

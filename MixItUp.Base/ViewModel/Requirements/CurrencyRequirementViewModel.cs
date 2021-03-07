@@ -148,7 +148,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new CurrencyRequirementModel(this.SelectedCurrency, this.SelectedRequirementType, this.MinAmount, this.MaxAmount);
+            if (this.SelectedCurrency != null)
+            {
+                return new CurrencyRequirementModel(this.SelectedCurrency, this.SelectedRequirementType, this.MinAmount, this.MaxAmount);
+            }
+            return null;
         }
     }
 }

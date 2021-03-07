@@ -130,7 +130,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new RankRequirementModel(this.SelectedRankSystem, this.SelectedRank, this.SelectedMatchType);
+            if (this.SelectedRankSystem != null && this.SelectedRank != null)
+            {
+                return new RankRequirementModel(this.SelectedRankSystem, this.SelectedRank, this.SelectedMatchType);
+            }
+            return null;
         }
     }
 }
