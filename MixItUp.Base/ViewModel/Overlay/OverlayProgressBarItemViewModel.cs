@@ -8,13 +8,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public class OverlayProgressBarItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> ProgressBarTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayProgressBarItemTypeEnum>();
-        public string ProgressBarTypeString
+        public IEnumerable<OverlayProgressBarItemTypeEnum> ProgressBarTypes { get; set; } = EnumHelper.GetEnumList<OverlayProgressBarItemTypeEnum>();
+        public OverlayProgressBarItemTypeEnum ProgressBarType
         {
-            get { return EnumHelper.GetEnumName(this.progressBarType); }
+            get { return this.progressBarType; }
             set
             {
-                this.progressBarType = EnumHelper.GetEnumValueFromString<OverlayProgressBarItemTypeEnum>(value);
+                this.progressBarType = value;
                 if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers)
                 {
                     this.TotalFollowers = true;

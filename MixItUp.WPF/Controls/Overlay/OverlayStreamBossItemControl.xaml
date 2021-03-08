@@ -4,12 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:OverlayItemControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -62,9 +66,21 @@
 
             <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding ProgressColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Progress Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-            <ComboBox ItemsSource="{Binding VisibleAnimationStrings}" SelectedItem="{Binding DamageAnimationString}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Damage Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding DamageAnimation}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Damage Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox ItemsSource="{Binding VisibleAnimationStrings}" SelectedItem="{Binding NewBossAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="New Boss Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding NewBossAnimation}" Grid.Column="8" MaterialDesign:HintAssist.Hint="New Boss Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">

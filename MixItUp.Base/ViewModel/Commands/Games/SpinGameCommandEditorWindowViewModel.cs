@@ -13,10 +13,7 @@ namespace MixItUp.Base.ViewModel.Games
         public SpinGameCommandEditorWindowViewModel(SpinGameCommandModel command)
             : base(command)
         {
-            foreach (GameOutcomeModel outcome in command.Outcomes)
-            {
-                this.Outcomes.Add(new GameOutcomeViewModel(outcome));
-            }
+            this.Outcomes.AddRange(command.Outcomes.Select(o => new GameOutcomeViewModel(o)));
         }
 
         public SpinGameCommandEditorWindowViewModel(CurrencyModel currency)

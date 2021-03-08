@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public string WinnerUsername { get { return ServiceManager.Get<GiveawayService>().Winner?.DisplayName ?? string.Empty; } }
 
-        public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>().EnableSync();
+        public ThreadSafeObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ThreadSafeObservableCollection<GiveawayUser>();
 
         public CommandModelBase GiveawayStartedReminderCommand
         {
@@ -197,19 +197,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             });
         }
 
-        private async void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
+        private void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
         {
             if (usersUpdated)
             {
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.EnteredUsers.Clear();
-                    foreach (GiveawayUser user in ServiceManager.Get<GiveawayService>().Users)
-                    {
-                        this.EnteredUsers.Add(user);
-                    }
-                    return Task.FromResult(0);
-                });
+                this.EnteredUsers.ClearAndAddRange(ServiceManager.Get<GiveawayService>().Users);
             }
             this.NotifyPropertyChanges();
         }

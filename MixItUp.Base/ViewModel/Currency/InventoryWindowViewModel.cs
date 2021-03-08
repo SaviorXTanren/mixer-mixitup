@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Currency
         }
         private int defaultItemMaxAmount;
 
-        public ObservableCollection<InventoryItemModel> Items { get; private set; } = new ObservableCollection<InventoryItemModel>().EnableSync();
+        public ThreadSafeObservableCollection<InventoryItemModel> Items { get; private set; } = new ThreadSafeObservableCollection<InventoryItemModel>();
 
         public InventoryItemModel SelectedItem
         {
@@ -217,10 +217,7 @@ namespace MixItUp.Base.ViewModel.Currency
             this.Name = this.Inventory.Name;
             this.DefaultItemMaxAmount = this.Inventory.DefaultMaxAmount;
 
-            foreach (InventoryItemModel item in this.Inventory.Items.Values)
-            {
-                this.Items.Add(item);
-            }
+            this.Items.AddRange(this.Inventory.Items.Values);
 
             this.ShopEnabled = this.Inventory.ShopEnabled;
             this.ShopCommandText = this.Inventory.ShopCommand;

@@ -27,7 +27,7 @@ namespace MixItUp.Base.Services
 
         bool DisableChat { get; set; }
 
-        ObservableCollection<ChatMessageViewModel> Messages { get; }
+        ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; }
 
         LockedDictionary<Guid, UserViewModel> AllUsers { get; }
         IEnumerable<UserViewModel> DisplayUsers { get; }
@@ -89,7 +89,7 @@ namespace MixItUp.Base.Services
 
         public bool DisableChat { get; set; }
 
-        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ThreadSafeObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
         public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();
@@ -205,12 +205,9 @@ namespace MixItUp.Base.Services
 
         public async Task ClearMessages()
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Clear();
-                this.Messages.Clear();
-                return Task.FromResult(0);
-            });
+            this.messagesLookup.Clear();
+            this.Messages.Clear();
+
             await ServiceManager.Get<ITwitchChatService>().ClearMessages();
         }
 
@@ -368,30 +365,25 @@ namespace MixItUp.Base.Services
 
                 if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
                 {
-                    await DispatcherHelper.InvokeDispatcher(() =>
+                    this.messagesLookup[message.ID] = message;
+                    if (showMessage)
                     {
-                        this.messagesLookup[message.ID] = message;
-                        if (showMessage)
+                        if (ChannelSession.Settings.LatestChatAtTop)
                         {
-                            if (ChannelSession.Settings.LatestChatAtTop)
-                            {
-                                this.Messages.Insert(0, message);
-                            }
-                            else
-                            {
-                                this.Messages.Add(message);
-                            }
+                            this.Messages.Insert(0, message);
                         }
-
-                        if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                        else
                         {
-                            ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                            this.messagesLookup.Remove(removedMessage.ID);
-                            this.Messages.Remove(removedMessage);
+                            this.Messages.Add(message);
                         }
+                    }
 
-                        return Task.FromResult(0);
-                    });
+                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                    {
+                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                        this.messagesLookup.Remove(removedMessage.ID);
+                        this.Messages.Remove(removedMessage);
+                    }
                 }
 
                 // Post message processing
@@ -603,14 +595,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task RemoveMessage(ChatMessageViewModel message)
+        public Task RemoveMessage(ChatMessageViewModel message)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Remove(message.ID);
-                this.Messages.Remove(message);
-                return Task.FromResult(0);
-            });
+            this.messagesLookup.Remove(message.ID);
+            this.Messages.Remove(message);
+            return Task.FromResult(0);
         }
 
         public async Task UsersJoined(IEnumerable<UserViewModel> users)

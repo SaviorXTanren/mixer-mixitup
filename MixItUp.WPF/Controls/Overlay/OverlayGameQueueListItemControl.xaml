@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:OverlayItemControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -64,11 +68,29 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox ItemsSource="{Binding AlignmentStrings}" SelectedItem="{Binding AlignmentString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="List Alignment" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
+            <ComboBox ItemsSource="{Binding Alignments}" SelectedItem="{Binding Alignment}" Grid.Column="0" MaterialDesign:HintAssist.Hint="List Alignment" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding EntranceAnimation}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding ExitAnimation}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />

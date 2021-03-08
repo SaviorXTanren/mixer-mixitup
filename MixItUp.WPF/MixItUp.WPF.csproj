@@ -33,6 +33,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <XamlDebuggingInformation>true</XamlDebuggingInformation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -1012,6 +1013,7 @@
     <Compile Include="Util\ColorBrushConverter.cs" />
     <Compile Include="Util\UIHelpers.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
+    <Compile Include="Util\WindowsDispatcher.cs" />
     <Compile Include="Util\WPFDialogShower.cs" />
     <Compile Include="Windows\Commands\CommandEditorWindow.xaml.cs">
       <DependentUpon>CommandEditorWindow.xaml</DependentUpon>

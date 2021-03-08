@@ -19,15 +19,12 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayEndCreditsSectionTypeEnum
     {
-        [Name("Viewers")]
         Chatters,
-        [Name("New Followers")]
+        [Name("NewFollowers")]
         Followers,
         Hosts,
-        [Name("New Subscribers")]
         NewSubscribers,
         Resubscribers,
-        [Name("Gifted Subs")]
         GiftedSubs,
         Donations,
         [Obsolete]
@@ -36,11 +33,8 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
         Subscribers,
         Moderators,
-        [Name("Free Form HTML 1")]
         FreeFormHTML,
-        [Name("Free Form HTML 2")]
         FreeFormHTML2,
-        [Name("Free Form HTML 3")]
         FreeFormHTML3,
         Bits,
         Raids,

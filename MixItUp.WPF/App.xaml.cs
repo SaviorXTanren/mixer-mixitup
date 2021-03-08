@@ -155,13 +155,8 @@ namespace MixItUp.WPF
         {
             FileLoggerHandler.Initialize();
 
-            DispatcherHelper.RegisterDispatcher(async (func) =>
-            {
-                await this.Dispatcher.Invoke(async () =>
-                {
-                    await func();
-                });
-            });
+            DispatcherHelper.RegisterDispatcher(new WindowsDispatcher(this.Dispatcher));
+
             DialogHelper.Initialize(new WPFDialogShower());
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;

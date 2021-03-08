@@ -22,7 +22,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string filePath;
 
-        public ObservableCollection<string> AudioDevices { get; set; } = new ObservableCollection<string>().EnableSync();
+        public ThreadSafeObservableCollection<string> AudioDevices { get; set; } = new ThreadSafeObservableCollection<string>();
 
         public string SelectedAudioDevice
         {
@@ -87,10 +87,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.AudioDevices.Add(SoundActionModel.DefaultAudioDevice);
             this.AudioDevices.Add(SoundActionModel.MixItUpOverlay);
-            foreach (string soundDevices in ServiceManager.Get<IAudioService>().GetOutputDevices())
-            {
-                this.AudioDevices.Add(soundDevices);
-            }
+            this.AudioDevices.AddRange(ServiceManager.Get<IAudioService>().GetOutputDevices());
         }
     }
 }

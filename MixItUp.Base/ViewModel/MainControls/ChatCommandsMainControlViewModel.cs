@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -25,7 +24,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool PreMadeCommandSelected { get { return !this.CustomCommandsSelected; } }
 
-        public ObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ObservableCollection<PreMadeChatCommandControlViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<PreMadeChatCommandControlViewModel> PreMadeChatCommands { get; set; } = new ThreadSafeObservableCollection<PreMadeChatCommandControlViewModel>();
         private List<PreMadeChatCommandControlViewModel> allPreMadeChatCommands = new List<PreMadeChatCommandControlViewModel>();
 
         public ICommand SwitchToPreMadeCommands { get; set; }
@@ -56,10 +55,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.allPreMadeChatCommands.Add(new PreMadeChatCommandControlViewModel(command));
             }
 
-            foreach (PreMadeChatCommandControlViewModel command in this.allPreMadeChatCommands)
-            {
-                this.PreMadeChatCommands.Add(command);
-            }
+            this.PreMadeChatCommands.AddRange(this.allPreMadeChatCommands);
 
             if (this.CommandGroups.Count == 0)
             {
@@ -83,11 +79,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         protected override void FilterCommands()
         {
-            this.PreMadeChatCommands.Clear();
+            List<PreMadeChatCommandControlViewModel> commands = new List<PreMadeChatCommandControlViewModel>();
             foreach (PreMadeChatCommandControlViewModel command in ((string.IsNullOrEmpty(this.NameFilter)) ? this.allPreMadeChatCommands : this.allPreMadeChatCommands.Where(c => c.Name.ToLower().Contains(this.NameFilter.ToLower()))).OrderBy(c => c.Name))
             {
-                this.PreMadeChatCommands.Add(command);
+                commands.Add(command);
             }
+            this.PreMadeChatCommands.ClearAndAddRange(commands);
 
             base.FilterCommands();
         }

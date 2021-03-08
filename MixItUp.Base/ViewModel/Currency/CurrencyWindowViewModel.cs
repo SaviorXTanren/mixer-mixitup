@@ -352,7 +352,7 @@ namespace MixItUp.Base.ViewModel.Currency
         public bool HasRankDownCommand { get { return this.RankDownCommand != null; } }
         public bool DoesNotHaveRankDownCommand { get { return !this.HasRankDownCommand; } }
 
-        public ObservableCollection<RankModel> Ranks { get; set; } = new ObservableCollection<RankModel>().EnableSync();
+        public ThreadSafeObservableCollection<RankModel> Ranks { get; set; } = new ThreadSafeObservableCollection<RankModel>();
 
         public string NewRankName
         {
@@ -459,10 +459,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 this.RankChangedCommand = this.Currency.RankChangedCommand;
                 this.RankDownCommand = this.Currency.RankDownCommand;
-                foreach (RankModel rank in this.Currency.Ranks.OrderBy(r => r.Amount))
-                {
-                    this.Ranks.Add(rank);
-                }
+                this.Ranks.AddRange(this.Currency.Ranks.OrderBy(r => r.Amount));
             }
         }
 
@@ -503,11 +500,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
                 var tempRanks = this.Ranks.ToList();
 
-                this.Ranks.Clear();
-                foreach (RankModel rank in tempRanks.OrderBy(r => r.Amount))
-                {
-                    this.Ranks.Add(rank);
-                }
+                this.Ranks.ClearAndAddRange(tempRanks.OrderBy(r => r.Amount));
 
                 this.NewRankName = string.Empty;
                 this.NewRankAmount = 0;

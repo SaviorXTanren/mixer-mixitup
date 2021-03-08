@@ -60,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public GenericToggleSettingsOptionControlViewModel ExplicitUserRoleRequirements { get; set; }
 
-        public ObservableCollection<UserTitleViewModel> Titles { get; set; } = new ObservableCollection<UserTitleViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<UserTitleViewModel> Titles { get; set; } = new ThreadSafeObservableCollection<UserTitleViewModel>();
 
         public string TitleName
         {
@@ -193,11 +193,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         private void RefreshTitleList()
         {
-            this.Titles.Clear();
-            foreach (UserTitleModel title in ChannelSession.Settings.UserTitles.OrderBy(t => t.Role).ThenBy(t => t.Months))
-            {
-                this.Titles.Add(new UserTitleViewModel(this, title));
-            }
+            this.Titles.ClearAndAddRange(ChannelSession.Settings.UserTitles.OrderBy(t => t.Role).ThenBy(t => t.Months).Select(t => new UserTitleViewModel(this, t)));
         }
     }
 }

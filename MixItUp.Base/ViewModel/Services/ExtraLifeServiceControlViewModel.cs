@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class ExtraLifeServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ObservableCollection<ExtraLifeTeamParticipant>().EnableSync();
+        public ThreadSafeObservableCollection<ExtraLifeTeamParticipant> Participants { get; set; } = new ThreadSafeObservableCollection<ExtraLifeTeamParticipant>();
 
         public int ExtraLifeTeamID
         {
@@ -122,21 +122,21 @@ namespace MixItUp.Base.ViewModel.Services
             }
             else
             {
-                this.Participants.Clear();
-
+                List<ExtraLifeTeamParticipant> participants = new List<ExtraLifeTeamParticipant>();
                 ExtraLifeTeam team = await ServiceManager.Get<ExtraLifeService>().GetTeam(this.ExtraLifeTeamID);
                 if (team != null)
                 {
                     IEnumerable<ExtraLifeTeamParticipant> ps = await ServiceManager.Get<ExtraLifeService>().GetTeamParticipants(this.ExtraLifeTeamID);
                     foreach (ExtraLifeTeamParticipant participant in ps.OrderBy(p => p.displayName))
                     {
-                        this.Participants.Add(participant);
+                        participants.Add(participant);
                     }
                 }
                 else
                 {
                     await DialogHelper.ShowMessage("The Extra Life team ID you entered could not be found");
                 }
+                this.Participants.ClearAndAddRange(participants);
             }
             this.NotifyPropertyChanged("ParticipantsAvailable");
         }

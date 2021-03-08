@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddJSONParameterCommand { get; private set; }
 
-        public ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel> JSONParameters { get; set; } = new ObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel>().EnableSync();
+        public ThreadSafeObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel> JSONParameters { get; set; } = new ThreadSafeObservableCollection<WebRequestActionJSONToSpecialIdentifierViewModel>();
 
         public WebRequestActionEditorControlViewModel(WebRequestActionModel action)
             : base(action)
@@ -82,10 +82,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.SelectedResponseParseType = action.ResponseType;
             if (this.ShowJSONGrid)
             {
-                foreach (var kvp in action.JSONToSpecialIdentifiers)
-                {
-                    this.JSONParameters.Add(new WebRequestActionJSONToSpecialIdentifierViewModel(kvp.Key, kvp.Value, this));
-                }
+                this.JSONParameters.AddRange(action.JSONToSpecialIdentifiers.Select(kvp => new WebRequestActionJSONToSpecialIdentifierViewModel(kvp.Key, kvp.Value, this)));
             }
         }
 
