@@ -646,6 +646,11 @@ namespace MixItUp.Base.ViewModel.User
                 return true;
             }
 
+            if (checkRole == UserRoleEnum.VIPExclusive && this.UserRoles.Contains(UserRoleEnum.VIP))
+            {
+                return true;
+            }
+
             if (ChannelSession.Settings.ExplicitUserRoleRequirements)
             {
                 return this.UserRoles.Contains(checkRole);

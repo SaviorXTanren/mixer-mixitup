@@ -41,14 +41,6 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (!parameters.User.HasPermissionsTo(this.Role))
             {
-                if (this.Role == UserRoleEnum.VIPExclusive)
-                {
-                    if (parameters.User.UserRoles.Contains(UserRoleEnum.VIP))
-                    {
-                        return Task.FromResult(new Result());
-                    }
-                }
-
                 if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ChannelSession.Services.Patreon.IsConnected)
                 {
                     PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitID);
