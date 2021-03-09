@@ -41,6 +41,14 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (!parameters.User.HasPermissionsTo(this.Role))
             {
+                if (this.Role == UserRoleEnum.VIPExclusive)
+                {
+                    if (parameters.User.UserRoles.Contains(UserRoleEnum.VIP))
+                    {
+                        return Task.FromResult(new Result());
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(this.PatreonBenefitID) && ChannelSession.Services.Patreon.IsConnected)
                 {
                     PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitID);
@@ -53,6 +61,7 @@ namespace MixItUp.Base.Model.Requirements
                         }
                     }
                 }
+
                 return Task.FromResult(this.CreateErrorMessage(parameters));
             }
 
@@ -63,6 +72,7 @@ namespace MixItUp.Base.Model.Requirements
                     return Task.FromResult(this.CreateErrorMessage(parameters));
                 }
             }
+
             return Task.FromResult(new Result());
         }
 
@@ -79,6 +89,10 @@ namespace MixItUp.Base.Model.Requirements
                     case 3: tierText = MixItUp.Base.Resources.Tier3; break;
                 }
                 role = tierText + " " + role;
+            }
+            else if (this.Role == UserRoleEnum.VIPExclusive)
+            {
+                role = EnumLocalizationHelper.GetLocalizedName(UserRoleEnum.VIP);
             }
             return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }

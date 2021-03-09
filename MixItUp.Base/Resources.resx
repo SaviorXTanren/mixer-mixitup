@@ -4765,4 +4765,10 @@ This setting will change all role requirements to be explicit and require that t
   <data name="Year" xml:space="preserve">
     <value>Year</value>
   </data>
+  <data name="VIPExclusive" xml:space="preserve">
+    <value>VIP Exclusive</value>
+  </data>
+  <data name="VIP" xml:space="preserve">
+    <value>VIP</value>
+  </data>
 </root>

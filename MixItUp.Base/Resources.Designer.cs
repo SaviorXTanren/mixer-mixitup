@@ -13407,6 +13407,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VIP.
+        /// </summary>
+        public static string VIP {
+            get {
+                return ResourceManager.GetString("VIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIP Exclusive.
+        /// </summary>
+        public static string VIPExclusive {
+            get {
+                return ResourceManager.GetString("VIPExclusive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VIP User.
         /// </summary>
         public static string VIPUser {
