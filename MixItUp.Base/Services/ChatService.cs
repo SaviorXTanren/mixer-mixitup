@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -164,6 +165,11 @@ namespace MixItUp.Base.Services
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
                 }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoChatEventService>() != null)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
+                }
             }
         }
 
@@ -197,6 +203,14 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            if (message.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                if (!string.IsNullOrEmpty(message.ID))
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
+                }
+            }
+
             if (!message.IsDeleted)
             {
                 await message.Delete();
@@ -214,6 +228,7 @@ namespace MixItUp.Base.Services
             this.Messages.Clear();
 
             await ServiceManager.Get<ITwitchChatService>().ClearMessages();
+            await ServiceManager.Get<TrovoChatEventService>().ClearChat();
         }
 
         public async Task PurgeUser(UserViewModel user)
@@ -230,6 +245,11 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
             }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user, (int)durationInSeconds);
+            }
             // TODO
         }
 
@@ -239,6 +259,11 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<ITwitchChatService>().ModUser(user);
             }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().ModUser(user);
+            }
         }
 
         public async Task UnmodUser(UserViewModel user)
@@ -246,6 +271,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await ServiceManager.Get<ITwitchChatService>().UnmodUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user);
             }
         }
 
@@ -260,6 +290,11 @@ namespace MixItUp.Base.Services
             {
                 await ServiceManager.Get<GlimeshChatEventService>().BanUser(user);
             }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().BanUser(user);
+            }
         }
 
         public async Task UnbanUser(UserViewModel user)
@@ -272,6 +307,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
             {
                 await ServiceManager.Get<GlimeshChatEventService>().UnbanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().UnbanUser(user);
             }
         }
 
@@ -324,40 +364,24 @@ namespace MixItUp.Base.Services
 
                 if (message is UserChatMessageViewModel)
                 {
-                    if (message.User != null)
+                    if (message.User == null)
                     {
-                        UserViewModel activeUser = null;
-                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
-                        {
-                            activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
-                        }
-                        else if (message.Platform == StreamingPlatformTypeEnum.Glimesh)
-                        {
-                            activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User.GlimeshID);
-                        }
+                        Logger.Log(LogLevel.Error, string.Format("User Message Contains No User - {0} - {1}", message.ID.ToString(), message));
+                        return;
+                    }
 
-                        if (activeUser != null)
+                    message.User.UpdateLastActivity();
+                    if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
+                    {
+                        await this.whisperNumberLock.WaitAndRelease(() =>
                         {
-                            message.User = activeUser;
-                        }
-                        else
-                        {
-                            await ServiceManager.Get<UserService>().AddOrUpdateUser(message.User);
-                        }
-
-                        message.User.UpdateLastActivity();
-                        if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
-                        {
-                            await this.whisperNumberLock.WaitAndRelease(() =>
+                            if (!whisperMap.ContainsKey(message.User.ID))
                             {
-                                if (!whisperMap.ContainsKey(message.User.ID))
-                                {
-                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
-                                }
-                                message.User.WhispererNumber = whisperMap[message.User.ID];
-                                return Task.FromResult(0);
-                            });
-                        }
+                                whisperMap[message.User.ID] = whisperMap.Count + 1;
+                            }
+                            message.User.WhispererNumber = whisperMap[message.User.ID];
+                            return Task.FromResult(0);
+                        });
                     }
                 }
 

@@ -1,15 +1,16 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using GlimeshBase = Glimesh.Base;
-using MixItUp.Base.Services.Twitch;
+using TrovoBase = Trovo.Base;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
@@ -21,6 +22,7 @@ namespace MixItUp.Base.Services
 
         Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
         Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser);
+        Task<UserViewModel> AddOrUpdateUser(TrovoBase.Models.Users.UserModel trovoUser);
         Task AddOrUpdateUser(UserViewModel user);
 
         Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username);
@@ -130,6 +132,21 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task<UserViewModel> AddOrUpdateUser(TrovoBase.Models.Users.UserModel trovoUser)
+        {
+            if (!string.IsNullOrEmpty(trovoUser.user_id) && !string.IsNullOrEmpty(trovoUser.username))
+            {
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, trovoUser.user_id);
+                if (user == null)
+                {
+                    user = new UserViewModel(trovoUser);
+                }
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
         public async Task AddOrUpdateUser(UserViewModel user)
         {
             if (!user.IsAnonymous)
@@ -146,6 +163,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID;
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.TrovoID) && !string.IsNullOrEmpty(user.TrovoUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoUsername] = user.ID;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
@@ -210,6 +233,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshID);
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshUsername);
+                }
+
+                if (!string.IsNullOrEmpty(user.TrovoID) && !string.IsNullOrEmpty(user.TrovoUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Trovo].Remove(user.TrovoID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo].Remove(user.TrovoUsername);
                 }
 
                 await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -35,6 +36,15 @@ namespace MixItUp.Base.Model.Commands
                     if (glimeshUser != null)
                     {
                         return new UserViewModel(glimeshUser);
+                    }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                {
+                    Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                    if (trovoUser != null)
+                    {
+                        return new UserViewModel(trovoUser);
                     }
                 }
             }

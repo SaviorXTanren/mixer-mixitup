@@ -590,6 +590,15 @@ namespace MixItUp.Base.Model.Settings
                         this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.TrovoUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
             });
             this.UserData.ClearTracking();
 
@@ -878,6 +887,7 @@ namespace MixItUp.Base.Model.Settings
             this.UserData[user.ID] = user;
             if (!string.IsNullOrEmpty(user.TwitchID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID; }
             if (!string.IsNullOrEmpty(user.GlimeshID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.TrovoID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID; }
             this.UserData.ManualValueChanged(user.ID);
         }
 

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
@@ -68,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Accounts
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().UserConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) {  }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) {  }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().UserConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().UserConnection != null; }
                 return false;
             }
@@ -103,7 +104,7 @@ namespace MixItUp.Base.ViewModel.Accounts
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().BotConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().BotConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().BotConnection != null; }
                 return false;
             }
@@ -124,14 +125,15 @@ namespace MixItUp.Base.ViewModel.Accounts
                 {
 
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().User != null)
                 {
-
+                    this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().User.profilePic;
+                    this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().User.nickName;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
                     this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
-                    this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.username;
+                    this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                 }
             }
 
@@ -146,14 +148,15 @@ namespace MixItUp.Base.ViewModel.Accounts
                 {
 
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().Bot != null)
                 {
-
+                    this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
+                    this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
                     this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
-                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
+                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                 }
             }
 
@@ -177,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         if (result.Success && ServiceManager.Get<TwitchSessionService>().UserNewAPI != null)
                         {
                             this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.login;
+                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
                         }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
@@ -186,7 +189,12 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-
+                        result = await ServiceManager.Get<TrovoSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<TrovoSessionService>().User != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().User.profilePic;
+                            this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().User.nickName;
+                        }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
@@ -194,7 +202,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
                             this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
-                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.username;
+                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                         }
                     }
 
@@ -223,7 +231,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-
+                        await ServiceManager.Get<TrovoSessionService>().DisconnectBot(ChannelSession.Settings);
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
@@ -248,7 +256,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                             else if (ServiceManager.Get<TwitchSessionService>().BotNewAPI != null)
                             {
                                 this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
-                                this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.login;
+                                this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
                             }
                         }
                     }
@@ -258,7 +266,20 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
-
+                        result = await ServiceManager.Get<TrovoSessionService>().ConnectBot();
+                        if (result.Success)
+                        {
+                            if (ServiceManager.Get<TrovoSessionService>().Bot.userId.Equals(ServiceManager.Get<TrovoSessionService>().User?.userId))
+                            {
+                                await ServiceManager.Get<TrovoSessionService>().DisconnectBot(ChannelSession.Settings);
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else if (ServiceManager.Get<TrovoSessionService>().Bot != null)
+                            {
+                                this.BotAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
+                                this.BotAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
+                            }
+                        }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                     {
@@ -273,7 +294,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                             else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
                             {
                                 this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
-                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.username;
+                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                             }
                         }
                     }

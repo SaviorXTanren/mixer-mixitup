@@ -1,0 +1,51 @@
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Trovo;
+using MixItUp.Base.ViewModel.User;
+using System;
+using System.Collections.Generic;
+using Trovo.Base.Models.Chat;
+
+namespace MixItUp.Base.ViewModel.Chat.Trovo
+{
+    public class TrovoChatMessageViewModel : UserChatMessageViewModel
+    {
+        public static readonly HashSet<ChatMessageTypeEnum> ApplicableMessageTypes = new HashSet<ChatMessageTypeEnum>()
+        {
+            ChatMessageTypeEnum.Normal, ChatMessageTypeEnum.MagicChatSuperCapChat, ChatMessageTypeEnum.MagicChatColorfulChat, ChatMessageTypeEnum.MagicChatSpellChat, ChatMessageTypeEnum.MagicChatBulletScreenChat,
+            ChatMessageTypeEnum.SubscriptionAlert, ChatMessageTypeEnum.FollowAlert, ChatMessageTypeEnum.WelcomeMessage, ChatMessageTypeEnum.ActivityEventMessage, ChatMessageTypeEnum.WelcomeMessageFromRaid
+        };
+
+        public TrovoChatMessageViewModel(ChatMessageContainerModel message, UserViewModel user = null)
+            : base(message.eid, StreamingPlatformTypeEnum.Trovo, (user != null) ? user : new UserViewModel(message))
+        {
+            foreach (ChatMessageModel token in message.chats)
+            {
+                if (ApplicableMessageTypes.Contains(token.type) && !string.IsNullOrEmpty(token.content))
+                {
+                    string[] parts = token.content.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string part in parts)
+                    {
+                        this.AddStringMessagePart(part);
+                        if (part.StartsWith(":"))
+                        {
+                            string emote = part.Substring(1);
+                            if (ServiceManager.Get<TrovoChatEventService>().ChannelEmotes.ContainsKey(emote))
+                            {
+                                this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().ChannelEmotes[part];
+                            }
+                            else if (ServiceManager.Get<TrovoChatEventService>().EventEmotes.ContainsKey(emote))
+                            {
+                                this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().EventEmotes[part];
+                            }
+                            else if (ServiceManager.Get<TrovoChatEventService>().GlobalEmotes.ContainsKey(emote))
+                            {
+                                this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TrovoChatEventService>().GlobalEmotes[part];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

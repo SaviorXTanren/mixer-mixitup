@@ -272,6 +272,9 @@ namespace MixItUp.Base.Services.Glimesh
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
                     }
                 }
+
+                user.SetGlimeshChatDetails(message);
+
                 await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
             }
         }

@@ -243,6 +243,15 @@ namespace MixItUp.Base.Services.Glimesh
                     this.User = user;
                 }
             }
+
+            if (this.BotConnection != null)
+            {
+                UserModel bot = await this.BotConnection.GetCurrentUser();
+                if (bot != null)
+                {
+                    this.Bot = bot;
+                }
+            }
         }
 
         public async Task RefreshChannel()
