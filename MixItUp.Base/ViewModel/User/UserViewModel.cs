@@ -196,16 +196,26 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTrovoRoles();
         }
 
-        public UserViewModel(Trovo.Base.Models.Chat.ChatMessageContainerModel messageContainer)
+        public UserViewModel(Trovo.Base.Models.Users.PrivateUserModel user)
         {
-            Trovo.Base.Models.Chat.ChatMessageModel message = messageContainer.chats.First();
+            this.SetUserData(StreamingPlatformTypeEnum.Trovo, user.userId);
 
+            this.TrovoID = user.userId;
+            this.TrovoUsername = user.userName;
+            this.TrovoDisplayName = user.nickName;
+            this.TrovoAvatarLink = user.profilePic;
+
+            this.SetTrovoRoles();
+        }
+
+        public UserViewModel(Trovo.Base.Models.Chat.ChatMessageModel message)
+        {
             this.SetUserData(StreamingPlatformTypeEnum.Trovo, message.sender_id);
 
             this.TrovoID = message.sender_id;
             this.TrovoUsername = this.TrovoDisplayName = message.nick_name;
 
-            this.SetTrovoChatDetails(messageContainer);
+            this.SetTrovoChatDetails(message);
         }
 
         public UserViewModel(UserDataModel userData)
@@ -230,6 +240,10 @@ namespace MixItUp.Base.ViewModel.User
                     else if (platform == StreamingPlatformTypeEnum.Glimesh)
                     {
                         this.Data = new UserDataModel() { GlimeshID = userID };
+                    }
+                    else if (platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        this.Data = new UserDataModel() { TrovoID = userID };
                     }
                     ChannelSession.Settings.AddUserData(this.Data);
                 }
@@ -906,14 +920,11 @@ namespace MixItUp.Base.ViewModel.User
 
         #region Trovo Data Setter Functions
 
-        public void SetTrovoChatDetails(Trovo.Base.Models.Chat.ChatMessageContainerModel messageContainer)
+        public void SetTrovoChatDetails(Trovo.Base.Models.Chat.ChatMessageModel message)
         {
-            if (messageContainer.chats.Count > 0)
-            {
-                this.TrovoAvatarLink = messageContainer.chats.First().FullAvatarURL;
+            this.TrovoAvatarLink = message.FullAvatarURL;
 
-                this.SetTrovoRoles(messageContainer.chats.First().roles);
-            }
+            this.SetTrovoRoles(message.roles);
         }
 
         #endregion Trovo Data Setter Functions

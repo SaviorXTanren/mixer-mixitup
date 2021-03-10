@@ -7,6 +7,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -121,6 +122,8 @@ namespace MixItUp.Base
 
             ServiceManager.Add(new GlimeshSessionService());
 
+            ServiceManager.Add(new TrovoSessionService());
+
             try
             {
                 Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
@@ -181,6 +184,14 @@ namespace MixItUp.Base
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<GlimeshSessionService>().User);
+                }
+            }
+            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
+                if (user == null)
+                {
+                    user = new UserViewModel(ServiceManager.Get<TrovoSessionService>().User);
                 }
             }
 

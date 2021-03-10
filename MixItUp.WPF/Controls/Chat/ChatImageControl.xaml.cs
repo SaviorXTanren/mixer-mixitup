@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.Chat.Glimesh;
+using MixItUp.Base.ViewModel.Chat.Trovo;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
@@ -56,6 +57,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(GlimeshChatEmoteViewModel emote) : this() { this.DataContext = emote; }
 
+        public ChatImageControl(TrovoChatEmoteViewModel emote) : this() { this.DataContext = emote; }
+
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
@@ -108,6 +111,18 @@ namespace MixItUp.WPF.Controls.Chat
                             this.SVGImage.Visibility = Visibility.Visible;
                             this.SVGImage.ToolTip = this.AltText.Text = emote.Name;
                             this.ResizeImage(this.SVGImage);
+                        }
+                    }
+                    else if (this.DataContext is TrovoChatEmoteViewModel)
+                    {
+                        TrovoChatEmoteViewModel emote = (TrovoChatEmoteViewModel)this.DataContext;
+                        if (emote.IsGif)
+                        {
+                            this.ProcessGifImage(emote.Name, emote.Url);
+                        }
+                        else
+                        {
+                            await this.ProcessImage(emote.Name, emote.Url);
                         }
                     }
                     else if (this.DataContext is string)

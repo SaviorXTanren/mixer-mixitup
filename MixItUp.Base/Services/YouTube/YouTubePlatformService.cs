@@ -1,4 +1,6 @@
-﻿namespace MixItUp.Base.Services.YouTube
+﻿using YouTube.Base;
+
+namespace MixItUp.Base.Services.YouTube
 {
     public interface IYouTubePlatformService
     {

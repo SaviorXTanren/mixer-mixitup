@@ -156,6 +156,10 @@ namespace MixItUp.Base.Services.Trovo
 
                         TrovoChatEventService chatService = new TrovoChatEventService();
 
+                        // Adding service before connecting due to race-condition where previous chat messages will begin getting
+                        // sent in prior to full connect functionality finishing.
+                        ServiceManager.Add<TrovoChatEventService>(chatService);
+
                         List<Task<Result>> platformServiceTasks = new List<Task<Result>>();
                         platformServiceTasks.Add(chatService.ConnectUser());
 
@@ -163,11 +167,11 @@ namespace MixItUp.Base.Services.Trovo
 
                         if (platformServiceTasks.Any(c => !c.Result.Success))
                         {
+                            ServiceManager.Remove<TrovoChatEventService>();
+
                             string errors = string.Join(Environment.NewLine, platformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                             return new Result("Failed to connect to Trovo services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
-
-                        ServiceManager.Add<TrovoChatEventService>(chatService);
                     }
                 }
                 catch (Exception ex)
@@ -211,7 +215,26 @@ namespace MixItUp.Base.Services.Trovo
 
         public void SaveSettings(SettingsV3Model settings)
         {
-            throw new NotImplementedException();
+            if (this.UserConnection != null)
+            {
+                if (!settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Trovo))
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Trovo);
+                }
+
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserOAuthToken = this.UserConnection.Connection.GetOAuthTokenCopy();
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].UserID = this.User.userId;
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].ChannelID = this.Channel.channel_id;
+
+                if (this.BotConnection != null)
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotOAuthToken = this.BotConnection.Connection.GetOAuthTokenCopy();
+                    if (this.Bot != null)
+                    {
+                        settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Trovo].BotID = this.Bot.userId;
+                    }
+                }
+            }
         }
 
         public async Task RefreshUser()

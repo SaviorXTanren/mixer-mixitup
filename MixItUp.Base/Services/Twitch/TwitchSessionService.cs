@@ -288,6 +288,15 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }
             }
+
+            if (this.BotConnection != null)
+            {
+                TwitchNewAPI.Users.UserModel botUserNewAPI = await this.BotConnection.GetNewAPICurrentUser();
+                if (botUserNewAPI != null)
+                {
+                    this.BotNewAPI = botUserNewAPI;
+                }
+            }
         }
 
         public async Task RefreshChannel()

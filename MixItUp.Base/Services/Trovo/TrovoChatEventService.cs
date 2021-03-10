@@ -24,7 +24,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private Dictionary<string, ChatEmoteModel> channelEmotes = new Dictionary<string, ChatEmoteModel>();
         private Dictionary<string, EventChatEmoteModel> eventEmotes = new Dictionary<string, EventChatEmoteModel>();
-        private Dictionary<string, GlobalEmoteChatModel> globalEmotes = new Dictionary<string, GlobalEmoteChatModel>();
+        private Dictionary<string, GlobalChatEmoteModel> globalEmotes = new Dictionary<string, GlobalChatEmoteModel>();
 
         private ChatClient userClient;
         private ChatClient botClient;
@@ -39,7 +39,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public IDictionary<string, ChatEmoteModel> ChannelEmotes { get { return this.channelEmotes; } }
         public IDictionary<string, EventChatEmoteModel> EventEmotes { get { return this.eventEmotes; } }
-        public IDictionary<string, GlobalEmoteChatModel> GlobalEmotes { get { return this.globalEmotes; } }
+        public IDictionary<string, GlobalChatEmoteModel> GlobalEmotes { get { return this.globalEmotes; } }
 
         public bool IsUserConnected { get { return this.userClient != null && this.userClient.IsOpen(); } }
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.IsOpen(); } }
@@ -60,6 +60,32 @@ namespace MixItUp.Base.Services.Trovo
                             return new Result("Failed to get chat token from Trovo chat servers");
                         }
 
+                        ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetEmotes(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
+                        if (emotePackage != null)
+                        {
+                            foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
+                            {
+                                foreach (ChatEmoteModel emote in channel.emotes)
+                                {
+                                    this.ChannelEmotes[emote.name] = emote;
+                                }
+                            }
+
+                            foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
+                            {
+                                this.EventEmotes[emote.name] = emote;
+                            }
+
+                            foreach (GlobalChatEmoteModel emote in emotePackage.globalEmotes)
+                            {
+                                this.GlobalEmotes[emote.name] = emote;
+                            }
+                        }
+                        else
+                        {
+                            Logger.Log(LogLevel.Error, "Failed to get available Trovo emotes");
+                        }
+
                         if (ChannelSession.AppSettings.DiagnosticLogging)
                         {
                             this.userClient.OnSentOccurred += Client_OnSentOccurred;
@@ -72,30 +98,6 @@ namespace MixItUp.Base.Services.Trovo
                         if (!await this.userClient.Connect(token))
                         {
                             return new Result("Failed to connect to Trovo chat servers");
-                        }
-
-                        ChatEmotePackageModel emotePackage = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetEmotes(ServiceManager.Get<TrovoSessionService>().Channel.channel_id);
-                        if (emotePackage != null)
-                        {
-                            return new Result("Failed to get available Trovo emotes");
-                        }
-
-                        foreach (ChannelChatEmotesModel channel in emotePackage.customizedEmotes.channel)
-                        {
-                            foreach (ChatEmoteModel emote in channel.emotes)
-                            {
-                                this.ChannelEmotes[emote.name] = emote;
-                            }
-                        }
-
-                        foreach (EventChatEmoteModel emote in emotePackage.eventEmotes)
-                        {
-                            this.EventEmotes[emote.name] = emote;
-                        }
-
-                        foreach (GlobalEmoteChatModel emote in emotePackage.globalEmotes)
-                        {
-                            this.GlobalEmotes[emote.name] = emote;
                         }
 
                         return new Result();
@@ -258,7 +260,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private async void UserClient_OnChatMessageReceived(object sender, ChatMessageContainerModel messageContainer)
         {
-            if (messageContainer != null && messageContainer.chats != null && messageContainer.chats.Count > 0)
+            foreach (ChatMessageModel message in messageContainer.chats)
             {
                 UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id);
                 if (user == null)
@@ -269,191 +271,185 @@ namespace MixItUp.Base.Services.Trovo
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(trovoUser);
                     }
                 }
+                user.SetTrovoChatDetails(message);
 
-                user.SetTrovoChatDetails(messageContainer);
-
-                TrovoChatMessageViewModel message = new TrovoChatMessageViewModel(messageContainer, user);
-
-                await ServiceManager.Get<ChatService>().AddMessage(message);
-
-                foreach (ChatMessageModel token in messageContainer.chats)
+                if (message.type == ChatMessageTypeEnum.FollowAlert)
                 {
-                    if (!string.IsNullOrEmpty(token.content))
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelFollowed, user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
                     {
-                        if (token.type == ChatMessageTypeEnum.FollowAlert)
+                        user.FollowDate = DateTimeOffset.Now;
+
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
+
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelFollowed, user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                            currency.AddAmount(user.Data, currency.OnFollowBonus);
+                        }
+
+                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                        {
+                            if (user.HasPermissionsTo(streamPass.Permission))
                             {
-                                user.FollowDate = DateTimeOffset.Now;
-
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
-
-                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                                {
-                                    currency.AddAmount(user.Data, currency.OnFollowBonus);
-                                }
-
-                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                                {
-                                    if (user.HasPermissionsTo(streamPass.Permission))
-                                    {
-                                        streamPass.AddAmount(user.Data, streamPass.FollowBonus);
-                                    }
-                                }
-
-                                await ServiceManager.Get<EventService>().PerformEvent(trigger);
-
-                                GlobalEvents.FollowOccurred(user);
-
-                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                                streamPass.AddAmount(user.Data, streamPass.FollowBonus);
                             }
                         }
-                        else if (token.type == ChatMessageTypeEnum.SubscriptionAlert)
+
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+
+                        GlobalEvents.FollowOccurred(user);
+
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Followed", user.DisplayName), ChannelSession.Settings.AlertFollowColor));
+                    }
+                }
+                else if (message.type == ChatMessageTypeEnum.SubscriptionAlert)
+                {
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscribed, user);
+                    if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                    {
+                        trigger.SpecialIdentifiers["message"] = message.content;
+                        //trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
+                        //trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+                        //trigger.SpecialIdentifiers["usersubplan"] = planTier;
+                        //trigger.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
+
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
+                        //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
+
+                        user.SubscribeDate = DateTimeOffset.Now;
+                        //user.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
+                        //user.Data.TotalMonthsSubbed++;
+
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscribed, user);
-                            if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
-                            {
-                                trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
-                                //trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
-                                //trigger.SpecialIdentifiers["usersubplanname"] = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-                                //trigger.SpecialIdentifiers["usersubplan"] = planTier;
-                                //trigger.SpecialIdentifiers["usersubstreak"] = packet.streak_months.ToString();
-
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
-                                //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
-
-                                user.SubscribeDate = DateTimeOffset.Now;
-                                //user.Data.TwitchSubscriberTier = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
-                                //user.Data.TotalMonthsSubbed++;
-
-                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                                {
-                                    currency.AddAmount(user.Data, currency.OnSubscribeBonus);
-                                }
-
-                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                                {
-                                    if (trigger.User.HasPermissionsTo(streamPass.Permission))
-                                    {
-                                        streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
-                                    }
-                                }
-
-                                if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, trigger.SpecialIdentifiers["message"])))
-                                {
-                                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
-                                }
-                            }
-
-                            GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, 1));
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                            currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                         }
-                        else if (token.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
-                        {
-                            int totalGifted = 1;
-                            int.TryParse(token.content, out totalGifted);
 
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, user);
-                            trigger.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
-                            //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
-                            //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
-                            //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                        {
+                            if (trigger.User.HasPermissionsTo(streamPass.Permission))
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(await ServiceManager.Get<ModerationService>().ShouldTextBeModerated(user, trigger.SpecialIdentifiers["message"])))
+                        {
                             await ServiceManager.Get<EventService>().PerformEvent(trigger);
-
-                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
-
-                        }
-                        else if (token.type == ChatMessageTypeEnum.GiftedSubscriptionMessage)
-                        {
-                            string[] splits = token.content.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (splits.Length == 2)
-                            {
-                                string gifteeUsername = splits[1];
-                                UserViewModel giftee = ServiceManager.Get<UserService>().GetUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
-                                if (giftee == null)
-                                {
-                                    UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);
-                                    if (giftee == null)
-                                    {
-                                        giftee = user;
-                                    }
-                                    else
-                                    {
-                                        giftee = new UserViewModel(gifteeTrovoUser);
-                                    }
-                                }
-
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
-                                //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
-
-                                giftee.SubscribeDate = DateTimeOffset.Now;
-                                //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
-                                user.Data.TotalSubsGifted++;
-                                giftee.Data.TotalSubsReceived++;
-                                //giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
-
-                                foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
-                                {
-                                    currency.AddAmount(user.Data, currency.OnSubscribeBonus);
-                                }
-
-                                foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                                {
-                                    if (user.HasPermissionsTo(streamPass.Permission))
-                                    {
-                                        streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
-                                    }
-                                }
-
-                                // TODO : Add same logic that Twitch uses for determine which event command to fire for gifted subs
-                                EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscriptionGifted, user);
-                                trigger.Arguments.Add(giftee.Username);
-                                trigger.TargetUser = giftee;
-                                await ServiceManager.Get<EventService>().PerformEvent(trigger);
-
-                                await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
-
-                                GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
-                            }
-                        }
-                        else if (token.type == ChatMessageTypeEnum.WelcomeMessageFromRaid)
-                        {
-                            Match match = Regex.Match(token.content, RaidMessageRegexFormat);
-                            if (match.Success)
-                            {
-                                int raidCount = 0;
-                                int.TryParse(Regex.Replace(match.Value, OnlyDigitsRegexReplacementFormat, string.Empty), out raidCount);
-
-                                EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelRaided, user);
-                                if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
-                                {
-                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
-                                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = raidCount.ToString();
-
-                                    foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
-                                    {
-                                        currency.AddAmount(user.Data, currency.OnHostBonus);
-                                    }
-
-                                    foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
-                                    {
-                                        if (user.HasPermissionsTo(streamPass.Permission))
-                                        {
-                                            streamPass.AddAmount(user.Data, streamPass.HostBonus);
-                                        }
-                                    }
-
-                                    GlobalEvents.RaidOccurred(user, raidCount);
-
-                                    trigger.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
-                                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
-
-                                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
-                                }
-                            }
                         }
                     }
+
+                    GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, 1));
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Subscribed", user.DisplayName), ChannelSession.Settings.AlertSubColor));
+                }
+                else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionSentMessage)
+                {
+                    int totalGifted = 1;
+                    int.TryParse(message.content, out totalGifted);
+
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, user);
+                    trigger.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                    //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
+                    //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
+                    //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
+
+                    await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
+
+                }
+                else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionMessage)
+                {
+                    string[] splits = message.content.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (splits.Length == 2)
+                    {
+                        string gifteeUsername = splits[1];
+                        UserViewModel giftee = ServiceManager.Get<UserService>().GetUserByUsername(gifteeUsername, StreamingPlatformTypeEnum.Trovo);
+                        if (giftee == null)
+                        {
+                            UserModel gifteeTrovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(gifteeUsername);
+                            if (giftee == null)
+                            {
+                                giftee = user;
+                            }
+                            else
+                            {
+                                giftee = new UserViewModel(gifteeTrovoUser);
+                            }
+                        }
+
+                        ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = giftee.ID;
+                        //ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = giftedSubEvent.MonthsGifted;
+
+                        giftee.SubscribeDate = DateTimeOffset.Now;
+                        //giftedSubEvent.Receiver.Data.TwitchSubscriberTier = giftedSubEvent.PlanTierNumber;
+                        user.Data.TotalSubsGifted++;
+                        giftee.Data.TotalSubsReceived++;
+                        //giftedSubEvent.Receiver.Data.TotalMonthsSubbed += (uint)giftedSubEvent.MonthsGifted;
+
+                        foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
+                        {
+                            currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                        }
+
+                        foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                        {
+                            if (user.HasPermissionsTo(streamPass.Permission))
+                            {
+                                streamPass.AddAmount(user.Data, streamPass.SubscribeBonus);
+                            }
+                        }
+
+                        // TODO : Add same logic that Twitch uses for determine which event command to fire for gifted subs
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscriptionGifted, user);
+                        trigger.Arguments.Add(giftee.Username);
+                        trigger.TargetUser = giftee;
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+
+                        await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
+
+                        GlobalEvents.SubscriptionGiftedOccurred(user, giftee);
+                    }
+                }
+                else if (message.type == ChatMessageTypeEnum.WelcomeMessageFromRaid)
+                {
+                    Match match = Regex.Match(message.content, RaidMessageRegexFormat);
+                    if (match.Success)
+                    {
+                        int raidCount = 0;
+                        int.TryParse(Regex.Replace(match.Value, OnlyDigitsRegexReplacementFormat, string.Empty), out raidCount);
+
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelRaided, user);
+                        if (ServiceManager.Get<EventService>().CanPerformEvent(trigger))
+                        {
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidUserData] = user.ID;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestRaidViewerCountData] = raidCount.ToString();
+
+                            foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values.ToList())
+                            {
+                                currency.AddAmount(user.Data, currency.OnHostBonus);
+                            }
+
+                            foreach (StreamPassModel streamPass in ChannelSession.Settings.StreamPass.Values)
+                            {
+                                if (user.HasPermissionsTo(streamPass.Permission))
+                                {
+                                    streamPass.AddAmount(user.Data, streamPass.HostBonus);
+                                }
+                            }
+
+                            GlobalEvents.RaidOccurred(user, raidCount);
+
+                            trigger.SpecialIdentifiers["raidviewercount"] = raidCount.ToString();
+                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+
+                            await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} raided with {1} viewers", user.DisplayName, raidCount), ChannelSession.Settings.AlertRaidColor));
+                        }
+                    }
+                }
+
+                if (TrovoChatMessageViewModel.ApplicableMessageTypes.Contains(message.type) && !string.IsNullOrEmpty(message.content))
+                {
+                    await ServiceManager.Get<ChatService>().AddMessage(new TrovoChatMessageViewModel(message, user));
                 }
             }
         }
