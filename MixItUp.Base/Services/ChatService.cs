@@ -78,7 +78,12 @@ namespace MixItUp.Base.Services
             {
                 string tempMessage = message.Substring(0, maxLength - 1);
                 int splitIndex = tempMessage.LastIndexOf(' ');
-                if (splitIndex > 0 && (splitIndex + 1) < message.Length)
+                if (splitIndex <= 0)
+                {
+                    splitIndex = maxLength;
+                }
+
+                if (splitIndex + 1 < message.Length)
                 {
                     subMessage = message.Substring(splitIndex + 1);
                     message = message.Substring(0, splitIndex);
