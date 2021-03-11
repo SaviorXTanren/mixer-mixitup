@@ -22,6 +22,8 @@ namespace MixItUp.Base.Services.Trovo
         private const string RaidMessageRegexFormat = " is carrying \\d+ raiders to this channel.";
         private const string OnlyDigitsRegexReplacementFormat = "[^0-9]";
 
+        private const int MaxMessageLength = 250;
+
         private Dictionary<string, ChatEmoteModel> channelEmotes = new Dictionary<string, ChatEmoteModel>();
         private Dictionary<string, EventChatEmoteModel> eventEmotes = new Dictionary<string, EventChatEmoteModel>();
         private Dictionary<string, GlobalChatEmoteModel> globalEmotes = new Dictionary<string, GlobalChatEmoteModel>();
@@ -31,7 +33,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
-        private const int MaxMessageLength = 250;
+        private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
 
         public TrovoChatEventService() { }
 
@@ -347,15 +349,18 @@ namespace MixItUp.Base.Services.Trovo
                     int totalGifted = 1;
                     int.TryParse(message.content, out totalGifted);
 
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, user);
-                    trigger.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
-                    //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
-                    //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
-                    //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
-                    await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                    this.userSubsGiftedInstanced[user.ID] = totalGifted;
 
+                    if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount == 0 || totalGifted > ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelMassSubscriptionsGifted, user);
+                        trigger.SpecialIdentifiers["subsgiftedamount"] = totalGifted.ToString();
+                        //trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
+                        //trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
+                        //trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                    }
                     await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted {1} Subs", user.DisplayName, totalGifted), ChannelSession.Settings.AlertMassGiftedSubColor));
-
                 }
                 else if (message.type == ChatMessageTypeEnum.GiftedSubscriptionMessage)
                 {
@@ -399,11 +404,14 @@ namespace MixItUp.Base.Services.Trovo
                             }
                         }
 
-                        // TODO : Add same logic that Twitch uses for determine which event command to fire for gifted subs
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscriptionGifted, user);
-                        trigger.Arguments.Add(giftee.Username);
-                        trigger.TargetUser = giftee;
-                        await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        this.userSubsGiftedInstanced.TryGetValue(user.ID, out int totalGifted);
+                        if (ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount == 0 || this.userSubsGiftedInstanced[user.ID] <= ChannelSession.Settings.TwitchMassGiftedSubsFilterAmount)
+                        {
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TrovoChannelSubscriptionGifted, user);
+                            trigger.Arguments.Add(giftee.Username);
+                            trigger.TargetUser = giftee;
+                            await ServiceManager.Get<EventService>().PerformEvent(trigger);
+                        }
 
                         await ServiceManager.Get<AlertsService>().AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Trovo, user, string.Format("{0} Gifted A Subscription To {1}", user.DisplayName, giftee.DisplayName), ChannelSession.Settings.AlertGiftedSubColor));
 

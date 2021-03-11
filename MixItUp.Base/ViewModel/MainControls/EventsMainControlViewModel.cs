@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
@@ -70,11 +71,25 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (eventNumber >= 100 && eventNumber < 200)
                 {
-                    return "Mixer";
+#pragma warning disable CS0612 // Type or member is obsolete
+                    return StreamingPlatformTypeEnum.Mixer.ToString();
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
                 else if (eventNumber >= 200 && eventNumber < 300)
                 {
-                    return "Twitch";
+                    return StreamingPlatformTypeEnum.Twitch.ToString();
+                }
+                else if (eventNumber >= 300 && eventNumber < 400)
+                {
+                    return StreamingPlatformTypeEnum.YouTube.ToString();
+                }
+                else if (eventNumber >= 400 && eventNumber < 500)
+                {
+                    return StreamingPlatformTypeEnum.Trovo.ToString();
+                }
+                else if (eventNumber >= 500 && eventNumber < 600)
+                {
+                    return StreamingPlatformTypeEnum.Glimesh.ToString();
                 }
                 else
                 {
@@ -116,6 +131,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
+
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelFollowed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelRaided));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelResubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscriptionGifted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelMassSubscriptionsGifted));
 
             commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStart));
             commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStop));
