@@ -59,7 +59,7 @@ namespace MixItUp.Base.Services.Twitch
                     return new Result("Failed to get Twitch bot data");
                 }
 
-                if (ServiceManager.Get<TwitchChatService>() != null && ServiceManager.Get<TwitchChatService>().IsUserConnected)
+                if (ServiceManager.Has<TwitchChatService>() && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
                     return await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 }
@@ -216,7 +216,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Get<TwitchChatService>() != null)
+            if (this.BotConnection != null && ServiceManager.Has<TwitchChatService>())
             {
                 Result result = await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 if (!result.Success)
@@ -229,12 +229,12 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Get<TwitchChatService>() != null)
+            if (ServiceManager.Has<TwitchChatService>())
             {
                 await ServiceManager.Get<TwitchChatService>().DisconnectUser();
             }
 
-            if (ServiceManager.Get<TwitchEventService>() != null)
+            if (ServiceManager.Has<TwitchEventService>())
             {
                 await ServiceManager.Get<TwitchEventService>().Disconnect();
             }
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Get<TwitchChatService>() != null)
+            if (ServiceManager.Has<TwitchChatService>())
             {
                 await ServiceManager.Get<TwitchChatService>().DisconnectBot();
             }

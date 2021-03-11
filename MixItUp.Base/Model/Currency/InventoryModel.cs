@@ -384,7 +384,7 @@ namespace MixItUp.Base.Model.Currency
         {
             try
             {
-                if (ServiceManager.Get<ChatService>() != null && ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
+                if (ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
                 {
                     CurrencyModel currency = ChannelSession.Settings.Currency[this.ShopCurrencyID];
 
@@ -559,7 +559,7 @@ namespace MixItUp.Base.Model.Currency
         {
             try
             {
-                if (ServiceManager.Get<ChatService>() != null && arguments != null)
+                if (arguments != null)
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {

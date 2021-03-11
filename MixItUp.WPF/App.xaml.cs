@@ -194,7 +194,7 @@ namespace MixItUp.WPF
 
                 this.crashObtained = true;
 
-                if (ServiceManager.Get<ITelemetryService>() != null)
+                if (ServiceManager.Has<ITelemetryService>())
                 {
                     ServiceManager.Get<ITelemetryService>().TrackException(ex);
                 }

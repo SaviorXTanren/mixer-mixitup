@@ -687,14 +687,14 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
-                    if (ServiceManager.Get<TwitchEventService>() != null)
+                    if (ServiceManager.Has<TwitchEventService>())
                     {
                         await ServiceManager.Get<TwitchEventService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
                     }
                 }
                 else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    if (ServiceManager.Get<TwitchEventService>() != null)
+                    if (ServiceManager.Has<TwitchEventService>())
                     {
                         await ServiceManager.Get<TwitchEventService>().AddSub(new TwitchSubEventModel(userNotice));
                     }

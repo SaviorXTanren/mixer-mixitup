@@ -317,7 +317,7 @@ namespace MixItUp.Base.Util
             }
 
             int gameQueueCount = 0;
-            if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
+            if (ServiceManager.Get<GameQueueService>().IsEnabled)
             {
                 gameQueueCount = ServiceManager.Get<GameQueueService>().Queue.Count();
             }
@@ -776,7 +776,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
                     string gameQueuePosition = "Not In Queue";
-                    if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
+                    if (ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
                         int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
                         if (position > 0)

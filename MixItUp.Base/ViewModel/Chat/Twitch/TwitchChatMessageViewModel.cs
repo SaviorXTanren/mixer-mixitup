@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 foreach (string part in parts)
                 {
                     this.AddStringMessagePart(part);
-                    if (ServiceManager.Get<TwitchChatService>() != null)
+                    if (ServiceManager.Has<TwitchChatService>())
                     {
                         if (this.HasBits)
                         {

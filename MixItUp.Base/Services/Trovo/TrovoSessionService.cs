@@ -199,7 +199,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task CloseUser()
         {
-            if (ServiceManager.Get<TrovoChatEventService>() != null)
+            if (ServiceManager.Has<TrovoChatEventService>())
             {
                 await ServiceManager.Get<TrovoChatEventService>().DisconnectUser();
             }
@@ -207,7 +207,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task CloseBot()
         {
-            if (ServiceManager.Get<TrovoChatEventService>() != null)
+            if (ServiceManager.Has<TrovoChatEventService>())
             {
                 await ServiceManager.Get<TrovoChatEventService>().DisconnectBot();
             }
