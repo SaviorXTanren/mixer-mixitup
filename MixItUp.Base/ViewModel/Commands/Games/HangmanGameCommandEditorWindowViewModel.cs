@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Hangman;
-            this.Triggers = MixItUp.Base.Resources.Hangman.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Hangman.Replace(" ", string.Empty).ToLower();
 
             this.MaxFailures = 5;
             this.InitialAmount = 100;

@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Bet;
-            this.Triggers = MixItUp.Base.Resources.Bet.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Bet.Replace(" ", string.Empty).ToLower();
 
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.MinimumParticipants = 2;

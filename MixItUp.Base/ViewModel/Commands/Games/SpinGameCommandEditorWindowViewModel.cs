@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Spin;
-            this.Triggers = MixItUp.Base.Resources.Spin.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Spin.Replace(" ", string.Empty).ToLower();
 
             this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Win, 50, 200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSpinWinExample, this.PrimaryCurrencyName))));
             this.Outcomes.Add(new GameOutcomeViewModel(MixItUp.Base.Resources.Lose, 50, 0, this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSpinLoseExample)));

@@ -180,7 +180,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Roulette;
-            this.Triggers = MixItUp.Base.Resources.Roulette.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Roulette.Replace(" ", string.Empty).ToLower();
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

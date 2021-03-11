@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Heist;
-            this.Triggers = MixItUp.Base.Resources.Heist.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Heist.Replace(" ", string.Empty).ToLower();
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;
