@@ -30,4 +30,8 @@ namespace MixItUp.Base.Services.External
 
         Task SetSceneCollection(string sceneCollectionName);
     }
+
+    public interface IOBSStudioService : IStreamingSoftwareService
+    {
+    }
 }

@@ -19,21 +19,7 @@ namespace MixItUp.Base.Services
         public int Entries { get; set; }
     }
 
-    public interface IGiveawayService
-    {
-        bool IsRunning { get; }
-
-        string Item { get; }
-        int TimeLeft { get; }
-        IEnumerable<GiveawayUser> Users { get; }
-        UserViewModel Winner { get; }
-
-        Task<string> Start(string item);
-
-        Task End();
-    }
-
-    public class GiveawayService : IGiveawayService
+    public class GiveawayService
     {
         public bool IsRunning { get; private set; }
 

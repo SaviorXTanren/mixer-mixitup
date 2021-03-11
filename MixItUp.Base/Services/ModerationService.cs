@@ -33,21 +33,7 @@ namespace MixItUp.Base.Services
         EmberSkillsOnly = 42,
     }
 
-    public interface IModerationService
-    {
-        Task Initialize();
-        void RebuildCache();
-
-        Task<string> ShouldTextBeModerated(UserViewModel user, string text, bool containsLink = false);
-        Task<string> ShouldTextBeFilteredWordModerated(UserViewModel user, string text);
-        string ShouldTextBeExcessiveModerated(UserViewModel user, string text);
-        string ShouldTextBeLinkModerated(UserViewModel user, string text, bool containsLink = false);
-
-        bool DoesUserMeetChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null);
-        Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false);
-    }
-
-    public class ModerationService : IModerationService
+    public class ModerationService
     {
         public const string ModerationReasonSpecialIdentifier = "moderationreason";
 

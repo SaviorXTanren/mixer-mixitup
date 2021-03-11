@@ -856,7 +856,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
                 if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
-                if (ServiceManager.Get<ITwitchChatService>() != null)
+                if (ServiceManager.Get<TwitchChatService>() != null)
                 {
                     if (this.HasTwitchBadge("staff")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("staff"); }
                     else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
@@ -895,12 +895,12 @@ namespace MixItUp.Base.ViewModel.User
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
-            if (ServiceManager.Get<ITwitchChatService>().ChatBadges.ContainsKey(name))
+            if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))
             {
                 int versionID = this.GetTwitchBadgeVersion(name);
-                if (ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
                 {
-                    return ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
                 }
             }
             return null;

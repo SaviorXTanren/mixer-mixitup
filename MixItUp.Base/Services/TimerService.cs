@@ -10,14 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface ITimerService : IDisposable
-    {
-        Task Initialize();
-
-        Task RebuildTimerGroups();
-    }
-
-    public class TimerService : ITimerService
+    public class TimerService : IDisposable
     {
         private bool isInitialized = false;
 

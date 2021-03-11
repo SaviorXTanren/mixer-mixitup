@@ -256,18 +256,7 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public interface IEventService
-    {
-        Task Initialize();
-
-        EventCommandModel GetEventCommand(EventTypeEnum type);
-
-        bool CanPerformEvent(EventTrigger trigger);
-
-        Task PerformEvent(EventTrigger trigger);
-    }
-
-    public class EventService : IEventService
+    public class EventService
     {
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {

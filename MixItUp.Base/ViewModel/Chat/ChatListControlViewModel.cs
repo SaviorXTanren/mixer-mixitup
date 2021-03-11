@@ -8,7 +8,6 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Chat
             get
             {
                 List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
-                if (ServiceManager.Get<ITwitchChatService>() != null && ServiceManager.Get<ITwitchChatService>().IsBotConnected)
+                if (ServiceManager.Get<TwitchChatService>() != null && ServiceManager.Get<TwitchChatService>().IsBotConnected)
                 {
                     results.Add(MixItUp.Base.Resources.Bot);
                 }

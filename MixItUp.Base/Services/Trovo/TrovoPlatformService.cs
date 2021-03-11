@@ -13,11 +13,7 @@ using Trovo.Base.Models.Users;
 
 namespace MixItUp.Base.Services.Trovo
 {
-    public interface ITrovoPlatformService
-    { 
-    }
-
-    public class TrovoPlatformService : StreamingPlatformServiceBase, ITrovoPlatformService
+    public class TrovoPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "8FMjuk785AX4FMyrwPTU3B8vYvgHWN33";
 

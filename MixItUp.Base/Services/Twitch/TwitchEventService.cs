@@ -112,19 +112,7 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
-    public interface ITwitchEventService
-    {
-        bool IsConnected { get; }
-
-        Task<Result> Connect();
-        Task Disconnect();
-
-        Task AddSub(TwitchSubEventModel subEvent);
-
-        Task AddMassGiftedSub(TwitchMassGiftedSubEventModel massGiftedSubEvent);
-    }
-
-    public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
+    public class TwitchEventService : StreamingPlatformServiceBase
     {
         private class TwitchGiftedSubEventModel
         {

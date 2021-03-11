@@ -28,30 +28,7 @@ namespace MixItUp.Base.Services
         Monthly,
     }
 
-    public interface ISettingsService
-    {
-        void Initialize();
-
-        Task<IEnumerable<SettingsV3Model>> GetAllSettings();
-
-        Task Initialize(SettingsV3Model settings);
-
-#pragma warning disable CS0612 // Type or member is obsolete
-        Task Save(SettingsV2Model settings);
-#pragma warning restore CS0612 // Type or member is obsolete
-
-        Task Save(SettingsV3Model settings);
-
-        Task SaveLocalBackup(SettingsV3Model settings);
-
-        Task SavePackagedBackup(SettingsV3Model settings, string filePath);
-
-        Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath);
-
-        Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
-    }
-
-    public class SettingsService : ISettingsService
+    public class SettingsService
     {
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 

@@ -14,16 +14,7 @@ using System.Web;
 
 namespace MixItUp.Base.Services.External
 {
-    public interface ITranslationService
-    {
-        Task SetAccessToken();
-
-        Task<IEnumerable<CultureInfo>> GetAvailableLanguages();
-
-        Task<string> Translate(CultureInfo language, string text, bool allowProfanity = true);
-    }
-
-    public class BingTranslationService : OAuthRestServiceBase, ITranslationService
+    public class BingTranslationService : OAuthRestServiceBase
     {
         private const int ExpirationLength = 300000;
 
@@ -108,21 +99,16 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public class TranslationService : ITranslationService
+    public class TranslationService
     {
-        private ITranslationService currentTranslationService;
-
         private BingTranslationService bingTranslation = new BingTranslationService();
 
-        public TranslationService()
-        {
-            this.currentTranslationService = this.bingTranslation;
-        }
+        public TranslationService() { }
 
-        public async Task<IEnumerable<CultureInfo>> GetAvailableLanguages() { return await this.currentTranslationService.GetAvailableLanguages(); }
+        public async Task<IEnumerable<CultureInfo>> GetAvailableLanguages() { return await this.bingTranslation.GetAvailableLanguages(); }
 
-        public async Task SetAccessToken() { await this.currentTranslationService.SetAccessToken(); }
+        public async Task SetAccessToken() { await this.bingTranslation.SetAccessToken(); }
 
-        public async Task<string> Translate(CultureInfo language, string text, bool allowProfanity = true) { return await this.currentTranslationService.Translate(language, text, allowProfanity); }
+        public async Task<string> Translate(CultureInfo language, string text, bool allowProfanity = true) { return await this.bingTranslation.Translate(language, text, allowProfanity); }
     }
 }

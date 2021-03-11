@@ -5,14 +5,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IAlertsService
-    {
-        ThreadSafeObservableCollection<AlertChatMessageViewModel> Alerts { get; }
-
-        Task AddAlert(AlertChatMessageViewModel alert);
-    }
-
-    public class AlertsService : IAlertsService
+    public class AlertsService
     {
         public ThreadSafeObservableCollection<AlertChatMessageViewModel> Alerts { get; private set; } = new ThreadSafeObservableCollection<AlertChatMessageViewModel>();
         private LockedDictionary<string, AlertChatMessageViewModel> alertsLookup = new LockedDictionary<string, AlertChatMessageViewModel>();

@@ -15,27 +15,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Glimesh
 {
-    public interface IGlimeshChatEventService
-    {
-        bool IsUserConnected { get; }
-        bool IsBotConnected { get; }
-
-        Task<Result> ConnectUser();
-        Task DisconnectUser();
-
-        Task<Result> ConnectBot();
-        Task DisconnectBot();
-
-        Task SendMessage(string message, bool sendAsStreamer = false);
-
-        Task ShortTimeoutUser(UserViewModel user);
-        Task LongTimeoutUser(UserViewModel user);
-
-        Task BanUser(UserViewModel user);
-        Task UnbanUser(UserViewModel user);
-    }
-
-    public class GlimeshChatEventService : StreamingPlatformServiceBase, IGlimeshChatEventService
+    public class GlimeshChatEventService : StreamingPlatformServiceBase
     {
         private ChatEventClient userClient;
         private ChatEventClient botClient;

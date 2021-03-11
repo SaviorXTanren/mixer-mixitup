@@ -14,32 +14,7 @@ using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
-    public interface IUserService
-    {
-        UserViewModel GetUserByID(Guid id);
-        UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
-        UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id);
-
-        Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
-        Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser);
-        Task<UserViewModel> AddOrUpdateUser(TrovoBase.Models.Users.UserModel trovoUser);
-        Task AddOrUpdateUser(UserViewModel user);
-
-        Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username);
-
-        void Clear();
-
-        IEnumerable<UserViewModel> GetAllUsers();
-        IEnumerable<UserViewModel> GetAllWorkableUsers();
-
-        UserViewModel GetRandomUser(CommandParametersModel parameters);
-
-        UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username);
-
-        int Count();
-    }
-
-    public class UserService : IUserService
+    public class UserService
     {
         public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "boomtvmod", "streamjar", "pretzelrocks", "scottybot", "streamlabs", "streamelements", "nightbot", "deepbot", "moobot", "coebot", "wizebot", "phantombot", "stay_hydrated_bot", "stayhealthybot", "anotherttvviewer", "commanderroot", "lurxx", "thecommandergroot", "moobot", "thelurxxer", "twitchprimereminder", "communityshowcase", "banmonitor", "wizebot" };
 

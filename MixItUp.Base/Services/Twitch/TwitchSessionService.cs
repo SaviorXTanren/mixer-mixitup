@@ -59,9 +59,9 @@ namespace MixItUp.Base.Services.Twitch
                     return new Result("Failed to get Twitch bot data");
                 }
 
-                if (ServiceManager.Get<ITwitchChatService>() != null && ServiceManager.Get<ITwitchChatService>().IsUserConnected)
+                if (ServiceManager.Get<TwitchChatService>() != null && ServiceManager.Get<TwitchChatService>().IsUserConnected)
                 {
-                    return await ServiceManager.Get<ITwitchChatService>().ConnectBot();
+                    return await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 }
             }
             return result;
@@ -198,10 +198,10 @@ namespace MixItUp.Base.Services.Twitch
                             return new Result("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
 
-                        ServiceManager.Add<ITwitchChatService>(chatService);
-                        ServiceManager.Add<ITwitchEventService>(eventService);
+                        ServiceManager.Add(chatService);
+                        ServiceManager.Add(eventService);
 
-                        await ServiceManager.Get<ITwitchChatService>().Initialize();
+                        await ServiceManager.Get<TwitchChatService>().Initialize();
                     }
                 }
                 catch (Exception ex)
@@ -218,7 +218,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (this.BotConnection != null && ServiceManager.Get<TwitchChatService>() != null)
             {
-                Result result = await ServiceManager.Get<ITwitchChatService>().ConnectBot();
+                Result result = await ServiceManager.Get<TwitchChatService>().ConnectBot();
                 if (!result.Success)
                 {
                     return result;

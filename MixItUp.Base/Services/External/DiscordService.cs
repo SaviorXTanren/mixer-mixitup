@@ -270,46 +270,6 @@ namespace MixItUp.Base.Services.External
         public bool IsReadyPacket { get { return ReadyPacketName.Equals(this.Name); } }
     }
 
-    public interface IDiscordService : IOAuthExternalService
-    {
-        bool IsUsingCustomApplication { get; }
-
-        DiscordUser User { get; }
-        DiscordServer Server { get; }
-
-        string BotPermissions { get; }
-
-        Task<DiscordGateway> GetBotGateway();
-
-        Task<DiscordUser> GetCurrentUser();
-
-        Task<DiscordUser> GetUser(string userID);
-
-        Task<IEnumerable<DiscordServer>> GetCurrentUserServers();
-
-        Task<DiscordServer> GetServer(string serverID);
-
-        Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1);
-
-        Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user);
-
-        Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server);
-
-        Task<DiscordChannel> GetChannel(string channelID);
-
-        Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
-
-        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath);
-
-        Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
-
-        Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles);
-
-        Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true);
-
-        Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true);
-    }
-
     public class DiscordOAuthServer : LocalOAuthHttpListenerServer
     {
         private const string ServerIDIdentifier = "guild_id";
@@ -642,7 +602,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public class DiscordService : OAuthExternalServiceBase, IDiscordService, IDisposable
+    public class DiscordService : OAuthExternalServiceBase, IDisposable
     {
         /// <summary>
         /// View Channels, Send Messages, Send TTS Messages, Embed Links, Attach Files, Mention Everyone, Use External Emojis, Connect, Mute Members, Deafen Members

@@ -19,12 +19,7 @@ using V5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public interface ITwitchPlatformService
-    {
-
-    }
-
-    public class TwitchPlatformService : StreamingPlatformServiceBase, ITwitchPlatformService
+    public class TwitchPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 

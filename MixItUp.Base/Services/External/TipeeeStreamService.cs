@@ -152,23 +152,7 @@ namespace MixItUp.Base.Services.External
         public string Fees { get; set; }
     }
 
-    public interface ITipeeeStreamService : IOAuthExternalService
-    {
-        bool WebSocketConnected { get; }
-
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler OnWebSocketDisconnectedOccurred;
-
-        event EventHandler<TipeeeStreamEvent> OnDonationOccurred;
-
-        Task<TipeeeStreamUser> GetUser();
-        Task<string> GetAPIKey();
-        Task<string> GetSocketAddress();
-
-        Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents();
-    }
-
-    public class TipeeeStreamService : OAuthExternalServiceBase, ITipeeeStreamService
+    public class TipeeeStreamService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://api.tipeeestream.com/";
 

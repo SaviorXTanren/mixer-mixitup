@@ -101,7 +101,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new TranslationService());
             ServiceManager.Add(new SerialService());
             ServiceManager.Add(new OverlayService());
-            ServiceManager.Add(new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub"));
 
             ServiceManager.Add(new StreamlabsOBSService());
             ServiceManager.Add(new XSplitService("http://localhost:8211/"));

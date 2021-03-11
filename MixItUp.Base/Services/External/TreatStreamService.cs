@@ -68,21 +68,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public interface ITreatStreamService : IOAuthExternalService
-    {
-        bool WebSocketConnected { get; }
-
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler OnWebSocketDisconnectedOccurred;
-
-        event EventHandler<TreatStreamEvent> OnDonationOccurred;
-
-        Task<string> GetSocketToken();
-
-        Task GetTreats();
-    }
-
-    public class TreatStreamService : OAuthExternalServiceBase, ITreatStreamService
+    public class TreatStreamService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://treatstream.com/api/";
 

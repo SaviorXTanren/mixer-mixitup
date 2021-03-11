@@ -101,11 +101,7 @@ namespace MixItUp.Base.Services.External
         public string value { get; set; }
     }
 
-    public interface IStreamlootsService : IOAuthExternalService
-    {
-    }
-
-    public class StreamlootsService : OAuthExternalServiceBase, IStreamlootsService
+    public class StreamlootsService : OAuthExternalServiceBase
     {
         private WebRequest webRequest;
         private Stream responseStream;

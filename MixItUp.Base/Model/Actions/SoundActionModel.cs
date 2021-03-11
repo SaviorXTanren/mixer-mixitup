@@ -46,7 +46,7 @@ namespace MixItUp.Base.Model.Actions
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
             if (SoundActionModel.MixItUpOverlay.Equals(this.OutputDevice))
             {
-                IOverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
+                OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(ServiceManager.Get<OverlayService>().DefaultOverlayName);
                 if (overlay != null)
                 {
                     var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale);

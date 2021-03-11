@@ -46,18 +46,7 @@ namespace MixItUp.Base.Services.External
         public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("twitch.tv/{0}", ServiceManager.Get<TwitchSessionService>().UserNewAPI.login.ToLower()))); } }
     }
 
-    public interface ITwitterService : IOAuthExternalService
-    {
-        void SetAuthPin(string pin);
-
-        Task<IEnumerable<Tweet>> GetLatestTweets();
-
-        Task<bool> SendTweet(string tweet, string imagePath = null);
-
-        Task<bool> UpdateName(string name);
-    }
-
-    public class TwitterService : OAuthExternalServiceBase, ITwitterService
+    public class TwitterService : OAuthExternalServiceBase
     {
         private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 

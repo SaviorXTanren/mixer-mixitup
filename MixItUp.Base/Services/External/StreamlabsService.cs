@@ -57,16 +57,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public interface IStreamlabsService : IOAuthExternalService
-    {
-        Task SpinWheel();
-
-        Task EmptyJar();
-
-        Task RollCredits();
-    }
-
-    public class StreamlabsService : OAuthExternalServiceBase, IStreamlabsService
+    public class StreamlabsService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
 
