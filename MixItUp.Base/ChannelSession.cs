@@ -9,6 +9,7 @@ using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Model.OAuth;
@@ -175,6 +176,14 @@ namespace MixItUp.Base
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                }
+            }
+            else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().User.id);
+                if (user == null)
+                {
+                    user = new UserViewModel(ServiceManager.Get<YouTubeSessionService>().Channel);
                 }
             }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)

@@ -2,6 +2,7 @@
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -27,6 +28,15 @@ namespace MixItUp.Base.Model.Commands
                     if (twitchUser != null)
                     {
                         return new UserViewModel(twitchUser);
+                    }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                {
+                    Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
+                    if (youtubeUser != null)
+                    {
+                        return new UserViewModel(youtubeUser);
                     }
                 }
 

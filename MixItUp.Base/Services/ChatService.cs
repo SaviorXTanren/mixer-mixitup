@@ -6,6 +6,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -115,6 +116,11 @@ namespace MixItUp.Base.Services
                     }
                 }
 
+                if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Has<YouTubeChatService>())
+                {
+                    await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
+                }
+
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Has<GlimeshChatEventService>())
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
@@ -149,17 +155,19 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+            if (!string.IsNullOrEmpty(message.ID))
             {
-                if (!string.IsNullOrEmpty(message.ID))
+                if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
                     await ServiceManager.Get<TwitchChatService>().DeleteMessage(message);
                 }
-            }
 
-            if (message.Platform == StreamingPlatformTypeEnum.Trovo)
-            {
-                if (!string.IsNullOrEmpty(message.ID))
+                if (message.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    await ServiceManager.Get<YouTubeChatService>().DeleteMessage(message);
+                }
+
+                if (message.Platform == StreamingPlatformTypeEnum.Trovo)
                 {
                     await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
                 }
@@ -200,11 +208,15 @@ namespace MixItUp.Base.Services
                 await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
             }
 
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().TimeoutUser(user, durationInSeconds);
+            }
+
             if (user.Platform == StreamingPlatformTypeEnum.Trovo)
             {
                 await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user, (int)durationInSeconds);
             }
-            // TODO
         }
 
         public async Task ModUser(UserViewModel user)
@@ -212,6 +224,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await ServiceManager.Get<TwitchChatService>().ModUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().ModUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Trovo)
@@ -238,6 +255,11 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
                 await ServiceManager.Get<TwitchChatService>().BanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().BanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)

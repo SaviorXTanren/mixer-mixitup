@@ -566,6 +566,15 @@ namespace MixItUp.Base.Model.Settings
                     }
                 }
 
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.YouTubeUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
                 if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
                 {
                     this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
@@ -870,6 +879,7 @@ namespace MixItUp.Base.Model.Settings
         {
             this.UserData[user.ID] = user;
             if (!string.IsNullOrEmpty(user.TwitchID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.YouTubeID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeID] = user.ID; }
             if (!string.IsNullOrEmpty(user.GlimeshID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID; }
             if (!string.IsNullOrEmpty(user.TrovoID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID; }
             this.UserData.ManualValueChanged(user.ID);

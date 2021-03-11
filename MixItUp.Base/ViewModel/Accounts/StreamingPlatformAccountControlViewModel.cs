@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
 using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -61,14 +62,12 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         public ICommand UserAccountCommand { get; set; }
         public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
-        public bool UserAccountButtonIsEnabled { get { return !this.IsUserAccountConnected; } }
-
         public bool IsUserAccountConnected
         {
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().UserConnection != null; }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) {  }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>().UserConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().UserConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().UserConnection != null; }
                 return false;
@@ -103,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Accounts
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>().BotConnection != null; }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>().BotConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>().BotConnection != null; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>().BotConnection != null; }
                 return false;
@@ -123,7 +122,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
-
+                    this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                    this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().User != null)
                 {
@@ -146,7 +146,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
-
+                    this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Standard.Url;
+                    this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().Bot != null)
                 {
@@ -164,12 +165,24 @@ namespace MixItUp.Base.ViewModel.Accounts
             {
                 if (this.IsUserAccountConnected)
                 {
-                    //if (this.Platform == StreamingPlatformTypeEnum.Mixer)
-                    //{
-                    //    ChannelSession.DisconnectMixerUser();
-                    //}
-                    //this.UserAccountAvatar = null;
-                    //this.UserAccountUsername = null;
+                    if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        await ServiceManager.Get<TwitchSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        await ServiceManager.Get<YouTubeSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        await ServiceManager.Get<TrovoSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                    {
+                        await ServiceManager.Get<GlimeshSessionService>().DisconnectUser(ChannelSession.Settings);
+                    }
+                    this.UserAccountAvatar = null;
+                    this.UserAccountUsername = null;
                 }
                 else
                 {
@@ -185,7 +198,12 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-
+                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<YouTubeSessionService>().Channel != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                            this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
+                        }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
@@ -227,7 +245,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-
+                        await ServiceManager.Get<YouTubeSessionService>().DisconnectBot(ChannelSession.Settings);
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
@@ -262,7 +280,28 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
+                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
+                        if (result.Success && ServiceManager.Get<YouTubeSessionService>().Channel != null)
+                        {
+                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                            this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
+                        }
 
+
+                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectBot();
+                        if (result.Success)
+                        {
+                            if (ServiceManager.Get<YouTubeSessionService>().Bot.Id.Equals(ServiceManager.Get<YouTubeSessionService>().Channel?.Id))
+                            {
+                                await ServiceManager.Get<YouTubeSessionService>().DisconnectBot(ChannelSession.Settings);
+                                result = new Result(MixItUp.Base.Resources.BotAccountMustBeDifferent);
+                            }
+                            else if (ServiceManager.Get<YouTubeSessionService>().Bot != null)
+                            {
+                                this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Standard.Url;
+                                this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
+                            }
+                        }
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Trovo)
                     {
@@ -316,7 +355,6 @@ namespace MixItUp.Base.ViewModel.Accounts
             this.NotifyPropertyChanged("IsUserAccountConnected");
             this.NotifyPropertyChanged("IsUserAccountNotConnected");
             this.NotifyPropertyChanged("UserAccountButtonContent");
-            this.NotifyPropertyChanged("UserAccountButtonIsEnabled");
             this.NotifyPropertyChanged("CanConnectBotAccount");
             this.NotifyPropertyChanged("IsBotAccountConnected");
             this.NotifyPropertyChanged("IsBotAccountNotConnected");

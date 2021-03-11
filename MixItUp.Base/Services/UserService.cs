@@ -92,6 +92,21 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task<UserViewModel> AddOrUpdateUser(Google.Apis.YouTube.v3.Data.Channel youtubeUser)
+        {
+            if (!string.IsNullOrEmpty(youtubeUser.Id) && !string.IsNullOrEmpty(youtubeUser.Snippet.Title))
+            {
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, youtubeUser.Id);
+                if (user == null)
+                {
+                    user = new UserViewModel(youtubeUser);
+                }
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
         public async Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser)
         {
             if (!string.IsNullOrEmpty(glimeshChatUser.id) && !string.IsNullOrEmpty(glimeshChatUser.username))
@@ -132,6 +147,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.YouTubeID) && !string.IsNullOrEmpty(user.YouTubeUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeUsername] = user.ID;
                 }
 
                 if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))
@@ -202,6 +223,12 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchID);
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
+                }
+
+                if (!string.IsNullOrEmpty(user.YouTubeID) && !string.IsNullOrEmpty(user.YouTubeUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.YouTube].Remove(user.YouTubeID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.YouTube].Remove(user.YouTubeUsername);
                 }
 
                 if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))

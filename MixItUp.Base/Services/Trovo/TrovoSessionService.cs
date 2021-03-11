@@ -186,7 +186,7 @@ namespace MixItUp.Base.Services.Trovo
 
         public async Task<Result> InitializeBot(SettingsV3Model settings)
         {
-            if (this.BotConnection != null && ServiceManager.Get<TrovoChatEventService>() != null)
+            if (this.BotConnection != null && ServiceManager.Has<TrovoChatEventService>())
             {
                 Result result = await ServiceManager.Get<TrovoChatEventService>().ConnectBot();
                 if (!result.Success)

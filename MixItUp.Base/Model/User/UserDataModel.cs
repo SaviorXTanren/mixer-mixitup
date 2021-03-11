@@ -107,6 +107,31 @@ namespace MixItUp.Base.Model.User
 
         #endregion Twitch
 
+        #region YouTube
+
+        [DataMember]
+        public string YouTubeID { get; set; }
+        [DataMember]
+        public string YouTubeUsername { get; set; }
+        [DataMember]
+        public string YouTubeDisplayName { get; set; }
+        [DataMember]
+        public string YouTubeAvatarLink { get; set; }
+        [DataMember]
+        public string YouTubeURL { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> YouTubeUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+
+        [DataMember]
+        public DateTimeOffset? YouTubeAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? YouTubeFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? YouTubeSubscribeDate { get; set; }
+
+        #endregion YouTube
+
         #region Glimesh
 
         [DataMember]
@@ -247,6 +272,7 @@ namespace MixItUp.Base.Model.User
                 if (this.MixerID > 0) { platform = platform | StreamingPlatformTypeEnum.Mixer; }
 #pragma warning restore CS0612 // Type or member is obsolete
                 if (!string.IsNullOrEmpty(this.TwitchID)) { platform = platform | StreamingPlatformTypeEnum.Twitch; }
+                if (!string.IsNullOrEmpty(this.YouTubeID)) { platform = platform | StreamingPlatformTypeEnum.YouTube; }
                 if (!string.IsNullOrEmpty(this.GlimeshID)) { platform = platform | StreamingPlatformTypeEnum.Glimesh; }
                 if (!string.IsNullOrEmpty(this.TrovoID)) { platform = platform | StreamingPlatformTypeEnum.Trovo; }
 
@@ -263,6 +289,7 @@ namespace MixItUp.Base.Model.User
                 if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer)) { return this.MixerUsername; }
 #pragma warning restore CS0612 // Type or member is obsolete
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch)) { return this.TwitchUsername; }
+                else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube)) { return this.YouTubeUsername; }
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh)) { return this.GlimeshUsername; }
                 else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo)) { return this.TrovoUsername; }
                 return string.Empty;
@@ -275,6 +302,7 @@ namespace MixItUp.Base.Model.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUserRoles; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeUserRoles; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUserRoles; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
