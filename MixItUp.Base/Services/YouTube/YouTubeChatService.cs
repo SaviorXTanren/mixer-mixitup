@@ -161,20 +161,31 @@ namespace MixItUp.Base.Services.YouTube
             {
                 foreach (LiveChatMessage message in messages)
                 {
-                    UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
-                    if (user == null)
+                    if (ChannelSession.AppSettings.DiagnosticLogging)
                     {
-                        Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
-                        if (youtubeUser != null)
+                        Logger.Log(LogLevel.Debug, string.Format("YouTube Chat Packet Received: {0}", JSONSerializerHelper.SerializeToString(message)));
+                    }
+
+                    if (message.AuthorDetails?.ChannelId != null)
+                    {
+                        UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails.ChannelId);
+                        if (user == null)
                         {
-                            user = await ServiceManager.Get<UserService>().AddOrUpdateUser(youtubeUser);
+                            Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(message.AuthorDetails.ChannelId);
+                            if (youtubeUser != null)
+                            {
+                                user = await ServiceManager.Get<UserService>().AddOrUpdateUser(youtubeUser);
+                            }
+                        }
+                        user.SetYouTubeChatDetails(message);
+
+                        // https://developers.google.com/youtube/v3/live/docs/liveChatMessages#resource
+
+                        if (message.Snippet.HasDisplayContent.GetValueOrDefault() && !string.IsNullOrEmpty(message.Snippet.DisplayMessage))
+                        {
+                            await ServiceManager.Get<ChatService>().AddMessage(new YouTubeChatMessageViewModel(message, user));
                         }
                     }
-                    user.SetYouTubeChatDetails(message);
-
-                    System.Console.WriteLine(string.Format("{0}: {1}", message.AuthorDetails.DisplayName, message.Snippet.TextMessageDetails.MessageText));
-
-                    await ServiceManager.Get<ChatService>().AddMessage(new YouTubeChatMessageViewModel(message, user));
                 }
             }
         }

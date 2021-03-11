@@ -120,6 +120,8 @@ namespace MixItUp.Base
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchStatusService());
 
+            ServiceManager.Add(new YouTubeSessionService());
+
             ServiceManager.Add(new GlimeshSessionService());
 
             ServiceManager.Add(new TrovoSessionService());
@@ -180,7 +182,7 @@ namespace MixItUp.Base
             }
             else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
             {
-                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().User.id);
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<YouTubeSessionService>().Channel);

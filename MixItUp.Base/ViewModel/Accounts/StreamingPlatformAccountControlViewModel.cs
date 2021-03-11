@@ -122,7 +122,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
-                    this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                    this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
                     this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().User != null)
@@ -146,7 +146,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                 {
-                    this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Standard.Url;
+                    this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Default__.Url;
                     this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo && ServiceManager.Get<TrovoSessionService>().Bot != null)
@@ -201,7 +201,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<YouTubeSessionService>().Channel != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
                             this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
                         }
                     }
@@ -283,7 +283,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<YouTubeSessionService>().Channel != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Standard.Url;
+                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
                             this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
                         }
 
@@ -298,7 +298,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                             }
                             else if (ServiceManager.Get<YouTubeSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Standard.Url;
+                                this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Default__.Url;
                                 this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
                             }
                         }

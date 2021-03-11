@@ -225,7 +225,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.YouTubeID = channel.Id;
             this.YouTubeUsername = this.YouTubeDisplayName = channel.Snippet.Title;
-            this.YouTubeAvatarLink = channel.Snippet.Thumbnails.Standard.Url;
+            this.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
             this.YouTubeURL = channel.Snippet.CustomUrl;
 
             this.SetYouTubeRoles();
@@ -301,7 +301,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.YouTubeUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoUsername; }
                 return this.UnassociatedUsername;
@@ -314,7 +314,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchDisplayName ?? this.TwitchUsername; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.YouTubeDisplayName ?? this.YouTubeUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeDisplayName ?? this.YouTubeUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshDisplayName ?? this.GlimeshUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoDisplayName ?? this.TrovoUsername; }
                 return this.UnassociatedUsername;
@@ -330,7 +330,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.YouTubeAvatarLink; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeAvatarLink; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshAvatarLink; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoAvatarLink; }
                 return string.Empty;
