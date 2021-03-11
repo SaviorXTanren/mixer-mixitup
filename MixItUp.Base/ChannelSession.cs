@@ -359,7 +359,7 @@ namespace MixItUp.Base
                             return false;
                         }
 
-                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.login;
+                        ChannelSession.Settings.Name = ChannelSession.TwitchUserNewAPI.display_name;
 
                         ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID = ChannelSession.TwitchUserNewAPI.id;
                         ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID = ChannelSession.TwitchUserNewAPI.id;

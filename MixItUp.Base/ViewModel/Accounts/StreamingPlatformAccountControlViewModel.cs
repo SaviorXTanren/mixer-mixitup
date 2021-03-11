@@ -115,7 +115,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchUserNewAPI != null)
                 {
                     this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                    this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
+                    this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.display_name;
                 }
             }
             if (this.IsBotAccountConnected)
@@ -123,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchBotNewAPI != null)
                 {
                     this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                    this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
+                    this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.display_name;
                 }
             }
 
@@ -147,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                         if (result.Success && ChannelSession.TwitchUserNewAPI != null)
                         {
                             this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
+                            this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.display_name;
                         }
                     }
 
@@ -190,7 +190,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                             else if (ChannelSession.TwitchBotNewAPI != null)
                             {
                                 this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
-                                this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
+                                this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.display_name;
                             }
                         }
                     }
