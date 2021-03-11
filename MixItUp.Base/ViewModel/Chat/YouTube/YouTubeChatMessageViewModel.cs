@@ -7,7 +7,9 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
 {
     public class YouTubeChatMessageViewModel : UserChatMessageViewModel
     {
-        // YouTube Emojis: https://emojipedia.org/youtube/
+        // YouTube Emojis:
+        // https://emojipedia.org/youtube/
+        // https://emojis.wiki/youtube/
         // https://stackoverflow.com/questions/64726611/how-to-get-a-list-of-youtube-channel-emojis
 
         public YouTubeChatMessageViewModel(LiveChatMessage message, UserViewModel user = null)

@@ -226,7 +226,7 @@ namespace MixItUp.Base.ViewModel.User
             this.YouTubeID = channel.Id;
             this.YouTubeUsername = this.YouTubeDisplayName = channel.Snippet.Title;
             this.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
-            this.YouTubeURL = channel.Snippet.CustomUrl;
+            this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
 
             this.SetYouTubeRoles();
         }
