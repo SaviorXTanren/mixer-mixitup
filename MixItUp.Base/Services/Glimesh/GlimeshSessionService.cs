@@ -167,7 +167,7 @@ namespace MixItUp.Base.Services.Glimesh
                             return new Result("Failed to connect to Glimesh services:" + Environment.NewLine + Environment.NewLine + errors);
                         }
 
-                        ServiceManager.Add<GlimeshChatEventService>(chatService);
+                        ServiceManager.Add(chatService);
                     }
                 }
                 catch (Exception ex)
