@@ -447,7 +447,7 @@ namespace MixItUp.Base.Model.Settings
         public string DiscordCustomBotToken { get; set; }
 
         [DataMember]
-        public string PatreonTierMixerSubscriberEquivalent { get; set; }
+        public string PatreonTierSubscriberEquivalent { get; set; }
 
         [DataMember]
         public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();

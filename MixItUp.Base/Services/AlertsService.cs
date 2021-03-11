@@ -22,11 +22,19 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(alert.Color))
             {
                 this.alertsLookup[alert.ID] = alert;
-                this.Alerts.Insert(0, alert);
+
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.Alerts.Insert(0, alert);
+                }
+                else
+                {
+                    this.Alerts.Add(alert);
+                }
 
                 if (this.Alerts.Count > ChannelSession.Settings.MaxMessagesInChat)
                 {
-                    AlertChatMessageViewModel removedAlert = this.Alerts.Last();
+                    AlertChatMessageViewModel removedAlert = (ChannelSession.Settings.LatestChatAtTop) ? this.Alerts.Last() : this.Alerts.First();
                     this.alertsLookup.Remove(removedAlert.ID);
                     this.Alerts.Remove(removedAlert);
                 }

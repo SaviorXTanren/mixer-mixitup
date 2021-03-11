@@ -133,7 +133,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.SlotMachine;
-            this.Triggers = MixItUp.Base.Resources.SlotMachine.ToLower();
+            this.Triggers = MixItUp.Base.Resources.GameCommandSlotMachineDefaultChatTrigger;
 
             this.Symbols = "X O $";
             this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSlotMachineLoseExample);

@@ -23,11 +23,11 @@ namespace MixItUp.Base.ViewModel.Services
 
                 if (this.SelectedTier != null)
                 {
-                    ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = this.SelectedTier.ID;
+                    ChannelSession.Settings.PatreonTierSubscriberEquivalent = this.SelectedTier.ID;
                 }
                 else
                 {
-                    ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
+                    ChannelSession.Settings.PatreonTierSubscriberEquivalent = null;
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Services
                 await ServiceManager.Get<PatreonService>().Disconnect();
 
                 ChannelSession.Settings.PatreonOAuthToken = null;
-                ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
+                ChannelSession.Settings.PatreonTierSubscriberEquivalent = null;
 
                 this.IsConnected = false;
             });
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Services
             if (this.IsConnected)
             {
                 this.RefreshTiers();
-                this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent));
+                this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierSubscriberEquivalent));
             }
             return Task.FromResult(0);
         }

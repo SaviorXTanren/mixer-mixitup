@@ -224,7 +224,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Trivia;
-            this.Triggers = MixItUp.Base.Resources.Trivia.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Trivia.Replace(" ", string.Empty).ToLower();
 
             this.WinAmount = 100;
             this.TimeLimit = 30;

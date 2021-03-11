@@ -54,6 +54,7 @@ namespace MixItUp.Base.Model.Requirements
                         }
                     }
                 }
+
                 return Task.FromResult(this.CreateErrorMessage(parameters));
             }
 
@@ -64,6 +65,7 @@ namespace MixItUp.Base.Model.Requirements
                     return Task.FromResult(this.CreateErrorMessage(parameters));
                 }
             }
+
             return Task.FromResult(new Result());
         }
 
@@ -80,6 +82,10 @@ namespace MixItUp.Base.Model.Requirements
                     case 3: tierText = MixItUp.Base.Resources.Tier3; break;
                 }
                 role = tierText + " " + role;
+            }
+            else if (this.Role == UserRoleEnum.VIPExclusive)
+            {
+                role = EnumLocalizationHelper.GetLocalizedName(UserRoleEnum.VIP);
             }
             return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
         }

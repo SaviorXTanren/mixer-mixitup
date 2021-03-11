@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.User
         Regular = 35,
         VIP = 38,
         Subscriber = 40,
+        VIPExclusive = 45,
         GlobalMod = 48,
         Mod = 50,
         ChannelEditor = 55,

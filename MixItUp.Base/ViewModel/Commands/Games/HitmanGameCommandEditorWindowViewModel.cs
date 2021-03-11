@@ -155,7 +155,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Hitman;
-            this.Triggers = MixItUp.Base.Resources.Hitman.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Hitman.Replace(" ", string.Empty).ToLower();
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

@@ -140,7 +140,7 @@
                                 <RowDefinition Height="100" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/saviorxtanren-profile_image-03a0b918ad9b65c6-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
+                            <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/45182012-95d6-4704-9863-82ff3fbaf48e-profile_image-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">SaviorXTanren</TextBlock>
 
@@ -157,7 +157,7 @@
 
                             <Image Source="https://static-cdn.jtvnw.net/jtv_user_pictures/e510a4d3-9fe0-41ff-afd5-2fc8120e8e45-profile_image-70x70.png" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
-                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">VerbatimT</TextBlock>
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Verbatim_T</TextBlock>
 
                         </Grid>
                     </Button>

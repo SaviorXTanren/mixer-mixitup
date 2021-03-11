@@ -3884,7 +3884,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>The potato exploded in @$targetusername hands! @$username gains {0} {1}!</value>
   </data>
   <data name="GameCommandHotPotatoPassedExample" xml:space="preserve">
-    <value>@$username has tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!</value>
+    <value>@$username has tossed the potato to @$targetusername. Quick, type !hotpotato to pass it to someone else!</value>
   </data>
   <data name="GameCommandHotPotatoPotatoExploded" xml:space="preserve">
     <value>Potato Exploded</value>
@@ -3893,7 +3893,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>Reset Time On Toss</value>
   </data>
   <data name="GameCommandHotPotatoStartedExample" xml:space="preserve">
-    <value>@$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!</value>
+    <value>@$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !hotpotato to pass it to someone else!</value>
   </data>
   <data name="GameCommandHotPotatoTossedPotato" xml:space="preserve">
     <value>Tossed Potato</value>
@@ -4764,5 +4764,23 @@ This setting will change all role requirements to be explicit and require that t
   </data>
   <data name="Year" xml:space="preserve">
     <value>Year</value>
+  </data>
+  <data name="VIPExclusive" xml:space="preserve">
+    <value>VIP Exclusive</value>
+  </data>
+  <data name="VIP" xml:space="preserve">
+    <value>VIP</value>
+  </data>
+  <data name="GameCommandRussianRouletteDefaultChatTrigger" xml:space="preserve">
+    <value>rr</value>
+  </data>
+  <data name="GameCommandSlotMachineDefaultChatTrigger" xml:space="preserve">
+    <value>slots</value>
+  </data>
+  <data name="GameCommandTreasureDefenseDefaultChatTrigger" xml:space="preserve">
+    <value>treasure</value>
+  </data>
+  <data name="GameCommandWordScrambleDefaultChatTrigger" xml:space="preserve">
+    <value>scramble</value>
   </data>
 </root>
