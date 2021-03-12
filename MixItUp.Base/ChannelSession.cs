@@ -301,9 +301,17 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name;
                 }
+                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>()?.Channel?.Snippet?.Title;
+                }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>()?.User?.displayname;
+                }
+                else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>()?.User?.nickName;
                 }
                 else
                 {

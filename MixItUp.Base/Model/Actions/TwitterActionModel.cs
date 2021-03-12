@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.Actions
                         Result result = await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath);
                         if (!result.Success)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message);
+                            await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
                         }
                     }
                 }
@@ -96,7 +96,7 @@ namespace MixItUp.Base.Model.Actions
                     Result result = await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
                     if (!result.Success)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message);
+                        await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
                     }
                 }
             }
