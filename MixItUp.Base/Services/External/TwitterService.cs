@@ -51,9 +51,9 @@ namespace MixItUp.Base.Services.External
 
         Task<IEnumerable<Tweet>> GetLatestTweets();
 
-        Task<bool> SendTweet(string tweet, string imagePath = null);
+        Task<Result> SendTweet(string tweet, string imagePath = null);
 
-        Task<bool> UpdateName(string name);
+        Task<Result> UpdateName(string name);
     }
 
     public class TwitterService : OAuthExternalServiceBase, ITwitterService
@@ -183,7 +183,7 @@ namespace MixItUp.Base.Services.External
             return results;
         }
 
-        public async Task<bool> SendTweet(string tweet, string imagePath = null)
+        public async Task<Result> SendTweet(string tweet, string imagePath = null)
         {
             try
             {
@@ -212,34 +212,38 @@ namespace MixItUp.Base.Services.External
                         catch (Exception ex)
                         {
                             Logger.Log(ex);
-                            return false;
+                            return new Result(ex);
                         }
 
                         await twitterCtx.TweetAsync(tweet, mediaIds);
 
-                        return true;
+                        return new Result();
                     }
                 }
+                return new Result("The tweet you specified could not be sent because you have already sent a tweet in the last 5 minutes");
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
+                return new Result(ex);
             }
-            return false;
         }
 
-        public async Task<bool> UpdateName(string name)
+        public async Task<Result> UpdateName(string name)
         {
             try
             {
                 using (var twitterCtx = new TwitterContext(this.authorizer))
                 {
                     await twitterCtx.UpdateAccountProfileAsync(name, null, null, null, true);
-                    return true;
+                    return new Result();
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
-            return false;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new Result(ex);
+            }
         }
 
         public override OAuthTokenModel GetOAuthTokenCopy()
