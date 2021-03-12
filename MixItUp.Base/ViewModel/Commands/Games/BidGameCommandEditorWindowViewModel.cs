@@ -96,7 +96,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Bid;
-            this.Triggers = MixItUp.Base.Resources.Bid.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Bid.Replace(" ", string.Empty).ToLower();
 
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.TimeLimit = 60;

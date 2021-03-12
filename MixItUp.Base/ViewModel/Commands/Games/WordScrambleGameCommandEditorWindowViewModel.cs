@@ -154,7 +154,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.WordScramble;
-            this.Triggers = MixItUp.Base.Resources.WordScramble.ToLower();
+            this.Triggers = MixItUp.Base.Resources.GameCommandWordScrambleDefaultChatTrigger;
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

@@ -113,7 +113,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.HotPotato;
-            this.Triggers = MixItUp.Base.Resources.HotPotato.ToLower();
+            this.Triggers = MixItUp.Base.Resources.HotPotato.Replace(" ", string.Empty).ToLower();
 
             this.LowerTimeLimit = 30;
             this.UpperTimeLimit = 60;

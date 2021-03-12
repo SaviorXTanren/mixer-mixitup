@@ -404,6 +404,8 @@ namespace MixItUp.Base.Services
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotID = (oldSettings.TwitchBotOAuthToken != null) ? string.Empty : null;
                 newSettings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = oldSettings.TwitchBotOAuthToken;
 
+                newSettings.PatreonTierSubscriberEquivalent = oldSettings.PatreonTierMixerSubscriberEquivalent;
+
                 foreach (var kvp in oldSettings.CooldownGroups)
                 {
                     newSettings.CooldownGroupAmounts[kvp.Key] = kvp.Value;

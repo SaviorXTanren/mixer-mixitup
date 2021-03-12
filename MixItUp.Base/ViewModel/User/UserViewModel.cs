@@ -646,6 +646,11 @@ namespace MixItUp.Base.ViewModel.User
                 return true;
             }
 
+            if (checkRole == UserRoleEnum.VIPExclusive && this.UserRoles.Contains(UserRoleEnum.VIP))
+            {
+                return true;
+            }
+
             if (ChannelSession.Settings.ExplicitUserRoleRequirements)
             {
                 return this.UserRoles.Contains(checkRole);
@@ -658,10 +663,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsEquivalentToSubscriber()
         {
-            if (this.PatreonUser != null && ChannelSession.Services.Patreon.IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent))
+            if (this.PatreonUser != null && ChannelSession.Services.Patreon.IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierSubscriberEquivalent))
             {
                 PatreonTier userTier = this.PatreonTier;
-                PatreonTier equivalentTier = ChannelSession.Services.Patreon.Campaign.GetTier(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent);
+                PatreonTier equivalentTier = ChannelSession.Services.Patreon.Campaign.GetTier(ChannelSession.Settings.PatreonTierSubscriberEquivalent);
                 if (userTier != null && equivalentTier != null && userTier.Amount >= equivalentTier.Amount)
                 {
                     return true;

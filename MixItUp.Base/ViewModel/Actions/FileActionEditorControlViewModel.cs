@@ -109,11 +109,6 @@ namespace MixItUp.Base.ViewModel.Actions
 
             if (this.ShowSaveToFileGrid)
             {
-                if (string.IsNullOrEmpty(this.TransferText))
-                {
-                    return Task.FromResult(new Result(MixItUp.Base.Resources.FileActionMissingTextToSave));
-                }
-
                 if (this.ShowLineToWrite)
                 {
                     if (string.IsNullOrEmpty(this.LineIndex))

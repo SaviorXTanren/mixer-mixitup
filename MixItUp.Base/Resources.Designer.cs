@@ -4762,7 +4762,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @$username has tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!.
+        ///   Looks up a localized string similar to @$username has tossed the potato to @$targetusername. Quick, type !hotpotato to pass it to someone else!.
         /// </summary>
         public static string GameCommandHotPotatoPassedExample {
             get {
@@ -4789,7 +4789,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !potato to pass it to someone else!.
+        ///   Looks up a localized string similar to @$username has started a game of hot potato and tossed the potato to @$targetusername. Quick, type !hotpotato to pass it to someone else!.
         /// </summary>
         public static string GameCommandHotPotatoStartedExample {
             get {
@@ -5212,6 +5212,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to rr.
+        /// </summary>
+        public static string GameCommandRussianRouletteDefaultChatTrigger {
+            get {
+                return ResourceManager.GetString("GameCommandRussianRouletteDefaultChatTrigger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally..
         /// </summary>
         public static string GameCommandRussianRouletteDescription {
@@ -5290,6 +5299,15 @@ namespace MixItUp.Base {
         public static string GameCommandSlotMachineAtLeast2Symbols {
             get {
                 return ResourceManager.GetString("GameCommandSlotMachineAtLeast2Symbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to slots.
+        /// </summary>
+        public static string GameCommandSlotMachineDefaultChatTrigger {
+            get {
+                return ResourceManager.GetString("GameCommandSlotMachineDefaultChatTrigger", resourceCulture);
             }
         }
         
@@ -5480,6 +5498,15 @@ namespace MixItUp.Base {
         public static string GameCommandTimeLimitMustBePositive {
             get {
                 return ResourceManager.GetString("GameCommandTimeLimitMustBePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to treasure.
+        /// </summary>
+        public static string GameCommandTreasureDefenseDefaultChatTrigger {
+            get {
+                return ResourceManager.GetString("GameCommandTreasureDefenseDefaultChatTrigger", resourceCulture);
             }
         }
         
@@ -6044,6 +6071,15 @@ namespace MixItUp.Base {
         public static string GameCommandWordScrambleCustomWordsFilePath {
             get {
                 return ResourceManager.GetString("GameCommandWordScrambleCustomWordsFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to scramble.
+        /// </summary>
+        public static string GameCommandWordScrambleDefaultChatTrigger {
+            get {
+                return ResourceManager.GetString("GameCommandWordScrambleDefaultChatTrigger", resourceCulture);
             }
         }
         
@@ -13403,6 +13439,24 @@ namespace MixItUp.Base {
         public static string ViewingTwoHours {
             get {
                 return ResourceManager.GetString("ViewingTwoHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIP.
+        /// </summary>
+        public static string VIP {
+            get {
+                return ResourceManager.GetString("VIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIP Exclusive.
+        /// </summary>
+        public static string VIPExclusive {
+            get {
+                return ResourceManager.GetString("VIPExclusive", resourceCulture);
             }
         }
         

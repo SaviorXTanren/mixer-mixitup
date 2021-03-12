@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.LockBox;
-            this.Triggers = MixItUp.Base.Resources.LockBox.ToLower();
+            this.Triggers = MixItUp.Base.Resources.LockBox.Replace(" ", string.Empty).ToLower();
 
             this.CombinationLength = 3;
             this.InitialAmount = 100;
