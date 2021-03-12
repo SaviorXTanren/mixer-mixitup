@@ -246,10 +246,14 @@ namespace MixItUp.Base.Services.Glimesh
                 UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
-                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(message.User?.id);
+                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
+                    }
+                    else
+                    {
+                        user = new UserViewModel(message);
                     }
                 }
 

@@ -176,6 +176,7 @@ namespace MixItUp.Base.Services.YouTube
                             {
                                 user = await ServiceManager.Get<UserService>().AddOrUpdateUser(youtubeUser);
                             }
+                            user = new UserViewModel(message);
                         }
                         user.SetYouTubeChatDetails(message);
 

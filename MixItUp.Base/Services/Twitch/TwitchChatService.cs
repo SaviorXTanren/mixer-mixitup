@@ -793,6 +793,10 @@ namespace MixItUp.Base.Services.Twitch
                         {
                             user = await ServiceManager.Get<UserService>().AddOrUpdateUser(twitchUser);
                         }
+                        else
+                        {
+                            user = new UserViewModel(message);
+                        }
                     }
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));
                 }

@@ -27,17 +27,7 @@ namespace MixItUp.Base.ViewModel.Accounts
 
         public string PlatformName { get { return EnumHelper.GetEnumName(this.Platform); } }
 
-        public string PlatformImage
-        {
-            get
-            {
-                if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch.png"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/Youtube.png"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
-                return string.Empty;
-            }
-        }
+        public string PlatformImage { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
 
         public string UserAccountAvatar
         {

@@ -33,6 +33,7 @@ namespace MixItUp.Base.Services.Trovo
 
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
+        private HashSet<string> messagesProcessed = new HashSet<string>();
         private Dictionary<Guid, int> userSubsGiftedInstanced = new Dictionary<Guid, int>();
 
         public TrovoChatEventService() { }
@@ -264,6 +265,12 @@ namespace MixItUp.Base.Services.Trovo
         {
             foreach (ChatMessageModel message in messageContainer.chats)
             {
+                if (this.messagesProcessed.Contains(message.message_id))
+                {
+                    continue;
+                }
+                this.messagesProcessed.Add(message.message_id);
+
                 UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, messageContainer.chats.First().sender_id);
                 if (user == null)
                 {
@@ -272,7 +279,12 @@ namespace MixItUp.Base.Services.Trovo
                     {
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(trovoUser);
                     }
+                    else
+                    {
+                        user = new UserViewModel(message);
+                    }
                 }
+
                 user.SetTrovoChatDetails(message);
 
                 if (message.type == ChatMessageTypeEnum.FollowAlert)

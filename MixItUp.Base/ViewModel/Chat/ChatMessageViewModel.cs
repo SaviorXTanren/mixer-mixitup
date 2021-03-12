@@ -52,6 +52,10 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = user;
         }
 
+        public string PlatformImageURL { get { return StreamingPlatforms.GetPlatformImage(this.Platform); } }
+
+        public bool ShowPlatformImage { get { return ServiceManager.GetAll<IStreamingPlatformSessionService>().Count(s => s.IsConnected) > 1; } }
+
         public double ProcessingTime { get { return (DateTimeOffset.Now - this.ProcessingStartTime).TotalMilliseconds; } }
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
