@@ -3,7 +3,6 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
@@ -20,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrEmpty(this.Name))
+            if (string.IsNullOrWhiteSpace(this.Name))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
             }

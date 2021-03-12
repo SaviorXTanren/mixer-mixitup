@@ -146,8 +146,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
                 {
-                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
-                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
+                    this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
+                    this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
                 }
             }
 
@@ -209,8 +209,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
-                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
+                            this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
+                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
                         }
                     }
 
@@ -322,8 +322,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                             }
                             else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
-                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
+                                this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
+                                this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
                             }
                         }
                     }

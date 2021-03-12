@@ -103,12 +103,12 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrEmpty(this.Name))
+            if (string.IsNullOrWhiteSpace(this.Name))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
             }
 
-            if (string.IsNullOrEmpty(this.Triggers))
+            if (string.IsNullOrWhiteSpace(this.Triggers))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ChatCommandMissingTriggers));
             }

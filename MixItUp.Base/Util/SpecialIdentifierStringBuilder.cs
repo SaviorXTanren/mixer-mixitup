@@ -264,17 +264,17 @@ namespace MixItUp.Base.Util
                 return;
             }
 
-            foreach (var kvp in parameters.SpecialIdentifiers)
+            foreach (var kvp in parameters.SpecialIdentifiers.OrderByDescending(kvp => kvp.Key))
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            foreach (var kvp in SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers)
+            foreach (var kvp in SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers.OrderByDescending(kvp => kvp.Key))
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.ToList())
+            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.OrderByDescending(c => c.Name))
             {
                 this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
             }

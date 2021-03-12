@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.Commands
 
         public static bool IsValidCommandTrigger(string command)
         {
-            if (!string.IsNullOrEmpty(command))
+            if (!string.IsNullOrWhiteSpace(command))
             {
                 return command.All(c => Char.IsLetterOrDigit(c) || Char.IsWhiteSpace(c) || Char.IsSymbol(c) || Char.IsPunctuation(c));
             }
