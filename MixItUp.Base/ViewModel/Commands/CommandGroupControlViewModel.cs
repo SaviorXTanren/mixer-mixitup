@@ -45,7 +45,16 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
-        public SortableObservableCollection<CommandModelBase> Commands = new SortableObservableCollection<CommandModelBase>();
+        public SortableObservableCollection<CommandModelBase> Commands
+        {
+            get { return this.commands; }
+            set
+            {
+                this.commands = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private SortableObservableCollection<CommandModelBase> commands = new SortableObservableCollection<CommandModelBase>();
 
         private Dictionary<Guid, CommandModelBase> commandLookup = new Dictionary<Guid, CommandModelBase>();
 
