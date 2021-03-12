@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> GetAllUsers();
 
         IEnumerable<UserViewModel> GetAllWorkableUsers();
+        IEnumerable<UserViewModel> GetAllWorkableUsers(StreamingPlatformTypeEnum platform);
 
         UserViewModel GetRandomUser(CommandParametersModel parameters);
 
@@ -176,11 +177,16 @@ namespace MixItUp.Base.Services
             return results.Where(u => !u.IgnoreForQueries);
         }
 
+        public IEnumerable<UserViewModel> GetAllWorkableUsers(StreamingPlatformTypeEnum platform)
+        {
+            IEnumerable<UserViewModel> results = this.GetAllWorkableUsers();
+            return results.Where(u => platform.HasFlag(u.Platform));
+        }
+
         public UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
-            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers());
+            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers(parameters.Platform));
             results.Remove(parameters.User);
-            results.RemoveAll(u => !parameters.Platform.HasFlag(u.Platform));
             return results.Random();
         }
 
