@@ -209,8 +209,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
+                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                         }
                     }
 
