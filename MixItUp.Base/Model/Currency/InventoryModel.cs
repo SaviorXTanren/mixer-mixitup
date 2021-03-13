@@ -384,7 +384,7 @@ namespace MixItUp.Base.Model.Currency
         {
             try
             {
-                if (ServiceManager.Get<ChatService>() != null && ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
+                if (ChannelSession.Settings.Currency.ContainsKey(this.ShopCurrencyID))
                 {
                     CurrencyModel currency = ChannelSession.Settings.Currency[this.ShopCurrencyID];
 
@@ -559,11 +559,11 @@ namespace MixItUp.Base.Model.Currency
         {
             try
             {
-                if (ServiceManager.Get<ChatService>() != null && arguments != null)
+                if (arguments != null)
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserViewModel targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.First(), user.Platform);
+                        UserViewModel targetUser = await CommandParametersModel.SearchForUser(arguments.First(), user.Platform);
                         if (targetUser == null)
                         {
                             await ServiceManager.Get<ChatService>().SendMessage("The specified user does not exist", user.Platform);

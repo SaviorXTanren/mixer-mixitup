@@ -235,33 +235,6 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.All)
-        {
-            string username = argument.Replace("@", "");
-            UserViewModel user = ServiceManager.Get<UserService>().GetUserByUsername(username, platform);
-            if (user == null)
-            {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<TwitchSessionService>().UserConnection != null)
-                {
-                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
-                    if (argUserModel != null)
-                    {
-                        return new UserViewModel(argUserModel);
-                    }
-                }
-
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
-                {
-                    Glimesh.Base.Models.Users.UserModel argUserModel = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
-                    if (argUserModel != null)
-                    {
-                        return new UserViewModel(argUserModel);
-                    }
-                }
-            }
-            return user;
-        }
-
         public static IEnumerable<UserDataModel> GetUserOrderedCurrencyList(CurrencyModel currency)
         {
             IEnumerable<UserDataModel> applicableUsers = SpecialIdentifierStringBuilder.GetAllNonExemptUsers();
@@ -291,17 +264,17 @@ namespace MixItUp.Base.Util
                 return;
             }
 
-            foreach (var kvp in parameters.SpecialIdentifiers)
+            foreach (var kvp in parameters.SpecialIdentifiers.OrderByDescending(kvp => kvp.Key))
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            foreach (var kvp in SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers)
+            foreach (var kvp in SpecialIdentifierStringBuilder.GlobalSpecialIdentifiers.OrderByDescending(kvp => kvp.Key))
             {
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.ToList())
+            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.OrderByDescending(c => c.Name))
             {
                 this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
             }
@@ -344,7 +317,7 @@ namespace MixItUp.Base.Util
             }
 
             int gameQueueCount = 0;
-            if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
+            if (ServiceManager.Get<GameQueueService>().IsEnabled)
             {
                 gameQueueCount = ServiceManager.Get<GameQueueService>().Queue.Count();
             }
@@ -569,7 +542,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(parameters.Arguments.ElementAt(i), parameters.Platform);
+                        UserViewModel argUser = await CommandParametersModel.SearchForUser(parameters.Arguments.ElementAt(i), parameters.Platform);
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -803,7 +776,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
                     string gameQueuePosition = "Not In Queue";
-                    if (ServiceManager.Get<GameQueueService>() != null && ServiceManager.Get<GameQueueService>().IsEnabled)
+                    if (ServiceManager.Get<GameQueueService>().IsEnabled)
                     {
                         int position = ServiceManager.Get<GameQueueService>().GetUserPosition(user);
                         if (position > 0)

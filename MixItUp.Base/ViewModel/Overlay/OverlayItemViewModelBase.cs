@@ -13,9 +13,9 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public IEnumerable<string> ColorNames { get; set; } = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
-        public IEnumerable<string> EntranceAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectEntranceAnimationTypeEnum>();
-        public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectVisibleAnimationTypeEnum>();
-        public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectExitAnimationTypeEnum>();
+        public IEnumerable<OverlayItemEffectEntranceAnimationTypeEnum> EntranceAnimations { get; set; } = EnumHelper.GetEnumList<OverlayItemEffectEntranceAnimationTypeEnum>();
+        public IEnumerable<OverlayItemEffectVisibleAnimationTypeEnum> VisibleAnimations { get; set; } = EnumHelper.GetEnumList<OverlayItemEffectVisibleAnimationTypeEnum>();
+        public IEnumerable<OverlayItemEffectExitAnimationTypeEnum> ExitAnimations { get; set; } = EnumHelper.GetEnumList<OverlayItemEffectExitAnimationTypeEnum>();
 
         public virtual bool SupportsRefreshUpdating { get { return false; } }
 

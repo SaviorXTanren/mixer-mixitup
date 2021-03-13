@@ -99,7 +99,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 this.ChatList.ContextMenu.Items.Clear();
                 foreach (var item in this.defaultContextMenuItems)
@@ -162,26 +162,26 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else if (tag.StartsWith(":"))
                     {
-                        if (ServiceManager.Get<ITwitchChatService>() != null)
+                        if (ServiceManager.Has<TwitchChatService>())
                         {
-                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<EmoteModel>(tag.Substring(1, tag.Length - 1), ServiceManager.Get<ITwitchChatService>().Emotes));
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, this.FindMatchingEmoticons<EmoteModel>(tag.Substring(1, tag.Length - 1), ServiceManager.Get<TwitchChatService>().Emotes));
                         }
                     }
                     else if (ChannelSession.Settings.ShowBetterTTVEmotes || ChannelSession.Settings.ShowFrankerFaceZEmotes)
                     {
-                        if (ServiceManager.Get<ITwitchChatService>() != null)
+                        if (ServiceManager.Has<TwitchChatService>())
                         {
                             Dictionary<string, object> emotes = new Dictionary<string, object>();
                             if (ChannelSession.Settings.ShowBetterTTVEmotes)
                             {
-                                foreach (var kvp in ServiceManager.Get<ITwitchChatService>().BetterTTVEmotes)
+                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().BetterTTVEmotes)
                                 {
                                     emotes[kvp.Key] = kvp.Value;
                                 }
                             }
                             if (ChannelSession.Settings.ShowFrankerFaceZEmotes)
                             {
-                                foreach (var kvp in ServiceManager.Get<ITwitchChatService>().FrankerFaceZEmotes)
+                                foreach (var kvp in ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes)
                                 {
                                     emotes[kvp.Key] = kvp.Value;
                                 }

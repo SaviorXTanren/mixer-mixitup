@@ -69,11 +69,8 @@ namespace MixItUp.Base.Services
 
             this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel("Chatters", "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
-                if (ServiceManager.Get<UserService>() != null)
-                {
-                    TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
-                    numberStats.AddValue(ServiceManager.Get<UserService>().Count());
-                }
+                TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
+                numberStats.AddValue(ServiceManager.Get<UserService>().Count());
                 return Task.FromResult(0);
             });
 

@@ -110,11 +110,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                 foreach (string part in parts)
                 {
                     this.AddStringMessagePart(part);
-                    if (ServiceManager.Get<ITwitchChatService>() != null)
+                    if (ServiceManager.Has<TwitchChatService>())
                     {
                         if (this.HasBits)
                         {
-                            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<ITwitchChatService>().BitsCheermotes)
+                            foreach (TwitchBitsCheermoteViewModel cheermote in ServiceManager.Get<TwitchChatService>().BitsCheermotes)
                             {
                                 if (part.StartsWith(cheermote.ID) && int.TryParse(part.Replace(cheermote.ID, ""), out int amount) && amount > 0)
                                 {
@@ -128,21 +128,21 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                             }
                         }
 
-                        if (ServiceManager.Get<ITwitchChatService>().Emotes.ContainsKey(part))
+                        if (ServiceManager.Get<TwitchChatService>().Emotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<ITwitchChatService>().Emotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().Emotes[part];
                         }
                         else if (messageEmotesCache.ContainsKey(part))
                         {
                             this.MessageParts[this.MessageParts.Count - 1] = messageEmotesCache[part];
                         }
-                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<ITwitchChatService>().BetterTTVEmotes.ContainsKey(part))
+                        else if (ChannelSession.Settings.ShowBetterTTVEmotes && ServiceManager.Get<TwitchChatService>().BetterTTVEmotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<ITwitchChatService>().BetterTTVEmotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().BetterTTVEmotes[part];
                         }
-                        else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<ITwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
+                        else if (ChannelSession.Settings.ShowFrankerFaceZEmotes && ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes.ContainsKey(part))
                         {
-                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<ITwitchChatService>().FrankerFaceZEmotes[part];
+                            this.MessageParts[this.MessageParts.Count - 1] = ServiceManager.Get<TwitchChatService>().FrankerFaceZEmotes[part];
                         }
                     }
                 }

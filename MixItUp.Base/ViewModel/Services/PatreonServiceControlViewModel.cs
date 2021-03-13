@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class PatreonServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<PatreonTier> Tiers { get; set; } = new ObservableCollection<PatreonTier>();
+        public ThreadSafeObservableCollection<PatreonTier> Tiers { get; set; } = new ThreadSafeObservableCollection<PatreonTier>();
 
         public PatreonTier SelectedTier
         {
@@ -22,11 +23,11 @@ namespace MixItUp.Base.ViewModel.Services
 
                 if (this.SelectedTier != null)
                 {
-                    ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = this.SelectedTier.ID;
+                    ChannelSession.Settings.PatreonTierSubscriberEquivalent = this.SelectedTier.ID;
                 }
                 else
                 {
-                    ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
+                    ChannelSession.Settings.PatreonTierSubscriberEquivalent = null;
                 }
             }
         }
@@ -57,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Services
                 await ServiceManager.Get<PatreonService>().Disconnect();
 
                 ChannelSession.Settings.PatreonOAuthToken = null;
-                ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
+                ChannelSession.Settings.PatreonTierSubscriberEquivalent = null;
 
                 this.IsConnected = false;
             });
@@ -70,21 +71,19 @@ namespace MixItUp.Base.ViewModel.Services
             if (this.IsConnected)
             {
                 this.RefreshTiers();
-                this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent));
+                this.SelectedTier = this.Tiers.FirstOrDefault(t => t.ID.Equals(ChannelSession.Settings.PatreonTierSubscriberEquivalent));
             }
             return Task.FromResult(0);
         }
 
         public void RefreshTiers()
         {
-            this.Tiers.Clear();
+            List<PatreonTier> tiers = new List<PatreonTier>();
             if (ServiceManager.Get<PatreonService>().Campaign != null && ServiceManager.Get<PatreonService>().Campaign.ActiveTiers != null)
             {
-                foreach (PatreonTier tier in ServiceManager.Get<PatreonService>().Campaign.ActiveTiers)
-                {
-                    this.Tiers.Add(tier);
-                }
+                tiers.AddRange(ServiceManager.Get<PatreonService>().Campaign.ActiveTiers);
             }
+            this.Tiers.ClearAndAddRange(tiers);
         }
     }
 }

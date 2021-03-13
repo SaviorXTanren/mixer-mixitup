@@ -1,5 +1,6 @@
-﻿using MixItUp.WPF.Controls.MainControls;
-using System.Collections.ObjectModel;
+﻿using MixItUp.Base.Util;
+using MixItUp.WPF.Controls.MainControls;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -22,7 +23,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class MainSettingsContainerControl : MainControlBase
     {
-        private ObservableCollection<SettingsOption> settingsGroups = new ObservableCollection<SettingsOption>();
+        private ThreadSafeObservableCollection<SettingsOption> settingsGroups = new ThreadSafeObservableCollection<SettingsOption>();
 
         public MainSettingsContainerControl()
         {
@@ -30,18 +31,21 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.SettingsItemsListBox.ItemsSource = this.settingsGroups;
 
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.General, new GeneralSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.ThemesAndColors, new ThemeSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Chat, new ChatSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Commands, new CommandsSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Alerts, new AlertsSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Remote, new RemoteSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.SerialDevices, new SerialDevicesSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Advanced, new AdvancedSettingsControl()));
+            List<SettingsOption> settings = new List<SettingsOption>();
+
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.General, new GeneralSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.ThemesAndColors, new ThemeSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Chat, new ChatSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Commands, new CommandsSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Alerts, new AlertsSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.SerialDevices, new SerialDevicesSettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Advanced, new AdvancedSettingsControl()));
+
+            this.settingsGroups.AddRange(settings);
         }
 
         protected override async Task InitializeInternal()

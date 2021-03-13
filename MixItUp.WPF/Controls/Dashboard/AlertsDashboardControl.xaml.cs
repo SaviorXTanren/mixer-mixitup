@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Controls.Dashboard
 
         private async void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(() =>
             {
                 this.AlertsListView.ContextMenu.Items.Clear();
                 foreach (var item in this.defaultContextMenuItems)

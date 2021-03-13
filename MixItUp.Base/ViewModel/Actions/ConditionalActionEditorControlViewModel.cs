@@ -5,7 +5,6 @@ using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -152,7 +151,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddClauseCommand { get; private set; }
 
-        public ObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ObservableCollection<ConditionalClauseViewModel>();
+        public ThreadSafeObservableCollection<ConditionalClauseViewModel> Clauses { get; private set; } = new ThreadSafeObservableCollection<ConditionalClauseViewModel>();
 
         public ICommand ImportActionsCommand { get; private set; }
 
@@ -166,10 +165,7 @@ namespace MixItUp.Base.ViewModel.Actions
             this.CaseSensitive = action.CaseSensitive;
             this.SelectedOperatorType = action.Operator;
 
-            foreach (ConditionalClauseModel clause in action.Clauses)
-            {
-                this.Clauses.Add(new ConditionalClauseViewModel(clause, this));
-            }
+            this.Clauses.AddRange(action.Clauses.Select(c => new ConditionalClauseViewModel(c, this)));
 
             foreach (ActionModelBase subAction in action.Actions)
             {

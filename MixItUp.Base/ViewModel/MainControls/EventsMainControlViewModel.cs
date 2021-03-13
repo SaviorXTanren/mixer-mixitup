@@ -1,7 +1,9 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.ViewModel.MainControls
@@ -69,11 +71,25 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (eventNumber >= 100 && eventNumber < 200)
                 {
-                    return "Mixer";
+#pragma warning disable CS0612 // Type or member is obsolete
+                    return StreamingPlatformTypeEnum.Mixer.ToString();
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
                 else if (eventNumber >= 200 && eventNumber < 300)
                 {
-                    return "Twitch";
+                    return StreamingPlatformTypeEnum.Twitch.ToString();
+                }
+                else if (eventNumber >= 300 && eventNumber < 400)
+                {
+                    return StreamingPlatformTypeEnum.YouTube.ToString();
+                }
+                else if (eventNumber >= 400 && eventNumber < 500)
+                {
+                    return StreamingPlatformTypeEnum.Trovo.ToString();
+                }
+                else if (eventNumber >= 500 && eventNumber < 600)
+                {
+                    return StreamingPlatformTypeEnum.Glimesh.ToString();
                 }
                 else
                 {
@@ -89,7 +105,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class EventsMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<EventCommandItemViewModel> EventCommands { get; set; } = new ObservableCollection<EventCommandItemViewModel>();
+        public ThreadSafeObservableCollection<EventCommandItemViewModel> EventCommands { get; set; } = new ThreadSafeObservableCollection<EventCommandItemViewModel>();
 
         public EventsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -101,45 +117,56 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.EventCommands.Clear();
 
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
-            //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
+            List<EventCommandItemViewModel> commands = new List<EventCommandItemViewModel>();
 
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStart));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStop));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelFollowed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
+            //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
+            //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelMassSubscriptionsGifted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelBitsCheered));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelPointsRedeemed));
 
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));
-            //this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserPurge));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserTimeout));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserBan));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageReceived));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatWhisperReceived));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageDeleted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelFollowed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelRaided));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelResubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelSubscriptionGifted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TrovoChannelMassSubscriptionsGifted));
 
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamlabsDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TiltifyDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ExtraLifeDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.JustGivingDonation));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.PatreonSubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsCardRedeemed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackPurchased));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackGifted));
+            commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStart));
+            commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelStreamStop));
+            commands.Add(this.GetEventCommand(EventTypeEnum.GlimeshChannelFollowed));
+
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));
+            //commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserPurge));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserTimeout));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatUserBan));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageReceived));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatWhisperReceived));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageDeleted));
+
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamlabsDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.TiltifyDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.ExtraLifeDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.JustGivingDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.PatreonSubscribed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsCardRedeemed));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackPurchased));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamlootsPackGifted));
+
+            this.EventCommands.AddRange(commands);
         }
 
         private EventCommandItemViewModel GetEventCommand(EventTypeEnum eventType)

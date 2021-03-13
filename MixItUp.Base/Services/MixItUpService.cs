@@ -10,17 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IMixItUpService
-    {
-        Task<MixItUpUpdateModel> GetLatestUpdate();
-        Task<MixItUpUpdateModel> GetLatestPublicUpdate();
-        Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
-        Task<MixItUpUpdateModel> GetLatestTestUpdate();
-
-        Task SendIssueReport(IssueReportModel report);
-    }
-
-    public class MixItUpService : IMixItUpService, IDisposable
+    public class MixItUpService : IDisposable
     {
         public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
         //public const string MixItUpAPIEndpoint = "http://localhost:33901/api/"; // Dev Endpoint

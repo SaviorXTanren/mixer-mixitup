@@ -165,17 +165,15 @@ namespace MixItUp.Base.ViewModel.Games
             this.NotEnoughPlayersCommand = command.NotEnoughPlayersCommand;
             this.BetsClosedCommand = command.BetsClosedCommand;
             this.GameCompleteCommand = command.GameCompleteCommand;
-            foreach (GameOutcomeModel outcome in command.BetOptions)
-            {
-                this.Outcomes.Add(new GameOutcomeViewModel(outcome));
-            }
+
+            this.Outcomes.AddRange(command.BetOptions.Select(o => new GameOutcomeViewModel(o)));
         }
 
         public BetGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Bet;
-            this.Triggers = MixItUp.Base.Resources.Bet.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Bet.Replace(" ", string.Empty).ToLower();
 
             this.SelectedStarterRole = UserRoleEnum.Mod;
             this.MinimumParticipants = 2;

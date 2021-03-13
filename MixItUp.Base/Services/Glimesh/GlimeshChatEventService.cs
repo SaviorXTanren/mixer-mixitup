@@ -15,27 +15,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Glimesh
 {
-    public interface IGlimeshChatEventService
-    {
-        bool IsUserConnected { get; }
-        bool IsBotConnected { get; }
-
-        Task<Result> ConnectUser();
-        Task DisconnectUser();
-
-        Task<Result> ConnectBot();
-        Task DisconnectBot();
-
-        Task SendMessage(string message, bool sendAsStreamer = false);
-
-        Task ShortTimeoutUser(UserViewModel user);
-        Task LongTimeoutUser(UserViewModel user);
-
-        Task BanUser(UserViewModel user);
-        Task UnbanUser(UserViewModel user);
-    }
-
-    public class GlimeshChatEventService : StreamingPlatformServiceBase, IGlimeshChatEventService
+    public class GlimeshChatEventService : StreamingPlatformServiceBase
     {
         private ChatEventClient userClient;
         private ChatEventClient botClient;
@@ -266,12 +246,19 @@ namespace MixItUp.Base.Services.Glimesh
                 UserViewModel user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User?.id);
                 if (user == null)
                 {
-                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(message.User?.id);
+                    UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByID(message.User?.id);
                     if (glimeshUser != null)
                     {
                         user = await ServiceManager.Get<UserService>().AddOrUpdateUser(glimeshUser);
                     }
+                    else
+                    {
+                        user = new UserViewModel(message);
+                    }
                 }
+
+                user.SetGlimeshChatDetails(message);
+
                 await ServiceManager.Get<ChatService>().AddMessage(new GlimeshChatMessageViewModel(message, user));
             }
         }

@@ -106,14 +106,7 @@ namespace MixItUp.Base.Services.External
         public string geo { get; set; }
     }
 
-    public interface IStreamElementsService : IOAuthExternalService
-    {
-        Task<StreamElementsChannel> GetCurrentChannel();
-
-        Task<IEnumerable<StreamElementsDonation>> GetDonations();
-    }
-
-    public class StreamElementsService : OAuthExternalServiceBase, IStreamElementsService
+    public class StreamElementsService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://api.streamelements.com/kappa/v2/";
 

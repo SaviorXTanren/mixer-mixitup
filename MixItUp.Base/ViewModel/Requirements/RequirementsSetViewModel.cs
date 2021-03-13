@@ -101,7 +101,11 @@ namespace MixItUp.Base.ViewModel.Requirements
             List<RequirementModelBase> requirements = new List<RequirementModelBase>();
             foreach (RequirementViewModelBase requirement in this.Requirements)
             {
-                requirements.Add(requirement.GetRequirement());
+                RequirementModelBase req = requirement.GetRequirement();
+                if (req != null)
+                {
+                    requirements.Add(requirement.GetRequirement());
+                }
             }
             return new RequirementsSetModel(requirements);
         }

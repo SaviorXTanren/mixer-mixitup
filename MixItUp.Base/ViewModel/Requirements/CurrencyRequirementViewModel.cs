@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class CurrencyListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ObservableCollection<CurrencyRequirementViewModel>();
+        public ThreadSafeObservableCollection<CurrencyRequirementViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRequirementViewModel>();
 
         public ICommand AddItemCommand { get; private set; }
 
@@ -148,7 +148,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new CurrencyRequirementModel(this.SelectedCurrency, this.SelectedRequirementType, this.MinAmount, this.MaxAmount);
+            if (this.SelectedCurrency != null)
+            {
+                return new CurrencyRequirementModel(this.SelectedCurrency, this.SelectedRequirementType, this.MinAmount, this.MaxAmount);
+            }
+            return null;
         }
     }
 }

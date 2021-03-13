@@ -3,11 +3,9 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
@@ -389,20 +387,6 @@ namespace MixItUp.Base.Model.Settings
 
         #endregion Overlay
 
-        #region Remote
-
-        [DataMember]
-        public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
-        [DataMember]
-        public List<RemoteConnectionModel> RemoteClientConnections { get; set; } = new List<RemoteConnectionModel>();
-
-        [DataMember]
-        public List<RemoteProfileModel> RemoteProfiles { get; set; } = new List<RemoteProfileModel>();
-        [DataMember]
-        public Dictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; set; } = new Dictionary<Guid, RemoteProfileBoardsModel>();
-
-        #endregion Remote
-
         #region Services
 
         [DataMember]
@@ -447,7 +431,7 @@ namespace MixItUp.Base.Model.Settings
         public string DiscordCustomBotToken { get; set; }
 
         [DataMember]
-        public string PatreonTierMixerSubscriberEquivalent { get; set; }
+        public string PatreonTierSubscriberEquivalent { get; set; }
 
         [DataMember]
         public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();
@@ -582,12 +566,30 @@ namespace MixItUp.Base.Model.Settings
                     }
                 }
 
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.YouTubeUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
                 if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
                 {
                     this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
                     if (!string.IsNullOrEmpty(userData.GlimeshUsername))
                     {
                         this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.TrovoUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
             });
@@ -877,7 +879,9 @@ namespace MixItUp.Base.Model.Settings
         {
             this.UserData[user.ID] = user;
             if (!string.IsNullOrEmpty(user.TwitchID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.YouTubeID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeID] = user.ID; }
             if (!string.IsNullOrEmpty(user.GlimeshID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.TrovoID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID; }
             this.UserData.ManualValueChanged(user.ID);
         }
 

@@ -11,12 +11,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Glimesh
 {
-    public interface IGlimeshPlatformService
-    {
-
-    }
-
-    public class GlimeshPlatformService : StreamingPlatformServiceBase, IGlimeshPlatformService
+    public class GlimeshPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "7ca2da26850dcc9395a565d920783d2bc859173894e4c0592542b518dccca1c3";
 
@@ -38,7 +33,11 @@ namespace MixItUp.Base.Services.Glimesh
             {
                 if (!string.IsNullOrEmpty(dateTime))
                 {
-                    return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
+                    DateTimeOffset result = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(dateTime);
+                    if (result > DateTimeOffset.MinValue)
+                    {
+                        return new DateTimeOffset(result.DateTime, TimeSpan.Zero);
+                    }
                 }
             }
             catch (Exception ex)

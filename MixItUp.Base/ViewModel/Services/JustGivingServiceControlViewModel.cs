@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
 {
     public class JustGivingServiceControlViewModel : ServiceControlViewModelBase
     {
-        public ObservableCollection<JustGivingFundraiser> Fundraisers { get; set; } = new ObservableCollection<JustGivingFundraiser>();
+        public ThreadSafeObservableCollection<JustGivingFundraiser> Fundraisers { get; set; } = new ThreadSafeObservableCollection<JustGivingFundraiser>();
 
         public JustGivingFundraiser SelectedFundraiser
         {
@@ -78,19 +78,12 @@ namespace MixItUp.Base.ViewModel.Services
 
         public async Task RefreshFundraisers()
         {
-            this.Fundraisers.Clear();
-
             IEnumerable<JustGivingFundraiser> fundraisers = await ServiceManager.Get<JustGivingService>().GetCurrentFundraisers();
             if (fundraisers != null)
             {
-                foreach (JustGivingFundraiser fundraiser in fundraisers)
-                {
-                    if (fundraiser.IsActive)
-                    {
-                        this.Fundraisers.Add(fundraiser);
-                    }
-                }
+                fundraisers = fundraisers.Where(f => f.IsActive);
             }
+            this.Fundraisers.ClearAndAddRange(fundraisers);
         }
     }
 }

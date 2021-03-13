@@ -126,17 +126,14 @@ namespace MixItUp.Base.ViewModel.Games
         {
             this.Symbols = string.Join(" ", command.Symbols);
             this.FailureCommand = command.FailureCommand;
-            foreach (SlotMachineGameOutcomeModel outcome in command.Outcomes)
-            {
-                this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(outcome));
-            }
+            this.Outcomes.AddRange(command.Outcomes.Select(o => new SlotMachineGameOutcomeViewModel(o)));
         }
 
         public SlotMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.SlotMachine;
-            this.Triggers = MixItUp.Base.Resources.SlotMachine.ToLower();
+            this.Triggers = MixItUp.Base.Resources.GameCommandSlotMachineDefaultChatTrigger;
 
             this.Symbols = "X O $";
             this.FailureCommand = this.CreateBasicChatCommand(MixItUp.Base.Resources.GameCommandSlotMachineLoseExample);

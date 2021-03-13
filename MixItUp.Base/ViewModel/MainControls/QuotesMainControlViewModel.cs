@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         }
         private string addQuoteText;
 
-        public ObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ObservableCollection<UserQuoteViewModel>();
+        public ThreadSafeObservableCollection<UserQuoteViewModel> Quotes { get; private set; } = new ThreadSafeObservableCollection<UserQuoteViewModel>();
 
         public string QuotesFormatText
         {
@@ -92,11 +92,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public void Refresh()
         {
-            this.Quotes.Clear();
-            foreach (UserQuoteModel quote in ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID))
-            {
-                this.Quotes.Add(new UserQuoteViewModel(quote));
-            }
+            this.Quotes.ClearAndAddRange(ChannelSession.Settings.Quotes.ToList().OrderBy(q => q.ID).Select(q => new UserQuoteViewModel(q)));
         }
 
         public async Task RemoveQuote(UserQuoteViewModel quote)

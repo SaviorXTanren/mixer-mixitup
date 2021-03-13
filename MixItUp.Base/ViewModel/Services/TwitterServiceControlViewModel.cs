@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Services
                 Task.Run(async () =>
                 {
                     Result result = await ServiceManager.Get<TwitterService>().Connect();
-                    await DispatcherHelper.InvokeDispatcher(async () =>
+                    await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
                     {
                         if (result.Success)
                         {

@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Dialogs
@@ -18,16 +18,12 @@ namespace MixItUp.Base.ViewModel.Dialogs
                 this.selectedCommandType = value;
                 this.NotifyPropertyChanged();
 
-                this.Commands.Clear();
-                foreach (CommandModelBase command in ChannelSession.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name))
-                {
-                    this.Commands.Add(command);
-                }
+                this.Commands.ClearAndAddRange(ChannelSession.AllCommands.Where(c => c.Type == this.SelectedCommandType).OrderBy(c => c.Name));
             }
         }
         private CommandTypeEnum selectedCommandType;
 
-        public ObservableCollection<CommandModelBase> Commands { get; set; } = new ObservableCollection<CommandModelBase>();
+        public ThreadSafeObservableCollection<CommandModelBase> Commands { get; set; } = new ThreadSafeObservableCollection<CommandModelBase>();
 
         public CommandModelBase SelectedCommand
         {

@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -29,12 +31,30 @@ namespace MixItUp.Base.Model.Commands
                     }
                 }
 
+                if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Get<YouTubeSessionService>().UserConnection != null)
+                {
+                    Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByUsername(username);
+                    if (youtubeUser != null)
+                    {
+                        return new UserViewModel(youtubeUser);
+                    }
+                }
+
                 if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Get<GlimeshSessionService>().UserConnection != null)
                 {
                     Glimesh.Base.Models.Users.UserModel glimeshUser = await ServiceManager.Get<GlimeshSessionService>().UserConnection.GetUserByName(username);
                     if (glimeshUser != null)
                     {
                         return new UserViewModel(glimeshUser);
+                    }
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Get<TrovoSessionService>().UserConnection != null)
+                {
+                    Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(username);
+                    if (trovoUser != null)
+                    {
+                        return new UserViewModel(trovoUser);
                     }
                 }
             }

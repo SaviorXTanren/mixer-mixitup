@@ -3,7 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 
@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ObservableCollection<string> ChannelPointRewards { get; set; } = new ObservableCollection<string>();
+        public ThreadSafeObservableCollection<string> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<string>();
 
         public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand) : base(existingCommand) { }
 
@@ -19,7 +19,7 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrEmpty(this.Name))
+            if (string.IsNullOrWhiteSpace(this.Name))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
             }
@@ -42,12 +42,10 @@ namespace MixItUp.Base.ViewModel.Commands
                 IEnumerable<CustomChannelPointRewardModel> customChannelPointRewards = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetCustomChannelPointRewards(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
                 if (customChannelPointRewards != null)
                 {
-                    foreach (CustomChannelPointRewardModel customChannelPointReward in customChannelPointRewards)
-                    {
-                        this.ChannelPointRewards.Add(customChannelPointReward.title);
-                    }
+                    this.ChannelPointRewards.AddRange(customChannelPointRewards.Select(c => c.title));
                 }
             }
+
             await base.OnLoadedInternal();
         }
     }

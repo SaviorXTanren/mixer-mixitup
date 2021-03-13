@@ -10,36 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IGameQueueService
-    {
-        IEnumerable<UserViewModel> Queue { get; }
-
-        bool IsEnabled { get; }
-
-        Task Enable();
-        Task Disable();
-
-        Task Join(UserViewModel user);
-        Task JoinFront(UserViewModel user);
-
-        Task Leave(UserViewModel user);
-
-        Task MoveUp(UserViewModel user);
-        Task MoveDown(UserViewModel user);
-
-        Task SelectFirst();
-        Task SelectFirstType(RoleRequirementModel roleRequirement);
-        Task SelectRandom();
-
-        int GetUserPosition(UserViewModel user);
-        Task PrintUserPosition(UserViewModel user);
-
-        Task PrintStatus(CommandParametersModel parameters);
-
-        Task Clear();
-    }
-
-    public class GameQueueService : IGameQueueService
+    public class GameQueueService
     {
         private const string QueuePositionSpecialIdentifier = "queueposition";
 

@@ -1,46 +1,20 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 using GlimeshBase = Glimesh.Base;
-using MixItUp.Base.Services.Twitch;
+using TrovoBase = Trovo.Base;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
-    public interface IUserService
-    {
-        UserViewModel GetUserByID(Guid id);
-
-        UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
-
-        UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id);
-
-        Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
-
-        Task<UserViewModel> AddOrUpdateUser(GlimeshBase.Models.Users.UserModel glimeshChatUser);
-
-        Task<UserViewModel> RemoveUserByUsername(StreamingPlatformTypeEnum platform, string username);
-
-        void Clear();
-
-        IEnumerable<UserViewModel> GetAllUsers();
-
-        IEnumerable<UserViewModel> GetAllWorkableUsers();
-
-        UserViewModel GetRandomUser(CommandParametersModel parameters);
-
-        UserViewModel GetUserFullSearch(StreamingPlatformTypeEnum platform, string userID, string username);
-
-        int Count();
-    }
-
-    public class UserService : IUserService
+    public class UserService
     {
         public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "boomtvmod", "streamjar", "pretzelrocks", "scottybot", "streamlabs", "streamelements", "nightbot", "deepbot", "moobot", "coebot", "wizebot", "phantombot", "stay_hydrated_bot", "stayhealthybot", "anotherttvviewer", "commanderroot", "lurxx", "thecommandergroot", "moobot", "thelurxxer", "twitchprimereminder", "communityshowcase", "banmonitor", "wizebot" };
 
@@ -96,7 +70,7 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByPlatformID(StreamingPlatformTypeEnum platform, string id)
         {
-            if (this.platformUserIDLookups[platform].ContainsKey(id))
+            if (!string.IsNullOrEmpty(id) && this.platformUserIDLookups[platform].ContainsKey(id))
             {
                 return this.GetUserByID(this.platformUserIDLookups[platform][id]);
             }
@@ -111,6 +85,21 @@ namespace MixItUp.Base.Services
                 if (user == null)
                 {
                     user = new UserViewModel(twitchChatUser);
+                }
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
+        public async Task<UserViewModel> AddOrUpdateUser(Google.Apis.YouTube.v3.Data.Channel youtubeUser)
+        {
+            if (!string.IsNullOrEmpty(youtubeUser.Id) && !string.IsNullOrEmpty(youtubeUser.Snippet.Title))
+            {
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, youtubeUser.Id);
+                if (user == null)
+                {
+                    user = new UserViewModel(youtubeUser);
                 }
                 await this.AddOrUpdateUser(user);
                 return user;
@@ -133,7 +122,22 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        private async Task AddOrUpdateUser(UserViewModel user)
+        public async Task<UserViewModel> AddOrUpdateUser(TrovoBase.Models.Users.UserModel trovoUser)
+        {
+            if (!string.IsNullOrEmpty(trovoUser.user_id) && !string.IsNullOrEmpty(trovoUser.username))
+            {
+                UserViewModel user = this.GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, trovoUser.user_id);
+                if (user == null)
+                {
+                    user = new UserViewModel(trovoUser);
+                }
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
+        public async Task AddOrUpdateUser(UserViewModel user)
         {
             if (!user.IsAnonymous)
             {
@@ -143,6 +147,24 @@ namespace MixItUp.Base.Services
                 {
                     this.platformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID;
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.YouTubeID) && !string.IsNullOrEmpty(user.YouTubeUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshUsername] = user.ID;
+                }
+
+                if (!string.IsNullOrEmpty(user.TrovoID) && !string.IsNullOrEmpty(user.TrovoUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID;
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoUsername] = user.ID;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username.ToLower()))
@@ -203,6 +225,24 @@ namespace MixItUp.Base.Services
                     this.platformUsernameLookups[StreamingPlatformTypeEnum.Twitch].Remove(user.TwitchUsername);
                 }
 
+                if (!string.IsNullOrEmpty(user.YouTubeID) && !string.IsNullOrEmpty(user.YouTubeUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.YouTube].Remove(user.YouTubeID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.YouTube].Remove(user.YouTubeUsername);
+                }
+
+                if (!string.IsNullOrEmpty(user.GlimeshID) && !string.IsNullOrEmpty(user.GlimeshUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Glimesh].Remove(user.GlimeshUsername);
+                }
+
+                if (!string.IsNullOrEmpty(user.TrovoID) && !string.IsNullOrEmpty(user.TrovoUsername))
+                {
+                    this.platformUserIDLookups[StreamingPlatformTypeEnum.Trovo].Remove(user.TrovoID);
+                    this.platformUsernameLookups[StreamingPlatformTypeEnum.Trovo].Remove(user.TrovoUsername);
+                }
+
                 await ServiceManager.Get<EventService>().PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
             }
         }
@@ -230,11 +270,16 @@ namespace MixItUp.Base.Services
             return results.Where(u => !u.IgnoreForQueries);
         }
 
+        public IEnumerable<UserViewModel> GetAllWorkableUsers(StreamingPlatformTypeEnum platform)
+        {
+            IEnumerable<UserViewModel> results = this.GetAllWorkableUsers();
+            return results.Where(u => platform.HasFlag(u.Platform));
+        }
+
         public UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
-            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers());
+            List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers(parameters.Platform));
             results.Remove(parameters.User);
-            results.RemoveAll(u => !parameters.Platform.HasFlag(u.Platform));
             return results.Random();
         }
 

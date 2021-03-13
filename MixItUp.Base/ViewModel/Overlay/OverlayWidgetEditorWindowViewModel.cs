@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -27,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayWidgetModel OverlayWidget { get; private set; }
 
-        public ObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ObservableCollection<OverlayTypeListing>();
+        public ThreadSafeObservableCollection<OverlayTypeListing> OverlayTypeListings { get; private set; } = new ThreadSafeObservableCollection<OverlayTypeListing>();
         public OverlayTypeListing SelectedOverlayType
         {
             get { return this.selectedOverlayType; }
@@ -59,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string name;
 
-        public ObservableCollection<string> OverlayEndpoints { get; set; } = new ObservableCollection<string>();
+        public ThreadSafeObservableCollection<string> OverlayEndpoints { get; set; } = new ThreadSafeObservableCollection<string>();
 
         public string SelectedOverlayEndpoint
         {
@@ -110,22 +111,26 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             this.Initialize();
 
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ChatMessages, "Shows the last X many chat messages from your channel. Chat messages are added as they occur."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EndCredits, "Shows a scrolling list of text like movie credits based on user interactions throughout the stream. Showing the widget triggers the credits, hiding resets it."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EventList, "Shows the last X many events that have occurred in your channel. Events are added as they occur."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.GameQueue, "Shows a block of text. Events are added as they occur."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ProgressBar, "Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.HTML, "Shows HTML code directly on the overlay. Refreshes based on user-defined Refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Image, "Shows an image. Refreshes based on user-defined Refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Leaderboard, "Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval"));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamBoss, "Shows a user from your channel as a \"boss\" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Text, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.TickerTape, "Shows a scrolling list of text of the last X many users that caused a specified event to occur. Users are added to the list as the event occurs."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Timer, "Shows a timer that counts down while it is visible. Hiding the timer resets the amount."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.TimerTrain, "Shows a timer that counts down and can be increased by performing certain actions in your channel. It is only shown when total time exceeds the Minimum Seconds To Show value. Time updates as events occur."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Video, "Shows a video. Refreshes based on user-defined Refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.WebPage, "Shows a web page. Refreshes based on user-defined Refresh Interval."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.YouTube, "Shows a YouTube video. Refreshes based on user-defined Refresh Interval."));
+            List<OverlayTypeListing> widgets = new List<OverlayTypeListing>();
+
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ChatMessages, "Shows the last X many chat messages from your channel. Chat messages are added as they occur."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EndCredits, "Shows a scrolling list of text like movie credits based on user interactions throughout the stream. Showing the widget triggers the credits, hiding resets it."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EventList, "Shows the last X many events that have occurred in your channel. Events are added as they occur."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.GameQueue, "Shows a block of text. Events are added as they occur."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ProgressBar, "Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.HTML, "Shows HTML code directly on the overlay. Refreshes based on user-defined Refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Image, "Shows an image. Refreshes based on user-defined Refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Leaderboard, "Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval"));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamBoss, "Shows a user from your channel as a \"boss\" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Text, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.TickerTape, "Shows a scrolling list of text of the last X many users that caused a specified event to occur. Users are added to the list as the event occurs."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Timer, "Shows a timer that counts down while it is visible. Hiding the timer resets the amount."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.TimerTrain, "Shows a timer that counts down and can be increased by performing certain actions in your channel. It is only shown when total time exceeds the Minimum Seconds To Show value. Time updates as events occur."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Video, "Shows a video. Refreshes based on user-defined Refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.WebPage, "Shows a web page. Refreshes based on user-defined Refresh Interval."));
+            widgets.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.YouTube, "Shows a YouTube video. Refreshes based on user-defined Refresh Interval."));
+
+            this.OverlayTypeListings.AddRange(widgets);
 
             this.OverlayTypeSelectedCommand = this.CreateCommand((parameter) =>
             {
@@ -159,10 +164,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
-            foreach (string overlayEndpoint in ServiceManager.Get<OverlayService>().GetOverlayNames())
-            {
-                this.OverlayEndpoints.Add(overlayEndpoint);
-            }
+            this.OverlayEndpoints.AddRange(ServiceManager.Get<OverlayService>().GetOverlayNames());
             this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
         }
     }

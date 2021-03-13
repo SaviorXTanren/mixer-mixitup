@@ -97,18 +97,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public interface IJustGivingService : IOAuthExternalService
-    {
-        void SetFundraiser(JustGivingFundraiser fundraiser);
-
-        Task<JustGivingUser> GetCurrentAccount();
-
-        Task<IEnumerable<JustGivingFundraiser>> GetCurrentFundraisers();
-
-        Task<IEnumerable<JustGivingDonation>> GetRecentDonations(JustGivingFundraiser fundraiser);
-    }
-
-    public class JustGivingService : OAuthExternalServiceBase, IJustGivingService, IDisposable
+    public class JustGivingService : OAuthExternalServiceBase, IDisposable
     {
         private const string BaseAddress = "https://api.justgiving.com/v1/";
 

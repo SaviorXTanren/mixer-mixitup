@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -79,28 +80,15 @@ namespace MixItUp.Base.ViewModel.MainControls
 
     public class CurrencyRankInventoryMainControlViewModel : WindowControlViewModelBase
     {
-        public ObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ObservableCollection<CurrencyRankInventoryContainerViewModel>();
+        public ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel> Items { get; set; } = new ThreadSafeObservableCollection<CurrencyRankInventoryContainerViewModel>();
 
         public CurrencyRankInventoryMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void RefreshList()
         {
             this.Items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currency)
-            {
-                if (kvp.Value.IsRank)
-                {
-                    this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
-                }
-                else
-                {
-                    this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
-                }
-            }
-            foreach (var kvp in ChannelSession.Settings.Inventory)
-            {
-                this.Items.Add(new CurrencyRankInventoryContainerViewModel(kvp.Value));
-            }
+            this.Items.AddRange(ChannelSession.Settings.Currency.Select(kvp => new CurrencyRankInventoryContainerViewModel(kvp.Value)));
+            this.Items.AddRange(ChannelSession.Settings.Inventory.Select(kvp => new CurrencyRankInventoryContainerViewModel(kvp.Value)));
         }
 
         public async void DeleteItem(CurrencyRankInventoryContainerViewModel item)

@@ -31,33 +31,6 @@ namespace MixItUp.Base.Services
         public double Rate { get; set; }
     }
 
-    public interface IOverlayEndpointService
-    {
-        string Name { get; }
-        int Port { get; }
-
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred;
-
-        Task<bool> Initialize();
-
-        Task Disconnect();
-
-        Task<int> TestConnection();
-
-        void StartBatching();
-
-        Task EndBatching();
-
-        Task ShowItem(OverlayItemModelBase item, CommandParametersModel parameters);
-        Task UpdateItem(OverlayItemModelBase item, CommandParametersModel parameters);
-        Task HideItem(OverlayItemModelBase item);
-
-        Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
-
-        void SetLocalFile(string fileID, string filePath);
-    }
-
     public class OverlayPacket : WebSocketPacket
     {
         public JObject data;
@@ -78,7 +51,7 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public class OverlayEndpointService : IOverlayEndpointService
+    public class OverlayEndpointService
     {
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
         public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";

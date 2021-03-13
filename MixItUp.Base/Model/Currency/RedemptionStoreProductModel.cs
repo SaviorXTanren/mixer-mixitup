@@ -108,10 +108,7 @@ namespace MixItUp.Base.Model.Currency
                 RedemptionStoreProductModel product = ChannelSession.Settings.RedemptionStoreProducts.Values.ToList().FirstOrDefault(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                 if (product == null)
                 {
-                    if (ServiceManager.Get<ChatService>() != null)
-                    {
-                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName, user.Platform);
-                    }
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStoreProductWithThatName, user.Platform);
                     return;
                 }
 
@@ -119,20 +116,14 @@ namespace MixItUp.Base.Model.Currency
                 {
                     if (product.CurrentAmount <= 0)
                     {
-                        if (ServiceManager.Get<ChatService>() != null)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts, user.Platform);
-                        }
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoMoreRedemptionStoreProducts, user.Platform);
                         return;
                     }
 
                     ThresholdRequirementModel threshold = product.Requirements.Threshold;
                     if (threshold != null && threshold.IsEnabled && threshold.Amount > product.CurrentAmount)
                     {
-                        if (ServiceManager.Get<ChatService>() != null)
-                        {
-                            await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts, user.Platform);
-                        }
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NotEnoughRedemptionStoreProducts, user.Platform);
                         return;
                     }
                 }
@@ -177,10 +168,7 @@ namespace MixItUp.Base.Model.Currency
         {
             if (!user.HasPermissionsTo(UserRoleEnum.Mod))
             {
-                if (ServiceManager.Get<ChatService>() != null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
-                }
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.YouDoNotHavePermissions, user.Platform);
                 return;
             }
 
@@ -216,10 +204,7 @@ namespace MixItUp.Base.Model.Currency
             }
             else
             {
-                if (ServiceManager.Get<ChatService>() != null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName, user.Platform);
-                }
+                await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.NoRedemptionStorePurchasesWithThatName, user.Platform);
             }
         }
 

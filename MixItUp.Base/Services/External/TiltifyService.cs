@@ -188,20 +188,7 @@ namespace MixItUp.Base.Services.External
         public JObject Errors { get; set; }
     }
 
-    public interface ITiltifyService : IOAuthExternalService
-    {
-        Task<TiltifyUser> GetUser();
-
-        Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
-
-        Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user);
-
-        Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team);
-
-        Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign);
-    }
-
-    public class TiltifyService : OAuthExternalServiceBase, ITiltifyService
+    public class TiltifyService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://tiltify.com/api/v3/";
 

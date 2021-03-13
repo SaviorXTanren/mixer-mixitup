@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Overlay
 {
@@ -183,23 +184,25 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string backgroundColor;
 
-        public string DamageAnimationString
+        public IEnumerable<OverlayItemEffectVisibleAnimationTypeEnum> VisibleAnimation { get; set; } = EnumHelper.GetEnumList<OverlayItemEffectVisibleAnimationTypeEnum>();
+
+        public OverlayItemEffectVisibleAnimationTypeEnum DamageAnimation
         {
-            get { return EnumHelper.GetEnumName(this.damageAnimation); }
+            get { return this.damageAnimation; }
             set
             {
-                this.damageAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectVisibleAnimationTypeEnum>(value);
+                this.damageAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }
         protected OverlayItemEffectVisibleAnimationTypeEnum damageAnimation;
 
-        public string NewBossAnimationString
+        public OverlayItemEffectVisibleAnimationTypeEnum NewBossAnimation
         {
-            get { return EnumHelper.GetEnumName(this.newBossAnimation); }
+            get { return this.newBossAnimation; }
             set
             {
-                this.newBossAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectVisibleAnimationTypeEnum>(value);
+                this.newBossAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }

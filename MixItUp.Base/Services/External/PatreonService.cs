@@ -349,19 +349,7 @@ namespace MixItUp.Base.Services.External
         public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
-    public interface IPatreonService : IOAuthExternalService
-    {
-        PatreonCampaign Campaign { get; }
-        IEnumerable<PatreonCampaignMember> CampaignMembers { get; }
-
-        Task<PatreonUser> GetCurrentUser();
-
-        Task<PatreonCampaign> GetCampaign();
-
-        Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers();
-    }
-
-    public class PatreonService : OAuthExternalServiceBase, IPatreonService
+    public class PatreonService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://www.patreon.com/api/oauth2/v2/";
 

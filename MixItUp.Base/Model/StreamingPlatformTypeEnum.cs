@@ -26,5 +26,14 @@ namespace MixItUp.Base.Model
             StreamingPlatformTypeEnum.Mixer, StreamingPlatformTypeEnum.Twitch, StreamingPlatformTypeEnum.YouTube, StreamingPlatformTypeEnum.Trovo, StreamingPlatformTypeEnum.Glimesh
 #pragma warning restore CS0612 // Type or member is obsolete
         };
+
+        public static string GetPlatformImage(StreamingPlatformTypeEnum platform)
+        {
+            if (platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch.png"; }
+            else if (platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/Youtube.png"; }
+            else if (platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
+            else if (platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
+            return string.Empty;
+        }
     }
 }

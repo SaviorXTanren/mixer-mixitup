@@ -7,7 +7,9 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Model.OAuth;
@@ -100,7 +102,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new TranslationService());
             ServiceManager.Add(new SerialService());
             ServiceManager.Add(new OverlayService());
-            ServiceManager.Add(new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub"));
 
             ServiceManager.Add(new StreamlabsOBSService());
             ServiceManager.Add(new XSplitService("http://localhost:8211/"));
@@ -119,7 +120,11 @@ namespace MixItUp.Base
             ServiceManager.Add(new TwitchSessionService());
             ServiceManager.Add(new TwitchStatusService());
 
+            ServiceManager.Add(new YouTubeSessionService());
+
             ServiceManager.Add(new GlimeshSessionService());
+
+            ServiceManager.Add(new TrovoSessionService());
 
             try
             {
@@ -175,12 +180,28 @@ namespace MixItUp.Base
                     user = new UserViewModel(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
                 }
             }
+            else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.YouTube, ServiceManager.Get<YouTubeSessionService>().Channel.Id);
+                if (user == null)
+                {
+                    user = new UserViewModel(ServiceManager.Get<YouTubeSessionService>().Channel);
+                }
+            }
             else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
             {
                 user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, ServiceManager.Get<GlimeshSessionService>().User.id);
                 if (user == null)
                 {
                     user = new UserViewModel(ServiceManager.Get<GlimeshSessionService>().User);
+                }
+            }
+            else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                user = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Trovo, ServiceManager.Get<TrovoSessionService>().User.userId);
+                if (user == null)
+                {
+                    user = new UserViewModel(ServiceManager.Get<TrovoSessionService>().User);
                 }
             }
 
@@ -280,9 +301,17 @@ namespace MixItUp.Base
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<TwitchSessionService>()?.UserNewAPI?.display_name;
                 }
+                else if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<YouTubeSessionService>()?.Channel?.Snippet?.Title;
+                }
                 else if (ServiceManager.Get<GlimeshSessionService>().IsConnected)
                 {
                     ChannelSession.Settings.Name = ServiceManager.Get<GlimeshSessionService>()?.User?.displayname;
+                }
+                else if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+                {
+                    ChannelSession.Settings.Name = ServiceManager.Get<TrovoSessionService>()?.User?.nickName;
                 }
                 else
                 {

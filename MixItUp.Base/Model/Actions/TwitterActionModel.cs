@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -83,15 +84,20 @@ namespace MixItUp.Base.Model.Actions
                             return;
                         }
 
-                        if (!await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath))
+                        Result result = await ServiceManager.Get<TwitterService>().SendTweet(tweet, imagePath);
+                        if (!result.Success)
                         {
-                            await ServiceManager.Get<ChatService>().SendMessage("The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes", parameters.Platform);
+                            await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
                         }
                     }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
-                    await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
+                    Result result = await ServiceManager.Get<TwitterService>().UpdateName(this.NameUpdate);
+                    if (!result.Success)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage("Twitter Error: " + result.Message, parameters.Platform);
+                    }
                 }
             }
         }

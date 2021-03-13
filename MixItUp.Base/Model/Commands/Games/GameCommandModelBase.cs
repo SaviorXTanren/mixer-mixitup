@@ -199,7 +199,26 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
-            return ServiceManager.Get<UserService>().GetRandomUser(parameters);
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            int betAmount = this.GetPrimaryBetAmount(parameters);
+            if (currencyRequirement != null && betAmount > 0)
+            {
+                string currencyName = currencyRequirement.Currency?.Name;
+                List<UserViewModel> users = new List<UserViewModel>(ServiceManager.Get<UserService>().GetAllWorkableUsers(parameters.Platform).Shuffle());
+                users.Remove(parameters.User);
+                foreach (UserViewModel user in users)
+                {
+                    if (currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    {
+                        return user;
+                    }
+                }
+                return null;
+            }
+            else
+            {
+                return ServiceManager.Get<UserService>().GetRandomUser(parameters);
+            }
         }
 
         protected override Task<bool> ValidateRequirements(CommandParametersModel parameters)
@@ -230,19 +249,17 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected async Task<bool> ValidateTargetUserPrimaryBetAmount(CommandParametersModel parameters)
         {
-            string currencyName = string.Empty;
-            int betAmount = this.GetPrimaryBetAmount(parameters);
-
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
-            if (currencyRequirement != null)
+            int betAmount = this.GetPrimaryBetAmount(parameters);
+            if (currencyRequirement != null && betAmount > 0)
             {
-                currencyName = currencyRequirement.Currency?.Name;
+                string currencyName = currencyRequirement.Currency?.Name;
                 if (currencyRequirement.Currency.HasAmount(parameters.TargetUser.Data, betAmount))
                 {
                     return true;
                 }
 
-                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount), parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName), parameters.Platform);
                 return false;
             }
             return true;

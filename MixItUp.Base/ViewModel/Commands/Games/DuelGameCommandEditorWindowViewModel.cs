@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Duel;
-            this.Triggers = MixItUp.Base.Resources.Duel.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Duel.Replace(" ", string.Empty).ToLower();
 
             this.TimeLimit = 60;
             this.UserSelectionTargeted = true;

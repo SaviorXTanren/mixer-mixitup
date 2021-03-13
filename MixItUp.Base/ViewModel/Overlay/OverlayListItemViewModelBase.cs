@@ -7,7 +7,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 {
     public abstract class OverlayListItemViewModelBase : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> AlignmentStrings { get; set; } = EnumHelper.GetEnumNames<OverlayListItemAlignmentTypeEnum>();
+        public IEnumerable<OverlayListItemAlignmentTypeEnum> Alignments { get; set; } = EnumHelper.GetEnumList<OverlayListItemAlignmentTypeEnum>();
 
         public string TotalToShowString
         {
@@ -97,34 +97,34 @@ namespace MixItUp.Base.ViewModel.Overlay
         }
         private string backgroundColor;
 
-        public string AlignmentString
+        public OverlayListItemAlignmentTypeEnum Alignment
         {
-            get { return EnumHelper.GetEnumName(this.alignment); }
+            get { return this.alignment; }
             set
             {
-                this.alignment = EnumHelper.GetEnumValueFromString<OverlayListItemAlignmentTypeEnum>(value);
+                this.alignment = value;
                 this.NotifyPropertyChanged();
             }
         }
         protected OverlayListItemAlignmentTypeEnum alignment;
 
-        public string EntranceAnimationString
+        public OverlayItemEffectEntranceAnimationTypeEnum EntranceAnimation
         {
-            get { return EnumHelper.GetEnumName(this.entranceAnimation); }
+            get { return this.entranceAnimation; }
             set
             {
-                this.entranceAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectEntranceAnimationTypeEnum>(value);
+                this.entranceAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }
         protected OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation;
 
-        public string ExitAnimationString
+        public OverlayItemEffectExitAnimationTypeEnum ExitAnimation
         {
-            get { return EnumHelper.GetEnumName(this.exitAnimation); }
+            get { return this.exitAnimation; }
             set
             {
-                this.exitAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectExitAnimationTypeEnum>(value);
+                this.exitAnimation = value;
                 this.NotifyPropertyChanged();
             }
         }

@@ -4,7 +4,9 @@ using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -12,7 +14,6 @@ using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,52 +22,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IChatService
-    {
-        Task Initialize();
-
-        bool DisableChat { get; set; }
-
-        ObservableCollection<ChatMessageViewModel> Messages { get; }
-
-        LockedDictionary<Guid, UserViewModel> AllUsers { get; }
-        IEnumerable<UserViewModel> DisplayUsers { get; }
-        event EventHandler DisplayUsersUpdated;
-
-        event EventHandler ChatCommandsReprocessed;
-        IEnumerable<CommandModelBase> ChatMenuCommands { get; }
-
-        event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
-
-        Task SendMessage(string message, StreamingPlatformTypeEnum platform, bool sendAsStreamer = false);
-        Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false);
-        Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
-
-        Task DeleteMessage(ChatMessageViewModel message);
-        Task ClearMessages();
-
-        Task TimeoutUser(UserViewModel user, uint durationInSeconds);
-        Task PurgeUser(UserViewModel user);
-
-        Task ModUser(UserViewModel user);
-        Task UnmodUser(UserViewModel user);
-
-        Task BanUser(UserViewModel user);
-        Task UnbanUser(UserViewModel user);
-
-        void RebuildCommandTriggers();
-
-        Task AddMessage(ChatMessageViewModel message);
-        Task RemoveMessage(string messageID);
-        Task RemoveMessage(ChatMessageViewModel message);
-
-        Task UsersJoined(IEnumerable<UserViewModel> users);
-        Task UsersLeft(IEnumerable<UserViewModel> users);
-
-        Task WriteToChatEventLog(ChatMessageViewModel message);
-    }
-
-    public class ChatService : IChatService
+    public class ChatService
     {
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
@@ -78,7 +34,12 @@ namespace MixItUp.Base.Services
             {
                 string tempMessage = message.Substring(0, maxLength - 1);
                 int splitIndex = tempMessage.LastIndexOf(' ');
-                if (splitIndex > 0 && (splitIndex + 1) < message.Length)
+                if (splitIndex <= 0)
+                {
+                    splitIndex = maxLength;
+                }
+
+                if (splitIndex + 1 < message.Length)
                 {
                     subMessage = message.Substring(splitIndex + 1);
                     message = message.Substring(0, splitIndex);
@@ -89,7 +50,7 @@ namespace MixItUp.Base.Services
 
         public bool DisableChat { get; set; }
 
-        public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
+        public ThreadSafeObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ThreadSafeObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
         public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();
@@ -144,9 +105,9 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(message))
             {
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<ITwitchChatService>() != null)
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Has<TwitchChatService>())
                 {
-                    await ServiceManager.Get<ITwitchChatService>().SendMessage(message, sendAsStreamer);
+                    await ServiceManager.Get<TwitchChatService>().SendMessage(message, sendAsStreamer);
 
                     if (sendAsStreamer || ServiceManager.Get<TwitchSessionService>().BotConnection == null)
                     {
@@ -155,9 +116,19 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                if (platform.HasFlag(StreamingPlatformTypeEnum.YouTube) && ServiceManager.Has<YouTubeChatService>())
+                {
+                    await ServiceManager.Get<YouTubeChatService>().SendMessage(message, sendAsStreamer);
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Glimesh) && ServiceManager.Has<GlimeshChatEventService>())
                 {
                     await ServiceManager.Get<GlimeshChatEventService>().SendMessage(message, sendAsStreamer);
+                }
+
+                if (platform.HasFlag(StreamingPlatformTypeEnum.Trovo) && ServiceManager.Has<TrovoChatEventService>())
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().SendMessage(message, sendAsStreamer);
                 }
             }
         }
@@ -166,9 +137,9 @@ namespace MixItUp.Base.Services
         {
             if (user != null && !string.IsNullOrEmpty(message))
             {
-                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Get<ITwitchChatService>() != null)
+                if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch) && ServiceManager.Has<TwitchChatService>())
                 {
-                    await ServiceManager.Get<ITwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
+                    await ServiceManager.Get<TwitchChatService>().SendWhisperMessage(user, message, sendAsStreamer);
                 }
             }
         }
@@ -184,11 +155,21 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+            if (!string.IsNullOrEmpty(message.ID))
             {
-                if (!string.IsNullOrEmpty(message.ID))
+                if (message.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
-                    await ServiceManager.Get<ITwitchChatService>().DeleteMessage(message);
+                    await ServiceManager.Get<TwitchChatService>().DeleteMessage(message);
+                }
+
+                if (message.Platform == StreamingPlatformTypeEnum.YouTube)
+                {
+                    await ServiceManager.Get<YouTubeChatService>().DeleteMessage(message);
+                }
+
+                if (message.Platform == StreamingPlatformTypeEnum.Trovo)
+                {
+                    await ServiceManager.Get<TrovoChatEventService>().DeleteMessage(message);
                 }
             }
 
@@ -205,20 +186,18 @@ namespace MixItUp.Base.Services
 
         public async Task ClearMessages()
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Clear();
-                this.Messages.Clear();
-                return Task.FromResult(0);
-            });
-            await ServiceManager.Get<ITwitchChatService>().ClearMessages();
+            this.messagesLookup.Clear();
+            this.Messages.Clear();
+
+            await ServiceManager.Get<TwitchChatService>().ClearMessages();
+            await ServiceManager.Get<TrovoChatEventService>().ClearChat();
         }
 
         public async Task PurgeUser(UserViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, 1);
+                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, 1);
             }
         }
 
@@ -226,16 +205,35 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
+                await ServiceManager.Get<TwitchChatService>().TimeoutUser(user, (int)durationInSeconds);
             }
-            // TODO
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().TimeoutUser(user, durationInSeconds);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().TimeoutUser(user, (int)durationInSeconds);
+            }
         }
 
         public async Task ModUser(UserViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().ModUser(user);
+                await ServiceManager.Get<TwitchChatService>().ModUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().ModUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().ModUser(user);
             }
         }
 
@@ -243,7 +241,12 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().UnmodUser(user);
+                await ServiceManager.Get<TwitchChatService>().UnmodUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().UnmodUser(user);
             }
         }
 
@@ -251,12 +254,22 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().BanUser(user);
+                await ServiceManager.Get<TwitchChatService>().BanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.YouTube)
+            {
+                await ServiceManager.Get<YouTubeChatService>().BanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
             {
                 await ServiceManager.Get<GlimeshChatEventService>().BanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().BanUser(user);
             }
         }
 
@@ -264,12 +277,17 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await ServiceManager.Get<ITwitchChatService>().UnbanUser(user);
+                await ServiceManager.Get<TwitchChatService>().UnbanUser(user);
             }
 
             if (user.Platform == StreamingPlatformTypeEnum.Glimesh)
             {
                 await ServiceManager.Get<GlimeshChatEventService>().UnbanUser(user);
+            }
+
+            if (user.Platform == StreamingPlatformTypeEnum.Trovo)
+            {
+                await ServiceManager.Get<TrovoChatEventService>().UnbanUser(user);
             }
         }
 
@@ -322,38 +340,24 @@ namespace MixItUp.Base.Services
 
                 if (message is UserChatMessageViewModel)
                 {
-                    if (message.User != null)
+                    if (message.User == null)
                     {
-                        if (message.Platform == StreamingPlatformTypeEnum.Twitch)
-                        {
-                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Twitch, message.User.TwitchID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
-                        }
-                        else if (message.Platform == StreamingPlatformTypeEnum.Glimesh)
-                        {
-                            UserViewModel activeUser = ServiceManager.Get<UserService>().GetUserByPlatformID(StreamingPlatformTypeEnum.Glimesh, message.User.GlimeshID);
-                            if (activeUser != null)
-                            {
-                                message.User = activeUser;
-                            }
-                        }
+                        Logger.Log(LogLevel.Error, string.Format("User Message Contains No User - {0} - {1}", message.ID.ToString(), message));
+                        return;
+                    }
 
-                        message.User.UpdateLastActivity();
-                        if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
+                    message.User.UpdateLastActivity();
+                    if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot && message.User.WhispererNumber == 0)
+                    {
+                        await this.whisperNumberLock.WaitAndRelease(() =>
                         {
-                            await this.whisperNumberLock.WaitAndRelease(() =>
+                            if (!whisperMap.ContainsKey(message.User.ID))
                             {
-                                if (!whisperMap.ContainsKey(message.User.ID))
-                                {
-                                    whisperMap[message.User.ID] = whisperMap.Count + 1;
-                                }
-                                message.User.WhispererNumber = whisperMap[message.User.ID];
-                                return Task.FromResult(0);
-                            });
-                        }
+                                whisperMap[message.User.ID] = whisperMap.Count + 1;
+                            }
+                            message.User.WhispererNumber = whisperMap[message.User.ID];
+                            return Task.FromResult(0);
+                        });
                     }
                 }
 
@@ -366,30 +370,25 @@ namespace MixItUp.Base.Services
 
                 if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
                 {
-                    await DispatcherHelper.InvokeDispatcher(() =>
+                    this.messagesLookup[message.ID] = message;
+                    if (showMessage)
                     {
-                        this.messagesLookup[message.ID] = message;
-                        if (showMessage)
+                        if (ChannelSession.Settings.LatestChatAtTop)
                         {
-                            if (ChannelSession.Settings.LatestChatAtTop)
-                            {
-                                this.Messages.Insert(0, message);
-                            }
-                            else
-                            {
-                                this.Messages.Add(message);
-                            }
+                            this.Messages.Insert(0, message);
                         }
-
-                        if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                        else
                         {
-                            ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                            this.messagesLookup.Remove(removedMessage.ID);
-                            this.Messages.Remove(removedMessage);
+                            this.Messages.Add(message);
                         }
+                    }
 
-                        return Task.FromResult(0);
-                    });
+                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                    {
+                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                        this.messagesLookup.Remove(removedMessage.ID);
+                        this.Messages.Remove(removedMessage);
+                    }
                 }
 
                 // Post message processing
@@ -601,14 +600,11 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task RemoveMessage(ChatMessageViewModel message)
+        public Task RemoveMessage(ChatMessageViewModel message)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
-            {
-                this.messagesLookup.Remove(message.ID);
-                this.Messages.Remove(message);
-                return Task.FromResult(0);
-            });
+            this.messagesLookup.Remove(message.ID);
+            this.Messages.Remove(message);
+            return Task.FromResult(0);
         }
 
         public async Task UsersJoined(IEnumerable<UserViewModel> users)

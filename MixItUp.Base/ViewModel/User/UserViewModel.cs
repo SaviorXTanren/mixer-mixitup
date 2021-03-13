@@ -4,7 +4,9 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -12,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
@@ -185,6 +186,58 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message) : this(message.User) { }
 
+        public UserViewModel(Trovo.Base.Models.Users.UserModel user)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.Trovo, user.user_id);
+
+            this.TrovoID = user.user_id;
+            this.TrovoUsername = user.username;
+            this.TrovoDisplayName = user.nickname;
+
+            this.SetTrovoRoles();
+        }
+
+        public UserViewModel(Trovo.Base.Models.Users.PrivateUserModel user)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.Trovo, user.userId);
+
+            this.TrovoID = user.userId;
+            this.TrovoUsername = user.userName;
+            this.TrovoDisplayName = user.nickName;
+            this.TrovoAvatarLink = user.profilePic;
+
+            this.SetTrovoRoles();
+        }
+
+        public UserViewModel(Trovo.Base.Models.Chat.ChatMessageModel message)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.Trovo, message.sender_id);
+
+            this.TrovoID = message.sender_id;
+            this.TrovoUsername = this.TrovoDisplayName = message.nick_name;
+
+            this.SetTrovoChatDetails(message);
+        }
+
+        public UserViewModel(Google.Apis.YouTube.v3.Data.Channel channel)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.YouTube, channel.Id);
+
+            this.YouTubeID = channel.Id;
+            this.YouTubeUsername = this.YouTubeDisplayName = channel.Snippet.Title;
+            this.YouTubeAvatarLink = channel.Snippet.Thumbnails.Default__.Url;
+            this.YouTubeURL = "https://www.youtube.com/channel/" + channel.Id;
+
+            this.SetYouTubeRoles();
+        }
+
+        public UserViewModel(Google.Apis.YouTube.v3.Data.LiveChatMessage message)
+        {
+            this.SetUserData(StreamingPlatformTypeEnum.YouTube, message.AuthorDetails?.ChannelId);
+
+            this.SetYouTubeChatDetails(message);
+        }
+
         public UserViewModel(UserDataModel userData)
         {
             this.Data = userData;
@@ -204,9 +257,17 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         this.Data = new UserDataModel() { TwitchID = userID };
                     }
+                    else if (platform == StreamingPlatformTypeEnum.YouTube)
+                    {
+                        this.Data = new UserDataModel() { YouTubeID = userID };
+                    }
                     else if (platform == StreamingPlatformTypeEnum.Glimesh)
                     {
                         this.Data = new UserDataModel() { GlimeshID = userID };
+                    }
+                    else if (platform == StreamingPlatformTypeEnum.Trovo)
+                    {
+                        this.Data = new UserDataModel() { TrovoID = userID };
                     }
                     ChannelSession.Settings.AddUserData(this.Data);
                 }
@@ -219,15 +280,7 @@ namespace MixItUp.Base.ViewModel.User
         public Guid ID { get { return this.Data.ID; } }
 
         [JsonIgnore]
-        public StreamingPlatformTypeEnum Platform
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(this.TwitchID)) { return StreamingPlatformTypeEnum.Twitch; }
-                else if (!string.IsNullOrEmpty(this.GlimeshID)) { return StreamingPlatformTypeEnum.Glimesh; }
-                return StreamingPlatformTypeEnum.None;
-            }
-        }
+        public StreamingPlatformTypeEnum Platform { get { return this.Data.Platform; } }
 
         [JsonIgnore]
         public string PlatformID
@@ -235,7 +288,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchID; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeID; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshID; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoID; }
                 return null;
             }
         }
@@ -246,7 +301,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoUsername; }
                 return this.UnassociatedUsername;
             }
         }
@@ -257,7 +314,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchDisplayName ?? this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeDisplayName ?? this.YouTubeUsername; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshDisplayName ?? this.GlimeshUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoDisplayName ?? this.TrovoUsername; }
                 return this.UnassociatedUsername;
             }
         }
@@ -271,7 +330,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeAvatarLink; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.GlimeshAvatarLink; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.TrovoAvatarLink; }
                 return string.Empty;
             }
         }
@@ -337,7 +398,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return $"https://www.twitch.tv/{this.Username}"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.YouTubeURL; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return $"https://www.glimesh.tv/{this.Username}"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return $"https://trovo.live/{this.Username}"; }
                 return string.Empty;
             }
         }
@@ -347,13 +410,17 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchAccountDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.Data.YouTubeAccountDate; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshAccountDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.Data.TrovoAccountDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchAccountDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { this.Data.YouTubeAccountDate = value; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshAccountDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { this.Data.TrovoAccountDate = value; }
             }
         }
 
@@ -362,13 +429,17 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchFollowDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.Data.YouTubeFollowDate; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshFollowDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.Data.TrovoFollowDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchFollowDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { this.Data.YouTubeFollowDate = value; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshFollowDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { this.Data.TrovoFollowDate = value; }
 
                 if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -386,13 +457,17 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscribeDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return this.Data.YouTubeSubscribeDate; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return this.Data.GlimeshSubscribeDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.Data.TrovoSubscribeDate; }
                 return null;
             }
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchSubscribeDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { this.Data.YouTubeSubscribeDate = value; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { this.Data.GlimeshSubscribeDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { this.Data.TrovoSubscribeDate = value; }
 
                 if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -413,7 +488,9 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.IsPlatformSubscriber)
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscriberTier; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return 1; }
                     else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return 1; }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return this.Data.TrovoSubscriberLevel; }
                 }
                 return 0;
             }
@@ -435,7 +512,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return "/Assets/Images/Twitch-Small.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return "/Assets/Images/YouTube.png"; }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return "/Assets/Images/Glimesh.png"; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return "/Assets/Images/Trovo.png"; }
                 return null;
             }
         }
@@ -459,7 +538,9 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.IsNullOrEmpty(this.TwitchID); }
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube) { return string.IsNullOrEmpty(this.YouTubeID); }
                 else if (this.Platform == StreamingPlatformTypeEnum.Glimesh) { return string.IsNullOrEmpty(this.GlimeshID); }
+                else if (this.Platform == StreamingPlatformTypeEnum.Trovo) { return string.IsNullOrEmpty(this.TrovoID); }
                 return true;
             }
         }
@@ -511,6 +592,18 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Twitch
 
+        #region YouTube
+
+        public string YouTubeID { get { return this.Data.YouTubeID; } private set { this.Data.YouTubeID = value; } }
+        public string YouTubeUsername { get { return this.Data.YouTubeUsername; } private set { this.Data.YouTubeUsername = value; } }
+        public string YouTubeDisplayName { get { return this.Data.YouTubeDisplayName; } private set { this.Data.YouTubeDisplayName = value; } }
+        public string YouTubeAvatarLink { get { return this.Data.YouTubeAvatarLink; } private set { this.Data.YouTubeAvatarLink = value; } }
+        public string YouTubeURL { get { return this.Data.YouTubeURL; } private set { this.Data.YouTubeURL = value; } }
+
+        public HashSet<UserRoleEnum> YouTubeUserRoles { get { return this.Data.YouTubeUserRoles; } private set { this.Data.YouTubeUserRoles = value; } }
+
+        #endregion YouTube
+
         #region Glimesh
 
         public string GlimeshID { get { return this.Data.GlimeshID; } private set { this.Data.GlimeshID = value; } }
@@ -521,6 +614,17 @@ namespace MixItUp.Base.ViewModel.User
         public HashSet<UserRoleEnum> GlimeshUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
 
         #endregion Glimesh
+
+        #region Trovo
+
+        public string TrovoID { get { return this.Data.TrovoID; } private set { this.Data.TrovoID = value; } }
+        public string TrovoUsername { get { return this.Data.TrovoUsername; } private set { this.Data.TrovoUsername = value; } }
+        public string TrovoDisplayName { get { return this.Data.TrovoDisplayName; } private set { this.Data.TrovoDisplayName = value; } }
+        public string TrovoAvatarLink { get { return this.Data.TrovoAvatarLink; } private set { this.Data.TrovoAvatarLink = value; } }
+
+        public HashSet<UserRoleEnum> TrovoUserRoles { get { return this.Data.GlimeshUserRoles; } private set { this.Data.GlimeshUserRoles = value; } }
+
+        #endregion Trovo
 
         public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
 
@@ -692,6 +796,11 @@ namespace MixItUp.Base.ViewModel.User
                 return true;
             }
 
+            if (checkRole == UserRoleEnum.VIPExclusive && this.UserRoles.Contains(UserRoleEnum.VIP))
+            {
+                return true;
+            }
+
             if (ChannelSession.Settings.ExplicitUserRoleRequirements)
             {
                 return this.UserRoles.Contains(checkRole);
@@ -704,10 +813,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsEquivalentToSubscriber()
         {
-            if (this.PatreonUser != null && ServiceManager.Get<PatreonService>().IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent))
+            if (this.PatreonUser != null && ServiceManager.Get<PatreonService>().IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierSubscriberEquivalent))
             {
                 PatreonTier userTier = this.PatreonTier;
-                PatreonTier equivalentTier = ServiceManager.Get<PatreonService>().Campaign.GetTier(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent);
+                PatreonTier equivalentTier = ServiceManager.Get<PatreonService>().Campaign.GetTier(ChannelSession.Settings.PatreonTierSubscriberEquivalent);
                 if (userTier != null && equivalentTier != null && userTier.Amount >= equivalentTier.Amount)
                 {
                     return true;
@@ -736,10 +845,20 @@ namespace MixItUp.Base.ViewModel.User
                         await this.RefreshTwitchUserFollowDate();
                         await this.RefreshTwitchUserSubscribeDate();
                     }
+
+                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube))
+                    {
+                        await this.RefreshYouTubeUserDetails();
+                    }
                     
                     if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
                     {
                         await this.RefreshGlimeshUserDetails();
+                    }
+
+                    if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo))
+                    {
+                        await this.RefreshTrovoUserDetails();
                     }
 
                     this.SetCommonUserRoles();
@@ -758,17 +877,17 @@ namespace MixItUp.Base.ViewModel.User
 
         #region Twitch Data Setter Functions
 
-        public void SetTwitchChatDetails(ChatMessagePacketModel message)
+        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatMessagePacketModel message)
         {
             this.SetTwitchChatDetails(message.UserDisplayName, message.BadgeDictionary, message.BadgeInfoDictionary, message.Color);
         }
 
-        public void SetTwitchChatDetails(ChatUserStatePacketModel userState)
+        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatUserStatePacketModel userState)
         {
             this.SetTwitchChatDetails(userState.UserDisplayName, userState.BadgeDictionary, userState.BadgeInfoDictionary, userState.Color);
         }
 
-        public void SetTwitchChatDetails(ChatUserNoticePacketModel userNotice)
+        public void SetTwitchChatDetails(Twitch.Base.Models.Clients.Chat.ChatUserNoticePacketModel userNotice)
         {
             this.SetTwitchChatDetails(userNotice.UserDisplayName, userNotice.BadgeDictionary, userNotice.BadgeInfoDictionary, userNotice.Color);
         }
@@ -792,7 +911,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.HasTwitchBadge("turbo") || this.HasTwitchBadge("premium")) { this.TwitchUserRoles.Add(UserRoleEnum.Premium); } else { this.TwitchUserRoles.Remove(UserRoleEnum.Premium); }
                 if (this.HasTwitchBadge("vip")) { this.TwitchUserRoles.Add(UserRoleEnum.VIP); } else { this.TwitchUserRoles.Remove(UserRoleEnum.VIP); }
 
-                if (ServiceManager.Get<ITwitchChatService>() != null)
+                if (ServiceManager.Get<TwitchChatService>() != null)
                 {
                     if (this.HasTwitchBadge("staff")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("staff"); }
                     else if (this.HasTwitchBadge("admin")) { this.TwitchRoleBadge = this.GetTwitchBadgeURL("admin"); }
@@ -831,18 +950,61 @@ namespace MixItUp.Base.ViewModel.User
 
         private ChatBadgeModel GetTwitchBadgeURL(string name)
         {
-            if (ServiceManager.Get<ITwitchChatService>().ChatBadges.ContainsKey(name))
+            if (ServiceManager.Get<TwitchChatService>().ChatBadges.ContainsKey(name))
             {
                 int versionID = this.GetTwitchBadgeVersion(name);
-                if (ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
+                if (ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions.ContainsKey(versionID.ToString()))
                 {
-                    return ServiceManager.Get<ITwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
+                    return ServiceManager.Get<TwitchChatService>().ChatBadges[name].versions[versionID.ToString()];
                 }
             }
             return null;
         }
 
         #endregion Twitch Data Setter Functions
+
+        #region YouTube Data Setter Functions
+
+        public void SetYouTubeChatDetails(Google.Apis.YouTube.v3.Data.LiveChatMessage message)
+        {
+            if (message.AuthorDetails != null)
+            {
+                this.YouTubeID = message.AuthorDetails.ChannelId;
+                this.YouTubeUsername = this.YouTubeDisplayName = message.AuthorDetails.DisplayName;
+                this.YouTubeAvatarLink = message.AuthorDetails.ProfileImageUrl;
+                this.YouTubeURL = message.AuthorDetails.ChannelUrl;
+
+                this.SetYouTubeRoles(message);
+            }
+        }
+
+        #endregion YouTube Data Setter Functions
+
+        #region Glimesh Data Setter Functions
+
+        public void SetGlimeshChatDetails(Glimesh.Base.Models.Clients.Chat.ChatMessagePacketModel message)
+        {
+            if (message.User != null)
+            {
+                this.GlimeshUsername = message.User.username;
+                this.GlimeshDisplayName = message.User.displayname;
+                this.GlimeshAvatarLink = message.User.avatarUrl;
+                this.AccountDate = GlimeshPlatformService.GetGlimeshDateTime(message.User.confirmedAt);
+            }
+        }
+
+        #endregion Glimesh Data Setter Functions
+
+        #region Trovo Data Setter Functions
+
+        public void SetTrovoChatDetails(Trovo.Base.Models.Chat.ChatMessageModel message)
+        {
+            this.TrovoAvatarLink = message.FullAvatarURL;
+
+            this.SetTrovoRoles(message.roles);
+        }
+
+        #endregion Trovo Data Setter Functions
 
         public async Task AddModerationStrike(string moderationReason = null)
         {
@@ -1023,6 +1185,71 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Twitch Refresh Functions
 
+        #region YouTube Refresh Functions
+
+        private async Task RefreshYouTubeUserDetails()
+        {
+            if (ServiceManager.Get<YouTubeSessionService>().IsConnected)
+            {
+                Google.Apis.YouTube.v3.Data.Channel youtubeUser = await ServiceManager.Get<YouTubeSessionService>().UserConnection.GetChannelByID(this.YouTubeUsername);
+                if (youtubeUser != null)
+                {
+                    this.YouTubeID = youtubeUser.Id;
+                    this.YouTubeUsername = this.YouTubeDisplayName = youtubeUser.Snippet.Title;
+                    this.YouTubeAvatarLink = youtubeUser.Snippet.Thumbnails.Standard.Url;
+                    this.YouTubeURL = youtubeUser.Snippet.CustomUrl;
+
+                    this.Color = null;
+                    this.RolesDisplayString = null;
+                }
+
+                this.SetYouTubeRoles();
+            }
+        }
+
+        private void SetYouTubeRoles(Google.Apis.YouTube.v3.Data.LiveChatMessage message = null)
+        {
+            this.YouTubeUserRoles.Add(UserRoleEnum.User);
+            if (ServiceManager.Get<YouTubeSessionService>().Channel != null && ServiceManager.Get<YouTubeSessionService>().Channel.Id.Equals(this.YouTubeID))
+            {
+                this.YouTubeUserRoles.Add(UserRoleEnum.Streamer);
+            }
+
+            if (message != null)
+            {
+                if (message.AuthorDetails.IsChatOwner.GetValueOrDefault())
+                {
+                    this.YouTubeUserRoles.Add(UserRoleEnum.Streamer);
+                }
+                else
+                {
+                    this.YouTubeUserRoles.Remove(UserRoleEnum.Streamer);
+                }
+
+                if (message.AuthorDetails.IsChatModerator.GetValueOrDefault())
+                {
+                    this.YouTubeUserRoles.Add(UserRoleEnum.Mod);
+                }
+                else
+                {
+                    this.YouTubeUserRoles.Add(UserRoleEnum.Mod);
+                }
+
+                if (message.AuthorDetails.IsChatSponsor.GetValueOrDefault())
+                {
+                    this.YouTubeUserRoles.Add(UserRoleEnum.Subscriber);
+                }
+                else
+                {
+                    this.YouTubeUserRoles.Add(UserRoleEnum.Subscriber);
+                }
+
+                this.IsInChat = true;
+            }
+        }
+
+        #endregion YouTube Refresh Functions
+
         #region Glimesh Refresh Functions
 
         private async Task RefreshGlimeshUserDetails()
@@ -1053,6 +1280,101 @@ namespace MixItUp.Base.ViewModel.User
             }
 
             this.IsInChat = true;
+        }
+
+        #endregion Glimesh Refresh Functions
+
+        #region Trovo Refresh Functions
+
+        private async Task RefreshTrovoUserDetails()
+        {
+            if (ServiceManager.Get<TrovoSessionService>().IsConnected)
+            {
+                Trovo.Base.Models.Users.UserModel trovoUser = await ServiceManager.Get<TrovoSessionService>().UserConnection.GetUserByName(this.TrovoUsername);
+                if (trovoUser != null)
+                {
+                    this.TrovoID = trovoUser.user_id;
+                    this.TrovoUsername = trovoUser.username;
+                    this.TrovoDisplayName = trovoUser.nickname ?? trovoUser.username;
+
+                    this.Color = null;
+                    this.RolesDisplayString = null;
+                }
+
+                this.SetTrovoRoles();
+            }
+        }
+
+        private void SetTrovoRoles(IEnumerable<string> roles = null)
+        {
+            this.TrovoUserRoles.Add(UserRoleEnum.User);
+            if (ServiceManager.Get<GlimeshSessionService>().User != null && ServiceManager.Get<GlimeshSessionService>().User.id.Equals(this.GlimeshID))
+            {
+                this.TrovoUserRoles.Add(UserRoleEnum.Streamer);
+            }
+
+            if (roles != null)
+            {
+                HashSet<string> rolesSet = new HashSet<string>(roles);
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.StreamerRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.Streamer);
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.Streamer);
+                }
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.AdminRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.Staff);
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.Staff);
+                }
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.WardenRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.GlobalMod);
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.GlobalMod);
+                }
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.ModeratorRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.Mod);
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.Mod);
+                }
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.FollowerRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.Follower);
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.Follower);
+                }
+
+                if (rolesSet.Contains(Trovo.Base.Models.Chat.ChatMessageModel.SubscriberRole))
+                {
+                    this.TrovoUserRoles.Add(UserRoleEnum.Subscriber);
+                    this.Data.TrovoSubscriberLevel = 1;
+                }
+                else
+                {
+                    this.TrovoUserRoles.Remove(UserRoleEnum.Subscriber);
+                    this.Data.TrovoSubscriberLevel = 0;
+                }
+
+                this.IsInChat = true;
+            }
         }
 
         #endregion Glimesh Refresh Functions

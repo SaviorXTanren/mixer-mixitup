@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.RussianRoulette;
-            this.Triggers = MixItUp.Base.Resources.RussianRoulette.ToLower();
+            this.Triggers = MixItUp.Base.Resources.GameCommandRussianRouletteDefaultChatTrigger;
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

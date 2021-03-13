@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Trovo;
 using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.YouTube;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using System;
@@ -37,7 +39,9 @@ namespace MixItUp.Base.Model.Settings
         public IStreamingPlatformSessionService GetStreamingPlatformSessionService()
         {
             if (this.Type == StreamingPlatformTypeEnum.Twitch) { return ServiceManager.Get<TwitchSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.YouTube) { return ServiceManager.Get<YouTubeSessionService>(); }
             else if (this.Type == StreamingPlatformTypeEnum.Glimesh) { return ServiceManager.Get<GlimeshSessionService>(); }
+            else if (this.Type == StreamingPlatformTypeEnum.Trovo) { return ServiceManager.Get<TrovoSessionService>(); }
             return null;
         }
 

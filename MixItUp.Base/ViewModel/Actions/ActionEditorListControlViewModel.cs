@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Actions
 {
     public class ActionEditorListControlViewModel : UIViewModelBase
     {
-        public ObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ObservableCollection<ActionTypeEnum>();
+        public ThreadSafeObservableCollection<ActionTypeEnum> ActionTypes { get; set; } = new ThreadSafeObservableCollection<ActionTypeEnum>();
         public ActionTypeEnum SelectedActionType
         {
             get { return this.selectedActionType; }
@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         public ICommand AddCommand { get; private set; }
 
-        public ObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ObservableCollection<ActionEditorControlViewModelBase>();
+        public ThreadSafeObservableCollection<ActionEditorControlViewModelBase> Actions { get; set; } = new ThreadSafeObservableCollection<ActionEditorControlViewModelBase>();
 
         public ActionEditorListControlViewModel()
         {
@@ -38,10 +38,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 actionTypes.Remove(hiddenActions);
             }
 
-            foreach (ActionTypeEnum actionType in actionTypes.OrderBy(a => a.ToString()))
-            {
-                this.ActionTypes.Add(actionType);
-            }
+            this.ActionTypes.AddRange(actionTypes.OrderBy(a => a.ToString()));
 
             this.AddCommand = this.CreateCommand(async (parameter) =>
             {

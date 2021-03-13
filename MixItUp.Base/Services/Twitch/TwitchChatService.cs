@@ -44,47 +44,7 @@ namespace MixItUp.Base.Services.Twitch
         public string url { get { return (this.urls != null && this.urls.ContainsKey("2")) ? "https:" + this.urls["2"].ToString() : string.Empty; } }
     }
 
-    public interface ITwitchChatService
-    {
-        IDictionary<string, EmoteModel> Emotes { get; }
-        IDictionary<string, ChatBadgeSetModel> ChatBadges { get; }
-        IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
-        IDictionary<string, FrankerFaceZEmoteModel> FrankerFaceZEmotes { get; }
-        IEnumerable<TwitchBitsCheermoteViewModel> BitsCheermotes { get; }
-
-        bool IsUserConnected { get; }
-        bool IsBotConnected { get; }
-
-        Task<Result> ConnectUser();
-        Task DisconnectUser();
-
-        Task<Result> ConnectBot();
-        Task DisconnectBot();
-
-        Task Initialize();
-
-        Task SendMessage(string message, bool sendAsStreamer = false);
-
-        Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false);
-
-        Task DeleteMessage(ChatMessageViewModel message);
-
-        Task ClearMessages();
-
-        Task ModUser(UserViewModel user);
-
-        Task UnmodUser(UserViewModel user);
-
-        Task TimeoutUser(UserViewModel user, int lengthInSeconds);
-
-        Task BanUser(UserViewModel user);
-
-        Task UnbanUser(UserViewModel user);
-
-        Task RunCommercial(int lengthInSeconds);
-    }
-
-    public class TwitchChatService : StreamingPlatformServiceBase, ITwitchChatService
+    public class TwitchChatService : StreamingPlatformServiceBase
     {
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
@@ -727,16 +687,16 @@ namespace MixItUp.Base.Services.Twitch
                 }
                 else if (SubMysteryGiftUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID) && userNotice.SubTotalGifted > 0)
                 {
-                    if (ServiceManager.Get<ITwitchEventService>() != null)
+                    if (ServiceManager.Has<TwitchEventService>())
                     {
-                        await ServiceManager.Get<ITwitchEventService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
+                        await ServiceManager.Get<TwitchEventService>().AddMassGiftedSub(new TwitchMassGiftedSubEventModel(userNotice));
                     }
                 }
                 else if (SubGiftPaidUpgradeUserNoticeMessageTypeID.Equals(userNotice.MessageTypeID))
                 {
-                    if (ServiceManager.Get<ITwitchEventService>() != null)
+                    if (ServiceManager.Has<TwitchEventService>())
                     {
-                        await ServiceManager.Get<ITwitchEventService>().AddSub(new TwitchSubEventModel(userNotice));
+                        await ServiceManager.Get<TwitchEventService>().AddSub(new TwitchSubEventModel(userNotice));
                     }
                 }
             }
@@ -832,6 +792,10 @@ namespace MixItUp.Base.Services.Twitch
                         if (twitchUser != null)
                         {
                             user = await ServiceManager.Get<UserService>().AddOrUpdateUser(twitchUser);
+                        }
+                        else
+                        {
+                            user = new UserViewModel(message);
                         }
                     }
                     await ServiceManager.Get<ChatService>().AddMessage(new TwitchChatMessageViewModel(message, user));

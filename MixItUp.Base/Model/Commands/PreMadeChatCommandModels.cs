@@ -416,10 +416,7 @@ namespace MixItUp.Base.Model.Commands
 
                     GlobalEvents.QuoteAdded(quote);
 
-                    if (ServiceManager.Get<ChatService>() != null)
-                    {
-                        await ServiceManager.Get<ChatService>().SendMessage("Added " + quote.ToString(), parameters.Platform);
-                    }
+                    await ServiceManager.Get<ChatService>().SendMessage("Added " + quote.ToString(), parameters.Platform);
                 }
                 else
                 {
@@ -794,12 +791,9 @@ namespace MixItUp.Base.Model.Commands
                 ChannelSession.Settings.SetCommand(newCommand);
                 ChannelSession.ChatCommands.Add(newCommand);
 
-                if (ServiceManager.Get<ChatService>() != null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("Added New Command: !" + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage("Added New Command: !" + commandTrigger, parameters.Platform);
 
-                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
-                }
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
             else
             {
@@ -851,12 +845,9 @@ namespace MixItUp.Base.Model.Commands
                     command.Actions.Add(new ChatActionModel(commandText));
                 }
 
-                if (ServiceManager.Get<ChatService>() != null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("Updated Command: !" + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage("Updated Command: !" + commandTrigger, parameters.Platform);
 
-                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
-                }
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
             else
             {
@@ -884,12 +875,9 @@ namespace MixItUp.Base.Model.Commands
 
                 command.IsEnabled = false;
 
-                if (ServiceManager.Get<ChatService>() != null)
-                {
-                    await ServiceManager.Get<ChatService>().SendMessage("Disabled Command: !" + commandTrigger, parameters.Platform);
+                await ServiceManager.Get<ChatService>().SendMessage("Disabled Command: !" + commandTrigger, parameters.Platform);
 
-                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
-                }
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             }
             else
             {

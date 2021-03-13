@@ -161,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.TreasureDefense;
-            this.Triggers = MixItUp.Base.Resources.TreasureDefense.ToLower();
+            this.Triggers = MixItUp.Base.Resources.GameCommandTreasureDefenseDefaultChatTrigger;
 
             this.MinimumParticipants = 2;
             this.TimeLimit = 60;

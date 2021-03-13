@@ -168,6 +168,21 @@ namespace MixItUp.Base.Services
 
         // 400 = Trovo
 
+        [Name("Trovo Channel Raided")]
+        TrovoChannelRaided = 203,
+
+        [Name("Trovo Channel Followed")]
+        TrovoChannelFollowed = 210,
+
+        [Name("Trovo Channel Subscribed")]
+        TrovoChannelSubscribed = 220,
+        [Name("Trovo Channel Resubscribed")]
+        TrovoChannelResubscribed = 221,
+        [Name("Trovo Channel Subscription Gifted")]
+        TrovoChannelSubscriptionGifted = 222,
+        [Name("Trovo Channel Mass Subscriptions Gifted")]
+        TrovoChannelMassSubscriptionsGifted = 223,
+
         // 500 = Glimesh
 
         [Name("Glimesh Channel Stream Start")]
@@ -241,24 +256,15 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public interface IEventService
-    {
-        Task Initialize();
-
-        EventCommandModel GetEventCommand(EventTypeEnum type);
-
-        bool CanPerformEvent(EventTrigger trigger);
-
-        Task PerformEvent(EventTrigger trigger);
-    }
-
-    public class EventService : IEventService
+    public class EventService
     {
         private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
 
             EventTypeEnum.TwitchChannelStreamStart, EventTypeEnum.TwitchChannelStreamStop, EventTypeEnum.TwitchChannelFollowed, EventTypeEnum.TwitchChannelUnfollowed, EventTypeEnum.TwitchChannelHosted, EventTypeEnum.TwitchChannelRaided, EventTypeEnum.TwitchChannelSubscribed, EventTypeEnum.TwitchChannelResubscribed,
+
+            EventTypeEnum.TrovoChannelFollowed,EventTypeEnum.TrovoChannelRaided, EventTypeEnum.TrovoChannelSubscribed, EventTypeEnum.TrovoChannelResubscribed,
 
             EventTypeEnum.GlimeshChannelStreamStart, EventTypeEnum.GlimeshChannelStreamStop, EventTypeEnum.GlimeshChannelFollowed,
         };

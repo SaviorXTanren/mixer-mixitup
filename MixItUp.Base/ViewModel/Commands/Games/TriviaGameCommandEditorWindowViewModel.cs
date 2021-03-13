@@ -198,7 +198,7 @@ namespace MixItUp.Base.ViewModel.Games
         }
         private CustomCommandModel userFailureCommand;
 
-        public ObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ObservableCollection<TriviaGameQuestionViewModel>();
+        public ThreadSafeObservableCollection<TriviaGameQuestionViewModel> CustomQuestions { get; set; } = new ThreadSafeObservableCollection<TriviaGameQuestionViewModel>();
 
         public ICommand AddQuestionCommand { get; set; }
         public ICommand DeleteQuestionCommand { get; set; }
@@ -214,10 +214,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.CorrectAnswerCommand = command.CorrectAnswerCommand;
             this.UserSuccessCommand = command.UserSuccessCommand;
             this.UserFailureCommand = command.UserFailureCommand;
-            foreach (TriviaGameQuestionModel question in command.CustomQuestions)
-            {
-                this.CustomQuestions.Add(new TriviaGameQuestionViewModel(question));
-            }
+
+            this.CustomQuestions.AddRange(command.CustomQuestions.Select(q => new TriviaGameQuestionViewModel(q)));
 
             this.SetUICommands();
         }
@@ -226,7 +224,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Trivia;
-            this.Triggers = MixItUp.Base.Resources.Trivia.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Trivia.Replace(" ", string.Empty).ToLower();
 
             this.WinAmount = 100;
             this.TimeLimit = 30;

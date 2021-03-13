@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,15 +12,14 @@ namespace MixItUp.Base.ViewModel.MainControls
         public bool OverlayEnabled { get { return ChannelSession.Settings.EnableOverlay; } }
         public bool OverlayNotEnabled { get { return !this.OverlayEnabled; } }
 
-        public ObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ObservableCollection<OverlayWidgetModel>();
+        public ThreadSafeObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ThreadSafeObservableCollection<OverlayWidgetModel>();
 
         public OverlayWidgetsMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
 
         public void Refresh()
         {
             List<OverlayWidgetModel> toBeRemoved = new List<OverlayWidgetModel>();
-
-            this.OverlayWidgets.Clear();
+            List<OverlayWidgetModel> widgets = new List<OverlayWidgetModel>();
             foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
             {
                 if (EnumHelper.IsObsolete(widget.Item.ItemType))
@@ -30,9 +28,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else
                 {
-                    this.OverlayWidgets.Add(widget);
+                    widgets.Add(widget);
                 }
             }
+
+            this.OverlayWidgets.ClearAndAddRange(widgets);
 
             foreach (OverlayWidgetModel widget in toBeRemoved)
             {

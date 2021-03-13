@@ -9,12 +9,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public interface IIFTTTService : IOAuthExternalService
-    {
-        Task SendTrigger(string eventName, Dictionary<string, string> values);
-    }
-
-    public class IFTTTService : OAuthExternalServiceBase, IIFTTTService
+    public class IFTTTService : OAuthExternalServiceBase
     {
         private const string WebHookURLFormat = "https://maker.ifttt.com/trigger/{0}/with/key/{1}";
 

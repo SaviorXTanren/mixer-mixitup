@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private const string PreMadeCommandType = "Pre-Made";
 
-        private ObservableCollection<HotKeyUI> hotKeys = new ObservableCollection<HotKeyUI>();
+        private ObservableCollection<HotKeyUI> hotKeys = new ThreadSafeObservableCollection<HotKeyUI>();
 
         public HotKeysSettingsControl()
         {
@@ -75,6 +75,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task OnVisibilityChanged()
         {
+            // TODO: Fix this to not use GetEnumNames, that doens't support localization.
             this.CommandTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(CommandModelBase.GetSelectableCommandTypes());
             this.KeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 

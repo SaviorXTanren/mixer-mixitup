@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Games
             : base(currency)
         {
             this.Name = MixItUp.Base.Resources.Steal;
-            this.Triggers = MixItUp.Base.Resources.Steal.ToLower();
+            this.Triggers = MixItUp.Base.Resources.Steal.Replace(" ", string.Empty).ToLower();
 
             this.UserSelectionTargeted = true;
             this.UserSelectionRandom = true;

@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 {
     public class InventoryListRequirementViewModel : ListRequirementViewModelBase
     {
-        public ObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ObservableCollection<InventoryRequirementViewModel>();
+        public ThreadSafeObservableCollection<InventoryRequirementViewModel> Items { get; set; } = new ThreadSafeObservableCollection<InventoryRequirementViewModel>();
 
         public ICommand AddItemCommand { get; private set; }
 
@@ -135,7 +135,11 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public override RequirementModelBase GetRequirement()
         {
-            return new InventoryRequirementModel(this.SelectedInventory, this.SelectedItem, this.Amount);
+            if (this.SelectedInventory != null && this.SelectedItem != null)
+            {
+                return new InventoryRequirementModel(this.SelectedInventory, this.SelectedItem, this.Amount);
+            }
+            return null;
         }
     }
 }
