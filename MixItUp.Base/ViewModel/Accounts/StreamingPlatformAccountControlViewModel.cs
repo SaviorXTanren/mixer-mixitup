@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
                     this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<TrovoSessionService>().User != null)
                 {
                     this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
                     this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().User.profilePic;
                     this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().User.nickName;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().User != null)
                 {
                     this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
                     this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
@@ -134,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
                     this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().Bot != null)
                 {
                     this.BotAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Thumbnails.Default__.Url;
                     this.BotAccountUsername = ServiceManager.Get<YouTubeSessionService>().Bot.Snippet.Title;
@@ -144,10 +144,10 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
                     this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh)
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().User != null)
                 {
-                    this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
-                    this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
+                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                 }
             }
 
@@ -322,8 +322,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                             }
                             else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ServiceManager.Get<TwitchSessionService>().BotNewAPI.profile_image_url;
-                                this.BotAccountUsername = ServiceManager.Get<TwitchSessionService>().BotNewAPI.display_name;
+                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                             }
                         }
                     }
