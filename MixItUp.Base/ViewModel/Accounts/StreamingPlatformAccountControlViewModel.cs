@@ -110,7 +110,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
                     this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<TrovoSessionService>().User != null)
+                else if (this.Platform == StreamingPlatformTypeEnum.YouTube && ServiceManager.Get<YouTubeSessionService>().Channel != null)
                 {
                     this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
                     this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
@@ -144,10 +144,10 @@ namespace MixItUp.Base.ViewModel.Accounts
                     this.UserAccountAvatar = ServiceManager.Get<TrovoSessionService>().Bot.profilePic;
                     this.UserAccountUsername = ServiceManager.Get<TrovoSessionService>().Bot.nickName;
                 }
-                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().User != null)
+                else if (this.Platform == StreamingPlatformTypeEnum.Glimesh && ServiceManager.Get<GlimeshSessionService>().Bot != null)
                 {
-                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
-                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
+                    this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
+                    this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                 }
             }
 
@@ -209,8 +209,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                         result = await ServiceManager.Get<GlimeshSessionService>().ConnectUser();
                         if (result.Success && ServiceManager.Get<GlimeshSessionService>().User != null)
                         {
-                            this.UserAccountAvatar = ServiceManager.Get<TwitchSessionService>().UserNewAPI.profile_image_url;
-                            this.UserAccountUsername = ServiceManager.Get<TwitchSessionService>().UserNewAPI.display_name;
+                            this.UserAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
+                            this.UserAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
                         }
                     }
 
@@ -270,14 +270,6 @@ namespace MixItUp.Base.ViewModel.Accounts
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.YouTube)
                     {
-                        result = await ServiceManager.Get<YouTubeSessionService>().ConnectUser();
-                        if (result.Success && ServiceManager.Get<YouTubeSessionService>().Channel != null)
-                        {
-                            this.UserAccountAvatar = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Thumbnails.Default__.Url;
-                            this.UserAccountUsername = ServiceManager.Get<YouTubeSessionService>().Channel.Snippet.Title;
-                        }
-
-
                         result = await ServiceManager.Get<YouTubeSessionService>().ConnectBot();
                         if (result.Success)
                         {
@@ -322,8 +314,8 @@ namespace MixItUp.Base.ViewModel.Accounts
                             }
                             else if (ServiceManager.Get<GlimeshSessionService>().Bot != null)
                             {
-                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().User.avatarUrl;
-                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().User.displayname;
+                                this.BotAccountAvatar = ServiceManager.Get<GlimeshSessionService>().Bot.avatarUrl;
+                                this.BotAccountUsername = ServiceManager.Get<GlimeshSessionService>().Bot.displayname;
                             }
                         }
                     }
