@@ -51,6 +51,7 @@ namespace MixItUp.Base.Actions
         [Obsolete]
         Spotify,
         Discord,
+        [Obsolete]
         Translation,
         Twitter,
         Conditional,

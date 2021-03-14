@@ -276,10 +276,11 @@ namespace MixItUp.Base.Services
             return results.Where(u => platform.HasFlag(u.Platform));
         }
 
-        public UserViewModel GetRandomUser(CommandParametersModel parameters)
+        public UserViewModel GetRandomUser(CommandParametersModel parameters, bool excludeCurrencyRankExempt = false)
         {
             List<UserViewModel> results = new List<UserViewModel>(this.GetAllWorkableUsers(parameters.Platform));
             results.Remove(parameters.User);
+            if (excludeCurrencyRankExempt) { results.RemoveAll(u => u.Data.IsCurrencyRankExempt); }
             return results.Random();
         }
 

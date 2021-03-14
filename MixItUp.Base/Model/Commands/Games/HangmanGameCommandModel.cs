@@ -92,6 +92,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
+            this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
+
             if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
             {
                 await this.ClearData();

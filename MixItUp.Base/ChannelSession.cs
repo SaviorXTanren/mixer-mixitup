@@ -99,7 +99,6 @@ namespace MixItUp.Base
             ServiceManager.Add(new TimerService());
             ServiceManager.Add(new GameQueueService());
             ServiceManager.Add(new GiveawayService());
-            ServiceManager.Add(new TranslationService());
             ServiceManager.Add(new SerialService());
             ServiceManager.Add(new OverlayService());
 

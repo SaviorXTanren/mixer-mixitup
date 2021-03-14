@@ -208,7 +208,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 users.Remove(parameters.User);
                 foreach (UserViewModel user in users)
                 {
-                    if (currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
                     {
                         return user;
                     }
@@ -217,7 +217,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ServiceManager.Get<UserService>().GetRandomUser(parameters);
+                return ServiceManager.Get<UserService>().GetRandomUser(parameters, excludeCurrencyRankExempt: true);
             }
         }
 
@@ -240,6 +240,15 @@ namespace MixItUp.Base.Model.Commands.Games
         protected override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.GetType().ToString()); }
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
+
+        protected void SetPrimaryCurrencyRequirementArgumentIndex(int argumentIndex)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            if (currencyRequirement != null)
+            {
+                currencyRequirement.ArgumentIndex = argumentIndex;
+            }
+        }
 
         protected int GetPrimaryBetAmount(CommandParametersModel parameters)
         {

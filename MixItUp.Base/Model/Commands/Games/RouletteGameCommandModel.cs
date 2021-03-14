@@ -103,6 +103,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
+            this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
+
             if (parameters.Arguments.Count > 0 && IsValidBetTypes(parameters.Arguments[0]))
             {
                 return await base.ValidateRequirements(parameters);
