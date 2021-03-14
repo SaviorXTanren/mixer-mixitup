@@ -33,6 +33,9 @@ namespace MixItUp.Base.Model.Requirements
         public int MaxAmount { get; set; }
 
         [JsonIgnore]
+        public int ArgumentIndex { get; set; } = 0;
+
+        [JsonIgnore]
         private int temporaryAmount { get; set; } = -1;
 
         public CurrencyRequirementModel(CurrencyModel currency, int amount) : this(currency, CurrencyRequirementTypeEnum.RequiredAmount, amount, 0) { }
@@ -163,13 +166,23 @@ namespace MixItUp.Base.Model.Requirements
                 int amount = 0;
                 if (parameters.Arguments.Count() > 0)
                 {
-                    if (!int.TryParse(parameters.Arguments.ElementAt(0), out amount))
+                    if (this.ArgumentIndex > 0)
                     {
-                        if (parameters.Arguments.Count() > 1)
+                        if (!int.TryParse(parameters.Arguments.ElementAt(this.ArgumentIndex), out amount))
                         {
-                            if (!int.TryParse(parameters.Arguments.ElementAt(1), out amount))
+                            amount = this.MinAmount;
+                        }
+                    }
+                    else
+                    {
+                        if (!int.TryParse(parameters.Arguments.ElementAt(0), out amount))
+                        {
+                            if (parameters.Arguments.Count() > 1)
                             {
-                                amount = this.MinAmount;
+                                if (!int.TryParse(parameters.Arguments.ElementAt(1), out amount))
+                                {
+                                    amount = this.MinAmount;
+                                }
                             }
                         }
                     }

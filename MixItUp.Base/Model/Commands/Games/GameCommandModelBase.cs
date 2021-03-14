@@ -240,6 +240,15 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
+        protected void SetPrimaryCurrencyRequirementArgumentIndex(int argumentIndex)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            if (currencyRequirement != null)
+            {
+                currencyRequirement.ArgumentIndex = argumentIndex;
+            }
+        }
+
         protected int GetPrimaryBetAmount(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
