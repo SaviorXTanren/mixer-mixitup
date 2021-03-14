@@ -192,11 +192,11 @@ namespace MixItUp.Base.Model.Commands.Games
 
             if (parameters.TargetUser == null && selectionType.HasFlag(GamePlayerSelectionType.Random))
             {
-                parameters.TargetUser = await this.GetRandomUser(parameters);
+                parameters.TargetUser = this.GetRandomUser(parameters);
             }
         }
 
-        protected async Task<UserViewModel> GetRandomUser(CommandParametersModel parameters)
+        protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             int betAmount = this.GetPrimaryBetAmount(parameters);
@@ -207,7 +207,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 users.Remove(parameters.User);
                 foreach (UserViewModel user in users)
                 {
-                    if (currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
                     {
                         return user;
                     }
@@ -216,7 +216,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ChannelSession.Services.User.GetRandomUser(parameters);
+                return ChannelSession.Services.User.GetRandomUser(parameters, excludeCurrencyRankExempt: true);
             }
         }
 
@@ -240,6 +240,15 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
+        protected void SetPrimaryCurrencyRequirementArgumentIndex(int argumentIndex)
+        {
+            CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
+            if (currencyRequirement != null)
+            {
+                currencyRequirement.ArgumentIndex = argumentIndex;
+            }
+        }
+
         protected int GetPrimaryBetAmount(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
@@ -258,7 +267,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     return true;
                 }
 
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, currencyName, betAmount));
+                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName));
                 return false;
             }
             return true;

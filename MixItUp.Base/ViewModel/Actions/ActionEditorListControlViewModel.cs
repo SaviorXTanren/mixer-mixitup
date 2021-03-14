@@ -67,13 +67,16 @@ namespace MixItUp.Base.ViewModel.Actions
                         case ActionTypeEnum.StreamingSoftware: editorViewModel = new StreamingSoftwareActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Streamlabs: editorViewModel = new StreamlabsActionEditorControlViewModel(); break;
                         case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel(); break;
-                        case ActionTypeEnum.Translation: editorViewModel = new TranslationActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel(); break;
                         case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel(); break;
                         case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel(); break;
                     }
-                    await this.AddActionViewModel(editorViewModel);
+
+                    if (editorViewModel != null)
+                    {
+                        await this.AddActionViewModel(editorViewModel);
+                    }
                 }
             });
         }
@@ -139,13 +142,16 @@ namespace MixItUp.Base.ViewModel.Actions
                 case ActionTypeEnum.StreamingSoftware: editorViewModel = new StreamingSoftwareActionEditorControlViewModel((StreamingSoftwareActionModel)action); break;
                 case ActionTypeEnum.Streamlabs: editorViewModel = new StreamlabsActionEditorControlViewModel((StreamlabsActionModel)action); break;
                 case ActionTypeEnum.TextToSpeech: editorViewModel = new TextToSpeechActionEditorControlViewModel((TextToSpeechActionModel)action); break;
-                case ActionTypeEnum.Translation: editorViewModel = new TranslationActionEditorControlViewModel((TranslationActionModel)action); break;
                 case ActionTypeEnum.Twitch: editorViewModel = new TwitchActionEditorControlViewModel((TwitchActionModel)action); break;
                 case ActionTypeEnum.Twitter: editorViewModel = new TwitterActionEditorControlViewModel((TwitterActionModel)action); break;
                 case ActionTypeEnum.Wait: editorViewModel = new WaitActionEditorControlViewModel((WaitActionModel)action); break;
                 case ActionTypeEnum.WebRequest: editorViewModel = new WebRequestActionEditorControlViewModel((WebRequestActionModel)action); break;
             }
-            await this.AddActionViewModel(editorViewModel);
+
+            if (editorViewModel != null)
+            {
+                await this.AddActionViewModel(editorViewModel);
+            }
         }
 
         public async Task<IEnumerable<Result>> ValidateActions()

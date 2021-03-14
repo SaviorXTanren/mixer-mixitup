@@ -146,23 +146,7 @@ namespace MixItUp.Base.Model.Actions
                     actions.Add(new TextToSpeechActionModel((MixItUp.Base.Actions.TextToSpeechAction)action));
                     break;
                 case Base.Actions.ActionTypeEnum.Translation:
-                    MixItUp.Base.Actions.TranslationAction tAction = (MixItUp.Base.Actions.TranslationAction)action;
-                    actions.Add(new TranslationActionModel(tAction));
-                    if (tAction.ResponseAction == Base.Actions.TranslationResponseActionTypeEnum.Chat)
-                    {
-                        actions.Add(new ChatActionModel(tAction.ResponseChatText));
-                    }
-                    else if (tAction.ResponseAction == Base.Actions.TranslationResponseActionTypeEnum.SpecialIdentifier)
-                    {
-                        actions.Add(new SpecialIdentifierActionModel(tAction.SpecialIdentifierName, "$" + TranslationActionModel.ResponseSpecialIdentifier, false, false));
-                    }
-                    else if (tAction.ResponseAction == Base.Actions.TranslationResponseActionTypeEnum.Command)
-                    {
-                        CommandActionModel cmdAction = new CommandActionModel(CommandActionTypeEnum.RunCommand, null);
-                        cmdAction.CommandID = tAction.ResponseCommandID;
-                        cmdAction.Arguments = tAction.ResponseCommandArgumentsText;
-                        actions.Add(cmdAction);
-                    }
+                    // Deprecated
                     break;
                 case Base.Actions.ActionTypeEnum.Twitter:
                     actions.Add(new TwitterActionModel((MixItUp.Base.Actions.TwitterAction)action));

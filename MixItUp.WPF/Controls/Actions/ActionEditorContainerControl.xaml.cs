@@ -52,7 +52,6 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.StreamingSoftware: this.ActionControl = new StreamingSoftwareActionEditorControl(); break;
                     case ActionTypeEnum.Streamlabs: this.ActionControl = new StreamlabsActionEditorControl(); break;
                     case ActionTypeEnum.TextToSpeech: this.ActionControl = new TextToSpeechActionEditorControl(); break;
-                    case ActionTypeEnum.Translation: this.ActionControl = new TranslationActionEditorControl(); break;
                     case ActionTypeEnum.Twitch: this.ActionControl = new TwitchActionEditorControl(); break;
                     case ActionTypeEnum.Twitter: this.ActionControl = new TwitterActionEditorControl(); break;
                     case ActionTypeEnum.Wait: this.ActionControl = new WaitActionEditorControl(); break;

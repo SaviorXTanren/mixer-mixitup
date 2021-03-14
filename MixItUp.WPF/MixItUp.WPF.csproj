@@ -429,9 +429,6 @@
     <Compile Include="Controls\Actions\TextToSpeechActionEditorControl.xaml.cs">
       <DependentUpon>TextToSpeechActionEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\TranslationActionEditorControl.xaml.cs">
-      <DependentUpon>TranslationActionEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\TwitchActionEditorControl.xaml.cs">
       <DependentUpon>TwitchActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1080,10 +1077,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TextToSpeechActionEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\TranslationActionEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

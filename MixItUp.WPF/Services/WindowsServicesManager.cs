@@ -30,7 +30,6 @@ namespace MixItUp.WPF.Services
             this.Image = new WindowsImageService();
             this.AudioService = new WindowsAudioService();
             this.GiveawayService = new GiveawayService();
-            this.Translation = new TranslationService();
             this.SerialService = new SerialService();
             this.RemoteService = new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
