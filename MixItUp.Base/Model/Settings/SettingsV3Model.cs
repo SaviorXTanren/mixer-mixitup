@@ -722,8 +722,10 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV3Model.LatestVersion;
 
-            ServiceManager.Get<TwitchSessionService>().SaveSettings(this);
-            ServiceManager.Get<GlimeshSessionService>().SaveSettings(this);
+            foreach (IStreamingPlatformSessionService sessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
+            {
+                sessionService.SaveSettings(this);
+            }
 
             if (ServiceManager.Get<StreamlabsService>().IsConnected)
             {
