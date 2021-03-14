@@ -192,11 +192,11 @@ namespace MixItUp.Base.Model.Commands.Games
 
             if (parameters.TargetUser == null && selectionType.HasFlag(GamePlayerSelectionType.Random))
             {
-                parameters.TargetUser = await this.GetRandomUser(parameters);
+                parameters.TargetUser = this.GetRandomUser(parameters);
             }
         }
 
-        protected async Task<UserViewModel> GetRandomUser(CommandParametersModel parameters)
+        protected UserViewModel GetRandomUser(CommandParametersModel parameters)
         {
             CurrencyRequirementModel currencyRequirement = this.GetPrimaryCurrencyRequirement();
             int betAmount = this.GetPrimaryBetAmount(parameters);
@@ -207,7 +207,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 users.Remove(parameters.User);
                 foreach (UserViewModel user in users)
                 {
-                    if (currencyRequirement.Currency.HasAmount(user.Data, betAmount))
+                    if (!user.Data.IsCurrencyRankExempt && currencyRequirement.Currency.HasAmount(user.Data, betAmount))
                     {
                         return user;
                     }
@@ -216,7 +216,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ChannelSession.Services.User.GetRandomUser(parameters);
+                return ChannelSession.Services.User.GetRandomUser(parameters, excludeCurrencyRankExempt: true);
             }
         }
 
