@@ -68,88 +68,99 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            using (HttpClient httpClient = new HttpClient())
+            if (ChannelSession.Services.FileService.FileExists(this.Url))
             {
-                httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
-                httpClient.DefaultRequestHeaders.Add("Twitch-UserID", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.id : string.Empty);
-                httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.login : string.Empty);
-
-                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
+                await this.ProcessContents(parameters, await ChannelSession.Services.FileService.ReadFile(this.Url));
+            }
+            else
+            {
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string webRequestResult = await response.Content.ReadAsStringAsync();
-                        if (!string.IsNullOrEmpty(webRequestResult))
-                        {
-                            string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
-                            if (this.ResponseType == WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers)
-                            {
-                                try
-                                {
-                                    JToken jToken = JToken.Parse(webRequestResult);
-                                    if (this.JSONToSpecialIdentifiers != null)
-                                    {
-                                        foreach (var kvp in this.JSONToSpecialIdentifiers)
-                                        {
-                                            string key = await this.ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
-                                            string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                                            if (splits.Count() > 0)
-                                            {
-                                                JToken currentToken = jToken;
-                                                for (int i = 0; i < splits.Count(); i++)
-                                                {
-                                                    if (currentToken is JObject)
-                                                    {
-                                                        JObject jobjToken = (JObject)currentToken;
-                                                        if (jobjToken.ContainsKey(splits[i]))
-                                                        {
-                                                            currentToken = jobjToken[splits[i]];
-                                                        }
-                                                        else
-                                                        {
-                                                            currentToken = null;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else if (currentToken is JArray)
-                                                    {
-                                                        JArray jarrayToken = (JArray)currentToken;
-                                                        if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
-                                                        {
-                                                            currentToken = jarrayToken[index];
-                                                        }
-                                                        else
-                                                        {
-                                                            currentToken = null;
-                                                            break;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        currentToken = null;
-                                                        break;
-                                                    }
-                                                }
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserID", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.id : string.Empty);
+                    httpClient.DefaultRequestHeaders.Add("Twitch-UserLogin", (ChannelSession.TwitchUserNewAPI != null) ? ChannelSession.TwitchUserNewAPI.login : string.Empty);
 
-                                                if (currentToken != null)
-                                                {
-                                                    parameters.SpecialIdentifiers[kvp.Value] = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
-                                                }
+                    using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, parameters, encode: true)))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            await this.ProcessContents(parameters, await response.Content.ReadAsStringAsync());
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task ProcessContents(CommandParametersModel parameters, string webRequestResult)
+        {
+            if (!string.IsNullOrEmpty(webRequestResult))
+            {
+                string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
+                if (this.ResponseType == WebRequestResponseParseTypeEnum.JSONToSpecialIdentifiers)
+                {
+                    try
+                    {
+                        JToken jToken = JToken.Parse(webRequestResult);
+                        if (this.JSONToSpecialIdentifiers != null)
+                        {
+                            foreach (var kvp in this.JSONToSpecialIdentifiers)
+                            {
+                                string key = await this.ReplaceStringWithSpecialModifiers(kvp.Key, parameters);
+                                string[] splits = key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (splits.Count() > 0)
+                                {
+                                    JToken currentToken = jToken;
+                                    for (int i = 0; i < splits.Count(); i++)
+                                    {
+                                        if (currentToken is JObject)
+                                        {
+                                            JObject jobjToken = (JObject)currentToken;
+                                            if (jobjToken.ContainsKey(splits[i]))
+                                            {
+                                                currentToken = jobjToken[splits[i]];
+                                            }
+                                            else
+                                            {
+                                                currentToken = null;
+                                                break;
                                             }
                                         }
+                                        else if (currentToken is JArray)
+                                        {
+                                            JArray jarrayToken = (JArray)currentToken;
+                                            if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
+                                            {
+                                                currentToken = jarrayToken[index];
+                                            }
+                                            else
+                                            {
+                                                currentToken = null;
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            currentToken = null;
+                                            break;
+                                        }
+                                    }
+
+                                    if (currentToken != null)
+                                    {
+                                        parameters.SpecialIdentifiers[kvp.Value] = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), parameters);
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    Logger.Log(ex);
-                                }
-                            }
-                            else
-                            {
-                                parameters.SpecialIdentifiers[ResponseSpecialIdentifier] = decodedWebRequestResult;
                             }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                }
+                else
+                {
+                    parameters.SpecialIdentifiers[ResponseSpecialIdentifier] = decodedWebRequestResult;
                 }
             }
         }
