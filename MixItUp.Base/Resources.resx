@@ -4052,7 +4052,7 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
     <value>@$username won $gamepayout {0}!</value>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
-    <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout {0}!</value>
+    <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
   </data>
   <data name="GameCommandRussianRouletteMaxWinners" xml:space="preserve">
     <value>Max Winners</value>

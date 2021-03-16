@@ -5240,7 +5240,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The dust settles after a grueling match-up and...It&apos;s $gamewinners! Total Amount Per Winner: $gameallpayout {0}!.
+        ///   Looks up a localized string similar to The dust settles after a grueling match-up and...It&apos;s $gamewinners! Total Amount Per Winner: $gamepayout {0}!.
         /// </summary>
         public static string GameCommandRussianRouletteGameCompleteExample {
             get {
