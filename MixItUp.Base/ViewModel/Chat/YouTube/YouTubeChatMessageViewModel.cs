@@ -11,6 +11,8 @@ namespace MixItUp.Base.ViewModel.Chat.YouTube
         // https://emojipedia.org/youtube/
         // https://emojis.wiki/youtube/
         // https://stackoverflow.com/questions/64726611/how-to-get-a-list-of-youtube-channel-emojis
+        // 
+        // https://www.gstatic.com/youtube/img/emojis/emojis-svg-5.json
 
         public YouTubeChatMessageViewModel(LiveChatMessage message, UserViewModel user = null)
             : base(message.Id, StreamingPlatformTypeEnum.YouTube, (user != null) ? user : new UserViewModel(message))

@@ -5,14 +5,32 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.YouTube;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using YouTube.Base.Clients;
 
 namespace MixItUp.Base.Services.YouTube
 {
+    public class YouTubeChatEmoteModel
+    {
+        public class YouTubeChatEmoteImageModel
+        {
+            public List<string> thumbnails { get; set; } = new List<string>();
+        }
+
+        public string emojiId { get; set; }
+        public List<string> searchTerms { get; set; } = new List<string>();
+        public List<string> shortcuts { get; set; } = new List<string>();
+
+        private YouTubeChatEmoteImageModel image;
+
+        public string ImageURL { get { return this.image?.thumbnails?.FirstOrDefault(); } }
+    }
+
     public class YouTubeChatService : StreamingPlatformServiceBase
     {
         private const int MaxMessageLength = 250;
@@ -23,6 +41,8 @@ namespace MixItUp.Base.Services.YouTube
         private SemaphoreSlim messageSemaphore = new SemaphoreSlim(1);
 
         public YouTubeChatService() { }
+
+        public IEnumerable<YouTubeChatEmoteModel> Emotes { get; private set; } = new List<YouTubeChatEmoteModel>();
 
         public override string Name { get { return "YouTube Chat"; } }
 
@@ -45,6 +65,8 @@ namespace MixItUp.Base.Services.YouTube
                         {
                             return new Result("Failed to connect to YouTube chat servers");
                         }
+
+                        this.Emotes = await this.GetChatEmotes();
 
                         return new Result();
                     }
@@ -152,6 +174,14 @@ namespace MixItUp.Base.Services.YouTube
         public async Task<LiveChatBan> TimeoutUser(UserViewModel user, ulong duration) { return await this.userClient.TimeoutUser(new Channel() { Id = user.YouTubeID }, duration); }
 
         public async Task<LiveChatBan> BanUser(UserViewModel user) { return await this.userClient.BanUser(new Channel() { Id = user.YouTubeID }); }
+
+        public async Task<IEnumerable<YouTubeChatEmoteModel>> GetChatEmotes()
+        {
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            {
+                return await client.GetAsync<List<YouTubeChatEmoteModel>>("https://www.gstatic.com/youtube/img/emojis/emojis-svg-5.json");
+            }
+        }
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.userClient; }
 
