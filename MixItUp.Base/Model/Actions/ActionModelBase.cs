@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Actions
         [Name("FileReadAndWrite")]
         File,
         Discord,
+        [Obsolete]
         Translation,
         Twitter,
         Conditional,
