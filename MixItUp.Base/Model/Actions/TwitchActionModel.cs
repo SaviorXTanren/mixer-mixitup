@@ -29,7 +29,7 @@ namespace MixItUp.Base.Model.Actions
 
         public const int StreamMarkerMaxDescriptionLength = 140;
 
-        private const string StartinCommercialBreakMessage = "Starting commercial break. Keep in mind you are still live and not all viewers will receive a commercial.";
+        private const string StartinCommercialBreakMessage = "Starting commercial break.";
 
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
@@ -152,7 +152,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
                 }
-                else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
+                else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
                 }
