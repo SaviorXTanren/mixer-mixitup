@@ -175,6 +175,12 @@ namespace MixItUp.Base.Model.Actions
                     }
                     break;
             }
+
+            foreach (ActionModelBase a in actions)
+            {
+                a.Name = action.Label;
+            }
+
             return actions;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
