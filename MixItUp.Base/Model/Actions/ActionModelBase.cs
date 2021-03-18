@@ -176,9 +176,9 @@ namespace MixItUp.Base.Model.Actions
                     break;
             }
 
-            foreach (ActionModelBase a in actions)
+            if (actions.Count > 0 && !string.Equals(action.Label, EnumLocalizationHelper.GetLocalizedName(action.Type)))
             {
-                a.Name = action.Label;
+                actions.First().Name = action.Label;
             }
 
             return actions;
