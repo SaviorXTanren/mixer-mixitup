@@ -4633,7 +4633,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
     <value>When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won't be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times.</value>
   </data>
-  <data name="CommandActionWaitUntilComplete" xml:space="preserve">
+  <data name="WaitUntilComplete" xml:space="preserve">
     <value>Wait Until Complete</value>
   </data>
   <data name="GameCommandTriviaCorrectAnswerExample" xml:space="preserve">

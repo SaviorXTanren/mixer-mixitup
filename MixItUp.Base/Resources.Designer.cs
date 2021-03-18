@@ -1906,15 +1906,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wait Until Complete.
-        /// </summary>
-        public static string CommandActionWaitUntilComplete {
-            get {
-                return ResourceManager.GetString("CommandActionWaitUntilComplete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The selected command can not be edited here.
         /// </summary>
         public static string CommandCannotBeEditedHere {
@@ -13547,6 +13538,15 @@ namespace MixItUp.Base {
         public static string WaitForFinish {
             get {
                 return ResourceManager.GetString("WaitForFinish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait Until Complete.
+        /// </summary>
+        public static string WaitUntilComplete {
+            get {
+                return ResourceManager.GetString("WaitUntilComplete", resourceCulture);
             }
         }
         
