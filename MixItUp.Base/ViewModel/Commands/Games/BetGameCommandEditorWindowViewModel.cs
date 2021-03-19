@@ -198,6 +198,7 @@ namespace MixItUp.Base.ViewModel.Games
             gCommand.StarterRole = this.SelectedStarterRole;
             gCommand.MinimumParticipants = this.MinimumParticipants;
             gCommand.TimeLimit = this.timeLimit;
+            gCommand.BetOptions = new List<GameOutcomeModel>(this.Outcomes.Select(o => o.GetModel()));
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.UserJoinCommand = this.UserJoinCommand;
             gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;

@@ -248,15 +248,15 @@ namespace MixItUp.Base.ViewModel.Games
         {
             await base.UpdateExistingCommand(command);
             TriviaGameCommandModel gCommand = (TriviaGameCommandModel)command;
-            gCommand.WinAmount = this.WinAmount;
             gCommand.TimeLimit = this.TimeLimit;
             gCommand.UseRandomOnlineQuestions = this.UseRandomOnlineQuestions;
+            gCommand.WinAmount = this.WinAmount;
+            gCommand.CustomQuestions = new List<TriviaGameQuestionModel>(this.CustomQuestions.Select(o => o.GetModel()));
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.UserJoinCommand = this.UserJoinCommand;
             gCommand.CorrectAnswerCommand = this.CorrectAnswerCommand;
             gCommand.UserSuccessCommand = this.UserSuccessCommand;
             gCommand.UserFailureCommand = this.UserFailureCommand;
-            gCommand.CustomQuestions = new List<TriviaGameQuestionModel>(this.CustomQuestions.Select(o => o.GetModel()));
         }
 
         public override async Task<Result> Validate()
