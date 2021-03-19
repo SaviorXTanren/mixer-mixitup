@@ -1906,6 +1906,19 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To have the Command Action wait until the selected sub-command is completed, the sub-command WILL NOT use the
+        ///built-in command locking system for this specific time it is run. This is to prevent what&apos;s known as a deadlock from occurring
+        ///(command gets stuck and can&apos;t complete). This also means that other commands of the same type as the selected
+        ///sub-command will be able to run at the same time if it&apos;s different than the current command. For example, if the selected
+        ///sub-command is an Action Group, then it [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CommandActionWaitUntilCompleteHintText {
+            get {
+                return ResourceManager.GetString("CommandActionWaitUntilCompleteHintText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The selected command can not be edited here.
         /// </summary>
         public static string CommandCannotBeEditedHere {

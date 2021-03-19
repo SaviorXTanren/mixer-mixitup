@@ -77,8 +77,8 @@
 
                 <TextBox Grid.Column="0" Text="{Binding CommandArguments}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" VerticalAlignment="Center" />
-                <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForCommandToFinish}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="{Binding Source={x:Static resx:Resources.WaitUntilComplete}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" ToolTip="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
+                <ToggleButton Grid.Column="4" IsChecked="{Binding WaitForCommandToFinish}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandActionWaitUntilCompleteHintText}" VerticalAlignment="Center" />
             </Grid>
         </Grid>
 
