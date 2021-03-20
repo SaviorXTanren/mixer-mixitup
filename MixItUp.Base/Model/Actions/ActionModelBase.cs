@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Actions
         [Name("FileReadAndWrite")]
         File,
         Discord,
+        [Obsolete]
         Translation,
         Twitter,
         Conditional,
@@ -174,6 +175,12 @@ namespace MixItUp.Base.Model.Actions
                     }
                     break;
             }
+
+            if (actions.Count > 0 && !string.Equals(action.Label, EnumLocalizationHelper.GetLocalizedName(action.Type)))
+            {
+                actions.First().Name = action.Label;
+            }
+
             return actions;
         }
 #pragma warning restore CS0612 // Type or member is obsolete

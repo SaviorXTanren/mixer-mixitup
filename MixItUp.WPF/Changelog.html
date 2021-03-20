@@ -7,6 +7,14 @@
 
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.9.1:</h2>
+        <ul>
+            <li>Updating Command Action to enable command locks if Wait Until Complete option is NOT selected</li>
+            <li>Fixing bug with certain Game Special Identifiers not processing correctly</li>
+            <li>Fixing bug with certain Game values not re-saving properly when editing an existing game</li>
+            <li>Fixing bug with Translation action still appearing in list of selectable actions to add to a command</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.9.0:</h2>
         <ul>
             <li>Command Updates:</li>
@@ -39,6 +47,7 @@
                 <li>Command Action:</li>
                 <ul>
                     <li>When a command action is used, by default it will now wait for the selected sub-command to finish before continuing on in the parent command</li>
+                    <li>Existing command actions will NOT have the above setting enabled and will function as they used to, meaning they will NOT wait for the sub-command to finish</li>
                     <li>Adding option to Command Action to determine whether sub-command should wait to finish before proceeding on to next action</li>
                     <li>Adding buttons to Command Action to auto-create a new Action Group and edit the select command</li>
                 </ul>
@@ -73,7 +82,6 @@
             <ul>
                 <li>Adding $streamcurrentscene Special Identifier for name of the current scene in OBS Studio &amp; Streamlabs OBS</li>
                 <li>Adding $gamequeuetotal for the total number of users in the Game Queue</li>
-                <li>Adding $translationresult Special Identifier for the result of a Translation action</li>
                 <li>Adding $webrequestresult Special Identifier for the result of a Web Request action</li>
                 <li>Adding $externalprogramresult Special Identifier for the result of a External Program action when option is toggled</li>
                 <li>Adding $userisvip Special Identifier</li>

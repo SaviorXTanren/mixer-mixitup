@@ -4633,7 +4633,7 @@ This setting will change all role requirements to be explicit and require that t
   <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
     <value>When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won't be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times.</value>
   </data>
-  <data name="CommandActionWaitUntilComplete" xml:space="preserve">
+  <data name="WaitUntilComplete" xml:space="preserve">
     <value>Wait Until Complete</value>
   </data>
   <data name="GameCommandTriviaCorrectAnswerExample" xml:space="preserve">
@@ -4782,5 +4782,13 @@ This setting will change all role requirements to be explicit and require that t
   </data>
   <data name="GameCommandWordScrambleDefaultChatTrigger" xml:space="preserve">
     <value>scramble</value>
+  </data>
+  <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
+    <value>To have the Command Action wait until the selected sub-command is completed, the sub-command WILL NOT use the
+built-in command locking system for this specific time it is run. This is to prevent what's known as a deadlock from occurring
+(command gets stuck and can't complete). This also means that other commands of the same type as the selected
+sub-command will be able to run at the same time if it's different than the current command. For example, if the selected
+sub-command is an Action Group, then it will still be possible for another Action Group to run at the same time if this is
+enabled. You can think of it as similar to toggling the "Unlock Command" option, but it instead only applies to this specific time.</value>
   </data>
 </root>
