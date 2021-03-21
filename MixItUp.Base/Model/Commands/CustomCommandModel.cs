@@ -42,8 +42,16 @@ namespace MixItUp.Base.Model.Commands
         internal CustomCommandModel(MixItUp.Base.Commands.CustomCommand command)
             : base(command)
         {
-            this.Name = command.Name;
-            this.Type = CommandTypeEnum.Custom;
+            if (command != null)
+            {
+                this.Name = command.Name;
+                this.Type = CommandTypeEnum.Custom;
+            }
+            else
+            {
+                this.Name = MixItUp.Base.Resources.CustomCommand;
+                this.Type = CommandTypeEnum.Custom;
+            }
         }
 #pragma warning restore CS0612 // Type or member is obsolete
 

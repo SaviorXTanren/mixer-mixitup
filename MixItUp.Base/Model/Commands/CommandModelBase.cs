@@ -130,20 +130,27 @@ namespace MixItUp.Base.Model.Commands
 #pragma warning disable CS0612 // Type or member is obsolete
         protected CommandModelBase(MixItUp.Base.Commands.CommandBase command)
         {
-            this.ID = command.ID;
-            this.GroupName = command.GroupName;
-            this.IsEnabled = command.IsEnabled;
-            this.Unlocked = command.Unlocked;
-
-            if (command is MixItUp.Base.Commands.PermissionsCommandBase)
+            if (command != null)
             {
-                MixItUp.Base.Commands.PermissionsCommandBase pCommand = (MixItUp.Base.Commands.PermissionsCommandBase)command;
-                this.Requirements = new RequirementsSetModel(pCommand.Requirements);
+                this.ID = command.ID;
+                this.GroupName = command.GroupName;
+                this.IsEnabled = command.IsEnabled;
+                this.Unlocked = command.Unlocked;
+
+                if (command is MixItUp.Base.Commands.PermissionsCommandBase)
+                {
+                    MixItUp.Base.Commands.PermissionsCommandBase pCommand = (MixItUp.Base.Commands.PermissionsCommandBase)command;
+                    this.Requirements = new RequirementsSetModel(pCommand.Requirements);
+                }
+
+                foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
+                {
+                    this.Actions.AddRange(ActionModelBase.UpgradeAction(action));
+                }
             }
-
-            foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
+            else
             {
-                this.Actions.AddRange(ActionModelBase.UpgradeAction(action));
+                this.ID = Guid.NewGuid();
             }
         }
 #pragma warning restore CS0612 // Type or member is obsolete
