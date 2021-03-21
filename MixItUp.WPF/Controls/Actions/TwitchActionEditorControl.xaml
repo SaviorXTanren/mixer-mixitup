@@ -47,6 +47,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IncludeDelay}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
@@ -54,6 +58,9 @@
 
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowInfoInChat}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}"/>
             <ToggleButton Grid.Column="6" VerticalAlignment="Center" IsChecked="{Binding ShowInfoInChat}" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Result}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+            <TextBlock Grid.Column="10" VerticalAlignment="Center" Text="$clipurl" />
         </Grid>
 
         <Grid Grid.Row="2" Visibility="{Binding ShowStreamMarkerGrid, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">

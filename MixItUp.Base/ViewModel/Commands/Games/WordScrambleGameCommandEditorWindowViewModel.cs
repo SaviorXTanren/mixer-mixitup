@@ -184,6 +184,7 @@ namespace MixItUp.Base.ViewModel.Games
             gCommand.MinimumParticipants = this.MinimumParticipants;
             gCommand.TimeLimit = this.TimeLimit;
             gCommand.WordScrambleTimeLimit = this.WordScrambleTimeLimit;
+            gCommand.CustomWordsFilePath = this.CustomWordsFilePath;
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.UserJoinCommand = this.UserJoinCommand;
             gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;

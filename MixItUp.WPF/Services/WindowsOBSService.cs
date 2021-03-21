@@ -247,7 +247,7 @@ namespace MixItUp.WPF.Services
             {
                 await this.Disconnect();
 
-                await Task.Delay(2500);
+                await Task.Delay(5000);
 
                 result = await this.Connect();
             }

@@ -31,7 +31,7 @@ namespace MixItUp.Base.Model.Actions
 
         public const int StreamMarkerMaxDescriptionLength = 140;
 
-        private const string StartinCommercialBreakMessage = "Starting commercial break. Keep in mind you are still live and not all viewers will receive a commercial.";
+        private const string StartinCommercialBreakMessage = "Starting commercial break.";
 
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
@@ -142,23 +142,23 @@ namespace MixItUp.Base.Model.Actions
                 if (this.ActionType == TwitchActionType.Host)
                 {
                     string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.Raid)
                 {
                     string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                    await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
                 else if (this.ActionType == TwitchActionType.RunAd)
                 {
-                    AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
+                    AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
                     if (response == null)
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later", parameters.Platform);
+                        await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
                     }
-                    else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
+                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
                     {
-                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message, parameters.Platform);
+                        await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
                     }
                 }
                 else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Actions
                     if (!string.IsNullOrEmpty(this.Username))
                     {
                         string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                        targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
+                        targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
                     }
                     else
                     {
@@ -233,6 +233,7 @@ namespace MixItUp.Base.Model.Actions
                     await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters.Platform);
                 }
             }
+        }
         }
     }
 }

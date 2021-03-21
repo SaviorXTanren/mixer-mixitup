@@ -101,8 +101,6 @@ namespace MixItUp.Base.Model.Settings
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; } = StreamingSoftwareTypeEnum.OBSStudio;
         [DataMember]
         public string DefaultAudioOutput { get; set; }
-        [DataMember]
-        public bool SaveChatEventLogs { get; set; }
 
         #endregion General
 
@@ -112,6 +110,9 @@ namespace MixItUp.Base.Model.Settings
         public int MaxMessagesInChat { get; set; } = 100;
         [DataMember]
         public int MaxUsersShownInChat { get; set; } = 100;
+
+        [DataMember]
+        public bool SaveChatEventLogs { get; set; }
 
         [DataMember]
         public int ChatFontSize { get; set; } = 13;

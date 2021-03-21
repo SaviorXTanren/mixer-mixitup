@@ -30,7 +30,13 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ActionTypes}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock Grid.Column="2" Visibility="{Binding OvrStreamNotEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EnableOvrStream}"/>
         </Grid>

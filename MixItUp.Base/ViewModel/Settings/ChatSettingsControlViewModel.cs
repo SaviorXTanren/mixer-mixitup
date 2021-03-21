@@ -13,6 +13,7 @@ namespace MixItUp.Base.ViewModel.Settings
     {
         private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "XLarge", 20 }, { "XXLarge", 24 }, };
 
+        public GenericToggleSettingsOptionControlViewModel SaveChatEventLogs { get; set; }
         public GenericComboBoxSettingsOptionControlViewModel<string> FontSize { get; set; }
         public GenericToggleSettingsOptionControlViewModel AddSeparatorsBetweenMessages { get; set; }
         public GenericToggleSettingsOptionControlViewModel UseAlternatingBackgroundColors { get; set; }
@@ -38,6 +39,8 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public ChatSettingsControlViewModel()
         {
+            this.SaveChatEventLogs = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.SaveChatEventLogs, ChannelSession.Settings.SaveChatEventLogs,
+                (value) => { ChannelSession.Settings.SaveChatEventLogs = value; });
             this.FontSize = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.FontSize, this.fontSizes.Keys, this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key,
                 (value) =>
                 {

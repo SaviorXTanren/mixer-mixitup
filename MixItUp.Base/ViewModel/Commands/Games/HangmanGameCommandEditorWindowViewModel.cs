@@ -160,6 +160,7 @@ namespace MixItUp.Base.ViewModel.Games
             HangmanGameCommandModel gCommand = (HangmanGameCommandModel)command;
             gCommand.MaxFailures = this.MaxFailures;
             gCommand.InitialAmount = this.InitialAmount;
+            gCommand.CustomWordsFilePath = this.CustomWordsFilePath;
             gCommand.SuccessfulGuessCommand = this.SuccessfulGuessCommand;
             gCommand.FailedGuessCommand = this.FailedGuessCommand;
             gCommand.GameWonCommand = this.GameWonCommand;
