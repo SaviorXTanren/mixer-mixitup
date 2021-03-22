@@ -19,10 +19,14 @@ namespace MixItUp.WPF.Windows.Overlay
         private Dictionary<OverlayItemModelTypeEnum, OverlayItemControl> overlayTypeEditors = new Dictionary<OverlayItemModelTypeEnum, OverlayItemControl>();
         private OverlayItemControl overlayTypeEditor;
 
+        private OverlayItemPositionViewModel position = new OverlayItemPositionViewModel();
+
         public OverlayWidgetEditorWindow(OverlayWidgetModel widget)
             : this()
         {
             this.viewModel = new OverlayWidgetEditorWindowViewModel(widget);
+
+            this.position.SetPosition(this.viewModel.OverlayWidget.Item.Position);
         }
 
         public OverlayWidgetEditorWindow()
@@ -30,6 +34,8 @@ namespace MixItUp.WPF.Windows.Overlay
             InitializeComponent();
 
             this.viewModel = new OverlayWidgetEditorWindowViewModel();
+
+            this.ItemPosition.DataContext = this.position;
 
             this.Initialize(this.StatusBar);
         }
@@ -42,8 +48,6 @@ namespace MixItUp.WPF.Windows.Overlay
 
             if (this.viewModel.OverlayWidget != null)
             {
-                this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Item.Position);
-
                 if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayChatMessagesListItemControl(new OverlayChatMessagesListItemViewModel((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayEndCreditsItemModel) { this.SetOverlayWidgetEditorControl(new OverlayEndCreditsItemControl(new OverlayEndCreditsItemViewModel((OverlayEndCreditsItemModel)this.viewModel.OverlayWidget.Item))); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetOverlayWidgetEditorControl(new OverlayEventListItemControl(new OverlayEventListItemViewModel((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item))); }
@@ -93,7 +97,7 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 if (await this.viewModel.Validate())
                 {
-                    OverlayItemPositionModel position = this.ItemPosition.GetPosition();
+                    OverlayItemPositionModel position = this.position.GetPosition();
                     if (position == null)
                     {
                         await DialogHelper.ShowMessage("A valid position for this overlay widget must be selected");
