@@ -1,10 +1,49 @@
-﻿using System;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Store;
+using MixItUp.Base.Util;
+using StreamingClient.Base.Web;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
     public class StoreService
     {
+        public async Task AddTestCommand()
+        {
+            StoreCommandUploadModel command = new StoreCommandUploadModel()
+            {
+                ID = Guid.NewGuid(),
+                Name = "Test Command " + RandomHelper.GenerateRandomNumber(100),
+                Description = "Here's some description text",
+                Tags = new HashSet<string>() { "Chat" },
+                MixItUpUserID = ChannelSession.Settings.ID.ToString(),
+                Username = ChannelSession.GetCurrentUser().Username,
+                UserAvatarURL = ChannelSession.GetCurrentUser().AvatarLink,
+            };
+
+            if (RandomHelper.GenerateRandomNumber(100) > 50)
+            {
+                command.Tags.Add("Sound");
+            }
+            else
+            {
+                command.Tags.Add("Video");
+            }
+
+            command.Actions.Add(new ChatActionModel("Hello World!"));
+
+            await this.AddCommand(command);
+        }
+
+        public async Task AddCommand(StoreCommandUploadModel command)
+        {
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            {
+                HttpResponseMessage response = await client.PostAsync("https://localhost:44309/api/store/command", AdvancedHttpClient.CreateContentFromObject(command));
+            }
+        }
     }
 }

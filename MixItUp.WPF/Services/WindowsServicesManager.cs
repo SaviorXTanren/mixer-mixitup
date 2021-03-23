@@ -34,6 +34,7 @@ namespace MixItUp.WPF.Services
             this.RemoteService = new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
+            this.StoreService = new StoreService();
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
             this.StreamElements = new StreamElementsService();
