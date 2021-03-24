@@ -10,15 +10,6 @@ Go to http://mixitupapp.com for the latest release and check out https://github.
 ## I found a bug / have a feature request!
 Please head to our Discord server for support & feature requests; the link can be found at the bottom of our website http://mixitupapp.com or in the About section of the app.
 
-## Current functionality
-The app is currently in heavy development at this point with an ETA of an initial release sometime before the end of 2017
-
-## Feature roadmap
-The app is currently in heavy development at this point with an ETA of an initial release sometime before the end of 2017
-
-## How do I contribute?
-Feel free to take a fork of the master branch and start plugging away! This app relies on the https://github.com/SaviorXTanren/mixer-client-csharp client API, which is pre-setup in the solution via NuGet. Once that is done, the solution should be all set to go. Code up some changes/features and submit a pull request at https://github.com/SaviorXTanren/mixer-mixitup/pulls! I'm happy to assist anyone in developing a feature, feel free to shoot me a tweet [@SaviorXTanren](https://twitter.com/SaviorXTanren).
-
 ## License
 MIT License
 
