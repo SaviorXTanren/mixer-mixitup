@@ -21,6 +21,7 @@ namespace MixItUp.Base.Services
 
         Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
 
+        Task<UserViewModel> RemoveUserByID(Guid id);
         Task<UserViewModel> RemoveUserByTwitchLogin(string twitchLogin);
 
         void Clear();
@@ -142,6 +143,17 @@ namespace MixItUp.Base.Services
         {
             if (!string.IsNullOrEmpty(twitchLogin) && this.usersByTwitchLogin.TryGetValue(twitchLogin, out UserViewModel user))
             {
+                await this.RemoveUser(user);
+                return user;
+            }
+            return null;
+        }
+
+        public async Task<UserViewModel> RemoveUserByID(Guid id)
+        {
+            if (this.usersByID.ContainsKey(id))
+            {
+                UserViewModel user = this.usersByID[id];
                 await this.RemoveUser(user);
                 return user;
             }
