@@ -1,9 +1,15 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
+using StreamingClient.Base.Util;
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Windows.Commands
 {
@@ -138,6 +144,66 @@ namespace MixItUp.WPF.Windows.Commands
         {
             this.CommandSaved(this, command);
             this.Close();
+        }
+
+        private void CommandEditorWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                e.Handled = true;
+                this.ActionsGrid.Visibility = Visibility.Hidden;
+                this.ImportCommandVisualGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+        private async void CommandEditorWindow_Drop(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                bool success = false;
+                try
+                {
+                    e.Handled = true;
+                    this.ActionsGrid.Visibility = Visibility.Visible;
+                    this.ImportCommandVisualGrid.Visibility = Visibility.Hidden;
+
+                    string filename = ((string[])obj)[0];
+                    if (!string.IsNullOrEmpty(filename))
+                    {
+                        CommandModelBase command = await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filename);
+                        if (command != null)
+                        {
+                            foreach (ActionModelBase action in command.Actions)
+                            {
+                                await this.viewModel.AddAction(action);
+                            }
+                            success = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+
+                if (!success)
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
+                }
+            }
+        }
+
+        private void CommandEditorWindow_DragLeave(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                e.Handled = true;
+                this.ActionsGrid.Visibility = Visibility.Visible;
+                this.ImportCommandVisualGrid.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

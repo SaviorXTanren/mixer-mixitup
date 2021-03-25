@@ -16,7 +16,12 @@
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                           
+        AllowDrop="True"
+        DragEnter="CommandEditorWindow_DragEnter"
+        Drop="CommandEditorWindow_Drop"
+        DragLeave="CommandEditorWindow_DragLeave"
 
         Icon="./../../Logo.ico"
         Title="Command Editor" Height="600" Width="800">
@@ -44,9 +49,23 @@
             <ContentControl x:Name="DetailsContentControl" Grid.Row="0" />
 
             <Border Grid.Row="2" Style="{StaticResource DefaultBorder}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-                    <ActionControls:ActionEditorListControl />
-                </ScrollViewer>
+                <Grid>
+                    <Grid x:Name="ImportCommandVisualGrid" Visibility="Hidden" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <MaterialDesign:PackIcon Grid.Row="0" Kind="Import" Height="80" Width="80" Margin="-7,-10" Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Center" />
+
+                        <TextBlock Grid.Row="2" FontSize="40" Text="{x:Static resx:Resources.ImportActions}" HorizontalAlignment="Center" />
+                    </Grid>
+                    
+                    <ScrollViewer x:Name="ActionsGrid" HorizontalScrollBarVisibility="Disabled">
+                        <ActionControls:ActionEditorListControl />
+                    </ScrollViewer>
+                </Grid>
             </Border>
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">

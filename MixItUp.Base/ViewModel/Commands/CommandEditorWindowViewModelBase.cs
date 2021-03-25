@@ -257,7 +257,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         protected virtual Task UpdateCommandGroup() { return Task.FromResult(0); }
-        protected virtual void SelectedCommandGroupChanged() {  }
+        protected virtual void SelectedCommandGroupChanged() { }
 
         protected CommandGroupSettingsModel GetCommandGroup()
         {
