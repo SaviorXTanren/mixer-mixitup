@@ -1,4 +1,7 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using NAudio.Wave;
@@ -12,61 +15,86 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsAudioService : IAudioService
     {
+        public string DefaultAudioDevice { get { return MixItUp.Base.Resources.DefaultOutput; } }
+        public string MixItUpOverlay { get { return MixItUp.Base.Resources.MixItUpOverlay; } }
+
         public async Task Play(string filePath, int volume)
         {
             await ChannelSession.Services.AudioService.Play(filePath, volume, null);
         }
 
-        public Task Play(string filePath, int volume, string deviceName)
+        public async Task Play(string filePath, int volume, string deviceName)
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                Task.Run(async () =>
+                if (string.IsNullOrEmpty(deviceName))
                 {
-                    int deviceNumber = -1;
-                    if (!string.IsNullOrEmpty(deviceName))
+                    deviceName = ChannelSession.Settings.DefaultAudioOutput;
+                }
+
+                if (this.MixItUpOverlay.Equals(deviceName))
+                {
+                    IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
+                    if (overlay != null)
                     {
-                        deviceNumber = this.GetOutputDeviceID(deviceName);
+                        var overlayItem = new OverlaySoundItemModel(filePath, volume);
+                        await overlay.ShowItem(overlayItem, new CommandParametersModel());
                     }
-
-                    if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
+                }
+                else
+                {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () =>
                     {
-                        deviceNumber = this.GetOutputDeviceID(ChannelSession.Settings.DefaultAudioOutput);
-                    }
-
-                    float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
-
-                    using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
-                    {
-                        WaveStream waveStream = null;
-                        if (File.Exists(filePath))
+                        int deviceNumber = -1;
+                        if (!string.IsNullOrEmpty(deviceName))
                         {
-                            AudioFileReader audioFile = new AudioFileReader(filePath);
-                            audioFile.Volume = floatVolume;
-                            waveStream = audioFile;
-                        }
-                        else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            waveStream = new MediaFoundationReader(filePath);
-                            outputDevice.Volume = floatVolume;
+                            deviceNumber = this.GetOutputDeviceID(deviceName);
                         }
 
-                        if (waveStream != null)
-                        {
-                            outputDevice.Init(waveStream);
-                            outputDevice.Play();
+                        float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
 
-                            while (outputDevice.PlaybackState == PlaybackState.Playing)
+                        using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
+                        {
+                            WaveStream waveStream = null;
+                            if (File.Exists(filePath))
                             {
-                                await Task.Delay(500);
+                                AudioFileReader audioFile = new AudioFileReader(filePath);
+                                audioFile.Volume = floatVolume;
+                                waveStream = audioFile;
+                            }
+                            else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                waveStream = new MediaFoundationReader(filePath);
+                                outputDevice.Volume = floatVolume;
                             }
 
-                            waveStream.Dispose();
+                            if (waveStream != null)
+                            {
+                                outputDevice.Init(waveStream);
+                                outputDevice.Play();
+
+                                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                                {
+                                    await Task.Delay(500);
+                                }
+
+                                waveStream.Dispose();
+                            }
                         }
-                    }
-                });
+                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
-            return Task.FromResult(0);
+        }
+
+        public IEnumerable<string> GetSelectableAudioDevices()
+        {
+            List<string> audioOptions = new List<string>();
+            audioOptions.Add(this.DefaultAudioDevice);
+            audioOptions.Add(this.MixItUpOverlay);
+            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
+            return audioOptions;
         }
 
         public IEnumerable<string> GetOutputDevices()
