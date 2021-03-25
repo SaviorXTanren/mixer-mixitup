@@ -11,6 +11,8 @@ namespace MixItUp.Base.Services
 {
     public class StoreService
     {
+        public const string UserAuthHeader = "MIUAuth";
+
         public async Task AddTestCommand()
         {
             StoreCommandUploadModel command = new StoreCommandUploadModel()
@@ -42,6 +44,7 @@ namespace MixItUp.Base.Services
         {
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
+                client.DefaultRequestHeaders.Add(UserAuthHeader, ChannelSession.Services.Secrets.Encrypt(ChannelSession.Settings.ID.ToString()));
                 HttpResponseMessage response = await client.PostAsync("https://localhost:44309/api/store/command", AdvancedHttpClient.CreateContentFromObject(command));
             }
         }
