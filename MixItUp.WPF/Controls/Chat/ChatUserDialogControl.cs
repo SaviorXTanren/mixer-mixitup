@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -60,11 +61,15 @@ namespace MixItUp.WPF.Controls.Chat
                             ProcessHelper.LaunchLink(user.ChannelLink);
                             break;
                         case UserDialogResult.EditUser:
-                            UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.GetUserData(user.ID));
-                            await Task.Delay(100);
-                            window.Show();
-                            await Task.Delay(100);
-                            window.Focus();
+                            UserDataModel userData = ChannelSession.Settings.GetUserData(user.ID);
+                            if (userData != null)
+                            {
+                                UserDataEditorWindow window = new UserDataEditorWindow(userData);
+                                await Task.Delay(100);
+                                window.Show();
+                                await Task.Delay(100);
+                                window.Focus();
+                            }
                             break;
                         case UserDialogResult.Close:
                         default:

@@ -140,6 +140,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (await DialogHelper.ShowConfirmation("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
             {
                 ChannelSession.Settings.UserData.Remove(user.ID);
+                await ChannelSession.Services.User.RemoveUserByID(user.ID);
             }
             this.RefreshUsers();
         }

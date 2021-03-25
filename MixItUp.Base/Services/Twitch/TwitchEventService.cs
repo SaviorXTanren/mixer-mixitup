@@ -126,6 +126,8 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
+        public const string PrimeSubPlan = "Prime";
+
         private class TwitchGiftedSubEventModel
         {
             public UserViewModel Gifter { get; set; }
@@ -169,15 +171,18 @@ namespace MixItUp.Base.Services.Twitch
 
         public static string GetSubTierNameFromText(string subPlan)
         {
+            if (string.Equals(subPlan, PrimeSubPlan, StringComparison.OrdinalIgnoreCase))
+            {
+                return PrimeSubPlan;
+            }
+
             int subTier = TwitchEventService.GetSubTierNumberFromText(subPlan);
             if (subTier > 0)
             {
                 return $"{MixItUp.Base.Resources.Tier} {subTier}";
             }
-            else
-            {
-                return subPlan;
-            }
+
+            return subPlan;
         }
 
         private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
@@ -363,7 +368,6 @@ namespace MixItUp.Base.Services.Twitch
             else
             {
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, subEvent.User, string.Format("{0} Subscribed at {1}", subEvent.User.DisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
-
             }
         }
 
