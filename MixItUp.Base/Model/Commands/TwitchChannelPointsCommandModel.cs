@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using System.Threading;
 
 namespace MixItUp.Base.Model.Commands
@@ -8,7 +9,13 @@ namespace MixItUp.Base.Model.Commands
     {
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
-        public TwitchChannelPointsCommandModel(string name) : base(name, CommandTypeEnum.TwitchChannelPoints) { }
+        public Guid ChannelPointRewardID { get; set; } = Guid.Empty;
+
+        public TwitchChannelPointsCommandModel(string name, Guid channelPointRewardID)
+            : base(name, CommandTypeEnum.TwitchChannelPoints)
+        {
+            this.ChannelPointRewardID = channelPointRewardID;
+        }
 
 #pragma warning disable CS0612 // Type or member is obsolete
         internal TwitchChannelPointsCommandModel(MixItUp.Base.Commands.TwitchChannelPointsCommand command)

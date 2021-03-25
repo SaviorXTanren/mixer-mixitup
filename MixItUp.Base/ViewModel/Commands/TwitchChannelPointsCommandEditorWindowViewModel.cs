@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
@@ -9,22 +9,42 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class TwitchChannelPointsCommandEditorWindowViewModel : CommandEditorWindowViewModelBase
     {
-        public ThreadSafeObservableCollection<string> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<string>();
+        public ThreadSafeObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ThreadSafeObservableCollection<CustomChannelPointRewardModel>();
 
-        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand) : base(existingCommand) { }
+        public CustomChannelPointRewardModel ChannelPointReward
+        {
+            get { return this.channelPointReward; }
+            set
+            {
+                this.channelPointReward = value;
+                this.NotifyPropertyChanged();
+
+                this.Name = (this.channelPointReward != null) ? this.channelPointReward.title : string.Empty;
+            }
+        }
+        private CustomChannelPointRewardModel channelPointReward;
+
+        private Guid existingChannelPointRewardID = Guid.Empty;
+
+        public TwitchChannelPointsCommandEditorWindowViewModel(TwitchChannelPointsCommandModel existingCommand)
+            : base(existingCommand)
+        {
+            this.existingChannelPointRewardID = existingCommand.ChannelPointRewardID;
+        }
 
         public TwitchChannelPointsCommandEditorWindowViewModel() : base(CommandTypeEnum.TwitchChannelPoints) { }
 
         public override Task<Result> Validate()
         {
-            if (string.IsNullOrWhiteSpace(this.Name))
+            if (this.ChannelPointReward == null)
             {
-                return Task.FromResult(new Result(MixItUp.Base.Resources.ACommandNameMustBeSpecified));
+                return Task.FromResult(new Result(MixItUp.Base.Resources.ChannelPointRewardMissing));
             }
+
             return Task.FromResult(new Result());
         }
 
-        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.Name)); }
+        public override Task<CommandModelBase> CreateNewCommand() { return Task.FromResult<CommandModelBase>(new TwitchChannelPointsCommandModel(this.ChannelPointReward.title, this.ChannelPointReward.id)); }
 
         public override Task SaveCommandToSettings(CommandModelBase command)
         {
@@ -35,10 +55,18 @@ namespace MixItUp.Base.ViewModel.Commands
 
         protected override async Task OnLoadedInternal()
         {
-            IEnumerable<CustomChannelPointRewardModel> customChannelPointRewards = await ChannelSession.TwitchUserConnection.GetCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI);
-            if (customChannelPointRewards != null)
+            foreach (CustomChannelPointRewardModel channelPoint in (await ChannelSession.TwitchUserConnection.GetCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI)).OrderBy(c => c.title))
             {
-                this.ChannelPointRewards.AddRange(customChannelPointRewards.Select(c => c.title));
+                this.ChannelPointRewards.Add(channelPoint);
+            }
+
+            if (this.existingChannelPointRewardID != Guid.Empty)
+            {
+                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+            }
+            else if (!string.IsNullOrEmpty(this.Name))
+            {
+                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.title.Equals(this.Name));
             }
 
             await base.OnLoadedInternal();

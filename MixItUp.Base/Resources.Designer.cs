@@ -1447,6 +1447,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing Channel Point Reward.
+        /// </summary>
+        public static string ChannelPointRewardMissing {
+            get {
+                return ResourceManager.GetString("ChannelPointRewardMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel Points.
         /// </summary>
         public static string ChannelPoints {
@@ -12831,6 +12840,15 @@ namespace MixItUp.Base {
         public static string UpdateChannel {
             get {
                 return ResourceManager.GetString("UpdateChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Channel Point Reward.
+        /// </summary>
+        public static string UpdateChannelPointReward {
+            get {
+                return ResourceManager.GetString("UpdateChannelPointReward", resourceCulture);
             }
         }
         
