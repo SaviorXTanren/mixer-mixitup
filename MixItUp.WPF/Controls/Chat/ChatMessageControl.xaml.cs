@@ -132,6 +132,11 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                     }
                 }
+
+                if (this.Message.IsDeleted)
+                {
+                    this.Message_OnDeleted(this, new EventArgs());
+                }
             }
         }
 
