@@ -4797,4 +4797,16 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ChannelPointRewardMissing" xml:space="preserve">
     <value>Missing Channel Point Reward</value>
   </data>
+  <data name="ChannelPointsRewardGlobalCooldown" xml:space="preserve">
+    <value>Global Cooldown (Mins)</value>
+  </data>
+  <data name="ChannelPointsRewardMaxPerStream" xml:space="preserve">
+    <value>Max Per Stream</value>
+  </data>
+  <data name="ChannelPointsRewardMaxPerUser" xml:space="preserve">
+    <value>Max Per User</value>
+  </data>
+  <data name="ChannelPointRewardUpdateCooldownAndLimits" xml:space="preserve">
+    <value>Update Cooldown &amp; Limits</value>
+  </data>
 </root>

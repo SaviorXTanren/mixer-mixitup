@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.Actions
 {
@@ -24,6 +27,7 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.NotifyPropertyChanged("ShowAdGrid");
                 this.NotifyPropertyChanged("ShowClipsGrid");
                 this.NotifyPropertyChanged("ShowStreamMarkerGrid");
+                this.NotifyPropertyChanged("ShowUpdateChannelPointRewardGrid");
             }
         }
         private TwitchActionType selectedActionType;
@@ -100,6 +104,135 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string streamMarkerDescription;
 
+        public bool ShowUpdateChannelPointRewardGrid { get { return this.SelectedActionType == TwitchActionType.UpdateChannelPointReward; } }
+
+        public ObservableCollection<CustomChannelPointRewardModel> ChannelPointRewards { get; set; } = new ObservableCollection<CustomChannelPointRewardModel>();
+
+        public CustomChannelPointRewardModel ChannelPointReward
+        {
+            get { return this.channelPointReward; }
+            set
+            {
+                this.channelPointReward = value;
+                this.NotifyPropertyChanged();
+
+                if (this.existingChannelPointRewardID == Guid.Empty)
+                {
+                    this.ChannelPointRewardState = this.ChannelPointReward.is_enabled;
+                    this.ChannelPointRewardCost = this.ChannelPointReward.cost.ToString();
+                    this.ChannelPointRewardMaxPerStream = this.ChannelPointReward.max_per_stream_setting.max_per_stream.ToString();
+                    this.ChannelPointRewardMaxPerUser = this.ChannelPointReward.max_per_user_per_stream_setting.max_per_user_per_stream.ToString();
+                    this.ChannelPointRewardGlobalCooldown = (this.ChannelPointReward.global_cooldown_setting.global_cooldown_seconds / 60).ToString();
+                    this.ChannelPointRewardUpdateCooldownsAndLimits = (this.ChannelPointReward.max_per_stream_setting.is_enabled || this.ChannelPointReward.max_per_user_per_stream_setting.is_enabled || this.ChannelPointReward.global_cooldown_setting.is_enabled);
+                }
+                this.existingChannelPointRewardID = Guid.Empty;
+            }
+        }
+        private CustomChannelPointRewardModel channelPointReward;
+
+        public bool ChannelPointRewardState
+        {
+            get { return this.channelPointRewardState; }
+            set
+            {
+                this.channelPointRewardState = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool channelPointRewardState;
+
+        public string ChannelPointRewardCost
+        {
+            get { return (this.channelPointRewardCost > 0) ? this.channelPointRewardCost.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.channelPointRewardCost = cost;
+                }
+                else
+                {
+                    this.channelPointRewardCost = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int channelPointRewardCost = 0;
+
+        public bool ChannelPointRewardUpdateCooldownsAndLimits
+        {
+            get { return this.channelPointRewardUpdateCooldownsAndLimits; }
+            set
+            {
+                this.channelPointRewardUpdateCooldownsAndLimits = value;
+                this.NotifyPropertyChanged();
+
+                if (!this.ChannelPointRewardUpdateCooldownsAndLimits)
+                {
+                    this.ChannelPointRewardMaxPerStream = string.Empty;
+                    this.ChannelPointRewardMaxPerUser = string.Empty;
+                    this.ChannelPointRewardGlobalCooldown = string.Empty;
+                }
+            }
+        }
+        private bool channelPointRewardUpdateCooldownsAndLimits = false;
+
+        public string ChannelPointRewardMaxPerStream
+        {
+            get { return (this.channelPointRewardMaxPerStream > 0) ? this.channelPointRewardMaxPerStream.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.channelPointRewardMaxPerStream = cost;
+                }
+                else
+                {
+                    this.channelPointRewardMaxPerStream = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int channelPointRewardMaxPerStream = 0;
+
+        public string ChannelPointRewardMaxPerUser
+        {
+            get { return (this.channelPointRewardMaxPerUser > 0) ? this.channelPointRewardMaxPerUser.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.channelPointRewardMaxPerUser = cost;
+                }
+                else
+                {
+                    this.channelPointRewardMaxPerUser = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int channelPointRewardMaxPerUser = 0;
+
+        public string ChannelPointRewardGlobalCooldown
+        {
+            get { return (this.channelPointRewardGlobalCooldown > 0) ? this.channelPointRewardGlobalCooldown.ToString() : string.Empty; }
+            set
+            {
+                if (int.TryParse(value, out int cost) && cost > 0)
+                {
+                    this.channelPointRewardGlobalCooldown = cost;
+                }
+                else
+                {
+                    this.channelPointRewardGlobalCooldown = 0;
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int channelPointRewardGlobalCooldown = 0;
+
+        private Guid existingChannelPointRewardID;
+
         public TwitchActionEditorControlViewModel(TwitchActionModel action)
             : base(action)
         {
@@ -122,6 +255,16 @@ namespace MixItUp.Base.ViewModel.Actions
                 this.StreamMarkerDescription = action.StreamMarkerDescription;
                 this.ShowInfoInChat = action.ShowInfoInChat;
             }
+            else if (this.ShowUpdateChannelPointRewardGrid)
+            {
+                this.existingChannelPointRewardID = action.ChannelPointRewardID;
+                this.ChannelPointRewardState = action.ChannelPointRewardState;
+                this.channelPointRewardCost = action.ChannelPointRewardCost;
+                this.ChannelPointRewardUpdateCooldownsAndLimits = action.ChannelPointRewardUpdateCooldownsAndLimits;
+                this.channelPointRewardMaxPerStream = action.ChannelPointRewardMaxPerStream;
+                this.channelPointRewardMaxPerUser = action.ChannelPointRewardMaxPerUser;
+                this.channelPointRewardGlobalCooldown = action.ChannelPointRewardGlobalCooldown;
+            }
         }
 
         public TwitchActionEditorControlViewModel() : base() { }
@@ -135,7 +278,29 @@ namespace MixItUp.Base.ViewModel.Actions
                     return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess));
                 }
             }
+            else if (this.ShowUpdateChannelPointRewardGrid)
+            {
+                if (this.ChannelPointReward == null)
+                {
+                    return Task.FromResult<Result>(new Result(MixItUp.Base.Resources.ChannelPointRewardMissing));
+                }
+            }
             return Task.FromResult(new Result());
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            foreach (CustomChannelPointRewardModel channelPoint in (await ChannelSession.TwitchUserConnection.GetCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI)).OrderBy(c => c.title))
+            {
+                this.ChannelPointRewards.Add(channelPoint);
+            }
+
+            if (this.ShowUpdateChannelPointRewardGrid)
+            {
+                this.ChannelPointReward = this.ChannelPointRewards.FirstOrDefault(c => c.id.Equals(this.existingChannelPointRewardID));
+            }
+
+            await base.OnLoadedInternal();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()
@@ -155,6 +320,11 @@ namespace MixItUp.Base.ViewModel.Actions
             else if (this.ShowStreamMarkerGrid)
             {
                 return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateStreamMarkerAction(this.StreamMarkerDescription, this.ShowInfoInChat));
+            }
+            else if (this.ShowUpdateChannelPointRewardGrid)
+            {
+                return Task.FromResult<ActionModelBase>(TwitchActionModel.CreateUpdateChannelPointReward(this.ChannelPointReward.id, this.ChannelPointRewardState, this.channelPointRewardCost,
+                    this.ChannelPointRewardUpdateCooldownsAndLimits, this.channelPointRewardMaxPerStream, this.channelPointRewardMaxPerUser, this.channelPointRewardGlobalCooldown));
             }
             return Task.FromResult<ActionModelBase>(null);
         }

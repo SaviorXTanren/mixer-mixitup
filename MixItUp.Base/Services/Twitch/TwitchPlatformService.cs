@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -262,5 +263,7 @@ namespace MixItUp.Base.Services.Twitch
         public async Task<IEnumerable<NewAPI.Chat.ChatBadgeSetModel>> GetGlobalChatBadges() { return await this.RunAsync(this.Connection.NewAPI.Chat.GetGlobalChatBadges()); }
 
         public async Task<IEnumerable<NewAPI.ChannelPoints.CustomChannelPointRewardModel>> GetCustomChannelPointRewards(NewAPI.Users.UserModel broadcaster) { return await this.RunAsync(this.Connection.NewAPI.ChannelPoints.GetCustomRewards(broadcaster)); }
+
+        public async Task<NewAPI.ChannelPoints.CustomChannelPointRewardModel> UpdateCustomChannelPointReward(NewAPI.Users.UserModel broadcaster, Guid id, JObject jobj) { return await AsyncRunner.RunAsync(this.Connection.NewAPI.ChannelPoints.UpdateCustomReward(broadcaster, id, jobj)); }
     }
 }

@@ -1456,11 +1456,47 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update Cooldown &amp; Limits.
+        /// </summary>
+        public static string ChannelPointRewardUpdateCooldownAndLimits {
+            get {
+                return ResourceManager.GetString("ChannelPointRewardUpdateCooldownAndLimits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel Points.
         /// </summary>
         public static string ChannelPoints {
             get {
                 return ResourceManager.GetString("ChannelPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global Cooldown (Mins).
+        /// </summary>
+        public static string ChannelPointsRewardGlobalCooldown {
+            get {
+                return ResourceManager.GetString("ChannelPointsRewardGlobalCooldown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Per Stream.
+        /// </summary>
+        public static string ChannelPointsRewardMaxPerStream {
+            get {
+                return ResourceManager.GetString("ChannelPointsRewardMaxPerStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Per User.
+        /// </summary>
+        public static string ChannelPointsRewardMaxPerUser {
+            get {
+                return ResourceManager.GetString("ChannelPointsRewardMaxPerUser", resourceCulture);
             }
         }
         
