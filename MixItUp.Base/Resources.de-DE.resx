@@ -713,6 +713,10 @@
     <value>Deaktiviert</value>
     <comment>Manual</comment>
   </data>
+  <data name="Discord" xml:space="preserve">
+    <value>Discord</value>
+    <comment>Manual</comment>
+  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; enthält</value>
     <comment>Manual</comment>
