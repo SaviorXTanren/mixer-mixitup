@@ -8,7 +8,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,6 +39,7 @@ namespace MixItUp.WPF
             { LanguageOptions.Japanese, "ja-JP" },
             { LanguageOptions.French, "fr-FR" },
             { LanguageOptions.Portuguese, "pt-BR" },
+            { LanguageOptions.Russian, "ru-RU" },
 
             { LanguageOptions.Pseudo, "qps-ploc" },
         };
