@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
+using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Streams;
 
@@ -319,7 +320,11 @@ namespace MixItUp.Base.Model.Actions
                     }
                 }
 
-                await ChannelSession.TwitchUserConnection.UpdateCustomChannelPointReward(ChannelSession.TwitchUserNewAPI, this.ChannelPointRewardID, jobj);
+                CustomChannelPointRewardModel reward = await ChannelSession.TwitchUserConnection.UpdateCustomChannelPointReward(ChannelSession.TwitchUserNewAPI, this.ChannelPointRewardID, jobj);
+                if (reward == null)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated);
+                }
             }
         }
     }

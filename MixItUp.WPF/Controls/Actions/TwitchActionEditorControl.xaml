@@ -83,9 +83,13 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <TextBlock Grid.Row="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{x:Static resx:Resources.TwitchActionChannelPointRewardMustBeCreatedInMixItUp}"/>
+
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="40" />
@@ -104,7 +108,7 @@
                 <TextBox Grid.Column="6" Text="{Binding ChannelPointRewardCost}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Cost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />

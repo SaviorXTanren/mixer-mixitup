@@ -25,11 +25,14 @@ namespace MixItUp.Base.ViewModel.MainControls
                     CustomChannelPointRewardModel reward = await ChannelSession.TwitchUserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
                     {
                         title = name,
-                        cost = 1
+                        cost = 1,
+                        is_enabled = true,
                     });
 
                     if (reward != null)
                     {
+                        this.AddCommand(new TwitchChannelPointsCommandModel(reward.title, reward.id));
+
                         await DialogHelper.ShowMessage(MixItUp.Base.Resources.CreateChannelPointRewardSuccess);
                     }
                     else
