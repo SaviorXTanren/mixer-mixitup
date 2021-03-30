@@ -4794,4 +4794,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="Russian" xml:space="preserve">
     <value>Russian</value>
   </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>Channel Points Editor</value>
+  </data>
 </root>

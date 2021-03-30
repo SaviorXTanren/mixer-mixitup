@@ -1456,6 +1456,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel Points Editor.
+        /// </summary>
+        public static string ChannelPointsEditor {
+            get {
+                return ResourceManager.GetString("ChannelPointsEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat.
         /// </summary>
         public static string Chat {
