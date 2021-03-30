@@ -121,8 +121,4 @@
     <value>Discord</value>
     <comment>Manual</comment>
   </data>
-  <data name="Login" xml:space="preserve">
-    <value>Iniciar sessão</value>
-    <comment>Google</comment>
-  </data>
 </root>

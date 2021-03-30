@@ -1474,6 +1474,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel Points Editor.
+        /// </summary>
+        public static string ChannelPointsEditor {
+            get {
+                return ResourceManager.GetString("ChannelPointsEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Global Cooldown (Mins).
         /// </summary>
         public static string ChannelPointsRewardGlobalCooldown {
@@ -10323,6 +10332,15 @@ namespace MixItUp.Base {
         public static string RunOneRandomly {
             get {
                 return ResourceManager.GetString("RunOneRandomly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Russian.
+        /// </summary>
+        public static string Russian {
+            get {
+                return ResourceManager.GetString("Russian", resourceCulture);
             }
         }
         

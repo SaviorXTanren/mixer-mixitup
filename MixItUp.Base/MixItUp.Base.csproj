@@ -126,6 +126,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 
+    <EmbeddedResource Update="Resources.ru.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.ru-RU.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
     <EmbeddedResource Update="Resources.qps-ploc.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
