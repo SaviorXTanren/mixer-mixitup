@@ -88,14 +88,18 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Width="140" />
 
-            <Button x:Name="ChannelPointsEditorButton" Grid.Column="2" Command="{Binding ChannelPointsEditorCommand}" Width="195">
+            <Button x:Name="CreateChannelPointsEditorButton" Grid.Column="2" Command="{Binding CreateChannelPointRewardCommand}" Content="{x:Static resx:Resources.CreateChannelPointReward}" Width="220" />
+
+            <Button x:Name="ChannelPointsEditorButton" Grid.Column="4" Command="{Binding ChannelPointsEditorCommand}" Width="195">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static resx:Resources.ChannelPointsEditor}" />
-                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,0,0,0" Foreground="{StaticResource WhiteColor}" />
+                    <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,-2,0,0" Foreground="{StaticResource WhiteColor}" />
                 </StackPanel>
             </Button>
         </Grid>

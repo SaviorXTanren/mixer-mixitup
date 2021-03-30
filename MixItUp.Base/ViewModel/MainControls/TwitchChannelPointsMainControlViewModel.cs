@@ -4,16 +4,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Twitch.Base.Models.NewAPI.ChannelPoints;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
     public class TwitchChannelPointsMainControlViewModel : GroupedCommandsMainControlViewModelBase
     {
+        public ICommand CreateChannelPointRewardCommand { get; set; }
+
         public ICommand ChannelPointsEditorCommand { get; set; }
 
         public TwitchChannelPointsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
+            this.CreateChannelPointRewardCommand = this.CreateCommand(async (parameters) =>
+            {
+                string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    CustomChannelPointRewardModel reward = await ChannelSession.TwitchUserConnection.CreateCustomChannelPointRewards(ChannelSession.TwitchUserNewAPI, new UpdatableCustomChannelPointRewardModel()
+                    {
+                        title = name,
+                        cost = 1
+                    });
+
+                    if (reward != null)
+                    {
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CreateChannelPointRewardSuccess);
+                    }
+                    else
+                    {
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.CreateChannelPointRewardFailure);
+                    }
+                }
+            });
+
             this.ChannelPointsEditorCommand = this.CreateCommand((parameters) =>
             {
                 if (ChannelSession.TwitchUserConnection != null)

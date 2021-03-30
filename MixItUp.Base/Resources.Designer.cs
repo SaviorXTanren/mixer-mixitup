@@ -1456,6 +1456,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel Point Reward Name.
+        /// </summary>
+        public static string ChannelPointRewardName {
+            get {
+                return ResourceManager.GetString("ChannelPointRewardName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update Cooldown &amp; Limits.
         /// </summary>
         public static string ChannelPointRewardUpdateCooldownAndLimits {
@@ -2365,6 +2374,33 @@ namespace MixItUp.Base {
         public static string CountersFolder {
             get {
                 return ResourceManager.GetString("CountersFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Channel Point Reward.
+        /// </summary>
+        public static string CreateChannelPointReward {
+            get {
+                return ResourceManager.GetString("CreateChannelPointReward", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Point Reward was not able to be created, please try again later. If this problem persists, please visit the Mix It Up Support Discord for assistance..
+        /// </summary>
+        public static string CreateChannelPointRewardFailure {
+            get {
+                return ResourceManager.GetString("CreateChannelPointRewardFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Point Reward successfully created! You can now dynamically update this Channel Point Reward using the Twitch action inside of a command. Please use the link on the main Channel Points page to visit the editor on Twitch to customize your reward..
+        /// </summary>
+        public static string CreateChannelPointRewardSuccess {
+            get {
+                return ResourceManager.GetString("CreateChannelPointRewardSuccess", resourceCulture);
             }
         }
         

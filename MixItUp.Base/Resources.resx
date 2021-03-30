@@ -4815,4 +4815,16 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ChannelPointRewardUpdateCooldownAndLimits" xml:space="preserve">
     <value>Update Cooldown &amp; Limits</value>
   </data>
+  <data name="CreateChannelPointReward" xml:space="preserve">
+    <value>Create Channel Point Reward</value>
+  </data>
+  <data name="ChannelPointRewardName" xml:space="preserve">
+    <value>Channel Point Reward Name</value>
+  </data>
+  <data name="CreateChannelPointRewardFailure" xml:space="preserve">
+    <value>Channel Point Reward was not able to be created, please try again later. If this problem persists, please visit the Mix It Up Support Discord for assistance.</value>
+  </data>
+  <data name="CreateChannelPointRewardSuccess" xml:space="preserve">
+    <value>Channel Point Reward successfully created! You can now dynamically update this Channel Point Reward using the Twitch action inside of a command. Please use the link on the main Channel Points page to visit the editor on Twitch to customize your reward.</value>
+  </data>
 </root>
