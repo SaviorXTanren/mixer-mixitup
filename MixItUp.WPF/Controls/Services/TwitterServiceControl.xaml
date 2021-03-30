@@ -18,7 +18,7 @@
             <ColumnDefinition Width="225" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap">Twitter service connectivity allows you to easily query your personal tweets for use within your stream, as well as get notifications &amp; information on when someone likes or retweets your tweets.</TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap">Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream.</TextBlock>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">

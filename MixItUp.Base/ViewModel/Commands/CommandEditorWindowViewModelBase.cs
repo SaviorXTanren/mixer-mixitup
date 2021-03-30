@@ -6,8 +6,8 @@ using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -16,13 +16,29 @@ namespace MixItUp.Base.ViewModel.Commands
     public abstract class CommandEditorWindowViewModelBase : ActionEditorListControlViewModel
     {
         public const string MixItUpCommandFileExtension = ".miucommand";
+        public const string MixItUpOldCommandFileExtension = ".mixitupc";
 
         public static async Task<CommandModelBase> ImportCommandFromFile()
         {
-            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
+            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0},*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
             if (!string.IsNullOrEmpty(fileName))
             {
-                return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
+                if (Path.GetExtension(fileName).Equals(MixItUpOldCommandFileExtension))
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    MixItUp.Base.Commands.CommandBase command = await FileSerializerHelper.DeserializeFromFile<MixItUp.Base.Commands.CommandBase>(fileName);
+                    ActionGroupCommandModel actionGroup = new ActionGroupCommandModel(command.Name, false);
+                    foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
+                    {
+                        actionGroup.Actions.AddRange(ActionModelBase.UpgradeAction(action));
+                    }
+                    return actionGroup;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+                else
+                {
+                    return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
+                }
             }
             return null;
         }

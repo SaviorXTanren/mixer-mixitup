@@ -10282,6 +10282,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Russian.
+        /// </summary>
+        public static string Russian {
+            get {
+                return ResourceManager.GetString("Russian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Russian Roulette.
         /// </summary>
         public static string RussianRoulette {
