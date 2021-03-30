@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Web;
@@ -35,7 +36,10 @@ namespace MixItUp.Base.Services
                 command.Tags.Add("Video");
             }
 
-            command.Actions.Add(new ChatActionModel("Hello World!"));
+            ChatCommandModel c = new ChatCommandModel("Test", new HashSet<string>() { "test" });
+            c.Actions.Add(new ChatActionModel("Hello World!"));
+
+            command.Commands.Add(c);
 
             await this.AddCommand(command);
         }

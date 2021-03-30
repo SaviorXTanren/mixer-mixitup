@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model.Commands;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -64,18 +64,18 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public string Data
         {
-            get { return JSONSerializerHelper.SerializeToString(this.Actions); }
+            get { return JSONSerializerHelper.SerializeToString(this.Commands); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.Actions.AddRange(JSONSerializerHelper.DeserializeFromString<List<ActionModelBase>>(value));
+                    this.Commands.AddRange(JSONSerializerHelper.DeserializeFromString<List<CommandModelBase>>(value));
                 }
             }
         }
 
         [JsonIgnore]
-        public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
+        public List<CommandModelBase> Commands { get; set; } = new List<CommandModelBase>();
     }
 
     [DataContract]
