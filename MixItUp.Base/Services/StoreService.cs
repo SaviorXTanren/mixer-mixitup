@@ -38,8 +38,11 @@ namespace MixItUp.Base.Services
 
             ChatCommandModel c = new ChatCommandModel("Test", new HashSet<string>() { "test" });
             c.Actions.Add(new ChatActionModel("Hello World!"));
-
             command.Commands.Add(c);
+
+            ActionGroupCommandModel a = new ActionGroupCommandModel("Test", runOneRandomly: false);
+            a.Actions.Add(new ChatActionModel("Hello World!"));
+            command.Commands.Add(a);
 
             await this.AddCommand(command);
         }
