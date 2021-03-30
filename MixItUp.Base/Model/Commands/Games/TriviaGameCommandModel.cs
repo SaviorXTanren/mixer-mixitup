@@ -42,6 +42,7 @@ namespace MixItUp.Base.Model.Commands.Games
     public class TriviaGameCommandModel : GameCommandModelBase
     {
         public const string GameTriviaQuestionSpecialIdentifier = "gamequestion";
+        public const string GameTriviaSpecificAnswerHeaderSpecialIdentifier = "gameanswer";
         public const string GameTriviaAnswersSpecialIdentifier = "gameanswers";
         public const string GameTriviaCorrectAnswerSpecialIdentifier = "gamecorrectanswer";
 
@@ -207,6 +208,10 @@ namespace MixItUp.Base.Model.Commands.Games
             }
 
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaQuestionSpecialIdentifier] = this.question.Question;
+            foreach (var kvp in this.numbersToAnswers)
+            {
+                this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaSpecificAnswerHeaderSpecialIdentifier + kvp.Key] = kvp.Value;
+            }
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaAnswersSpecialIdentifier] = string.Join(", ", this.numbersToAnswers.OrderBy(a => a.Key).Select(a => $"{a.Key}) {a.Value}"));
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaCorrectAnswerSpecialIdentifier] = this.question.CorrectAnswer;
 

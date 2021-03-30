@@ -127,6 +127,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.Symbols = string.Join(" ", command.Symbols);
             this.FailureCommand = command.FailureCommand;
             this.Outcomes.AddRange(command.Outcomes.Select(o => new SlotMachineGameOutcomeViewModel(o)));
+
+            this.SetUICommands();
         }
 
         public SlotMachineGameCommandEditorWindowViewModel(CurrencyModel currency)
@@ -140,6 +142,8 @@ namespace MixItUp.Base.ViewModel.Games
             this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(500, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "O", "O", "O"));
             this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(200, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "$", "O", "$"));
             this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(150, this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName)), "X", "$", "O", anyOrder: true));
+
+            this.SetUICommands();
         }
 
         public IEnumerable<string> SymbolsList { get { return (!string.IsNullOrEmpty(this.Symbols)) ? this.Symbols.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>(); } }
@@ -192,6 +196,15 @@ namespace MixItUp.Base.ViewModel.Games
             }
 
             return new Result();
+        }
+
+        private void SetUICommands()
+        {
+            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            {
+                this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName))));
+                return Task.FromResult(0);
+            });
         }
     }
 }
