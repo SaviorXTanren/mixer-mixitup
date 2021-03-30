@@ -4791,6 +4791,12 @@ sub-command will be able to run at the same time if it's different than the curr
 sub-command is an Action Group, then it will still be possible for another Action Group to run at the same time if this is
 enabled. You can think of it as similar to toggling the "Unlock Command" option, but it instead only applies to this specific time.</value>
   </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>Channel Points Editor</value>
+  </data>
   <data name="UpdateChannelPointReward" xml:space="preserve">
     <value>Update Channel Point Reward</value>
   </data>

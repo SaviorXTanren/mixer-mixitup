@@ -11,6 +11,7 @@
         Japanese = 5,
         French = 6,
         Portuguese = 7,
+        Russian = 8,
 
         Pseudo = 99999,
     }

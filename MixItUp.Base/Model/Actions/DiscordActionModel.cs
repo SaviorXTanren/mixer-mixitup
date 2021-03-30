@@ -69,7 +69,8 @@ namespace MixItUp.Base.Model.Actions
                 if (this.channel != null)
                 {
                     string message = await this.ReplaceStringWithSpecialModifiers(this.MessageText, parameters);
-                    await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
+                    string filePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
+                    await ChannelSession.Services.Discord.CreateMessage(this.channel, message, filePath);
                 }
             }
             else if (this.ActionType == DiscordActionTypeEnum.MuteSelf)

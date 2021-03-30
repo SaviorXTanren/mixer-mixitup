@@ -744,6 +744,7 @@ namespace MixItUp.Base.Model.Commands
 
                 ChatCommandModel newCommand = new ChatCommandModel(commandTrigger, new HashSet<string>() { commandTrigger }, includeExclamation: true, wildcards: false);
                 newCommand.Requirements.AddBasicRequirements();
+                newCommand.Requirements.Role.Role = UserRoleEnum.User;
                 newCommand.Requirements.Cooldown.Type = CooldownTypeEnum.Standard;
                 newCommand.Requirements.Cooldown.IndividualAmount = cooldown;
                 newCommand.Actions.Add(new ChatActionModel(commandText));
