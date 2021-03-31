@@ -166,7 +166,7 @@ namespace MixItUp.Base.Model.Requirements
                 int amount = 0;
                 if (parameters.Arguments.Count() > 0)
                 {
-                    if (this.ArgumentIndex > 0)
+                    if (this.ArgumentIndex > 0 && parameters.Arguments.Count() > this.ArgumentIndex)
                     {
                         if (!int.TryParse(parameters.Arguments.ElementAt(this.ArgumentIndex), out amount))
                         {
