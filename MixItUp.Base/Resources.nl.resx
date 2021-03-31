@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Opdracht Bewerken</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Sintels</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Alleen ember-vaardigheden</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers Uitgegeven</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Alleen emotes en vaardigheden</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Het pad naar het geluidsbestand mag niet leeg zijn.</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Tijdstempel voor berichten weergeven</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>MixPlay-waarschuwingen weergeven</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr Emotes weergeven (opnieuw opstarten vereist)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Enkele actie</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Alleen vaardigheden</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Gebruikte vaardigheden</value>

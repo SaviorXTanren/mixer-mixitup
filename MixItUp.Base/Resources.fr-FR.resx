@@ -537,10 +537,6 @@
     <value>Dupliquer</value>
     <comment>Manual</comment>
   </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Coût en Ember</value>
-    <comment>Manual</comment>
-  </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Activer le Chat</value>
     <comment>Manual</comment>
@@ -919,6 +915,10 @@
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>Vous devez être un {0} pour faire cela.</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>RTS</value>
     <comment>Manual</comment>
   </data>
   <data name="RunCommand" xml:space="preserve">

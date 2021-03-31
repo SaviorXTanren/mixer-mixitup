@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Embers</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Ember Skills Only</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers Spent</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Emotes &amp; Skills Only</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>The sound file path must not be empty.</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Show Message Timestamp</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Show MixPlay Alerts</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Show MixrElixr Emotes (Requires Restart)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Single Action</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Skills Only</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Skills Used</value>
@@ -4706,5 +4688,152 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="ChannelPointsEditor" xml:space="preserve">
     <value>Channel Points Editor</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>Chat User Timeout</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>Chat Whisper Received</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>Twitch Channel Bits Cheered</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>Twitch Channel Followed</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>Twitch Channel Hosted</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch Channel Mass Subscriptions Gifted</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>Twitch Channel Points Redeemed</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>Twitch Channel Raided</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>Twitch Channel Resubscribed</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>Twitch Channel Stream Start</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>Twitch Channel Stream Stop</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>Twitch Channel Subscribed</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch ChannelSubscription Gifted</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>Twitch Channel Unfollowed</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>Chat Timeout</value>
+  </data>
+  <data name="PurgeUser" xml:space="preserve">
+    <value>Purge User</value>
+  </data>
+  <data name="BanUser" xml:space="preserve">
+    <value>Ban User</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>Clear Chat</value>
+  </data>
+  <data name="AddModerationStrike" xml:space="preserve">
+    <value>Add Moderation Strike</value>
+  </data>
+  <data name="RemoveModerationStrike" xml:space="preserve">
+    <value>Remove Moderation Strike</value>
+  </data>
+  <data name="ModUser" xml:space="preserve">
+    <value>Mod User</value>
+  </data>
+  <data name="UnbanUser" xml:space="preserve">
+    <value>Unban User</value>
+  </data>
+  <data name="UnmodUser" xml:space="preserve">
+    <value>Unmod User</value>
+  </data>
+  <data name="VIPUser" xml:space="preserve">
+    <value>VIP User</value>
+  </data>
+  <data name="UnVIPUser" xml:space="preserve">
+    <value>Un-VIP User</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>Poll</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>Raid</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>Clip</value>
+  </data>
+  <data name="StreamMarker" xml:space="preserve">
+    <value>Stream Marker</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>Spin the Wheel</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>Empty the Jar</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>Roll Credits</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>Send Tweet</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>Update Name</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>Plain Text</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>Left Mouse Down</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>Left Mouse Up</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>Right Mouse Down</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>RightMouseUp</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>Middle Mouse Down</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>Middle Mouse Up</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>Extra Mouse Down</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>Extra Mouse Up</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>Wheel</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>Absolute</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>Affiliate</value>
   </data>
 </root>

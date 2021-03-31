@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Edit-Befehl</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Glut</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Nur Ember-Fähigkeiten</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers Spent</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Nur Emotes &amp; Skills</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Der Sounddateipfad darf nicht leer sein.</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Nachricht Zeitstempel anzeigen</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>MixPlay-Warnungen anzeigen</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr Emotes anzeigen (Neustart erforderlich)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Einheitliche Aktion</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Nur Fähigkeiten</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Verwendete Fähigkeiten</value>

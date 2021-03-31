@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Командование редактирования</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Угли</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Эмбер Навыки только</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Эмберс потрачено</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Эмоции и только навыки</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Путь звукового файла не должен быть пустым.</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Показать таймштамп сообщения</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Показать оповещения MixPlay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Показать MixrElixr Эмоты (требует перезагрузки)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Одно действие</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Только навыки</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Используемые навыки</value>

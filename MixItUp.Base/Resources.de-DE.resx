@@ -733,22 +733,6 @@
     <value>Befehl anpassen</value>
     <comment>Manual</comment>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Embers</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Nur Ember Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers ausgegeben</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Nur Emotes &amp; Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Enable" xml:space="preserve">
     <value>Aktivieren</value>
     <comment>Manual</comment>
@@ -1625,10 +1609,6 @@
     <value>Chat-Zeitstempel anzeigen</value>
     <comment>Manual</comment>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Zeige MixPlay-Alerts</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr-Emotes anzeigen (Neustart erforderlich)</value>
     <comment>Manual</comment>
@@ -1639,10 +1619,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Einzelne Aktion</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Nur Fähigkeiten</value>
     <comment>Manual</comment>
   </data>
   <data name="SkillsUsed" xml:space="preserve">

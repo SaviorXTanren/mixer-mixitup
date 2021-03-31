@@ -633,22 +633,6 @@
     <value>Изменить команду</value>
     <comment>Manual</comment>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Угольки</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Только скиллы за угольки</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Потрачено угольков</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Только смайлы &amp; скиллы</value>
-    <comment>Manual</comment>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Путь к звуковому файлу не должен быть пустым.</value>
     <comment>Manual</comment>
@@ -1539,10 +1523,6 @@
   </data>
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Показывать время отправки сообщения</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Показывать оповещения MixPlay</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">

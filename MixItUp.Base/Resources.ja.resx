@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>編集コマンド</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>残り火</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>エンバースキルのみ</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>残り火支出</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>エモート&amp;スキルのみ</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>サウンド ファイルのパスは空にできません。</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>メッセージのタイムスタンプを表示</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>ミックスプレイのアラートを表示する</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>ミクサーリクサーエモートを表示する (再起動が必要)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>単一アクション</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>スキルのみ</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>使用されるスキル</value>

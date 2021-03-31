@@ -11,26 +11,16 @@ namespace MixItUp.Base.Actions
     [Obsolete]
     public enum ModerationActionTypeEnum
     {
-        [Name("Chat Timeout")]
         ChatTimeout,
-        [Name("Purge User")]
         PurgeUser,
         [Obsolete]
-        [Name("MixPlay Timeout")]
         InteractiveTimeout,
-        [Name("Ban User")]
         BanUser,
-        [Name("Clear Chat")]
         ClearChat,
-        [Name("Add Moderation Strike")]
         AddModerationStrike,
-        [Name("Remove Moderation Strike")]
         RemoveModerationStrike,
-        [Name("Unban User")]
         UnbanUser,
-        [Name("Mod User")]
         ModUser,
-        [Name("Unmod User")]
         UnmodUser,
         VIPUser,
         UnVIPUser

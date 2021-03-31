@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Editar comando</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Brasas</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Somente habilidades de brasa</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Brasas Gastas</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Emotes &amp; Skills Only</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>O caminho do arquivo de som não deve estar vazio.</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Mostrar timestamp de mensagem</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Mostrar alertas mixPlay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Show MixrElixr Emotes (Requer Reinicialização)</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Ação Única</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Somente habilidades</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Habilidades usadas</value>

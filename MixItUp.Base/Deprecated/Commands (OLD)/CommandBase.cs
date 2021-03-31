@@ -19,7 +19,6 @@ namespace MixItUp.Base.Commands
     {
         Chat = 0,
         [Obsolete]
-        [Name("MixPlay")]
         Interactive = 1,
         Event = 2,
         Timer = 3,

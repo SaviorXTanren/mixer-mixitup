@@ -771,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>[!!! Éδïţ Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>[!!! É₥βèřš !!!]</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>[!!! É₥βèř Šƙïℓℓš Óñℓ¥ !!!]</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>[!!! É₥βèřš Šƥèñţ !!!]</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>[!!! É₥ôţèš &amp; Šƙïℓℓš Óñℓ¥ !!!]</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>[!!! Ţĥè šôúñδ ƒïℓè ƥáţĥ ₥úšţ ñôţ βè è₥ƥţ¥. !!!]</value>
   </data>
@@ -1932,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>[!!! Šĥôω Mèššáĝè Ţï₥èšţá₥ƥ !!!]</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>[!!! Šĥôω MïжÞℓá¥ Âℓèřţš !!!]</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>[!!! Šĥôω MïжřÉℓïжř É₥ôţèš (Rè9úïřèš Rèšţářţ) !!!]</value>
   </data>
@@ -1949,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>[!!! Šïñĝℓè Âçţïôñ !!!]</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>[!!! Šƙïℓℓš Óñℓ¥ !!!]</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>[!!! Šƙïℓℓš Ûšèδ !!!]</value>
@@ -4703,5 +4685,155 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="Russian" xml:space="preserve">
     <value>[!!! Rúššïáñ !!!]</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţš Éδïţôř !!!]</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>[!!! Çĥáţ Ûšèř Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>[!!! Çĥáţ Wĥïšƥèř RèçèïƲèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ ßïţš Çĥèèřèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Fôℓℓôωèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Hôšţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Mášš Šúβšçřïƥţïôñš Gïƒţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Þôïñţš Rèδèè₥èδ !!!]</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Ráïδèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Rèšúβšçřïβèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţářţ !!!]</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţôƥ !!!]</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šúβšçřïβèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ ÇĥáññèℓŠúβšçřïƥţïôñ Gïƒţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Ûñƒôℓℓôωèδ !!!]</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>[!!! Çĥáţ Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="PurgeUser" xml:space="preserve">
+    <value>[!!! Þúřĝè Ûšèř !!!]</value>
+  </data>
+  <data name="BanUser" xml:space="preserve">
+    <value>[!!! ßáñ Ûšèř !!!]</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>[!!! Çℓèář Çĥáţ !!!]</value>
+  </data>
+  <data name="AddModerationStrike" xml:space="preserve">
+    <value>[!!! Âδδ Môδèřáţïôñ Šţřïƙè !!!]</value>
+  </data>
+  <data name="RemoveModerationStrike" xml:space="preserve">
+    <value>[!!! Rè₥ôƲè Môδèřáţïôñ Šţřïƙè !!!]</value>
+  </data>
+  <data name="ModUser" xml:space="preserve">
+    <value>[!!! Môδ Ûšèř !!!]</value>
+  </data>
+  <data name="UnbanUser" xml:space="preserve">
+    <value>[!!! Ûñβáñ Ûšèř !!!]</value>
+  </data>
+  <data name="UnmodUser" xml:space="preserve">
+    <value>[!!! Ûñ₥ôδ Ûšèř !!!]</value>
+  </data>
+  <data name="VIPUser" xml:space="preserve">
+    <value>[!!! VÌÞ Ûšèř !!!]</value>
+  </data>
+  <data name="UnVIPUser" xml:space="preserve">
+    <value>[!!! Ûñ-VÌÞ Ûšèř !!!]</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>[!!! Hôšţ !!!]</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>[!!! Þôℓℓ !!!]</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>[!!! Ráïδ !!!]</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>[!!! Çℓïƥ !!!]</value>
+  </data>
+  <data name="StreamMarker" xml:space="preserve">
+    <value>[!!! Šţřèá₥ Mářƙèř !!!]</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>[!!! Šƥïñ ţĥè Wĥèèℓ !!!]</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>[!!! É₥ƥţ¥ ţĥè Jář !!!]</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>[!!! Rôℓℓ Çřèδïţš !!!]</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>[!!! Šèñδ Ţωèèţ !!!]</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>[!!! Ûƥδáţè Ná₥è !!!]</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>[!!! Þℓáïñ Ţèжţ !!!]</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>[!!! Ļèƒţ Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>[!!! Ļèƒţ Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>[!!! Rïĝĥţ Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>[!!! RïĝĥţMôúšèÛƥ !!!]</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>[!!! Mïδδℓè Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>[!!! Mïδδℓè Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>[!!! Éжţřá Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>[!!! Éжţřá Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>[!!! Wĥèèℓ !!!]</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>[!!! Âβšôℓúţè !!!]</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ !!!]</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>[!!! Þřè₥ïú₥ !!!]</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>[!!! Âƒƒïℓïáţè !!!]</value>
   </data>
 </root>

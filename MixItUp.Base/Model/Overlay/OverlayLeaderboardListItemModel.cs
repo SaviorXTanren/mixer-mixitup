@@ -37,7 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         Weekly,
         Monthly,
         Yearly,
-        [Name("All Time")]
         AllTime,
         Daily,
     }
