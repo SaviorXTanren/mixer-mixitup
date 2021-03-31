@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Pro Ember</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 pro Stunde</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 pro Minute</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 Pro Funke</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>Über</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Audioausgabegerät</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Auto-Hoster</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Der Mix It Up Auto-Hoster ist eine eigenständige Anwendung, die das Hosting anderer Kanäle verarbeitet, wenn Sie nicht streamen. Der Auto-Hoster muss ausgeführt werden, aber Sie müssen Nicht haben, dass Mix It Up ausgeführt wird, um ihn verwenden zu können.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Der Auto-Hoster kann gestartet werden, indem Sie auf die Schaltfläche unten klicken</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Auto-Include "!"</value>
@@ -1188,9 +1173,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Neueste Version</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Starten von Auto-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Layout</value>
   </data>
@@ -1332,24 +1314,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Min-Wert</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Mixer Alter</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Mixer-Clips</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Mixer-Daten</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Mixer Labs</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Mixer-Status</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Mixer-Unterstützung</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mix It Up-Befehle</value>
   </data>
@@ -1370,9 +1334,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Sollte diese Schaltfläche Abklingzeit auf seine oder zusammen mit allen?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Wie viele Sparks sollte dieser Button kosten?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Möchten Sie Chat Moderation für den gesamten eingegebenen Text verwenden?</value>
@@ -2019,20 +1980,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Quelltext</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Spark-Kosten</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Spark Crystal</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark Exempt</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Funken</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Sparks Spent</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Spezial-Identifikator</value>
@@ -2568,45 +2520,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Spende</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Mixer Channel Embers Spent</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Fan Progression Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer-Kanal gefolgt</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel Gehostet</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Mixer Channel Milestone erreicht</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixer-Kanal neu abonniert</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Mixer Channel Skill verwendet</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixer Channel Sparks Spent</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Mixer-Kanal-Stream-Start</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Channel Stream Stop</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer-Kanal abonniert</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel Abonnement begabt</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mixer-Kanal unfollowed</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Abonniert</value>
   </data>
@@ -2684,9 +2597,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Punktpreise</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Funkenbonus</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sub-Multiplikator</value>
@@ -3046,7 +2956,7 @@
     <value>Nicht abonniert</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Mit der Auto-Log-In-Einstellung kann sich Mix It Up automatisch im aktuell angemeldeten Mixer-Benutzerkonto anmelden. HINWEIS: Wenn ein Mix It Up-Update vorhanden ist oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
+    <value>Mit der Auto-Log-In-Einstellung kann sich Mix It Up automatisch im aktuell angemeldeten anmelden. HINWEIS: Wenn ein Mix It Up-Update vorhanden ist oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Mit dieser Option können Sie jede Verfolgung Ihrer Daten über unsere Back-End-Services deaktivieren. Wir verfolgen Daten rund um App-Nutzung &amp; Abstürze, um Ihre Erfahrung zu verbessern. Wenn Sie diese Option auswählen, beenden wir die gesamte Nachverfolgung dieser Daten. Beachten Sie, dass dadurch keine Daten deaktiviert werden, die beim Hochladen und Überprüfen von Mix It Up-Store-Befehlen enthalten sind.</value>

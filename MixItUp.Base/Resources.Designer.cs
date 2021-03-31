@@ -79,15 +79,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 Per Ember.
-        /// </summary>
-        public static string _1PerEmber {
-            get {
-                return ResourceManager.GetString("1PerEmber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 1 Per Hour.
         /// </summary>
         public static string _1PerHour {
@@ -102,15 +93,6 @@ namespace MixItUp.Base {
         public static string _1PerMinute {
             get {
                 return ResourceManager.GetString("1PerMinute", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 1 Per Spark.
-        /// </summary>
-        public static string _1PerSpark {
-            get {
-                return ResourceManager.GetString("1PerSpark", resourceCulture);
             }
         }
         
@@ -844,33 +826,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Hoster.
-        /// </summary>
-        public static string AutoHoster {
-            get {
-                return ResourceManager.GetString("AutoHoster", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Mix It Up Auto-Hoster is a stand-alone application that handles the hosting of other channels when you are not streaming. The Auto-Hoster must be running, but you do not have to have Mix It Up running to use it..
-        /// </summary>
-        public static string AutoHosterDescription {
-            get {
-                return ResourceManager.GetString("AutoHosterDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Auto-Hoster can be launched by clicking the button below.
-        /// </summary>
-        public static string AutoHosterLaunchHeader {
-            get {
-                return ResourceManager.GetString("AutoHosterLaunchHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Auto-Include &quot;!&quot;.
         /// </summary>
         public static string AutoIncludeBang {
@@ -889,7 +844,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in Mixer user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs..
+        ///   Looks up a localized string similar to The Auto Log-In setting allows Mix It Up to automatically log in the currently signed-in user account. NOTE: If there is a Mix It Up update or you are required to re-authenticate any of your services accounts, you will need to manually log in when this occurs..
         /// </summary>
         public static string AutoLogInCurrentAccountTooltip {
             get {
@@ -7267,15 +7222,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Launch Auto-Hoster.
-        /// </summary>
-        public static string LaunchAutoHoster {
-            get {
-                return ResourceManager.GetString("LaunchAutoHoster", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Layout.
         /// </summary>
         public static string Layout {
@@ -7861,177 +7807,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mixer Age.
-        /// </summary>
-        public static string MixerAge {
-            get {
-                return ResourceManager.GetString("MixerAge", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Embers Spent.
-        /// </summary>
-        public static string MixerChannelEmbersUsed {
-            get {
-                return ResourceManager.GetString("MixerChannelEmbersUsed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Fan Progression Level-Up.
-        /// </summary>
-        public static string MixerChannelFanProgressionLevelUp {
-            get {
-                return ResourceManager.GetString("MixerChannelFanProgressionLevelUp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Followed.
-        /// </summary>
-        public static string MixerChannelFollowed {
-            get {
-                return ResourceManager.GetString("MixerChannelFollowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Hosted.
-        /// </summary>
-        public static string MixerChannelHosted {
-            get {
-                return ResourceManager.GetString("MixerChannelHosted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Milestone Reached.
-        /// </summary>
-        public static string MixerChannelMilestoneReached {
-            get {
-                return ResourceManager.GetString("MixerChannelMilestoneReached", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Resubscribed.
-        /// </summary>
-        public static string MixerChannelResubscribed {
-            get {
-                return ResourceManager.GetString("MixerChannelResubscribed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Skill Used.
-        /// </summary>
-        public static string MixerChannelSkillUsed {
-            get {
-                return ResourceManager.GetString("MixerChannelSkillUsed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Sparks Spent.
-        /// </summary>
-        public static string MixerChannelSparksUsed {
-            get {
-                return ResourceManager.GetString("MixerChannelSparksUsed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Stream Start.
-        /// </summary>
-        public static string MixerChannelStreamStart {
-            get {
-                return ResourceManager.GetString("MixerChannelStreamStart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Stream Stop.
-        /// </summary>
-        public static string MixerChannelStreamStop {
-            get {
-                return ResourceManager.GetString("MixerChannelStreamStop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Subscribed.
-        /// </summary>
-        public static string MixerChannelSubscribed {
-            get {
-                return ResourceManager.GetString("MixerChannelSubscribed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Subscription Gifted.
-        /// </summary>
-        public static string MixerChannelSubscriptionGifted {
-            get {
-                return ResourceManager.GetString("MixerChannelSubscriptionGifted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Channel Unfollowed.
-        /// </summary>
-        public static string MixerChannelUnfollowed {
-            get {
-                return ResourceManager.GetString("MixerChannelUnfollowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Clips.
-        /// </summary>
-        public static string MixerClips {
-            get {
-                return ResourceManager.GetString("MixerClips", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Data.
-        /// </summary>
-        public static string MixerData {
-            get {
-                return ResourceManager.GetString("MixerData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Labs.
-        /// </summary>
-        public static string MixerLabs {
-            get {
-                return ResourceManager.GetString("MixerLabs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Status.
-        /// </summary>
-        public static string MixerStatus {
-            get {
-                return ResourceManager.GetString("MixerStatus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mixer Support.
-        /// </summary>
-        public static string MixerSupport {
-            get {
-                return ResourceManager.GetString("MixerSupport", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Commands.
         /// </summary>
         public static string MixItUpCommands {
@@ -8091,15 +7866,6 @@ namespace MixItUp.Base {
         public static string MixPlayCooldownTypeHeader {
             get {
                 return ResourceManager.GetString("MixPlayCooldownTypeHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to How many Sparks should this button cost?.
-        /// </summary>
-        public static string MixPlaySparkCostHeader {
-            get {
-                return ResourceManager.GetString("MixPlaySparkCostHeader", resourceCulture);
             }
         }
         
@@ -11245,24 +11011,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spark Bonus.
-        /// </summary>
-        public static string SparkBonus {
-            get {
-                return ResourceManager.GetString("SparkBonus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Spark Cost.
-        /// </summary>
-        public static string SparkCost {
-            get {
-                return ResourceManager.GetString("SparkCost", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Spark Crystal.
         /// </summary>
         public static string SparkCrystal {
@@ -11272,29 +11020,11 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spark Exempt.
-        /// </summary>
-        public static string SparkExempt {
-            get {
-                return ResourceManager.GetString("SparkExempt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Sparks.
         /// </summary>
         public static string Sparks {
             get {
                 return ResourceManager.GetString("Sparks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sparks Spent.
-        /// </summary>
-        public static string SparksSpent {
-            get {
-                return ResourceManager.GetString("SparksSpent", resourceCulture);
             }
         }
         

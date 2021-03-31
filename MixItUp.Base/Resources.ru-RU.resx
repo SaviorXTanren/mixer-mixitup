@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 за янтарь</value>
-    <comment>Manual</comment>
-  </data>
   <data name="About" xml:space="preserve">
     <value>О программе</value>
     <comment>Manual</comment>
@@ -267,14 +263,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Аудиовывод</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Mix It Up Авто-Хостер является автономным приложением, которое проводит ретрансляцию других каналов, когда вы не стримите. Авто-Hoster должен быть запущен, но вам не обязательно оставлять Mix It Up работающим.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Авто-Hoster может быть запущен с помощью кнопки ниже</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
@@ -989,10 +977,6 @@
     <value>Язык (требуется перезапуск)</value>
     <comment>Manual</comment>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Запуск Авто-Хостера</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Таблица лидеров</value>
     <comment>Manual</comment>
@@ -1089,30 +1073,6 @@
     <value>Мин. значение</value>
     <comment>Manual</comment>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Стаж на Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Клипы на Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Данные Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Лаборатории Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Статус на Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Поддержка Mixer</value>
-    <comment>Manual</comment>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mix It Up - Команды</value>
     <comment>Manual</comment>
@@ -1135,10 +1095,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Эта кнопка перезаряжается сама по себе или вместе со всеми?</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Сколько искр будет стоить эта кнопка?</value>
     <comment>Manual</comment>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
@@ -1613,14 +1569,6 @@
     <value>Путь к звуковому файлу</value>
     <comment>Manual</comment>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Стоимость в искрах</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Искра освобождена</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Спец. идентификатор</value>
     <comment>Manual</comment>
@@ -2077,58 +2025,6 @@
     <value>Пожертвование Extra Life</value>
     <comment>Manual</comment>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Канал на Mixer потратил угольки</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Прогресс фаната канала на Mixer повышен</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Канал Mixer отслеживают</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Канал Mixer ретранслируют</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Канал Mixer достиг уровня</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>На канале Mixer повторная подписка</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>На канале Mixer использован скилл</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>На канале Mixer потрачены искры</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>На канале Mixer начат стрим</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>На канале Mixer окончен стрим</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>На канале Mixer оформлена подписка</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>На канале Mixer подарена подписка</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>На канале Mixer потерян фолловер</value>
-    <comment>Manual</comment>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Патрон подписался</value>
     <comment>Manual</comment>
@@ -2191,10 +2087,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Коэффициенты очков</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Бонус за искры</value>
     <comment>Manual</comment>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
@@ -2514,7 +2406,7 @@
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Настройка автоматической авторизации позволяет Mix It Up автоматически входить в используемый в данный момент аккаунт Mixer. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вам нужно повторно авторизоваться в любой из ваших учетных записей, поле этого нужно будет вручную войти в систему.</value>
+    <value>Настройка автоматической авторизации позволяет Mix It Up автоматически входить в используемый в данный момент аккаунт. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вам нужно повторно авторизоваться в любой из ваших учетных записей, поле этого нужно будет вручную войти в систему.</value>
     <comment>Manual</comment>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">

@@ -121,8 +121,20 @@
     <value>Discord</value>
     <comment>Manual</comment>
   </data>
+  <data name="HTML" xml:space="preserve">
+    <value>HTML</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="IFTTT" xml:space="preserve">
+    <value>IFTTT</value>
+    <comment>Manual</comment>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>ログイン</value>
     <comment>Google</comment>
+  </data>
+  <data name="OvrStream" xml:space="preserve">
+    <value>OvrStream</value>
+    <comment>Manual</comment>
   </data>
 </root>

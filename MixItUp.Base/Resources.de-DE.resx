@@ -117,20 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 pro Ember</value>
-    <comment>Manual</comment>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 pro Stunde</value>
     <comment>Manual</comment>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 pro Minute</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 pro Spark</value>
     <comment>Manual</comment>
   </data>
   <data name="About" xml:space="preserve">
@@ -319,18 +311,6 @@
   </data>
   <data name="Audience" xml:space="preserve">
     <value>Publikum</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Auto-Hoster</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Der Mix It Up Auto-Hoster ist eine eigenständige Anwendung, die das Hosting anderer Kanäle übernimmt, wenn Du nicht streamst. Der Auto-Hoster kann ohne Mix It Up ausgeführt werden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Der Auto-Hoster kann durch die folgende Taste gestartet werden</value>
     <comment>Manual</comment>
   </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
@@ -1101,10 +1081,6 @@
     <value>Neuestes Release</value>
     <comment>Manual</comment>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Auto-Hoster starten</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Bestenliste</value>
     <comment>Manual</comment>
@@ -1207,30 +1183,6 @@
   </data>
   <data name="Minutes" xml:space="preserve">
     <value>Minuten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Mixer-Alter</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Mixer Clips</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Mixer-Daten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Mixer Labs</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Mixer-Status</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Mixer-Unterstützung</value>
     <comment>Manual</comment>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
@@ -1705,16 +1657,8 @@
     <value>Quelle</value>
     <comment>Manual</comment>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark Ausnahme</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Sparks</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Spark ausgegeben</value>
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
@@ -2203,45 +2147,6 @@
   </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Spende</value>
-  </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Mixer Channel Glut verbraucht</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Fan Progression Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer Channel gefolgt</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel gehostet</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Meilenstein des Mischerkanals erreicht</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixer Channel neu abonniert</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Mixer Channel Skill Used</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mischerkanal Funken verbraucht</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Mixer Channel Stream Start</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Channel Stream Stop</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer Channel abonniert</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel Abonnement begabt</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mischerkanal nicht befolgt</value>
   </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon abonniert</value>

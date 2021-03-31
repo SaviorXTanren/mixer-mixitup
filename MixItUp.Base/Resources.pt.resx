@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Por Brasa</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 por hora</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 por minuto</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 por faísca</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>Sobre</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Dispositivo de saída de áudio</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Hoster automático</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>O Mix It Up Auto-Hoster é um aplicativo autônomo que lida com a hospedagem de outros canais quando você não está transmitindo. O Auto-Hoster deve estar em execução, mas você não precisa ter Mix It Up funcionando para usá-lo.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>O Auto-Hoster pode ser lançado clicando no botão abaixo</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Incluir automaticamente "!"</value>
@@ -1188,9 +1173,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Versão mais recente</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Lançar auto-hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Layout</value>
   </data>
@@ -1332,24 +1314,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Valor Min</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Idade da Batedeira</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Clipes de misturador</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Dados do misturador</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Laboratórios de Mistura</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Status do misturador</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Suporte ao misturador</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Misturar comandos</value>
   </data>
@@ -1370,9 +1334,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Este botão deve esfriar o refrigerador em seu ou junto com todos?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Quantas faíscas esse botão deve custar?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Você gostaria de usar a Moderação de Bate-Papo em todos os textos inseridos?</value>
@@ -2019,20 +1980,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Texto fonte</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Custo da Centelha</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Cristal de Faísca</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Isento de Faísca</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Faíscas</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Faíscas Gastas</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Identificador Especial</value>
@@ -2568,45 +2520,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Doação JustGiving</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Misturadores Canal Embers Gastos</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Nível de progressão do ventilador do canal mixer</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Canal mixer seguido</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Canal mixer hospedado</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Marco do Canal mixer alcançado</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixer Channel Resinscrito</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Habilidade do canal do misturador usado</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Faíscas do canal mixer gastas</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Início do fluxo de canais do mixer</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Parada de fluxo de canal de mixer</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer Channel Inscrito</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Assinatura do canal mixer presenteada</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mixer Channel Unfollowed</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Subscrito</value>
   </data>
@@ -2684,9 +2597,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Taxas de ponto</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Bônus de Faísca</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sub Multiplicador</value>
@@ -3046,7 +2956,7 @@
     <value>Não inscrito</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>A configuração De login automático permite que o Mix It Up faça login automaticamente na conta de usuário do Mixer atualmente assinada. NOTA: Se houver uma atualização do Mix It Up ou você for obrigado a re-autenticar qualquer uma de suas contas de serviços, você precisará fazer login manualmente quando isso ocorrer.</value>
+    <value>A configuração De login automático permite que o Mix It Up faça login automaticamente na conta de usuário do atualmente assinada. NOTA: Se houver uma atualização do Mix It Up ou você for obrigado a re-autenticar qualquer uma de suas contas de serviços, você precisará fazer login manualmente quando isso ocorrer.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Esta opção permite que você opte por não rastrear seus dados através de nossos serviços back-end. Rastreamos dados em torno do uso de aplicativos e acidentes para ajudar a melhorar sua experiência. Se você selecionar esta opção, interromperemos todo o rastreamento desses dados. Observe que isso não desabilitou nenhum dado incluído com upload e revisão de comandos de loja Mix It Up.</value>
