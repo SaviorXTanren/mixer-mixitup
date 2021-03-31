@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Пер Эмбер</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 в час</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 в минуту</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 за искру</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>О</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Аудио выходное устройство</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Авто-Хостер</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Mix It Up Auto-Hoster является автономным приложением, которое обрабатывает хостинг других каналов, когда вы не потоковое. Авто-Hoster должен быть запущен, но вы не должны иметь Mix It Up работает, чтобы использовать его.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Авто-Hoster может быть запущен, нажав на кнопку ниже</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Авто-Включите "!"</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Командование редактирования</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Угли</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Эмбер Навыки только</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Эмберс потрачено</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Эмоции и только навыки</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Путь звукового файла не должен быть пустым.</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Последний релиз</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Запуск Авто-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Макет</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Мин Значение</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Миксер Возраст</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Миксер клипы</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Данные миксера</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Миксер Лаборатории</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Статус миксера</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Поддержка миксера</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Смешайте команды</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Если эта кнопка охлаждения на его или вместе со всеми?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Сколько Sparks должна стоить эта кнопка?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Хотите использовать Chat Moderation на всех введенных текстах?</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Показать таймштамп сообщения</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Показать оповещения MixPlay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Показать MixrElixr Эмоты (требует перезагрузки)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Одно действие</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Только навыки</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Используемые навыки</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Исходный текст</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Искра стоимость</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Кристалл искры</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Искра освобождены</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Искры</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Искры потрачены</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Специальный идентификатор</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Пожертвование JustGiving</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Миксер канал Эмберс провел</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Миксер канал Вентилятор Прогрессия Уровень-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Миксер канал следуют</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Миксер канал Хостинг</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Миксер канал Milestone Достигнуто</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Миксер канал переподписан</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Миксер канал Навыки Используются</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Миксер канал Искры Провел</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Микшер Канал Поток Начало</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Миксер Канал Поток Остановка</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Миксер канал Подписано</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Миксер канал Подписка Одаренные</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Миксер канал Unfollowed</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Патреон Подписано</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Точечные тарифы</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Искра Бонус</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Суб мультипликатор</value>
@@ -3046,7 +2938,7 @@
     <value>Не подписан</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Настройка Auto Log-In позволяет Mix It Up автоматически войти в в настоящее время включаемую учетную запись пользователя Mixer. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вы должны повторно проверить подлинность любой из ваших учетных записей служб, вам нужно будет вручную войти в систему, когда это произойдет.</value>
+    <value>Настройка Auto Log-In позволяет Mix It Up автоматически войти в в настоящее время включаемую учетную запись пользователя. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вы должны повторно проверить подлинность любой из ваших учетных записей служб, вам нужно будет вручную войти в систему, когда это произойдет.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Эта опция позволяет отказаться от любого отслеживания ваших данных с помощью наших бэк-энд-сервисов. Мы отслеживаем данные об использовании приложений и сбоях, чтобы улучшить ваш опыт. Если вы выберете эту опцию, мы прекратим все отслеживания этих данных. Обратите внимание, что это не отключает никаких данных, включенных в загрузку и просмотр команд магазина Mix It Up.</value>

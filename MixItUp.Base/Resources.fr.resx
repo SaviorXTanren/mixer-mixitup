@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Par braise</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 par heure</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 par minute</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 Par étincelle</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>Sur</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Dispositif de sortie audio</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Auto-Hoster (auto-hoster)</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Le Mix It Up Auto-Hoster est une application autonome qui gère l’hébergement d’autres canaux lorsque vous ne diffusez pas. L’Auto-Hoster doit être en cours d’exécution, mais vous n’avez pas besoin d’avoir Mix It Up en cours d’exécution pour l’utiliser.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>L’Auto-Hoster peut être lancé en cliquant sur le bouton ci-dessous</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Auto-Inclure « ! »</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Modifier la commande</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Braises</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Compétences ember seulement</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Braises dépensées</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Emotes &amp; Compétences seulement</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Le chemin de fichier sonore ne doit pas être vide.</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Dernière version</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Lancer Auto-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Disposition</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Valeur Min</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Âge du mélangeur</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Clips mixeur</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Données de mélangeur</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Laboratoires de mélangeurs</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Statut du mélangeur</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Support mixeur</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mélanger les commandes</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Est-ce que ce bouton de refroidissement sur son ou avec tous?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Combien d’étincelles ce bouton devrait-il coûter ?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Souhaitez-vous utiliser la modération de chat sur tous les textes entrés?</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Afficher le message Timestamp</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Afficher les alertes MixPlay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Afficher MixrElixr Emotes (Nécessite redémarrer)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Action unique</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Compétences seulement</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Compétences utilisées</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Texte source</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Coût de l’étincelle</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Cristal d’étincelle</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Étincelle exempte</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Étincelles</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Étincelles dépensées</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Identificateur spécial</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Don justgiving</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Braises de canal de mélangeur dépensées</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Fan Progression Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer Channel suivi</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel Hébergé</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Mixer Channel Milestone atteint</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixer Channel résouscrit</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Compétence de canal de mélangeur utilisée</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixer Channel Étincelles dépensées</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Mixer Channel Stream Démarrer</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Channel Stream Arrêt</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer Channel Abonnés</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel Abonnement doué</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mixer Channel Non suivi</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Souscrit</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Taux de points</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Bonus d’étincelle</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sous-multiplicateur</value>
@@ -3046,7 +2938,7 @@
     <value>Non abonné</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Le paramètre de connexion automatique permet à Mix It Up de se connecter automatiquement au compte utilisateur Mixer actuellement connecté. REMARQUE : S’il y a une mise à jour Mix It Up ou si vous êtes tenu de réinthentifier l’un de vos comptes de services, vous devrez vous connecter manuellement lorsque cela se produit.</value>
+    <value>Le paramètre de connexion automatique permet à Mix It Up de se connecter automatiquement au compte utilisateur actuellement connecté. REMARQUE : S’il y a une mise à jour Mix It Up ou si vous êtes tenu de réinthentifier l’un de vos comptes de services, vous devrez vous connecter manuellement lorsque cela se produit.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Cette option vous permet de vous retirer de tout suivi de vos données via nos services back-end. Nous suivons les données sur l’utilisation des applications et les plantages pour aider à améliorer votre expérience. Si vous sélectionnez cette option, nous arrêterons tout suivi de ces données. Notez que cela ne désactive aucune donnée incluse dans le téléchargement et l’examen des commandes du magasin Mix It Up.</value>

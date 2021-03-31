@@ -9,9 +9,7 @@ namespace MixItUp.Base.Model.Actions
 {
     public enum TwitterActionTypeEnum
     {
-        [Name("Send Tweet")]
         SendTweet,
-        [Name("Update Name")]
         UpdateName,
     }
 

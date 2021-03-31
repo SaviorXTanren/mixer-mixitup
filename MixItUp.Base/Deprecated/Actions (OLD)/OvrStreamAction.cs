@@ -12,17 +12,11 @@ namespace MixItUp.Base.Actions
     public enum OvrStreamActionTypeEnum
     {
         [Obsolete]
-        [Name("Show Title")]
         ShowTitle,
-        [Name("Hide Title")]
         HideTitle,
-        [Name("Play Title")]
         PlayTitle,
-        [Name("Update Variables")]
         UpdateVariables,
-        [Name("Enable Title")]
         EnableTitle,
-        [Name("Disable Title")]
         DisableTitle,
     }
 

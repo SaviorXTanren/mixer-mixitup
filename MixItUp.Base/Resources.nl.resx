@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Per ember</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 per uur</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 per minuut</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 per vonk</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>Over</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Audio-uitvoerapparaat</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Automatische hoster</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>De Mix It Up Auto-Hoster is een zelfstandige applicatie die de hosting van andere kanalen afhandelt wanneer u niet streamt. De Auto-Hoster moet worden uitgevoerd, maar u hoeft Mix It Up niet actief te hebben om het te gebruiken.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>De Auto-Hoster kan worden gestart door op de onderstaande knop te klikken</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Automatisch opnemen "!"</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Opdracht Bewerken</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Sintels</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Alleen ember-vaardigheden</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers Uitgegeven</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Alleen emotes en vaardigheden</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Het pad naar het geluidsbestand mag niet leeg zijn.</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Laatste release</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Start Auto-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Indeling</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Min-waarde</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Mixer Leeftijd</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Mixerclips</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Mixer-gegevens</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Mixer Laboratoria</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Mixer-status</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Mixer-ondersteuning</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Opdrachten voor mix it-up</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Moet deze knop afkoelen op zijn of samen met iedereen?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Hoeveel Sparks moet deze knop kosten?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Wilt u Chat Moderation gebruiken op alle ingevoerde tekst?</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Tijdstempel voor berichten weergeven</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>MixPlay-waarschuwingen weergeven</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr Emotes weergeven (opnieuw opstarten vereist)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Enkele actie</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Alleen vaardigheden</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Gebruikte vaardigheden</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Brontekst</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Spark-kosten</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Het Kristal van de vonk</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark vrijgesteld</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Sparks</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Sparks Uitgegeven</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Speciale identificatiecode</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Donatie</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Mixer Channel Embers Uitgegeven</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Ventilator Progressie Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer Kanaal gevolgd</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel gehost</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Mijlpaal mixerkanaal bereikt</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixerkanaal opnieuw ingeschreven</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Mixer Channel Skill gebruikt</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixer Channel Sparks Uitgegeven</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Start mixerkanaalstream</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Kanaal Stream Stop</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer-kanaal geabonneerd</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel-abonnement hoogbegaafd</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mixer kanaal niet gevolgd</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Geabonneerd</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Puntentarieven</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Spark Bonus</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sub vermenigvuldigingsfactor</value>
@@ -3046,7 +2938,7 @@
     <value>Niet geabonneerd</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Met de instelling Automatisch inloggen kan Mix It Up zich automatisch aanmelden bij het momenteel aangemelde Mixer-gebruikersaccount. OPMERKING: Als er een Mix It Up-update is of als u een van uw servicesaccounts opnieuw moet verifiëren, moet u zich handmatig aanmelden wanneer dit gebeurt.</value>
+    <value>Met de instelling Automatisch inloggen kan Mix It Up zich automatisch aanmelden bij het momenteel aangemelde. OPMERKING: Als er een Mix It Up-update is of als u een van uw servicesaccounts opnieuw moet verifiëren, moet u zich handmatig aanmelden wanneer dit gebeurt.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Met deze optie u zich afmelden voor het bijhouden van uw gegevens via onze back-enddiensten. We volgen gegevens over app-gebruik en crashes om uw ervaring te verbeteren. Als u deze optie selecteert, stoppen we met het bijhouden van deze gegevens. Houd er rekening mee dat hiermee geen gegevens worden uitgeschakeld die zijn opgenomen bij het uploaden en controleren van Mix It Up-winkelopdrachten.</value>

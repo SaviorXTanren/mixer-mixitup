@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 1 エンバーあたり</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 時間あたり 1</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 分あたり 1</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 スパークあたり</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>に関しては</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>オーディオ出力デバイス</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>自動ホスト</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Mix It Up 自動ホストは、ストリーミングを行わないときに他のチャネルのホスティングを処理するスタンドアロンアプリケーションです。自動ホストは実行されている必要がありますが、それを使用するために Mix It Up を実行する必要はありません。</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>以下のボタンをクリックすると、自動ホストを起動できます</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>自動インクルード "!</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>編集コマンド</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>残り火</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>エンバースキルのみ</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>残り火支出</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>エモート&amp;スキルのみ</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>サウンド ファイルのパスは空にできません。</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>最新リリース</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>自動ホストを起動する</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>レイアウト</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>最小値</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>ミキサー時代</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>ミキサークリップ</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>ミキサーデータ</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>ミキサーラボ</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>ミキサーの状態</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>ミキサーサポート</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>ミックス・イット・アップ・コマンド</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>このボタンは、その上で、またはすべてと一緒にクールダウンする必要がありますか?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>このボタンのコストはいくつですか?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>入力したすべてのテキストに対してチャット モデレーションを使用しますか?</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>メッセージのタイムスタンプを表示</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>ミックスプレイのアラートを表示する</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>ミクサーリクサーエモートを表示する (再起動が必要)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>単一アクション</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>スキルのみ</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>使用されるスキル</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>ソース テキスト</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>スパークコスト</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>スパーククリスタル</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>スパーク免除</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>火花</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>火花が費やされた</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>特別な識別子</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>ジャストギビング寄付</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>ミキサーチャンネルエンバー使用済み</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>ミキサーチャンネルファンの進行レベルアップ</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>ミキサーチャンネルフォロー</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>ミキサーチャンネルホスト</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>ミキサーチャンネルマイルストーンに到達しました</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>ミキサーチャンネル再サブスクライブ</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>ミキサーチャンネルのスキル使用</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>ミキサーチャンネルの火花を費やした</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>ミキサーチャンネルストリームの開始</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>ミキサーチャンネルストリーム停止</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>ミキサーチャンネルの購読</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>ミキサーチャンネルサブスクリプションギフテッド</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>ミキサーチャンネルの未フォロー</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>パトリーン加入</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>ポイントレート</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>スパークボーナス</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>サブ乗数</value>

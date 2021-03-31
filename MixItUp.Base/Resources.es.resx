@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 por brasa</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 por hora</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 por minuto</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 por chispa</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>acerca de</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Dispositivo de salida de audio</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Auto-Hoster</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Mix It Up Auto-Hoster es una aplicación independiente que controla el hospedaje de otros canales cuando no está transmitiendo. El Auto-Hoster debe estar ejecutándose, pero no es necesario tener Mix It Up ejecutándose para usarlo.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>El Auto-Hoster se puede iniciar haciendo clic en el botón de abajo</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Incluir automáticamente "!"</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Editar comando</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Brasas</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Sólo habilidades de brasa</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Brasas gastadas</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Emotes &amp;Skills Only</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>La ruta del archivo de sonido no debe estar vacía.</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Última versión</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Iniciar auto-hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Diseño</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Valor mínimo</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Edad del mezclador</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Clips de mezclador</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Datos del mezclador</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Laboratorios mezclador</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Estado del mezclador</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Soporte para mezcladores</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mezclar comandos</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>¿Debería este tiempo de reutilización de botones en su o junto con todos?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>¿Cuántas chispas debe costar este botón?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>¿Desea utilizar la moderación de chat en todo el texto introducido?</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Mostrar marca de tiempo del mensaje</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Mostrar alertas mixplay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Mostrar gestos mixrelixr (requiere reinicio)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Acción única</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Sólo habilidades</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Habilidades utilizadas</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Texto fuente</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Costo de chispa</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Cristal de chispa</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Chispa exenta</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Chispas</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Chispas gastadas</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Identificador especial</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Donación</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Embasas de canal mezclador gastadas</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Nivelación de progresión del ventilador del canal mezclador</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Seguimiento del canal mezclador</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Canal mezclador alojado</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Hito del canal mezclador alcanzado</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Canal mezclador resuscrito</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Habilidad del canal mezclador utilizada</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Chispas de canal mezclador gastadas</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Inicio de la transmisión del canal mezclador</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Parada de flujo de canal mezclador</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Canal mezclador suscrito</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Suscripción al canal mezclador regalada</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Canal mezclador sin dejar de seguir</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Suscrito</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Tarifas de puntos</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Bonificación de chispa</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sub multiplicador</value>
@@ -3046,7 +2938,7 @@
     <value>No suscrito</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>La configuración de inicio de sesión automático permite que Mix It Up inicie sesión automáticamente en la cuenta de usuario de Mixer que ha iniciado sesión actualmente. NOTA: Si hay una actualización de Mix It Up o está obligado a volver a autenticar cualquiera de sus cuentas de servicios, deberá iniciar sesión manualmente cuando esto ocurra.</value>
+    <value>La configuración de inicio de sesión automático permite que Mix It Up inicie sesión automáticamente en la cuenta de usuario de que ha iniciado sesión actualmente. NOTA: Si hay una actualización de Mix It Up o está obligado a volver a autenticar cualquiera de sus cuentas de servicios, deberá iniciar sesión manualmente cuando esto ocurra.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Esta opción le permite excluirse de cualquier seguimiento de sus datos a través de nuestros servicios back-end. Realizamos un seguimiento de los datos sobre el uso de la aplicación y los bloqueos para ayudar a mejorar su experiencia. Si selecciona esta opción, detendremos todo el seguimiento de estos datos. Tenga en cuenta que esto no deshabilita ningún dato incluido con la carga y revisión de los comandos de la tienda Mix It Up.</value>

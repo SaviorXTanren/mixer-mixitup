@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>[!!! 1 Þèř É₥βèř !!!]</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>[!!! 1 Þèř Hôúř !!!]</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>[!!! 1 Þèř Mïñúţè !!!]</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>[!!! 1 Þèř Šƥářƙ !!!]</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>[!!! Âβôúţ !!!]</value>
@@ -329,15 +323,6 @@
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>[!!! Âúδïô Óúţƥúţ ÐèƲïçè !!!]</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>[!!! Âúţô-Hôšţèř !!!]</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>[!!! Ţĥè Mïж Ìţ Ûƥ Âúţô-Hôšţèř ïš á šţáñδ-áℓôñè áƥƥℓïçáţïôñ ţĥáţ ĥáñδℓèš ţĥè ĥôšţïñĝ ôƒ ôţĥèř çĥáññèℓš ωĥèñ ¥ôú ářè ñôţ šţřèá₥ïñĝ. Ţĥè Âúţô-Hôšţèř ₥úšţ βè řúññïñĝ, βúţ ¥ôú δô ñôţ ĥáƲè ţô ĥáƲè Mïж Ìţ Ûƥ řúññïñĝ ţô úšè ïţ. !!!]</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>[!!! Ţĥè Âúţô-Hôšţèř çáñ βè ℓáúñçĥèδ β¥ çℓïçƙïñĝ ţĥè βúţţôñ βèℓôω !!!]</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>[!!! Âúţô-Ìñçℓúδè "!" !!!]</value>
@@ -786,18 +771,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>[!!! Éδïţ Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>[!!! É₥βèřš !!!]</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>[!!! É₥βèř Šƙïℓℓš Óñℓ¥ !!!]</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>[!!! É₥βèřš Šƥèñţ !!!]</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>[!!! É₥ôţèš &amp; Šƙïℓℓš Óñℓ¥ !!!]</value>
-  </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>[!!! Ţĥè šôúñδ ƒïℓè ƥáţĥ ₥úšţ ñôţ βè è₥ƥţ¥. !!!]</value>
   </data>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>[!!! Ļáţèšţ Rèℓèášè !!!]</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>[!!! Ļáúñçĥ Âúţô-Hôšţèř !!!]</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>[!!! Ļá¥ôúţ !!!]</value>
   </data>
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>[!!! Mïñ Váℓúè !!!]</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>[!!! Mïжèř Âĝè !!!]</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>[!!! Mïжèř Çℓïƥš !!!]</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>[!!! Mïжèř Ðáţá !!!]</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>[!!! Mïжèř Ļáβš !!!]</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>[!!! Mïжèř Šţáţúš !!!]</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>[!!! Mïжèř Šúƥƥôřţ !!!]</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>[!!! Mïж Ìţ Ûƥ Çô₥₥áñδš !!!]</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>[!!! Šĥôúℓδ ţĥïš βúţţôñ çôôℓδôωñ ôñ ïţš ôř ţôĝèţĥèř ωïţĥ áℓℓ? !!!]</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>[!!! Hôω ₥áñ¥ Šƥářƙš šĥôúℓδ ţĥïš βúţţôñ çôšţ? !!!]</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>[!!! Wôúℓδ ¥ôú ℓïƙè ţô úšè Çĥáţ Môδèřáţïôñ ôñ áℓℓ èñţèřèδ ţèжţ? !!!]</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>[!!! Šĥôω Mèššáĝè Ţï₥èšţá₥ƥ !!!]</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>[!!! Šĥôω MïжÞℓá¥ Âℓèřţš !!!]</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>[!!! Šĥôω MïжřÉℓïжř É₥ôţèš (Rè9úïřèš Rèšţářţ) !!!]</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>[!!! Šïñĝℓè Âçţïôñ !!!]</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>[!!! Šƙïℓℓš Óñℓ¥ !!!]</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>[!!! Šƙïℓℓš Ûšèδ !!!]</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>[!!! Šôúřçè Ţèжţ !!!]</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>[!!! Šƥářƙ Çôšţ !!!]</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>[!!! Šƥářƙ Çř¥šţáℓ !!!]</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>[!!! Šƥářƙ Éжè₥ƥţ !!!]</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>[!!! Šƥářƙš !!!]</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>[!!! Šƥářƙš Šƥèñţ !!!]</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>[!!! Šƥèçïáℓ Ìδèñţïƒïèř !!!]</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>[!!! JúšţGïƲïñĝ Ðôñáţïôñ !!!]</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ É₥βèřš Šƥèñţ !!!]</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Fáñ Þřôĝřèššïôñ ĻèƲèℓ-Ûƥ !!!]</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Fôℓℓôωèδ !!!]</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Hôšţèδ !!!]</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Mïℓèšţôñè Rèáçĥèδ !!!]</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Rèšúβšçřïβèδ !!!]</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šƙïℓℓ Ûšèδ !!!]</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šƥářƙš Šƥèñţ !!!]</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šţřèá₥ Šţářţ !!!]</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šţřèá₥ Šţôƥ !!!]</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šúβšçřïβèδ !!!]</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Šúβšçřïƥţïôñ Gïƒţèδ !!!]</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>[!!! Mïжèř Çĥáññèℓ Ûñƒôℓℓôωèδ !!!]</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>[!!! Þáţřèôñ Šúβšçřïβèδ !!!]</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>[!!! Þôïñţ Ráţèš !!!]</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>[!!! Šƥářƙ ßôñúš !!!]</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>[!!! Šúβ Múℓţïƥℓïèř !!!]</value>
@@ -3046,7 +2938,7 @@
     <value>[!!! Nôţ Šúβšçřïβèδ !!!]</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>[!!! Ţĥè Âúţô Ļôĝ-Ìñ šèţţïñĝ áℓℓôωš Mïж Ìţ Ûƥ ţô áúţô₥áţïçáℓℓ¥ ℓôĝ ïñ ţĥè çúřřèñţℓ¥ šïĝñèδ-ïñ Mïжèř úšèř áççôúñţ. NÓŢÉ: Ìƒ ţĥèřè ïš á Mïж Ìţ Ûƥ úƥδáţè ôř ¥ôú ářè řè9úïřèδ ţô řè-áúţĥèñţïçáţè áñ¥ ôƒ ¥ôúř šèřƲïçèš áççôúñţš, ¥ôú ωïℓℓ ñèèδ ţô ₥áñúáℓℓ¥ ℓôĝ ïñ ωĥèñ ţĥïš ôççúřš. !!!]</value>
+    <value>[!!! Ţĥè Âúţô Ļôĝ-Ìñ šèţţïñĝ áℓℓôωš Mïж Ìţ Ûƥ ţô áúţô₥áţïçáℓℓ¥ ℓôĝ ïñ ţĥè çúřřèñţℓ¥ šïĝñèδ-ïñ úšèř áççôúñţ. NÓŢÉ: Ìƒ ţĥèřè ïš á Mïж Ìţ Ûƥ úƥδáţè ôř ¥ôú ářè řè9úïřèδ ţô řè-áúţĥèñţïçáţè áñ¥ ôƒ ¥ôúř šèřƲïçèš áççôúñţš, ¥ôú ωïℓℓ ñèèδ ţô ₥áñúáℓℓ¥ ℓôĝ ïñ ωĥèñ ţĥïš ôççúřš. !!!]</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>[!!! Ţĥïš ôƥţïôñ áℓℓôωš ¥ôú ţô ôƥţ-ôúţ ôƒ áñ¥ ţřáçƙïñĝ ôƒ ¥ôúř δáţá Ʋïá ôúř βáçƙ-èñδ šèřƲïçèš. Wè ţřáçƙ δáţá ářôúñδ áƥƥ úšáĝè &amp; çřášĥèš ţô ĥèℓƥ ï₥ƥřôƲè ¥ôúř èжƥèřïèñçè. Ìƒ ¥ôú šèℓèçţ ţĥïš ôƥţïôñ, ωè ωïℓℓ šţôƥ áℓℓ ţřáçƙïñĝ ôƒ ţĥïš δáţá. Nôţè ţĥáţ ţĥïš δôèš ñôţ δïšáβℓè áñ¥ δáţá ïñçℓúδèδ ωïţĥ úƥℓôáδïñĝ &amp; řèƲïèωïñĝ Mïж Ìţ Ûƥ šţôřè çô₥₥áñδš. !!!]</value>
@@ -4793,5 +4685,155 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="Russian" xml:space="preserve">
     <value>[!!! Rúššïáñ !!!]</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţš Éδïţôř !!!]</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>[!!! Çĥáţ Ûšèř Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>[!!! Çĥáţ Wĥïšƥèř RèçèïƲèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ ßïţš Çĥèèřèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Fôℓℓôωèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Hôšţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Mášš Šúβšçřïƥţïôñš Gïƒţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Þôïñţš Rèδèè₥èδ !!!]</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Ráïδèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Rèšúβšçřïβèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţářţ !!!]</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţôƥ !!!]</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šúβšçřïβèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ ÇĥáññèℓŠúβšçřïƥţïôñ Gïƒţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Ûñƒôℓℓôωèδ !!!]</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>[!!! Çĥáţ Ţï₥èôúţ !!!]</value>
+  </data>
+  <data name="PurgeUser" xml:space="preserve">
+    <value>[!!! Þúřĝè Ûšèř !!!]</value>
+  </data>
+  <data name="BanUser" xml:space="preserve">
+    <value>[!!! ßáñ Ûšèř !!!]</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>[!!! Çℓèář Çĥáţ !!!]</value>
+  </data>
+  <data name="AddModerationStrike" xml:space="preserve">
+    <value>[!!! Âδδ Môδèřáţïôñ Šţřïƙè !!!]</value>
+  </data>
+  <data name="RemoveModerationStrike" xml:space="preserve">
+    <value>[!!! Rè₥ôƲè Môδèřáţïôñ Šţřïƙè !!!]</value>
+  </data>
+  <data name="ModUser" xml:space="preserve">
+    <value>[!!! Môδ Ûšèř !!!]</value>
+  </data>
+  <data name="UnbanUser" xml:space="preserve">
+    <value>[!!! Ûñβáñ Ûšèř !!!]</value>
+  </data>
+  <data name="UnmodUser" xml:space="preserve">
+    <value>[!!! Ûñ₥ôδ Ûšèř !!!]</value>
+  </data>
+  <data name="VIPUser" xml:space="preserve">
+    <value>[!!! VÌÞ Ûšèř !!!]</value>
+  </data>
+  <data name="UnVIPUser" xml:space="preserve">
+    <value>[!!! Ûñ-VÌÞ Ûšèř !!!]</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>[!!! Hôšţ !!!]</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>[!!! Þôℓℓ !!!]</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>[!!! Ráïδ !!!]</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>[!!! Çℓïƥ !!!]</value>
+  </data>
+  <data name="StreamMarker" xml:space="preserve">
+    <value>[!!! Šţřèá₥ Mářƙèř !!!]</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>[!!! Šƥïñ ţĥè Wĥèèℓ !!!]</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>[!!! É₥ƥţ¥ ţĥè Jář !!!]</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>[!!! Rôℓℓ Çřèδïţš !!!]</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>[!!! Šèñδ Ţωèèţ !!!]</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>[!!! Ûƥδáţè Ná₥è !!!]</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>[!!! Þℓáïñ Ţèжţ !!!]</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>[!!! Ļèƒţ Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>[!!! Ļèƒţ Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>[!!! Rïĝĥţ Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>[!!! RïĝĥţMôúšèÛƥ !!!]</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>[!!! Mïδδℓè Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>[!!! Mïδδℓè Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>[!!! Éжţřá Môúšè Ðôωñ !!!]</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>[!!! Éжţřá Môúšè Ûƥ !!!]</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>[!!! Wĥèèℓ !!!]</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>[!!! Âβšôℓúţè !!!]</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ !!!]</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>[!!! Þřè₥ïú₥ !!!]</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>[!!! Âƒƒïℓïáţè !!!]</value>
   </data>
 </root>

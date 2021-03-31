@@ -12,14 +12,10 @@ namespace MixItUp.Base.Actions
     [Obsolete]
     public enum StreamingSoftwareTypeEnum
     {
-        [Name("Default Setting")]
         DefaultSetting,
 
-        [Name("OBS Studio")]
         OBSStudio,
-        [Name("XSplit")]
         XSplit,
-        [Name("Streamlabs OBS")]
         StreamlabsOBS,
     }
 
@@ -28,22 +24,15 @@ namespace MixItUp.Base.Actions
     {
         Scene,
 
-        [Name("Source Visibility")]
         SourceVisibility,
-        [Name("Text Source")]
         TextSource,
-        [Name("Web Browser Source")]
         WebBrowserSource,
-        [Name("Source Dimensions")]
         SourceDimensions,
 
-        [Name("Start/Stop Stream")]
         StartStopStream,
 
-        [Name("Save Replay Buffer")]
         SaveReplayBuffer,
 
-        [Name("Set Scene Collection")]
         SceneCollection,
     }
 
