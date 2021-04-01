@@ -4921,4 +4921,52 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TeamID" xml:space="preserve">
     <value>Team ID</value>
   </data>
+  <data name="IFTTTInfo1" xml:space="preserve">
+    <value>IFTTT service connectivity allows you to trigger IFTTT Web Hook applets and provide data to use.</value>
+  </data>
+  <data name="IFTTTInfo2" xml:space="preserve">
+    <value>To connect to IFTTT, you will need your Web Hook key. This can be found by going to the web hooks and clicking on the Documentation button in the upper-right corner.</value>
+  </data>
+  <data name="IFTTTInvalidWebHookKey" xml:space="preserve">
+    <value>Please enter a valid IFTTT Web Hook key.</value>
+  </data>
+  <data name="IFTTTWebHookKey" xml:space="preserve">
+    <value>IFTTT Web Hook Key</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP Address (Optional)</value>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+  </data>
+  <data name="JustGivingInfo1" xml:space="preserve">
+    <value>JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="OBSStudioFailed" xml:space="preserve">
+    <value>OBS Studio connection test failed, Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio.</value>
+  </data>
+  <data name="OBSStudioInfo1" xml:space="preserve">
+    <value>The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources.</value>
+  </data>
+  <data name="OBSStudioInfo2" xml:space="preserve">
+    <value>OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer.</value>
+  </data>
+  <data name="OBSStudioSuccess" xml:space="preserve">
+    <value>OBS Studio connection test successful!</value>
+  </data>
+  <data name="OBSWebSocketInstaller" xml:space="preserve">
+    <value>OBS WebSocket Installer</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password (Optional)</value>
+  </data>
+  <data name="SelectedFundraiser" xml:space="preserve">
+    <value>Selected Fundraiser</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Test Connection</value>
+  </data>
+  <data name="WebHooksPage" xml:space="preserve">
+    <value>Web Hooks Page</value>
+  </data>
 </root>

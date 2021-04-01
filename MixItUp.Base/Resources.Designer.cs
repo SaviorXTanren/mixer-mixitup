@@ -7015,6 +7015,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IFTTT service connectivity allows you to trigger IFTTT Web Hook applets and provide data to use..
+        /// </summary>
+        public static string IFTTTInfo1 {
+            get {
+                return ResourceManager.GetString("IFTTTInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect to IFTTT, you will need your Web Hook key. This can be found by going to the web hooks and clicking on the Documentation button in the upper-right corner..
+        /// </summary>
+        public static string IFTTTInfo2 {
+            get {
+                return ResourceManager.GetString("IFTTTInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid IFTTT Web Hook key..
+        /// </summary>
+        public static string IFTTTInvalidWebHookKey {
+            get {
+                return ResourceManager.GetString("IFTTTInvalidWebHookKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IFTTT Web Hook Key.
+        /// </summary>
+        public static string IFTTTWebHookKey {
+            get {
+                return ResourceManager.GetString("IFTTTWebHookKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignore Your Bot Account for Commands.
         /// </summary>
         public static string IgnoreYourBotAccountForCommands {
@@ -7240,6 +7276,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IP Address (Optional).
+        /// </summary>
+        public static string IPAddress {
+            get {
+                return ResourceManager.GetString("IPAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Math Expression.
         /// </summary>
         public static string IsMathExpression {
@@ -7420,11 +7465,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JustGiving.
+        /// </summary>
+        public static string JustGiving {
+            get {
+                return ResourceManager.GetString("JustGiving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JustGiving Donation.
         /// </summary>
         public static string JustGivingDonation {
             get {
                 return ResourceManager.GetString("JustGivingDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information..
+        /// </summary>
+        public static string JustGivingInfo1 {
+            get {
+                return ResourceManager.GetString("JustGivingInfo1", resourceCulture);
             }
         }
         
@@ -8734,6 +8797,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OBS Studio connection test failed, Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio..
+        /// </summary>
+        public static string OBSStudioFailed {
+            get {
+                return ResourceManager.GetString("OBSStudioFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The OBS Studio service allows you to directly interact with your instance of OBS Studio to perform changes to scenes and sources..
+        /// </summary>
+        public static string OBSStudioInfo1 {
+            get {
+                return ResourceManager.GetString("OBSStudioInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OBS Studio 25.0 or higher is required and you must run the OBS WebSocket Installer..
+        /// </summary>
+        public static string OBSStudioInfo2 {
+            get {
+                return ResourceManager.GetString("OBSStudioInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OBS Studio connection test successful!.
+        /// </summary>
+        public static string OBSStudioSuccess {
+            get {
+                return ResourceManager.GetString("OBSStudioSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OBS WebSocket Installer.
+        /// </summary>
+        public static string OBSWebSocketInstaller {
+            get {
+                return ResourceManager.GetString("OBSWebSocketInstaller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Offline Rate.
         /// </summary>
         public static string OfflineRate {
@@ -9180,6 +9288,15 @@ namespace MixItUp.Base {
         public static string PartnersOnly {
             get {
                 return ResourceManager.GetString("PartnersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password (Optional).
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -10728,6 +10845,15 @@ namespace MixItUp.Base {
         public static string SecondValue {
             get {
                 return ResourceManager.GetString("SecondValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Fundraiser.
+        /// </summary>
+        public static string SelectedFundraiser {
+            get {
+                return ResourceManager.GetString("SelectedFundraiser", resourceCulture);
             }
         }
         
@@ -12321,6 +12447,15 @@ namespace MixItUp.Base {
         public static string TestCommand {
             get {
                 return ResourceManager.GetString("TestCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test Connection.
+        /// </summary>
+        public static string TestConnection {
+            get {
+                return ResourceManager.GetString("TestConnection", resourceCulture);
             }
         }
         
@@ -13947,6 +14082,15 @@ namespace MixItUp.Base {
         public static string WebHookEventName {
             get {
                 return ResourceManager.GetString("WebHookEventName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Hooks Page.
+        /// </summary>
+        public static string WebHooksPage {
+            get {
+                return ResourceManager.GetString("WebHooksPage", resourceCulture);
             }
         }
         

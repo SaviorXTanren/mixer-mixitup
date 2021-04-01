@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public JustGivingServiceControlViewModel()
-            : base("JustGiving")
+            : base(Resources.JustGiving)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
