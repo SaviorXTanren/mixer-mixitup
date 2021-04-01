@@ -4734,36 +4734,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="ChatTimeout" xml:space="preserve">
     <value>[!!! Çĥáţ Ţï₥èôúţ !!!]</value>
   </data>
-  <data name="PurgeUser" xml:space="preserve">
-    <value>[!!! Þúřĝè Ûšèř !!!]</value>
-  </data>
-  <data name="BanUser" xml:space="preserve">
-    <value>[!!! ßáñ Ûšèř !!!]</value>
-  </data>
-  <data name="ClearChat" xml:space="preserve">
-    <value>[!!! Çℓèář Çĥáţ !!!]</value>
-  </data>
-  <data name="AddModerationStrike" xml:space="preserve">
-    <value>[!!! Âδδ Môδèřáţïôñ Šţřïƙè !!!]</value>
-  </data>
-  <data name="RemoveModerationStrike" xml:space="preserve">
-    <value>[!!! Rè₥ôƲè Môδèřáţïôñ Šţřïƙè !!!]</value>
-  </data>
-  <data name="ModUser" xml:space="preserve">
-    <value>[!!! Môδ Ûšèř !!!]</value>
-  </data>
-  <data name="UnbanUser" xml:space="preserve">
-    <value>[!!! Ûñβáñ Ûšèř !!!]</value>
-  </data>
-  <data name="UnmodUser" xml:space="preserve">
-    <value>[!!! Ûñ₥ôδ Ûšèř !!!]</value>
-  </data>
-  <data name="VIPUser" xml:space="preserve">
-    <value>[!!! VÌÞ Ûšèř !!!]</value>
-  </data>
-  <data name="UnVIPUser" xml:space="preserve">
-    <value>[!!! Ûñ-VÌÞ Ûšèř !!!]</value>
-  </data>
   <data name="Host" xml:space="preserve">
     <value>[!!! Hôšţ !!!]</value>
   </data>
@@ -4775,9 +4745,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="Clip" xml:space="preserve">
     <value>[!!! Çℓïƥ !!!]</value>
-  </data>
-  <data name="StreamMarker" xml:space="preserve">
-    <value>[!!! Šţřèá₥ Mářƙèř !!!]</value>
   </data>
   <data name="SpinWheel" xml:space="preserve">
     <value>[!!! Šƥïñ ţĥè Wĥèèℓ !!!]</value>
@@ -4835,5 +4802,41 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="Affiliate" xml:space="preserve">
     <value>[!!! Âƒƒïℓïáţè !!!]</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRole" xml:space="preserve">
+    <value>[!!! Â ţïţℓè ωïţĥ ţĥè šá₥è řôℓè áℓřèáδ¥ èжïšţš. !!!]</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRoleMonths" xml:space="preserve">
+    <value>[!!! Â ţïţℓè ωïţĥ ţĥè šá₥è řôℓè &amp; ₥ôñţĥš áℓřèáδ¥ èжïšţš. !!!]</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateTitle" xml:space="preserve">
+    <value>[!!! Â ţïţℓè ωïţĥ ţĥè šá₥è ñá₥è áℓřèáδ¥ èжïšţš. !!!]</value>
+  </data>
+  <data name="CreateTitleErrorInvalidMonths" xml:space="preserve">
+    <value>[!!! Â Ʋáℓïδ á₥ôúñţ ôƒ ₥ôñţĥš ƒôř ţĥè ţïţℓè ₥úšţ βè šƥèçïƒïèδ. !!!]</value>
+  </data>
+  <data name="CreateTitleErrorNoTitle" xml:space="preserve">
+    <value>[!!! Â ñá₥è ƒôř ţĥè ţïţℓè ₥úšţ βè šƥèçïƒïèδ. !!!]</value>
+  </data>
+  <data name="DeleteSettingsWarning" xml:space="preserve">
+    <value>[!!! Ţĥïš ωïℓℓ çô₥ƥℓèţèℓ¥ δèℓèţè ţĥè šèţţïñĝš ôƒ ţĥè çúřřèñţℓ¥ ℓôĝĝèδ ïñ áççôúñţ áñδ ïš ñôţ řèƲèřšïβℓè. Âřè ¥ôú šúřè ¥ôú ωïšĥ ţô δô ţĥïš? !!!]</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>[!!! Fèáţúřèδ !!!]</value>
+  </data>
+  <data name="JSONToSpecialIdentifiers" xml:space="preserve">
+    <value>[!!! JŠÓN ţô Šƥèçïáℓ Ìδèñţïƒïèřš !!!]</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>[!!! Þïñ !!!]</value>
+  </data>
+  <data name="RunNewUserWizardWarning" xml:space="preserve">
+    <value>[!!! Mïж Ìţ Ûƥ ωïℓℓ řèšţářţ áñδ ţĥè Nèω Ûšèř Wïƺářδ ωïℓℓ βè řè-řúñ ωĥèñ ¥ôú ℓôĝ ïñ. Ţĥïš ωïℓℓ áℓℓôω ¥ôú ţô řè-ï₥ƥôřţ ¥ôúř δáţá, ωĥïçĥ çôúℓδ δúƥℓïçáţè áñδ ôƲèřωřïţè ¥ôúř Çô₥₥áñδš &amp; Ûšèř δáţá. Âřè ¥ôú šúřè ¥ôú ωïšĥ ţô δô ţĥïš? !!!]</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>[!!! Šţáñδářδ !!!]</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>[!!! Ûñƥïñ !!!]</value>
   </data>
 </root>

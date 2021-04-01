@@ -63,7 +63,7 @@
                 </ListView>
             </GroupBox>
 
-            <Button Grid.Row="2" Width="140" Command="{Binding ConnectDeviceCommand}" Content="{x:Static resx:Resources.ConnectDevices}" />
+            <Button Grid.Row="2" MinWidth="140" Command="{Binding ConnectDeviceCommand}" Content="{x:Static resx:Resources.ConnectDevices}" />
 
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>

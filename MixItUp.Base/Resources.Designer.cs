@@ -2351,6 +2351,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A title with the same role already exists..
+        /// </summary>
+        public static string CreateTitleErrorDuplicateRole {
+            get {
+                return ResourceManager.GetString("CreateTitleErrorDuplicateRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title with the same role &amp; months already exists..
+        /// </summary>
+        public static string CreateTitleErrorDuplicateRoleMonths {
+            get {
+                return ResourceManager.GetString("CreateTitleErrorDuplicateRoleMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title with the same name already exists..
+        /// </summary>
+        public static string CreateTitleErrorDuplicateTitle {
+            get {
+                return ResourceManager.GetString("CreateTitleErrorDuplicateTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid amount of months for the title must be specified..
+        /// </summary>
+        public static string CreateTitleErrorInvalidMonths {
+            get {
+                return ResourceManager.GetString("CreateTitleErrorInvalidMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A name for the title must be specified..
+        /// </summary>
+        public static string CreateTitleErrorNoTitle {
+            get {
+                return ResourceManager.GetString("CreateTitleErrorNoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cumulative Months Subbed.
         /// </summary>
         public static string CumulativeMonthsSubbed {
@@ -2833,6 +2878,15 @@ namespace MixItUp.Base {
         public static string DeleteSettings {
             get {
                 return ResourceManager.GetString("DeleteSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will completely delete the settings of the currently logged in account and is not reversible. Are you sure you wish to do this?.
+        /// </summary>
+        public static string DeleteSettingsWarning {
+            get {
+                return ResourceManager.GetString("DeleteSettingsWarning", resourceCulture);
             }
         }
         
@@ -3771,6 +3825,15 @@ namespace MixItUp.Base {
         public static string FavoriteStreamers {
             get {
                 return ResourceManager.GetString("FavoriteStreamers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Featured.
+        /// </summary>
+        public static string Featured {
+            get {
+                return ResourceManager.GetString("Featured", resourceCulture);
             }
         }
         
@@ -7150,6 +7213,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JSON to Special Identifiers.
+        /// </summary>
+        public static string JSONToSpecialIdentifiers {
+            get {
+                return ResourceManager.GetString("JSONToSpecialIdentifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JSON Value Name (Use &apos;\&apos; for nested parameters).
         /// </summary>
         public static string JSONValueName {
@@ -8977,6 +9049,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pin.
+        /// </summary>
+        public static string Pin {
+            get {
+                return ResourceManager.GetString("Pin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pink.
         /// </summary>
         public static string Pink {
@@ -10183,6 +10264,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands &amp; User data. Are you sure you wish to do this?.
+        /// </summary>
+        public static string RunNewUserWizardWarning {
+            get {
+                return ResourceManager.GetString("RunNewUserWizardWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run One Randomly.
         /// </summary>
         public static string RunOneRandomly {
@@ -11259,6 +11349,15 @@ namespace MixItUp.Base {
         public static string Staff {
             get {
                 return ResourceManager.GetString("Staff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard.
+        /// </summary>
+        public static string Standard {
+            get {
+                return ResourceManager.GetString("Standard", resourceCulture);
             }
         }
         
@@ -12804,6 +12903,15 @@ namespace MixItUp.Base {
         public static string UnmodUser {
             get {
                 return ResourceManager.GetString("UnmodUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpin.
+        /// </summary>
+        public static string Unpin {
+            get {
+                return ResourceManager.GetString("Unpin", resourceCulture);
             }
         }
         

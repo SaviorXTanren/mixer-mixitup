@@ -4734,36 +4734,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ChatTimeout" xml:space="preserve">
     <value>Chat Timeout</value>
   </data>
-  <data name="PurgeUser" xml:space="preserve">
-    <value>Purge User</value>
-  </data>
-  <data name="BanUser" xml:space="preserve">
-    <value>Ban User</value>
-  </data>
-  <data name="ClearChat" xml:space="preserve">
-    <value>Clear Chat</value>
-  </data>
-  <data name="AddModerationStrike" xml:space="preserve">
-    <value>Add Moderation Strike</value>
-  </data>
-  <data name="RemoveModerationStrike" xml:space="preserve">
-    <value>Remove Moderation Strike</value>
-  </data>
-  <data name="ModUser" xml:space="preserve">
-    <value>Mod User</value>
-  </data>
-  <data name="UnbanUser" xml:space="preserve">
-    <value>Unban User</value>
-  </data>
-  <data name="UnmodUser" xml:space="preserve">
-    <value>Unmod User</value>
-  </data>
-  <data name="VIPUser" xml:space="preserve">
-    <value>VIP User</value>
-  </data>
-  <data name="UnVIPUser" xml:space="preserve">
-    <value>Un-VIP User</value>
-  </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
   </data>
@@ -4775,9 +4745,6 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="Clip" xml:space="preserve">
     <value>Clip</value>
-  </data>
-  <data name="StreamMarker" xml:space="preserve">
-    <value>Stream Marker</value>
   </data>
   <data name="SpinWheel" xml:space="preserve">
     <value>Spin the Wheel</value>
@@ -4835,5 +4802,41 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="Affiliate" xml:space="preserve">
     <value>Affiliate</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRole" xml:space="preserve">
+    <value>A title with the same role already exists.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRoleMonths" xml:space="preserve">
+    <value>A title with the same role &amp; months already exists.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateTitle" xml:space="preserve">
+    <value>A title with the same name already exists.</value>
+  </data>
+  <data name="CreateTitleErrorInvalidMonths" xml:space="preserve">
+    <value>A valid amount of months for the title must be specified.</value>
+  </data>
+  <data name="CreateTitleErrorNoTitle" xml:space="preserve">
+    <value>A name for the title must be specified.</value>
+  </data>
+  <data name="DeleteSettingsWarning" xml:space="preserve">
+    <value>This will completely delete the settings of the currently logged in account and is not reversible. Are you sure you wish to do this?</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>Featured</value>
+  </data>
+  <data name="JSONToSpecialIdentifiers" xml:space="preserve">
+    <value>JSON to Special Identifiers</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="RunNewUserWizardWarning" xml:space="preserve">
+    <value>Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands &amp; User data. Are you sure you wish to do this?</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Unpin</value>
   </data>
 </root>

@@ -64,7 +64,7 @@
                 <TextBlock Grid.Row="4" Text="{Binding SelectedOverlayType.Description}" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
             </Grid>
 
-            <Button Command="{Binding OverlayTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding OverlayTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Next}"/>
+            <Button Command="{Binding OverlayTypeSelectedCommand}" MinWidth="80" Margin="0,0,40,20" IsEnabled="{Binding OverlayTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Next}"/>
         </Grid>
 
         <Grid Visibility="{Binding OverlayTypeIsSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0">
@@ -114,7 +114,7 @@
                 <ContentControl Margin="10" x:Name="MainContentControl" HorizontalAlignment="Center" />
             </ScrollViewer>
 
-            <Button x:Name="SaveButton" Grid.Row="4" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">
+            <Button x:Name="SaveButton" Grid.Row="4" Margin="0,0,0,10" Click="SaveButton_Click" MinWidth="80">
                 <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
