@@ -4839,4 +4839,86 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="Unpin" xml:space="preserve">
     <value>Unpin</value>
   </data>
+  <data name="ApplicationBotToken" xml:space="preserve">
+    <value>Application Bot Token</value>
+  </data>
+  <data name="ApplicationClientID" xml:space="preserve">
+    <value>Application Client ID</value>
+  </data>
+  <data name="ApplicationClientSecret" xml:space="preserve">
+    <value>Application Client Secret</value>
+  </data>
+  <data name="CreatingCustomDiscordApplication" xml:space="preserve">
+    <value>Creating Custom Discord Application</value>
+  </data>
+  <data name="CustomApplication" xml:space="preserve">
+    <value>Custom Application</value>
+  </data>
+  <data name="DeveloperAPI" xml:space="preserve">
+    <value>Developer API</value>
+  </data>
+  <data name="DeveloperAPIAdvanced" xml:space="preserve">
+    <value>Open To Local Network (Must run as Administrator):</value>
+  </data>
+  <data name="DeveloperAPIInfo" xml:space="preserve">
+    <value>The Developer API allows advanced interaction with Mix It Up from other applications running on your computer using a series of REST API services. For more information about this, please see the Developer API Wiki page.</value>
+  </data>
+  <data name="DeveloperAPIWarning" xml:space="preserve">
+    <value>WARNING: This will make the developer APIs listen on all addresses and may open Mix It Up to callers from outside your network. Only use this option if you know what you are doing!</value>
+  </data>
+  <data name="DiscordInfo1" xml:space="preserve">
+    <value>Discord service connectivity allows you to get information about your Discord account, send messages to channels, and control the audio from voice channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="DiscordInfo2" xml:space="preserve">
+    <value>The default Mix It Up Discord application has a 30 second cooldown between each Discord action to prevent rate limiting issues for all users. To circumvent the 30 second cooldown, you can create your own custom Discord Application.</value>
+  </data>
+  <data name="DiscordInvalidBotToken" xml:space="preserve">
+    <value>Please enter a valid Custom Bot Token.</value>
+  </data>
+  <data name="DiscordInvalidClientId" xml:space="preserve">
+    <value>Please enter a valid Custom Client ID.</value>
+  </data>
+  <data name="DiscordInvalidSecret" xml:space="preserve">
+    <value>Please enter a valid Custom Client Secret.</value>
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+  </data>
+  <data name="ExtraLifeInfo1" xml:space="preserve">
+    <value>Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</value>
+  </data>
+  <data name="ExtraLifeInfo2" xml:space="preserve">
+    <value>First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button.</value>
+  </data>
+  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
+    <value>Please select a valid Extra Life participant.</value>
+  </data>
+  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
+    <value>Please enter a valid Extra Life team ID.</value>
+  </data>
+  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
+    <value>The Extra Life team ID you entered could not be found.</value>
+  </data>
+  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
+    <value>Trigger Donation Event for Team Donations:</value>
+  </data>
+  <data name="OverlayConnectionFailed1" xml:space="preserve">
+    <value>Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.</value>
+  </data>
+  <data name="OverlayConnectionFailed2" xml:space="preserve">
+    <value>If you launched your streaming software before Mix It Up, try refreshing the webpage source in your streaming software.</value>
+  </data>
+  <data name="OverlayConnectionSuccess" xml:space="preserve">
+    <value>Overlay connection test successful!</value>
+  </data>
+  <data name="OverlaysConnected" xml:space="preserve">
+    <value>{0} overlays connected in total</value>
+    <comment>{0} is the number of overlays connected</comment>
+  </data>
+  <data name="ParticipantName" xml:space="preserve">
+    <value>Participant Name</value>
+  </data>
+  <data name="TeamID" xml:space="preserve">
+    <value>Team ID</value>
+  </data>
 </root>

@@ -820,4 +820,12 @@
     <value>Tiltify Donatie</value>
     <comment>Manual</comment>
   </data>
+<data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+    <comment>Manual</comment>
+  </data>
 </root>

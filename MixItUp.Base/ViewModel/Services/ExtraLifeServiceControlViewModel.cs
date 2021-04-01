@@ -59,19 +59,19 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand GetTeamParticipantsCommand { get; set; }
 
         public ExtraLifeServiceControlViewModel()
-            : base("Extra Life")
+            : base(Resources.ExtraLife)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
                 if (this.ExtraLifeTeamID <= 0)
                 {
-                    await DialogHelper.ShowMessage("Please enter a valid Extra Life team ID.");
+                    await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidTeamId);
                     return;
                 }
 
                 if (this.ExtraLifeParticipant == null)
                 {
-                    await DialogHelper.ShowMessage("Please select a valid Extra Life participant");
+                    await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidParticipant);
                     return;
                 }
 
@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             if (this.ExtraLifeTeamID <= 0)
             {
-                await DialogHelper.ShowMessage("Please enter a valid Extra Life team ID");
+                await DialogHelper.ShowMessage(Resources.ExtraLifeInvalidTeamId);
             }
             else
             {
@@ -133,7 +133,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("The Extra Life team ID you entered could not be found");
+                    await DialogHelper.ShowMessage(Resources.ExtraLifeTeamNotFound);
                 }
                 this.Participants.ClearAndAddRange(participants);
             }

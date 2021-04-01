@@ -121,6 +121,10 @@
     <value>Discord</value>
     <comment>Manual</comment>
   </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
   <data name="HTML" xml:space="preserve">
     <value>HTML</value>
     <comment>Manual</comment>
@@ -139,6 +143,10 @@
   </data>
   <data name="RTS" xml:space="preserve">
     <value>RTS</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
     <comment>Manual</comment>
   </data>
 </root>

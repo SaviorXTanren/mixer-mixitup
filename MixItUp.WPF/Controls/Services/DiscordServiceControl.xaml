@@ -30,11 +30,19 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account, send messages to channels, and control the audio from voice channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.DiscordInfo1}"/>
 
-                <TextBlock Grid.Row="2" TextWrapping="Wrap">The default Mix It Up Discord application has a 30 second cooldown between each Discord action to prevent rate limiting issues for all users. To circumvent the 30 second cooldown, you can create your own custom Discord Application: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#discord" RequestNavigate="Hyperlink_RequestNavigate">Creating Custom Discord Application</Hyperlink></TextBlock>
+                <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.DiscordInfo2}"/>
+                
+                <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#discord" RequestNavigate="Hyperlink_RequestNavigate">
+                         <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.CreatingCustomDiscordApplication}"/>
+                    </Hyperlink>
+                </TextBlock>
             </Grid>
 
             <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -58,7 +66,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Custom Application</TextBlock>
+                        <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.CustomApplication}"/>
 
                         <ToggleButton Grid.Column="2" IsChecked="{Binding CustomApplication}" />
                     </Grid>
@@ -75,11 +83,11 @@
                 <ColumnDefinition Width="200" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding CustomClientID}" MaterialDesign:HintAssist.Hint="Application Client ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" Text="{Binding CustomClientID}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ApplicationClientID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="2" Text="{Binding CustomClientSecret}" MaterialDesign:HintAssist.Hint="Application Client Secret" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding CustomClientSecret}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ApplicationClientSecret}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" Text="{Binding CustomBotToken}" MaterialDesign:HintAssist.Hint="Application Bot Token" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding CustomBotToken}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ApplicationBotToken}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ServiceControlBase>

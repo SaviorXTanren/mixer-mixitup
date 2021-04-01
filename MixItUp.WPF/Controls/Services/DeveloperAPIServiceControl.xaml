@@ -19,14 +19,20 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <TextBlock TextWrapping="Wrap">The Developer API allows advanced interaction with Mix It Up from other applications running on your computer using a series of REST API services. For more information about this, please see the <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API" RequestNavigate="Hyperlink_RequestNavigate">Developer API</Hyperlink> Wiki page.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DeveloperAPIInfo}"/>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.DeveloperAPI}"/>
+                </Hyperlink>
+            </TextBlock>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">Open To Local Network (Must run as Administrator):</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" Text="{x:Static resx:Resources.DeveloperAPIAdvanced}"/>
                 <ToggleButton Margin="10,10,0,0" IsEnabled="{Binding IsNotConnected}" IsChecked="{Binding EnableDeveloperAPIAdvancedMode}" HorizontalAlignment="Center"/>
             </StackPanel>
-            
-            <TextBlock TextWrapping="Wrap">WARNING: This will make the developer APIs listen on all addresses and may open Mix It Up to callers from outside your network. Only use this option if you know what you are doing!</TextBlock>
+
+            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DeveloperAPIWarning}"/>
         </StackPanel>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
