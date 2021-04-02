@@ -9121,6 +9121,51 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add a web browser source in your streaming software with the following URL:.
+        /// </summary>
+        public static string OverlayInfo1 {
+            get {
+                return ResourceManager.GetString("OverlayInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up..
+        /// </summary>
+        public static string OverlayInfo2 {
+            get {
+                return ResourceManager.GetString("OverlayInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multi-overlay support can be found under Settings -&gt; Overlay..
+        /// </summary>
+        public static string OverlayInfo3 {
+            get {
+                return ResourceManager.GetString("OverlayInfo3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you have OBS Studio, XSplit, or Streamlabs OBS connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay when Mix It Up starts. Simply type the name of the source below:.
+        /// </summary>
+        public static string OverlayInfo4 {
+            get {
+                return ResourceManager.GetString("OverlayInfo4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simply type the name of the web browser source in your streaming software below:.
+        /// </summary>
+        public static string OverlayInfo5 {
+            get {
+                return ResourceManager.GetString("OverlayInfo5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Leader.
         /// </summary>
         public static string OverlayLeaderboardNewLeader {
@@ -9234,6 +9279,24 @@ namespace MixItUp.Base {
         public static string OvrStreamActionMissingVariableName {
             get {
                 return ResourceManager.GetString("OvrStreamActionMissingVariableName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OvrStream is a powerful, motion graphics editor for alerts &amp;amp; overlays. Mix It Up allows you to trigger your visualizations and set variables values for them in OvrStream..
+        /// </summary>
+        public static string OvrStreamInfo1 {
+            get {
+                return ResourceManager.GetString("OvrStreamInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For information on OvrStream, please see the following link:.
+        /// </summary>
+        public static string OvrStreamInfo2 {
+            get {
+                return ResourceManager.GetString("OvrStreamInfo2", resourceCulture);
             }
         }
         
@@ -11970,6 +12033,15 @@ namespace MixItUp.Base {
         public static string StreamingSoftwareOBSSLOBS {
             get {
                 return ResourceManager.GetString("StreamingSoftwareOBSSLOBS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming Software Source Name.
+        /// </summary>
+        public static string StreamingSoftwareSourceName {
+            get {
+                return ResourceManager.GetString("StreamingSoftwareSourceName", resourceCulture);
             }
         }
         

@@ -4957,11 +4957,35 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="OBSWebSocketInstaller" xml:space="preserve">
     <value>OBS WebSocket Installer</value>
   </data>
+  <data name="OverlayInfo1" xml:space="preserve">
+    <value>Add a web browser source in your streaming software with the following URL:</value>
+  </data>
+  <data name="OverlayInfo2" xml:space="preserve">
+    <value>To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</value>
+  </data>
+  <data name="OverlayInfo3" xml:space="preserve">
+    <value>Multi-overlay support can be found under Settings -&gt; Overlay.</value>
+  </data>
+  <data name="OverlayInfo4" xml:space="preserve">
+    <value>If you have OBS Studio, XSplit, or Streamlabs OBS connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay when Mix It Up starts. Simply type the name of the source below:</value>
+  </data>
+  <data name="OverlayInfo5" xml:space="preserve">
+    <value>Simply type the name of the web browser source in your streaming software below:</value>
+  </data>
+  <data name="OvrStreamInfo1" xml:space="preserve">
+    <value>OvrStream is a powerful, motion graphics editor for alerts &amp;amp; overlays. Mix It Up allows you to trigger your visualizations and set variables values for them in OvrStream.</value>
+  </data>
+  <data name="OvrStreamInfo2" xml:space="preserve">
+    <value>For information on OvrStream, please see the following link:</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password (Optional)</value>
   </data>
   <data name="SelectedFundraiser" xml:space="preserve">
     <value>Selected Fundraiser</value>
+  </data>
+  <data name="StreamingSoftwareSourceName" xml:space="preserve">
+    <value>Streaming Software Source Name</value>
   </data>
   <data name="TestConnection" xml:space="preserve">
     <value>Test Connection</value>
