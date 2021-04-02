@@ -1834,6 +1834,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to clear the Game Queue queue?.
+        /// </summary>
+        public static string ClearGameQueuePrompt {
+            get {
+                return ResourceManager.GetString("ClearGameQueuePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear Mixer Data.
         /// </summary>
         public static string ClearMixerUserData {
@@ -2990,6 +2999,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you wish to delete this?.
+        /// </summary>
+        public static string DeleteItemPrompt {
+            get {
+                return ResourceManager.GetString("DeleteItemPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this profile?.
+        /// </summary>
+        public static string DeleteProfilePrompt {
+            get {
+                return ResourceManager.GetString("DeleteProfilePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this quote?.
+        /// </summary>
+        public static string DeleteQuotePrompt {
+            get {
+                return ResourceManager.GetString("DeleteQuotePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Settings.
         /// </summary>
         public static string DeleteSettings {
@@ -3004,6 +3040,24 @@ namespace MixItUp.Base {
         public static string DeleteSettingsWarning {
             get {
                 return ResourceManager.GetString("DeleteSettingsWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will delete this user&apos;s data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?.
+        /// </summary>
+        public static string DeleteUserDataPrompt {
+            get {
+                return ResourceManager.GetString("DeleteUserDataPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this widget?.
+        /// </summary>
+        public static string DeleteWidgetPrompt {
+            get {
+                return ResourceManager.GetString("DeleteWidgetPrompt", resourceCulture);
             }
         }
         
@@ -10840,6 +10894,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to reset all item amounts?.
+        /// </summary>
+        public static string ResetAllItemPrompt {
+            get {
+                return ResourceManager.GetString("ResetAllItemPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to reset progress for all user?.
+        /// </summary>
+        public static string ResetAllProgressPrompt {
+            get {
+                return ResourceManager.GetString("ResetAllProgressPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Date.
         /// </summary>
         public static string ResetDate {
@@ -11659,6 +11731,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to These services have disconnected.
+        /// </summary>
+        public static string ServiceDisconnectedLine1 {
+            get {
+                return ResourceManager.GetString("ServiceDisconnectedLine1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to and are attempting to reconnect:.
+        /// </summary>
+        public static string ServiceDisconnectedLine2 {
+            get {
+                return ResourceManager.GetString("ServiceDisconnectedLine2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service Disconnect Sound.
         /// </summary>
         public static string ServiceDisconnectSound {
@@ -11718,6 +11808,15 @@ namespace MixItUp.Base {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?.
+        /// </summary>
+        public static string SettingsChangedRestartPrompt {
+            get {
+                return ResourceManager.GetString("SettingsChangedRestartPrompt", resourceCulture);
             }
         }
         
@@ -13207,6 +13306,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Switch to Dark Theme.
+        /// </summary>
+        public static string SwitchToDarkTheme {
+            get {
+                return ResourceManager.GetString("SwitchToDarkTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch to Light Theme.
+        /// </summary>
+        public static string SwitchToLightTheme {
+            get {
+                return ResourceManager.GetString("SwitchToLightTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Symbol.
         /// </summary>
         public static string Symbol {
@@ -14415,6 +14532,24 @@ namespace MixItUp.Base {
         public static string UpdateVariables {
             get {
                 return ResourceManager.GetString("UpdateVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We&apos;ve detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up..
+        /// </summary>
+        public static string UpgradePrompt1 {
+            get {
+                return ResourceManager.GetString("UpgradePrompt1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later..
+        /// </summary>
+        public static string UpgradePrompt2 {
+            get {
+                return ResourceManager.GetString("UpgradePrompt2", resourceCulture);
             }
         }
         

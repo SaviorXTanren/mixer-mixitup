@@ -44,10 +44,10 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class MainMenuControl : MainControlBase
     {
-        private const string SwitchToLightThemeText = "Switch to Light Theme";
-        private const string SwitchToDarkThemeText = "Switch to Dark Theme";
+        private readonly string SwitchToLightThemeText = MixItUp.Base.Resources.SwitchToLightTheme;
+        private readonly string SwitchToDarkThemeText = MixItUp.Base.Resources.SwitchToDarkTheme;
 
-        private static readonly string DisconnectedServicesHeader = "These services have disconnected" + Environment.NewLine + "and are attempting to reconnect:";
+        private static readonly string DisconnectedServicesHeader = MixItUp.Base.Resources.ServiceDisconnectedLine1 + Environment.NewLine + MixItUp.Base.Resources.ServiceDisconnectedLine2;
 
         private HashSet<string> serviceDisconnections = new HashSet<string>();
 
@@ -199,7 +199,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 await ChannelSession.AppSettings.Save();
-                if (ChannelSession.AppSettings.SettingsChangeRestartRequired && await DialogHelper.ShowConfirmation("Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?"))
+                if (ChannelSession.AppSettings.SettingsChangeRestartRequired && await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.SettingsChangedRestartPrompt))
                 {
                     ((MainWindow)this.Window).Restart();
                 }

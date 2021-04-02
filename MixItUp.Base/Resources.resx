@@ -5234,8 +5234,26 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="BoardHeader" xml:space="preserve">
     <value>Board:</value>
   </data>
+  <data name="ClearGameQueuePrompt" xml:space="preserve">
+    <value>Are you sure you want to clear the Game Queue queue?</value>
+  </data>
   <data name="DamageAnimation" xml:space="preserve">
     <value>Damage Animation</value>
+  </data>
+  <data name="DeleteItemPrompt" xml:space="preserve">
+    <value>Are you sure you wish to delete this?</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>Are you sure you want to delete this profile?</value>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>Are you sure you want to delete this quote?</value>
+  </data>
+  <data name="DeleteUserDataPrompt" xml:space="preserve">
+    <value>This will delete this user's data, which includes their Hours, Currency, Rank, &amp; Custom User Commands. Are you sure you want to do this?</value>
+  </data>
+  <data name="DeleteWidgetPrompt" xml:space="preserve">
+    <value>Are you sure you want to delete this widget?</value>
   </data>
   <data name="DonationsHeader" xml:space="preserve">
     <value>Donations:</value>
@@ -5309,11 +5327,26 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ResetAfterDays" xml:space="preserve">
     <value>Reset After Days</value>
   </data>
+  <data name="ResetAllItemPrompt" xml:space="preserve">
+    <value>Do you want to reset all item amounts?</value>
+  </data>
+  <data name="ResetAllProgressPrompt" xml:space="preserve">
+    <value>Are you sure you want to reset progress for all user?</value>
+  </data>
   <data name="ScorpBotInstallationDirectory" xml:space="preserve">
     <value>ScorpBot Installation Directory</value>
   </data>
   <data name="ScrollWidthPixels" xml:space="preserve">
     <value>Scroll Width (Pixels)</value>
+  </data>
+  <data name="ServiceDisconnectedLine1" xml:space="preserve">
+    <value>These services have disconnected</value>
+  </data>
+  <data name="ServiceDisconnectedLine2" xml:space="preserve">
+    <value>and are attempting to reconnect:</value>
+  </data>
+  <data name="SettingsChangedRestartPrompt" xml:space="preserve">
+    <value>Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?</value>
   </data>
   <data name="Shadow" xml:space="preserve">
     <value>Shadow (Optional)</value>
@@ -5336,11 +5369,23 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="SubResubsHeader" xml:space="preserve">
     <value>Subs/Resubs:</value>
   </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>Switch to Dark Theme</value>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>Switch to Light Theme</value>
+  </data>
   <data name="TextSize" xml:space="preserve">
     <value>Text Size (Pixels)</value>
   </data>
   <data name="TotalFollowsHeader" xml:space="preserve">
     <value>Total Follows:</value>
+  </data>
+  <data name="UpgradePrompt1" xml:space="preserve">
+    <value>We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
+  </data>
+  <data name="UpgradePrompt2" xml:space="preserve">
+    <value>If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later.</value>
   </data>
   <data name="VideoFilePath" xml:space="preserve">
     <value>Video File Path</value>

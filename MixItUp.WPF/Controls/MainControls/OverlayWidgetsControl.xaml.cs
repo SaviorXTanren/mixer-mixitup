@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this widget?"))
+                if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DeleteWidgetPrompt))
                 {
                     OverlayWidgetModel widget = FrameworkElementHelpers.GetDataContext<OverlayWidgetModel>(sender);
                     await this.viewModel.DeleteWidget(widget);

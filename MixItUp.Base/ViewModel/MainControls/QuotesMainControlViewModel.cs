@@ -95,7 +95,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task RemoveQuote(UserQuoteViewModel quote)
         {
-            if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this quote?"))
+            if (await DialogHelper.ShowConfirmation(Resources.DeleteQuotePrompt))
             {
                 ChannelSession.Settings.Quotes.Remove(quote.Model);
                 this.Refresh();

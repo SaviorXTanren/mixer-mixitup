@@ -72,9 +72,9 @@ namespace MixItUp.Base.Services
                 {
                     if (!v2SettingsUpgradeNeeded)
                     {
-                        if (!await DialogHelper.ShowConfirmation("We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform & is required to use Mix It Up." +
+                        if (!await DialogHelper.ShowConfirmation(Resources.UpgradePrompt1 +
                             Environment.NewLine + Environment.NewLine +
-                            "If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later"))
+                            Resources.UpgradePrompt2))
                         {
                             return new List<SettingsV3Model>();
                         }

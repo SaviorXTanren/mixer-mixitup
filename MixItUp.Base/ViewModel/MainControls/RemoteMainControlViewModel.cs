@@ -154,7 +154,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (this.Profile != null)
                 {
-                    if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this profile?"))
+                    if (await DialogHelper.ShowConfirmation(Resources.DeleteProfilePrompt))
                     {
                         ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.GetModel());
                         ChannelSession.Settings.RemoteProfileBoards.Remove(this.profile.ID);

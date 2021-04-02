@@ -113,7 +113,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ClearQueueCommand = this.CreateCommand(async (x) =>
             {
-                if (await DialogHelper.ShowConfirmation("Are you sure you want to clear the Game Queue queue?"))
+                if (await DialogHelper.ShowConfirmation(Resources.ClearGameQueuePrompt))
                 {
                     await ChannelSession.Services.GameQueueService.Clear();
                     this.NotifyPropertyChanges();

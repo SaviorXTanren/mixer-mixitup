@@ -263,7 +263,7 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             this.ManualResetCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("Are you sure you want to reset progress for all user?"))
+                if (await DialogHelper.ShowConfirmation(Resources.ResetAllProgressPrompt))
                 {
                     if (this.IsExisting)
                     {

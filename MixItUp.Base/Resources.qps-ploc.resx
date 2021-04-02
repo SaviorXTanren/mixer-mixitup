@@ -5234,8 +5234,26 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="BoardHeader" xml:space="preserve">
     <value>[!!! ßôářδ: !!!]</value>
   </data>
+  <data name="ClearGameQueuePrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô çℓèář ţĥè Gá₥è Qúèúè 9úèúè? !!!]</value>
+  </data>
   <data name="DamageAnimation" xml:space="preserve">
     <value>[!!! Ðá₥áĝè Âñï₥áţïôñ !!!]</value>
+  </data>
+  <data name="DeleteItemPrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωïšĥ ţô δèℓèţè ţĥïš? !!!]</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δèℓèţè ţĥïš ƥřôƒïℓè? !!!]</value>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δèℓèţè ţĥïš 9úôţè? !!!]</value>
+  </data>
+  <data name="DeleteUserDataPrompt" xml:space="preserve">
+    <value>[!!! Ţĥïš ωïℓℓ δèℓèţè ţĥïš úšèř'š δáţá, ωĥïçĥ ïñçℓúδèš ţĥèïř Hôúřš, Çúřřèñç¥, Ráñƙ, &amp; Çúšţô₥ Ûšèř Çô₥₥áñδš. Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δô ţĥïš? !!!]</value>
+  </data>
+  <data name="DeleteWidgetPrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δèℓèţè ţĥïš ωïδĝèţ? !!!]</value>
   </data>
   <data name="DonationsHeader" xml:space="preserve">
     <value>[!!! Ðôñáţïôñš: !!!]</value>
@@ -5309,11 +5327,26 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="ResetAfterDays" xml:space="preserve">
     <value>[!!! Rèšèţ Âƒţèř Ðá¥š !!!]</value>
   </data>
+  <data name="ResetAllItemPrompt" xml:space="preserve">
+    <value>[!!! Ðô ¥ôú ωáñţ ţô řèšèţ áℓℓ ïţè₥ á₥ôúñţš? !!!]</value>
+  </data>
+  <data name="ResetAllProgressPrompt" xml:space="preserve">
+    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô řèšèţ ƥřôĝřèšš ƒôř áℓℓ úšèř? !!!]</value>
+  </data>
   <data name="ScorpBotInstallationDirectory" xml:space="preserve">
     <value>[!!! Šçôřƥßôţ Ìñšţáℓℓáţïôñ Ðïřèçţôř¥ !!!]</value>
   </data>
   <data name="ScrollWidthPixels" xml:space="preserve">
     <value>[!!! Šçřôℓℓ Wïδţĥ (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="ServiceDisconnectedLine1" xml:space="preserve">
+    <value>[!!! Ţĥèšè šèřƲïçèš ĥáƲè δïšçôññèçţèδ !!!]</value>
+  </data>
+  <data name="ServiceDisconnectedLine2" xml:space="preserve">
+    <value>[!!! áñδ ářè áţţè₥ƥţïñĝ ţô řèçôññèçţ: !!!]</value>
+  </data>
+  <data name="SettingsChangedRestartPrompt" xml:space="preserve">
+    <value>[!!! Šô₥è ôƒ ţĥè šèţţïñĝš ¥ôú ĥáƲè çĥáñĝèδ řè9úïřè á řèšţářţ ţô ţáƙè èƒƒèçţ. Wôúℓδ ¥ôú ℓïƙè ţô řèšţářţ Mïж Ìţ Ûƥ ñôω? !!!]</value>
   </data>
   <data name="Shadow" xml:space="preserve">
     <value>[!!! Šĥáδôω (Óƥţïôñáℓ) !!!]</value>
@@ -5336,11 +5369,23 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="SubResubsHeader" xml:space="preserve">
     <value>[!!! Šúβš/Rèšúβš: !!!]</value>
   </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>[!!! Šωïţçĥ ţô Ðářƙ Ţĥè₥è !!!]</value>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>[!!! Šωïţçĥ ţô Ļïĝĥţ Ţĥè₥è !!!]</value>
+  </data>
   <data name="TextSize" xml:space="preserve">
     <value>[!!! Ţèжţ Šïƺè (Þïжèℓš) !!!]</value>
   </data>
   <data name="TotalFollowsHeader" xml:space="preserve">
     <value>[!!! Ţôţáℓ Fôℓℓôωš: !!!]</value>
+  </data>
+  <data name="UpgradePrompt1" xml:space="preserve">
+    <value>[!!! Wè'Ʋè δèţèçţèδ áñ ôℓδèř Ʋèřšïôñ ôƒ ¥ôúř šèţţïñĝš ţĥáţ ñèèδš ţô βè úƥĝřáδèδ ţô á ñèωèř ƒôř₥áţ. Ðèƥèñδïñĝ ôñ ţĥè šïƺè, ţĥïš çôúℓδ ţáƙè šô₥è ţï₥è ţô ƥèřƒôř₥ &amp; ïš řè9úïřèδ ţô úšè Mïж Ìţ Ûƥ. !!!]</value>
+  </data>
+  <data name="UpgradePrompt2" xml:space="preserve">
+    <value>[!!! Ìƒ ¥ôú ářè řèáδ¥ ţô δô ţĥïš, ƥℓèášè ƥřèšš Ýèš. Óţĥèřωïšè ƥřèšš Nô áñδ çℓôšè ţô ţĥè áƥƥℓïçáţïôñ ţô ƥèřƒôř₥ ℓáţèř. !!!]</value>
   </data>
   <data name="VideoFilePath" xml:space="preserve">
     <value>[!!! Vïδèô Fïℓè Þáţĥ !!!]</value>

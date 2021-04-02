@@ -300,7 +300,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 if (this.Inventory != null)
                 {
-                    if (await DialogHelper.ShowConfirmation("Do you want to reset all item amounts?"))
+                    if (await DialogHelper.ShowConfirmation(Resources.ResetAllItemPrompt))
                     {
                         await this.Inventory.Reset();
                     }

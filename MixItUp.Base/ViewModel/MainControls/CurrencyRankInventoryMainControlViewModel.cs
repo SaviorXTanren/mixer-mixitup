@@ -93,7 +93,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async void DeleteItem(CurrencyRankInventoryContainerViewModel item)
         {
-            if (await DialogHelper.ShowConfirmation("Are you sure you wish to delete this?"))
+            if (await DialogHelper.ShowConfirmation(Resources.DeleteItemPrompt))
             {
                 if (item.Inventory != null)
                 {
