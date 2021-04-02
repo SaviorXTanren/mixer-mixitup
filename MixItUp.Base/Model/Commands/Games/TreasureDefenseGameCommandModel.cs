@@ -122,7 +122,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runBetAmount = this.GetPrimaryBetAmount(parameters);
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
-                this.GetPrimaryCurrencyRequirement().SetTemporaryAmount(this.runBetAmount);
+                this.GetPrimaryCurrencyRequirement()?.SetTemporaryAmount(this.runBetAmount);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
@@ -246,7 +246,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runBetAmount = 0;
             this.runUsers.Clear();
             this.runUserTypes.Clear();
-            this.GetPrimaryCurrencyRequirement().ResetTemporaryAmount();
+            this.GetPrimaryCurrencyRequirement()?.ResetTemporaryAmount();
         }
     }
 }
