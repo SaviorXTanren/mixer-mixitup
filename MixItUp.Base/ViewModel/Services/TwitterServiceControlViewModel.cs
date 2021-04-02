@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand AuthorizePinCommand { get; set; }
 
         public TwitterServiceControlViewModel()
-            : base("Twitter")
+            : base(Resources.Twitter)
         {
             this.LogInCommand = this.CreateCommand((parameter) =>
             {

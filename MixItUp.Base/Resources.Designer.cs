@@ -871,6 +871,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authorization Pin.
+        /// </summary>
+        public static string AuthorizationPin {
+            get {
+                return ResourceManager.GetString("AuthorizationPin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authorize.
+        /// </summary>
+        public static string Authorize {
+            get {
+                return ResourceManager.GetString("Authorize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-Include &quot;!&quot;.
         /// </summary>
         public static string AutoIncludeBang {
@@ -10930,6 +10948,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected Campaign.
+        /// </summary>
+        public static string SelectedCampaign {
+            get {
+                return ResourceManager.GetString("SelectedCampaign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selected Fundraiser.
         /// </summary>
         public static string SelectedFundraiser {
@@ -12019,11 +12046,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to StreamElements.
+        /// </summary>
+        public static string StreamElements {
+            get {
+                return ResourceManager.GetString("StreamElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StreamElements Donation.
         /// </summary>
         public static string StreamElementsDonation {
             get {
                 return ResourceManager.GetString("StreamElementsDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StreamElements service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamElements and approve Mix It Up to access your information..
+        /// </summary>
+        public static string StreamElementsInfo1 {
+            get {
+                return ResourceManager.GetString("StreamElementsInfo1", resourceCulture);
             }
         }
         
@@ -12145,11 +12190,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to StreamJar.
+        /// </summary>
+        public static string StreamJar {
+            get {
+                return ResourceManager.GetString("StreamJar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StreamJar Donation.
         /// </summary>
         public static string StreamJarDonation {
             get {
                 return ResourceManager.GetString("StreamJarDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information..
+        /// </summary>
+        public static string StreamJarInfo1 {
+            get {
+                return ResourceManager.GetString("StreamJarInfo1", resourceCulture);
             }
         }
         
@@ -12172,6 +12235,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information..
+        /// </summary>
+        public static string StreamlabsInfo1 {
+            get {
+                return ResourceManager.GetString("StreamlabsInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamlabs OBS.
         /// </summary>
         public static string StreamlabsOBS {
@@ -12181,11 +12253,83 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running..
+        /// </summary>
+        public static string StreamlabsOBSConnectionFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS connection test successful!.
+        /// </summary>
+        public static string StreamlabsOBSConnectionSuccess {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources..
+        /// </summary>
+        public static string StreamlabsOBSInfo1 {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots.
+        /// </summary>
+        public static string Streamloots {
+            get {
+                return ResourceManager.GetString("Streamloots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots Alerts Overlay URL.
+        /// </summary>
+        public static string StreamlootsAlertsOverlayURL {
+            get {
+                return ResourceManager.GetString("StreamlootsAlertsOverlayURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamloots Card Redeemed.
         /// </summary>
         public static string StreamlootsCardRedeemed {
             get {
                 return ResourceManager.GetString("StreamlootsCardRedeemed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots service connectivity allows you to trigger events from when a card is used on your channel..
+        /// </summary>
+        public static string StreamlootsInfo1 {
+            get {
+                return ResourceManager.GetString("StreamlootsInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To connect to Streamloots, head to your Streamloots dashboard page, click on Alerts on the left-side menu, copy your Alert Overlay URL into the text box, and click Log In..
+        /// </summary>
+        public static string StreamlootsInfo2 {
+            get {
+                return ResourceManager.GetString("StreamlootsInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter a valid Streamloots URL ({0})..
+        /// </summary>
+        public static string StreamlootsInvalidUrl {
+            get {
+                return ResourceManager.GetString("StreamlootsInvalidUrl", resourceCulture);
             }
         }
         
@@ -12847,11 +12991,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tiltify.
+        /// </summary>
+        public static string Tiltify {
+            get {
+                return ResourceManager.GetString("Tiltify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tiltify Donation.
         /// </summary>
         public static string TiltifyDonation {
             get {
                 return ResourceManager.GetString("TiltifyDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiltify service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Tiltify and approve Mix It Up to access your information. Once you have connect Tiltify, you need to select the campaign you wish to use when detecting donations..
+        /// </summary>
+        public static string TiltifyInfo1 {
+            get {
+                return ResourceManager.GetString("TiltifyInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NOTE: When logging in, please us the Email option to log in to your account. It is not currently possible to log in with connected accounts..
+        /// </summary>
+        public static string TiltifyInfo2 {
+            get {
+                return ResourceManager.GetString("TiltifyInfo2", resourceCulture);
             }
         }
         
@@ -12946,11 +13117,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TipeeeStream.
+        /// </summary>
+        public static string TipeeeStream {
+            get {
+                return ResourceManager.GetString("TipeeeStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TipeeeStream Donation.
         /// </summary>
         public static string TipeeeStreamDonation {
             get {
                 return ResourceManager.GetString("TipeeeStreamDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TipeeeStream service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to TipeeeStream and approve Mix It Up to access your information..
+        /// </summary>
+        public static string TipeeeStreamInfo1 {
+            get {
+                return ResourceManager.GetString("TipeeeStreamInfo1", resourceCulture);
             }
         }
         
@@ -13090,11 +13279,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TreatStream.
+        /// </summary>
+        public static string TreatStream {
+            get {
+                return ResourceManager.GetString("TreatStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TreatStream Donation.
         /// </summary>
         public static string TreatStreamDonation {
             get {
                 return ResourceManager.GetString("TreatStreamDonation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TreatStream service connectivity allows you to perform actions when a treat is received. When you log in, an authentication webpage will open asking you to log in to TreatStream and approve Mix It Up to access your information..
+        /// </summary>
+        public static string TreatStreamInfo1 {
+            get {
+                return ResourceManager.GetString("TreatStreamInfo1", resourceCulture);
             }
         }
         
@@ -13313,6 +13520,15 @@ namespace MixItUp.Base {
         public static string TwitterActionMissingTweet {
             get {
                 return ResourceManager.GetString("TwitterActionMissingTweet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream..
+        /// </summary>
+        public static string TwitterInfo1 {
+            get {
+                return ResourceManager.GetString("TwitterInfo1", resourceCulture);
             }
         }
         
@@ -14559,6 +14775,60 @@ namespace MixItUp.Base {
         public static string XSplit {
             get {
                 return ResourceManager.GetString("XSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit..
+        /// </summary>
+        public static string XSplitConnectionFailed {
+            get {
+                return ResourceManager.GetString("XSplitConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSplit connection test successful!.
+        /// </summary>
+        public static string XSplitConnectionSuccess {
+            get {
+                return ResourceManager.GetString("XSplitConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSplit Folder.
+        /// </summary>
+        public static string XSplitFolder {
+            get {
+                return ResourceManager.GetString("XSplitFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The XSplit service allows you to directly interact with your instance of XSplit to perform changes to scenes and sources..
+        /// </summary>
+        public static string XSplitInfo1 {
+            get {
+                return ResourceManager.GetString("XSplitInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Mix It Up extension must be installed from the XSplit Folder and running in XSplit. For instructions on how to do this, please check out the XSplit Service page..
+        /// </summary>
+        public static string XSplitInfo2 {
+            get {
+                return ResourceManager.GetString("XSplitInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XSplit Service Page.
+        /// </summary>
+        public static string XSplitServicePage {
+            get {
+                return ResourceManager.GetString("XSplitServicePage", resourceCulture);
             }
         }
         

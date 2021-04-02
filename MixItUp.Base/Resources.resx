@@ -4921,6 +4921,12 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TeamID" xml:space="preserve">
     <value>Team ID</value>
   </data>
+  <data name="AuthorizationPin" xml:space="preserve">
+    <value>Authorization Pin</value>
+  </data>
+  <data name="Authorize" xml:space="preserve">
+    <value>Authorize</value>
+  </data>
   <data name="IFTTTInfo1" xml:space="preserve">
     <value>IFTTT service connectivity allows you to trigger IFTTT Web Hook applets and provide data to use.</value>
   </data>
@@ -4987,6 +4993,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="PatreonInfo1" xml:space="preserve">
     <value>Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information.</value>
   </data>
+  <data name="SelectedCampaign" xml:space="preserve">
+    <value>Selected Campaign</value>
+  </data>
   <data name="SelectedFundraiser" xml:space="preserve">
     <value>Selected Fundraiser</value>
   </data>
@@ -5017,8 +5026,48 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamDeckInfo2" xml:space="preserve">
     <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the "More Actions..." button in the bottom-right corner, then search for "Mix It Up" in the window.</value>
   </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+  </data>
+  <data name="StreamElementsInfo1" xml:space="preserve">
+    <value>StreamElements service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamElements and approve Mix It Up to access your information.</value>
+  </data>
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
     <value>Streaming Software Source Name</value>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+  </data>
+  <data name="StreamJarInfo1" xml:space="preserve">
+    <value>StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="StreamlabsInfo1" xml:space="preserve">
+    <value>Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
+    <value>Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
+    <value>Streamlabs OBS connection test successful!</value>
+  </data>
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+    <value>The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources.</value>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+  </data>
+  <data name="StreamlootsAlertsOverlayURL" xml:space="preserve">
+    <value>Streamloots Alerts Overlay URL</value>
+  </data>
+  <data name="StreamlootsInfo1" xml:space="preserve">
+    <value>Streamloots service connectivity allows you to trigger events from when a card is used on your channel.</value>
+  </data>
+  <data name="StreamlootsInfo2" xml:space="preserve">
+    <value>To connect to Streamloots, head to your Streamloots dashboard page, click on Alerts on the left-side menu, copy your Alert Overlay URL into the text box, and click Log In.</value>
+  </data>
+  <data name="StreamlootsInvalidUrl" xml:space="preserve">
+    <value>Please enter a valid Streamloots URL ({0}).</value>
+    <comment>{0} is a url format</comment>
   </data>
   <data name="SubEquivalent" xml:space="preserve">
     <value>Sub Equivalent</value>
@@ -5026,7 +5075,49 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TestConnection" xml:space="preserve">
     <value>Test Connection</value>
   </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+  </data>
+  <data name="TiltifyInfo1" xml:space="preserve">
+    <value>Tiltify service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Tiltify and approve Mix It Up to access your information. Once you have connect Tiltify, you need to select the campaign you wish to use when detecting donations.</value>
+  </data>
+  <data name="TiltifyInfo2" xml:space="preserve">
+    <value>NOTE: When logging in, please us the Email option to log in to your account. It is not currently possible to log in with connected accounts.</value>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+  </data>
+  <data name="TipeeeStreamInfo1" xml:space="preserve">
+    <value>TipeeeStream service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to TipeeeStream and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+  </data>
+  <data name="TreatStreamInfo1" xml:space="preserve">
+    <value>TreatStream service connectivity allows you to perform actions when a treat is received. When you log in, an authentication webpage will open asking you to log in to TreatStream and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="TwitterInfo1" xml:space="preserve">
+    <value>Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream.</value>
+  </data>
   <data name="WebHooksPage" xml:space="preserve">
     <value>Web Hooks Page</value>
+  </data>
+  <data name="XSplitConnectionFailed" xml:space="preserve">
+    <value>XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.</value>
+  </data>
+  <data name="XSplitConnectionSuccess" xml:space="preserve">
+    <value>XSplit connection test successful!</value>
+  </data>
+  <data name="XSplitFolder" xml:space="preserve">
+    <value>XSplit Folder</value>
+  </data>
+  <data name="XSplitInfo1" xml:space="preserve">
+    <value>The XSplit service allows you to directly interact with your instance of XSplit to perform changes to scenes and sources.</value>
+  </data>
+  <data name="XSplitInfo2" xml:space="preserve">
+    <value>The Mix It Up extension must be installed from the XSplit Folder and running in XSplit. For instructions on how to do this, please check out the XSplit Service page.</value>
+  </data>
+  <data name="XSplitServicePage" xml:space="preserve">
+    <value>XSplit Service Page</value>
   </data>
 </root>

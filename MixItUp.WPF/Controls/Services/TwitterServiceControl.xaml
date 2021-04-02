@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -15,14 +16,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="425" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="225" />
+            <ColumnDefinition Width="325" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap">Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream.</TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.TwitterInfo1}"/>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -32,7 +33,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Command="{Binding LogInCommand}" HorizontalAlignment="Center" Width="90">Log In</Button>
+                <Button Grid.Row="0" Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
 
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -41,9 +42,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding AuthorizationPin}" IsEnabled="{Binding AuthorizationInProgress}" MaterialDesign:HintAssist.Hint="Authorization Pin" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding AuthorizationPin}" IsEnabled="{Binding AuthorizationInProgress}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AuthorizationPin}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <Button Grid.Column="2" Command="{Binding AuthorizePinCommand}" IsEnabled="{Binding AuthorizationInProgress}" HorizontalAlignment="Center" Width="100">Authorize</Button>
+                    <Button Grid.Column="2" Command="{Binding AuthorizePinCommand}" IsEnabled="{Binding AuthorizationInProgress}" HorizontalAlignment="Center" MinWidth="100" Content="{x:Static resx:Resources.Authorize}"/>
                 </Grid>
             </Grid>
         </Grid>
