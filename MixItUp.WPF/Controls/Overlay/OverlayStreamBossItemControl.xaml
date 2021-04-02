@@ -38,12 +38,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding WidthString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox Text="{Binding HeightString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding WidthString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
         </Grid>
 
@@ -60,13 +66,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Border Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
-
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
-
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding ProgressColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Progress Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
-
-            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding DamageAnimation}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Damage Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -74,7 +74,31 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding NewBossAnimation}" Grid.Column="8" MaterialDesign:HintAssist.Hint="New Boss Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding ProgressColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgressColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding DamageAnimation}" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DamageAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox ItemsSource="{Binding VisibleAnimations}" SelectedItem="{Binding NewBossAnimation}" Grid.Column="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.NewBossAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -100,19 +124,19 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding StartingHealthString}"  MaterialDesign:HintAssist.Hint="Starting Health" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="0" Text="{Binding StartingHealthString}"  MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StartingHealth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="2" Text="{Binding FollowBonusString}" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="2" Text="{Binding FollowBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="4" Text="{Binding HostBonusString}" MaterialDesign:HintAssist.Hint="Host Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="4" Text="{Binding HostBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HostBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="6" Text="{Binding RaidBonusString}" MaterialDesign:HintAssist.Hint="Raid Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
+            <TextBox Grid.Column="6" Text="{Binding RaidBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RaidBonusPerUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
 
-            <TextBox Grid.Column="8" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="8" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="10" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="10" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DonationBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="12" Text="{Binding BitsBonusString}" MaterialDesign:HintAssist.Hint="Bits Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Grid.Column="12" Text="{Binding BitsBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BitsBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
@@ -129,12 +153,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding HealingBonusString}"  MaterialDesign:HintAssist.Hint="Healing Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox Grid.Column="0" Text="{Binding HealingBonusString}"  MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HealingBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <TextBox Grid.Column="2" Text="{Binding OverkillBonusString}" MaterialDesign:HintAssist.Hint="Overkill Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox Grid.Column="2" Text="{Binding OverkillBonusString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OverkillBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
             </Grid>
 
-            <GroupBox Header="On New Stream Boss" Grid.Column="2" Width="220">
+            <GroupBox Header="{x:Static resx:Resources.OnNewStreamBoss}" Grid.Column="2" Width="220">
                 <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
                     <Button x:Name="AddCommandButton" Visibility="{Binding IsNewBossCommandCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
@@ -145,6 +169,6 @@
             </GroupBox>
         </Grid>
 
-        <TextBox Grid.Row="8" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <TextBox Grid.Row="8" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

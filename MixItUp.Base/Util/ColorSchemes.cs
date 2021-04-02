@@ -12,16 +12,16 @@ namespace MixItUp.Base.Util
             { "Amber", "#ffb300" },
             { "Black", "#000000" },
             { "Blue", "#2196f3" },
-            { "Blue Grey", "#607d8b" },
+            { "BlueGrey", "#607d8b" },
             { "Brown", "#795548" },
             { "Cyan", "#00bcd4" },
-            { "Deep Orange", "#ff5722" },
-            { "Deep Purple", "#673ab7" },
+            { "DeepOrange", "#ff5722" },
+            { "DeepPurple", "#673ab7" },
             { "Green", "#4caf50" },
             { "Grey", "#9e9e9e" },
             { "Indigo", "#3f51b5" },
-            { "Light Blue", "#03a9f4" },
-            { "Light Green", "#8bc34a" },
+            { "LightBlue", "#03a9f4" },
+            { "LightGreen", "#8bc34a" },
             { "Lime", "#cddc39" },
             { "Orange", "#ff9800" },
             { "Pink", "#e91e63" },
@@ -58,6 +58,13 @@ namespace MixItUp.Base.Util
             {
                 return ColorSchemes.HTMLColorSchemeDictionary[name];
             }
+
+            var locLookup = HTMLColorSchemeDictionary.Select(kvp => kvp.Key).SingleOrDefault(key => MixItUp.Base.Resources.ResourceManager.GetString(key) == name);
+            if (locLookup != null)
+            {
+                return ColorSchemes.HTMLColorSchemeDictionary[locLookup];
+            }
+
             return name;
         }
 
@@ -65,7 +72,8 @@ namespace MixItUp.Base.Util
         {
             if (!string.IsNullOrEmpty(code) && ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(code))
             {
-                return ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(code)).Key;
+                var key = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(code)).Key;
+                return MixItUp.Base.Resources.ResourceManager.GetString(key) ?? key;
             }
             return code;
         }

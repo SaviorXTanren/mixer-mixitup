@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             });
         }
 
-        public string SectionTypeName { get { return EnumHelper.GetEnumName(this.SectionType); } }
+        public string SectionTypeName { get { return EnumLocalizationHelper.GetLocalizedName(this.SectionType); } }
 
         public OverlayEndCreditsSectionModel GetItem()
         {
@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.backgroundColor; }
             set
             {
-                this.backgroundColor = value;
+                this.backgroundColor = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -129,7 +129,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.sectionTextColor; }
             set
             {
-                this.sectionTextColor = value;
+                this.sectionTextColor = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.itemTextColor; }
             set
             {
-                this.itemTextColor = value;
+                this.itemTextColor = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -186,12 +186,12 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayEndCreditsItemViewModel()
         {
             this.speed = OverlayEndCreditsSpeedEnum.Medium;
-            this.BackgroundColor = "Black";
+            this.BackgroundColor = Resources.Black;
             this.SectionTextFont = "Arial";
-            this.SectionTextColor = "White";
+            this.SectionTextColor = Resources.White;
             this.sectionTextSize = 48;
             this.ItemTextFont = "Arial";
-            this.ItemTextColor = "White";
+            this.ItemTextColor = Resources.White;
             this.itemTextSize = 24;
 
             this.HTML = OverlayEndCreditsItemModel.TitleHTMLTemplate;

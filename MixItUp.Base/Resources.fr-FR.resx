@@ -305,7 +305,7 @@
     <value>Débit en Bauds</value>
     <comment>Manual</comment>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Gris bleuté</value>
     <comment>Manual</comment>
   </data>
@@ -473,11 +473,11 @@
     <value>Déduire de la commande en cours d'exécution de l'utilisateur</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Orange foncé</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Violet foncé</value>
     <comment>Manual</comment>
   </data>

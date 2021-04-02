@@ -297,7 +297,7 @@
     <value>Чёрный</value>
     <comment>Manual</comment>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Сине-серый</value>
     <comment>Manual</comment>
   </data>
@@ -533,11 +533,11 @@
     <value>Удержать с пользователя, запускающего команду</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Тёмно-оранжевая</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Тёмно-фиолетовая</value>
     <comment>Manual</comment>
   </data>
@@ -985,11 +985,11 @@
     <value>Светлая</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Светло-голубая</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Светло-зелёная</value>
     <comment>Manual</comment>
   </data>

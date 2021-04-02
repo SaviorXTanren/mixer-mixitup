@@ -378,7 +378,7 @@
   <data name="Blue" xml:space="preserve">
     <value>Blau</value>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Blaugrau</value>
   </data>
   <data name="Bot" xml:space="preserve">
@@ -657,10 +657,10 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Vom Benutzer-Running-Befehl abziehen</value>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Deep Orange</value>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Deep Purple</value>
   </data>
   <data name="Default" xml:space="preserve">
@@ -1194,10 +1194,10 @@
   <data name="Light" xml:space="preserve">
     <value>Licht</value>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Hellblau</value>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Hellgrün</value>
   </data>
   <data name="Lime" xml:space="preserve">

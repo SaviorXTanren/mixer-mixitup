@@ -373,7 +373,7 @@
     <value>Blau</value>
     <comment>Manual</comment>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Blaugrau</value>
     <comment>Manual</comment>
   </data>
@@ -625,11 +625,11 @@
     <value>Datum/Uhrzeit</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Dunkelorange</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Dunkellila</value>
     <comment>Manual</comment>
   </data>
@@ -1089,11 +1089,11 @@
     <value>Hell</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Hellblau</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Hellgrün</value>
     <comment>Manual</comment>
   </data>

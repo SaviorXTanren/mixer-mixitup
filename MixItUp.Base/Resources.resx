@@ -378,7 +378,7 @@
   <data name="Blue" xml:space="preserve">
     <value>Blue</value>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Blue Grey</value>
   </data>
   <data name="Bot" xml:space="preserve">
@@ -657,10 +657,10 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Deep Orange</value>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Deep Purple</value>
   </data>
   <data name="Default" xml:space="preserve">
@@ -1194,10 +1194,10 @@
   <data name="Light" xml:space="preserve">
     <value>Light</value>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Light Blue</value>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Light Green</value>
   </data>
   <data name="Lime" xml:space="preserve">
@@ -4921,11 +4921,29 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TeamID" xml:space="preserve">
     <value>Team ID</value>
   </data>
+  <data name="AddAnimation" xml:space="preserve">
+    <value>Add Animation</value>
+  </data>
   <data name="AuthorizationPin" xml:space="preserve">
     <value>Authorization Pin</value>
   </data>
   <data name="Authorize" xml:space="preserve">
     <value>Authorize</value>
+  </data>
+  <data name="BorderColor" xml:space="preserve">
+    <value>Border Color</value>
+  </data>
+  <data name="FadeOutSeconds" xml:space="preserve">
+    <value>Fade Out (Secs)</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height (Pixels)</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>HTML Style</value>
+  </data>
+  <data name="HTMLText" xml:space="preserve">
+    <value>HTML Text</value>
   </data>
   <data name="IFTTTInfo1" xml:space="preserve">
     <value>IFTTT service connectivity allows you to trigger IFTTT Web Hook applets and provide data to use.</value>
@@ -4939,14 +4957,41 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="IFTTTWebHookKey" xml:space="preserve">
     <value>IFTTT Web Hook Key</value>
   </data>
+  <data name="ImageFilePath" xml:space="preserve">
+    <value>Image File Path / URL</value>
+  </data>
   <data name="IPAddress" xml:space="preserve">
     <value>IP Address (Optional)</value>
+  </data>
+  <data name="ItemHeight" xml:space="preserve">
+    <value>Item Height (Pixels)</value>
+  </data>
+  <data name="ItemTextColor" xml:space="preserve">
+    <value>Item Text Color</value>
+  </data>
+  <data name="ItemTextFont" xml:space="preserve">
+    <value>Item Text Font</value>
+  </data>
+  <data name="ItemTextSize" xml:space="preserve">
+    <value>Item Text Size (Pixels)</value>
+  </data>
+  <data name="ItemWidth" xml:space="preserve">
+    <value>Item Width (Pixels)</value>
   </data>
   <data name="JustGiving" xml:space="preserve">
     <value>JustGiving</value>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
     <value>JustGiving service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to JustGiving and approve Mix It Up to access your information.</value>
+  </data>
+  <data name="LayerPosition" xml:space="preserve">
+    <value>Layer Position</value>
+  </data>
+  <data name="LeftPixelPosition" xml:space="preserve">
+    <value>Left Pixel Position</value>
+  </data>
+  <data name="ListAlignment" xml:space="preserve">
+    <value>List Alignment</value>
   </data>
   <data name="OBSStudioFailed" xml:space="preserve">
     <value>OBS Studio connection test failed, Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio.</value>
@@ -4993,6 +5038,42 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="PatreonInfo1" xml:space="preserve">
     <value>Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information.</value>
   </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Pixels</value>
+  </data>
+  <data name="PositionPercentageFromLeft" xml:space="preserve">
+    <value>Position % From Left:</value>
+  </data>
+  <data name="PositionPercentageFromTop" xml:space="preserve">
+    <value>Position % From Top:</value>
+  </data>
+  <data name="RemoveAnimation" xml:space="preserve">
+    <value>Remove Animation</value>
+  </data>
+  <data name="ScreenPosition" xml:space="preserve">
+    <value>Screen Position:</value>
+  </data>
+  <data name="ScrollSpeed" xml:space="preserve">
+    <value>Scroll Speed</value>
+  </data>
+  <data name="SectionHTMLStyle" xml:space="preserve">
+    <value>Section HTML Style</value>
+  </data>
+  <data name="SectionTextColor" xml:space="preserve">
+    <value>Section Text Color</value>
+  </data>
+  <data name="SectionTextFont" xml:space="preserve">
+    <value>Section Text Font</value>
+  </data>
+  <data name="SectionTextSize" xml:space="preserve">
+    <value>Section Text Size (Pixels)</value>
+  </data>
+  <data name="SectionType" xml:space="preserve">
+    <value>Section Type</value>
+  </data>
   <data name="SelectedCampaign" xml:space="preserve">
     <value>Selected Campaign</value>
   </data>
@@ -5004,6 +5085,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="ServiceConnectFailed" xml:space="preserve">
     <value>Could not connect to service, please try again. If this continues, please reach out to our support for further assistance.</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>Simple</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
     <value>Stream Avatars</value>
@@ -5075,6 +5159,12 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TestConnection" xml:space="preserve">
     <value>Test Connection</value>
   </data>
+  <data name="TextFont" xml:space="preserve">
+    <value>Text Font</value>
+  </data>
+  <data name="TextHeight" xml:space="preserve">
+    <value>Text Height (Pixels)</value>
+  </data>
   <data name="Tiltify" xml:space="preserve">
     <value>Tiltify</value>
   </data>
@@ -5090,6 +5180,15 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TipeeeStreamInfo1" xml:space="preserve">
     <value>TipeeeStream service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to TipeeeStream and approve Mix It Up to access your information.</value>
   </data>
+  <data name="TitleHTMLStyle" xml:space="preserve">
+    <value>Title HTML Style</value>
+  </data>
+  <data name="TopPixelPosition" xml:space="preserve">
+    <value>TopPixel Position</value>
+  </data>
+  <data name="TotalToShow" xml:space="preserve">
+    <value>Total To Show</value>
+  </data>
   <data name="TreatStream" xml:space="preserve">
     <value>TreatStream</value>
   </data>
@@ -5099,8 +5198,14 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TwitterInfo1" xml:space="preserve">
     <value>Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream.</value>
   </data>
+  <data name="UserHTMLStyle" xml:space="preserve">
+    <value>User HTMLStyle</value>
+  </data>
   <data name="WebHooksPage" xml:space="preserve">
     <value>Web Hooks Page</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width (Pixels)</value>
   </data>
   <data name="XSplitConnectionFailed" xml:space="preserve">
     <value>XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.</value>
@@ -5119,5 +5224,119 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="XSplitServicePage" xml:space="preserve">
     <value>XSplit Service Page</value>
+  </data>
+  <data name="BitsHeader" xml:space="preserve">
+    <value>Bits:</value>
+  </data>
+  <data name="DamageAnimation" xml:space="preserve">
+    <value>Damage Animation</value>
+  </data>
+  <data name="DonationsHeader" xml:space="preserve">
+    <value>Donations:</value>
+  </data>
+  <data name="FollowsHeader" xml:space="preserve">
+    <value>Follows:</value>
+  </data>
+  <data name="FontColor" xml:space="preserve">
+    <value>Font Color</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>FontName</value>
+  </data>
+  <data name="GoalAmount" xml:space="preserve">
+    <value>Goal Amount</value>
+  </data>
+  <data name="GoalType" xml:space="preserve">
+    <value>Goal Type</value>
+  </data>
+  <data name="HealingBonus" xml:space="preserve">
+    <value>Healing Bonus</value>
+  </data>
+  <data name="HostBonusPerUser" xml:space="preserve">
+    <value>Host Bonus (Per User)</value>
+  </data>
+  <data name="HostsHeader" xml:space="preserve">
+    <value>Hosts:</value>
+  </data>
+  <data name="LengthSeconds" xml:space="preserve">
+    <value>Length (Seconds)</value>
+  </data>
+  <data name="LoopHeader" xml:space="preserve">
+    <value>Loop:</value>
+  </data>
+  <data name="MinimumAmount" xml:space="preserve">
+    <value>Minimum Amount</value>
+  </data>
+  <data name="MinSecondsToShow" xml:space="preserve">
+    <value>Min Seconds To Show</value>
+  </data>
+  <data name="NewBossAnimation" xml:space="preserve">
+    <value>New Boss Animation</value>
+  </data>
+  <data name="NewLeader" xml:space="preserve">
+    <value>New Leader</value>
+  </data>
+  <data name="OnGoalReached" xml:space="preserve">
+    <value>On Goal Reached</value>
+  </data>
+  <data name="OnNewStreamBoss" xml:space="preserve">
+    <value>On New Stream Boss</value>
+  </data>
+  <data name="OnTimerCompleted" xml:space="preserve">
+    <value>On Timer Completed</value>
+  </data>
+  <data name="OverkillBonus" xml:space="preserve">
+    <value>Overkill Bonus</value>
+  </data>
+  <data name="ProgressColor" xml:space="preserve">
+    <value>Progress Color</value>
+  </data>
+  <data name="RaidBonusPerUser" xml:space="preserve">
+    <value>Raid Bonus (Per User)</value>
+  </data>
+  <data name="RaidsHeader" xml:space="preserve">
+    <value>Raids:</value>
+  </data>
+  <data name="ResetAfterDays" xml:space="preserve">
+    <value>Reset After Days</value>
+  </data>
+  <data name="ScrollWidthPixels" xml:space="preserve">
+    <value>Scroll Width (Pixels)</value>
+  </data>
+  <data name="Shadow" xml:space="preserve">
+    <value>Shadow (Optional)</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size (Pixels)</value>
+  </data>
+  <data name="StartingAmount" xml:space="preserve">
+    <value>Starting Amount</value>
+  </data>
+  <data name="StartingHealth" xml:space="preserve">
+    <value>Starting Health</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Start Time (Secs)</value>
+  </data>
+  <data name="SubResubsHeader" xml:space="preserve">
+    <value>Subs/Resubs:</value>
+  </data>
+  <data name="TextSize" xml:space="preserve">
+    <value>Text Size (Pixels)</value>
+  </data>
+  <data name="TotalFollowsHeader" xml:space="preserve">
+    <value>Total Follows:</value>
+  </data>
+  <data name="VideoFilePath" xml:space="preserve">
+    <value>Video File Path</value>
+  </data>
+  <data name="VolumeHeader" xml:space="preserve">
+    <value>Volume:</value>
+  </data>
+  <data name="WebPageURL" xml:space="preserve">
+    <value>Web Page URL</value>
+  </data>
+  <data name="YoutubeVideoURLID" xml:space="preserve">
+    <value>Youtube Video URL/ID</value>
   </data>
 </root>

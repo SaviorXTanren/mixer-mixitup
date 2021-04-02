@@ -378,7 +378,7 @@
   <data name="Blue" xml:space="preserve">
     <value>[!!! ßℓúè !!!]</value>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>[!!! ßℓúè Gřè¥ !!!]</value>
   </data>
   <data name="Bot" xml:space="preserve">
@@ -657,10 +657,10 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>[!!! Ðèδúçţ Fřô₥ Ûšèř Rúññïñĝ Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>[!!! Ðèèƥ Óřáñĝè !!!]</value>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>[!!! Ðèèƥ Þúřƥℓè !!!]</value>
   </data>
   <data name="Default" xml:space="preserve">
@@ -1194,10 +1194,10 @@
   <data name="Light" xml:space="preserve">
     <value>[!!! Ļïĝĥţ !!!]</value>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>[!!! Ļïĝĥţ ßℓúè !!!]</value>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>[!!! Ļïĝĥţ Gřèèñ !!!]</value>
   </data>
   <data name="Lime" xml:space="preserve">
@@ -4921,11 +4921,29 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TeamID" xml:space="preserve">
     <value>[!!! Ţèá₥ ÌÐ !!!]</value>
   </data>
+  <data name="AddAnimation" xml:space="preserve">
+    <value>[!!! Âδδ Âñï₥áţïôñ !!!]</value>
+  </data>
   <data name="AuthorizationPin" xml:space="preserve">
     <value>[!!! Âúţĥôřïƺáţïôñ Þïñ !!!]</value>
   </data>
   <data name="Authorize" xml:space="preserve">
     <value>[!!! Âúţĥôřïƺè !!!]</value>
+  </data>
+  <data name="BorderColor" xml:space="preserve">
+    <value>[!!! ßôřδèř Çôℓôř !!!]</value>
+  </data>
+  <data name="FadeOutSeconds" xml:space="preserve">
+    <value>[!!! Fáδè Óúţ (Šèçš) !!!]</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>[!!! Hèïĝĥţ (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>[!!! HŢMĻ Šţ¥ℓè !!!]</value>
+  </data>
+  <data name="HTMLText" xml:space="preserve">
+    <value>[!!! HŢMĻ Ţèжţ !!!]</value>
   </data>
   <data name="IFTTTInfo1" xml:space="preserve">
     <value>[!!! ÌFŢŢŢ šèřƲïçè çôññèçţïƲïţ¥ áℓℓôωš ¥ôú ţô ţřïĝĝèř ÌFŢŢŢ Wèβ Hôôƙ áƥƥℓèţš áñδ ƥřôƲïδè δáţá ţô úšè. !!!]</value>
@@ -4939,14 +4957,41 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="IFTTTWebHookKey" xml:space="preserve">
     <value>[!!! ÌFŢŢŢ Wèβ Hôôƙ Kè¥ !!!]</value>
   </data>
+  <data name="ImageFilePath" xml:space="preserve">
+    <value>[!!! Ì₥áĝè Fïℓè Þáţĥ / ÛRĻ !!!]</value>
+  </data>
   <data name="IPAddress" xml:space="preserve">
     <value>[!!! ÌÞ Âδδřèšš (Óƥţïôñáℓ) !!!]</value>
+  </data>
+  <data name="ItemHeight" xml:space="preserve">
+    <value>[!!! Ìţè₥ Hèïĝĥţ (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="ItemTextColor" xml:space="preserve">
+    <value>[!!! Ìţè₥ Ţèжţ Çôℓôř !!!]</value>
+  </data>
+  <data name="ItemTextFont" xml:space="preserve">
+    <value>[!!! Ìţè₥ Ţèжţ Fôñţ !!!]</value>
+  </data>
+  <data name="ItemTextSize" xml:space="preserve">
+    <value>[!!! Ìţè₥ Ţèжţ Šïƺè (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="ItemWidth" xml:space="preserve">
+    <value>[!!! Ìţè₥ Wïδţĥ (Þïжèℓš) !!!]</value>
   </data>
   <data name="JustGiving" xml:space="preserve">
     <value>[!!! JúšţGïƲïñĝ !!!]</value>
   </data>
   <data name="JustGivingInfo1" xml:space="preserve">
     <value>[!!! JúšţGïƲïñĝ šèřƲïçè çôññèçţïƲïţ¥ áℓℓôωš ¥ôú ţô ƥèřƒôř₥ áçţïôñš ωĥèñ á δôñáţïôñ ïš řèçèïƲèδ. Wĥèñ ¥ôú ℓôĝ ïñ, áñ áúţĥèñţïçáţïôñ ωèβƥáĝè ωïℓℓ ôƥèñ ášƙïñĝ ¥ôú ţô ℓôĝ ïñ ţô JúšţGïƲïñĝ áñδ áƥƥřôƲè Mïж Ìţ Ûƥ ţô áççèšš ¥ôúř ïñƒôř₥áţïôñ. !!!]</value>
+  </data>
+  <data name="LayerPosition" xml:space="preserve">
+    <value>[!!! Ļá¥èř Þôšïţïôñ !!!]</value>
+  </data>
+  <data name="LeftPixelPosition" xml:space="preserve">
+    <value>[!!! Ļèƒţ Þïжèℓ Þôšïţïôñ !!!]</value>
+  </data>
+  <data name="ListAlignment" xml:space="preserve">
+    <value>[!!! Ļïšţ Âℓïĝñ₥èñţ !!!]</value>
   </data>
   <data name="OBSStudioFailed" xml:space="preserve">
     <value>[!!! ÓßŠ Šţúδïô çôññèçţïôñ ţèšţ ƒáïℓèδ, Þℓèášè ₥áƙè šúřè ÓßŠ Šţúδïô ïš řúññïñĝ, ţĥè ôβš-ωèβšôçƙèţ ƥℓúĝïñ ïš ïñšţáℓℓèδ, áñδ ţĥè çôññèçţïôñ áñδ ƥáššωôřδ ₥áţçĥ ¥ôúř šèţţïñĝš ïñ ÓßŠ Šţúδïô. !!!]</value>
@@ -4993,6 +5038,42 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="PatreonInfo1" xml:space="preserve">
     <value>[!!! Þáţřèôñ šèřƲïçè çôññèçţïƲïţ¥ áℓℓôωš ¥ôú ţô ƥèřƒôř₥ áçţïôñš ωĥèñ á δôñáţïôñ ïš řèçèïƲèδ. Wĥèñ ¥ôú ℓôĝ ïñ, áñ áúţĥèñţïçáţïôñ ωèβƥáĝè ωïℓℓ ôƥèñ ášƙïñĝ ¥ôú ţô ℓôĝ ïñ ţô Þáţřèôñ áñδ áƥƥřôƲè Mïж Ìţ Ûƥ ţô áççèšš ¥ôúř ïñƒôř₥áţïôñ. !!!]</value>
   </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>[!!! Þèřçèñţáĝè !!!]</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>[!!! Þïжèℓš !!!]</value>
+  </data>
+  <data name="PositionPercentageFromLeft" xml:space="preserve">
+    <value>[!!! Þôšïţïôñ % Fřô₥ Ļèƒţ: !!!]</value>
+  </data>
+  <data name="PositionPercentageFromTop" xml:space="preserve">
+    <value>[!!! Þôšïţïôñ % Fřô₥ Ţôƥ: !!!]</value>
+  </data>
+  <data name="RemoveAnimation" xml:space="preserve">
+    <value>[!!! Rè₥ôƲè Âñï₥áţïôñ !!!]</value>
+  </data>
+  <data name="ScreenPosition" xml:space="preserve">
+    <value>[!!! Šçřèèñ Þôšïţïôñ: !!!]</value>
+  </data>
+  <data name="ScrollSpeed" xml:space="preserve">
+    <value>[!!! Šçřôℓℓ Šƥèèδ !!!]</value>
+  </data>
+  <data name="SectionHTMLStyle" xml:space="preserve">
+    <value>[!!! Šèçţïôñ HŢMĻ Šţ¥ℓè !!!]</value>
+  </data>
+  <data name="SectionTextColor" xml:space="preserve">
+    <value>[!!! Šèçţïôñ Ţèжţ Çôℓôř !!!]</value>
+  </data>
+  <data name="SectionTextFont" xml:space="preserve">
+    <value>[!!! Šèçţïôñ Ţèжţ Fôñţ !!!]</value>
+  </data>
+  <data name="SectionTextSize" xml:space="preserve">
+    <value>[!!! Šèçţïôñ Ţèжţ Šïƺè (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="SectionType" xml:space="preserve">
+    <value>[!!! Šèçţïôñ Ţ¥ƥè !!!]</value>
+  </data>
   <data name="SelectedCampaign" xml:space="preserve">
     <value>[!!! Šèℓèçţèδ Çá₥ƥáïĝñ !!!]</value>
   </data>
@@ -5004,6 +5085,9 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="ServiceConnectFailed" xml:space="preserve">
     <value>[!!! Çôúℓδ ñôţ çôññèçţ ţô šèřƲïçè, ƥℓèášè ţř¥ áĝáïñ. Ìƒ ţĥïš çôñţïñúèš, ƥℓèášè řèáçĥ ôúţ ţô ôúř šúƥƥôřţ ƒôř ƒúřţĥèř áššïšţáñçè. !!!]</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>[!!! Šï₥ƥℓè !!!]</value>
   </data>
   <data name="StreamAvatars" xml:space="preserve">
     <value>[!!! Šţřèá₥ ÂƲáţářš !!!]</value>
@@ -5075,6 +5159,12 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TestConnection" xml:space="preserve">
     <value>[!!! Ţèšţ Çôññèçţïôñ !!!]</value>
   </data>
+  <data name="TextFont" xml:space="preserve">
+    <value>[!!! Ţèжţ Fôñţ !!!]</value>
+  </data>
+  <data name="TextHeight" xml:space="preserve">
+    <value>[!!! Ţèжţ Hèïĝĥţ (Þïжèℓš) !!!]</value>
+  </data>
   <data name="Tiltify" xml:space="preserve">
     <value>[!!! Ţïℓţïƒ¥ !!!]</value>
   </data>
@@ -5090,6 +5180,15 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TipeeeStreamInfo1" xml:space="preserve">
     <value>[!!! ŢïƥèèèŠţřèá₥ šèřƲïçè çôññèçţïƲïţ¥ áℓℓôωš ¥ôú ţô ƥèřƒôř₥ áçţïôñš ωĥèñ á δôñáţïôñ ïš řèçèïƲèδ. Wĥèñ ¥ôú ℓôĝ ïñ, áñ áúţĥèñţïçáţïôñ ωèβƥáĝè ωïℓℓ ôƥèñ ášƙïñĝ ¥ôú ţô ℓôĝ ïñ ţô ŢïƥèèèŠţřèá₥ áñδ áƥƥřôƲè Mïж Ìţ Ûƥ ţô áççèšš ¥ôúř ïñƒôř₥áţïôñ. !!!]</value>
   </data>
+  <data name="TitleHTMLStyle" xml:space="preserve">
+    <value>[!!! Ţïţℓè HŢMĻ Šţ¥ℓè !!!]</value>
+  </data>
+  <data name="TopPixelPosition" xml:space="preserve">
+    <value>[!!! ŢôƥÞïжèℓ Þôšïţïôñ !!!]</value>
+  </data>
+  <data name="TotalToShow" xml:space="preserve">
+    <value>[!!! Ţôţáℓ Ţô Šĥôω !!!]</value>
+  </data>
   <data name="TreatStream" xml:space="preserve">
     <value>[!!! ŢřèáţŠţřèá₥ !!!]</value>
   </data>
@@ -5099,8 +5198,14 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TwitterInfo1" xml:space="preserve">
     <value>[!!! Ţωïţţèř šèřƲïçè çôññèçţïƲïţ¥ áℓℓôωš ¥ôú ţô šèñδ ôúţ ţωèèţš ôñ ¥ôúř áççôúñţ áñδ èášïℓ¥ 9úèř¥ ¥ôúř ƥèřšôñáℓ ţωèèţš ƒôř úšè ωïţĥïñ ¥ôúř šţřèá₥. !!!]</value>
   </data>
+  <data name="UserHTMLStyle" xml:space="preserve">
+    <value>[!!! Ûšèř HŢMĻŠţ¥ℓè !!!]</value>
+  </data>
   <data name="WebHooksPage" xml:space="preserve">
     <value>[!!! Wèβ Hôôƙš Þáĝè !!!]</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>[!!! Wïδţĥ (Þïжèℓš) !!!]</value>
   </data>
   <data name="XSplitConnectionFailed" xml:space="preserve">
     <value>[!!! XŠƥℓïţ çôññèçţïôñ ţèšţ ƒáïℓèδ, ƥℓèášè èñšúřè ¥ôú ĥáƲè ţĥè Mïж Ìţ Ûƥ XŠƥℓïţ èжţèñšïôñ áδδèδ áñδ ôƥèñ ïñ XŠƥℓïţ. !!!]</value>
@@ -5119,5 +5224,119 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="XSplitServicePage" xml:space="preserve">
     <value>[!!! XŠƥℓïţ ŠèřƲïçè Þáĝè !!!]</value>
+  </data>
+  <data name="BitsHeader" xml:space="preserve">
+    <value>[!!! ßïţš: !!!]</value>
+  </data>
+  <data name="DamageAnimation" xml:space="preserve">
+    <value>[!!! Ðá₥áĝè Âñï₥áţïôñ !!!]</value>
+  </data>
+  <data name="DonationsHeader" xml:space="preserve">
+    <value>[!!! Ðôñáţïôñš: !!!]</value>
+  </data>
+  <data name="FollowsHeader" xml:space="preserve">
+    <value>[!!! Fôℓℓôωš: !!!]</value>
+  </data>
+  <data name="FontColor" xml:space="preserve">
+    <value>[!!! Fôñţ Çôℓôř !!!]</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>[!!! FôñţNá₥è !!!]</value>
+  </data>
+  <data name="GoalAmount" xml:space="preserve">
+    <value>[!!! Gôáℓ Â₥ôúñţ !!!]</value>
+  </data>
+  <data name="GoalType" xml:space="preserve">
+    <value>[!!! Gôáℓ Ţ¥ƥè !!!]</value>
+  </data>
+  <data name="HealingBonus" xml:space="preserve">
+    <value>[!!! Hèáℓïñĝ ßôñúš !!!]</value>
+  </data>
+  <data name="HostBonusPerUser" xml:space="preserve">
+    <value>[!!! Hôšţ ßôñúš (Þèř Ûšèř) !!!]</value>
+  </data>
+  <data name="HostsHeader" xml:space="preserve">
+    <value>[!!! Hôšţš: !!!]</value>
+  </data>
+  <data name="LengthSeconds" xml:space="preserve">
+    <value>[!!! Ļèñĝţĥ (Šèçôñδš) !!!]</value>
+  </data>
+  <data name="LoopHeader" xml:space="preserve">
+    <value>[!!! Ļôôƥ: !!!]</value>
+  </data>
+  <data name="MinimumAmount" xml:space="preserve">
+    <value>[!!! Mïñï₥ú₥ Â₥ôúñţ !!!]</value>
+  </data>
+  <data name="MinSecondsToShow" xml:space="preserve">
+    <value>[!!! Mïñ Šèçôñδš Ţô Šĥôω !!!]</value>
+  </data>
+  <data name="NewBossAnimation" xml:space="preserve">
+    <value>[!!! Nèω ßôšš Âñï₥áţïôñ !!!]</value>
+  </data>
+  <data name="NewLeader" xml:space="preserve">
+    <value>[!!! Nèω Ļèáδèř !!!]</value>
+  </data>
+  <data name="OnGoalReached" xml:space="preserve">
+    <value>[!!! Óñ Gôáℓ Rèáçĥèδ !!!]</value>
+  </data>
+  <data name="OnNewStreamBoss" xml:space="preserve">
+    <value>[!!! Óñ Nèω Šţřèá₥ ßôšš !!!]</value>
+  </data>
+  <data name="OnTimerCompleted" xml:space="preserve">
+    <value>[!!! Óñ Ţï₥èř Çô₥ƥℓèţèδ !!!]</value>
+  </data>
+  <data name="OverkillBonus" xml:space="preserve">
+    <value>[!!! ÓƲèřƙïℓℓ ßôñúš !!!]</value>
+  </data>
+  <data name="ProgressColor" xml:space="preserve">
+    <value>[!!! Þřôĝřèšš Çôℓôř !!!]</value>
+  </data>
+  <data name="RaidBonusPerUser" xml:space="preserve">
+    <value>[!!! Ráïδ ßôñúš (Þèř Ûšèř) !!!]</value>
+  </data>
+  <data name="RaidsHeader" xml:space="preserve">
+    <value>[!!! Ráïδš: !!!]</value>
+  </data>
+  <data name="ResetAfterDays" xml:space="preserve">
+    <value>[!!! Rèšèţ Âƒţèř Ðá¥š !!!]</value>
+  </data>
+  <data name="ScrollWidthPixels" xml:space="preserve">
+    <value>[!!! Šçřôℓℓ Wïδţĥ (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="Shadow" xml:space="preserve">
+    <value>[!!! Šĥáδôω (Óƥţïôñáℓ) !!!]</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>[!!! Šïƺè (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="StartingAmount" xml:space="preserve">
+    <value>[!!! Šţářţïñĝ Â₥ôúñţ !!!]</value>
+  </data>
+  <data name="StartingHealth" xml:space="preserve">
+    <value>[!!! Šţářţïñĝ Hèáℓţĥ !!!]</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>[!!! Šţářţ Ţï₥è (Šèçš) !!!]</value>
+  </data>
+  <data name="SubResubsHeader" xml:space="preserve">
+    <value>[!!! Šúβš/Rèšúβš: !!!]</value>
+  </data>
+  <data name="TextSize" xml:space="preserve">
+    <value>[!!! Ţèжţ Šïƺè (Þïжèℓš) !!!]</value>
+  </data>
+  <data name="TotalFollowsHeader" xml:space="preserve">
+    <value>[!!! Ţôţáℓ Fôℓℓôωš: !!!]</value>
+  </data>
+  <data name="VideoFilePath" xml:space="preserve">
+    <value>[!!! Vïδèô Fïℓè Þáţĥ !!!]</value>
+  </data>
+  <data name="VolumeHeader" xml:space="preserve">
+    <value>[!!! Vôℓú₥è: !!!]</value>
+  </data>
+  <data name="WebPageURL" xml:space="preserve">
+    <value>[!!! Wèβ Þáĝè ÛRĻ !!!]</value>
+  </data>
+  <data name="YoutubeVideoURLID" xml:space="preserve">
+    <value>[!!! Ýôúţúβè Vïδèô ÛRĻ/ÌÐ !!!]</value>
   </data>
 </root>

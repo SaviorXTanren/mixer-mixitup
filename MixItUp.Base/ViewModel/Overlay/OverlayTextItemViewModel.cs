@@ -76,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.color; }
             set
             {
-                this.color = value;
+                this.color = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }
@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.shadowColor; }
             set
             {
-                this.shadowColor = value;
+                this.shadowColor = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }
