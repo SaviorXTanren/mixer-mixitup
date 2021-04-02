@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand TestConnectionCommand { get; set; }
 
         public StreamlabsOBSServiceControlViewModel()
-            : base("Streamlabs OBS")
+            : base(Resources.StreamlabsOBS)
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
@@ -40,11 +40,11 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 if (await ChannelSession.Services.StreamlabsOBS.TestConnection())
                 {
-                    await DialogHelper.ShowMessage("Streamlabs OBS connection test successful!");
+                    await DialogHelper.ShowMessage(Resources.StreamlabsOBSConnectionSuccess);
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running.");
+                    await DialogHelper.ShowMessage(Resources.StreamlabsOBSConnectionFailed);
                 }
             });
 

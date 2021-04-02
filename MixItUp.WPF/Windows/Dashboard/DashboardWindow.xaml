@@ -100,11 +100,11 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <Button x:Name="UnpinButton" Click="TogglePin_Click" Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" ToolTip="Unpin">
+                        <Button x:Name="UnpinButton" Click="TogglePin_Click" Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" ToolTip="{x:Static resx:Resources.Unpin}">
                             <MaterialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center" Kind="Pin" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                         </Button>
 
-                        <Button x:Name="PinButton" Click="TogglePin_Click" Visibility="{Binding IsNotPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" ToolTip="Pin">
+                        <Button x:Name="PinButton" Click="TogglePin_Click" Visibility="{Binding IsNotPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" ToolTip="{x:Static resx:Resources.Pin}">
                             <MaterialDesign:PackIcon Visibility="{Binding IsNotPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" HorizontalAlignment="Center" VerticalAlignment="Center" Kind="PinOff" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                         </Button>
                     </Grid>

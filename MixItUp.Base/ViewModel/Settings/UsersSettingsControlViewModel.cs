@@ -145,19 +145,19 @@ namespace MixItUp.Base.ViewModel.Settings
             {
                 if (string.IsNullOrEmpty(this.TitleName))
                 {
-                    await DialogHelper.ShowMessage("A name for the title must be specified");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorNoTitle);
                     return;
                 }
 
                 if (this.CanSelectMinimumMonths && this.MinimumMonths < 0)
                 {
-                    await DialogHelper.ShowMessage("A valid amount of months for the title must be specified");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorInvalidMonths);
                     return;
                 }
 
                 if (this.Titles.Any(t => t.Name.Equals(this.TitleName)))
                 {
-                    await DialogHelper.ShowMessage("A title with the same name already exists");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateTitle);
                     return;
                 }
 
@@ -168,13 +168,13 @@ namespace MixItUp.Base.ViewModel.Settings
                     {
                         if (existingTitle.Months == this.MinimumMonths)
                         {
-                            await DialogHelper.ShowMessage("A title with the same role & months already exists");
+                            await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateRoleMonths);
                             return;
                         }
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("A title with the same role already exists");
+                        await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateRole);
                         return;
                     }
                 }

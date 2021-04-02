@@ -51,7 +51,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Row="0" Command="{Binding AddJSONParameterCommand}" Content="{x:Static resx:Resources.AddNewPair}" HorizontalAlignment="Center" Width="150" />
+            <Button Grid.Row="0" Command="{Binding AddJSONParameterCommand}" Content="{x:Static resx:Resources.AddNewPair}" HorizontalAlignment="Center" MinWidth="150" />
 
             <ItemsControl Grid.Row="2" ItemsSource="{Binding JSONParameters}">
                 <ItemsControl.ItemTemplate>

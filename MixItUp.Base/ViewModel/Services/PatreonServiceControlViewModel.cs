@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public PatreonServiceControlViewModel()
-            : base("Patreon")
+            : base(Resources.Patreon)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {

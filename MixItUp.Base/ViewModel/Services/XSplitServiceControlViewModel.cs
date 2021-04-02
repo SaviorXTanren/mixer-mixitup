@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand TestConnectionCommand { get; set; }
 
         public XSplitServiceControlViewModel()
-            : base("XSplit")
+            : base(Resources.XSplit)
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
@@ -41,11 +41,11 @@ namespace MixItUp.Base.ViewModel.Services
             {
                 if (await ChannelSession.Services.XSplit.TestConnection())
                 {
-                    await DialogHelper.ShowMessage("XSplit connection test successful!");
+                    await DialogHelper.ShowMessage(Resources.XSplitConnectionSuccess);
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.");
+                    await DialogHelper.ShowMessage(Resources.XSplitConnectionFailed);
                 }
             });
 

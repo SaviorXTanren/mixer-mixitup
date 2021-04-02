@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public StreamJarServiceControlViewModel()
-            : base("StreamJar")
+            : base(Resources.StreamJar)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {

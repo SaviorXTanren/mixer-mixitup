@@ -2181,4 +2181,72 @@
   <data name="ResetDate" xml:space="preserve">
     <value>Datum zurücksetzen</value>
   </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="OBSStudio" xml:space="preserve">
+    <value>OBS Studio</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatars</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>Streamlabs</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="XSplit" xml:space="preserve">
+    <value>XSplit</value>
+    <comment>Manual</comment>
+  </data>
 </root>

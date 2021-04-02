@@ -22,13 +22,13 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public IFTTTServiceControlViewModel()
-            : base("IFTTT")
+            : base(Resources.IFTTT)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
                 if (string.IsNullOrEmpty(this.IFTTTWebHookKey))
                 {
-                    await DialogHelper.ShowMessage("Please enter a valid IFTTT Web Hook key.");
+                    await DialogHelper.ShowMessage(Resources.IFTTTInvalidWebHookKey);
                 }
                 else
                 {

@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public TiltifyServiceControlViewModel()
-            : base("Tiltify")
+            : base(Resources.Tiltify)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {

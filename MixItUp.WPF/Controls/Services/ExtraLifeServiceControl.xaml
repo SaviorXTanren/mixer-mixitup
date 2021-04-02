@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -13,9 +14,9 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="350" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="300" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -27,9 +28,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center">Extra Life service connectivity allows you to trigger events from when you or your team receive a donation.</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.ExtraLifeInfo1}"/>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center">First, visit your team's page on the Extra Life website and near the end of the web URL, it will say "teamID=_____". Type that number into the first box, click search, select your name from the list, then click Log In button</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.ExtraLifeInfo2}"/>
 
             <Grid Grid.Row="4" Margin="0,20,0,0" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -38,7 +39,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0">Trigger Donation Event for Team Donations:</TextBlock>
+                <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.ExtraLifeTriggerForTeamDonation}"/>
                 <ToggleButton Grid.Column="2" IsChecked="{Binding ExtraLifeIncludeTeamDonations}" />
 
             </Grid>
@@ -46,7 +47,7 @@
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -65,14 +66,14 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding ExtraLifeTeamID}" MaterialDesign:HintAssist.Hint="Team ID" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding ExtraLifeTeamID}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TeamID}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <Button Grid.Column="2" Command="{Binding GetTeamParticipantsCommand}" HorizontalAlignment="Center">Search</Button>
+                    <Button Grid.Column="2" Command="{Binding GetTeamParticipantsCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.Search}"/>
                 </Grid>
 
-                <ComboBox Grid.Row="2" IsEnabled="{Binding ParticipantsAvailable}" ItemsSource="{Binding Participants}" SelectedItem="{Binding ExtraLifeParticipant}" MaterialDesign:HintAssist.Hint="Participant Name" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="displayName" />
+                <ComboBox Grid.Row="2" IsEnabled="{Binding ParticipantsAvailable}" ItemsSource="{Binding Participants}" SelectedItem="{Binding ExtraLifeParticipant}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ParticipantName}" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="displayName" />
 
-                <Button Grid.Row="4" Command="{Binding LogInCommand}" HorizontalAlignment="Center" Width="90">Log In</Button>
+                <Button Grid.Row="4" Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
             </Grid>
         </Grid>
     </Grid>
