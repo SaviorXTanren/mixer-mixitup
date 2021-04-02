@@ -4981,11 +4981,47 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="Password" xml:space="preserve">
     <value>Password (Optional)</value>
   </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+  </data>
+  <data name="PatreonInfo1" xml:space="preserve">
+    <value>Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information.</value>
+  </data>
   <data name="SelectedFundraiser" xml:space="preserve">
     <value>Selected Fundraiser</value>
   </data>
+  <data name="ServiceConnectAdditionalDetails" xml:space="preserve">
+    <value>Additional details:</value>
+  </data>
+  <data name="ServiceConnectFailed" xml:space="preserve">
+    <value>Could not connect to service, please try again. If this continues, please reach out to our support for further assistance.</value>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatars</value>
+  </data>
+  <data name="StreamAvatarsInfo1" xml:space="preserve">
+    <value>Stream Avatars functionality is handled directly through the Stream Avatars program. Prior to connecting Stream Avatars to Mix It Up, you must ensure the Developer API is enabled on the Services page.</value>
+  </data>
+  <data name="StreamAvatarsInfo2" xml:space="preserve">
+    <value>For information on how to link Stream Avatars with Mix It Up, please see the Stream Avatars wiki section.</value>
+  </data>
+  <data name="StreamAvatarsWikiSection" xml:space="preserve">
+    <value>Stream Avatars Wiki Section</value>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+  </data>
+  <data name="StreamDeckInfo1" xml:space="preserve">
+    <value>This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device, as well as other status information about your stream.</value>
+  </data>
+  <data name="StreamDeckInfo2" xml:space="preserve">
+    <value>To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the "More Actions..." button in the bottom-right corner, then search for "Mix It Up" in the window.</value>
+  </data>
   <data name="StreamingSoftwareSourceName" xml:space="preserve">
     <value>Streaming Software Source Name</value>
+  </data>
+  <data name="SubEquivalent" xml:space="preserve">
+    <value>Sub Equivalent</value>
   </data>
   <data name="TestConnection" xml:space="preserve">
     <value>Test Connection</value>

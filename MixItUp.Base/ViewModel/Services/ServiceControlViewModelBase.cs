@@ -31,10 +31,10 @@ namespace MixItUp.Base.ViewModel.Services
 
         protected async Task ShowConnectFailureMessage(Result result)
         {
-            string message = "Could not connect to service, please try again. If this continues, please reach out to our support for further assistance.";
+            string message = Resources.ServiceConnectFailed;
             if (!string.IsNullOrEmpty(result.Message))
             {
-                message += Environment.NewLine + Environment.NewLine + "Additional details: " + result.Message;
+                message += Environment.NewLine + Environment.NewLine + Resources.ServiceConnectAdditionalDetails + " " + result.Message;
             }
             await DialogHelper.ShowMessage(message);
         }

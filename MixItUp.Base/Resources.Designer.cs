@@ -9364,6 +9364,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Patreon.
+        /// </summary>
+        public static string Patreon {
+            get {
+                return ResourceManager.GetString("Patreon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patreon Benefit.
         /// </summary>
         public static string PatreonBenefit {
@@ -9378,6 +9387,15 @@ namespace MixItUp.Base {
         public static string PatreonBenefitRequirement {
             get {
                 return ResourceManager.GetString("PatreonBenefitRequirement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information..
+        /// </summary>
+        public static string PatreonInfo1 {
+            get {
+                return ResourceManager.GetString("PatreonInfo1", resourceCulture);
             }
         }
         
@@ -11074,6 +11092,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Additional details:.
+        /// </summary>
+        public static string ServiceConnectAdditionalDetails {
+            get {
+                return ResourceManager.GetString("ServiceConnectAdditionalDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not connect to service, please try again. If this continues, please reach out to our support for further assistance..
+        /// </summary>
+        public static string ServiceConnectFailed {
+            get {
+                return ResourceManager.GetString("ServiceConnectFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service Connect Sound.
         /// </summary>
         public static string ServiceConnectSound {
@@ -11893,6 +11929,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stream Avatars.
+        /// </summary>
+        public static string StreamAvatars {
+            get {
+                return ResourceManager.GetString("StreamAvatars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Avatars functionality is handled directly through the Stream Avatars program. Prior to connecting Stream Avatars to Mix It Up, you must ensure the Developer API is enabled on the Services page..
+        /// </summary>
+        public static string StreamAvatarsInfo1 {
+            get {
+                return ResourceManager.GetString("StreamAvatarsInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For information on how to link Stream Avatars with Mix It Up, please see the Stream Avatars wiki section..
+        /// </summary>
+        public static string StreamAvatarsInfo2 {
+            get {
+                return ResourceManager.GetString("StreamAvatarsInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Avatars Wiki Section.
+        /// </summary>
+        public static string StreamAvatarsWikiSection {
+            get {
+                return ResourceManager.GetString("StreamAvatarsWikiSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream Boss.
         /// </summary>
         public static string StreamBoss {
@@ -11916,6 +11988,33 @@ namespace MixItUp.Base {
         public static string StreamClip {
             get {
                 return ResourceManager.GetString("StreamClip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stream Deck.
+        /// </summary>
+        public static string StreamDeck {
+            get {
+                return ResourceManager.GetString("StreamDeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device, as well as other status information about your stream..
+        /// </summary>
+        public static string StreamDeckInfo1 {
+            get {
+                return ResourceManager.GetString("StreamDeckInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the &quot;More Actions...&quot; button in the bottom-right corner, then search for &quot;Mix It Up&quot; in the window..
+        /// </summary>
+        public static string StreamDeckInfo2 {
+            get {
+                return ResourceManager.GetString("StreamDeckInfo2", resourceCulture);
             }
         }
         
@@ -12204,6 +12303,15 @@ namespace MixItUp.Base {
         public static string SubChancePercentage {
             get {
                 return ResourceManager.GetString("SubChancePercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub Equivalent.
+        /// </summary>
+        public static string SubEquivalent {
+            get {
+                return ResourceManager.GetString("SubEquivalent", resourceCulture);
             }
         }
         
