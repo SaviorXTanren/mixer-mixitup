@@ -997,6 +997,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Image URL (300 Characters Max).
+        /// </summary>
+        public static string BackgroundImageURL300CharactersMax {
+            get {
+                return ResourceManager.GetString("BackgroundImageURL300CharactersMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backup Rate.
         /// </summary>
         public static string BackupRate {
@@ -1191,6 +1200,15 @@ namespace MixItUp.Base {
         public static string BlueGrey {
             get {
                 return ResourceManager.GetString("BlueGrey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Board:.
+        /// </summary>
+        public static string BoardHeader {
+            get {
+                return ResourceManager.GetString("BoardHeader", resourceCulture);
             }
         }
         
@@ -10120,6 +10138,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Profile Type.
+        /// </summary>
+        public static string ProfileType {
+            get {
+                return ResourceManager.GetString("ProfileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Program Arguments.
         /// </summary>
         public static string ProgramArguments {
@@ -11295,6 +11322,15 @@ namespace MixItUp.Base {
         public static string SceneNameOptional {
             get {
                 return ResourceManager.GetString("SceneNameOptional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ScorpBot Installation Directory.
+        /// </summary>
+        public static string ScorpBotInstallationDirectory {
+            get {
+                return ResourceManager.GetString("ScorpBotInstallationDirectory", resourceCulture);
             }
         }
         
@@ -12753,6 +12789,15 @@ namespace MixItUp.Base {
         public static string Streamlabs {
             get {
                 return ResourceManager.GetString("Streamlabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamlabs ChatBot Data File.
+        /// </summary>
+        public static string StreamlabsChatBotDataFile {
+            get {
+                return ResourceManager.GetString("StreamlabsChatBotDataFile", resourceCulture);
             }
         }
         

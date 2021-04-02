@@ -5225,8 +5225,14 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="XSplitServicePage" xml:space="preserve">
     <value>[!!! XŠƥℓïţ ŠèřƲïçè Þáĝè !!!]</value>
   </data>
+  <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
+    <value>[!!! ßáçƙĝřôúñδ Ì₥áĝè ÛRĻ (300 Çĥářáçţèřš Máж) !!!]</value>
+  </data>
   <data name="BitsHeader" xml:space="preserve">
     <value>[!!! ßïţš: !!!]</value>
+  </data>
+  <data name="BoardHeader" xml:space="preserve">
+    <value>[!!! ßôářδ: !!!]</value>
   </data>
   <data name="DamageAnimation" xml:space="preserve">
     <value>[!!! Ðá₥áĝè Âñï₥áţïôñ !!!]</value>
@@ -5288,6 +5294,9 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="OverkillBonus" xml:space="preserve">
     <value>[!!! ÓƲèřƙïℓℓ ßôñúš !!!]</value>
   </data>
+  <data name="ProfileType" xml:space="preserve">
+    <value>[!!! Þřôƒïℓè Ţ¥ƥè !!!]</value>
+  </data>
   <data name="ProgressColor" xml:space="preserve">
     <value>[!!! Þřôĝřèšš Çôℓôř !!!]</value>
   </data>
@@ -5299,6 +5308,9 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="ResetAfterDays" xml:space="preserve">
     <value>[!!! Rèšèţ Âƒţèř Ðá¥š !!!]</value>
+  </data>
+  <data name="ScorpBotInstallationDirectory" xml:space="preserve">
+    <value>[!!! Šçôřƥßôţ Ìñšţáℓℓáţïôñ Ðïřèçţôř¥ !!!]</value>
   </data>
   <data name="ScrollWidthPixels" xml:space="preserve">
     <value>[!!! Šçřôℓℓ Wïδţĥ (Þïжèℓš) !!!]</value>
@@ -5317,6 +5329,9 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="StartTime" xml:space="preserve">
     <value>[!!! Šţářţ Ţï₥è (Šèçš) !!!]</value>
+  </data>
+  <data name="StreamlabsChatBotDataFile" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓáβš Çĥáţßôţ Ðáţá Fïℓè !!!]</value>
   </data>
   <data name="SubResubsHeader" xml:space="preserve">
     <value>[!!! Šúβš/Rèšúβš: !!!]</value>

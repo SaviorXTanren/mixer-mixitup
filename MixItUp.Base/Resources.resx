@@ -5225,8 +5225,14 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="XSplitServicePage" xml:space="preserve">
     <value>XSplit Service Page</value>
   </data>
+  <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
+    <value>Background Image URL (300 Characters Max)</value>
+  </data>
   <data name="BitsHeader" xml:space="preserve">
     <value>Bits:</value>
+  </data>
+  <data name="BoardHeader" xml:space="preserve">
+    <value>Board:</value>
   </data>
   <data name="DamageAnimation" xml:space="preserve">
     <value>Damage Animation</value>
@@ -5288,6 +5294,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="OverkillBonus" xml:space="preserve">
     <value>Overkill Bonus</value>
   </data>
+  <data name="ProfileType" xml:space="preserve">
+    <value>Profile Type</value>
+  </data>
   <data name="ProgressColor" xml:space="preserve">
     <value>Progress Color</value>
   </data>
@@ -5299,6 +5308,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="ResetAfterDays" xml:space="preserve">
     <value>Reset After Days</value>
+  </data>
+  <data name="ScorpBotInstallationDirectory" xml:space="preserve">
+    <value>ScorpBot Installation Directory</value>
   </data>
   <data name="ScrollWidthPixels" xml:space="preserve">
     <value>Scroll Width (Pixels)</value>
@@ -5317,6 +5329,9 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="StartTime" xml:space="preserve">
     <value>Start Time (Secs)</value>
+  </data>
+  <data name="StreamlabsChatBotDataFile" xml:space="preserve">
+    <value>Streamlabs ChatBot Data File</value>
   </data>
   <data name="SubResubsHeader" xml:space="preserve">
     <value>Subs/Resubs:</value>
