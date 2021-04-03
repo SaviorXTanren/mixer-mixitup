@@ -122,13 +122,13 @@ namespace MixItUp.Base
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
-                    return new Result("Failed to get New API Twitch user data");
+                    return new Result(Resources.TwitchFailedNewAPIUserData);
                 }
 
                 ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
                 if (ChannelSession.TwitchUserV5 == null)
                 {
-                    return new Result("Failed to get V5 API Twitch user data");
+                    return new Result(Resources.TwitchFailedV5APIUserData);
                 }
             }
             return result;
@@ -143,7 +143,7 @@ namespace MixItUp.Base
                 ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchBotNewAPI == null)
                 {
-                    return new Result("Failed to get Twitch bot data");
+                    return new Result(Resources.TwitchFailedBotData);
                 }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsUserConnected)
@@ -183,13 +183,13 @@ namespace MixItUp.Base
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
-                    return new Result("Failed to get Twitch user data");
+                    return new Result(Resources.TwitchFailedNewAPIUserData);
                 }
 
                 ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
                 if (ChannelSession.TwitchUserV5 == null)
                 {
-                    return new Result("Failed to get V5 API Twitch user data");
+                    return new Result(Resources.TwitchFailedV5APIUserData);
                 }
 
                 if (ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
@@ -201,7 +201,7 @@ namespace MixItUp.Base
                         ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
                         if (ChannelSession.TwitchBotNewAPI == null)
                         {
-                            return new Result("Failed to get Twitch bot data");
+                            return new Result(Resources.TwitchFailedBotData);
                         }
                     }
                     else

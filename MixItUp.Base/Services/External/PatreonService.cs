@@ -680,9 +680,9 @@ namespace MixItUp.Base.Services.External
                     this.TrackServiceTelemetry("Patreon");
                     return new Result();
                 }
-                return new Result("Failed to get Campaign data");
+                return new Result(Resources.PatreonCampaignDataFailed);
             }
-            return new Result("Failed to get User data");
+            return new Result(Resources.PatreonUserDataFailed);
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

@@ -1377,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Name of Profile</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Name of Profile:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>Never</value>
@@ -5707,5 +5707,102 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="YoutubeVideoURLID" xml:space="preserve">
     <value>Youtube Video URL/ID</value>
+  </data>
+  <data name="DiscoardBotGatewayFailed" xml:space="preserve">
+    <value>Could not get Bot Application Gateway data</value>
+  </data>
+  <data name="DiscordBotWebSocketFailed" xml:space="preserve">
+    <value>Could not connect Bot Application to web socket</value>
+  </data>
+  <data name="DiscordServerDataFailed" xml:space="preserve">
+    <value>Could not get Server data</value>
+  </data>
+  <data name="DiscordUserDataFailed" xml:space="preserve">
+    <value>Could not get User data</value>
+  </data>
+  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
+    <value>Could not get Team/Participant data</value>
+  </data>
+  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
+    <value>Extra Life team ID / participant ID was not set</value>
+  </data>
+  <data name="JustGivingUserDataFailed" xml:space="preserve">
+    <value>Unable to get User data</value>
+  </data>
+  <data name="NameOfButtonHeader" xml:space="preserve">
+    <value>Name of Button:</value>
+  </data>
+  <data name="NameOfFolderHeader" xml:space="preserve">
+    <value>Name of Folder:</value>
+  </data>
+  <data name="OBSWebSocketFailed" xml:space="preserve">
+    <value>Failed to connect to OBS Studio web socket</value>
+  </data>
+  <data name="OverlayAddFailed" xml:space="preserve">
+    <value>Failed to add {0} overlay</value>
+    <comment>{0} is the overlay name</comment>
+  </data>
+  <data name="OvrStreamInvalidAddress" xml:space="preserve">
+    <value>Invalid address specified</value>
+  </data>
+  <data name="PatreonCampaignDataFailed" xml:space="preserve">
+    <value>Failed to get Campaign data</value>
+  </data>
+  <data name="PatreonUserDataFailed" xml:space="preserve">
+    <value>Failed to get User data</value>
+  </data>
+  <data name="StreamElementsUserDataFailed" xml:space="preserve">
+    <value>Failed to get user information</value>
+  </data>
+  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+    <value>Failed to get channel data</value>
+  </data>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting.</value>
+  </data>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>Streamlabs OBS could not be reached</value>
+  </data>
+  <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
+    <value>Failed to get web socket token</value>
+  </data>
+  <data name="TiltifyUserDataFailed" xml:space="preserve">
+    <value>Failed to get User data</value>
+  </data>
+  <data name="TipeeeStreamSocketFailed" xml:space="preserve">
+    <value>Failed to connect to socket</value>
+  </data>
+  <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
+    <value>Unable to get Socket URL address</value>
+  </data>
+  <data name="TipeeeStreamUserDataFailed" xml:space="preserve">
+    <value>Unable to get User information</value>
+  </data>
+  <data name="TipeeStreamSocketKeyFailed" xml:space="preserve">
+    <value>Unable to get Socket API key</value>
+  </data>
+  <data name="TreatStreamSocketFailed" xml:space="preserve">
+    <value>Failed to connect to Socket</value>
+  </data>
+  <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
+    <value>Failed to get Socket token</value>
+  </data>
+  <data name="TwitchConnectionFailed" xml:space="preserve">
+    <value>Twitch connection has not been established</value>
+  </data>
+  <data name="TwitchFailedBotData" xml:space="preserve">
+    <value>Failed to get Twitch bot data</value>
+  </data>
+  <data name="TwitchFailedNewAPIUserData" xml:space="preserve">
+    <value>Failed to get New API Twitch user data</value>
+  </data>
+  <data name="TwitchFailedV5APIUserData" xml:space="preserve">
+    <value>Failed to get V5 API Twitch user data</value>
+  </data>
+  <data name="TwitterAuthFailed" xml:space="preserve">
+    <value>Failed to get authorization</value>
+  </data>
+  <data name="TwitterRateLimited" xml:space="preserve">
+    <value>The tweet you specified could not be sent because you have already sent a tweet in the last 5 minutes</value>
   </data>
 </root>

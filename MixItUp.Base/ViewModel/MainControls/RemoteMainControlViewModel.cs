@@ -132,7 +132,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.AddProfileCommand = this.CreateCommand(async (x) =>
             {
-                string name = await DialogHelper.ShowTextEntry($"{MixItUp.Base.Resources.NameOfProfile}:");
+                string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.NameOfProfileHeader);
                 if (!string.IsNullOrEmpty(name))
                 {
                     if (ChannelSession.Settings.RemoteProfiles.Any(p => p.Name.Equals(name)))

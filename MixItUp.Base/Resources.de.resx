@@ -1377,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>Namen</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Name des Profils</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Name des Profils:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>Nie</value>

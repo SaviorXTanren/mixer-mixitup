@@ -3431,6 +3431,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not get Bot Application Gateway data.
+        /// </summary>
+        public static string DiscoardBotGatewayFailed {
+            get {
+                return ResourceManager.GetString("DiscoardBotGatewayFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disconnect.
         /// </summary>
         public static string Disconnect {
@@ -3463,6 +3472,15 @@ namespace MixItUp.Base {
         public static string DiscordActionMissingChatMessage {
             get {
                 return ResourceManager.GetString("DiscordActionMissingChatMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not connect Bot Application to web socket.
+        /// </summary>
+        public static string DiscordBotWebSocketFailed {
+            get {
+                return ResourceManager.GetString("DiscordBotWebSocketFailed", resourceCulture);
             }
         }
         
@@ -3508,6 +3526,24 @@ namespace MixItUp.Base {
         public static string DiscordInvalidSecret {
             get {
                 return ResourceManager.GetString("DiscordInvalidSecret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not get Server data.
+        /// </summary>
+        public static string DiscordServerDataFailed {
+            get {
+                return ResourceManager.GetString("DiscordServerDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not get User data.
+        /// </summary>
+        public static string DiscordUserDataFailed {
+            get {
+                return ResourceManager.GetString("DiscordUserDataFailed", resourceCulture);
             }
         }
         
@@ -4234,11 +4270,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not get Team/Participant data.
+        /// </summary>
+        public static string ExtraLifeTeamDataFailed {
+            get {
+                return ResourceManager.GetString("ExtraLifeTeamDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Extra Life team ID you entered could not be found..
         /// </summary>
         public static string ExtraLifeTeamNotFound {
             get {
                 return ResourceManager.GetString("ExtraLifeTeamNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extra Life team ID / participant ID was not set.
+        /// </summary>
+        public static string ExtraLifeTeamNotSet {
+            get {
+                return ResourceManager.GetString("ExtraLifeTeamNotSet", resourceCulture);
             }
         }
         
@@ -8248,6 +8302,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to get User data.
+        /// </summary>
+        public static string JustGivingUserDataFailed {
+            get {
+                return ResourceManager.GetString("JustGivingUserDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyboard.
         /// </summary>
         public static string Keyboard {
@@ -9418,11 +9481,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name of Profile.
+        ///   Looks up a localized string similar to Name of Button:.
         /// </summary>
-        public static string NameOfProfile {
+        public static string NameOfButtonHeader {
             get {
-                return ResourceManager.GetString("NameOfProfile", resourceCulture);
+                return ResourceManager.GetString("NameOfButtonHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of Folder:.
+        /// </summary>
+        public static string NameOfFolderHeader {
+            get {
+                return ResourceManager.GetString("NameOfFolderHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of Profile:.
+        /// </summary>
+        public static string NameOfProfileHeader {
+            get {
+                return ResourceManager.GetString("NameOfProfileHeader", resourceCulture);
             }
         }
         
@@ -9738,6 +9819,15 @@ namespace MixItUp.Base {
         public static string OBSStudioSuccess {
             get {
                 return ResourceManager.GetString("OBSStudioSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to OBS Studio web socket.
+        /// </summary>
+        public static string OBSWebSocketFailed {
+            get {
+                return ResourceManager.GetString("OBSWebSocketFailed", resourceCulture);
             }
         }
         
@@ -10111,6 +10201,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to add {0} overlay.
+        /// </summary>
+        public static string OverlayAddFailed {
+            get {
+                return ResourceManager.GetString("OverlayAddFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software..
         /// </summary>
         public static string OverlayConnectionFailed1 {
@@ -10354,6 +10453,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid address specified.
+        /// </summary>
+        public static string OvrStreamInvalidAddress {
+            get {
+                return ResourceManager.GetString("OvrStreamInvalidAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OvrStream Title Name.
         /// </summary>
         public static string OvrStreamTitleName {
@@ -10444,6 +10552,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get Campaign data.
+        /// </summary>
+        public static string PatreonCampaignDataFailed {
+            get {
+                return ResourceManager.GetString("PatreonCampaignDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information..
         /// </summary>
         public static string PatreonInfo1 {
@@ -10467,6 +10584,15 @@ namespace MixItUp.Base {
         public static string PatreonUser {
             get {
                 return ResourceManager.GetString("PatreonUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get User data.
+        /// </summary>
+        public static string PatreonUserDataFailed {
+            get {
+                return ResourceManager.GetString("PatreonUserDataFailed", resourceCulture);
             }
         }
         
@@ -13513,6 +13639,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get user information.
+        /// </summary>
+        public static string StreamElementsUserDataFailed {
+            get {
+                return ResourceManager.GetString("StreamElementsUserDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamer.
         /// </summary>
         public static string Streamer {
@@ -13639,6 +13774,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get channel data.
+        /// </summary>
+        public static string StreamJarChannelDataFailed {
+            get {
+                return ResourceManager.GetString("StreamJarChannelDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StreamJar Donation.
         /// </summary>
         public static string StreamJarDonation {
@@ -13702,6 +13846,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting..
+        /// </summary>
+        public static string StreamlabsOBSAdminMaybe {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSAdminMaybe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running..
         /// </summary>
         public static string StreamlabsOBSConnectionFailed {
@@ -13720,11 +13873,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamlabs OBS could not be reached.
+        /// </summary>
+        public static string StreamlabsOBSFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsOBSFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources..
         /// </summary>
         public static string StreamlabsOBSInfo1 {
             get {
                 return ResourceManager.GetString("StreamlabsOBSInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get web socket token.
+        /// </summary>
+        public static string StreamlabsWebSocketTokenFailed {
+            get {
+                return ResourceManager.GetString("StreamlabsWebSocketTokenFailed", resourceCulture);
             }
         }
         
@@ -14575,6 +14746,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get User data.
+        /// </summary>
+        public static string TiltifyUserDataFailed {
+            get {
+                return ResourceManager.GetString("TiltifyUserDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time.
         /// </summary>
         public static string Time {
@@ -14688,6 +14868,42 @@ namespace MixItUp.Base {
         public static string TipeeeStreamInfo1 {
             get {
                 return ResourceManager.GetString("TipeeeStreamInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to socket.
+        /// </summary>
+        public static string TipeeeStreamSocketFailed {
+            get {
+                return ResourceManager.GetString("TipeeeStreamSocketFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get Socket URL address.
+        /// </summary>
+        public static string TipeeeStreamSocketUrlFailed {
+            get {
+                return ResourceManager.GetString("TipeeeStreamSocketUrlFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get User information.
+        /// </summary>
+        public static string TipeeeStreamUserDataFailed {
+            get {
+                return ResourceManager.GetString("TipeeeStreamUserDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to get Socket API key.
+        /// </summary>
+        public static string TipeeStreamSocketKeyFailed {
+            get {
+                return ResourceManager.GetString("TipeeStreamSocketKeyFailed", resourceCulture);
             }
         }
         
@@ -14899,6 +15115,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to Socket.
+        /// </summary>
+        public static string TreatStreamSocketFailed {
+            get {
+                return ResourceManager.GetString("TreatStreamSocketFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get Socket token.
+        /// </summary>
+        public static string TreatStreamSocketTokenFailed {
+            get {
+                return ResourceManager.GetString("TreatStreamSocketTokenFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trigger(s) in Chat (No &quot;!&quot; needed).
         /// </summary>
         public static string TriggerHint {
@@ -15079,11 +15313,47 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Twitch connection has not been established.
+        /// </summary>
+        public static string TwitchConnectionFailed {
+            get {
+                return ResourceManager.GetString("TwitchConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to Twitch services:.
         /// </summary>
         public static string TwitchFailed {
             get {
                 return ResourceManager.GetString("TwitchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get Twitch bot data.
+        /// </summary>
+        public static string TwitchFailedBotData {
+            get {
+                return ResourceManager.GetString("TwitchFailedBotData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get New API Twitch user data.
+        /// </summary>
+        public static string TwitchFailedNewAPIUserData {
+            get {
+                return ResourceManager.GetString("TwitchFailedNewAPIUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get V5 API Twitch user data.
+        /// </summary>
+        public static string TwitchFailedV5APIUserData {
+            get {
+                return ResourceManager.GetString("TwitchFailedV5APIUserData", resourceCulture);
             }
         }
         
@@ -15144,11 +15414,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to get authorization.
+        /// </summary>
+        public static string TwitterAuthFailed {
+            get {
+                return ResourceManager.GetString("TwitterAuthFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Twitter service connectivity allows you to send out tweets on your account and easily query your personal tweets for use within your stream..
         /// </summary>
         public static string TwitterInfo1 {
             get {
                 return ResourceManager.GetString("TwitterInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The tweet you specified could not be sent because you have already sent a tweet in the last 5 minutes.
+        /// </summary>
+        public static string TwitterRateLimited {
+            get {
+                return ResourceManager.GetString("TwitterRateLimited", resourceCulture);
             }
         }
         

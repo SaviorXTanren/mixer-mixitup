@@ -1377,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>名前</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>プロファイルの名前</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>プロファイルの名前:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>ぜんぜん</value>

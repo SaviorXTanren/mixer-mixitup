@@ -230,9 +230,9 @@ namespace MixItUp.Base.Services.External
                     this.TrackServiceTelemetry("TreatStream");
                     return new Result();
                 }
-                return new Result("Failed to connect to Socket");
+                return new Result(Resources.TreatStreamSocketFailed);
             }
-            return new Result("Failed to get Socket token");
+            return new Result(Resources.TreatStreamSocketTokenFailed);
         }
 
         private async Task<bool> ConnectSocket()

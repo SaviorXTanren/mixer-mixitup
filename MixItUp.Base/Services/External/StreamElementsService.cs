@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("StreamElements");
                 return new Result();
             }
-            return new Result("Failed to get user information");
+            return new Result(Resources.StreamElementsUserDataFailed);
         }
 
         protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)

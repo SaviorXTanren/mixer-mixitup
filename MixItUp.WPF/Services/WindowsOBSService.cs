@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Services
                 ChannelSession.Services.Telemetry.TrackService("OBS Studio");
                 return new Result();
             }
-            return new Result("Failed to connect to OBS Studio web socket.");
+            return new Result(Resources.OBSWebSocketFailed);
         }
 
         public async Task Disconnect()

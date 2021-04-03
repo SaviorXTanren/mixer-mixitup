@@ -1377,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>[!!! Ná₥è !!!]</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>[!!! Ná₥è ôƒ Þřôƒïℓè !!!]</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>[!!! Ná₥è ôƒ Þřôƒïℓè: !!!]</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>[!!! NèƲèř !!!]</value>
@@ -5707,5 +5707,102 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="YoutubeVideoURLID" xml:space="preserve">
     <value>[!!! Ýôúţúβè Vïδèô ÛRĻ/ÌÐ !!!]</value>
+  </data>
+  <data name="DiscoardBotGatewayFailed" xml:space="preserve">
+    <value>[!!! Çôúℓδ ñôţ ĝèţ ßôţ Âƥƥℓïçáţïôñ Gáţèωá¥ δáţá !!!]</value>
+  </data>
+  <data name="DiscordBotWebSocketFailed" xml:space="preserve">
+    <value>[!!! Çôúℓδ ñôţ çôññèçţ ßôţ Âƥƥℓïçáţïôñ ţô ωèβ šôçƙèţ !!!]</value>
+  </data>
+  <data name="DiscordServerDataFailed" xml:space="preserve">
+    <value>[!!! Çôúℓδ ñôţ ĝèţ ŠèřƲèř δáţá !!!]</value>
+  </data>
+  <data name="DiscordUserDataFailed" xml:space="preserve">
+    <value>[!!! Çôúℓδ ñôţ ĝèţ Ûšèř δáţá !!!]</value>
+  </data>
+  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
+    <value>[!!! Çôúℓδ ñôţ ĝèţ Ţèá₥/Þářţïçïƥáñţ δáţá !!!]</value>
+  </data>
+  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
+    <value>[!!! Éжţřá Ļïƒè ţèá₥ ÌÐ / ƥářţïçïƥáñţ ÌÐ ωáš ñôţ šèţ !!!]</value>
+  </data>
+  <data name="JustGivingUserDataFailed" xml:space="preserve">
+    <value>[!!! Ûñáβℓè ţô ĝèţ Ûšèř δáţá !!!]</value>
+  </data>
+  <data name="NameOfButtonHeader" xml:space="preserve">
+    <value>[!!! Ná₥è ôƒ ßúţţôñ: !!!]</value>
+  </data>
+  <data name="NameOfFolderHeader" xml:space="preserve">
+    <value>[!!! Ná₥è ôƒ Fôℓδèř: !!!]</value>
+  </data>
+  <data name="OBSWebSocketFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô çôññèçţ ţô ÓßŠ Šţúδïô ωèβ šôçƙèţ !!!]</value>
+  </data>
+  <data name="OverlayAddFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô áδδ {0} ôƲèřℓá¥ !!!]</value>
+    <comment>{0} is the overlay name</comment>
+  </data>
+  <data name="OvrStreamInvalidAddress" xml:space="preserve">
+    <value>[!!! ÌñƲáℓïδ áδδřèšš šƥèçïƒïèδ !!!]</value>
+  </data>
+  <data name="PatreonCampaignDataFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Çá₥ƥáïĝñ δáţá !!!]</value>
+  </data>
+  <data name="PatreonUserDataFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Ûšèř δáţá !!!]</value>
+  </data>
+  <data name="StreamElementsUserDataFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ úšèř ïñƒôř₥áţïôñ !!!]</value>
+  </data>
+  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ çĥáññèℓ δáţá !!!]</value>
+  </data>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓáβš ÓßŠ ₥ïĝĥţ βè řúññïñĝ áš áδ₥ïñïšţřáţôř áñδ Mïж Ìţ Ûƥ ïš ñôţ. Ţř¥ řúññïñĝ Mïж Ìţ Ûƥ áš áñ Âδ₥ïñïšţřáţôř βèƒôřè çôññèçţïñĝ. !!!]</value>
+  </data>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓáβš ÓßŠ çôúℓδ ñôţ βè řèáçĥèδ !!!]</value>
+  </data>
+  <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ ωèβ šôçƙèţ ţôƙèñ !!!]</value>
+  </data>
+  <data name="TiltifyUserDataFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Ûšèř δáţá !!!]</value>
+  </data>
+  <data name="TipeeeStreamSocketFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô çôññèçţ ţô šôçƙèţ !!!]</value>
+  </data>
+  <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
+    <value>[!!! Ûñáβℓè ţô ĝèţ Šôçƙèţ ÛRĻ áδδřèšš !!!]</value>
+  </data>
+  <data name="TipeeeStreamUserDataFailed" xml:space="preserve">
+    <value>[!!! Ûñáβℓè ţô ĝèţ Ûšèř ïñƒôř₥áţïôñ !!!]</value>
+  </data>
+  <data name="TipeeStreamSocketKeyFailed" xml:space="preserve">
+    <value>[!!! Ûñáβℓè ţô ĝèţ Šôçƙèţ ÂÞÌ ƙè¥ !!!]</value>
+  </data>
+  <data name="TreatStreamSocketFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô çôññèçţ ţô Šôçƙèţ !!!]</value>
+  </data>
+  <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Šôçƙèţ ţôƙèñ !!!]</value>
+  </data>
+  <data name="TwitchConnectionFailed" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ çôññèçţïôñ ĥáš ñôţ βèèñ èšţáβℓïšĥèδ !!!]</value>
+  </data>
+  <data name="TwitchFailedBotData" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Ţωïţçĥ βôţ δáţá !!!]</value>
+  </data>
+  <data name="TwitchFailedNewAPIUserData" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ Nèω ÂÞÌ Ţωïţçĥ úšèř δáţá !!!]</value>
+  </data>
+  <data name="TwitchFailedV5APIUserData" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ V5 ÂÞÌ Ţωïţçĥ úšèř δáţá !!!]</value>
+  </data>
+  <data name="TwitterAuthFailed" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô ĝèţ áúţĥôřïƺáţïôñ !!!]</value>
+  </data>
+  <data name="TwitterRateLimited" xml:space="preserve">
+    <value>[!!! Ţĥè ţωèèţ ¥ôú šƥèçïƒïèδ çôúℓδ ñôţ βè šèñţ βèçáúšè ¥ôú ĥáƲè áℓřèáδ¥ šèñţ á ţωèèţ ïñ ţĥè ℓášţ 5 ₥ïñúţèš !!!]</value>
   </data>
 </root>

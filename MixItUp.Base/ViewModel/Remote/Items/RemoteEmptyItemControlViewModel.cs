@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         {
             this.AddCommandCommand = this.CreateCommand(async (x) =>
             {
-                string name = await DialogHelper.ShowTextEntry("Name of Button:");
+                string name = await DialogHelper.ShowTextEntry(Resources.NameOfButtonHeader);
                 if (!string.IsNullOrEmpty(name))
                 {
                     MessageCenter.Send(RemoteEmptyItemControlViewModel.NewRemoteCommandEventName, new RemoteCommandItemViewModel(name, this.GetTypedItem<RemoteEmptyItemViewModel>().XPosition, this.GetTypedItem<RemoteEmptyItemViewModel>().YPosition));
@@ -23,7 +23,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
 
             this.AddFolderCommand = this.CreateCommand(async (x) =>
             {
-                string name = await DialogHelper.ShowTextEntry("Name of Folder:");
+                string name = await DialogHelper.ShowTextEntry(Resources.NameOfFolderHeader);
                 if (!string.IsNullOrEmpty(name))
                 {
                     MessageCenter.Send(RemoteEmptyItemControlViewModel.NewRemoteFolderEventName, new RemoteFolderItemViewModel(name, this.GetTypedItem<RemoteEmptyItemViewModel>().XPosition, this.GetTypedItem<RemoteEmptyItemViewModel>().YPosition));
