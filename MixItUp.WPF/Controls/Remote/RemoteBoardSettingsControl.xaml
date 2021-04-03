@@ -12,7 +12,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="16">
-        <Button HorizontalAlignment="Right" VerticalAlignment="Top" IsDefault="True" IsCancel="True" ToolTip="Close" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" IsDefault="True" IsCancel="True" ToolTip="{x:Static resx:Resources.Close}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
             <Button.CommandParameter>
                 <system:String>Close</system:String>
             </Button.CommandParameter>

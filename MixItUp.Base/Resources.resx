@@ -5853,4 +5853,58 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="OverlayWidgetYouTubeDescription" xml:space="preserve">
     <value>Shows a YouTube video. Refreshes based on user-defined Refresh Interval.</value>
   </data>
+  <data name="Generic" xml:space="preserve">
+    <value>Generic</value>
+  </data>
+  <data name="DemoteFromMod" xml:space="preserve">
+    <value>Demote From Mod</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Edit User</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="Follows" xml:space="preserve">
+    <value>Follows</value>
+  </data>
+  <data name="ModerationStrikes" xml:space="preserve">
+    <value>Moderation Strikes</value>
+  </data>
+  <data name="OpenChannelPage" xml:space="preserve">
+    <value>Open Channel Page</value>
+  </data>
+  <data name="PromoteToMod" xml:space="preserve">
+    <value>Promote To Mod</value>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>Resubscribes</value>
+  </data>
+  <data name="StreamInfo" xml:space="preserve">
+    <value>Stream Info</value>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>Sub Priority:</value>
+  </data>
+  <data name="SubscribersReceivePriority" xml:space="preserve">
+    <value>Subscribers Receive Priority</value>
+  </data>
+  <data name="Subscribes" xml:space="preserve">
+    <value>Subscribes</value>
+  </data>
+  <data name="TimeoutFiveMin" xml:space="preserve">
+    <value>Timeout 5 Min</value>
+  </data>
+  <data name="TimeoutOneMin" xml:space="preserve">
+    <value>Timeout 1 Min</value>
+  </data>
+  <data name="Unban" xml:space="preserve">
+    <value>Unban</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>Unfollow</value>
+  </data>
 </root>

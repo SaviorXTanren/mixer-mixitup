@@ -3683,7 +3683,7 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
     <value>[!!! Ûšèř Šèℓèçţïôñ !!!]</value>
   </data>
   <data name="ColumnHeaderFormat" xml:space="preserve">
-    <value>[!!! {0}: !!!]</value>
+    <value>{0}:</value>
   </data>
   <data name="GameCommandProbabilityMustBeBetween1And100" xml:space="preserve">
     <value>[!!! Þřôβáβïℓïţïèš ₥úšţ βè βèţωèèñ 1 - 100 !!!]</value>
@@ -5852,5 +5852,59 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="OverlayWidgetYouTubeDescription" xml:space="preserve">
     <value>[!!! Šĥôωš á ÝôúŢúβè Ʋïδèô. Rèƒřèšĥèš βášèδ ôñ úšèř-δèƒïñèδ Rèƒřèšĥ ÌñţèřƲáℓ. !!!]</value>
+  </data>
+  <data name="Generic" xml:space="preserve">
+    <value>[!!! Gèñèřïç !!!]</value>
+  </data>
+  <data name="DemoteFromMod" xml:space="preserve">
+    <value>[!!! Ðè₥ôţè Fřô₥ Môδ !!!]</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>[!!! Ðïšáβℓè !!!]</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>[!!! Éδïţ Ûšèř !!!]</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>[!!! Fôℓℓôω !!!]</value>
+  </data>
+  <data name="Follows" xml:space="preserve">
+    <value>[!!! Fôℓℓôωš !!!]</value>
+  </data>
+  <data name="ModerationStrikes" xml:space="preserve">
+    <value>[!!! Môδèřáţïôñ Šţřïƙèš !!!]</value>
+  </data>
+  <data name="OpenChannelPage" xml:space="preserve">
+    <value>[!!! Óƥèñ Çĥáññèℓ Þáĝè !!!]</value>
+  </data>
+  <data name="PromoteToMod" xml:space="preserve">
+    <value>[!!! Þřô₥ôţè Ţô Môδ !!!]</value>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>[!!! Rèšúβšçřïβèš !!!]</value>
+  </data>
+  <data name="StreamInfo" xml:space="preserve">
+    <value>[!!! Šţřèá₥ Ìñƒô !!!]</value>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>[!!! Šúβ Þřïôřïţ¥: !!!]</value>
+  </data>
+  <data name="SubscribersReceivePriority" xml:space="preserve">
+    <value>[!!! Šúβšçřïβèřš RèçèïƲè Þřïôřïţ¥ !!!]</value>
+  </data>
+  <data name="Subscribes" xml:space="preserve">
+    <value>[!!! Šúβšçřïβèš !!!]</value>
+  </data>
+  <data name="TimeoutFiveMin" xml:space="preserve">
+    <value>[!!! Ţï₥èôúţ 5 Mïñ !!!]</value>
+  </data>
+  <data name="TimeoutOneMin" xml:space="preserve">
+    <value>[!!! Ţï₥èôúţ 1 Mïñ !!!]</value>
+  </data>
+  <data name="Unban" xml:space="preserve">
+    <value>[!!! Ûñβáñ !!!]</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>[!!! Ûñƒôℓℓôω !!!]</value>
   </data>
 </root>
