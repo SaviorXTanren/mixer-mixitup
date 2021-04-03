@@ -10381,6 +10381,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows the last X many chat messages from your channel. Chat messages are added as they occur..
+        /// </summary>
+        public static string OverlayWidgetChatMessagesDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetChatMessagesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay Widget - Editor.
         /// </summary>
         public static string OverlayWidgetEditor {
@@ -10399,6 +10408,69 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows a scrolling list of text like movie credits based on user interactions throughout the stream. Showing the widget triggers the credits, hiding resets it..
+        /// </summary>
+        public static string OverlayWidgetEndCreditsDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetEndCreditsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the last X many events that have occurred in your channel. Events are added as they occur..
+        /// </summary>
+        public static string OverlayWidgetEventListDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetEventListDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a block of text. Events are added as they occur..
+        /// </summary>
+        public static string OverlayWidgetGameQueueDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetGameQueueDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows HTML code directly on the overlay. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetHTMLDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetHTMLDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows an image. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetImageDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetImageDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval.
+        /// </summary>
+        public static string OverlayWidgetLeaderboardDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetLeaderboardDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetProgressBarDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetProgressBarDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overlay Widgets.
         /// </summary>
         public static string OverlayWidgets {
@@ -10413,6 +10485,78 @@ namespace MixItUp.Base {
         public static string OverlayWidgetsRequireOverlay {
             get {
                 return ResourceManager.GetString("OverlayWidgetsRequireOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a user from your channel as a &quot;boss&quot; that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget..
+        /// </summary>
+        public static string OverlayWidgetStreamBossDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetStreamBossDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a block of text. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetTextDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetTextDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a scrolling list of text of the last X many users that caused a specified event to occur. Users are added to the list as the event occurs..
+        /// </summary>
+        public static string OverlayWidgetTickerTapeDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetTickerTapeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a timer that counts down while it is visible. Hiding the timer resets the amount..
+        /// </summary>
+        public static string OverlayWidgetTimerDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetTimerDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a timer that counts down and can be increased by performing certain actions in your channel. It is only shown when total time exceeds the Minimum Seconds To Show value. Time updates as events occur..
+        /// </summary>
+        public static string OverlayWidgetTimerTrainDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetTimerTrainDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a video. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetVideoDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetVideoDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a web page. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetWebPageDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetWebPageDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shows a YouTube video. Refreshes based on user-defined Refresh Interval..
+        /// </summary>
+        public static string OverlayWidgetYouTubeDescription {
+            get {
+                return ResourceManager.GetString("OverlayWidgetYouTubeDescription", resourceCulture);
             }
         }
         
