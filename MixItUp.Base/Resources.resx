@@ -5228,6 +5228,16 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
     <value>Background Image URL (300 Characters Max)</value>
   </data>
+  <data name="BackupSettingsLoadedError" xml:space="preserve">
+    <value>One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.</value>
+  </data>
+  <data name="BanUserPrompt" xml:space="preserve">
+    <value>This will ban the user {0} from this channel. Are you sure?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="BitsBonusZeroOrMore" xml:space="preserve">
+    <value>The Bits Bonus must be greater than or equal to 0.</value>
+  </data>
   <data name="BitsHeader" xml:space="preserve">
     <value>Bits:</value>
   </data>
@@ -5237,8 +5247,51 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ClearGameQueuePrompt" xml:space="preserve">
     <value>Are you sure you want to clear the Game Queue queue?</value>
   </data>
+  <data name="CommandNameRequiredForShop" xml:space="preserve">
+    <value>A command name must be specified for the shop.</value>
+  </data>
+  <data name="CommandRequired" xml:space="preserve">
+    <value>A command must be selected.</value>
+  </data>
+  <data name="CurrencyImportFailed" xml:space="preserve">
+    <value>We were unable to import the data. Please ensure your file is in one of the following formats:</value>
+  </data>
+  <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
+    <value>The name must have at least 1 letter in it.</value>
+  </data>
+  <data name="CurrencyRankInventoryNameProtected" xml:space="preserve">
+    <value>The following names are reserved and can not be used:</value>
+  </data>
+  <data name="CurrencyRankNameDuplicate" xml:space="preserve">
+    <value>There already exists a currency or rank system with this name.</value>
+  </data>
+  <data name="CurrencyRankNameNoDigits" xml:space="preserve">
+    <value>The name can not contain any number digits in it.</value>
+  </data>
+  <data name="CurrencyRankNameRequired" xml:space="preserve">
+    <value>A {0} name must be specified</value>
+    <comment>{0} is the type (currency or rank)</comment>
+  </data>
+  <data name="CustomCommandAlreadyExists" xml:space="preserve">
+    <value>There already exists a custom command for this level.</value>
+  </data>
+  <data name="CustomLevelGreaterThanZero" xml:space="preserve">
+    <value>You must specify a number greater than 0.</value>
+  </data>
   <data name="DamageAnimation" xml:space="preserve">
     <value>Damage Animation</value>
+  </data>
+  <data name="DataFileImportFailed" xml:space="preserve">
+    <value>We were unable to read data from the file. Please make sure it is not already opened in another program.</value>
+  </data>
+  <data name="DataFileInvalidColumn" xml:space="preserve">
+    <value>A number 0 or greater must be specified for each column that you want to include.</value>
+  </data>
+  <data name="DataFileRequiredColumns" xml:space="preserve">
+    <value>Your data file must include at least either the User ID or Username columns.</value>
+  </data>
+  <data name="DefaultMaxGreaterThanZero" xml:space="preserve">
+    <value>The default max amount must be greater than 0.</value>
   </data>
   <data name="DeleteItemPrompt" xml:space="preserve">
     <value>Are you sure you wish to delete this?</value>
@@ -5255,8 +5308,67 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="DeleteWidgetPrompt" xml:space="preserve">
     <value>Are you sure you want to delete this widget?</value>
   </data>
+  <data name="DemoteUserPrompt" xml:space="preserve">
+    <value>This will demote the user {0} from a moderator of this channel. Are you sure?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="DeviceApprovedLine1" xml:space="preserve">
+    <value>The device {0} has been approved.</value>
+    <comment>{0} is the device name</comment>
+  </data>
+  <data name="DeviceApprovedLine2" xml:space="preserve">
+    <value>To configure it, head to Settings -&gt; Remote.</value>
+  </data>
+  <data name="DeviceCodeHeader" xml:space="preserve">
+    <value>Device 6-Digit Code:</value>
+  </data>
+  <data name="DeviceCodeInvalid" xml:space="preserve">
+    <value>The code entered is not valid.</value>
+  </data>
+  <data name="DeviceNoCode" xml:space="preserve">
+    <value>A client device could not be found with the specified code.</value>
+  </data>
+  <data name="DonationBonusZeroOrMore" xml:space="preserve">
+    <value>The Donation Bonus must be greater than or equal to 0.</value>
+  </data>
   <data name="DonationsHeader" xml:space="preserve">
     <value>Donations:</value>
+  </data>
+  <data name="DuplicateItemName" xml:space="preserve">
+    <value>An item with the same name already exists.</value>
+  </data>
+  <data name="DuplicateProfileName" xml:space="preserve">
+    <value>A profile with the same name already exists.</value>
+  </data>
+  <data name="EndDateInvalid" xml:space="preserve">
+    <value>The End Date must be after the Start Date.</value>
+  </data>
+  <data name="ErrorDetailsHeader" xml:space="preserve">
+    <value>Error Details:</value>
+  </data>
+  <data name="FailedToConnectToTwitch" xml:space="preserve">
+    <value>Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FailedToFinalizeInitialization" xml:space="preserve">
+    <value>Failed to finalize initialization. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FailedToGetChannelInformation" xml:space="preserve">
+    <value>Failed to get channel information. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FailedToInitializeBotAccount" xml:space="preserve">
+    <value>Failed to initialize Bot account</value>
+  </data>
+  <data name="FailedToInitializeExternalServices" xml:space="preserve">
+    <value>Failed to initialize external services. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FailedToInitializeSettings" xml:space="preserve">
+    <value>Failed to initialize settings. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FailedToInitializeStreamerBasedServices" xml:space="preserve">
+    <value>Failed to initialize streamer-based services. If this continues, please visit the Mix It Up Discord for assistance.</value>
+  </data>
+  <data name="FollowBonusZeroOrMore" xml:space="preserve">
+    <value>The Follow Bonus must be greater than or equal to 0.</value>
   </data>
   <data name="FollowsHeader" xml:space="preserve">
     <value>Follows:</value>
@@ -5279,20 +5391,92 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="HostBonusPerUser" xml:space="preserve">
     <value>Host Bonus (Per User)</value>
   </data>
+  <data name="HostBonusZeroOrMore" xml:space="preserve">
+    <value>The Host Bonus must be greater than or equal to 0.</value>
+  </data>
   <data name="HostsHeader" xml:space="preserve">
     <value>Hosts:</value>
+  </data>
+  <data name="HotKeyRequired" xml:space="preserve">
+    <value>A hot key configuration must be set.</value>
+  </data>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>We were unable to read data from the file. Please make sure it is not already opened in another program. If this continues, please reach out to support.</value>
+  </data>
+  <data name="ImportPointsPrompt1" xml:space="preserve">
+    <value>This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="ImportPointsPrompt2" xml:space="preserve">
+    <value>This process may take some time; are you sure you wish to do this?</value>
+  </data>
+  <data name="ImportSuccess" xml:space="preserve">
+    <value>{0} users were imported successfully.</value>
+    <comment>{0} is the number of successes</comment>
+  </data>
+  <data name="ImportWithFailures" xml:space="preserve">
+    <value>{0} users were imported successfully, but {1} users were not able to be imported. This could be due to invalid data or failure to find their information on the platform. Please contact support for further help with this if needed.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
+  <data name="InvalidDataFile" xml:space="preserve">
+    <value>A valid data file must be specified.</value>
+  </data>
+  <data name="InvalidPosition" xml:space="preserve">
+    <value>A valid position for this overlay widget must be selected.</value>
+  </data>
+  <data name="InventoryNameDuplicate" xml:space="preserve">
+    <value>There already exists an inventory with this name.</value>
+  </data>
+  <data name="InventoryNameRequired" xml:space="preserve">
+    <value>An inventory name must be specified.</value>
+  </data>
+  <data name="ItemBuyAmountZeroOrMore" xml:space="preserve">
+    <value>The item buy amount must be either blank or a number greater than 0.</value>
+  </data>
+  <data name="ItemMaxAmountZeroOrMore" xml:space="preserve">
+    <value>The item max amount must be either blank or a number greater than 0.</value>
+  </data>
+  <data name="ItemNameRequired" xml:space="preserve">
+    <value>You must specify a name for the item.</value>
+  </data>
+  <data name="ItemSellAmountZeroOrMore" xml:space="preserve">
+    <value>The item sell amount must be either blank or a number greater than 0.</value>
   </data>
   <data name="LengthSeconds" xml:space="preserve">
     <value>Length (Seconds)</value>
   </data>
+  <data name="LessThanMaxLevel" xml:space="preserve">
+    <value>You must specify a number less than or equal to the Max Level.</value>
+  </data>
   <data name="LoopHeader" xml:space="preserve">
     <value>Loop:</value>
+  </data>
+  <data name="MaxAmountMustBeZeroOrMore" xml:space="preserve">
+    <value>The max amount must be greater than 0 or can be left as 0 for no max amount.</value>
+  </data>
+  <data name="MaxCustomLevelCommand" xml:space="preserve">
+    <value>There can not be any custom level up commands that are greater than the Max Level.</value>
+  </data>
+  <data name="MaxLevelGreaterThanZero" xml:space="preserve">
+    <value>The Max Level must be greater than 0.</value>
+  </data>
+  <data name="MinimumActivityRateZeroOrMore" xml:space="preserve">
+    <value>The Minimum Activity Rate must be 0 or greater.</value>
   </data>
   <data name="MinimumAmount" xml:space="preserve">
     <value>Minimum Amount</value>
   </data>
+  <data name="MinimumAmountRequired" xml:space="preserve">
+    <value>A minimum amount must be specified.</value>
+  </data>
   <data name="MinSecondsToShow" xml:space="preserve">
     <value>Min Seconds To Show</value>
+  </data>
+  <data name="ModeratorBonusZeroOrMore" xml:space="preserve">
+    <value>The Moderator bonus must be 0 or greater.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>A name must be specified.</value>
   </data>
   <data name="NewBossAnimation" xml:space="preserve">
     <value>New Boss Animation</value>
@@ -5300,11 +5484,41 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="NewLeader" xml:space="preserve">
     <value>New Leader</value>
   </data>
+  <data name="OfflineRateVsInterval" xml:space="preserve">
+    <value>The offline minutes can not be 0 if the offline amount is greater than 0.</value>
+  </data>
+  <data name="OneCustomLevelCommand" xml:space="preserve">
+    <value>There can only be 1 custom level up command per individual level.</value>
+  </data>
+  <data name="OneItemRequired" xml:space="preserve">
+    <value>At least 1 item must be added.</value>
+  </data>
+  <data name="OneRankRequired" xml:space="preserve">
+    <value>At least one rank must be created.</value>
+  </data>
+  <data name="OnFollowBonusZeroOrMore" xml:space="preserve">
+    <value>The On Follow bonus must be 0 or greater.</value>
+  </data>
   <data name="OnGoalReached" xml:space="preserve">
     <value>On Goal Reached</value>
   </data>
+  <data name="OnHostBonusZeroOrMore" xml:space="preserve">
+    <value>The On Host bonus must be 0 or greater.</value>
+  </data>
+  <data name="OnlineRateMustBeZeroOrMore" xml:space="preserve">
+    <value>The online amount &amp; minutes must be 0 or greater.</value>
+  </data>
+  <data name="OnlineRateVsInterval1" xml:space="preserve">
+    <value>The online minutes cannot be 0 if the online amount is greater than 0.</value>
+  </data>
+  <data name="OnlineRateVsInterval2" xml:space="preserve">
+    <value>The offline amount &amp; minutes must be 0 or greater.</value>
+  </data>
   <data name="OnNewStreamBoss" xml:space="preserve">
     <value>On New Stream Boss</value>
+  </data>
+  <data name="OnSubscribeBonusZeroOrMore" xml:space="preserve">
+    <value>The On Subscribe bonus must be 0 or greater.</value>
   </data>
   <data name="OnTimerCompleted" xml:space="preserve">
     <value>On Timer Completed</value>
@@ -5312,17 +5526,45 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="OverkillBonus" xml:space="preserve">
     <value>Overkill Bonus</value>
   </data>
+  <data name="OverlayMissingDetails" xml:space="preserve">
+    <value>There are missing details for the overlay item.</value>
+  </data>
+  <data name="OverlayRequired" xml:space="preserve">
+    <value>An overlay to use must be selected.</value>
+  </data>
+  <data name="PointsForLevelUpGreaterThanZero" xml:space="preserve">
+    <value>The Points for Level Up must be greater than 0.</value>
+  </data>
   <data name="ProfileType" xml:space="preserve">
     <value>Profile Type</value>
   </data>
   <data name="ProgressColor" xml:space="preserve">
     <value>Progress Color</value>
   </data>
+  <data name="PromoteUserPrompt" xml:space="preserve">
+    <value>This will promote the user {0} to a moderator of this channel. Are you sure?</value>
+    <comment>{0} is the username</comment>
+  </data>
   <data name="RaidBonusPerUser" xml:space="preserve">
     <value>Raid Bonus (Per User)</value>
   </data>
   <data name="RaidsHeader" xml:space="preserve">
     <value>Raids:</value>
+  </data>
+  <data name="RankRequired" xml:space="preserve">
+    <value>A rank name must be specified.</value>
+  </data>
+  <data name="RegularBonusZeroOrMore" xml:space="preserve">
+    <value>The Regular bonus must be 0 or greater.</value>
+  </data>
+  <data name="RemoteFailed" xml:space="preserve">
+    <value>Could not connect to Remote service, please try again.</value>
+  </data>
+  <data name="RemoteServicesFailed" xml:space="preserve">
+    <value>Could not connect to Remote service, please try again.</value>
+  </data>
+  <data name="RemoteTwoLayersMax" xml:space="preserve">
+    <value>Boards can only be up to 2 layers deep.</value>
   </data>
   <data name="ResetAfterDays" xml:space="preserve">
     <value>Reset After Days</value>
@@ -5332,6 +5574,24 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="ResetAllProgressPrompt" xml:space="preserve">
     <value>Are you sure you want to reset progress for all user?</value>
+  </data>
+  <data name="ResetCurrencyRankPointsPrompt" xml:space="preserve">
+    <value>Do you want to reset all {0} points?</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt1" xml:space="preserve">
+    <value>This option will reset all {0} points for this {0} &amp; assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
+    <value>EX: If the Online Rate is "1 Per Hour" and a user has 16 viewing hours, then that user's {0} points will be set to 16.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
+    <value>This process may take some time; are you sure you wish to do this?</value>
+  </data>
+  <data name="RetroactiveUnsupported" xml:space="preserve">
+    <value>The rate type for this currency does not support retroactively giving points.</value>
   </data>
   <data name="ScorpBotInstallationDirectory" xml:space="preserve">
     <value>ScorpBot Installation Directory</value>
@@ -5345,11 +5605,20 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="ServiceDisconnectedLine2" xml:space="preserve">
     <value>and are attempting to reconnect:</value>
   </data>
+  <data name="SessionInitializationFailed" xml:space="preserve">
+    <value>Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.</value>
+  </data>
   <data name="SettingsChangedRestartPrompt" xml:space="preserve">
     <value>Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?</value>
   </data>
+  <data name="SettingsLoadFailure" xml:space="preserve">
+    <value>One or more settings files were unable to be loaded. Please visit the Mix It Up discord for assistance on this issue.</value>
+  </data>
   <data name="Shadow" xml:space="preserve">
     <value>Shadow (Optional)</value>
+  </data>
+  <data name="ShopCurrencyRequired" xml:space="preserve">
+    <value>A currency must be specified for the shop.</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Size (Pixels)</value>
@@ -5366,8 +5635,23 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="StreamlabsChatBotDataFile" xml:space="preserve">
     <value>Streamlabs ChatBot Data File</value>
   </data>
+  <data name="StreamPassNameDuplicate" xml:space="preserve">
+    <value>There already exists a Stream Pass with this name.</value>
+  </data>
+  <data name="StreamPassNameInvalid" xml:space="preserve">
+    <value>The name can only contain letters, numbers, or spaces.</value>
+  </data>
+  <data name="StreamPassNameRequired" xml:space="preserve">
+    <value>A valid name must be specified.</value>
+  </data>
+  <data name="SubMultiplierOneOrMore" xml:space="preserve">
+    <value>The Sub Multiplier must be greater than or equal to 1.0.</value>
+  </data>
   <data name="SubResubsHeader" xml:space="preserve">
     <value>Subs/Resubs:</value>
+  </data>
+  <data name="SubscriberBonusZeroOrMore" xml:space="preserve">
+    <value>The Subscriber bonus must be 0 or greater.</value>
   </data>
   <data name="SwitchToDarkTheme" xml:space="preserve">
     <value>Switch to Dark Theme</value>
@@ -5381,6 +5665,22 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TotalFollowsHeader" xml:space="preserve">
     <value>Total Follows:</value>
   </data>
+  <data name="TradingCommandRequired" xml:space="preserve">
+    <value>A command name must be specified for trading.</value>
+  </data>
+  <data name="TwitchAccountExists" xml:space="preserve">
+    <value>There already exists settings for the account {0}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="TwitchAccountMismatch" xml:space="preserve">
+    <value>The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.</value>
+  </data>
+  <data name="TwitchFailed" xml:space="preserve">
+    <value>Failed to connect to Twitch services:</value>
+  </data>
+  <data name="UniqueRankNameAndMinimumAmountRequired" xml:space="preserve">
+    <value>Every rank must have a unique name and minimum amount.</value>
+  </data>
   <data name="UpgradePrompt1" xml:space="preserve">
     <value>We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform &amp; is required to use Mix It Up.</value>
   </data>
@@ -5389,6 +5689,15 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="VideoFilePath" xml:space="preserve">
     <value>Video File Path</value>
+  </data>
+  <data name="ViewingRateAmountZeroOrMore" xml:space="preserve">
+    <value>The Viewing Rate Amount must be greater than or equal to 0.</value>
+  </data>
+  <data name="ViewingRateMinutesInvalid" xml:space="preserve">
+    <value>The Viewing Rate Amount &amp; Minutes must both be greater than 0 or both equal to 0.</value>
+  </data>
+  <data name="ViewingRateMinutesZeroOrMore" xml:space="preserve">
+    <value>The Viewing Rate Minutes must be greater than or equal to 0.</value>
   </data>
   <data name="VolumeHeader" xml:space="preserve">
     <value>Volume:</value>

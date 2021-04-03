@@ -148,13 +148,13 @@ namespace MixItUp.Base.ViewModel.Overlay
         {
             if (string.IsNullOrEmpty(this.name))
             {
-                await DialogHelper.ShowMessage("A name must be specified");
+                await DialogHelper.ShowMessage(Resources.NameRequired);
                 return false;
             }
 
             if (string.IsNullOrEmpty(this.SelectedOverlayEndpoint))
             {
-                await DialogHelper.ShowMessage("An overlay to use must be selected");
+                await DialogHelper.ShowMessage(Resources.OverlayRequired);
                 return false;
             }
 

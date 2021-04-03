@@ -100,14 +100,14 @@ namespace MixItUp.WPF.Windows.Overlay
                     OverlayItemPositionModel position = this.position.GetPosition();
                     if (position == null)
                     {
-                        await DialogHelper.ShowMessage("A valid position for this overlay widget must be selected");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.InvalidPosition);
                         return;
                     }
 
                     OverlayItemModelBase overlayItem = overlayTypeEditor.GetItem();
                     if (overlayItem == null)
                     {
-                        await DialogHelper.ShowMessage("There are missing details for the overlay item");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.OverlayMissingDetails);
                         return;
                     }
 

@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 if (this.CommandNameComboBox.SelectedIndex < 0)
                 {
-                    await DialogHelper.ShowMessage("A command must be selected");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.CommandRequired);
                     return;
                 }
 
@@ -129,7 +129,7 @@ namespace MixItUp.WPF.Controls.Settings
 
                 if (this.KeyComboBox.SelectedIndex < 0)
                 {
-                    await DialogHelper.ShowMessage("A hot key configuration must be set");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.HotKeyRequired);
                     return;
                 }
 
