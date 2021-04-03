@@ -13,6 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Controls:LoadingControlBase.Resources>
         <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <Util:StrikethroughConverter x:Key="StrikethroughConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <Style x:Key="LabelHeaderTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
@@ -42,8 +43,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="Auto"  />
-                    <TextBox Grid.Column="0" Text="{Binding Name}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
+                    <TextBlock Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBlock, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="Auto"  />
+                    <TextBox Grid.Column="0" Text="{Binding Name}" TextDecorations="{Binding Disabled, Converter={StaticResource StrikethroughConverter}}" Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="{StaticResource WhiteColor}" Width="250" Style="{StaticResource LabelHeaderTextBox}" />
 
                     <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-9" />
 
@@ -63,7 +64,12 @@
             </Controls:AccordianGroupBoxControl.Header>
 
             <Controls:AccordianGroupBoxControl.Content>
-                <ContentControl x:Uid="ActionContentControl" Margin="10" />
+                <Grid>
+                    <ContentControl x:Uid="ActionContentControl" Margin="10" />
+                    <Grid Visibility="{Binding ShowNameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" IsHitTestVisible="False">
+                        <Rectangle Grid.Column="1" Fill="#77555555" Visibility="{Binding Disabled, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-9" IsHitTestVisible="False"/>
+                    </Grid>
+                </Grid>
             </Controls:AccordianGroupBoxControl.Content>
         </Controls:AccordianGroupBoxControl>
     </Border>
