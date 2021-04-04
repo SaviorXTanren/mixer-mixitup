@@ -11389,7 +11389,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scene Name (Optional).
+        ///   Looks up a localized string similar to Scene Name (Case Sensitive) (Optional).
         /// </summary>
         public static string SceneNameOptional {
             get {
