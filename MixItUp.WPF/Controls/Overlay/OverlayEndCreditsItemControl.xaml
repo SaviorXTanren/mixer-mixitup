@@ -7,6 +7,7 @@
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:DragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:OverlayItemControl.Resources>
@@ -115,7 +116,7 @@
         </Grid>
 
         <GroupBox Grid.Row="10" Width="700" Header="Sections">
-            <ItemsControl ItemsSource="{Binding SectionItems}">
+            <ItemsControl ItemsSource="{Binding SectionItems}" DragDrop:DragDrop.IsDragSource="True" DragDrop:DragDrop.IsDropTarget="True">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="10">
