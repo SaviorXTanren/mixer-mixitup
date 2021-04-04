@@ -14,10 +14,10 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="10" />
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="10" />
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 

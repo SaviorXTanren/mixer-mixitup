@@ -13,9 +13,9 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="450" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Column="0">
