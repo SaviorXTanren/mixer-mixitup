@@ -1801,7 +1801,7 @@
     <value>Scene Name (Case Sensitive)</value>
   </data>
   <data name="SceneNameOptional" xml:space="preserve">
-    <value>Scene Name (Optional)</value>
+    <value>Scene Name (Case Sensitive) (Optional)</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
