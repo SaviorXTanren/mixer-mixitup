@@ -78,7 +78,7 @@
                         </Grid>
                     </Grid>
 
-                    <Button Grid.Row="4" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="100" />
+                    <Button Grid.Row="4" Content="{x:Static resx:Resources.Update}" Command="{Binding UpdateChannelInformationCommand}" Width="150" />
                 </Grid>
             </GroupBox>
 

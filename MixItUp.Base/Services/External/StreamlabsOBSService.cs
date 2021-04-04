@@ -185,10 +185,10 @@ namespace MixItUp.Base.Services.External
             {
                 if (!ChannelSession.IsElevated)
                 {
-                    return new Result("Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting.");
+                    return new Result(Resources.StreamlabsOBSAdminMaybe);
                 }
             }
-            return new Result("Streamlabs OBS could not be reached.");
+            return new Result(Resources.StreamlabsOBSFailed);
         }
 
         public Task Disconnect()

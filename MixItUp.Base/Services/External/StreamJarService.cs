@@ -208,7 +208,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("StreamJar");
                 return new Result();
             }
-            return new Result("Failed to get channel data");
+            return new Result(Resources.StreamJarChannelDataFailed);
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

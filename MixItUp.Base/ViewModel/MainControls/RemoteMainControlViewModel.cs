@@ -132,12 +132,12 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.AddProfileCommand = this.CreateCommand(async (x) =>
             {
-                string name = await DialogHelper.ShowTextEntry($"{MixItUp.Base.Resources.NameOfProfile}:");
+                string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.NameOfProfileHeader);
                 if (!string.IsNullOrEmpty(name))
                 {
                     if (ChannelSession.Settings.RemoteProfiles.Any(p => p.Name.Equals(name)))
                     {
-                        await DialogHelper.ShowMessage("A profile with the same name already exists");
+                        await DialogHelper.ShowMessage(Resources.DuplicateProfileName);
                         return;
                     }
 
@@ -179,17 +179,17 @@ namespace MixItUp.Base.ViewModel.MainControls
                     {
                         if (!await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection))
                         {
-                            await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
+                            await DialogHelper.ShowMessage(Resources.RemoteServicesFailed);
                             return;
                         }
                     }
 
-                    string shortCode = await DialogHelper.ShowTextEntry("Device 6-Digit Code:");
+                    string shortCode = await DialogHelper.ShowTextEntry(Resources.DeviceCodeHeader);
                     if (!string.IsNullOrEmpty(shortCode))
                     {
                         if (shortCode.Length != 6)
                         {
-                            await DialogHelper.ShowMessage("The code entered is not valid");
+                            await DialogHelper.ShowMessage(Resources.DeviceCodeInvalid);
                             return;
                         }
 
@@ -200,19 +200,19 @@ namespace MixItUp.Base.ViewModel.MainControls
                             {
                                 ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
                             }
-                            await DialogHelper.ShowMessage(string.Format("The device {0} has been approved." + Environment.NewLine + Environment.NewLine +
-                                "To configure it, head to Settings -> Remote.", clientConnection.Name));
+                            await DialogHelper.ShowMessage(string.Format(Resources.DeviceApprovedLine1 + Environment.NewLine + Environment.NewLine +
+                                Resources.DeviceApprovedLine2, clientConnection.Name));
                         }
                         else
                         {
-                            await DialogHelper.ShowMessage("A client device could not be found with the specified code");
+                            await DialogHelper.ShowMessage(Resources.DeviceNoCode);
                             return;
                         }
                     }
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
+                    await DialogHelper.ShowMessage(Resources.RemoteFailed);
                 }
             });
 
@@ -242,7 +242,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (this.NavigationNames.Count() > 2)
                 {
-                    await DialogHelper.ShowMessage("Boards can only be up to 2 layers deep");
+                    await DialogHelper.ShowMessage(Resources.RemoteTwoLayersMax);
                     return;
                 }
 

@@ -47,7 +47,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnBitsOccurred += GlobalEvents_OnBitsOccurred;
 
-            this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel("Viewers", "Eye", (StatisticDataTrackerModelBase stats) =>
+            this.ViewerTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Viewers, "Eye", (StatisticDataTrackerModelBase stats) =>
             {
                 TrackedNumberStatisticDataTrackerModel numberStats = (TrackedNumberStatisticDataTrackerModel)stats;
 
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel("Chatters", "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
+            this.ChatterTracker = new TrackedNumberStatisticDataTrackerModel(Resources.Chatters, "MessageTextOutline", (StatisticDataTrackerModelBase stats) =>
             {
                 if (ChannelSession.Services.User != null)
                 {
@@ -71,19 +71,19 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            this.FollowTracker = new EventStatisticDataTrackerModel("Follows", "AccountPlus", new List<string>() { "Username", "Date & Time" });
-            this.HostsTracker = new EventStatisticDataTrackerModel("Hosts", "AccountNetwork", new List<string>() { "Username", "Date & Time" });
+            this.FollowTracker = new EventStatisticDataTrackerModel(Resources.Follows, "AccountPlus", new List<string>() { "Username", "Date & Time" });
+            this.HostsTracker = new EventStatisticDataTrackerModel(Resources.Hosts, "AccountNetwork", new List<string>() { "Username", "Date & Time" });
 
-            this.RaidsTracker = new EventStatisticDataTrackerModel("Raids", "AccountMultipleMinus", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            this.RaidsTracker = new EventStatisticDataTrackerModel(Resources.Raids, "AccountMultipleMinus", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
                 return string.Format("Raids: {0},    Total Viewers: {1},    Average Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
             });
 
-            this.SubscriberTracker = new EventStatisticDataTrackerModel("Subscribes", "AccountStar", new List<string>() { "Username", "Date & Time" });
-            this.ResubscriberTracker = new EventStatisticDataTrackerModel("Resubscribes", "AccountSettings", new List<string>() { "Username", "Date & Time" });
-            this.GiftedSubscriptionsTracker = new EventStatisticDataTrackerModel("Gifted Subs", "AccountHeart", new List<string>() { "Gifter", "Receiver", });
+            this.SubscriberTracker = new EventStatisticDataTrackerModel(Resources.Subscribes, "AccountStar", new List<string>() { "Username", "Date & Time" });
+            this.ResubscriberTracker = new EventStatisticDataTrackerModel(Resources.Resubscribes, "AccountSettings", new List<string>() { "Username", "Date & Time" });
+            this.GiftedSubscriptionsTracker = new EventStatisticDataTrackerModel(Resources.GiftedSubs, "AccountHeart", new List<string>() { "Gifter", "Receiver", });
 
-            this.AllSubsTracker = new StaticTextStatisticDataTrackerModel("Subscribers", "AccountStar", (StatisticDataTrackerModelBase stats) =>
+            this.AllSubsTracker = new StaticTextStatisticDataTrackerModel(Resources.Subscribers, "AccountStar", (StatisticDataTrackerModelBase stats) =>
             {
                 StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
                 staticStats.ClearValues();
@@ -95,12 +95,12 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
 
-            this.DonationsTracker = new EventStatisticDataTrackerModel("Donations", "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            this.DonationsTracker = new EventStatisticDataTrackerModel(Resources.Donations, "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
                 return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
             });
 
-            this.BitsTracker = new EventStatisticDataTrackerModel("Bits", "Decagram", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
+            this.BitsTracker = new EventStatisticDataTrackerModel(Resources.Bits, "Decagram", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
                 return $"{Resources.Users}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValue},    {Resources.Average}: {dataTracker.AverageValueString}";
             });

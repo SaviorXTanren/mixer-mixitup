@@ -87,7 +87,7 @@
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Grid.Column="6" x:Name="DeleteHotKeyButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteHotKeyButton_Click" Width="50" ToolTip="Delete" />
+                                <Button Grid.Column="6" x:Name="DeleteHotKeyButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteHotKeyButton_Click" Width="50" ToolTip="{x:Static resx:Resources.Delete}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

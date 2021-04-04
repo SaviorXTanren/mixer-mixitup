@@ -91,7 +91,7 @@
                     <Grid>
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontSize="22">Settings</TextBlock>
 
-                        <Button x:Name="CloseSettingsButton" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}" Click="CloseSettingsButton_Click" Width="40" ToolTip="Close">
+                        <Button x:Name="CloseSettingsButton" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}" Click="CloseSettingsButton_Click" Width="40" ToolTip="{x:Static resx:Resources.Close}">
                             <MaterialDesign:PackIcon Kind="CloseCircleOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>

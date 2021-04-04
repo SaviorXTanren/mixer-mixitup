@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.MainControls
     {
         public bool IsEnabled { get { return ChannelSession.Services.GameQueueService.IsEnabled; } }
 
-        public string EnableDisableButtonText { get { return (this.IsEnabled) ? "Disable" : "Enable"; } }
+        public string EnableDisableButtonText { get { return (this.IsEnabled) ? MixItUp.Base.Resources.Disable : MixItUp.Base.Resources.Enable; } }
 
         public bool SubPriority
         {

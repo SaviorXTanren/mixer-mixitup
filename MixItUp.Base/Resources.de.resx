@@ -1377,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>Namen</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Name des Profils</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Name des Profils:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>Nie</value>
@@ -2938,7 +2938,7 @@
     <value>Nicht abonniert</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Mit der Auto-Log-In-Einstellung kann sich Mix It Up automatisch im aktuell angemeldeten anmelden. HINWEIS: Wenn ein Mix It Up-Update vorhanden ist oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
+    <value>Mit der Auto-Log-In-Einstellung kann sich Mix It Up automatisch in das aktuell angemeldete Benutzerkonto einloggen. HINWEIS: Wenn ein Mix It Up-Update vorhanden ist oder Sie eines Ihrer Dienstkonten erneut authentifizieren müssen, müssen Sie sich in diesem Fall manuell anmelden.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Mit dieser Option können Sie jede Verfolgung Ihrer Daten über unsere Back-End-Services deaktivieren. Wir verfolgen Daten rund um App-Nutzung &amp; Abstürze, um Ihre Erfahrung zu verbessern. Wenn Sie diese Option auswählen, beenden wir die gesamte Nachverfolgung dieser Daten. Beachten Sie, dass dadurch keine Daten deaktiviert werden, die beim Hochladen und Überprüfen von Mix It Up-Store-Befehlen enthalten sind.</value>
@@ -4685,5 +4685,1226 @@ Aktiviert. Sie können es sich vorstellen, wie das Umschalten der Option "Unlock
   </data>
   <data name="Russian" xml:space="preserve">
     <value>Russisch</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>Channel Points Editor</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>Chat-Benutzer-Timeout</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>Chat-Flüsterer empfangen</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>Twitch Channel Bits bejubelt</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>Twitch Channel Followed</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>Twitch Channel Gehostet</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch Channel Massenabonnements begabt</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>Twitch Channel Points Eingelöst</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>Twitch Channel Raided</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>Twitch Channel Resubscribed</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>Twitch Channel Stream Start</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>Twitch Channel Stream Stop</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>Twitch-Kanal abonniert</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch ChannelSubscription Begabt</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>Twitch-Kanal unfollowed</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>Chat-Timeout</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>Umfrage</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>Raid</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>Clip</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>Spin the Wheel</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>Leeren Sie den Glas</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>Roll Credits</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>Tweet senden</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>Updatename</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>Klartext</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>Linke Maus nach unten</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>Linke Maus nach oben</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>Rechte Maus nach unten</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>RightMouseUp</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>Mittlere Maus nach unten</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>Mittlere Maus nach oben</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>Extra Mouse Down</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>Extra Mouse Up</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>Rad</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>Absolut</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Zucken</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>Affiliate</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRole" xml:space="preserve">
+    <value>Ein Titel mit derselben Rolle ist bereits vorhanden.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRoleMonths" xml:space="preserve">
+    <value>Ein Titel mit der gleichen Rolle &amp; Monate existiert bereits.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateTitle" xml:space="preserve">
+    <value>Ein Titel mit demselben Namen ist bereits vorhanden.</value>
+  </data>
+  <data name="CreateTitleErrorInvalidMonths" xml:space="preserve">
+    <value>Es muss ein gültiger Betrag von Monaten für den Titel angegeben werden.</value>
+  </data>
+  <data name="CreateTitleErrorNoTitle" xml:space="preserve">
+    <value>Es muss ein Name für den Titel angegeben werden.</value>
+  </data>
+  <data name="DeleteSettingsWarning" xml:space="preserve">
+    <value>Dadurch werden die Einstellungen des aktuell angemeldeten Kontos vollständig gelöscht und sind nicht umkehrbar. Sind Sie sicher, dass Sie dies tun möchten?</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>Empfohlene</value>
+  </data>
+  <data name="JSONToSpecialIdentifiers" xml:space="preserve">
+    <value>JSON zu speziellen Identifikatoren</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="RunNewUserWizardWarning" xml:space="preserve">
+    <value>Mix It Up wird neu gestartet und der Assistent für neue Benutzer wird erneut ausgeführt, wenn Sie sich anmelden. Auf diese Weise können Sie Ihre Daten erneut importieren, was Ihre Befehle und Benutzerdaten duplizieren und überschreiben könnte. Sind Sie sicher, dass Sie dies tun möchten?</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Unpin</value>
+  </data>
+  <data name="ApplicationBotToken" xml:space="preserve">
+    <value>Anwendung Bot Token</value>
+  </data>
+  <data name="ApplicationClientID" xml:space="preserve">
+    <value>Anwendungsclient-ID</value>
+  </data>
+  <data name="ApplicationClientSecret" xml:space="preserve">
+    <value>Anwendungsclient-Geheimnis</value>
+  </data>
+  <data name="CreatingCustomDiscordApplication" xml:space="preserve">
+    <value>Erstellen einer benutzerdefinierten Discord-Anwendung</value>
+  </data>
+  <data name="CustomApplication" xml:space="preserve">
+    <value>Benutzerdefinierte Anwendung</value>
+  </data>
+  <data name="DeveloperAPI" xml:space="preserve">
+    <value>Entwickler-API</value>
+  </data>
+  <data name="DeveloperAPIAdvanced" xml:space="preserve">
+    <value>Offen für lokales Netzwerk (muss als Administrator ausgeführt werden):</value>
+  </data>
+  <data name="DeveloperAPIInfo" xml:space="preserve">
+    <value>Die Entwickler-API ermöglicht erweiterte Interaktionen mit Mix It Up von anderen Anwendungen, die auf Ihrem Computer mit einer Reihe von REST-API-Diensten ausgeführt werden. Weitere Informationen hierzu finden Sie auf der Entwickler-API-Wiki-Seite.</value>
+  </data>
+  <data name="DeveloperAPIWarning" xml:space="preserve">
+    <value>WARNUNG: Dadurch werden die Entwickler-APIs alle Adressen abhören und möglicherweise Mix It Up für Anrufer von außerhalb Ihres Netzwerks öffnen. Verwenden Sie diese Option nur, wenn Sie wissen, was Sie tun!</value>
+  </data>
+  <data name="DiscordInfo1" xml:space="preserve">
+    <value>Mit der Discord-Service-Konnektivität können Sie Informationen über Ihr Discord-Konto abrufen, Nachrichten an Kanäle senden und das Audio über Sprachkanäle steuern. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei Discord anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="DiscordInfo2" xml:space="preserve">
+    <value>Die Standardanwendung "Mix It Up Discord" hat eine Abklingzeit von 30 Sekunden zwischen jeder Discord-Aktion, um Probleme mit der Preisbegrenzung für alle Benutzer zu verhindern. Um die Abklingzeit von 30 Sekunden zu umgehen, können Sie Ihre eigene benutzerdefinierte Discord-Anwendung erstellen.</value>
+  </data>
+  <data name="DiscordInvalidBotToken" xml:space="preserve">
+    <value>Bitte geben Sie einen gültigen benutzerdefinierten Bot-Token ein.</value>
+  </data>
+  <data name="DiscordInvalidClientId" xml:space="preserve">
+    <value>Geben Sie eine gültige benutzerdefinierte Client-ID ein.</value>
+  </data>
+  <data name="DiscordInvalidSecret" xml:space="preserve">
+    <value>Geben Sie einen gültigen benutzerdefinierten Geheimschlüssel für den Client ein.</value>
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+  </data>
+  <data name="ExtraLifeInfo1" xml:space="preserve">
+    <value>Mit der Extra Life-Service-Konnektivität können Sie Ereignisse auslösen, wenn Sie oder Ihr Team eine Spende erhalten.</value>
+  </data>
+  <data name="ExtraLifeInfo2" xml:space="preserve">
+    <value>Besuchen Sie zuerst die Seite Ihres Teams auf der Extra Life-Website und am Ende der Web-URL heißt es "teamID=_____". Geben Sie diese Zahl in das erste Feld ein, klicken Sie auf Suchen, wählen Sie Ihren Namen aus der Liste aus, und klicken Sie dann auf Die Schaltfläche Anmelden.</value>
+  </data>
+  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
+    <value>Bitte wählen Sie einen gültigen Extra Life-Teilnehmer aus.</value>
+  </data>
+  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige Extra Life Team-ID ein.</value>
+  </data>
+  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
+    <value>Die eingegebene Extra Life-Team-ID konnte nicht gefunden werden.</value>
+  </data>
+  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
+    <value>Trigger-Spendenaktion für Teamspenden:</value>
+  </data>
+  <data name="OverlayConnectionFailed1" xml:space="preserve">
+    <value>Overlay-Verbindungstest fehlgeschlagen, stellen Sie sicher, dass Sie die Mix It Up Overlay-Seite in Ihrer Streaming-Software sichtbar und ausgeführt haben.</value>
+  </data>
+  <data name="OverlayConnectionFailed2" xml:space="preserve">
+    <value>Wenn Sie Ihre Streaming-Software vor Mix It Up gestartet haben, versuchen Sie, die Webseitenquelle in Ihrer Streaming-Software zu aktualisieren.</value>
+  </data>
+  <data name="OverlayConnectionSuccess" xml:space="preserve">
+    <value>Overlay-Verbindungstest erfolgreich!</value>
+  </data>
+  <data name="OverlaysConnected" xml:space="preserve">
+    <value>{0}-Overlays insgesamt verbunden</value>
+    <comment>{0} is the number of overlays connected</comment>
+  </data>
+  <data name="ParticipantName" xml:space="preserve">
+    <value>Teilnehmername</value>
+  </data>
+  <data name="TeamID" xml:space="preserve">
+    <value>Team-ID</value>
+  </data>
+  <data name="AddAnimation" xml:space="preserve">
+    <value>Animation hinzufügen</value>
+  </data>
+  <data name="AuthorizationPin" xml:space="preserve">
+    <value>Autorisierungs-Pin</value>
+  </data>
+  <data name="Authorize" xml:space="preserve">
+    <value>Autorisieren</value>
+  </data>
+  <data name="BorderColor" xml:space="preserve">
+    <value>Rahmenfarbe</value>
+  </data>
+  <data name="FadeOutSeconds" xml:space="preserve">
+    <value>Fade Out (Sek.)</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Höhe (Pixel)</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>HTML-Stil</value>
+  </data>
+  <data name="HTMLText" xml:space="preserve">
+    <value>HTML-Text</value>
+  </data>
+  <data name="IFTTTInfo1" xml:space="preserve">
+    <value>Mit der IFTTT-Dienstkonnektivität können Sie IFTTT Web Hook-Applets auslösen und daten zur Verwendung bereitstellen.</value>
+  </data>
+  <data name="IFTTTInfo2" xml:space="preserve">
+    <value>Um eine Verbindung mit IFTTT herzustellen, benötigen Sie Ihren Web Hook-Schlüssel. Dies kann gefunden werden, indem Sie zu den Web-Hooks gehen und auf die Dokumentations-Schaltfläche in der oberen rechten Ecke klicken.</value>
+  </data>
+  <data name="IFTTTInvalidWebHookKey" xml:space="preserve">
+    <value>Geben Sie einen gültigen IFTTT-Webhakenschlüssel ein.</value>
+  </data>
+  <data name="IFTTTWebHookKey" xml:space="preserve">
+    <value>IFTTT Web-Hook-Schlüssel</value>
+  </data>
+  <data name="ImageFilePath" xml:space="preserve">
+    <value>Bilddateipfad / URL</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP-Adresse (optional)</value>
+  </data>
+  <data name="ItemHeight" xml:space="preserve">
+    <value>Elementhöhe (Pixel)</value>
+  </data>
+  <data name="ItemTextColor" xml:space="preserve">
+    <value>Elementtextfarbe</value>
+  </data>
+  <data name="ItemTextFont" xml:space="preserve">
+    <value>Artikeltextschriftart</value>
+  </data>
+  <data name="ItemTextSize" xml:space="preserve">
+    <value>Elementtextgröße (Pixel)</value>
+  </data>
+  <data name="ItemWidth" xml:space="preserve">
+    <value>Elementbreite (Pixel)</value>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+  </data>
+  <data name="JustGivingInfo1" xml:space="preserve">
+    <value>JustGiving Service-Konnektivität ermöglicht es Ihnen, Aktionen durchzuführen, wenn eine Spende empfangen wird. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei JustGiving anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="LayerPosition" xml:space="preserve">
+    <value>Layer-Position</value>
+  </data>
+  <data name="LeftPixelPosition" xml:space="preserve">
+    <value>Linke Pixelposition</value>
+  </data>
+  <data name="ListAlignment" xml:space="preserve">
+    <value>Listenausrichtung</value>
+  </data>
+  <data name="OBSStudioFailed" xml:space="preserve">
+    <value>OBS Studio-Verbindungstest fehlgeschlagen, Stellen Sie sicher, obS Studio läuft, das obs-websocket Plugin installiert ist, und die Verbindung und das Kennwort entsprechen Ihren Einstellungen in OBS Studio.</value>
+  </data>
+  <data name="OBSStudioInfo1" xml:space="preserve">
+    <value>Mit dem OBS Studio-Dienst können Sie direkt mit Ihrer OBS Studio-Instanz interagieren, um Änderungen an Szenen und Quellen durchzuführen.</value>
+  </data>
+  <data name="OBSStudioInfo2" xml:space="preserve">
+    <value>OBS Studio 25.0 oder höher ist erforderlich, und Sie müssen das OBS WebSocket Installer ausführen.</value>
+  </data>
+  <data name="OBSStudioSuccess" xml:space="preserve">
+    <value>OBS Studio-Verbindungstest erfolgreich!</value>
+  </data>
+  <data name="OBSWebSocketInstaller" xml:space="preserve">
+    <value>OBS WebSocket Installer</value>
+  </data>
+  <data name="OverlayInfo1" xml:space="preserve">
+    <value>Fügen Sie Ihrer Streaming-Software eine Webbrowserquelle mit der folgenden URL hinzu:</value>
+  </data>
+  <data name="OverlayInfo2" xml:space="preserve">
+    <value>Um das Mix It Up Overlay zu verwenden, stellen Sie bitte sicher, dass Mix It Up zuerst ausgeführt wird, bevor Sie Ihre Streaming-Software starten oder die Webseitenquelle in Ihrer Streaming-Software aktualisieren, nachdem Sie Mix It Up gestartet haben.</value>
+  </data>
+  <data name="OverlayInfo3" xml:space="preserve">
+    <value>Multi-Overlay-Unterstützung finden Sie unter Einstellungen -&gt; Overlay.</value>
+  </data>
+  <data name="OverlayInfo4" xml:space="preserve">
+    <value>Wenn Sie ÜBER OBS Studio, XSplit oder Streamlabs OBS-Konnektivitätseinrichtung verfügen, können wir die Webbrowserquelle, die das Mix It Up-Overlay enthält, beim Starten von Mix It Up automatisch aktualisieren. Geben Sie einfach den Namen der Quelle unten ein:</value>
+  </data>
+  <data name="OverlayInfo5" xml:space="preserve">
+    <value>Geben Sie einfach den Namen der Web-Browser-Quelle in Ihrer Streaming-Software unten ein:</value>
+  </data>
+  <data name="OvrStreamInfo1" xml:space="preserve">
+    <value>OvrStream ist ein leistungsstarker Motion-Grafik-Editor für Warnungen und Überlagerungen. Mit Mix It Up können Sie Ihre Visualisierungen auslösen und Variablenwerte für sie in OvrStream festlegen.</value>
+  </data>
+  <data name="OvrStreamInfo2" xml:space="preserve">
+    <value>Weitere Informationen zu OvrStream finden Sie unter folgendem Link:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort (optional)</value>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+  </data>
+  <data name="PatreonInfo1" xml:space="preserve">
+    <value>Mit der Patreon-Servicekonnektivität können Sie Aktionen ausführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei Patreon anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Prozentsatz</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Pixel</value>
+  </data>
+  <data name="PositionPercentageFromLeft" xml:space="preserve">
+    <value>Position % Von links:</value>
+  </data>
+  <data name="PositionPercentageFromTop" xml:space="preserve">
+    <value>Position % von oben:</value>
+  </data>
+  <data name="RemoveAnimation" xml:space="preserve">
+    <value>Entfernen Animation</value>
+  </data>
+  <data name="ScreenPosition" xml:space="preserve">
+    <value>Bildschirmposition:</value>
+  </data>
+  <data name="ScrollSpeed" xml:space="preserve">
+    <value>Scroll-Geschwindigkeit</value>
+  </data>
+  <data name="SectionHTMLStyle" xml:space="preserve">
+    <value>Abschnitt HTML-Stil</value>
+  </data>
+  <data name="SectionTextColor" xml:space="preserve">
+    <value>AbschnittStextfarbe</value>
+  </data>
+  <data name="SectionTextFont" xml:space="preserve">
+    <value>Abschnittstextschriftart</value>
+  </data>
+  <data name="SectionTextSize" xml:space="preserve">
+    <value>Abschnittstextgröße (Pixel)</value>
+  </data>
+  <data name="SectionType" xml:space="preserve">
+    <value>Abschnittstyp</value>
+  </data>
+  <data name="SelectedCampaign" xml:space="preserve">
+    <value>Ausgewählte Kampagne</value>
+  </data>
+  <data name="SelectedFundraiser" xml:space="preserve">
+    <value>Ausgewählte Fundraiser</value>
+  </data>
+  <data name="ServiceConnectAdditionalDetails" xml:space="preserve">
+    <value>Weitere Details:</value>
+  </data>
+  <data name="ServiceConnectFailed" xml:space="preserve">
+    <value>Es konnte keine Verbindung zum Dienst hergestellt werden, versuchen Sie es erneut. Wenn dies so weitergeht, wenden Sie sich bitte an unsere Unterstützung für weitere Unterstützung.</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>Einfach</value>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatare</value>
+  </data>
+  <data name="StreamAvatarsInfo1" xml:space="preserve">
+    <value>Die Stream Avatars-Funktionalität wird direkt über das Stream Avatars-Programm abgewickelt. Bevor Sie Stream Avatars mit Mix It Up verbinden, müssen Sie sicherstellen, dass die Entwickler-API auf der Seite Dienste aktiviert ist.</value>
+  </data>
+  <data name="StreamAvatarsInfo2" xml:space="preserve">
+    <value>Informationen dazu, wie Sie Stream Avatare mit Mix It Up verknüpfen können, finden Sie im Wiki-Bereich Stream Avatars.</value>
+  </data>
+  <data name="StreamAvatarsWikiSection" xml:space="preserve">
+    <value>Stream Avatars Wiki-Sektion</value>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+  </data>
+  <data name="StreamDeckInfo1" xml:space="preserve">
+    <value>Mit diesem Stream Deck-Plug-in können Sie Mix It Up-Befehle direkt von Ihrem Stream Deck-Gerät aus ausführen, sowie andere Statusinformationen zu Ihrem Stream.</value>
+  </data>
+  <data name="StreamDeckInfo2" xml:space="preserve">
+    <value>Stellen Sie zunächst sicher, dass die Stream Deck-Software auf mindestens Version 4.0 aktualisiert wird und der Entwickler-API-Dienst in Mix It Up aktiviert ist. Um das Mix It Up Plugin zu installieren, klicken Sie auf "Mehr Aktionen..." in der rechten unteren Ecke, und suchen Sie dann im Fenster nach "Mix It Up".</value>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+  </data>
+  <data name="StreamElementsInfo1" xml:space="preserve">
+    <value>Mit der StreamElements-Dienstkonnektivität können Sie Aktionen ausführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei StreamElements anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="StreamingSoftwareSourceName" xml:space="preserve">
+    <value>Streaming-Software-Quellname</value>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+  </data>
+  <data name="StreamJarInfo1" xml:space="preserve">
+    <value>StreamJar-Dienstkonnektivität ermöglicht es Ihnen, Aktionen auszuführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei StreamJar anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="StreamlabsInfo1" xml:space="preserve">
+    <value>Mit der Streamlabs-Dienstkonnektivität können Sie Aktionen ausführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei Streamlabs anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
+    <value>Streamlabs OBS-Verbindungstest fehlgeschlagen, stellen Sie sicher, dass Streamlabs OBS ausgeführt wird.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
+    <value>Streamlabs OBS-Verbindungstest erfolgreich!</value>
+  </data>
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+    <value>Mit dem Streamlabs OBS-Dienst können Sie direkt mit Ihrer Streamlabs-OBS-Instanz interagieren, um Änderungen an Szenen und Quellen durchzuführen.</value>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+  </data>
+  <data name="StreamlootsAlertsOverlayURL" xml:space="preserve">
+    <value>Streamloots Alerts Overlay URL</value>
+  </data>
+  <data name="StreamlootsInfo1" xml:space="preserve">
+    <value>Mit der Streamloots-Dienstkonnektivität können Sie Ereignisse auslösen, wenn eine Karte auf Ihrem Kanal verwendet wird.</value>
+  </data>
+  <data name="StreamlootsInfo2" xml:space="preserve">
+    <value>Um eine Verbindung zu Streamloots herzustellen, wechseln Sie zu Ihrer Streamloots-Dashboardseite, klicken Sie im linken Menü auf Warnungen, kopieren Sie Ihre Warnungs-Overlay-URL in das Textfeld, und klicken Sie auf Anmelden.</value>
+  </data>
+  <data name="StreamlootsInvalidUrl" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige Streamloots URL ({0}) ein.</value>
+    <comment>{0} is a url format</comment>
+  </data>
+  <data name="SubEquivalent" xml:space="preserve">
+    <value>Sub-Äquivalent</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Testverbindung</value>
+  </data>
+  <data name="TextFont" xml:space="preserve">
+    <value>Textschriftart</value>
+  </data>
+  <data name="TextHeight" xml:space="preserve">
+    <value>Texthöhe (Pixel)</value>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+  </data>
+  <data name="TiltifyInfo1" xml:space="preserve">
+    <value>Tiltify Service-Konnektivität ermöglicht es Ihnen, Aktionen durchzuführen, wenn eine Spende empfangen wird. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei Tiltify anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen. Sobald Sie Tiltify verbunden haben, müssen Sie die Kampagne auswählen, die Sie verwenden möchten, wenn Sie Spenden erkennen.</value>
+  </data>
+  <data name="TiltifyInfo2" xml:space="preserve">
+    <value>HINWEIS: Bitte melden Sie sich bei der Anmeldung mit der E-Mail-Option bei Ihrem Konto an. Eine Anmeldung mit verbundenen Konten ist derzeit nicht möglich.</value>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+  </data>
+  <data name="TipeeeStreamInfo1" xml:space="preserve">
+    <value>TipeeeStream-Dienstkonnektivität ermöglicht es Ihnen, Aktionen auszuführen, wenn eine Spende eingegangen ist. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei TipeeeStream anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="TitleHTMLStyle" xml:space="preserve">
+    <value>Titel HTML-Stil</value>
+  </data>
+  <data name="TopPixelPosition" xml:space="preserve">
+    <value>TopPixel-Position</value>
+  </data>
+  <data name="TotalToShow" xml:space="preserve">
+    <value>Gesamt zu zeigen</value>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+  </data>
+  <data name="TreatStreamInfo1" xml:space="preserve">
+    <value>TreatStream-Dienstkonnektivität ermöglicht es Ihnen, Aktionen auszuführen, wenn eine Behandlung empfangen wird. Wenn Sie sich anmelden, wird eine Authentifizierungswebseite geöffnet, auf der Sie aufgefordert werden, sich bei TreatStream anzumelden und Mix It Up zu genehmigen, um auf Ihre Informationen zuzugreifen.</value>
+  </data>
+  <data name="TwitterInfo1" xml:space="preserve">
+    <value>Die Twitter-Dienstkonnektivität ermöglicht es Ihnen, Tweets auf Ihrem Konto zu senden und Ihre persönlichen Tweets einfach nach der Verwendung in Ihrem Stream abzufragen.</value>
+  </data>
+  <data name="UserHTMLStyle" xml:space="preserve">
+    <value>User HTMLStyle</value>
+  </data>
+  <data name="WebHooksPage" xml:space="preserve">
+    <value>Web-Hooks-Seite</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Breite (Pixel)</value>
+  </data>
+  <data name="XSplitConnectionFailed" xml:space="preserve">
+    <value>XSplit-Verbindungstest fehlgeschlagen, stellen Sie sicher, dass Sie die Mix It Up XSplit-Erweiterung in XSplit hinzugefügt und geöffnet haben.</value>
+  </data>
+  <data name="XSplitConnectionSuccess" xml:space="preserve">
+    <value>XSplit-Verbindungstest erfolgreich!</value>
+  </data>
+  <data name="XSplitFolder" xml:space="preserve">
+    <value>XSplit-Ordner</value>
+  </data>
+  <data name="XSplitInfo1" xml:space="preserve">
+    <value>Mit dem XSplit-Dienst können Sie direkt mit Ihrer XSplit-Instanz interagieren, um Änderungen an Szenen und Quellen durchzuführen.</value>
+  </data>
+  <data name="XSplitInfo2" xml:space="preserve">
+    <value>Die Mix It Up-Erweiterung muss aus dem XSplit-Ordner installiert und in XSplit ausgeführt werden. Anweisungen dazu finden Sie auf der XSplit Service-Seite.</value>
+  </data>
+  <data name="XSplitServicePage" xml:space="preserve">
+    <value>XSplit-Dienstseite</value>
+  </data>
+  <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
+    <value>Hintergrundbild-URL (300 Zeichen max.)</value>
+  </data>
+  <data name="BackupSettingsLoadedError" xml:space="preserve">
+    <value>Eine oder mehrere der Einstellungsdateien konnten aufgrund von Dateibeschädigungen nicht geladen werden, und stattdessen wurde die letzte lokale Sicherung geladen.</value>
+  </data>
+  <data name="BanUserPrompt" xml:space="preserve">
+    <value>Dadurch wird der Benutzer {0} von diesem Kanal gesperrt. Bist du sicher?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="BitsBonusZeroOrMore" xml:space="preserve">
+    <value>Der Bits-Bonus muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="BitsHeader" xml:space="preserve">
+    <value>Bits:</value>
+  </data>
+  <data name="BoardHeader" xml:space="preserve">
+    <value>Bord:</value>
+  </data>
+  <data name="ClearGameQueuePrompt" xml:space="preserve">
+    <value>Möchten Sie die Warteschlange für die Spielwarteschlange wirklich löschen?</value>
+  </data>
+  <data name="CommandNameRequiredForShop" xml:space="preserve">
+    <value>Für den Shop muss ein Befehlsname angegeben werden.</value>
+  </data>
+  <data name="CommandRequired" xml:space="preserve">
+    <value>Ein Befehl muss ausgewählt werden.</value>
+  </data>
+  <data name="CurrencyImportFailed" xml:space="preserve">
+    <value>Wir konnten die Daten nicht importieren. Stellen Sie sicher, dass sich Ihre Datei in einem der folgenden Formate befindet:</value>
+  </data>
+  <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
+    <value>Der Name muss mindestens 1 Buchstabe enthält.</value>
+  </data>
+  <data name="CurrencyRankInventoryNameProtected" xml:space="preserve">
+    <value>Die folgenden Namen sind reserviert und können nicht verwendet werden:</value>
+  </data>
+  <data name="CurrencyRankNameDuplicate" xml:space="preserve">
+    <value>Es gibt bereits ein Währungs- oder Rangsystem mit diesem Namen.</value>
+  </data>
+  <data name="CurrencyRankNameNoDigits" xml:space="preserve">
+    <value>Der Name darf keine Zahlenziffern enthalten.</value>
+  </data>
+  <data name="CurrencyRankNameRequired" xml:space="preserve">
+    <value>Ein {0} Name muss angegeben werden.</value>
+    <comment>{0} is the type (currency or rank)</comment>
+  </data>
+  <data name="CustomCommandAlreadyExists" xml:space="preserve">
+    <value>Es ist bereits ein benutzerdefinierter Befehl für diese Ebene vorhanden.</value>
+  </data>
+  <data name="CustomLevelGreaterThanZero" xml:space="preserve">
+    <value>Sie müssen eine Zahl größer als 0 angeben.</value>
+  </data>
+  <data name="DamageAnimation" xml:space="preserve">
+    <value>Schadensanimation</value>
+  </data>
+  <data name="DataFileImportFailed" xml:space="preserve">
+    <value>Wir konnten keine Daten aus der Datei lesen. Stellen Sie sicher, dass es nicht bereits in einem anderen Programm geöffnet ist.</value>
+  </data>
+  <data name="DataFileInvalidColumn" xml:space="preserve">
+    <value>Für jede Spalte, die Sie einschließen möchten, muss eine Zahl 0 oder höher angegeben werden.</value>
+  </data>
+  <data name="DataFileRequiredColumns" xml:space="preserve">
+    <value>Ihre Datendatei muss mindestens die Spalten Benutzer-ID oder Benutzername enthalten.</value>
+  </data>
+  <data name="DefaultMaxGreaterThanZero" xml:space="preserve">
+    <value>Der standardmäßige Höchstbetrag muss größer als 0 sein.</value>
+  </data>
+  <data name="DeleteItemPrompt" xml:space="preserve">
+    <value>Möchten Sie dies wirklich löschen?</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>Möchten Sie dieses Profil wirklich löschen?</value>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>Möchten Sie dieses Angebot wirklich löschen?</value>
+  </data>
+  <data name="DeleteUserDataPrompt" xml:space="preserve">
+    <value>Dadurch werden die Daten dieses Benutzers gelöscht, die ihre Stunden,Währung, Rang und benutzerdefinierten Benutzerbefehle enthalten. Sind Sie sicher, dass Sie dies tun möchten?</value>
+  </data>
+  <data name="DeleteWidgetPrompt" xml:space="preserve">
+    <value>Möchten Sie dieses Widget wirklich löschen?</value>
+  </data>
+  <data name="DemoteUserPrompt" xml:space="preserve">
+    <value>Dadurch wird der Benutzer {0} von einem Moderator dieses Kanals herabgestuft. Bist du sicher?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="DeviceApprovedLine1" xml:space="preserve">
+    <value>Das Gerät {0} wurde zugelassen.</value>
+    <comment>{0} is the device name</comment>
+  </data>
+  <data name="DeviceApprovedLine2" xml:space="preserve">
+    <value>Um es zu konfigurieren, gehen Sie zu Einstellungen -&gt; Remote.</value>
+  </data>
+  <data name="DeviceCodeHeader" xml:space="preserve">
+    <value>Gerät 6-Stelliger Code:</value>
+  </data>
+  <data name="DeviceCodeInvalid" xml:space="preserve">
+    <value>Der eingegebene Code ist ungültig.</value>
+  </data>
+  <data name="DeviceNoCode" xml:space="preserve">
+    <value>Ein Clientgerät konnte mit dem angegebenen Code nicht gefunden werden.</value>
+  </data>
+  <data name="DonationBonusZeroOrMore" xml:space="preserve">
+    <value>Der Spendenbonus muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="DonationsHeader" xml:space="preserve">
+    <value>Spenden:</value>
+  </data>
+  <data name="DuplicateItemName" xml:space="preserve">
+    <value>Ein Element mit demselben Namen ist bereits vorhanden.</value>
+  </data>
+  <data name="DuplicateProfileName" xml:space="preserve">
+    <value>Ein Profil mit demselben Namen ist bereits vorhanden.</value>
+  </data>
+  <data name="EndDateInvalid" xml:space="preserve">
+    <value>Das Enddatum muss nach dem Startdatum liegen.</value>
+  </data>
+  <data name="ErrorDetailsHeader" xml:space="preserve">
+    <value>Fehlerdetails:</value>
+  </data>
+  <data name="FailedToConnectToTwitch" xml:space="preserve">
+    <value>Fehler beim Herstellen einer Verbindung mit Twitch-Diensten. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FailedToFinalizeInitialization" xml:space="preserve">
+    <value>Fehler beim Abschließen der Initialisierung. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FailedToGetChannelInformation" xml:space="preserve">
+    <value>Fehler beim Abrufen von Kanalinformationen. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FailedToInitializeBotAccount" xml:space="preserve">
+    <value>Fehler beim Initialisieren des Bot-Kontos</value>
+  </data>
+  <data name="FailedToInitializeExternalServices" xml:space="preserve">
+    <value>Fehler beim Initialisieren externer Dienste. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FailedToInitializeSettings" xml:space="preserve">
+    <value>Fehler beim Initialisieren der Einstellungen. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FailedToInitializeStreamerBasedServices" xml:space="preserve">
+    <value>Fehler beim Initialisieren von Streamer-basierten Diensten. Wenn dies weiterhin der Zuspruch bietet, besuchen Sie bitte die Mix It Up Discord.</value>
+  </data>
+  <data name="FollowBonusZeroOrMore" xml:space="preserve">
+    <value>Der Follow-Bonus muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="FollowsHeader" xml:space="preserve">
+    <value>Folgt:</value>
+  </data>
+  <data name="FontColor" xml:space="preserve">
+    <value>Schriftfarbe</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>Fontname</value>
+  </data>
+  <data name="GoalAmount" xml:space="preserve">
+    <value>Zielbetrag</value>
+  </data>
+  <data name="GoalType" xml:space="preserve">
+    <value>Zieltyp</value>
+  </data>
+  <data name="HealingBonus" xml:space="preserve">
+    <value>Heilungsbonus</value>
+  </data>
+  <data name="HostBonusPerUser" xml:space="preserve">
+    <value>Host-Bonus (pro Benutzer)</value>
+  </data>
+  <data name="HostBonusZeroOrMore" xml:space="preserve">
+    <value>Der Host-Bonus muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="HostsHeader" xml:space="preserve">
+    <value>Hosts:</value>
+  </data>
+  <data name="HotKeyRequired" xml:space="preserve">
+    <value>Es muss eine Hotkeykonfiguration festgelegt werden.</value>
+  </data>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>Wir konnten keine Daten aus der Datei lesen. Stellen Sie sicher, dass es nicht bereits in einem anderen Programm geöffnet ist. Wenn dies weiterhin der Nachbereiter ist, wenden Sie sich bitte an die Unterstützung.</value>
+  </data>
+  <data name="ImportPointsPrompt1" xml:space="preserve">
+    <value>Auf diese Weise können Sie die Gesamtbeträge importieren, die jeder Benutzer hatte, sie diesem {0} zuweisen und alle Beträge überschreiben, die jeder Benutzer hat.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="ImportPointsPrompt2" xml:space="preserve">
+    <value>Dieser Prozess kann einige Zeit in Anspruch nehmen; Sind Sie sicher, dass Sie dies tun möchten?</value>
+  </data>
+  <data name="ImportSuccess" xml:space="preserve">
+    <value>{0} Benutzer wurden erfolgreich importiert.</value>
+    <comment>{0} is the number of successes</comment>
+  </data>
+  <data name="ImportWithFailures" xml:space="preserve">
+    <value>{0} Benutzer wurden erfolgreich importiert, {1} Benutzer konnten jedoch nicht importiert werden. Dies kann auf ungültige Daten oder das Nicht-Auffinden ihrer Informationen auf der Plattform zurückzuführen sein. Bitte wenden Sie sich bei Bedarf an den Support, um weitere Hilfe hierzu zu erhalten.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
+  <data name="InvalidDataFile" xml:space="preserve">
+    <value>Es muss eine gültige Datendatei angegeben werden.</value>
+  </data>
+  <data name="InvalidPosition" xml:space="preserve">
+    <value>Eine gültige Position für dieses Overlay-Widget muss ausgewählt werden.</value>
+  </data>
+  <data name="InventoryNameDuplicate" xml:space="preserve">
+    <value>Es ist bereits eine Bestandsaufnahme mit diesem Namen vorhanden.</value>
+  </data>
+  <data name="InventoryNameRequired" xml:space="preserve">
+    <value>Es muss ein Lagername angegeben werden.</value>
+  </data>
+  <data name="ItemBuyAmountZeroOrMore" xml:space="preserve">
+    <value>Der Artikelkaufbetrag muss entweder leer oder eine Zahl größer als 0 sein.</value>
+  </data>
+  <data name="ItemMaxAmountZeroOrMore" xml:space="preserve">
+    <value>Der Artikelhöchstbetrag muss entweder leer oder eine Zahl größer als 0 sein.</value>
+  </data>
+  <data name="ItemNameRequired" xml:space="preserve">
+    <value>Sie müssen einen Namen für das Element angeben.</value>
+  </data>
+  <data name="ItemSellAmountZeroOrMore" xml:space="preserve">
+    <value>Der Artikelverkaufsbetrag muss entweder leer oder eine Zahl größer als 0 sein.</value>
+  </data>
+  <data name="LengthSeconds" xml:space="preserve">
+    <value>Länge (Sekunden)</value>
+  </data>
+  <data name="LessThanMaxLevel" xml:space="preserve">
+    <value>Sie müssen eine Zahl angeben, die kleiner oder gleich der Max-Ebene ist.</value>
+  </data>
+  <data name="LoopHeader" xml:space="preserve">
+    <value>Schleife:</value>
+  </data>
+  <data name="MaxAmountMustBeZeroOrMore" xml:space="preserve">
+    <value>Der maximale Betrag muss größer als 0 sein oder kann als 0 für keinen maximalen Betrag belassen werden.</value>
+  </data>
+  <data name="MaxCustomLevelCommand" xml:space="preserve">
+    <value>Es kann keine benutzerdefinierten Level-Up-Befehle geben, die größer als die Maximale Ebene sind.</value>
+  </data>
+  <data name="MaxLevelGreaterThanZero" xml:space="preserve">
+    <value>Die Maximale Ebene muss größer als 0 sein.</value>
+  </data>
+  <data name="MinimumActivityRateZeroOrMore" xml:space="preserve">
+    <value>Die Mindestaktivitätsrate muss 0 oder höher sein.</value>
+  </data>
+  <data name="MinimumAmount" xml:space="preserve">
+    <value>Mindestbetrag</value>
+  </data>
+  <data name="MinimumAmountRequired" xml:space="preserve">
+    <value>Es muss ein Mindestbetrag angegeben werden.</value>
+  </data>
+  <data name="MinSecondsToShow" xml:space="preserve">
+    <value>Min Sekunden zu zeigen</value>
+  </data>
+  <data name="ModeratorBonusZeroOrMore" xml:space="preserve">
+    <value>Der Moderator-Bonus muss 0 oder höher sein.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Es muss ein Name angegeben werden.</value>
+  </data>
+  <data name="NewBossAnimation" xml:space="preserve">
+    <value>Neue Boss-Animation</value>
+  </data>
+  <data name="NewLeader" xml:space="preserve">
+    <value>Neuer Leader</value>
+  </data>
+  <data name="OfflineRateVsInterval" xml:space="preserve">
+    <value>Die Offlineminuten können nicht 0 sein, wenn der Offlinebetrag größer als 0 ist.</value>
+  </data>
+  <data name="OneCustomLevelCommand" xml:space="preserve">
+    <value>Es kann nur 1 benutzerdefinierter Level-up-Befehl pro einzelner Ebene vorhanden sein.</value>
+  </data>
+  <data name="OneItemRequired" xml:space="preserve">
+    <value>Mindestens 1 Element muss hinzugefügt werden.</value>
+  </data>
+  <data name="OneRankRequired" xml:space="preserve">
+    <value>Es muss mindestens ein Rang erstellt werden.</value>
+  </data>
+  <data name="OnFollowBonusZeroOrMore" xml:space="preserve">
+    <value>Der On Follow Bonus muss 0 oder höher sein.</value>
+  </data>
+  <data name="OnGoalReached" xml:space="preserve">
+    <value>Auf Ziel erreicht</value>
+  </data>
+  <data name="OnHostBonusZeroOrMore" xml:space="preserve">
+    <value>Der On Host-Bonus muss 0 oder höher sein.</value>
+  </data>
+  <data name="OnlineRateMustBeZeroOrMore" xml:space="preserve">
+    <value>Der Online-Betrag &amp; Minuten muss 0 oder höher sein.</value>
+  </data>
+  <data name="OnlineRateVsInterval1" xml:space="preserve">
+    <value>Die Online-Minuten können nicht 0 sein, wenn der Onlinebetrag größer als 0 ist.</value>
+  </data>
+  <data name="OnlineRateVsInterval2" xml:space="preserve">
+    <value>Der Offlinebetrag &amp; Minuten muss 0 oder höher sein.</value>
+  </data>
+  <data name="OnNewStreamBoss" xml:space="preserve">
+    <value>Auf New Stream Boss</value>
+  </data>
+  <data name="OnSubscribeBonusZeroOrMore" xml:space="preserve">
+    <value>Der Bonus auf Abonnieren muss 0 oder höher sein.</value>
+  </data>
+  <data name="OnTimerCompleted" xml:space="preserve">
+    <value>On Timer abgeschlossen</value>
+  </data>
+  <data name="OverkillBonus" xml:space="preserve">
+    <value>Overkill Bonus</value>
+  </data>
+  <data name="OverlayMissingDetails" xml:space="preserve">
+    <value>Es fehlen Details für das Überlagerungselement.</value>
+  </data>
+  <data name="OverlayRequired" xml:space="preserve">
+    <value>Es muss ein zu verwendendes Überlagerungsüberlagerungsmittel ausgewählt werden.</value>
+  </data>
+  <data name="PointsForLevelUpGreaterThanZero" xml:space="preserve">
+    <value>Die Punkte für Level Up müssen größer als 0 sein.</value>
+  </data>
+  <data name="ProfileType" xml:space="preserve">
+    <value>Profiltyp</value>
+  </data>
+  <data name="ProgressColor" xml:space="preserve">
+    <value>Fortschrittsfarbe</value>
+  </data>
+  <data name="PromoteUserPrompt" xml:space="preserve">
+    <value>Dadurch wird der Benutzer {0} zu einem Moderator dieses Kanals heraufbefördern. Bist du sicher?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="RaidBonusPerUser" xml:space="preserve">
+    <value>Raid-Bonus (pro Benutzer)</value>
+  </data>
+  <data name="RaidsHeader" xml:space="preserve">
+    <value>Überfälle:</value>
+  </data>
+  <data name="RankRequired" xml:space="preserve">
+    <value>Es muss ein Rangname angegeben werden.</value>
+  </data>
+  <data name="RegularBonusZeroOrMore" xml:space="preserve">
+    <value>Der reguläre Bonus muss 0 oder höher sein.</value>
+  </data>
+  <data name="RemoteFailed" xml:space="preserve">
+    <value>Es konnte keine Verbindung mit dem Remotedienst hergestellt werden, versuchen Sie es erneut.</value>
+  </data>
+  <data name="RemoteServicesFailed" xml:space="preserve">
+    <value>Es konnte keine Verbindung mit dem Remotedienst hergestellt werden, versuchen Sie es erneut.</value>
+  </data>
+  <data name="RemoteTwoLayersMax" xml:space="preserve">
+    <value>Bretter können nur bis zu 2 Schichten tief sein.</value>
+  </data>
+  <data name="ResetAfterDays" xml:space="preserve">
+    <value>Zurücksetzen nach Tagen</value>
+  </data>
+  <data name="ResetAllItemPrompt" xml:space="preserve">
+    <value>Möchten Sie alle Artikelbeträge zurücksetzen?</value>
+  </data>
+  <data name="ResetAllProgressPrompt" xml:space="preserve">
+    <value>Möchten Sie den Fortschritt wirklich für alle Benutzer zurücksetzen?</value>
+  </data>
+  <data name="ResetCurrencyRankPointsPrompt" xml:space="preserve">
+    <value>Möchten Sie alle {0} Punkte zurücksetzen?</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt1" xml:space="preserve">
+    <value>Diese Option setzt alle {0} Punkte für diesen {0} zurück und weist jedem Benutzer einen Betrag zu, der direkt der SAVED-Onlinerate entspricht, nicht der aktuell bearbeiteten Online-Rate. Bevor Sie diese Option verwenden, speichern Sie bitte alle Änderungen an diesem {0}, bearbeiten Sie sie erneut, und wählen Sie dann diese Option aus.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
+    <value>EX: Wenn die Onlinerate "1 pro Stunde" ist und ein Benutzer 16 Anzeigestunden hat, werden die {0} Punkte dieses Benutzers auf 16 festgelegt.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
+    <value>Dieser Prozess kann einige Zeit in Anspruch nehmen; Sind Sie sicher, dass Sie dies tun möchten?</value>
+  </data>
+  <data name="RetroactiveUnsupported" xml:space="preserve">
+    <value>Der Kurstyp für diese Währung unterstützt nicht rückwirkend die Angabe von Punkten.</value>
+  </data>
+  <data name="ScorpBotInstallationDirectory" xml:space="preserve">
+    <value>ScorpBot-Installationsverzeichnis</value>
+  </data>
+  <data name="ScrollWidthPixels" xml:space="preserve">
+    <value>Bildlaufbreite (Pixel)</value>
+  </data>
+  <data name="ServiceDisconnectedLine1" xml:space="preserve">
+    <value>Diese Dienste haben die Verbindung getrennt</value>
+  </data>
+  <data name="ServiceDisconnectedLine2" xml:space="preserve">
+    <value>und versuchen, die Verbindung wiederherzustellen:</value>
+  </data>
+  <data name="SessionInitializationFailed" xml:space="preserve">
+    <value>Fehler beim Initialisieren der Sitzung. Wenn dies bitte so weitergeht, besuchen Sie die Mix It Up Discord für Unterstützung.</value>
+  </data>
+  <data name="SettingsChangedRestartPrompt" xml:space="preserve">
+    <value>Einige der Einstellungen, die Sie geändert haben, erfordern einen Neustart, um wirksam zu werden. Möchten Sie Mix It Up jetzt neu starten?</value>
+  </data>
+  <data name="SettingsLoadFailure" xml:space="preserve">
+    <value>Mindestens eine Einstellungsdatei konnte nicht geladen werden. Bitte besuchen Sie die Mix It Up Discord für Unterstützung in dieser Frage.</value>
+  </data>
+  <data name="Shadow" xml:space="preserve">
+    <value>Schatten (optional)</value>
+  </data>
+  <data name="ShopCurrencyRequired" xml:space="preserve">
+    <value>Für den Shop muss eine Währung angegeben werden.</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Größe (Pixel)</value>
+  </data>
+  <data name="StartingAmount" xml:space="preserve">
+    <value>Startbetrag</value>
+  </data>
+  <data name="StartingHealth" xml:space="preserve">
+    <value>Starting Health</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Startzeit (Sek.)</value>
+  </data>
+  <data name="StreamlabsChatBotDataFile" xml:space="preserve">
+    <value>Streamlabs ChatBot Datendatei</value>
+  </data>
+  <data name="StreamPassNameDuplicate" xml:space="preserve">
+    <value>Es gibt bereits einen Stream Pass mit diesem Namen.</value>
+  </data>
+  <data name="StreamPassNameInvalid" xml:space="preserve">
+    <value>Der Name darf nur Buchstaben, Zahlen oder Leerzeichen enthalten.</value>
+  </data>
+  <data name="StreamPassNameRequired" xml:space="preserve">
+    <value>Es muss ein gültiger Name angegeben werden.</value>
+  </data>
+  <data name="SubMultiplierOneOrMore" xml:space="preserve">
+    <value>Der Submultiplikator muss größer oder gleich 1,0 sein.</value>
+  </data>
+  <data name="SubResubsHeader" xml:space="preserve">
+    <value>Subs/Resubs:</value>
+  </data>
+  <data name="SubscriberBonusZeroOrMore" xml:space="preserve">
+    <value>Der Abonnentenbonus muss 0 oder höher sein.</value>
+  </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>Wechseln zu Dark Theme</value>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>Wechseln zu Light Theme</value>
+  </data>
+  <data name="TextSize" xml:space="preserve">
+    <value>Textgröße (Pixel)</value>
+  </data>
+  <data name="TotalFollowsHeader" xml:space="preserve">
+    <value>Folgen:</value>
+  </data>
+  <data name="TradingCommandRequired" xml:space="preserve">
+    <value>Für den Handel muss ein Befehlsname angegeben werden.</value>
+  </data>
+  <data name="TwitchAccountExists" xml:space="preserve">
+    <value>Es sind bereits Einstellungen für das Konto {0}. Melden Sie sich mit einem anderen Konto an oder starten Sie Mix It Up neu, um diese Einstellungen aus der Dropdown-Liste auszuwählen.</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="TwitchAccountMismatch" xml:space="preserve">
+    <value>Das Konto, das Sie wie bei Twitch angemeldet haben, stimmt nicht mit dem Konto für diese Einstellungen überein. Bitte loggen Sie sich als das richtige Konto bei Twitch ein.</value>
+  </data>
+  <data name="TwitchFailed" xml:space="preserve">
+    <value>Fehler beim Herstellen einer Verbindung mit Twitch-Diensten:</value>
+  </data>
+  <data name="UniqueRankNameAndMinimumAmountRequired" xml:space="preserve">
+    <value>Jeder Rang muss einen eindeutigen Namen und einen Mindestbetrag haben.</value>
+  </data>
+  <data name="UpgradePrompt1" xml:space="preserve">
+    <value>Wir haben eine ältere Version Ihrer Einstellungen erkannt, die auf ein neueres Format aktualisiert werden muss. Je nach Größe, dies kann einige Zeit dauern, um durchzuführen &amp; ist erforderlich, um Mix It Up zu verwenden.</value>
+  </data>
+  <data name="UpgradePrompt2" xml:space="preserve">
+    <value>Wenn Sie dazu bereit sind, drücken Sie bitte Ja. Andernfalls drücken Sie Nein und in der Nähe der Anwendung, um sie später auszuführen.</value>
+  </data>
+  <data name="VideoFilePath" xml:space="preserve">
+    <value>Videodateipfad</value>
+  </data>
+  <data name="ViewingRateAmountZeroOrMore" xml:space="preserve">
+    <value>Der Anzeigesatzbetrag muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="ViewingRateMinutesInvalid" xml:space="preserve">
+    <value>Der Anzeigesatzbetrag &amp; Minuten muss größer als 0 oder beide gleich 0 sein.</value>
+  </data>
+  <data name="ViewingRateMinutesZeroOrMore" xml:space="preserve">
+    <value>Die Anzeigerate Minuten muss größer oder gleich 0 sein.</value>
+  </data>
+  <data name="VolumeHeader" xml:space="preserve">
+    <value>Volumen:</value>
+  </data>
+  <data name="WebPageURL" xml:space="preserve">
+    <value>Webseiten-URL</value>
+  </data>
+  <data name="YoutubeVideoURLID" xml:space="preserve">
+    <value>Youtube Video URL/ID</value>
+  </data>
+  <data name="DiscoardBotGatewayFailed" xml:space="preserve">
+    <value>Bot Application Gateway-Daten konnten nicht abbekommen werden.</value>
+  </data>
+  <data name="DiscordBotWebSocketFailed" xml:space="preserve">
+    <value>Bot Application konnte nicht mit Websocket verbunden werden</value>
+  </data>
+  <data name="DiscordServerDataFailed" xml:space="preserve">
+    <value>Serverdaten konnten nicht abgerufen werden.</value>
+  </data>
+  <data name="DiscordUserDataFailed" xml:space="preserve">
+    <value>Benutzerdaten konnten nicht abbekommen werden</value>
+  </data>
+  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
+    <value>Team-/Teilnehmerdaten konnten nicht abbekommen</value>
+  </data>
+  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
+    <value>Extra Life Team ID / Teilnehmer ID wurde nicht festgelegt</value>
+  </data>
+  <data name="JustGivingUserDataFailed" xml:space="preserve">
+    <value>Benutzerdaten können nicht ababrufen</value>
+  </data>
+  <data name="NameOfButtonHeader" xml:space="preserve">
+    <value>Name der Schaltfläche:</value>
+  </data>
+  <data name="NameOfFolderHeader" xml:space="preserve">
+    <value>Name des Ordners:</value>
+  </data>
+  <data name="OBSWebSocketFailed" xml:space="preserve">
+    <value>Fehler beim Herstellen einer Verbindung mit dem OBS Studio-Websocket</value>
+  </data>
+  <data name="OverlayAddFailed" xml:space="preserve">
+    <value>Fehler beim Hinzufügen {0}-Überlagerung</value>
+    <comment>{0} is the overlay name</comment>
+  </data>
+  <data name="OvrStreamInvalidAddress" xml:space="preserve">
+    <value>Ungültige Adresse angegeben</value>
+  </data>
+  <data name="PatreonCampaignDataFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen von Kampagnendaten</value>
+  </data>
+  <data name="PatreonUserDataFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen von Benutzerdaten</value>
+  </data>
+  <data name="StreamElementsUserDataFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen von Benutzerinformationen</value>
+  </data>
+  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen von Kanaldaten</value>
+  </data>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>Streamlabs OBS wird möglicherweise als Administrator ausgeführt, und Mix It Up ist es nicht. Versuchen Sie, Mix It Up als Administrator auszuführen, bevor Sie eine Verbindung herstellen.</value>
+  </data>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>Streamlabs OBS konnte nicht erreicht werden</value>
+  </data>
+  <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen des Websockettokens</value>
+  </data>
+  <data name="TiltifyUserDataFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen von Benutzerdaten</value>
+  </data>
+  <data name="TipeeeStreamSocketFailed" xml:space="preserve">
+    <value>Fehler beim Herstellen einer Verbindung mit dem Socket</value>
+  </data>
+  <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
+    <value>Socket-URL-Adresse kann nicht abzurufen</value>
+  </data>
+  <data name="TipeeeStreamUserDataFailed" xml:space="preserve">
+    <value>Benutzerinformationen können nicht abbekommen werden</value>
+  </data>
+  <data name="TipeeStreamSocketKeyFailed" xml:space="preserve">
+    <value>Socket-API-Schlüssel kann nicht abbekommen</value>
+  </data>
+  <data name="TreatStreamSocketFailed" xml:space="preserve">
+    <value>Fehler beim Herstellen einer Verbindung mit Socket</value>
+  </data>
+  <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen des Socket-Tokens</value>
+  </data>
+  <data name="TwitchConnectionFailed" xml:space="preserve">
+    <value>Twitch-Verbindung wurde nicht hergestellt</value>
+  </data>
+  <data name="TwitchFailedBotData" xml:space="preserve">
+    <value>Twitch-Bot-Daten konnten nicht abbekommen werden</value>
+  </data>
+  <data name="TwitchFailedNewAPIUserData" xml:space="preserve">
+    <value>Fehler beim Abrufen neuer API Twitch-Benutzerdaten</value>
+  </data>
+  <data name="TwitchFailedV5APIUserData" xml:space="preserve">
+    <value>Fehler beim Abrufen von V5 API Twitch-Benutzerdaten</value>
+  </data>
+  <data name="TwitterAuthFailed" xml:space="preserve">
+    <value>Fehler beim Abrufen der Autorisierung</value>
+  </data>
+  <data name="TwitterRateLimited" xml:space="preserve">
+    <value>Der von Ihnen angegebene Tweet konnte nicht gesendet werden, da Sie in den letzten 5 Minuten bereits einen Tweet gesendet haben.</value>
+  </data>
+  <data name="OverlayWidgetChatMessagesDescription" xml:space="preserve">
+    <value>Zeigt die letzten X viele Chat-Nachrichten von Ihrem Kanal an. Chat-Nachrichten werden hinzugefügt, sobald sie auftreten.</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsDescription" xml:space="preserve">
+    <value>Zeigt eine Bildlaufliste von Texten wie Filmgutschriften basierend auf Benutzerinteraktionen im gesamten Stream an. Das Anzeigen des Widgets löst die Credits aus und blendt es zurück.</value>
+  </data>
+  <data name="OverlayWidgetEventListDescription" xml:space="preserve">
+    <value>Zeigt die letzten X-Ereignisse an, die in Ihrem Kanal aufgetreten sind. Ereignisse werden hinzugefügt, wenn sie auftreten.</value>
+  </data>
+  <data name="OverlayWidgetGameQueueDescription" xml:space="preserve">
+    <value>Zeigt einen Textblock an. Ereignisse werden hinzugefügt, wenn sie auftreten.</value>
+  </data>
+  <data name="OverlayWidgetHTMLDescription" xml:space="preserve">
+    <value>Zeigt HTML-Code direkt auf dem Overlay an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetImageDescription" xml:space="preserve">
+    <value>Zeigt ein Bild an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetLeaderboardDescription" xml:space="preserve">
+    <value>Zeigt die obersten X-Benutzer in einer angegebenen Kategorie an. Ranglistenpositionen werden aktualisiert, wenn Ereignisse auftreten oder ein benutzerdefiniertes Aktualisierungsintervall</value>
+  </data>
+  <data name="OverlayWidgetProgressBarDescription" xml:space="preserve">
+    <value>Zeigt einen Fortschrittsbalken für ein angegebenes Ziel an. Der Fortschritt wird aktualisiert, wenn Ereignisse auftreten oder das benutzerdefinierte Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
+    <value>Zeigt einen Benutzer aus Ihrem Kanal als "Boss", der durch Aktionen in Ihrem Kanal beschädigt werden kann, bis sie besiegt werden und ein neuer Boss ausgewählt wird. Der Schaden wird hinzugefügt, wenn er auftritt. Die Stream Boss Special Identifiers können parallel zu diesem Overlay-Widget verwendet werden.</value>
+  </data>
+  <data name="OverlayWidgetTextDescription" xml:space="preserve">
+    <value>Zeigt einen Textblock an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetTickerTapeDescription" xml:space="preserve">
+    <value>Zeigt eine Bildlaufliste des Textes der letzten X vieler Benutzer an, die ein angegebenes Ereignis verursacht haben. Benutzer werden der Liste hinzugefügt, wenn das Ereignis eintritt.</value>
+  </data>
+  <data name="OverlayWidgetTimerDescription" xml:space="preserve">
+    <value>Zeigt einen Timer an, der herunterzählt, während er sichtbar ist. Durch das Ausblenden des Timers wird der Betrag zurückgesetzt.</value>
+  </data>
+  <data name="OverlayWidgetTimerTrainDescription" xml:space="preserve">
+    <value>Zeigt einen Timer an, der herunterzählt und durch ausführen bestimmter Aktionen in Ihrem Kanal erhöht werden kann. Sie wird nur angezeigt, wenn die Gesamtzeit den Wert "Mindestsekunden zum Anzeigen" überschreitet. Zeitaktualisierungen, wenn Ereignisse auftreten.</value>
+  </data>
+  <data name="OverlayWidgetVideoDescription" xml:space="preserve">
+    <value>Zeigt ein Video an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetWebPageDescription" xml:space="preserve">
+    <value>Zeigt eine Webseite an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="OverlayWidgetYouTubeDescription" xml:space="preserve">
+    <value>Zeigt ein YouTube-Video an. Aktualisierungen basierend auf dem benutzerdefinierten Aktualisierungsintervall.</value>
+  </data>
+  <data name="Generic" xml:space="preserve">
+    <value>Generische</value>
+  </data>
+  <data name="DemoteFromMod" xml:space="preserve">
+    <value>Degradieren von Mod</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Deaktivieren</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Benutzer bearbeiten</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Folgen</value>
+  </data>
+  <data name="Follows" xml:space="preserve">
+    <value>Folgt</value>
+  </data>
+  <data name="ModerationStrikes" xml:space="preserve">
+    <value>Moderationsstreiks</value>
+  </data>
+  <data name="OpenChannelPage" xml:space="preserve">
+    <value>Open Channel Page</value>
+  </data>
+  <data name="PromoteToMod" xml:space="preserve">
+    <value>Zu Mod vermarkten</value>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>Resubscribes</value>
+  </data>
+  <data name="StreamInfo" xml:space="preserve">
+    <value>Stream-Info</value>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>Unterpriorität:</value>
+  </data>
+  <data name="SubscribersReceivePriority" xml:space="preserve">
+    <value>Abonnenten erhalten Priorität</value>
+  </data>
+  <data name="Subscribes" xml:space="preserve">
+    <value>Abonniert</value>
+  </data>
+  <data name="TimeoutFiveMin" xml:space="preserve">
+    <value>Timeout 5 Min</value>
+  </data>
+  <data name="TimeoutOneMin" xml:space="preserve">
+    <value>Timeout 1 Min</value>
+  </data>
+  <data name="Unban" xml:space="preserve">
+    <value>Unban</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>Unfollow</value>
   </data>
 </root>

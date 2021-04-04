@@ -1201,8 +1201,8 @@
     <value>Name</value>
     <comment>Manual</comment>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Profilname</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Profilname:</value>
     <comment>Manual</comment>
   </data>
   <data name="Never" xml:space="preserve">

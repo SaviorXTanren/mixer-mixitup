@@ -179,11 +179,11 @@ namespace MixItUp.Base.Services
 
             if (backupSettingsLoaded)
             {
-                await DialogHelper.ShowMessage("One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.");
+                await DialogHelper.ShowMessage(Resources.BackupSettingsLoadedError);
             }
             if (settingsLoadFailure)
             {
-                await DialogHelper.ShowMessage("One or more settings files were unable to be loaded. Please visit the Mix It Up discord for assistance on this issue.");
+                await DialogHelper.ShowMessage(Resources.SettingsLoadFailure);
             }
 
             return allSettings;

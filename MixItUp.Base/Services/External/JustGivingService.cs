@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("JustGiving");
                 return new Result();
             }
-            return new Result("Unable to get User data");
+            return new Result(Resources.JustGivingUserDataFailed);
         }
 
         protected override void DisposeInternal()

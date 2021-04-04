@@ -38,6 +38,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">

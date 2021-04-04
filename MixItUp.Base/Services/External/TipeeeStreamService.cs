@@ -335,13 +335,13 @@ namespace MixItUp.Base.Services.External
                             this.TrackServiceTelemetry("TipeeeStream");
                             return new Result();
                         }
-                        return new Result("Failed to connect to socket");
+                        return new Result(Resources.TipeeeStreamSocketFailed);
                     }
-                    return new Result("Unable to get Socket URL address");
+                    return new Result(Resources.TipeeeStreamSocketUrlFailed);
                 }
-                return new Result("Unable to get Socket API key");
+                return new Result(Resources.TipeeStreamSocketKeyFailed);
             }
-            return new Result("Unable to get User information");
+            return new Result(Resources.TipeeeStreamUserDataFailed);
         }
 
         private async Task<T> GetAsync<T>(string url)

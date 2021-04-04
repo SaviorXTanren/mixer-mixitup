@@ -200,7 +200,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }));
             }
-            return new Result("Twitch connection has not been established");
+            return new Result(Resources.TwitchConnectionFailed);
         }
 
         public async Task DisconnectUser()
@@ -281,7 +281,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }));
             }
-            return new Result("Twitch connection has not been established");
+            return new Result(Resources.TwitchConnectionFailed);
         }
 
         public async Task DisconnectBot()

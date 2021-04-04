@@ -30,43 +30,43 @@ namespace MixItUp.Base.ViewModel.MainControls
                 int eventNumber = (int)this.EventType;
                 if (this.EventType == EventTypeEnum.StreamlabsDonation)
                 {
-                    return "Streamlabs";
+                    return Resources.Streamlabs;
                 }
                 else if (this.EventType == EventTypeEnum.TiltifyDonation)
                 {
-                    return "Tiltify";
+                    return Resources.Tiltify;
                 }
                 else if (this.EventType == EventTypeEnum.ExtraLifeDonation)
                 {
-                    return "Extra Life";
+                    return Resources.ExtraLife;
                 }
                 else if (this.EventType == EventTypeEnum.TipeeeStreamDonation)
                 {
-                    return "TipeeeStream";
+                    return Resources.TipeeeStream;
                 }
                 else if (this.EventType == EventTypeEnum.TreatStreamDonation)
                 {
-                    return "TreatStream";
+                    return Resources.TreatStream;
                 }
                 else if (this.EventType == EventTypeEnum.StreamJarDonation)
                 {
-                    return "StreamJar";
+                    return Resources.StreamJar;
                 }
                 else if (this.EventType == EventTypeEnum.PatreonSubscribed)
                 {
-                    return "Patreon";
+                    return Resources.Patreon;
                 }
                 else if (this.EventType == EventTypeEnum.JustGivingDonation)
                 {
-                    return "JustGiving";
+                    return Resources.JustGiving;
                 }
                 else if (this.EventType == EventTypeEnum.StreamlootsCardRedeemed || this.EventType == EventTypeEnum.StreamlootsPackGifted || this.EventType == EventTypeEnum.StreamlootsPackPurchased)
                 {
-                    return "Streamloots";
+                    return Resources.Streamloots;
                 }
                 else if (this.EventType == EventTypeEnum.StreamElementsDonation)
                 {
-                    return "StreamElements";
+                    return Resources.StreamElements;
                 }
                 else if (eventNumber >= 100 && eventNumber < 200)
                 {
@@ -74,11 +74,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (eventNumber >= 200 && eventNumber < 300)
                 {
-                    return "Twitch";
+                    return Resources.Twitch;
                 }
                 else
                 {
-                    return "Generic";
+                    return Resources.Generic;
                 }
             }
         }

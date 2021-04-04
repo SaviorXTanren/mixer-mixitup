@@ -203,7 +203,7 @@ namespace MixItUp.Base.ViewModel.Wizard
                 {
                     if (!await ChannelSession.InitializeSession())
                     {
-                        await DialogHelper.ShowMessage("Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.");
+                        await DialogHelper.ShowMessage(Resources.SessionInitializationFailed);
                         return;
                     }
 

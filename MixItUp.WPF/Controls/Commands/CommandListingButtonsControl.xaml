@@ -14,7 +14,7 @@
         <Button x:Name="PlayButton" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
-        <Button x:Name="StopButton" Visibility="Collapsed" Click="StopButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Stop Command">
+        <Button x:Name="StopButton" Visibility="Collapsed" Click="StopButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.StopCommand}">
             <MaterialDesign:PackIcon Kind="Stop" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
 

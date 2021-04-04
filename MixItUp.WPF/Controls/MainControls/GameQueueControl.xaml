@@ -43,12 +43,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="{Binding EnableDisableButtonText}" Command="{Binding EnableDisableCommand}" Width="90" />
+            <Button Grid.Column="0" Content="{Binding EnableDisableButtonText}" Command="{Binding EnableDisableCommand}" Width="150" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Sub Priority:</TextBlock>
-            <ToggleButton Grid.Column="4" IsChecked="{Binding SubPriority}" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Subscribers Receive Priority" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{x:Static resx:Resources.SubPriorityHeader}"/>
+            <ToggleButton Grid.Column="4" IsChecked="{Binding SubPriority}" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}" ToolTip="{x:Static resx:Resources.SubscribersReceivePriority}" />
 
-            <Button Grid.Column="6" Command="{Binding ClearQueueCommand}" IsEnabled="{Binding IsEnabled}" Width="110">Clear Queue</Button>
+            <Button Grid.Column="6" Command="{Binding ClearQueueCommand}" IsEnabled="{Binding IsEnabled}" MinWidth="110" Content="{x:Static resx:Resources.ClearQueue}"/>
 
             <GroupBox Grid.Column="8" Header="{x:Static resx:Resources.UserJoined}">
                 <CommandsControls:CommandListingButtonsControl x:Name="UserJoinedCommand" DataContext="{Binding GameQueueUserJoinedCommand}" HorizontalAlignment="Center" EditClicked="UserJoinedCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
