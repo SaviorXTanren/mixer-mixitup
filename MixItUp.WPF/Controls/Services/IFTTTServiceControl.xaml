@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ServiceControlBase.Resources>
@@ -23,16 +24,24 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center">IFTTT service connectivity allows you to trigger IFTTT Web Hook applets and provide data to use.</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.IFTTTInfo1}"/>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap">To connect to IFTTT, you will need your Web Hook key. This can be found by going to the <Hyperlink NavigateUri="https://ifttt.com/maker_webhooks" RequestNavigate="Hyperlink_RequestNavigate">Web Hooks Page</Hyperlink> &amp; clicking on the Documentation button in the upper-right corner.</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Text="{x:Static resx:Resources.IFTTTInfo2}"/>
+
+            <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                <Hyperlink NavigateUri="https://ifttt.com/maker_webhooks" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.WebHooksPage}"/>
+                </Hyperlink>
+            </TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -42,9 +51,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" Text="{Binding IFTTTWebHookKey}" MaterialDesign:HintAssist.Hint="IFTTT Web Hook Key" Width="250" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Row="0" Text="{Binding IFTTTWebHookKey}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.IFTTTWebHookKey}" Width="250" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Button Grid.Row="2" Command="{Binding LogInCommand}" HorizontalAlignment="Center" Width="90">Log In</Button>
+                <Button Grid.Row="4" Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
             </Grid>
         </Grid>
     </Grid>

@@ -12,9 +12,7 @@ namespace MixItUp.Base.Actions
     [Obsolete]
     public enum TwitterActionTypeEnum
     {
-        [Name("Send Tweet")]
         SendTweet,
-        [Name("Update Name")]
         UpdateName,
     }
 

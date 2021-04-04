@@ -117,17 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Per ember</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 per uur</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 per minuut</value>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 per vonk</value>
   </data>
   <data name="About" xml:space="preserve">
     <value>Over</value>
@@ -330,15 +324,6 @@
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Audio-uitvoerapparaat</value>
   </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Automatische hoster</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>De Mix It Up Auto-Hoster is een zelfstandige applicatie die de hosting van andere kanalen afhandelt wanneer u niet streamt. De Auto-Hoster moet worden uitgevoerd, maar u hoeft Mix It Up niet actief te hebben om het te gebruiken.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>De Auto-Hoster kan worden gestart door op de onderstaande knop te klikken</value>
-  </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Automatisch opnemen "!"</value>
   </data>
@@ -393,7 +378,7 @@
   <data name="Blue" xml:space="preserve">
     <value>Blauwe</value>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Blauw Grijs</value>
   </data>
   <data name="Bot" xml:space="preserve">
@@ -672,10 +657,10 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Aftrekken van actieve opdracht gebruiker</value>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Diep Oranje</value>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Diep Paars</value>
   </data>
   <data name="Default" xml:space="preserve">
@@ -785,18 +770,6 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Opdracht Bewerken</value>
-  </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Sintels</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Alleen ember-vaardigheden</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers Uitgegeven</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Alleen emotes en vaardigheden</value>
   </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Het pad naar het geluidsbestand mag niet leeg zijn.</value>
@@ -1188,9 +1161,6 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Laatste release</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Start Auto-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
     <value>Indeling</value>
   </data>
@@ -1224,10 +1194,10 @@
   <data name="Light" xml:space="preserve">
     <value>Licht</value>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Lichtblauw</value>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Lichtgroen</value>
   </data>
   <data name="Lime" xml:space="preserve">
@@ -1332,24 +1302,6 @@
   <data name="MinValue" xml:space="preserve">
     <value>Min-waarde</value>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Mixer Leeftijd</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Mixerclips</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Mixer-gegevens</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Mixer Laboratoria</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Mixer-status</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Mixer-ondersteuning</value>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Opdrachten voor mix it-up</value>
   </data>
@@ -1370,9 +1322,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Moet deze knop afkoelen op zijn of samen met iedereen?</value>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Hoeveel Sparks moet deze knop kosten?</value>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Wilt u Chat Moderation gebruiken op alle ingevoerde tekst?</value>
@@ -1428,8 +1377,8 @@
   <data name="Name" xml:space="preserve">
     <value>Naam</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Naam van het profiel</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Naam van het profiel:</value>
   </data>
   <data name="Never" xml:space="preserve">
     <value>Nooit</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Tijdstempel voor berichten weergeven</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>MixPlay-waarschuwingen weergeven</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr Emotes weergeven (opnieuw opstarten vereist)</value>
   </data>
@@ -1988,9 +1934,6 @@
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Enkele actie</value>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Alleen vaardigheden</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Gebruikte vaardigheden</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Brontekst</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Spark-kosten</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Het Kristal van de vonk</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark vrijgesteld</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Sparks</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Sparks Uitgegeven</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Speciale identificatiecode</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Donatie</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Mixer Channel Embers Uitgegeven</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Ventilator Progressie Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer Kanaal gevolgd</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel gehost</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Mijlpaal mixerkanaal bereikt</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixerkanaal opnieuw ingeschreven</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Mixer Channel Skill gebruikt</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixer Channel Sparks Uitgegeven</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Start mixerkanaalstream</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Kanaal Stream Stop</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer-kanaal geabonneerd</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel-abonnement hoogbegaafd</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mixer kanaal niet gevolgd</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon Geabonneerd</value>
   </data>
@@ -2684,9 +2579,6 @@
   </data>
   <data name="PointRates" xml:space="preserve">
     <value>Puntentarieven</value>
-  </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Spark Bonus</value>
   </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Sub vermenigvuldigingsfactor</value>
@@ -3046,7 +2938,7 @@
     <value>Niet geabonneerd</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Met de instelling Automatisch inloggen kan Mix It Up zich automatisch aanmelden bij het momenteel aangemelde Mixer-gebruikersaccount. OPMERKING: Als er een Mix It Up-update is of als u een van uw servicesaccounts opnieuw moet verifiëren, moet u zich handmatig aanmelden wanneer dit gebeurt.</value>
+    <value>Met de instelling Automatisch aanmelden kan Mix It Up zich automatisch aanmelden bij het momenteel aangemelde gebruikersaccount. OPMERKING: Als er een Mix It Up-update is of als u een van uw servicesaccounts opnieuw moet verifiëren, moet u zich handmatig aanmelden wanneer dit gebeurt.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Met deze optie u zich afmelden voor het bijhouden van uw gegevens via onze back-enddiensten. We volgen gegevens over app-gebruik en crashes om uw ervaring te verbeteren. Als u deze optie selecteert, stoppen we met het bijhouden van deze gegevens. Houd er rekening mee dat hiermee geen gegevens worden uitgeschakeld die zijn opgenomen bij het uploaden en controleren van Mix It Up-winkelopdrachten.</value>
@@ -4793,5 +4685,1226 @@ Ingeschakeld. Je het zien als vergelijkbaar met het gebruik van de optie Opdrach
   </data>
   <data name="Russian" xml:space="preserve">
     <value>Russisch</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>Kanaalpunten-editor</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>Time-out voor chatgebruikers</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>Chat Whisper ontvangen</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>Twitch Channel Bits toegejuicht</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>Twitch-kanaal gevolgd</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>Twitch-kanaal gehost</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch Channel Mass-abonnementen hoogbegaafd</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>Twitch Channel-punten ingewisseld</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>Twitch-kanaal overvallen</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>Twitch-kanaal opnieuw ingeschreven</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>Twitch-kanaalstream start</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>Twitch-kanaalstreamstop</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>Twitch-kanaal geabonneerd</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch ChannelSubscriptie Hoogbegaafd</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>Twitch-kanaal niet gevolgd</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>Time-out voor chat</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>Poll</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>Raid</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>Clip</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>Draai aan het wiel</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>Leeg de pot</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>Credits rollen</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>Tweet verzenden</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>Naam bijwerken</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>Platte tekst</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>Linkermuis omlaag</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>Linkermuis omhoog</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>Rechtermuis omlaag</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>RechtsMouseUp</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>Middelste muis omlaag</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>Middelste muis omhoog</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>Extra muis omlaag</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>Extra muis omhoog</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>Wiel</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>Absolute</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>Affiliate</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRole" xml:space="preserve">
+    <value>Er bestaat al een titel met dezelfde rol.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRoleMonths" xml:space="preserve">
+    <value>Er bestaat al een titel met dezelfde rol en maanden.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateTitle" xml:space="preserve">
+    <value>Er bestaat al een titel met dezelfde naam.</value>
+  </data>
+  <data name="CreateTitleErrorInvalidMonths" xml:space="preserve">
+    <value>Er moet een geldig aantal maanden voor de titel worden opgegeven.</value>
+  </data>
+  <data name="CreateTitleErrorNoTitle" xml:space="preserve">
+    <value>Er moet een naam voor de titel worden opgegeven.</value>
+  </data>
+  <data name="DeleteSettingsWarning" xml:space="preserve">
+    <value>Hiermee worden de instellingen van het momenteel aangemelde account volledig verwijderd en is het niet omkeerbaar. Weet je zeker dat je dit wilt doen?</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>Aanbevolen</value>
+  </data>
+  <data name="JSONToSpecialIdentifiers" xml:space="preserve">
+    <value>JSON naar speciale id's</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="RunNewUserWizardWarning" xml:space="preserve">
+    <value>Mix It Up wordt opnieuw opgestart en de wizard Nieuwe gebruiker wordt opnieuw uitgevoerd wanneer u zich aanmeldt. Hiermee u uw gegevens opnieuw importeren, waardoor uw opdrachten en gebruikersgegevens kunnen worden gedupliceerd en overschreven. Weet je zeker dat je dit wilt doen?</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Ontpin</value>
+  </data>
+  <data name="ApplicationBotToken" xml:space="preserve">
+    <value>Toepassing Bot Token</value>
+  </data>
+  <data name="ApplicationClientID" xml:space="preserve">
+    <value>Client-ID van toepassing</value>
+  </data>
+  <data name="ApplicationClientSecret" xml:space="preserve">
+    <value>Clientgeheim van toepassing</value>
+  </data>
+  <data name="CreatingCustomDiscordApplication" xml:space="preserve">
+    <value>Aangepaste discordtoepassing maken</value>
+  </data>
+  <data name="CustomApplication" xml:space="preserve">
+    <value>Aangepaste toepassing</value>
+  </data>
+  <data name="DeveloperAPI" xml:space="preserve">
+    <value>API voor ontwikkelaars</value>
+  </data>
+  <data name="DeveloperAPIAdvanced" xml:space="preserve">
+    <value>Open voor lokaal netwerk (moet worden uitgevoerd als beheerder):</value>
+  </data>
+  <data name="DeveloperAPIInfo" xml:space="preserve">
+    <value>De Developer API maakt geavanceerde interactie met Mix It Up mogelijk vanuit andere toepassingen die op uw computer worden uitgevoerd met behulp van een reeks REST API-services. Voor meer informatie hierover, zie de Developer API Wiki pagina.</value>
+  </data>
+  <data name="DeveloperAPIWarning" xml:space="preserve">
+    <value>WAARSCHUWING: Hierdoor luisteren de API's van ontwikkelaars op alle adressen en kunnen Mix It Up worden geopend voor bellers van buiten uw netwerk. Gebruik deze optie alleen als u weet wat u doet!</value>
+  </data>
+  <data name="DiscordInfo1" xml:space="preserve">
+    <value>Met discord-serviceconnectiviteit u informatie over uw Discord-account ophalen, berichten naar kanalen verzenden en de audio via spraakkanalen bedienen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend met de vraag om u aan te melden bij Discord en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="DiscordInfo2" xml:space="preserve">
+    <value>De standaard Mix It Up Discord-applicatie heeft een afkoeling van 30 seconden tussen elke Discord-actie om snelheidsbegrenzingsproblemen voor alle gebruikers te voorkomen. Om de afkoeling van 30 seconden te omzeilen, u uw eigen aangepaste Discord-toepassing maken.</value>
+  </data>
+  <data name="DiscordInvalidBotToken" xml:space="preserve">
+    <value>Voer een geldig aangepast bottoken in.</value>
+  </data>
+  <data name="DiscordInvalidClientId" xml:space="preserve">
+    <value>Voer een geldige aangepaste client-ID in.</value>
+  </data>
+  <data name="DiscordInvalidSecret" xml:space="preserve">
+    <value>Voer een geldig aangepast clientgeheim in.</value>
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra leven</value>
+  </data>
+  <data name="ExtraLifeInfo1" xml:space="preserve">
+    <value>Met extra Life-serviceconnectiviteit u gebeurtenissen activeren vanaf het moment dat u of uw team een donatie ontvangt.</value>
+  </data>
+  <data name="ExtraLifeInfo2" xml:space="preserve">
+    <value>Bezoek eerst de pagina van je team op de Extra Life-website en aan het einde van de web-URL staat "teamID=_____". Typ dat nummer in het eerste vak, klik op zoeken, selecteer uw naam in de lijst en klik vervolgens op de knop Aanmelden.</value>
+  </data>
+  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
+    <value>Selecteer een geldige Extra Life deelnemer.</value>
+  </data>
+  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
+    <value>Voer een geldige Extra Life team-ID in.</value>
+  </data>
+  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
+    <value>De extra life team-ID die u hebt ingevoerd, kan niet worden gevonden.</value>
+  </data>
+  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
+    <value>Trigger donatie-evenement voor teamdonaties:</value>
+  </data>
+  <data name="OverlayConnectionFailed1" xml:space="preserve">
+    <value>Overlay-verbindingstest is mislukt, zorg ervoor dat de Mix It Up Overlay-pagina zichtbaar is en wordt uitgevoerd in uw streamingsoftware.</value>
+  </data>
+  <data name="OverlayConnectionFailed2" xml:space="preserve">
+    <value>Als u uw streamingsoftware hebt gestart voordat u deze combineert, probeert u de webpaginabron in uw streamingsoftware te vernieuwen.</value>
+  </data>
+  <data name="OverlayConnectionSuccess" xml:space="preserve">
+    <value>Overlay verbindingstest geslaagd!</value>
+  </data>
+  <data name="OverlaysConnected" xml:space="preserve">
+    <value>{0} overlays in totaal verbonden</value>
+    <comment>{0} is the number of overlays connected</comment>
+  </data>
+  <data name="ParticipantName" xml:space="preserve">
+    <value>Naam deelnemer</value>
+  </data>
+  <data name="TeamID" xml:space="preserve">
+    <value>Team-ID</value>
+  </data>
+  <data name="AddAnimation" xml:space="preserve">
+    <value>Animatie toevoegen</value>
+  </data>
+  <data name="AuthorizationPin" xml:space="preserve">
+    <value>Autorisatiepin</value>
+  </data>
+  <data name="Authorize" xml:space="preserve">
+    <value>Machtigen</value>
+  </data>
+  <data name="BorderColor" xml:space="preserve">
+    <value>Randkleur</value>
+  </data>
+  <data name="FadeOutSeconds" xml:space="preserve">
+    <value>Fade Out (Secs)</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Hoogte (pixels)</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>HTML-stijl</value>
+  </data>
+  <data name="HTMLText" xml:space="preserve">
+    <value>HTML-tekst</value>
+  </data>
+  <data name="IFTTTInfo1" xml:space="preserve">
+    <value>Met IFTTT-serviceconnectiviteit u IFTTT Web Hook-applets activeren en gegevens verstrekken die u gebruiken.</value>
+  </data>
+  <data name="IFTTTInfo2" xml:space="preserve">
+    <value>Als u verbinding wilt maken met IFTTT, hebt u uw Web Hook-toets nodig. Dit is te vinden door naar de webhaken te gaan en op de knop Documentatie in de rechterbovenhoek te klikken.</value>
+  </data>
+  <data name="IFTTTInvalidWebHookKey" xml:space="preserve">
+    <value>Voer een geldige IFTTT Web Hook-sleutel in.</value>
+  </data>
+  <data name="IFTTTWebHookKey" xml:space="preserve">
+    <value>IFTTT Web Hook-toets</value>
+  </data>
+  <data name="ImageFilePath" xml:space="preserve">
+    <value>Afbeeldingsbestandspad / URL</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP-adres (optioneel)</value>
+  </data>
+  <data name="ItemHeight" xml:space="preserve">
+    <value>Itemhoogte (pixels)</value>
+  </data>
+  <data name="ItemTextColor" xml:space="preserve">
+    <value>Tekstkleur van item</value>
+  </data>
+  <data name="ItemTextFont" xml:space="preserve">
+    <value>Lettertype itemtekst</value>
+  </data>
+  <data name="ItemTextSize" xml:space="preserve">
+    <value>Tekstgrootte van item (pixels)</value>
+  </data>
+  <data name="ItemWidth" xml:space="preserve">
+    <value>Objectbreedte (pixels)</value>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+  </data>
+  <data name="JustGivingInfo1" xml:space="preserve">
+    <value>Met JustGiving-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend met de vraag om u aan te melden bij JustGiving en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="LayerPosition" xml:space="preserve">
+    <value>Laagpositie</value>
+  </data>
+  <data name="LeftPixelPosition" xml:space="preserve">
+    <value>Linker pixelpositie</value>
+  </data>
+  <data name="ListAlignment" xml:space="preserve">
+    <value>Lijstuitlijning</value>
+  </data>
+  <data name="OBSStudioFailed" xml:space="preserve">
+    <value>OBS Studio-verbindingstest is mislukt, zorg ervoor dat OBS Studio wordt uitgevoerd, dat de obs-websocket-plug-in is geïnstalleerd en dat de verbinding en het wachtwoord overeenkomen met uw instellingen in OBS Studio.</value>
+  </data>
+  <data name="OBSStudioInfo1" xml:space="preserve">
+    <value>Met de OBS Studio-service u rechtstreeks communiceren met uw exemplaar van OBS Studio om wijzigingen in scènes en bronnen uit te voeren.</value>
+  </data>
+  <data name="OBSStudioInfo2" xml:space="preserve">
+    <value>OBS Studio 25.0 of hoger is vereist en u moet het OBS WebSocket Installer uitvoeren.</value>
+  </data>
+  <data name="OBSStudioSuccess" xml:space="preserve">
+    <value>OBS Studio verbindingstest geslaagd!</value>
+  </data>
+  <data name="OBSWebSocketInstaller" xml:space="preserve">
+    <value>OBS WebSocket Installatieprogramma</value>
+  </data>
+  <data name="OverlayInfo1" xml:space="preserve">
+    <value>Voeg een webbrowserbron toe aan uw streamingsoftware met de volgende URL:</value>
+  </data>
+  <data name="OverlayInfo2" xml:space="preserve">
+    <value>Als u de Mix It Up Overlay wilt gebruiken, moet u ervoor zorgen dat Mix It Up eerst wordt uitgevoerd voordat u uw streamingsoftware start of de webpaginabron in uw streamingsoftware vernieuwt nadat u Mix It Up hebt gestart.</value>
+  </data>
+  <data name="OverlayInfo3" xml:space="preserve">
+    <value>Ondersteuning voor meerdere overlays vindt u onder Instellingen -&gt; Overlay.</value>
+  </data>
+  <data name="OverlayInfo4" xml:space="preserve">
+    <value>Als u obs studio, XSplit of Streamlabs OBS-connectiviteit hebt ingesteld, kunnen we de webbrowserbron die de Mix It Up Overlay bevat automatisch vernieuwen wanneer Mix It Up wordt gestart. Typ gewoon de naam van de bron hieronder:</value>
+  </data>
+  <data name="OverlayInfo5" xml:space="preserve">
+    <value>Typ hieronder de naam van de webbrowserbron in uw streamingsoftware:</value>
+  </data>
+  <data name="OvrStreamInfo1" xml:space="preserve">
+    <value>OvrStream is een krachtige editor voor bewegingsafbeeldingen voor waarschuwingen en overlays. Met Mix It Up u uw visualisaties activeren en variabelenwaarden voor hen instellen in OvrStream.</value>
+  </data>
+  <data name="OvrStreamInfo2" xml:space="preserve">
+    <value>Zie de volgende link voor informatie over OvrStream:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Wachtwoord (optioneel)</value>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+  </data>
+  <data name="PatreonInfo1" xml:space="preserve">
+    <value>Met patreon-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen bij Patreon en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Pixels</value>
+  </data>
+  <data name="PositionPercentageFromLeft" xml:space="preserve">
+    <value>Positie % van links:</value>
+  </data>
+  <data name="PositionPercentageFromTop" xml:space="preserve">
+    <value>Positie % van bovenaf:</value>
+  </data>
+  <data name="RemoveAnimation" xml:space="preserve">
+    <value>Animatie verwijderen</value>
+  </data>
+  <data name="ScreenPosition" xml:space="preserve">
+    <value>Schermpositie:</value>
+  </data>
+  <data name="ScrollSpeed" xml:space="preserve">
+    <value>Scrollsnelheid</value>
+  </data>
+  <data name="SectionHTMLStyle" xml:space="preserve">
+    <value>HTML-stijl van sectie</value>
+  </data>
+  <data name="SectionTextColor" xml:space="preserve">
+    <value>Tekstkleur sectie</value>
+  </data>
+  <data name="SectionTextFont" xml:space="preserve">
+    <value>Sectietekstlettertype</value>
+  </data>
+  <data name="SectionTextSize" xml:space="preserve">
+    <value>Tekstgrootte sectie (pixels)</value>
+  </data>
+  <data name="SectionType" xml:space="preserve">
+    <value>Sectietype</value>
+  </data>
+  <data name="SelectedCampaign" xml:space="preserve">
+    <value>Geselecteerde campagne</value>
+  </data>
+  <data name="SelectedFundraiser" xml:space="preserve">
+    <value>Geselecteerde inzamelingsactie</value>
+  </data>
+  <data name="ServiceConnectAdditionalDetails" xml:space="preserve">
+    <value>Aanvullende details:</value>
+  </data>
+  <data name="ServiceConnectFailed" xml:space="preserve">
+    <value>Kon geen verbinding maken met de service, probeer het opnieuw. Als dit zo doorgaat, neem dan contact op met onze steun voor verdere hulp.</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>Eenvoudige</value>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Avatars streamen</value>
+  </data>
+  <data name="StreamAvatarsInfo1" xml:space="preserve">
+    <value>Stream Avatars-functionaliteit wordt rechtstreeks afgehandeld via het Stream Avatars-programma. Voordat u Stream Avatars verbindt met Mix It Up, moet u ervoor zorgen dat de Developer API is ingeschakeld op de pagina Services.</value>
+  </data>
+  <data name="StreamAvatarsInfo2" xml:space="preserve">
+    <value>Voor informatie over het koppelen van Stream Avatars met Mix It Up, zie de Stream Avatars wiki sectie.</value>
+  </data>
+  <data name="StreamAvatarsWikiSection" xml:space="preserve">
+    <value>Stream Avatars Wiki Sectie</value>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Het Dek van de stroom</value>
+  </data>
+  <data name="StreamDeckInfo1" xml:space="preserve">
+    <value>Met deze Stream Deck-plug-in u Mix It Up-opdrachten rechtstreeks vanaf uw Stream Deck-apparaat uitvoeren, evenals andere statusinformatie over uw stream.</value>
+  </data>
+  <data name="StreamDeckInfo2" xml:space="preserve">
+    <value>Om aan de slag te gaan, moet u ervoor zorgen dat de Stream Deck-software is bijgewerkt naar ten minste versie 4.0 en dat de DEVELOPER API-service is ingeschakeld in Mix It Up. Om de Mix It Up plugin te installeren, klikt u op de "Meer acties..." in de rechterbenedenhoek en zoek vervolgens naar "Mix It Up" in het venster.</value>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+  </data>
+  <data name="StreamElementsInfo1" xml:space="preserve">
+    <value>Met streamelements-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend met de vraag om u aan te melden bij StreamElements en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="StreamingSoftwareSourceName" xml:space="preserve">
+    <value>Bronnaam streamingsoftware</value>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+  </data>
+  <data name="StreamJarInfo1" xml:space="preserve">
+    <value>Met streamjar-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend met de vraag om u aan te melden bij StreamJar en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="StreamlabsInfo1" xml:space="preserve">
+    <value>Met streamlabs-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend met de vraag om u aan te melden bij Streamlabs en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
+    <value>Streamlabs OBS-verbindingstest is mislukt, zorg ervoor dat Streamlabs OBS wordt uitgevoerd.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
+    <value>Streamlabs OBS-verbindingstest geslaagd!</value>
+  </data>
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+    <value>Met de Streamlabs OBS-service u rechtstreeks communiceren met uw exemplaar van Streamlabs OBS om wijzigingen in scènes en bronnen uit te voeren.</value>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+  </data>
+  <data name="StreamlootsAlertsOverlayURL" xml:space="preserve">
+    <value>Streamloots waarschuwt overlay-URL</value>
+  </data>
+  <data name="StreamlootsInfo1" xml:space="preserve">
+    <value>Met streamloots-serviceconnectiviteit u gebeurtenissen activeren vanaf het moment dat een kaart op uw kanaal wordt gebruikt.</value>
+  </data>
+  <data name="StreamlootsInfo2" xml:space="preserve">
+    <value>Als u verbinding wilt maken met Streamloots, gaat u naar uw Streamloots-dashboardpagina, klikt u op Waarschuwingen in het menu aan de linkerkant, kopieert u uw Alert Overlay-URL naar het tekstvak en klikt u op Inloggen.</value>
+  </data>
+  <data name="StreamlootsInvalidUrl" xml:space="preserve">
+    <value>Voer een geldige Streamloots URL ({0}) in.</value>
+    <comment>{0} is a url format</comment>
+  </data>
+  <data name="SubEquivalent" xml:space="preserve">
+    <value>Subequivalent</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Verbinding testen</value>
+  </data>
+  <data name="TextFont" xml:space="preserve">
+    <value>Tekstlettertype</value>
+  </data>
+  <data name="TextHeight" xml:space="preserve">
+    <value>Teksthoogte (pixels)</value>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Kantelen</value>
+  </data>
+  <data name="TiltifyInfo1" xml:space="preserve">
+    <value>Met tiltify-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen op Tiltify en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens. Zodra u verbinding hebt gemaakt met Tiltify, moet u de campagne selecteren die u wilt gebruiken bij het detecteren van donaties.</value>
+  </data>
+  <data name="TiltifyInfo2" xml:space="preserve">
+    <value>OPMERKING: Wanneer u inlogt, u ons de e-mailoptie gebruiken om in te loggen op uw account. Het is momenteel niet mogelijk om in te loggen met gekoppelde accounts.</value>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+  </data>
+  <data name="TipeeeStreamInfo1" xml:space="preserve">
+    <value>Met tipeeeStream-serviceconnectiviteit u acties uitvoeren wanneer een donatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen op TipeeeStream en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="TitleHTMLStyle" xml:space="preserve">
+    <value>Titel HTML-stijl</value>
+  </data>
+  <data name="TopPixelPosition" xml:space="preserve">
+    <value>TopPixel Positie</value>
+  </data>
+  <data name="TotalToShow" xml:space="preserve">
+    <value>Totaal om weer te geven</value>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+  </data>
+  <data name="TreatStreamInfo1" xml:space="preserve">
+    <value>Met TreatStream-serviceconnectiviteit u acties uitvoeren wanneer een traktatie wordt ontvangen. Wanneer u zich aanmeldt, wordt er een verificatiewebpagina geopend waarin u wordt gevraagd in te loggen op TreatStream en Mix It Up goed te keuren om toegang te krijgen tot uw gegevens.</value>
+  </data>
+  <data name="TwitterInfo1" xml:space="preserve">
+    <value>Met Twitter-serviceconnectiviteit u tweets verzenden op uw account en eenvoudig uw persoonlijke tweets opvragen voor gebruik in uw stream.</value>
+  </data>
+  <data name="UserHTMLStyle" xml:space="preserve">
+    <value>HTMLStyle van de gebruiker</value>
+  </data>
+  <data name="WebHooksPage" xml:space="preserve">
+    <value>Web hooks, pagina</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Breedte (pixels)</value>
+  </data>
+  <data name="XSplitConnectionFailed" xml:space="preserve">
+    <value>XSplit-verbindingstest is mislukt, zorg ervoor dat u de Mix It Up XSplit-extensie hebt toegevoegd en geopend in XSplit.</value>
+  </data>
+  <data name="XSplitConnectionSuccess" xml:space="preserve">
+    <value>XSplit verbindingstest geslaagd!</value>
+  </data>
+  <data name="XSplitFolder" xml:space="preserve">
+    <value>XSplit-map</value>
+  </data>
+  <data name="XSplitInfo1" xml:space="preserve">
+    <value>Met de XSplit-service u rechtstreeks communiceren met uw exemplaar van XSplit om wijzigingen in scènes en bronnen uit te voeren.</value>
+  </data>
+  <data name="XSplitInfo2" xml:space="preserve">
+    <value>De extensie Mix It Up moet worden geïnstalleerd vanuit de XSplit-map en worden uitgevoerd in XSplit. Raadpleeg de XSplit Service-pagina voor instructies over hoe u dit doen.</value>
+  </data>
+  <data name="XSplitServicePage" xml:space="preserve">
+    <value>XSplit-servicepagina</value>
+  </data>
+  <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
+    <value>URL achtergrondafbeelding (maximaal 300 tekens)</value>
+  </data>
+  <data name="BackupSettingsLoadedError" xml:space="preserve">
+    <value>Een of meer van de instellingen bestand kon niet worden geladen als gevolg van bestandsbeschadiging en de meest recente lokale back-up werd geladen in plaats daarvan.</value>
+  </data>
+  <data name="BanUserPrompt" xml:space="preserve">
+    <value>Dit zal de gebruiker {0} van dit kanaal verbannen. Weet je het zeker?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="BitsBonusZeroOrMore" xml:space="preserve">
+    <value>De Bits Bonus moet groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="BitsHeader" xml:space="preserve">
+    <value>Stukjes:</value>
+  </data>
+  <data name="BoardHeader" xml:space="preserve">
+    <value>Raad:</value>
+  </data>
+  <data name="ClearGameQueuePrompt" xml:space="preserve">
+    <value>Weet je zeker dat je de wachtrij voor gamewachtrij wilt wissen?</value>
+  </data>
+  <data name="CommandNameRequiredForShop" xml:space="preserve">
+    <value>Er moet een opdrachtnaam voor de winkel worden opgegeven.</value>
+  </data>
+  <data name="CommandRequired" xml:space="preserve">
+    <value>Er moet een opdracht worden geselecteerd.</value>
+  </data>
+  <data name="CurrencyImportFailed" xml:space="preserve">
+    <value>We konden de gegevens niet importeren. Zorg ervoor dat uw bestand een van de volgende indelingen heeft:</value>
+  </data>
+  <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
+    <value>De naam moet ten minste 1 letter hebben.</value>
+  </data>
+  <data name="CurrencyRankInventoryNameProtected" xml:space="preserve">
+    <value>De volgende namen zijn gereserveerd en kunnen niet worden gebruikt:</value>
+  </data>
+  <data name="CurrencyRankNameDuplicate" xml:space="preserve">
+    <value>Er bestaat al een valuta- of rangsysteem met deze naam.</value>
+  </data>
+  <data name="CurrencyRankNameNoDigits" xml:space="preserve">
+    <value>De naam mag er geen cijfercijfers in bevatten.</value>
+  </data>
+  <data name="CurrencyRankNameRequired" xml:space="preserve">
+    <value>Er moet een {0} naam worden opgegeven</value>
+    <comment>{0} is the type (currency or rank)</comment>
+  </data>
+  <data name="CustomCommandAlreadyExists" xml:space="preserve">
+    <value>Er bestaat al een aangepaste opdracht voor dit niveau.</value>
+  </data>
+  <data name="CustomLevelGreaterThanZero" xml:space="preserve">
+    <value>U moet een getal van meer dan 0 opgeven.</value>
+  </data>
+  <data name="DamageAnimation" xml:space="preserve">
+    <value>Schade Animatie</value>
+  </data>
+  <data name="DataFileImportFailed" xml:space="preserve">
+    <value>We konden geen gegevens uit het bestand lezen. Zorg ervoor dat het nog niet is geopend in een ander programma.</value>
+  </data>
+  <data name="DataFileInvalidColumn" xml:space="preserve">
+    <value>Voor elke kolom die u wilt opnemen, moet een getal 0 of hoger worden opgegeven.</value>
+  </data>
+  <data name="DataFileRequiredColumns" xml:space="preserve">
+    <value>Uw gegevensbestand moet ten minste de kolommen Gebruikersnaam of Gebruikersnaam bevatten.</value>
+  </data>
+  <data name="DefaultMaxGreaterThanZero" xml:space="preserve">
+    <value>Het standaard maximumbedrag moet groter zijn dan 0.</value>
+  </data>
+  <data name="DeleteItemPrompt" xml:space="preserve">
+    <value>Weet u zeker dat u dit wilt verwijderen?</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>Weet u zeker dat u dit profiel wilt verwijderen?</value>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>Weet u zeker dat u deze offerte wilt verwijderen?</value>
+  </data>
+  <data name="DeleteUserDataPrompt" xml:space="preserve">
+    <value>Hiermee worden de gegevens van deze gebruiker verwijderd, waaronder de opdrachten Uren, Valuta, Rang en Aangepaste gebruikers. Weet je zeker dat je dit wilt doen?</value>
+  </data>
+  <data name="DeleteWidgetPrompt" xml:space="preserve">
+    <value>Weet u zeker dat u deze widget wilt verwijderen?</value>
+  </data>
+  <data name="DemoteUserPrompt" xml:space="preserve">
+    <value>Dit degradeert de gebruiker {0} van een moderator van dit kanaal. Weet je het zeker?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="DeviceApprovedLine1" xml:space="preserve">
+    <value>Het apparaat {0} is goedgekeurd.</value>
+    <comment>{0} is the device name</comment>
+  </data>
+  <data name="DeviceApprovedLine2" xml:space="preserve">
+    <value>Ga naar Instellingen -&gt;-afstandsbediening om het te configureren.</value>
+  </data>
+  <data name="DeviceCodeHeader" xml:space="preserve">
+    <value>Apparaat 6-cijferige code:</value>
+  </data>
+  <data name="DeviceCodeInvalid" xml:space="preserve">
+    <value>De ingevoerde code is ongeldig.</value>
+  </data>
+  <data name="DeviceNoCode" xml:space="preserve">
+    <value>Er kan geen clientapparaat worden gevonden met de opgegeven code.</value>
+  </data>
+  <data name="DonationBonusZeroOrMore" xml:space="preserve">
+    <value>De donatiebonus moet groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="DonationsHeader" xml:space="preserve">
+    <value>Donaties:</value>
+  </data>
+  <data name="DuplicateItemName" xml:space="preserve">
+    <value>Er bestaat al een item met dezelfde naam.</value>
+  </data>
+  <data name="DuplicateProfileName" xml:space="preserve">
+    <value>Er bestaat al een profiel met dezelfde naam.</value>
+  </data>
+  <data name="EndDateInvalid" xml:space="preserve">
+    <value>De einddatum moet na de begindatum zijn.</value>
+  </data>
+  <data name="ErrorDetailsHeader" xml:space="preserve">
+    <value>Foutdetails:</value>
+  </data>
+  <data name="FailedToConnectToTwitch" xml:space="preserve">
+    <value>Kan geen verbinding maken met Twitch-services. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FailedToFinalizeInitialization" xml:space="preserve">
+    <value>Kan initialisatie niet afronden. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FailedToGetChannelInformation" xml:space="preserve">
+    <value>Kan kanaalinformatie niet ophalen. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FailedToInitializeBotAccount" xml:space="preserve">
+    <value>Kan Bot-account niet initialiseren</value>
+  </data>
+  <data name="FailedToInitializeExternalServices" xml:space="preserve">
+    <value>Kan externe services niet initialiseren. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FailedToInitializeSettings" xml:space="preserve">
+    <value>Kan instellingen niet initialiseren. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FailedToInitializeStreamerBasedServices" xml:space="preserve">
+    <value>Kan op streamer gebaseerde services niet initialiseren. Als dit zo doorgaat, ga dan naar de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="FollowBonusZeroOrMore" xml:space="preserve">
+    <value>De follow bonus moet groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="FollowsHeader" xml:space="preserve">
+    <value>Volgt:</value>
+  </data>
+  <data name="FontColor" xml:space="preserve">
+    <value>Tekstkleur</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>Lettertypenaam</value>
+  </data>
+  <data name="GoalAmount" xml:space="preserve">
+    <value>Doelbedrag</value>
+  </data>
+  <data name="GoalType" xml:space="preserve">
+    <value>Doeltype</value>
+  </data>
+  <data name="HealingBonus" xml:space="preserve">
+    <value>Helende Bonus</value>
+  </data>
+  <data name="HostBonusPerUser" xml:space="preserve">
+    <value>Hostbonus (per gebruiker)</value>
+  </data>
+  <data name="HostBonusZeroOrMore" xml:space="preserve">
+    <value>De hostbonus moet groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="HostsHeader" xml:space="preserve">
+    <value>Hosts:</value>
+  </data>
+  <data name="HotKeyRequired" xml:space="preserve">
+    <value>Er moet een hot key-configuratie worden ingesteld.</value>
+  </data>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>We konden geen gegevens uit het bestand lezen. Zorg ervoor dat het nog niet is geopend in een ander programma. Als dit zo doorgaat, neem dan contact op om te ondersteunen.</value>
+  </data>
+  <data name="ImportPointsPrompt1" xml:space="preserve">
+    <value>Hiermee u de totale bedragen importeren die elke gebruiker had, deze aan deze {0} toewijzen en alle bedragen die elke gebruiker heeft overschrijven.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="ImportPointsPrompt2" xml:space="preserve">
+    <value>Dit proces kan enige tijd in zich opnemen; Weet je zeker dat je dit wilt doen?</value>
+  </data>
+  <data name="ImportSuccess" xml:space="preserve">
+    <value>{0} gebruikers zijn geïmporteerd.</value>
+    <comment>{0} is the number of successes</comment>
+  </data>
+  <data name="ImportWithFailures" xml:space="preserve">
+    <value>{0} gebruikers zijn geïmporteerd, maar {1} gebruikers konden niet worden geïmporteerd. Dit kan te wijten zijn aan ongeldige gegevens of het niet vinden van hun informatie op het platform. Neem indien nodig contact op met de ondersteuning voor verdere hulp hierbij.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
+  <data name="InvalidDataFile" xml:space="preserve">
+    <value>Er moet een geldig gegevensbestand worden opgegeven.</value>
+  </data>
+  <data name="InvalidPosition" xml:space="preserve">
+    <value>Er moet een geldige positie voor deze overlaywidget worden geselecteerd.</value>
+  </data>
+  <data name="InventoryNameDuplicate" xml:space="preserve">
+    <value>Er bestaat al een inventaris met deze naam.</value>
+  </data>
+  <data name="InventoryNameRequired" xml:space="preserve">
+    <value>Er moet een voorraadnaam worden opgegeven.</value>
+  </data>
+  <data name="ItemBuyAmountZeroOrMore" xml:space="preserve">
+    <value>Het aankoopbedrag van het artikel moet leeg zijn of een getal groter dan 0.</value>
+  </data>
+  <data name="ItemMaxAmountZeroOrMore" xml:space="preserve">
+    <value>Het maximumbedrag van het artikel moet leeg zijn of een getal groter dan 0.</value>
+  </data>
+  <data name="ItemNameRequired" xml:space="preserve">
+    <value>U moet een naam voor het artikel opgeven.</value>
+  </data>
+  <data name="ItemSellAmountZeroOrMore" xml:space="preserve">
+    <value>Het verkoopbedrag van het artikel moet leeg zijn of een getal groter dan 0.</value>
+  </data>
+  <data name="LengthSeconds" xml:space="preserve">
+    <value>Lengte (seconden)</value>
+  </data>
+  <data name="LessThanMaxLevel" xml:space="preserve">
+    <value>U moet een getal opgeven dat kleiner is dan of gelijk is aan het maximumniveau.</value>
+  </data>
+  <data name="LoopHeader" xml:space="preserve">
+    <value>Lus:</value>
+  </data>
+  <data name="MaxAmountMustBeZeroOrMore" xml:space="preserve">
+    <value>Het maximumbedrag moet groter zijn dan 0 of kan worden achtergelaten als 0 voor geen maximumbedrag.</value>
+  </data>
+  <data name="MaxCustomLevelCommand" xml:space="preserve">
+    <value>Er kunnen geen aangepaste niveau-opdrachten zijn die groter zijn dan het maximumniveau.</value>
+  </data>
+  <data name="MaxLevelGreaterThanZero" xml:space="preserve">
+    <value>Het maximumniveau moet groter zijn dan 0.</value>
+  </data>
+  <data name="MinimumActivityRateZeroOrMore" xml:space="preserve">
+    <value>Het minimumactiviteitspercentage moet 0 of hoger zijn.</value>
+  </data>
+  <data name="MinimumAmount" xml:space="preserve">
+    <value>Minimumbedrag</value>
+  </data>
+  <data name="MinimumAmountRequired" xml:space="preserve">
+    <value>Er moet een minimumbedrag worden opgegeven.</value>
+  </data>
+  <data name="MinSecondsToShow" xml:space="preserve">
+    <value>Min seconden om weer te geven</value>
+  </data>
+  <data name="ModeratorBonusZeroOrMore" xml:space="preserve">
+    <value>De moderatorbonus moet 0 of hoger zijn.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Er moet een naam worden opgegeven.</value>
+  </data>
+  <data name="NewBossAnimation" xml:space="preserve">
+    <value>Nieuwe bossanimatie</value>
+  </data>
+  <data name="NewLeader" xml:space="preserve">
+    <value>Nieuwe leider</value>
+  </data>
+  <data name="OfflineRateVsInterval" xml:space="preserve">
+    <value>De offline minuten kunnen niet 0 zijn als het offline bedrag groter is dan 0.</value>
+  </data>
+  <data name="OneCustomLevelCommand" xml:space="preserve">
+    <value>Er kan slechts 1 aangepaste level up-opdracht per individueel niveau zijn.</value>
+  </data>
+  <data name="OneItemRequired" xml:space="preserve">
+    <value>Er moet ten minste 1 item worden toegevoegd.</value>
+  </data>
+  <data name="OneRankRequired" xml:space="preserve">
+    <value>Er moet ten minste één rang worden gemaakt.</value>
+  </data>
+  <data name="OnFollowBonusZeroOrMore" xml:space="preserve">
+    <value>De On Follow bonus moet 0 of hoger zijn.</value>
+  </data>
+  <data name="OnGoalReached" xml:space="preserve">
+    <value>Op doel bereikt</value>
+  </data>
+  <data name="OnHostBonusZeroOrMore" xml:space="preserve">
+    <value>De On Host bonus moet 0 of hoger zijn.</value>
+  </data>
+  <data name="OnlineRateMustBeZeroOrMore" xml:space="preserve">
+    <value>Het online bedrag en de minuten moeten 0 of hoger zijn.</value>
+  </data>
+  <data name="OnlineRateVsInterval1" xml:space="preserve">
+    <value>De online minuten kunnen niet 0 zijn als het online bedrag groter is dan 0.</value>
+  </data>
+  <data name="OnlineRateVsInterval2" xml:space="preserve">
+    <value>Het offlinebedrag en de minuten moeten 0 of hoger zijn.</value>
+  </data>
+  <data name="OnNewStreamBoss" xml:space="preserve">
+    <value>Op New Stream Boss</value>
+  </data>
+  <data name="OnSubscribeBonusZeroOrMore" xml:space="preserve">
+    <value>De bonus Op abonneren moet 0 of hoger zijn.</value>
+  </data>
+  <data name="OnTimerCompleted" xml:space="preserve">
+    <value>Op Timer voltooid</value>
+  </data>
+  <data name="OverkillBonus" xml:space="preserve">
+    <value>Overkill Bonus</value>
+  </data>
+  <data name="OverlayMissingDetails" xml:space="preserve">
+    <value>Er ontbreken details voor het overlay-item.</value>
+  </data>
+  <data name="OverlayRequired" xml:space="preserve">
+    <value>Een te gebruiken overlay moet worden geselecteerd.</value>
+  </data>
+  <data name="PointsForLevelUpGreaterThanZero" xml:space="preserve">
+    <value>De punten voor niveau omhoog moeten groter zijn dan 0.</value>
+  </data>
+  <data name="ProfileType" xml:space="preserve">
+    <value>Profieltype</value>
+  </data>
+  <data name="ProgressColor" xml:space="preserve">
+    <value>Voortgangskleur</value>
+  </data>
+  <data name="PromoteUserPrompt" xml:space="preserve">
+    <value>Dit promoot de gebruiker {0} aan een moderator van dit kanaal. Weet je het zeker?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="RaidBonusPerUser" xml:space="preserve">
+    <value>Raid Bonus (per gebruiker)</value>
+  </data>
+  <data name="RaidsHeader" xml:space="preserve">
+    <value>Invallen:</value>
+  </data>
+  <data name="RankRequired" xml:space="preserve">
+    <value>Er moet een rangnaam worden opgegeven.</value>
+  </data>
+  <data name="RegularBonusZeroOrMore" xml:space="preserve">
+    <value>De reguliere bonus moet 0 of hoger zijn.</value>
+  </data>
+  <data name="RemoteFailed" xml:space="preserve">
+    <value>Kon geen verbinding maken met de externe service, probeer het opnieuw.</value>
+  </data>
+  <data name="RemoteServicesFailed" xml:space="preserve">
+    <value>Kon geen verbinding maken met de externe service, probeer het opnieuw.</value>
+  </data>
+  <data name="RemoteTwoLayersMax" xml:space="preserve">
+    <value>Planken kunnen slechts tot 2 lagen diep zijn.</value>
+  </data>
+  <data name="ResetAfterDays" xml:space="preserve">
+    <value>Reset na dagen</value>
+  </data>
+  <data name="ResetAllItemPrompt" xml:space="preserve">
+    <value>Wilt u alle artikelbedragen opnieuw instellen?</value>
+  </data>
+  <data name="ResetAllProgressPrompt" xml:space="preserve">
+    <value>Weet u zeker dat u de voortgang voor alle gebruikers wilt resetten?</value>
+  </data>
+  <data name="ResetCurrencyRankPointsPrompt" xml:space="preserve">
+    <value>Wilt u alle {0} punten resetten?</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt1" xml:space="preserve">
+    <value>Met deze optie worden alle {0} punten voor deze {0} opnieuw ingesteld en wordt een bedrag toegewezen aan elke gebruiker dat rechtstreeks gelijk is aan de opgeslagen onlinesnelheid, niet aan de momenteel bewerkte onlinesnelheid. Voordat u deze optie gebruikt, moet u alle bewerkingen op dit {0} opslaan, opnieuw bewerken en vervolgens deze optie selecteren.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
+    <value>EX: Als het onlinetarief "1 per uur" is en een gebruiker 16 kijkuren heeft, worden de {0} punten van die gebruiker ingesteld op 16.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
+    <value>Dit proces kan enige tijd in zich opnemen; Weet je zeker dat je dit wilt doen?</value>
+  </data>
+  <data name="RetroactiveUnsupported" xml:space="preserve">
+    <value>Het koerstype voor deze valuta biedt geen ondersteuning voor het geven van punten met terugwerkende kracht.</value>
+  </data>
+  <data name="ScorpBotInstallationDirectory" xml:space="preserve">
+    <value>ScorpBot Installatie Directory</value>
+  </data>
+  <data name="ScrollWidthPixels" xml:space="preserve">
+    <value>Schuifbreedte (pixels)</value>
+  </data>
+  <data name="ServiceDisconnectedLine1" xml:space="preserve">
+    <value>Deze services hebben de verbinding verbroken</value>
+  </data>
+  <data name="ServiceDisconnectedLine2" xml:space="preserve">
+    <value>en proberen opnieuw verbinding te maken:</value>
+  </data>
+  <data name="SessionInitializationFailed" xml:space="preserve">
+    <value>Kan sessie niet initialiseren. Als dit zo doorgaat, bezoek dan de Mix It Up Discord voor hulp.</value>
+  </data>
+  <data name="SettingsChangedRestartPrompt" xml:space="preserve">
+    <value>Voor sommige instellingen die u hebt gewijzigd, moet u opnieuw worden opgestart. Wilt u Mix It Up nu opnieuw opstarten?</value>
+  </data>
+  <data name="SettingsLoadFailure" xml:space="preserve">
+    <value>Een of meer instellingenbestanden konden niet worden geladen. Bezoek de Mix It Up-onenigheid voor hulp bij dit onderwerp.</value>
+  </data>
+  <data name="Shadow" xml:space="preserve">
+    <value>Schaduw (optioneel)</value>
+  </data>
+  <data name="ShopCurrencyRequired" xml:space="preserve">
+    <value>Er moet een valuta voor de winkel worden opgegeven.</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Grootte (pixels)</value>
+  </data>
+  <data name="StartingAmount" xml:space="preserve">
+    <value>Startbedrag</value>
+  </data>
+  <data name="StartingHealth" xml:space="preserve">
+    <value>Gezondheid starten</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Begintijd (secs)</value>
+  </data>
+  <data name="StreamlabsChatBotDataFile" xml:space="preserve">
+    <value>Streamlabs ChatBot-gegevensbestand</value>
+  </data>
+  <data name="StreamPassNameDuplicate" xml:space="preserve">
+    <value>Er bestaat al een Stream Pass met deze naam.</value>
+  </data>
+  <data name="StreamPassNameInvalid" xml:space="preserve">
+    <value>De naam mag alleen letters, cijfers of spaties bevatten.</value>
+  </data>
+  <data name="StreamPassNameRequired" xml:space="preserve">
+    <value>Er moet een geldige naam worden opgegeven.</value>
+  </data>
+  <data name="SubMultiplierOneOrMore" xml:space="preserve">
+    <value>De subvermenigvuldigingsfactor moet groter zijn dan of gelijk zijn aan 1,0.</value>
+  </data>
+  <data name="SubResubsHeader" xml:space="preserve">
+    <value>Subs/Resubs:</value>
+  </data>
+  <data name="SubscriberBonusZeroOrMore" xml:space="preserve">
+    <value>De abonneebonus moet 0 of hoger zijn.</value>
+  </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>Overschakelen naar donker thema</value>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>Overschakelen naar lichtthema</value>
+  </data>
+  <data name="TextSize" xml:space="preserve">
+    <value>Tekstgrootte (pixels)</value>
+  </data>
+  <data name="TotalFollowsHeader" xml:space="preserve">
+    <value>Totaal volgt:</value>
+  </data>
+  <data name="TradingCommandRequired" xml:space="preserve">
+    <value>Er moet een opdrachtnaam worden opgegeven voor de handel.</value>
+  </data>
+  <data name="TwitchAccountExists" xml:space="preserve">
+    <value>Er bestaan al instellingen voor het account {0}. Meld u aan met een ander account of start Mix It Up opnieuw om deze instellingen in de vervolgkeuzelijst te selecteren.</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="TwitchAccountMismatch" xml:space="preserve">
+    <value>Het account waarmee je bent ingelogd zoals op Twitch komt niet overeen met het account voor deze instellingen. Log in als het juiste account op Twitch.</value>
+  </data>
+  <data name="TwitchFailed" xml:space="preserve">
+    <value>Kan geen verbinding maken met Twitch-services:</value>
+  </data>
+  <data name="UniqueRankNameAndMinimumAmountRequired" xml:space="preserve">
+    <value>Elke rang moet een unieke naam en minimumbedrag hebben.</value>
+  </data>
+  <data name="UpgradePrompt1" xml:space="preserve">
+    <value>We hebben een oudere versie van uw instellingen gedetecteerd die moet worden geüpgraded naar een nieuwere indeling. Afhankelijk van de grootte kan dit enige tijd duren om uit te voeren en is vereist om Mix It Up te gebruiken.</value>
+  </data>
+  <data name="UpgradePrompt2" xml:space="preserve">
+    <value>Als u klaar bent om dit te doen, druk dan op Ja. Druk anders op Nee en dicht bij de toepassing om later uit te voeren.</value>
+  </data>
+  <data name="VideoFilePath" xml:space="preserve">
+    <value>Videobestandspad</value>
+  </data>
+  <data name="ViewingRateAmountZeroOrMore" xml:space="preserve">
+    <value>Het weergavetariefbedrag moet groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="ViewingRateMinutesInvalid" xml:space="preserve">
+    <value>Het weergavepercentage Bedrag en minuten moeten beide groter zijn dan 0 of beide gelijk aan 0.</value>
+  </data>
+  <data name="ViewingRateMinutesZeroOrMore" xml:space="preserve">
+    <value>De kijksnelheidsminuten moeten groter zijn dan of gelijk zijn aan 0.</value>
+  </data>
+  <data name="VolumeHeader" xml:space="preserve">
+    <value>Volume:</value>
+  </data>
+  <data name="WebPageURL" xml:space="preserve">
+    <value>URL van webpagina's</value>
+  </data>
+  <data name="YoutubeVideoURLID" xml:space="preserve">
+    <value>Youtube Video URL/ID</value>
+  </data>
+  <data name="DiscoardBotGatewayFailed" xml:space="preserve">
+    <value>Kan Bot Application Gateway-gegevens niet ophalen</value>
+  </data>
+  <data name="DiscordBotWebSocketFailed" xml:space="preserve">
+    <value>Kan Bot Application niet verbinden met web socket</value>
+  </data>
+  <data name="DiscordServerDataFailed" xml:space="preserve">
+    <value>Kon servergegevens niet ophalen</value>
+  </data>
+  <data name="DiscordUserDataFailed" xml:space="preserve">
+    <value>Kon geen gebruikersgegevens ophalen</value>
+  </data>
+  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
+    <value>Kon team-/deelnemersgegevens niet ophalen</value>
+  </data>
+  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
+    <value>Extra Life team ID / deelnemer ID is niet ingesteld</value>
+  </data>
+  <data name="JustGivingUserDataFailed" xml:space="preserve">
+    <value>Kan gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="NameOfButtonHeader" xml:space="preserve">
+    <value>Naam van de knop:</value>
+  </data>
+  <data name="NameOfFolderHeader" xml:space="preserve">
+    <value>Naam van de map:</value>
+  </data>
+  <data name="OBSWebSocketFailed" xml:space="preserve">
+    <value>Kan geen verbinding maken met obs studio web socket</value>
+  </data>
+  <data name="OverlayAddFailed" xml:space="preserve">
+    <value>Kan {0} overlay niet toevoegen</value>
+    <comment>{0} is the overlay name</comment>
+  </data>
+  <data name="OvrStreamInvalidAddress" xml:space="preserve">
+    <value>Ongeldig opgegeven adres</value>
+  </data>
+  <data name="PatreonCampaignDataFailed" xml:space="preserve">
+    <value>Kan campagnegegevens niet ophalen</value>
+  </data>
+  <data name="PatreonUserDataFailed" xml:space="preserve">
+    <value>Kan gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="StreamElementsUserDataFailed" xml:space="preserve">
+    <value>Kan gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+    <value>Kan kanaalgegevens niet ophalen</value>
+  </data>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>Streamlabs OBS wordt mogelijk uitgevoerd als beheerder en Mix It Up niet. Probeer Mix It Up uit te voeren als beheerder voordat u verbinding maakt.</value>
+  </data>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>Streamlabs OBS kon niet worden bereikt</value>
+  </data>
+  <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
+    <value>Kan token voor web sockets niet ophalen</value>
+  </data>
+  <data name="TiltifyUserDataFailed" xml:space="preserve">
+    <value>Kan gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="TipeeeStreamSocketFailed" xml:space="preserve">
+    <value>Kan geen verbinding maken met socket</value>
+  </data>
+  <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
+    <value>Kan socket-URL-adres niet ophalen</value>
+  </data>
+  <data name="TipeeeStreamUserDataFailed" xml:space="preserve">
+    <value>Kan gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="TipeeStreamSocketKeyFailed" xml:space="preserve">
+    <value>Kan Socket API-sleutel niet ophalen</value>
+  </data>
+  <data name="TreatStreamSocketFailed" xml:space="preserve">
+    <value>Kan geen verbinding maken met socket</value>
+  </data>
+  <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
+    <value>Kan Socket-token niet ophalen</value>
+  </data>
+  <data name="TwitchConnectionFailed" xml:space="preserve">
+    <value>Twitch-verbinding is niet tot stand gebracht</value>
+  </data>
+  <data name="TwitchFailedBotData" xml:space="preserve">
+    <value>Kan Twitch-botgegevens niet ophalen</value>
+  </data>
+  <data name="TwitchFailedNewAPIUserData" xml:space="preserve">
+    <value>Kan nieuwe API Twitch-gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="TwitchFailedV5APIUserData" xml:space="preserve">
+    <value>Kan V5 API Twitch-gebruikersgegevens niet ophalen</value>
+  </data>
+  <data name="TwitterAuthFailed" xml:space="preserve">
+    <value>Kan autorisatie niet ophalen</value>
+  </data>
+  <data name="TwitterRateLimited" xml:space="preserve">
+    <value>De opgegeven tweet kan niet worden verzonden omdat je de afgelopen 5 minuten al een tweet hebt verzonden</value>
+  </data>
+  <data name="OverlayWidgetChatMessagesDescription" xml:space="preserve">
+    <value>Toont de laatste X veel chatberichten van je kanaal. Chatberichten worden toegevoegd wanneer ze zich voordoen.</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsDescription" xml:space="preserve">
+    <value>Toont een scrollende lijst met tekst zoals filmcredits op basis van gebruikersinteracties in de hele stream. Als u de widget weergeeft, worden de credits geactiveerd en wordt deze opnieuw ingesteld.</value>
+  </data>
+  <data name="OverlayWidgetEventListDescription" xml:space="preserve">
+    <value>Toont de laatste X veel gebeurtenissen die in uw kanaal hebben plaatsgevonden. Gebeurtenissen worden toegevoegd wanneer ze zich voordoen.</value>
+  </data>
+  <data name="OverlayWidgetGameQueueDescription" xml:space="preserve">
+    <value>Toont een tekstblok. Gebeurtenissen worden toegevoegd wanneer ze zich voordoen.</value>
+  </data>
+  <data name="OverlayWidgetHTMLDescription" xml:space="preserve">
+    <value>Toont HTML-code rechtstreeks op de overlay. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetImageDescription" xml:space="preserve">
+    <value>Toont een afbeelding. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetLeaderboardDescription" xml:space="preserve">
+    <value>Toont de beste X-gebruikers in een opgegeven categorie. Leaderboardposities worden bijgewerkt wanneer gebeurtenissen plaatsvinden of op door de gebruiker gedefinieerd vernieuwingsinterval</value>
+  </data>
+  <data name="OverlayWidgetProgressBarDescription" xml:space="preserve">
+    <value>Toont een voortgangsbalk voor een opgegeven doel. De voortgang wordt bijgewerkt wanneer gebeurtenissen plaatsvinden of bij het door de gebruiker gedefinieerde vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
+    <value>Toont een gebruiker van je kanaal als een 'baas' die kan worden beschadigd door acties in je kanaal uit te voeren totdat ze zijn verslagen en een nieuwe baas is geselecteerd. Schade wordt toegevoegd wanneer deze optreedt. De speciale id's van de stream boss kunnen parallel met deze overlaywidget worden gebruikt.</value>
+  </data>
+  <data name="OverlayWidgetTextDescription" xml:space="preserve">
+    <value>Toont een tekstblok. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetTickerTapeDescription" xml:space="preserve">
+    <value>Toont een scrollende lijst met tekst van de laatste X veel gebruikers die een opgegeven gebeurtenis hebben veroorzaakt. Gebruikers worden toegevoegd aan de lijst wanneer de gebeurtenis plaatsvindt.</value>
+  </data>
+  <data name="OverlayWidgetTimerDescription" xml:space="preserve">
+    <value>Toont een timer die aftelt terwijl deze zichtbaar is. Als u de timer verbergt, wordt het bedrag opnieuw ingesteld.</value>
+  </data>
+  <data name="OverlayWidgetTimerTrainDescription" xml:space="preserve">
+    <value>Toont een timer die aftelt en kan worden verhoogd door bepaalde acties in uw kanaal uit te voeren. Het wordt alleen weergegeven wanneer de totale tijd de waarde Minimumseconden om weer te geven overschrijdt. Tijdupdates wanneer gebeurtenissen plaatsvinden.</value>
+  </data>
+  <data name="OverlayWidgetVideoDescription" xml:space="preserve">
+    <value>Toont een video. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetWebPageDescription" xml:space="preserve">
+    <value>Toont een webpagina. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="OverlayWidgetYouTubeDescription" xml:space="preserve">
+    <value>Toont een YouTube-video. Vernieuwt op basis van door de gebruiker gedefinieerd vernieuwingsinterval.</value>
+  </data>
+  <data name="Generic" xml:space="preserve">
+    <value>Generieke</value>
+  </data>
+  <data name="DemoteFromMod" xml:space="preserve">
+    <value>Degraderen van Mod</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Uitschakelen</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Gebruiker bewerken</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Volgen</value>
+  </data>
+  <data name="Follows" xml:space="preserve">
+    <value>Volgt</value>
+  </data>
+  <data name="ModerationStrikes" xml:space="preserve">
+    <value>Moderatie slaat toe</value>
+  </data>
+  <data name="OpenChannelPage" xml:space="preserve">
+    <value>Kanaalpagina openen</value>
+  </data>
+  <data name="PromoteToMod" xml:space="preserve">
+    <value>Promoveren naar Mod</value>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>Herinschrijvingen</value>
+  </data>
+  <data name="StreamInfo" xml:space="preserve">
+    <value>Stream-informatie</value>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>Subprioriteit:</value>
+  </data>
+  <data name="SubscribersReceivePriority" xml:space="preserve">
+    <value>Abonnees ontvangen prioriteit</value>
+  </data>
+  <data name="Subscribes" xml:space="preserve">
+    <value>Onderschrijft</value>
+  </data>
+  <data name="TimeoutFiveMin" xml:space="preserve">
+    <value>Time-out 5 Min</value>
+  </data>
+  <data name="TimeoutOneMin" xml:space="preserve">
+    <value>Time-out 1 Min</value>
+  </data>
+  <data name="Unban" xml:space="preserve">
+    <value>Unban</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>Unfollow</value>
   </data>
 </root>

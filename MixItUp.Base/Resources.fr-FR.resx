@@ -261,18 +261,6 @@
     <value>Périphérique de sortie audio</value>
     <comment>Manual</comment>
   </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Hébergement automatique</value>
-    <comment>Manual</comment>
-  </data>
-   <data name="AutoHosterDescription" xml:space="preserve">
-    <value>L'Hébergement Automatique de Mix It Up est une application autonome qui gère l'hébergement d'autres canaux lorsque vous ne diffusez pas. L'Hébergement Automatique doit être en cours d'exécution, mais vous n'avez pas besoin d'avoir Mix It Up en cours d'exécution pour l'utiliser.</value>
-  <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>L'Hébergement Automatique peut être lancé en cliquant sur le bouton ci-dessous</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Inclut automatiquement "!"</value>
     <comment>Manual</comment>
@@ -317,7 +305,7 @@
     <value>Débit en Bauds</value>
     <comment>Manual</comment>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Gris bleuté</value>
     <comment>Manual</comment>
   </data>
@@ -485,11 +473,11 @@
     <value>Déduire de la commande en cours d'exécution de l'utilisateur</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Orange foncé</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Violet foncé</value>
     <comment>Manual</comment>
   </data>
@@ -547,10 +535,6 @@
   </data>
   <data name="Duplicate" xml:space="preserve">
     <value>Dupliquer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Coût en Ember</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableChat" xml:space="preserve">
@@ -689,6 +673,14 @@
     <value>Durée avant que cette commande puisse être exécutée à nouveau (en secondes)?</value>
     <comment>Manual</comment>
   </data>
+  <data name="HTML" xml:space="preserve">
+    <value>HTML</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="IFTTT" xml:space="preserve">
+    <value>IFTTT</value>
+    <comment>Manual</comment>
+  </data>
   <data name="ImportActions" xml:space="preserve">
     <value>Importer les Actions</value>
     <comment>Manual</comment>
@@ -737,10 +729,6 @@
     <value>Dernière Version</value>
     <comment>Manual</comment>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Lancement De l’Hébergement automatique</value>
-    <comment>Manual</comment>
-  </data>
   <data name="LeaveQueue" xml:space="preserve">
     <value>Quitter la File d’attente</value>
     <comment>Manual</comment>
@@ -777,26 +765,6 @@
     <value>Maximum de Majuscules</value>
     <comment>Manual</comment>
   </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Âge du compte Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Données de Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Laboratoires de Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>État de Mixer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Support de Mixer</value>
-    <comment>Manual</comment>
-  </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Commandes Mix It Up</value>
     <comment>Manual</comment>
@@ -819,10 +787,6 @@
   </data>
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Ce bouton doit-il se recharger seul ou avec tous ?</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Combien d'étincelles ce bouton coûte-t-il ?</value>
     <comment>Manual</comment>
   </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
@@ -889,6 +853,10 @@
     <value>L'overlay doit être activé dans le menu Services pour utiliser Overlay Widgets.</value>
     <comment>Manual</comment>
   </data>
+  <data name="OvrStream" xml:space="preserve">
+    <value>OvrStream</value>
+    <comment>Manual</comment>
+  </data>
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Streamer Partenaire</value>
     <comment>Manual</comment>
@@ -947,6 +915,10 @@
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>Vous devez être un {0} pour faire cela.</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>RTS</value>
     <comment>Manual</comment>
   </data>
   <data name="RunCommand" xml:space="preserve">
@@ -1059,18 +1031,6 @@
   </data>
   <data name="SoundFilePath" xml:space="preserve">
     <value>Chemin du fichier sonore</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Coût Étincelles</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>exempt d'étincelles</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Étincelles dépensées</value>
     <comment>Manual</comment>
   </data>
   <data name="SpeechMessage" xml:space="preserve">
@@ -1289,58 +1249,6 @@
     <value>faire un don</value>
     <comment>Manual</comment> 
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Chaîne Mixer Braises dépensées</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Chaîne Mixer Fan Progression Level-Up</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Chaîne Mixer Suivi</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Chaîne Mixer Hébergé</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Le Jalon de la Chaîne Mixer est Atteint</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Chaîne Mixer Résouscrit</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Chaîne Mixer Compétences utilisées</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Chaîne Mixer Étincelles utilisées</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Démarrage du flux de stream de la Chaîne Mixer</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Arrêt du flux du Stream de la Chaîne Mixer</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Chaîne Mixer abonné</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Chaîne Mixer abonnements offert</value>
-    <comment>Manual</comment> 
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Chaîne Mixer non-abonnée</value>
-    <comment>Manual</comment> 
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>abonné Patreon</value>
     <comment>Manual</comment> 
@@ -1360,5 +1268,73 @@
   <data name="Timeout" xml:space="preserve">
     <value>Délai d'expiration</value>
     <comment>Manual</comment> 
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="OBSStudio" xml:space="preserve">
+    <value>OBS Studio</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatars</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>Streamlabs</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="XSplit" xml:space="preserve">
+    <value>XSplit</value>
+    <comment>Manual</comment>
   </data>
 </root>

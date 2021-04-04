@@ -13,13 +13,9 @@ namespace MixItUp.Base.ViewModel.Requirement
     [Obsolete]
     public enum CurrencyRequirementTypeEnum
     {
-        [Name("No Currency Cost")]
         NoCurrencyCost,
-        [Name("Minimum Only")]
         MinimumOnly,
-        [Name("Minimum & Maximum")]
         MinimumAndMaximum,
-        [Name("Required Amount")]
         RequiredAmount
     }
 

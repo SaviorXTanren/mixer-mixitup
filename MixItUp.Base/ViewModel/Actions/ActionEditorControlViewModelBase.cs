@@ -39,9 +39,15 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.enabled = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(Disabled));
             }
         }
         private bool enabled;
+
+        public bool Disabled
+        {
+            get { return !this.enabled; }
+        }
 
         public bool IsMinimized
         {

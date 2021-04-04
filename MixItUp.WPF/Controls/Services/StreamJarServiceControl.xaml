@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ServiceControlBase.Resources>
@@ -17,15 +18,15 @@
             <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap">StreamJar service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to StreamJar and approve Mix It Up to access your information.</TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.StreamJarInfo1}"/>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                <Button Command="{Binding LogOutCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Logout}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding LogInCommand}" HorizontalAlignment="Center" Width="90">Log In</Button>
+                <Button Command="{Binding LogInCommand}" HorizontalAlignment="Center" MinWidth="90" Content="{x:Static resx:Resources.Login}"/>
             </Grid>
         </Grid>
     </Grid>

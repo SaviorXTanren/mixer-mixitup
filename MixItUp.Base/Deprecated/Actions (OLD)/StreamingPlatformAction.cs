@@ -14,7 +14,6 @@ namespace MixItUp.Base.Actions
         Host,
         [Obsolete]
         Poll,
-        [Name("Run Ad")]
         RunAd,
         Raid,
     }

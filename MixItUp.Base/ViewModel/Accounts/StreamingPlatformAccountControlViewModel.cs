@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         }
         private StreamingPlatformTypeEnum platform;
 
-        public string PlatformName { get { return EnumHelper.GetEnumName(this.Platform); } }
+        public string PlatformName { get { return EnumLocalizationHelper.GetLocalizedName(this.Platform); } }
 
         public string PlatformImage
         {

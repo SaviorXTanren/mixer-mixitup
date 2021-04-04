@@ -34,7 +34,7 @@
 
         </Grid>
 
-        <TextBox Grid.Row="2" Text="{Binding Item.BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL (300 Characters Max)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" HorizontalAlignment="Center" />
+        <TextBox Grid.Row="2" Text="{Binding Item.BackgroundImage}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundImageURL300CharactersMax}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" HorizontalAlignment="Center" />
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

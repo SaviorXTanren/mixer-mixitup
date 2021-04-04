@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Services
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            return new Result("Invalid address specified");
+            return new Result(Resources.OvrStreamInvalidAddress);
         }
 
         public async Task Disconnect()

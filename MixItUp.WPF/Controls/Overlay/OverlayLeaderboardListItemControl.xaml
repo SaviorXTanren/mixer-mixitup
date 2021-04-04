@@ -46,9 +46,9 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRank}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding BitsDates}" SelectedItem="{Binding BitsDate}" Visibility="{Binding IsBitsType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+            <ComboBox Grid.Column="2" ItemsSource="{Binding BitsDates}" SelectedItem="{Binding BitsDate}" Visibility="{Binding IsBitsType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DateRange}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -56,7 +56,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <GroupBox Header="New Leader" Grid.Column="4" Width="220">
+            <GroupBox Header="{x:Static resx:Resources.NewLeader}" Grid.Column="4" Width="220">
                 <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
                     <Button x:Name="AddCommandButton" Visibility="{Binding DoesNotHaveNewLeaderCommand, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
@@ -78,12 +78,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalToShow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemWidth}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemHeight}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
         </Grid>
 
@@ -96,11 +96,29 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Border Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BorderColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
@@ -112,7 +130,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox ItemsSource="{Binding Alignments}" SelectedItem="{Binding Alignment}" Grid.Column="0" MaterialDesign:HintAssist.Hint="List Alignment" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
+            <ComboBox ItemsSource="{Binding Alignments}" SelectedItem="{Binding Alignment}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ListAlignment}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -120,7 +138,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding EntranceAnimation}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+            <ComboBox ItemsSource="{Binding EntranceAnimations}" SelectedItem="{Binding EntranceAnimation}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AddAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -128,7 +146,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding ExitAnimation}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
+            <ComboBox ItemsSource="{Binding ExitAnimations}" SelectedItem="{Binding ExitAnimation}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RemoveAnimation}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -137,6 +155,6 @@
             </ComboBox>
         </Grid>
 
-        <TextBox Text="{Binding HTML}" Grid.Row="8" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <TextBox Text="{Binding HTML}" Grid.Row="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

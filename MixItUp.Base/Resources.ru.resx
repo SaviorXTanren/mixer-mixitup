@@ -117,29 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 Пер Эмбер</value>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 в час</value>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 в минуту</value>
   </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 за искру</value>
-  </data>
   <data name="About" xml:space="preserve">
-    <value>О</value>
+    <value>около</value>
   </data>
   <data name="Accept" xml:space="preserve">
-    <value>Принять</value>
+    <value>принимать</value>
   </data>
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
     <value>Доступ к папке, где установлен Mix It Up</value>
   </data>
   <data name="Account" xml:space="preserve">
-    <value>Учетной записи</value>
+    <value>счет</value>
   </data>
   <data name="AccountDay" xml:space="preserve">
     <value>Учетная запись 1 день старый</value>
@@ -166,7 +160,7 @@
     <value>Приобрести курс</value>
   </data>
   <data name="Action" xml:space="preserve">
-    <value>Действий</value>
+    <value>действие</value>
   </data>
   <data name="ActionGroup" xml:space="preserve">
     <value>Группа действий</value>
@@ -187,7 +181,7 @@
     <value>Действия для выполнения с переводом</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Добавить</value>
+    <value>добавлять</value>
   </data>
   <data name="AddClause" xml:space="preserve">
     <value>Добавить клаузула</value>
@@ -244,7 +238,7 @@
     <value>18+</value>
   </data>
   <data name="Advanced" xml:space="preserve">
-    <value>Дополнительные</value>
+    <value>продвинутый</value>
   </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Расширенное командование</value>
@@ -271,13 +265,13 @@
     <value>Уже установлено</value>
   </data>
   <data name="Alt" xml:space="preserve">
-    <value>Alt</value>
+    <value>Альт</value>
   </data>
   <data name="Amber" xml:space="preserve">
-    <value>Янтаря</value>
+    <value>янтарь</value>
   </data>
   <data name="Amount" xml:space="preserve">
-    <value>Сумма</value>
+    <value>количество</value>
   </data>
   <data name="AmountDonated" xml:space="preserve">
     <value>Сумма пожертвовано</value>
@@ -322,22 +316,13 @@
     <value>Аргументы ($webrequestresult - Текст результата)</value>
   </data>
   <data name="Assets" xml:space="preserve">
-    <value>Активов</value>
+    <value>авуары</value>
   </data>
   <data name="Audience" xml:space="preserve">
-    <value>Аудитории</value>
+    <value>публика</value>
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Аудио выходное устройство</value>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Авто-Хостер</value>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Mix It Up Auto-Hoster является автономным приложением, которое обрабатывает хостинг других каналов, когда вы не потоковое. Авто-Hoster должен быть запущен, но вы не должны иметь Mix It Up работает, чтобы использовать его.</value>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Авто-Hoster может быть запущен, нажав на кнопку ниже</value>
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Авто-Включите "!"</value>
@@ -352,10 +337,10 @@
     <value>Автоматическая перезагрузка</value>
   </data>
   <data name="Average" xml:space="preserve">
-    <value>Средняя</value>
+    <value>средний</value>
   </data>
   <data name="BackgroundColor" xml:space="preserve">
-    <value>Фоновый цвет</value>
+    <value>цвет фона</value>
   </data>
   <data name="BackupRate" xml:space="preserve">
     <value>Скорость резервного копирования</value>
@@ -382,31 +367,31 @@
     <value>Имя (EX: "Следуй за мной")</value>
   </data>
   <data name="BaudRate" xml:space="preserve">
-    <value>Скорость</value>
+    <value>скорость</value>
   </data>
   <data name="Between" xml:space="preserve">
-    <value>Между</value>
+    <value>между</value>
   </data>
   <data name="Black" xml:space="preserve">
-    <value>Черный</value>
+    <value>чёрный</value>
   </data>
   <data name="Blue" xml:space="preserve">
-    <value>Синий</value>
+    <value>синий</value>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Синий серый</value>
   </data>
   <data name="Bot" xml:space="preserve">
-    <value>Бот</value>
+    <value>бот</value>
   </data>
   <data name="BotAccount" xml:space="preserve">
     <value>Бот-аккаунт</value>
   </data>
   <data name="Brown" xml:space="preserve">
-    <value>Коричневый</value>
+    <value>коричневый</value>
   </data>
   <data name="Browse" xml:space="preserve">
-    <value>Просмотреть</value>
+    <value>просматривать</value>
   </data>
   <data name="ButtonName" xml:space="preserve">
     <value>Имя кнопки</value>
@@ -427,7 +412,7 @@
     <value>Чувствительный случай</value>
   </data>
   <data name="Channel" xml:space="preserve">
-    <value>Канал</value>
+    <value>канал</value>
   </data>
   <data name="BannedWords" xml:space="preserve">
     <value>Запрещенные слова (по одному за строку) (- Wild Card)</value>
@@ -451,7 +436,7 @@
     <value>Название канала</value>
   </data>
   <data name="Chat" xml:space="preserve">
-    <value>Чат</value>
+    <value>чат</value>
   </data>
   <data name="ChatMessage" xml:space="preserve">
     <value>Сообщение чата</value>
@@ -502,7 +487,7 @@
     <value>Четкие пользовательские данные</value>
   </data>
   <data name="Click" xml:space="preserve">
-    <value>Нажмите</value>
+    <value>щелчок</value>
   </data>
   <data name="ClipLength" xml:space="preserve">
     <value>Длина (15-300 сек)</value>
@@ -511,7 +496,7 @@
     <value>Название клипа</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Закрыть</value>
+    <value>закрывать</value>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
     <value>Пожалуйста, подождите, пока Mix It Up сохраняет ваши настройки и выключается ...</value>
@@ -520,10 +505,10 @@
     <value>Цветовая гамма</value>
   </data>
   <data name="ColumnNumber" xml:space="preserve">
-    <value>Столбца #</value>
+    <value>столбец #</value>
   </data>
   <data name="Command" xml:space="preserve">
-    <value>Команды</value>
+    <value>команда</value>
   </data>
   <data name="CommandGroup" xml:space="preserve">
     <value>Командная группа</value>
@@ -538,13 +523,13 @@
     <value>Запуск команд</value>
   </data>
   <data name="Compare" xml:space="preserve">
-    <value>Сравнить</value>
+    <value>сравнивать</value>
   </data>
   <data name="Conditional" xml:space="preserve">
-    <value>Условного</value>
+    <value>условный</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Подключения</value>
+    <value>соединять</value>
   </data>
   <data name="ConnectDevices" xml:space="preserve">
     <value>Подключение устройств</value>
@@ -556,7 +541,7 @@
     <value>Содержит</value>
   </data>
   <data name="Control" xml:space="preserve">
-    <value>Управления</value>
+    <value>контроль</value>
   </data>
   <data name="ControlID" xml:space="preserve">
     <value>Идентификатор управления</value>
@@ -565,13 +550,13 @@
     <value>Преобразование в расширенный</value>
   </data>
   <data name="Cooldown" xml:space="preserve">
-    <value>Перезарядка</value>
+    <value>Охлаждение</value>
   </data>
   <data name="CooldownSeconds" xml:space="preserve">
     <value>Охлаждение (секунды)</value>
   </data>
   <data name="Cost" xml:space="preserve">
-    <value>Стоимость</value>
+    <value>стоить</value>
   </data>
   <data name="Costream" xml:space="preserve">
     <value>Котстрим</value>
@@ -595,7 +580,7 @@
     <value>Валюты/ранги/запасы</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>Валюты</value>
+    <value>валюта</value>
   </data>
   <data name="CurrencyCost" xml:space="preserve">
     <value>Стоимость валюты</value>
@@ -616,10 +601,10 @@
     <value>Требования к валюте</value>
   </data>
   <data name="Current" xml:space="preserve">
-    <value>Текущего</value>
+    <value>текущий</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Пользовательские</value>
+    <value>обычай</value>
   </data>
   <data name="CustomCommands" xml:space="preserve">
     <value>Пользовательские команды</value>
@@ -646,25 +631,25 @@
     <value>Пользовательское название</value>
   </data>
   <data name="Cyan" xml:space="preserve">
-    <value>Голубой</value>
+    <value>голубой</value>
   </data>
   <data name="Daily" xml:space="preserve">
-    <value>Ежедневно</value>
+    <value>ежедневный</value>
   </data>
   <data name="Dark" xml:space="preserve">
-    <value>Темно</value>
+    <value>темный</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Панели мониторинга</value>
+    <value>щиток</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>дата</value>
   </data>
   <data name="DateTime" xml:space="preserve">
     <value>Дата/время</value>
   </data>
   <data name="Deafen" xml:space="preserve">
-    <value>Глухие</value>
+    <value>оглушать</value>
   </data>
   <data name="DeafenSelf" xml:space="preserve">
     <value>Глухие / Undeafen Self</value>
@@ -672,14 +657,14 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Вычет из команды запуска пользователя</value>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Глубокий оранжевый</value>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Глубокий фиолетовый</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>По умолчанию</value>
+    <value>по умолчанию</value>
   </data>
   <data name="DefaultAudioOutput" xml:space="preserve">
     <value>Выход аудио по умолчанию</value>
@@ -697,7 +682,7 @@
     <value>Программное обеспечение потоковой передачи по умолчанию</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
+    <value>удалить</value>
   </data>
   <data name="DeleteChatCommandsWhenRun" xml:space="preserve">
     <value>Удаление команд чата при запуске</value>
@@ -709,7 +694,7 @@
     <value>Вы уверены, что хотите удалить эту группу?</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Описание</value>
+    <value>описание</value>
   </data>
   <data name="DisableAllTimers" xml:space="preserve">
     <value>Отключить все таймеры</value>
@@ -727,7 +712,7 @@
     <value>Отключить командную группу</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Отключен</value>
+    <value>нетрудоспособный</value>
   </data>
   <data name="DisableDiagnostics" xml:space="preserve">
     <value>Отключить диагностику</value>
@@ -736,10 +721,10 @@
     <value>Отключение очереди</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Отключите</value>
+    <value>разъединять</value>
   </data>
   <data name="Discord" xml:space="preserve">
-    <value>Раздора</value>
+    <value>разногласие</value>
   </data>
   <data name="DisplayImage" xml:space="preserve">
     <value>Отображение изображения (по желанию)</value>
@@ -751,7 +736,7 @@
     <value>Доноры</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Скачать</value>
+    <value>загружать</value>
   </data>
   <data name="DownloadAndInstall" xml:space="preserve">
     <value>Скачать и установить</value>
@@ -769,40 +754,28 @@
     <value>СкачатьОткуда</value>
   </data>
   <data name="Drop" xml:space="preserve">
-    <value>Падение</value>
+    <value>капля</value>
   </data>
   <data name="DTR" xml:space="preserve">
-    <value>Dtr</value>
+    <value>DTR</value>
   </data>
   <data name="Duplicate" xml:space="preserve">
-    <value>Дублировать</value>
+    <value>дублировать</value>
   </data>
   <data name="DurationSec" xml:space="preserve">
     <value>Продолжительность (Sec)</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Редактировать</value>
+    <value>редактировать</value>
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Командование редактирования</value>
-  </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Угли</value>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Эмбер Навыки только</value>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Эмберс потрачено</value>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Эмоции и только навыки</value>
   </data>
   <data name="EmptySoundFilePath" xml:space="preserve">
     <value>Путь звукового файла не должен быть пустым.</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Включить</value>
+    <value>давать возможность</value>
   </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Включить чат</value>
@@ -880,7 +853,7 @@
     <value>Вы должны быть {0}, чтобы начать эту игру.</value>
   </data>
   <data name="Event" xml:space="preserve">
-    <value>Событие</value>
+    <value>событие</value>
   </data>
   <data name="EventBonuses" xml:space="preserve">
     <value>Бонусы за события</value>
@@ -913,7 +886,7 @@
     <value>Внешняя программа</value>
   </data>
   <data name="Family" xml:space="preserve">
-    <value>Семьи</value>
+    <value>семья</value>
   </data>
   <data name="FanProgression" xml:space="preserve">
     <value>Прогрессия вентилятора</value>
@@ -964,13 +937,13 @@
     <value>Следите за возрастом</value>
   </data>
   <data name="Follower" xml:space="preserve">
-    <value>Последователем</value>
+    <value>последователь</value>
   </data>
   <data name="FollowerOnly" xml:space="preserve">
     <value>Только последователь</value>
   </data>
   <data name="FontSize" xml:space="preserve">
-    <value>Размер шрифта</value>
+    <value>размер шрифта</value>
   </data>
   <data name="Four" xml:space="preserve">
     <value>Четыре</value>
@@ -979,7 +952,7 @@
     <value>Полная тема</value>
   </data>
   <data name="Game" xml:space="preserve">
-    <value>Игра</value>
+    <value>игра</value>
   </data>
   <data name="GameName" xml:space="preserve">
     <value>Название игры</value>
@@ -1003,7 +976,7 @@
     <value>Получить ток</value>
   </data>
   <data name="Gifted" xml:space="preserve">
-    <value>Одаренных</value>
+    <value>одаренный</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Поддавки</value>
@@ -1021,13 +994,13 @@
     <value>&gt;=</value>
   </data>
   <data name="Green" xml:space="preserve">
-    <value>Зеленый</value>
+    <value>зеленый</value>
   </data>
   <data name="Grey" xml:space="preserve">
-    <value>Серый</value>
+    <value>серый</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>Группы</value>
+    <value>группа</value>
   </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>Интервал группы (Мин)</value>
@@ -1072,7 +1045,7 @@
     <value>Как долго, прежде чем эта команда может быть запущена снова (в считанные секунды)?</value>
   </data>
   <data name="HTML" xml:space="preserve">
-    <value>Html</value>
+    <value>HTML</value>
   </data>
   <data name="IFTTT" xml:space="preserve">
     <value>ИКТТТ</value>
@@ -1081,7 +1054,7 @@
     <value>Игнорировать учетную запись Bot для команд</value>
   </data>
   <data name="Image" xml:space="preserve">
-    <value>Изображения</value>
+    <value>образ</value>
   </data>
   <data name="ImportActions" xml:space="preserve">
     <value>Действия импорта из файла</value>
@@ -1096,10 +1069,10 @@
     <value>Вы должны войти в другую учетную запись, чем ваша учетная запись Streamer.</value>
   </data>
   <data name="Indigo" xml:space="preserve">
-    <value>Индиго</value>
+    <value>индиго</value>
   </data>
   <data name="Individual" xml:space="preserve">
-    <value>Индивидуальные</value>
+    <value>индивидуальный</value>
   </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>Входные данные (клавиатура и мышь)</value>
@@ -1108,7 +1081,7 @@
     <value>Установка Folder</value>
   </data>
   <data name="Inventory" xml:space="preserve">
-    <value>Инвентаризация</value>
+    <value>инвентарь</value>
   </data>
   <data name="InventoryName" xml:space="preserve">
     <value>Название инвентаря</value>
@@ -1162,7 +1135,7 @@
     <value>Имя значения JSON (использовать '' для вложенных параметров)</value>
   </data>
   <data name="Keyboard" xml:space="preserve">
-    <value>Клавиатуры</value>
+    <value>клавиатура</value>
   </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>Ключ клавиатуры</value>
@@ -1174,7 +1147,7 @@
     <value>Язык для перевода на</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Большой</value>
+    <value>большой</value>
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Большой стример (&gt;25)</value>
@@ -1188,11 +1161,8 @@
   <data name="LatestRelease" xml:space="preserve">
     <value>Последний релиз</value>
   </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Запуск Авто-Hoster</value>
-  </data>
   <data name="Layout" xml:space="preserve">
-    <value>Макет</value>
+    <value>схема</value>
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Лидеров</value>
@@ -1216,31 +1186,31 @@
     <value>&lt;=</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>Лицензии</value>
+    <value>лицензия</value>
   </data>
   <data name="LicenseAgreement" xml:space="preserve">
     <value>Лицензионное соглашение</value>
   </data>
   <data name="Light" xml:space="preserve">
-    <value>Свет</value>
+    <value>свет</value>
   </data>
-  <data name="Light Blue" xml:space="preserve">
-    <value>Светло-голубой</value>
+  <data name="LightBlue" xml:space="preserve">
+    <value>голубой</value>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Светло-зеленый</value>
   </data>
   <data name="Lime" xml:space="preserve">
-    <value>Извести</value>
+    <value>известь</value>
   </data>
   <data name="LinkBlocking" xml:space="preserve">
     <value>Блокировка ссылок</value>
   </data>
   <data name="Live" xml:space="preserve">
-    <value>Жить</value>
+    <value>жить</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>Расположение</value>
+    <value>местоположение</value>
   </data>
   <data name="LockChatScrolling" xml:space="preserve">
     <value>Блокировка/разблокировка прокрутки чата</value>
@@ -1258,7 +1228,7 @@
     <value>Вы не модератор этого канала.</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Выход из системы</value>
+    <value>выходить</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>Магия 8 мяч</value>
@@ -1270,7 +1240,7 @@
     <value>Ручная перезагрузка</value>
   </data>
   <data name="Map" xml:space="preserve">
-    <value>Карта</value>
+    <value>карта</value>
   </data>
   <data name="Max" xml:space="preserve">
     <value>Макс</value>
@@ -1327,28 +1297,10 @@
     <value>Мин Очки</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Минут</value>
+    <value>протокол</value>
   </data>
   <data name="MinValue" xml:space="preserve">
     <value>Мин Значение</value>
-  </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Миксер Возраст</value>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Миксер клипы</value>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Данные миксера</value>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Миксер Лаборатории</value>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Статус миксера</value>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Поддержка миксера</value>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Смешайте команды</value>
@@ -1371,20 +1323,17 @@
   <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
     <value>Если эта кнопка охлаждения на его или вместе со всеми?</value>
   </data>
-  <data name="MixPlaySparkCostHeader" xml:space="preserve">
-    <value>Сколько Sparks должна стоить эта кнопка?</value>
-  </data>
   <data name="MixPlayTextboxModeration" xml:space="preserve">
     <value>Хотите использовать Chat Moderation на всех введенных текстах?</value>
   </data>
   <data name="Mod" xml:space="preserve">
-    <value>Мод</value>
+    <value>модуль</value>
   </data>
   <data name="ModBonus" xml:space="preserve">
     <value>Мод Бонус</value>
   </data>
   <data name="Moderation" xml:space="preserve">
-    <value>Умеренности</value>
+    <value>умеренность</value>
   </data>
   <data name="ModerationAction" xml:space="preserve">
     <value>Умеренность действий</value>
@@ -1393,19 +1342,19 @@
     <value>Причина умеренности (необязательно)</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>Модератор</value>
+    <value>посредник</value>
   </data>
   <data name="ModeratorOnly" xml:space="preserve">
     <value>Только модератор</value>
   </data>
   <data name="Monthly" xml:space="preserve">
-    <value>Ежемесячно</value>
+    <value>ежемесячный</value>
   </data>
   <data name="Months" xml:space="preserve">
     <value>Месяцы</value>
   </data>
   <data name="Mouse" xml:space="preserve">
-    <value>Мыши</value>
+    <value>мышь</value>
   </data>
   <data name="MouseButton" xml:space="preserve">
     <value>Кнопка мыши</value>
@@ -1414,25 +1363,25 @@
     <value>Переместить вниз</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Двигайтесь вверх</value>
+    <value>придвигаться</value>
   </data>
   <data name="Must" xml:space="preserve">
-    <value>Должны</value>
+    <value>должен</value>
   </data>
   <data name="Mute" xml:space="preserve">
-    <value>Отключить</value>
+    <value>немой</value>
   </data>
   <data name="MuteSelf" xml:space="preserve">
     <value>Mute/Unmute Self</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Имя</value>
+    <value>имя</value>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Название профиля</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Название профиля:</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Нвер</value>
+    <value>никогда</value>
   </data>
   <data name="NewActionGroup" xml:space="preserve">
     <value>Новая группа действий</value>
@@ -1450,19 +1399,19 @@
     <value>Новый пользовательский мастер</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Следующий</value>
+    <value>следующий</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Ни один</value>
+    <value>никакой</value>
   </data>
   <data name="NoResultsFound" xml:space="preserve">
     <value>Результаты не найдены</value>
   </data>
   <data name="Normal" xml:space="preserve">
-    <value>Нормальной</value>
+    <value>нормальный</value>
   </data>
   <data name="NotEquals" xml:space="preserve">
     <value>&lt;&gt;</value>
@@ -1510,7 +1459,7 @@
     <value>На ранге пользователя вниз</value>
   </data>
   <data name="Operator" xml:space="preserve">
-    <value>Оператор</value>
+    <value>оператор</value>
   </data>
   <data name="OptionalCommandArguments" xml:space="preserve">
     <value>(По желанию) Командные аргументы</value>
@@ -1522,10 +1471,10 @@
     <value>Отказ от отслеживания данных</value>
   </data>
   <data name="Orange" xml:space="preserve">
-    <value>Оранжевый</value>
+    <value>апельсин</value>
   </data>
   <data name="Overlay" xml:space="preserve">
-    <value>Наложения</value>
+    <value>покрышка</value>
   </data>
   <data name="OverlayEndpoints" xml:space="preserve">
     <value>Конечные точки наложения</value>
@@ -1567,7 +1516,7 @@
     <value>Название OvrStream Название</value>
   </data>
   <data name="Partner" xml:space="preserve">
-    <value>Партнер</value>
+    <value>партнёр</value>
   </data>
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Партнерский стример</value>
@@ -1591,13 +1540,13 @@
     <value>На человека</value>
   </data>
   <data name="Pink" xml:space="preserve">
-    <value>Розовый</value>
+    <value>розовый</value>
   </data>
   <data name="Pitch" xml:space="preserve">
     <value>Шаг (0% - 200%)</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Играть</value>
+    <value>играть</value>
   </data>
   <data name="PollResultCommand" xml:space="preserve">
     <value>Команда результатов опроса (необязательно)</value>
@@ -1609,7 +1558,7 @@
     <value>Название порта</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Поз</value>
   </data>
   <data name="PreMade" xml:space="preserve">
     <value>Предварительно сделано</value>
@@ -1618,7 +1567,7 @@
     <value>Предустановимые команды</value>
   </data>
   <data name="Press" xml:space="preserve">
-    <value>Нажмите</value>
+    <value>давить</value>
   </data>
   <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
     <value>Предотвращение небольших cooldowns от overwriting</value>
@@ -1633,7 +1582,7 @@
     <value>Первичный ранг</value>
   </data>
   <data name="Pro" xml:space="preserve">
-    <value>Pro</value>
+    <value>профессионал</value>
   </data>
   <data name="Profiles" xml:space="preserve">
     <value>Профили</value>
@@ -1648,13 +1597,13 @@
     <value>Цель/Прогресс Бар</value>
   </data>
   <data name="Pseudo" xml:space="preserve">
-    <value>Псевдо</value>
+    <value>псевдо</value>
   </data>
   <data name="Purple" xml:space="preserve">
-    <value>Фиолетовый</value>
+    <value>пурпурный</value>
   </data>
   <data name="Question" xml:space="preserve">
-    <value>Вопрос</value>
+    <value>вопрос</value>
   </data>
   <data name="QueuePosition" xml:space="preserve">
     <value>Позиция очереди пользователя</value>
@@ -1669,19 +1618,19 @@
     <value>Сначала необходимо создать по крайней мере одну команду, чтобы использовать эту функцию.</value>
   </data>
   <data name="Quote" xml:space="preserve">
-    <value>Цитата</value>
+    <value>цитировать</value>
   </data>
   <data name="QuoteFormatting" xml:space="preserve">
     <value>Цитата Форматирование ($quotenumber, $quotetext, $quotegame, $quotedatetime)</value>
   </data>
   <data name="Quotes" xml:space="preserve">
-    <value>Котировки</value>
+    <value>кавычки</value>
   </data>
   <data name="RandomStreamer" xml:space="preserve">
     <value>Случайный стример</value>
   </data>
   <data name="Rank" xml:space="preserve">
-    <value>Ранга</value>
+    <value>ранг</value>
   </data>
   <data name="RankMinimum" xml:space="preserve">
     <value>Минимальный ранг</value>
@@ -1702,7 +1651,7 @@
     <value>Оценить (Secs)</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Рейтинг</value>
+    <value>рейтинг</value>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>Читать из файла</value>
@@ -1714,28 +1663,28 @@
     <value>Читать конкретную строку из файла</value>
   </data>
   <data name="Red" xml:space="preserve">
-    <value>Красного</value>
+    <value>красный</value>
   </data>
   <data name="RefreshTimeSecs" xml:space="preserve">
     <value>Время обновления (Secs)</value>
   </data>
   <data name="Regular" xml:space="preserve">
-    <value>Регулярные</value>
+    <value>регулярный</value>
   </data>
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
     <value>"Регулярный" Статус Онлайн Время просмотра</value>
   </data>
   <data name="Release" xml:space="preserve">
-    <value>Выпуска</value>
+    <value>отпускать</value>
   </data>
   <data name="ReminderMins" xml:space="preserve">
     <value>Напоминание (Мины)</value>
   </data>
   <data name="Remote" xml:space="preserve">
-    <value>Удаленного</value>
+    <value>удалённый</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Удалить</value>
+    <value>убирать</value>
   </data>
   <data name="RemoveRandomLineFromFile" xml:space="preserve">
     <value>Удалить случайную строку из файла</value>
@@ -1747,7 +1696,7 @@
     <value>Замена текста</value>
   </data>
   <data name="Report" xml:space="preserve">
-    <value>Отчет</value>
+    <value>сообщать</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
     <value>Требовать "!претензии"</value>
@@ -1762,7 +1711,7 @@
     <value>Повторное запуск нового пользовательского мастера</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Сброс</value>
+    <value>сброс</value>
   </data>
   <data name="ResetForAllUsers" xml:space="preserve">
     <value>Перезагрузка для всех пользователей</value>
@@ -1789,7 +1738,7 @@
     <value>Ретроактивно давать очки</value>
   </data>
   <data name="Review" xml:space="preserve">
-    <value>Отзыв</value>
+    <value>обзор</value>
   </data>
   <data name="Reviews" xml:space="preserve">
     <value>Отзывов</value>
@@ -1798,7 +1747,7 @@
     <value>Правая кнопка</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Роль</value>
+    <value>роль</value>
   </data>
   <data name="RoleBonuses" xml:space="preserve">
     <value>Ролевые бонусы</value>
@@ -1831,7 +1780,7 @@
     <value>Та же команда</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+    <value>спасать</value>
   </data>
   <data name="SaveChatEventLogs" xml:space="preserve">
     <value>Сохранить чат / события журналы</value>
@@ -1843,7 +1792,7 @@
     <value>Сохранить файл</value>
   </data>
   <data name="Scene" xml:space="preserve">
-    <value>Сцены</value>
+    <value>сцена</value>
   </data>
   <data name="SceneCollectionName" xml:space="preserve">
     <value>Название коллекции сцен</value>
@@ -1855,7 +1804,7 @@
     <value>Название сцены (по желанию)</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Поиск</value>
+    <value>искать</value>
   </data>
   <data name="SearchCriteria" xml:space="preserve">
     <value>Критерии поиска</value>
@@ -1864,10 +1813,10 @@
     <value>Условия поиска</value>
   </data>
   <data name="Seconds" xml:space="preserve">
-    <value>Секунд</value>
+    <value>товары второго сорта</value>
   </data>
   <data name="SecondsAllCaps" xml:space="preserve">
-    <value>Секунд</value>
+    <value>товары второго сорта</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Второе значение</value>
@@ -1903,7 +1852,7 @@
     <value>Отправить сообщение</value>
   </data>
   <data name="Serial" xml:space="preserve">
-    <value>Серийный</value>
+    <value>серийный</value>
   </data>
   <data name="SerialDevice" xml:space="preserve">
     <value>Серийное устройство</value>
@@ -1912,7 +1861,7 @@
     <value>Серийные устройства</value>
   </data>
   <data name="Service" xml:space="preserve">
-    <value>Службы</value>
+    <value>служба</value>
   </data>
   <data name="ServiceConnectSound" xml:space="preserve">
     <value>Сервис Connect Sound</value>
@@ -1924,7 +1873,7 @@
     <value>Услуги</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Установить</value>
+    <value>набор</value>
   </data>
   <data name="SetAudience" xml:space="preserve">
     <value>Установить аудиторию</value>
@@ -1948,10 +1897,10 @@
     <value>Код обмена</value>
   </data>
   <data name="Shift" xml:space="preserve">
-    <value>Shift</value>
+    <value>сдвиг</value>
   </data>
   <data name="Shop" xml:space="preserve">
-    <value>Магазин</value>
+    <value>магазин</value>
   </data>
   <data name="ShopCommand" xml:space="preserve">
     <value>Командование магазина</value>
@@ -1971,9 +1920,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Показать таймштамп сообщения</value>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Показать оповещения MixPlay</value>
-  </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>Показать MixrElixr Эмоты (требует перезагрузки)</value>
   </data>
@@ -1989,9 +1935,6 @@
   <data name="SingleAction" xml:space="preserve">
     <value>Одно действие</value>
   </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Только навыки</value>
-  </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Используемые навыки</value>
   </data>
@@ -2005,13 +1948,13 @@
     <value>Песня Запросы</value>
   </data>
   <data name="Sound" xml:space="preserve">
-    <value>Звук</value>
+    <value>звук</value>
   </data>
   <data name="SoundFilePath" xml:space="preserve">
     <value>Путь звукового файла</value>
   </data>
   <data name="Source" xml:space="preserve">
-    <value>Источник</value>
+    <value>источник</value>
   </data>
   <data name="SourceName" xml:space="preserve">
     <value>Имя источника</value>
@@ -2019,20 +1962,11 @@
   <data name="SourceText" xml:space="preserve">
     <value>Исходный текст</value>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Искра стоимость</value>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Кристалл искры</value>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Искра освобождены</value>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Искры</value>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Искры потрачены</value>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>Специальный идентификатор</value>
@@ -2053,7 +1987,7 @@
     <value>Речевое послание</value>
   </data>
   <data name="Staff" xml:space="preserve">
-    <value>Персонал</value>
+    <value>посох</value>
   </data>
   <data name="StartGiveaway" xml:space="preserve">
     <value>Начало поддавки</value>
@@ -2062,7 +1996,7 @@
     <value>Начало/Напоминание</value>
   </data>
   <data name="Statistics" xml:space="preserve">
-    <value>Статистика</value>
+    <value>статистика</value>
   </data>
   <data name="SteamGame" xml:space="preserve">
     <value>Паровая игра</value>
@@ -2074,7 +2008,7 @@
     <value>Воспроизведение потокового клипа</value>
   </data>
   <data name="Streamer" xml:space="preserve">
-    <value>Streamer</value>
+    <value>стример</value>
   </data>
   <data name="StreamerAccount" xml:space="preserve">
     <value>Учетная запись стримера</value>
@@ -2116,7 +2050,7 @@
     <value>Подписаться Возраст</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Абонент</value>
+    <value>абонент</value>
   </data>
   <data name="SubscriberOnly" xml:space="preserve">
     <value>Только абонент</value>
@@ -2149,16 +2083,16 @@
     <value>Целевой пользователь (по желанию)</value>
   </data>
   <data name="Teal" xml:space="preserve">
-    <value>Чирок</value>
+    <value>чирок</value>
   </data>
   <data name="Team" xml:space="preserve">
-    <value>Команда</value>
+    <value>команда</value>
   </data>
   <data name="TeamName" xml:space="preserve">
     <value>Название команды</value>
   </data>
   <data name="Teen" xml:space="preserve">
-    <value>Молодняк</value>
+    <value>подросток</value>
   </data>
   <data name="TestCommand" xml:space="preserve">
     <value>Команда испытаний</value>
@@ -2203,7 +2137,7 @@
     <value>Время осталось</value>
   </data>
   <data name="Timer" xml:space="preserve">
-    <value>Таймер</value>
+    <value>таймер</value>
   </data>
   <data name="TimerInterval" xml:space="preserve">
     <value>Интервал (минуты)</value>
@@ -2218,13 +2152,13 @@
     <value>Промежуток времени (секунды)</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Название</value>
+    <value>титул</value>
   </data>
   <data name="TitleName" xml:space="preserve">
     <value>Название Имя</value>
   </data>
   <data name="Total" xml:space="preserve">
-    <value>Общая</value>
+    <value>итог</value>
   </data>
   <data name="TotalTimeMins" xml:space="preserve">
     <value>Общее время (Мины)</value>
@@ -2236,13 +2170,13 @@
     <value>Номера шепота трека</value>
   </data>
   <data name="Trade" xml:space="preserve">
-    <value>Торговли</value>
+    <value>торговля</value>
   </data>
   <data name="TradeCommand" xml:space="preserve">
     <value>Торговое командование</value>
   </data>
   <data name="Translation" xml:space="preserve">
-    <value>Перевод</value>
+    <value>перевод</value>
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value />
@@ -2257,7 +2191,7 @@
     <value>Сообщение в твиттере (@mentions разрешено)</value>
   </data>
   <data name="Twitter" xml:space="preserve">
-    <value>Twitter</value>
+    <value>щебетать</value>
   </data>
   <data name="Two" xml:space="preserve">
     <value>Два</value>
@@ -2266,7 +2200,7 @@
     <value>2 Командование ударов</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Тип</value>
+    <value>тип</value>
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>Тип для добавления</value>
@@ -2284,7 +2218,7 @@
     <value>Несгруппированные</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>Неизвестный</value>
+    <value>неизвестный</value>
   </data>
   <data name="UnlockAllCommandTypes" xml:space="preserve">
     <value>Разблокировать все типы команд</value>
@@ -2293,7 +2227,7 @@
     <value>Команда разблокировки</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Обновление</value>
+    <value>обновлять</value>
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Канал обновления</value>
@@ -2308,7 +2242,7 @@
     <value>Программа предварительного просмотра обновления</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Загрузить</value>
+    <value>закачать</value>
   </data>
   <data name="UploadFilePath" xml:space="preserve">
     <value>Путь загрузки файла (необязательно)</value>
@@ -2317,7 +2251,7 @@
     <value>Загрузить в</value>
   </data>
   <data name="Uptime" xml:space="preserve">
-    <value>Работоспособности</value>
+    <value>время безотказной работы</value>
   </data>
   <data name="UsageRequirements" xml:space="preserve">
     <value>Требования к использованию</value>
@@ -2326,7 +2260,7 @@
     <value>Использование списка сообщества (ОЧЕНЬ STRICT)</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Пользователя</value>
+    <value>пользователь</value>
   </data>
   <data name="UserDataImport" xml:space="preserve">
     <value>Импорт пользовательских данных</value>
@@ -2404,7 +2338,7 @@
     <value>Идентификатор версии</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Видео</value>
+    <value>видео</value>
   </data>
   <data name="Viewers" xml:space="preserve">
     <value>Зрителей</value>
@@ -2425,22 +2359,22 @@
     <value>Смотрел в течение 2 часов</value>
   </data>
   <data name="Visible" xml:space="preserve">
-    <value>Видны</value>
+    <value>видимый</value>
   </data>
   <data name="VisibleAnimation" xml:space="preserve">
     <value>Видимая анимация</value>
   </data>
   <data name="Voice" xml:space="preserve">
-    <value>Голос</value>
+    <value>голос</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Объем</value>
+    <value>том</value>
   </data>
   <data name="Volume0to100" xml:space="preserve">
     <value>Объем (0% - 100%)</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Подожди</value>
+    <value>ждать</value>
   </data>
   <data name="WaitForFinish" xml:space="preserve">
     <value>Подождите окончания</value>
@@ -2452,7 +2386,7 @@
     <value>Название события веб-крюк</value>
   </data>
   <data name="WebPage" xml:space="preserve">
-    <value>Веб-страница</value>
+    <value>веб-страница</value>
   </data>
   <data name="WebPageOrLocalFile" xml:space="preserve">
     <value>Веб-страница (URL или локальный файл)</value>
@@ -2467,13 +2401,13 @@
     <value>Веб-шоу</value>
   </data>
   <data name="Weekly" xml:space="preserve">
-    <value>Еженедельно</value>
+    <value>еженедельный</value>
   </data>
   <data name="WhatIsTrigger" xml:space="preserve">
     <value>Какой текст в чате вызовет эту команду (EX: "!follow")?</value>
   </data>
   <data name="Whisper" xml:space="preserve">
-    <value>Шепот</value>
+    <value>шептать</value>
   </data>
   <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
     <value>Шепот все оповещения для счета Streamer</value>
@@ -2488,16 +2422,16 @@
     <value>Кому должно быть разрешено управлять этой командой?</value>
   </data>
   <data name="Widget" xml:space="preserve">
-    <value>Виджет</value>
+    <value>виджет</value>
   </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Подстановочные знаки</value>
   </data>
   <data name="Winner" xml:space="preserve">
-    <value>Победитель</value>
+    <value>победитель</value>
   </data>
   <data name="WinnerAllCaps" xml:space="preserve">
-    <value>Победитель</value>
+    <value>победитель</value>
   </data>
   <data name="WinnerSelected" xml:space="preserve">
     <value>Выбран победитель</value>
@@ -2518,13 +2452,13 @@
     <value>XX-Большой</value>
   </data>
   <data name="Yearly" xml:space="preserve">
-    <value>Годовой</value>
+    <value>ежегодный</value>
   </data>
   <data name="Yellow" xml:space="preserve">
-    <value>Желтый</value>
+    <value>жёлтый</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Да</value>
+    <value>да</value>
   </data>
   <data name="YPosition" xml:space="preserve">
     <value>Y Позиция</value>
@@ -2568,45 +2502,6 @@
   <data name="JustGivingDonation" xml:space="preserve">
     <value>Пожертвование JustGiving</value>
   </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Миксер канал Эмберс провел</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Миксер канал Вентилятор Прогрессия Уровень-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Миксер канал следуют</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Миксер канал Хостинг</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Миксер канал Milestone Достигнуто</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Миксер канал переподписан</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Миксер канал Навыки Используются</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Миксер канал Искры Провел</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Микшер Канал Поток Начало</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Миксер Канал Поток Остановка</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Миксер канал Подписано</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Миксер канал Подписка Одаренные</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Миксер канал Unfollowed</value>
-  </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Патреон Подписано</value>
   </data>
@@ -2641,13 +2536,13 @@
     <value>Вы запустите рекламу</value>
   </data>
   <data name="Ban" xml:space="preserve">
-    <value>Запрет</value>
+    <value>запрещение</value>
   </data>
   <data name="GlobalTimeout" xml:space="preserve">
     <value>Глобальный тайм-аут</value>
   </data>
   <data name="Purge" xml:space="preserve">
-    <value>Очистить</value>
+    <value>чистка</value>
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>Времени ожидания</value>
@@ -2656,7 +2551,7 @@
     <value>Эта функция в настоящее время доступна только для партнеров и проверенных каналов.</value>
   </data>
   <data name="Imported" xml:space="preserve">
-    <value>Импортированные</value>
+    <value>импортный</value>
   </data>
   <data name="ImportFromFile" xml:space="preserve">
     <value>Импорт из файла</value>
@@ -2685,9 +2580,6 @@
   <data name="PointRates" xml:space="preserve">
     <value>Точечные тарифы</value>
   </data>
-  <data name="SparkBonus" xml:space="preserve">
-    <value>Искра Бонус</value>
-  </data>
   <data name="SubMultiplier" xml:space="preserve">
     <value>Суб мультипликатор</value>
   </data>
@@ -2701,7 +2593,7 @@
     <value>Добавить stream Pass</value>
   </data>
   <data name="Copy" xml:space="preserve">
-    <value>Копировать</value>
+    <value>копировать</value>
   </data>
   <data name="DateRange" xml:space="preserve">
     <value>Диапазон дат</value>
@@ -2710,16 +2602,16 @@
     <value>Команда уровня по умолчанию</value>
   </data>
   <data name="Details" xml:space="preserve">
-    <value>Детали</value>
+    <value>подробности</value>
   </data>
   <data name="End" xml:space="preserve">
-    <value>Конец:</value>
+    <value>конец:</value>
   </data>
   <data name="Level" xml:space="preserve">
-    <value>Уровень</value>
+    <value>уровень</value>
   </data>
   <data name="LevelNumber" xml:space="preserve">
-    <value>Уровень #</value>
+    <value>уровень #</value>
   </data>
   <data name="LevelUpCommands" xml:space="preserve">
     <value>Команды уровня Up</value>
@@ -2728,7 +2620,7 @@
     <value>Очки за уровень вверх</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Начать:</value>
+    <value>начало:</value>
   </data>
   <data name="StreamPass" xml:space="preserve">
     <value>Поток пасс</value>
@@ -2767,7 +2659,7 @@
     <value>Макс Уровень</value>
   </data>
   <data name="Viewing" xml:space="preserve">
-    <value>Просмотра:</value>
+    <value>просмотр:</value>
   </data>
   <data name="UserData" xml:space="preserve">
     <value>Данные пользователей</value>
@@ -2779,7 +2671,7 @@
     <value>Последний раз видели</value>
   </data>
   <data name="Quantity" xml:space="preserve">
-    <value>Количество</value>
+    <value>количество</value>
   </data>
   <data name="AutoReplenish" xml:space="preserve">
     <value>Автоматическое пополнение:</value>
@@ -2803,16 +2695,16 @@
     <value>Сохранить продукт</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Продукты</value>
+    <value>продукция</value>
   </data>
   <data name="Redemption" xml:space="preserve">
-    <value>Искупление</value>
+    <value>выкуп</value>
   </data>
   <data name="ManualRedeem" xml:space="preserve">
     <value>Ручной выкуп</value>
   </data>
   <data name="Refund" xml:space="preserve">
-    <value>Возврат</value>
+    <value>возмещение</value>
   </data>
   <data name="EditProducts" xml:space="preserve">
     <value>Редактировать продукты</value>
@@ -2824,10 +2716,10 @@
     <value>Команда по покупке чата</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Пользователя</value>
+    <value>Имя пользователя</value>
   </data>
   <data name="Product" xml:space="preserve">
-    <value>Продукта</value>
+    <value>продукт</value>
   </data>
   <data name="PurchaseTime" xml:space="preserve">
     <value>Время покупки</value>
@@ -2863,10 +2755,10 @@
     <value>Вы уверены, что хотите вернуть деньги пользователю и удалить эту покупку?</value>
   </data>
   <data name="State" xml:space="preserve">
-    <value>Государства</value>
+    <value>государство</value>
   </data>
   <data name="Pending" xml:space="preserve">
-    <value>Ожидающие</value>
+    <value>ожидаемый</value>
   </data>
   <data name="Redeemed" xml:space="preserve">
     <value>Искупил</value>
@@ -2935,7 +2827,7 @@
     <value>Не хватает этого продукта для количества пользователей, участвующих</value>
   </data>
   <data name="Infinite" xml:space="preserve">
-    <value>Бесконечное</value>
+    <value>бесконечный</value>
   </data>
   <data name="ExportQuotes" xml:space="preserve">
     <value>Экспортные котировки</value>
@@ -2959,10 +2851,10 @@
     <value>Очки канала</value>
   </data>
   <data name="Platform" xml:space="preserve">
-    <value>Платформы</value>
+    <value>платформа</value>
   </data>
   <data name="Tier" xml:space="preserve">
-    <value>Уровня</value>
+    <value>ярус</value>
   </data>
   <data name="ClipCreationFailed" xml:space="preserve">
     <value>Создание клипа не удалось, пожалуйста, повторите попытку позже</value>
@@ -2983,13 +2875,13 @@
     <value>Битс приветствовали</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Тег</value>
+    <value>ярлык</value>
   </data>
   <data name="FollowedChannels" xml:space="preserve">
     <value>Последующие каналы</value>
   </data>
   <data name="OpenChannel" xml:space="preserve">
-    <value>Открытый канал</value>
+    <value>открытое русло</value>
   </data>
   <data name="RaidChannel" xml:space="preserve">
     <value>Рейд-канал</value>
@@ -3013,7 +2905,7 @@
     <value>Удалить настройки</value>
   </data>
   <data name="Changelog" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Перемены</value>
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>Воспроизведение клипа</value>
@@ -3046,7 +2938,7 @@
     <value>Не подписан</value>
   </data>
   <data name="AutoLogInCurrentAccountTooltip" xml:space="preserve">
-    <value>Настройка Auto Log-In позволяет Mix It Up автоматически войти в в настоящее время включаемую учетную запись пользователя Mixer. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вы должны повторно проверить подлинность любой из ваших учетных записей служб, вам нужно будет вручную войти в систему, когда это произойдет.</value>
+    <value>Настройка Auto Log-In позволяет Mix It Up автоматически войти в в настоящее время войдите в учетную запись пользователя. ПРИМЕЧАНИЕ: Если есть обновление Mix It Up или вы должны повторно проверить подлинность любой из ваших учетных записей служб, вам нужно будет вручную войти в систему, когда это произойдет.</value>
   </data>
   <data name="OptOutofDataTrackingTooltip" xml:space="preserve">
     <value>Эта опция позволяет отказаться от любого отслеживания ваших данных с помощью наших бэк-энд-сервисов. Мы отслеживаем данные об использовании приложений и сбоях, чтобы улучшить ваш опыт. Если вы выберете эту опцию, мы прекратим все отслеживания этих данных. Обратите внимание, что это не отключает никаких данных, включенных в загрузку и просмотр команд магазина Mix It Up.</value>
@@ -3198,7 +3090,7 @@
     <value>Валюта/Рейтинг/Инвентарь</value>
   </data>
   <data name="Item" xml:space="preserve">
-    <value>Элемента</value>
+    <value>пункт</value>
   </data>
   <data name="ConsumableActionMissingAmount" xml:space="preserve">
     <value>Расходные действия: Недостающая сумма</value>
@@ -3405,7 +3297,7 @@
     <value>Показать / Скрыть виджет</value>
   </data>
   <data name="YouTube" xml:space="preserve">
-    <value>Youtube</value>
+    <value>YouTube</value>
   </data>
   <data name="ChatCommandInvalidTriggers" xml:space="preserve">
     <value>Триггеры чата могут содержать только буквы, цифры, пробелы, символы и знаки препинания</value>
@@ -3495,13 +3387,13 @@
     <value>У вас нет необходимых {0} {1} для этого</value>
   </data>
   <data name="GameCommandLockBoxHigh" xml:space="preserve">
-    <value>Высокой</value>
+    <value>высокий</value>
   </data>
   <data name="GameCommandLockBoxIncorrectLength" xml:space="preserve">
     <value>Догадка должна быть точно {0} чисел</value>
   </data>
   <data name="GameCommandLockBoxLow" xml:space="preserve">
-    <value>Низкой</value>
+    <value>низкий</value>
   </data>
   <data name="GameCommandLockBoxNotNumber" xml:space="preserve">
     <value>Догадка должна иметь действительную комбинацию цифр 0 - 9</value>
@@ -3513,7 +3405,7 @@
     <value>Сбор в настоящее время ведется, пожалуйста, подождите, пока он не завершится</value>
   </data>
   <data name="Answer" xml:space="preserve">
-    <value>Ответ</value>
+    <value>ответ</value>
   </data>
   <data name="GameCommandBetInvalidSelection" xml:space="preserve">
     <value>{0}: Выбранный вами номер опции не действителен.</value>
@@ -3529,10 +3421,10 @@
     <value>Игра Подкоко командный</value>
   </data>
   <data name="Lose" xml:space="preserve">
-    <value>Потерять</value>
+    <value>терять</value>
   </data>
   <data name="Win" xml:space="preserve">
-    <value>Выиграть</value>
+    <value>побеждать</value>
   </data>
   <data name="GameCommandOutcomeMissingCommand" xml:space="preserve">
     <value>В результате отсутствует команда</value>
@@ -3547,7 +3439,7 @@
     <value>Должен быть не менее 1 результата</value>
   </data>
   <data name="Bet" xml:space="preserve">
-    <value>Ставка</value>
+    <value>пари</value>
   </data>
   <data name="GameCommandBetDescription" xml:space="preserve">
     <value>Игра Bet позволяет пользователю начать ставку среди всех пользователей, над которой вариант является правильным. Каждый пользователь, участвующий в конкурсе, должен указать, какие варианты вы ожидаете выиграть и сколько он хочет сделать ставку. Как только ограничение по времени будет завершено, пользователь может указать, что правильный ответ на ставку, и все правильные пользователи будут вознаграждены. Кроме того, вы можете указать, какие роли пользователя могут начаться, и ответить на эту игру, чтобы убедиться, что она не злоупотребляет, например, модераторы или выше только.</value>
@@ -3557,7 +3449,7 @@
     <comment>{0} will be the command trigger</comment>
   </data>
   <data name="Bid" xml:space="preserve">
-    <value>Ставку</value>
+    <value>приказывать</value>
   </data>
   <data name="GameCommandBidDescription" xml:space="preserve">
     <value>Игра Bid позволяет пользователю начать соревнование среди всех пользователей, чтобы выиграть приз или специальную привилегию. Пользователь должен предложить цену по крайней мере на 1 валюту сумму выше, чем самая высокая ставка, чтобы стать ведущим участником торгов. Когда пользователь превзойден, он получает свою валюту ставок обратно и самую высокую цену, когда время заканчивается победами. Кроме того, можно указать, какие роли пользователей могут начать эту игру, чтобы убедиться, что ею не злоупотребляют, например, модераторы или только выше.</value>
@@ -3575,7 +3467,7 @@
     <value>EX: !pusher 100</value>
   </data>
   <data name="Duel" xml:space="preserve">
-    <value>Дуэль</value>
+    <value>дуэль</value>
   </data>
   <data name="GameCommandDuelDescription" xml:space="preserve">
     <value>Дуэльная игра бросает вызов указанному пользователю для победителя-принимает все для суммы ставки. В случае успеха пользователь забирает сумму ставки у указанного пользователя. В случае неудачи указанный пользователь забирает сумму ставки у пользователя.</value>
@@ -3584,7 +3476,7 @@
     <value>EX: !дуэль &lt;USERNAME&gt;100</value>
   </data>
   <data name="Hangman" xml:space="preserve">
-    <value>Палач</value>
+    <value>палач</value>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
     <value>Игра Hangman позволяет пользователям угадать комбинацию букв случайного слова, чтобы выиграть накопленный банк валюты. Каждая неудачная догадка помещает требуемую сумму валюты в банк и добавляет сбой, в то время как правильная догадка добавляет букву. Человек, чтобы угадать последнее недостающее письмо получает весь горшок. Пользователи имеют возможность увидеть состояние игры, чтобы увидеть, сколько банк и что уже догадались.</value>
@@ -3593,7 +3485,7 @@
     <value>EX: !палач&lt;LETTER&gt;</value>
   </data>
   <data name="Heist" xml:space="preserve">
-    <value>Ограбление</value>
+    <value>красть</value>
   </data>
   <data name="GameCommandHeistDescription" xml:space="preserve">
     <value>Игра Heist позволяет пользователю начать групповое действие для пользователей, чтобы индивидуально делать ставки, когда они участвуют. Каждый пользователь имеет свой собственный индивидуальный шанс добиться успеха и отыграть больше или потерпеть неудачу и потерять свою ставку</value>
@@ -3602,7 +3494,7 @@
     <value>EX: !heist 100</value>
   </data>
   <data name="Hitman" xml:space="preserve">
-    <value>Hitman</value>
+    <value>киллер</value>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
     <value>Игра Hitman позволяет пользователю начать ставку «победитель получает все» среди всех введенных пользователей. После первоначального срока в чате появится киллер с определенным именем. Если пользователь навеяет имя киллера в чате в течение срока, он выигрывает весь банк. В противном случае, каждый теряет свои деньги.</value>
@@ -3633,7 +3525,7 @@ EX: !картофель &lt;TARGET USER&gt;</value>
     <value>Вероятность того, что роль {0}, не составляет до 100 во всех исходах</value>
   </data>
   <data name="Roulette" xml:space="preserve">
-    <value>Рулетка</value>
+    <value>рулетка</value>
   </data>
   <data name="GameCommandRouletteDescription" xml:space="preserve">
     <value>Игра в рулетку позволяет пользователю начать игру групповых ставок среди всех пользователей, чтобы сделать ставку на определенное число или имя. Если игра основана на диапазоне номеров, то пользователь может выбрать любой номер в этом диапазоне. Если игра основана на серии имен, пользователь может выбрать любое из имен. Все пользователи, выбравший тип выигрышной ставки, получают выплату за свою ставку, все остальные выигрывают свою ставку.</value>
@@ -3661,7 +3553,7 @@ EX: !rr</value>
     <value>EX: !слоты 100</value>
   </data>
   <data name="Spin" xml:space="preserve">
-    <value>Спина</value>
+    <value>прясть</value>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
     <value>Игра Spin выбирает случайное число и выбирает результат на основе этого числа. Помимо выбора выплаты для каждого исхода, вы также можете запустить настроенную команду для каждого результата.</value>
@@ -3676,7 +3568,7 @@ EX: !rr</value>
     <value>Поздравляю вас $username, вы $gamepayout {0}!</value>
   </data>
   <data name="Steal" xml:space="preserve">
-    <value>Украсть</value>
+    <value>красть</value>
   </data>
   <data name="GameCommandStealDescription" xml:space="preserve">
     <value>Игра Steal позволяет пользователю попытаться украсть валюту у другого пользователя. В случае успеха пользователь крадет сумму ставки у другого пользователя. В случае неудачи они теряют сумму ставки.</value>
@@ -3699,7 +3591,7 @@ EX: !сокровище
 EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
   </data>
   <data name="Trivia" xml:space="preserve">
-    <value>Мелочи</value>
+    <value>пустяки</value>
   </data>
   <data name="GameCommandTriviaDescription" xml:space="preserve">
     <value>Игра Trivia выбирает случайный вопрос из заранее определяемого списка и просит всех пользователей выбрать правильный ответ из списка возможных. Всем пользователям, выбранным правильный ответ, присуждается выплата.</value>
@@ -3708,7 +3600,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>EX: !тривиа</value>
   </data>
   <data name="Volcano" xml:space="preserve">
-    <value>Вулкан</value>
+    <value>вулкан</value>
   </data>
   <data name="GameCommandVolcanoDescription" xml:space="preserve">
     <value>Вулкан игра позволяет пользователю внести определенное количество валюты в вулкан с шансом на личную выплату и выплату для всех пользователей в чате. Вулкан проходит через 3 этапа, как все больше и больше валюты депонированы в него и другой набор депозитов и статус команды используются в зависимости от того, на какой стадии вулкан находится.
@@ -3749,7 +3641,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Выплата пользователей %</value>
   </data>
   <data name="Usage" xml:space="preserve">
-    <value>Использования</value>
+    <value>употребление</value>
   </data>
   <data name="MinAmount" xml:space="preserve">
     <value>Мин Сумма</value>
@@ -3776,7 +3668,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Новая игра</value>
   </data>
   <data name="Random" xml:space="preserve">
-    <value>Случайных</value>
+    <value>случайный</value>
   </data>
   <data name="Targeted" xml:space="preserve">
     <value>Целевой</value>
@@ -3821,10 +3713,10 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Результат: $gameslotsoutcome - $username уходит с $gamepayout {0}!</value>
   </data>
   <data name="Outcome" xml:space="preserve">
-    <value>Результат</value>
+    <value>результат</value>
   </data>
   <data name="Symbol" xml:space="preserve">
-    <value>Символ</value>
+    <value>символ</value>
   </data>
   <data name="AnyOrder" xml:space="preserve">
     <value>Любой заказ</value>
@@ -3914,7 +3806,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>«$username бросает свои монеты в и попробовать их комбо $arg 1text ... но коробка не разблокируется. Их предположение было слишком $gamelockboxhint.</value>
   </data>
   <data name="GameCommandLockBoxInspectionArgmentExample" xml:space="preserve">
-    <value>Проверить</value>
+    <value>осматривать</value>
   </data>
   <data name="GameCommandLockBoxInspectionArgument" xml:space="preserve">
     <value>Аргумент инспекции</value>
@@ -3950,7 +3842,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Параметры</value>
   </data>
   <data name="GameCommandStarted" xml:space="preserve">
-    <value>Начал</value>
+    <value>начатый</value>
   </data>
   <data name="GameCommandStarterRole" xml:space="preserve">
     <value>Стартовая роль</value>
@@ -3959,7 +3851,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Настройки запуска</value>
   </data>
   <data name="GameCommandStatusArgumentExample" xml:space="preserve">
-    <value>Статус</value>
+    <value>статус</value>
   </data>
   <data name="GameCommandTimeLimit" xml:space="preserve">
     <value>Ограничение по времени</value>
@@ -3974,7 +3866,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Мин Сумма для выплаты</value>
   </data>
   <data name="Payout" xml:space="preserve">
-    <value>Выплат</value>
+    <value>выплата</value>
   </data>
   <data name="PayoutMaximumPercentage" xml:space="preserve">
     <value>Выплата Макс %</value>
@@ -4094,7 +3986,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Все терпеливо собираются с карандашами в руках. Приготовиться...</value>
   </data>
   <data name="NumberRange" xml:space="preserve">
-    <value>Диапазон номеров</value>
+    <value>диапазон чисел</value>
   </data>
   <data name="GameCommandBetBetsClosed" xml:space="preserve">
     <value>Ставки закрыты</value>
@@ -4142,7 +4034,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Полицейские появились в последнюю секунду и зацепили несколько из вас, но большинство сделал это с хорошим! Общая сумма: $gameallpayout {0}! Победители: $gamewinners</value>
   </data>
   <data name="GameCommandPayout" xml:space="preserve">
-    <value>Выплат</value>
+    <value>выплата</value>
   </data>
   <data name="GameCommandRouletteBetHighNumber" xml:space="preserve">
     <value>Высокое число</value>
@@ -4223,7 +4115,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Пользовательские вопросы</value>
   </data>
   <data name="GameCommandTriviaQuestion" xml:space="preserve">
-    <value>Вопрос</value>
+    <value>вопрос</value>
   </data>
   <data name="GameCommandTriviaQuestionMissing" xml:space="preserve">
     <value>Мелочи вопрос отсутствует</value>
@@ -4247,13 +4139,13 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Неправильный ответ 3</value>
   </data>
   <data name="GameCommandVolcanoCollect" xml:space="preserve">
-    <value>Собирать</value>
+    <value>собирать</value>
   </data>
   <data name="GameCommandVolcanoCollectArgument" xml:space="preserve">
     <value>Соберите Аргумент</value>
   </data>
   <data name="GameCommandVolcanoCollectArgumentExample" xml:space="preserve">
-    <value>Собирать</value>
+    <value>собирать</value>
   </data>
   <data name="GameCommandVolcanoCollectExample" xml:space="preserve">
     <value>«$username ушел с $gamepayout {0} после очистки последствий!</value>
@@ -4262,13 +4154,13 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Процент сбора должен быть почтовым номером</value>
   </data>
   <data name="GameCommandVolcanoDeposit" xml:space="preserve">
-    <value>Депозит</value>
+    <value>задаток</value>
   </data>
   <data name="GameCommandVolcanoMinimumAmount" xml:space="preserve">
     <value>Минимальная сумма</value>
   </data>
   <data name="GameCommandVolcanoPayout" xml:space="preserve">
-    <value>Выплат</value>
+    <value>выплата</value>
   </data>
   <data name="GameCommandVolcanoPayoutExample" xml:space="preserve">
     <value>По мере $username, как «Земля» сбрасывает свой депозит в вулкан, происходит громко$ извержени$ $gamepayout {0} на землю! Вулкан взрывает монеты! Быстрый, тип "!Вулкан собирать" в чате в ближайшие 30 секунд!</value>
@@ -4307,7 +4199,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Минимальные суммы этапа должны быть положительными числами</value>
   </data>
   <data name="GameCommandVolcanoStatus" xml:space="preserve">
-    <value>Статус</value>
+    <value>статус</value>
   </data>
   <data name="CommandMustHaveAtLeast1Action" xml:space="preserve">
     <value>По крайней мере 1 действие должно быть добавлено в команду</value>
@@ -4334,7 +4226,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>«$username только что $productname и должны быть выкуплены вручную</value>
   </data>
   <data name="Bounce" xml:space="preserve">
-    <value>Отказов</value>
+    <value>отскакивать</value>
   </data>
   <data name="BounceIn" xml:space="preserve">
     <value>Отказов в</value>
@@ -4382,7 +4274,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Исчезновение в Up</value>
   </data>
   <data name="FadeOut" xml:space="preserve">
-    <value>Исчезновение</value>
+    <value>заглохнуть</value>
   </data>
   <data name="FadeOutDown" xml:space="preserve">
     <value>Fade Out Down</value>
@@ -4397,10 +4289,10 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Fade Out Up</value>
   </data>
   <data name="Flash" xml:space="preserve">
-    <value>Вспышки</value>
+    <value>вспышка</value>
   </data>
   <data name="Flip" xml:space="preserve">
-    <value>Флип</value>
+    <value>наглый</value>
   </data>
   <data name="FlipInX" xml:space="preserve">
     <value>Флип в X</value>
@@ -4415,7 +4307,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Флип out Y</value>
   </data>
   <data name="Hinge" xml:space="preserve">
-    <value>Петля</value>
+    <value>шарнир</value>
   </data>
   <data name="JackInTheBox" xml:space="preserve">
     <value>Джек в коробке</value>
@@ -4430,13 +4322,13 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Скорость света</value>
   </data>
   <data name="Pulse" xml:space="preserve">
-    <value>Импульса</value>
+    <value>пульс</value>
   </data>
   <data name="RollIn" xml:space="preserve">
     <value>Ролл в</value>
   </data>
   <data name="RollOut" xml:space="preserve">
-    <value>Раскатать</value>
+    <value>выкатывать</value>
   </data>
   <data name="RotateIn" xml:space="preserve">
     <value>Поверните в</value>
@@ -4448,7 +4340,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Резинкой</value>
   </data>
   <data name="Shake" xml:space="preserve">
-    <value>Встряхнуть</value>
+    <value>трясти</value>
   </data>
   <data name="SlideInDown" xml:space="preserve">
     <value>Слайд в вниз</value>
@@ -4475,13 +4367,13 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Слайд вверх</value>
   </data>
   <data name="Swing" xml:space="preserve">
-    <value>Качели</value>
+    <value>качать</value>
   </data>
   <data name="Tada" xml:space="preserve">
     <value>Сада</value>
   </data>
   <data name="Wobble" xml:space="preserve">
-    <value>Колебания</value>
+    <value>качание</value>
   </data>
   <data name="ZoomIn" xml:space="preserve">
     <value>Увеличить</value>
@@ -4569,7 +4461,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Вставьте в файл на определенной строке</value>
   </data>
   <data name="LineNumber" xml:space="preserve">
-    <value>Линии #</value>
+    <value>линия #</value>
   </data>
   <data name="StreamMarkerCreatedMessage" xml:space="preserve">
     <value>Созданный маркер потока: {0}</value>
@@ -4646,10 +4538,10 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Создание новой команды</value>
   </data>
   <data name="Result" xml:space="preserve">
-    <value>Результат</value>
+    <value>результат</value>
   </data>
   <data name="Output" xml:space="preserve">
-    <value>Выход</value>
+    <value>выпуск</value>
   </data>
   <data name="OverlayLeaderboardNewLeader" xml:space="preserve">
     <value>Новый лидер</value>
@@ -4688,28 +4580,28 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Выбранная команда не может быть отредактирована здесь</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Все</value>
+    <value>все</value>
   </data>
   <data name="Bits" xml:space="preserve">
     <value>Биты</value>
   </data>
   <data name="Bottom" xml:space="preserve">
-    <value>Нижней</value>
+    <value>дно</value>
   </data>
   <data name="Center" xml:space="preserve">
-    <value>Центр</value>
+    <value>центр</value>
   </data>
   <data name="Chatters" xml:space="preserve">
     <value>Зрителей</value>
   </data>
   <data name="Day" xml:space="preserve">
-    <value>День</value>
+    <value>день</value>
   </data>
   <data name="Donations" xml:space="preserve">
     <value>Пожертвования</value>
   </data>
   <data name="Fast" xml:space="preserve">
-    <value>Быстрый</value>
+    <value>быстрый</value>
   </data>
   <data name="Followers" xml:space="preserve">
     <value>Последователей</value>
@@ -4736,7 +4628,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Модераторов</value>
   </data>
   <data name="Month" xml:space="preserve">
-    <value>Месяц</value>
+    <value>месяц</value>
   </data>
   <data name="NewFollowers" xml:space="preserve">
     <value>Новые последователи</value>
@@ -4751,37 +4643,37 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Переподписчики</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Медленно</value>
+    <value>медленный</value>
   </data>
   <data name="Subscribers" xml:space="preserve">
-    <value>Абонентов</value>
+    <value>абоненты</value>
   </data>
   <data name="Top" xml:space="preserve">
     <value>Вверх</value>
   </data>
   <data name="Week" xml:space="preserve">
-    <value>Неделю</value>
+    <value>неделя</value>
   </data>
   <data name="Year" xml:space="preserve">
-    <value>Год</value>
+    <value>год</value>
   </data>
   <data name="VIPExclusive" xml:space="preserve">
     <value>VIP Эксклюзив</value>
   </data>
   <data name="VIP" xml:space="preserve">
-    <value>Vip</value>
+    <value>ВИП</value>
   </data>
   <data name="GameCommandRussianRouletteDefaultChatTrigger" xml:space="preserve">
-    <value>Rr</value>
+    <value>rr</value>
   </data>
   <data name="GameCommandSlotMachineDefaultChatTrigger" xml:space="preserve">
     <value>Слоты</value>
   </data>
   <data name="GameCommandTreasureDefenseDefaultChatTrigger" xml:space="preserve">
-    <value>Сокровище</value>
+    <value>сокровище</value>
   </data>
   <data name="GameCommandWordScrambleDefaultChatTrigger" xml:space="preserve">
-    <value>Схватка</value>
+    <value>карабкаться</value>
   </data>
   <data name="CommandActionWaitUntilCompleteHintText" xml:space="preserve">
     <value>Чтобы командные действия ждали завершения выбранного подпокождего, подкоко команда НЕ будет использовать
@@ -4793,5 +4685,1226 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
   </data>
   <data name="Russian" xml:space="preserve">
     <value>русский</value>
+  </data>
+  <data name="ChannelPointsEditor" xml:space="preserve">
+    <value>Редактор очков канала</value>
+  </data>
+  <data name="ChatUserTimeout" xml:space="preserve">
+    <value>Тайм-аут пользователя чата</value>
+  </data>
+  <data name="ChatWhisperReceived" xml:space="preserve">
+    <value>Чат шепот получил</value>
+  </data>
+  <data name="TwitchChannelBitsCheered" xml:space="preserve">
+    <value>Twitch канал Bits Cheered</value>
+  </data>
+  <data name="TwitchChannelFollowed" xml:space="preserve">
+    <value>Twitch канал следуют</value>
+  </data>
+  <data name="TwitchChannelHosted" xml:space="preserve">
+    <value>Twitch канал Хостинг</value>
+  </data>
+  <data name="TwitchChannelMassSubscriptionsGifted" xml:space="preserve">
+    <value>Twitch канал Массовые подписки одаренных</value>
+  </data>
+  <data name="TwitchChannelPointsRedeemed" xml:space="preserve">
+    <value>Twitch Канал Очки Искупленный</value>
+  </data>
+  <data name="TwitchChannelRaided" xml:space="preserve">
+    <value>Twitch канал рейд</value>
+  </data>
+  <data name="TwitchChannelResubscribed" xml:space="preserve">
+    <value>Twitch Канал Переподписан</value>
+  </data>
+  <data name="TwitchChannelStreamStart" xml:space="preserve">
+    <value>Начало потока Twitch Channel</value>
+  </data>
+  <data name="TwitchChannelStreamStop" xml:space="preserve">
+    <value>Twitch Канал Поток Остановка</value>
+  </data>
+  <data name="TwitchChannelSubscribed" xml:space="preserve">
+    <value>Twitch канал Подписано</value>
+  </data>
+  <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
+    <value>Twitch ChannelSubscription Одаренный</value>
+  </data>
+  <data name="TwitchChannelUnfollowed" xml:space="preserve">
+    <value>Twitch канал Unfollowed</value>
+  </data>
+  <data name="ChatTimeout" xml:space="preserve">
+    <value>Тайм-аут чата</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>хозяин</value>
+  </data>
+  <data name="Poll" xml:space="preserve">
+    <value>опрос</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>рейд</value>
+  </data>
+  <data name="Clip" xml:space="preserve">
+    <value>клип</value>
+  </data>
+  <data name="SpinWheel" xml:space="preserve">
+    <value>Спин колесо</value>
+  </data>
+  <data name="EmptyJar" xml:space="preserve">
+    <value>Пустой Джар</value>
+  </data>
+  <data name="RollCredits" xml:space="preserve">
+    <value>Ролл Кредиты</value>
+  </data>
+  <data name="SendTweet" xml:space="preserve">
+    <value>Отправить чирикать</value>
+  </data>
+  <data name="UpdateName" xml:space="preserve">
+    <value>Имя обновления</value>
+  </data>
+  <data name="PlainText" xml:space="preserve">
+    <value>Простой текст</value>
+  </data>
+  <data name="LeftDown" xml:space="preserve">
+    <value>Левая мышь вниз</value>
+  </data>
+  <data name="LeftUp" xml:space="preserve">
+    <value>Левая мышь вверх</value>
+  </data>
+  <data name="RightDown" xml:space="preserve">
+    <value>Правая мышь вниз</value>
+  </data>
+  <data name="RightUp" xml:space="preserve">
+    <value>RightMouseUp</value>
+  </data>
+  <data name="MiddleDown" xml:space="preserve">
+    <value>Средняя мышь вниз</value>
+  </data>
+  <data name="MiddleUp" xml:space="preserve">
+    <value>Средняя мышь вверх</value>
+  </data>
+  <data name="XDown" xml:space="preserve">
+    <value>Дополнительная мышь вниз</value>
+  </data>
+  <data name="XUp" xml:space="preserve">
+    <value>Дополнительная мышь вверх</value>
+  </data>
+  <data name="Wheel" xml:space="preserve">
+    <value>колесо</value>
+  </data>
+  <data name="Absolute" xml:space="preserve">
+    <value>абсолютный</value>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>дергать</value>
+  </data>
+  <data name="Premium" xml:space="preserve">
+    <value>премия</value>
+  </data>
+  <data name="Affiliate" xml:space="preserve">
+    <value>филиал</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRole" xml:space="preserve">
+    <value>Название с той же ролью уже существует.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateRoleMonths" xml:space="preserve">
+    <value>Название с той же ролью и месяцами уже существует.</value>
+  </data>
+  <data name="CreateTitleErrorDuplicateTitle" xml:space="preserve">
+    <value>Название с таким же названием уже существует.</value>
+  </data>
+  <data name="CreateTitleErrorInvalidMonths" xml:space="preserve">
+    <value>Действительное количество месяцев для названия должны быть указаны.</value>
+  </data>
+  <data name="CreateTitleErrorNoTitle" xml:space="preserve">
+    <value>Имя названия должно быть указано.</value>
+  </data>
+  <data name="DeleteSettingsWarning" xml:space="preserve">
+    <value>Это полностью удалит настройки в настоящее время зарегистрированной учетной записи и не обратимо. Ты уверен, что хочешь это сделать?</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>обработанный</value>
+  </data>
+  <data name="JSONToSpecialIdentifiers" xml:space="preserve">
+    <value>JSON для специальных идентификаторов</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>булавка</value>
+  </data>
+  <data name="RunNewUserWizardWarning" xml:space="preserve">
+    <value>Mix It Up перезапустится, и новый пользовательский мастер будет повторно запущен при входе в систему. Это позволит вам повторно импортировать данные, которые могут дублировать и перезаписать ваши команды и пользовательские данные. Ты уверен, что хочешь это сделать?</value>
+  </data>
+  <data name="Standard" xml:space="preserve">
+    <value>стандарт</value>
+  </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>откалывать</value>
+  </data>
+  <data name="ApplicationBotToken" xml:space="preserve">
+    <value>Приложение Bot Token</value>
+  </data>
+  <data name="ApplicationClientID" xml:space="preserve">
+    <value>Идентификатор клиента приложения</value>
+  </data>
+  <data name="ApplicationClientSecret" xml:space="preserve">
+    <value>Секрет клиента приложения</value>
+  </data>
+  <data name="CreatingCustomDiscordApplication" xml:space="preserve">
+    <value>Создание пользовательского приложения раздора</value>
+  </data>
+  <data name="CustomApplication" xml:space="preserve">
+    <value>Пользовательское приложение</value>
+  </data>
+  <data name="DeveloperAPI" xml:space="preserve">
+    <value>API разработчика</value>
+  </data>
+  <data name="DeveloperAPIAdvanced" xml:space="preserve">
+    <value>Открыт для локальной сети (должен работать в качестве администратора):</value>
+  </data>
+  <data name="DeveloperAPIInfo" xml:space="preserve">
+    <value>API разработчика позволяет расширенное взаимодействие с Mix It Up из других приложений, работающих на вашем компьютере с помощью ряда услуг REST API. Для получения дополнительной информации об этом, пожалуйста, посетите страницу разработчика API Wiki.</value>
+  </data>
+  <data name="DeveloperAPIWarning" xml:space="preserve">
+    <value>ВНИМАНИЕ: Это позволит разработчику API слушать по всем адресам и может открыть Mix It Up для абонентов из-за пределов вашей сети. Используйте эту опцию, только если вы знаете, что вы делаете!</value>
+  </data>
+  <data name="DiscordInfo1" xml:space="preserve">
+    <value>Подключение к сервису Discord позволяет получать информацию об учетной записи Discord, отправлять сообщения по каналам и управлять звуком с голосовых каналов. При входе в систему откроется веб-страница аутентификации с просьбой войти в систему Discord и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="DiscordInfo2" xml:space="preserve">
+    <value>Приложение Mix It Up Discord по умолчанию имеет 30-секундную прохладу между каждым действием Discord, чтобы предотвратить проблемы ограничения скорости для всех пользователей. Чтобы обойти 30-секундный охлаждание, вы можете создать свой собственный пользовательский Discord Application.</value>
+  </data>
+  <data name="DiscordInvalidBotToken" xml:space="preserve">
+    <value>Пожалуйста, введите действительный пользовательский токен Bot.</value>
+  </data>
+  <data name="DiscordInvalidClientId" xml:space="preserve">
+    <value>Пожалуйста, введите действительный идентификатор пользовательского клиента.</value>
+  </data>
+  <data name="DiscordInvalidSecret" xml:space="preserve">
+    <value>Пожалуйста, введите действительный пользовательский секрет клиента.</value>
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Дополнительная жизнь</value>
+  </data>
+  <data name="ExtraLifeInfo1" xml:space="preserve">
+    <value>Дополнительное подключение к службе Life позволяет инициировать события, связанные с получением пожертвования от вас или вашей команды.</value>
+  </data>
+  <data name="ExtraLifeInfo2" xml:space="preserve">
+    <value>Во-первых, посетите страницу вашей команды на веб-сайте Extra Life и ближе к концу веб-адреса, он будет говорить "teamID". Ввените этот номер в первую коробку, нажмите на поиск, выберите свое имя из списка, а затем нажмите кнопку Войти в систему.</value>
+  </data>
+  <data name="ExtraLifeInvalidParticipant" xml:space="preserve">
+    <value>Пожалуйста, выберите действительного участника Extra Life.</value>
+  </data>
+  <data name="ExtraLifeInvalidTeamId" xml:space="preserve">
+    <value>Пожалуйста, введите действительный идентификатор команды Extra Life.</value>
+  </data>
+  <data name="ExtraLifeTeamNotFound" xml:space="preserve">
+    <value>Идентификатор команды Extra Life, в который вы вошли, не был найден.</value>
+  </data>
+  <data name="ExtraLifeTriggerForTeamDonation" xml:space="preserve">
+    <value>Событие триггерного пожертвования для командных пожертвований:</value>
+  </data>
+  <data name="OverlayConnectionFailed1" xml:space="preserve">
+    <value>Тест соединения наложения не удалось, пожалуйста, убедитесь, что у вас есть Mix It Up Overlay страницу видимых и работает в потоковом программном обеспечении.</value>
+  </data>
+  <data name="OverlayConnectionFailed2" xml:space="preserve">
+    <value>Если вы запустили потоковое программное обеспечение перед Mix It Up, попробуйте освежить источник веб-страницы в потоковом программном обеспечении.</value>
+  </data>
+  <data name="OverlayConnectionSuccess" xml:space="preserve">
+    <value>Тест на наложение соединения успешно!</value>
+  </data>
+  <data name="OverlaysConnected" xml:space="preserve">
+    <value>{0} наложения подключены в общей сложности</value>
+    <comment>{0} is the number of overlays connected</comment>
+  </data>
+  <data name="ParticipantName" xml:space="preserve">
+    <value>Имя участника</value>
+  </data>
+  <data name="TeamID" xml:space="preserve">
+    <value>Идентификатор команды</value>
+  </data>
+  <data name="AddAnimation" xml:space="preserve">
+    <value>Добавить анимацию</value>
+  </data>
+  <data name="AuthorizationPin" xml:space="preserve">
+    <value>Авторизация Pin</value>
+  </data>
+  <data name="Authorize" xml:space="preserve">
+    <value>уполномочивать</value>
+  </data>
+  <data name="BorderColor" xml:space="preserve">
+    <value>Пограничный цвет</value>
+  </data>
+  <data name="FadeOutSeconds" xml:space="preserve">
+    <value>Исчезновение (Secs)</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Высота (пиксели)</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>Стиль HTML</value>
+  </data>
+  <data name="HTMLText" xml:space="preserve">
+    <value>HTML Текст</value>
+  </data>
+  <data name="IFTTTInfo1" xml:space="preserve">
+    <value>Подключение к сервису IFTTT позволяет вызвать по яблоки IFTTT Web Hook и предоставить данные для использования.</value>
+  </data>
+  <data name="IFTTTInfo2" xml:space="preserve">
+    <value>Для подключения к IFTTT вам понадобится ключ Web Hook. Это можно найти, зацепив веб-крючки и нажав на кнопку Документация в правом верхнем углу.</value>
+  </data>
+  <data name="IFTTTInvalidWebHookKey" xml:space="preserve">
+    <value>Пожалуйста, введите действительный ключ IFTTT Web Hook.</value>
+  </data>
+  <data name="IFTTTWebHookKey" xml:space="preserve">
+    <value>IFTTT веб-крюк ключ</value>
+  </data>
+  <data name="ImageFilePath" xml:space="preserve">
+    <value>Путь файла изображения / URL</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP-адрес (необязательно)</value>
+  </data>
+  <data name="ItemHeight" xml:space="preserve">
+    <value>Высота элемента (пиксели)</value>
+  </data>
+  <data name="ItemTextColor" xml:space="preserve">
+    <value>Цвет текста элемента</value>
+  </data>
+  <data name="ItemTextFont" xml:space="preserve">
+    <value>Текстовый шрифт элемента</value>
+  </data>
+  <data name="ItemTextSize" xml:space="preserve">
+    <value>Размер текста элемента (пиксели)</value>
+  </data>
+  <data name="ItemWidth" xml:space="preserve">
+    <value>Ширина элемента (пиксели)</value>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+  </data>
+  <data name="JustGivingInfo1" xml:space="preserve">
+    <value>Подключение к сервису JustGiving позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в систему JustGiving и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="LayerPosition" xml:space="preserve">
+    <value>Положение слоя</value>
+  </data>
+  <data name="LeftPixelPosition" xml:space="preserve">
+    <value>Левая позиция пикселя</value>
+  </data>
+  <data name="ListAlignment" xml:space="preserve">
+    <value>Выравнивание списка</value>
+  </data>
+  <data name="OBSStudioFailed" xml:space="preserve">
+    <value>Тест на подключение OBS Studio провалился, пожалуйста, убедитесь, что OBS Studio работает, установлен плагин obs-websocket, а соединение и пароль соответствуют вашим настройкам в OBS Studio.</value>
+  </data>
+  <data name="OBSStudioInfo1" xml:space="preserve">
+    <value>Сервис OBS Studio позволяет напрямую взаимодействовать с экземпляром OBS Studio для выполнения изменений сцен и источников.</value>
+  </data>
+  <data name="OBSStudioInfo2" xml:space="preserve">
+    <value>OBS Studio 25.0 или выше не требуется, и вы должны запустить OBS WebSocket Установщик.</value>
+  </data>
+  <data name="OBSStudioSuccess" xml:space="preserve">
+    <value>OBS Studio соединение тест успешно!</value>
+  </data>
+  <data name="OBSWebSocketInstaller" xml:space="preserve">
+    <value>Установщик OBS WebSocket</value>
+  </data>
+  <data name="OverlayInfo1" xml:space="preserve">
+    <value>Добавьте источник веб-браузера в потоковое программное обеспечение со следующим URL:</value>
+  </data>
+  <data name="OverlayInfo2" xml:space="preserve">
+    <value>Чтобы использовать Mix It Up Overlay, пожалуйста, убедитесь, что Mix It Up работает, прежде чем запустить потоковое программное обеспечение или обновить источник веб-страницы в потоковом программном обеспечении после запуска Mix It Up.</value>
+  </data>
+  <data name="OverlayInfo3" xml:space="preserve">
+    <value>Многослойную поддержку можно найти в настройках -&gt; Overlay.</value>
+  </data>
+  <data name="OverlayInfo4" xml:space="preserve">
+    <value>Если у вас есть OBS Studio, XSplit, или Streamlabs OBS настройки подключения, мы можем автоматически обновить веб-браузер источник, который содержит Mix It Up overlay, когда Mix It Up начинается. Просто ввемите имя источника ниже:</value>
+  </data>
+  <data name="OverlayInfo5" xml:space="preserve">
+    <value>Просто ввемите имя источника веб-браузера в потоковом программном обеспечении ниже:</value>
+  </data>
+  <data name="OvrStreamInfo1" xml:space="preserve">
+    <value>OvrStream является мощным, редактор графики движения для оповещений и накладок. Mix It Up позволяет инициировать визуализацию и устанавливать значения переменных для них в OvrStream.</value>
+  </data>
+  <data name="OvrStreamInfo2" xml:space="preserve">
+    <value>Для получения информации о OvrStream, пожалуйста, смотрите следующую ссылку:</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль (необязательно)</value>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Патреон</value>
+  </data>
+  <data name="PatreonInfo1" xml:space="preserve">
+    <value>Подключение к службе Patreon позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в сайт Patreon и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>процент</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Пикселей</value>
+  </data>
+  <data name="PositionPercentageFromLeft" xml:space="preserve">
+    <value>Позиция % слева:</value>
+  </data>
+  <data name="PositionPercentageFromTop" xml:space="preserve">
+    <value>Позиция % сверху:</value>
+  </data>
+  <data name="RemoveAnimation" xml:space="preserve">
+    <value>Удалить анимацию</value>
+  </data>
+  <data name="ScreenPosition" xml:space="preserve">
+    <value>Положение на экране:</value>
+  </data>
+  <data name="ScrollSpeed" xml:space="preserve">
+    <value>Скорость прокрутки</value>
+  </data>
+  <data name="SectionHTMLStyle" xml:space="preserve">
+    <value>Раздел HTML Стиль</value>
+  </data>
+  <data name="SectionTextColor" xml:space="preserve">
+    <value>Цвет текста раздела</value>
+  </data>
+  <data name="SectionTextFont" xml:space="preserve">
+    <value>Раздел Текст шрифта</value>
+  </data>
+  <data name="SectionTextSize" xml:space="preserve">
+    <value>Размер текста раздела (пиксели)</value>
+  </data>
+  <data name="SectionType" xml:space="preserve">
+    <value>Тип раздела</value>
+  </data>
+  <data name="SelectedCampaign" xml:space="preserve">
+    <value>Выбранная кампания</value>
+  </data>
+  <data name="SelectedFundraiser" xml:space="preserve">
+    <value>Выбранный сбор средств</value>
+  </data>
+  <data name="ServiceConnectAdditionalDetails" xml:space="preserve">
+    <value>Дополнительные сведения:</value>
+  </data>
+  <data name="ServiceConnectFailed" xml:space="preserve">
+    <value>Не мог подключиться к сервису, пожалуйста, попробуйте еще раз. Если это будет продолжаться, пожалуйста, обращайтесь к нам с поддержкой для оказания дальнейшей помощи.</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>простой</value>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Поток Аватары</value>
+  </data>
+  <data name="StreamAvatarsInfo1" xml:space="preserve">
+    <value>Функция Stream Avatars обрабатывается непосредственно через программу Stream Avatars. Перед подключением Аватаров Потока, чтобы смешать его, вы должны убедиться, что API разработчика включен на странице Службы.</value>
+  </data>
+  <data name="StreamAvatarsInfo2" xml:space="preserve">
+    <value>Для получения информации о том, как связать поток Аватары с Mix It Up, пожалуйста, смотрите раздел поток Аватары вики.</value>
+  </data>
+  <data name="StreamAvatarsWikiSection" xml:space="preserve">
+    <value>Поток Аватары Вики раздел</value>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Потоковая палуба</value>
+  </data>
+  <data name="StreamDeckInfo1" xml:space="preserve">
+    <value>Этот плагин Stream Deck позволяет запускать команды Mix It Up непосредственно с вашего устройства Stream Deck, а также другую информацию о состоянии вашего потока.</value>
+  </data>
+  <data name="StreamDeckInfo2" xml:space="preserve">
+    <value>Чтобы начать работу, убедитесь, что программное обеспечение Stream Deck обновляется, по крайней мере, до версии 4.0 - служба API разработчика включена в Mix It Up. Чтобы установить плагин Mix It Up, нажмите на кнопку "Больше действий ..." кнопку в правом нижнем углу, а затем искать "Mix It Up" в окне.</value>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>СтримЭлементы</value>
+  </data>
+  <data name="StreamElementsInfo1" xml:space="preserve">
+    <value>Подключение к сервису StreamElements позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в StreamElements и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="StreamingSoftwareSourceName" xml:space="preserve">
+    <value>Имя источника потокового программного обеспечения</value>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>СтримХар</value>
+  </data>
+  <data name="StreamJarInfo1" xml:space="preserve">
+    <value>Подключение к сервису StreamJar позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в StreamJar и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="StreamlabsInfo1" xml:space="preserve">
+    <value>Подключение к сервису Streamlabs позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в Streamlabs и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionFailed" xml:space="preserve">
+    <value>Испытание соединения Streamlabs OBS не удалось, пожалуйста, убедитесь, что Streamlabs OBS работает.</value>
+  </data>
+  <data name="StreamlabsOBSConnectionSuccess" xml:space="preserve">
+    <value>Испытание соединения Streamlabs OBS успешно!</value>
+  </data>
+  <data name="StreamlabsOBSInfo1" xml:space="preserve">
+    <value>Служба ObS Streamlabs позволяет напрямую взаимодействовать с экземпляром Streamlabs OBS для выполнения изменений сцен и источников.</value>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Стримлуты</value>
+  </data>
+  <data name="StreamlootsAlertsOverlayURL" xml:space="preserve">
+    <value>Streamloots Оповещения Наложение URL</value>
+  </data>
+  <data name="StreamlootsInfo1" xml:space="preserve">
+    <value>Подключение к сервису Streamloots позволяет инициировать события, связанные с тем, как карта используется на вашем канале.</value>
+  </data>
+  <data name="StreamlootsInfo2" xml:space="preserve">
+    <value>Чтобы подключиться к Streamloots, отправляйтесь на страницу панели мониторинга Streamloots, нажмите на оповещения в левом меню, скопировать URL-адрес оповещения в текстовое поле и нажмите кнопку Log In.</value>
+  </data>
+  <data name="StreamlootsInvalidUrl" xml:space="preserve">
+    <value>Пожалуйста, введите действительный URL Streamloots ({0}).</value>
+    <comment>{0} is a url format</comment>
+  </data>
+  <data name="SubEquivalent" xml:space="preserve">
+    <value>Суб-эквивалент</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Тестовое соединение</value>
+  </data>
+  <data name="TextFont" xml:space="preserve">
+    <value>Текстовый шрифт</value>
+  </data>
+  <data name="TextHeight" xml:space="preserve">
+    <value>Высота текста (пиксели)</value>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Тильтифиц</value>
+  </data>
+  <data name="TiltifyInfo1" xml:space="preserve">
+    <value>Подключение к сервису Tiltify позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в Систему Tiltify и утвердить Mix It Up для доступа к вашей информации. После подключения Tiltify необходимо выбрать кампанию, которую вы хотите использовать при обнаружении пожертвований.</value>
+  </data>
+  <data name="TiltifyInfo2" xml:space="preserve">
+    <value>ПРИМЕЧАНИЕ: При входе в систему, пожалуйста, нам возможность электронной почты, чтобы войти в свой аккаунт. В настоящее время невозможно войти в систему с подключенными учетными записями.</value>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>ТипиСтрим</value>
+  </data>
+  <data name="TipeeeStreamInfo1" xml:space="preserve">
+    <value>Подключение к сервису TipeeeStream позволяет выполнять действия при получении пожертвования. При входе в систему откроется веб-страница аутентификации с просьбой войти в TipeeeStream и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="TitleHTMLStyle" xml:space="preserve">
+    <value>Название HTML Стиль</value>
+  </data>
+  <data name="TopPixelPosition" xml:space="preserve">
+    <value>Позиция TopPixel</value>
+  </data>
+  <data name="TotalToShow" xml:space="preserve">
+    <value>Всего, чтобы показать</value>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+  </data>
+  <data name="TreatStreamInfo1" xml:space="preserve">
+    <value>Подключение к сервису TreatStream позволяет выполнять действия при получении лечения. При входе в систему откроется веб-страница аутентификации с просьбой войти в систему TreatStream и утвердить Mix It Up для доступа к вашей информации.</value>
+  </data>
+  <data name="TwitterInfo1" xml:space="preserve">
+    <value>Подключение к сервису Twitter позволяет отправлять твиты в свой аккаунт и легко запрашивать ваши личные твиты для использования в потоке.</value>
+  </data>
+  <data name="UserHTMLStyle" xml:space="preserve">
+    <value>Пользователь HTMLStyle</value>
+  </data>
+  <data name="WebHooksPage" xml:space="preserve">
+    <value>Страница веб-крючки</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Ширина (пиксели)</value>
+  </data>
+  <data name="XSplitConnectionFailed" xml:space="preserve">
+    <value>XSplit соединение тест не удалось, пожалуйста, убедитесь, что у вас есть Mix It Up XSplit расширение добавил и открыть в XSplit.</value>
+  </data>
+  <data name="XSplitConnectionSuccess" xml:space="preserve">
+    <value>Тест соединения XSplit успешно!</value>
+  </data>
+  <data name="XSplitFolder" xml:space="preserve">
+    <value>XSplit Папка</value>
+  </data>
+  <data name="XSplitInfo1" xml:space="preserve">
+    <value>Служба XSplit позволяет напрямую взаимодействовать с экземпляром XSplit для выполнения изменений сцен и источников.</value>
+  </data>
+  <data name="XSplitInfo2" xml:space="preserve">
+    <value>Расширение Mix It Up должно быть установлено из папки XSplit и запущено в XSplit. Для получения инструкций о том, как это сделать, пожалуйста, ознакомьтесь со страницей XSplit Service.</value>
+  </data>
+  <data name="XSplitServicePage" xml:space="preserve">
+    <value>Страница обслуживания XSplit</value>
+  </data>
+  <data name="BackgroundImageURL300CharactersMax" xml:space="preserve">
+    <value>URL-адрес фонового изображения (300 символов Макс)</value>
+  </data>
+  <data name="BackupSettingsLoadedError" xml:space="preserve">
+    <value>Один или несколько файлов настроек не могли быть загружены из-за повреждения файлов, а вместо него была загружена последняя локаловая резервная копия.</value>
+  </data>
+  <data name="BanUserPrompt" xml:space="preserve">
+    <value>Это запретит пользователю {0} этого канала. Уверен?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="BitsBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус Bits должен быть больше или равен 0.</value>
+  </data>
+  <data name="BitsHeader" xml:space="preserve">
+    <value>Биты:</value>
+  </data>
+  <data name="BoardHeader" xml:space="preserve">
+    <value>доска:</value>
+  </data>
+  <data name="ClearGameQueuePrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите очистить очередь на игру?</value>
+  </data>
+  <data name="CommandNameRequiredForShop" xml:space="preserve">
+    <value>Для магазина должно быть указано название команды.</value>
+  </data>
+  <data name="CommandRequired" xml:space="preserve">
+    <value>Команда должна быть выбрана.</value>
+  </data>
+  <data name="CurrencyImportFailed" xml:space="preserve">
+    <value>Мы не смогли импортировать данные. Пожалуйста, убедитесь, что ваш файл находится в одном из следующих форматов:</value>
+  </data>
+  <data name="CurrencyRankInventoryNameNotEmpty" xml:space="preserve">
+    <value>Имя должно иметь не менее 1 буквы в нем.</value>
+  </data>
+  <data name="CurrencyRankInventoryNameProtected" xml:space="preserve">
+    <value>Следующие имена зарезервированы и не могут быть использованы:</value>
+  </data>
+  <data name="CurrencyRankNameDuplicate" xml:space="preserve">
+    <value>Там уже существует валюта или ранг системы с этим именем.</value>
+  </data>
+  <data name="CurrencyRankNameNoDigits" xml:space="preserve">
+    <value>Имя не может содержать в нем цифры чиций.</value>
+  </data>
+  <data name="CurrencyRankNameRequired" xml:space="preserve">
+    <value>Необходимо {0} имя</value>
+    <comment>{0} is the type (currency or rank)</comment>
+  </data>
+  <data name="CustomCommandAlreadyExists" xml:space="preserve">
+    <value>Для этого уровня уже существует пользовательская команда.</value>
+  </data>
+  <data name="CustomLevelGreaterThanZero" xml:space="preserve">
+    <value>Необходимо указать число, большее 0.</value>
+  </data>
+  <data name="DamageAnimation" xml:space="preserve">
+    <value>Анимация повреждений</value>
+  </data>
+  <data name="DataFileImportFailed" xml:space="preserve">
+    <value>Мы не смогли прочитать данные из файла. Пожалуйста, убедитесь, что он еще не открыт в другой программе.</value>
+  </data>
+  <data name="DataFileInvalidColumn" xml:space="preserve">
+    <value>Для каждого столбца, который вы хотите включить, должно быть указано число 0 или больше.</value>
+  </data>
+  <data name="DataFileRequiredColumns" xml:space="preserve">
+    <value>Файл данных должен содержать, по крайней мере, либо идентификатор пользователя, либо столбцы имени пользователя.</value>
+  </data>
+  <data name="DefaultMaxGreaterThanZero" xml:space="preserve">
+    <value>Максимальная сумма по умолчанию должна быть больше 0.</value>
+  </data>
+  <data name="DeleteItemPrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить это?</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить этот профиль?</value>
+  </data>
+  <data name="DeleteQuotePrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить эту цитату?</value>
+  </data>
+  <data name="DeleteUserDataPrompt" xml:space="preserve">
+    <value>Это удалит данные этого пользователя, который включает в себя их часы, валюту, ранг, пользовательские команды пользователей. Ты уверен, что хочешь это сделать?</value>
+  </data>
+  <data name="DeleteWidgetPrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить этот виджет?</value>
+  </data>
+  <data name="DemoteUserPrompt" xml:space="preserve">
+    <value>Это позволит понизить {0} от модератора этого канала. Уверен?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="DeviceApprovedLine1" xml:space="preserve">
+    <value>Устройство {0} одобрено.</value>
+    <comment>{0} is the device name</comment>
+  </data>
+  <data name="DeviceApprovedLine2" xml:space="preserve">
+    <value>Чтобы настроить его, отправляйтесь в Настройки -&gt; Пульт дистанционного управления.</value>
+  </data>
+  <data name="DeviceCodeHeader" xml:space="preserve">
+    <value>Устройство 6-Digit Код:</value>
+  </data>
+  <data name="DeviceCodeInvalid" xml:space="preserve">
+    <value>Введенный код не действителен.</value>
+  </data>
+  <data name="DeviceNoCode" xml:space="preserve">
+    <value>Клиентское устройство не может быть найдено с указанным кодом.</value>
+  </data>
+  <data name="DonationBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус пожертвования должен быть больше или равен 0.</value>
+  </data>
+  <data name="DonationsHeader" xml:space="preserve">
+    <value>Пожертвования:</value>
+  </data>
+  <data name="DuplicateItemName" xml:space="preserve">
+    <value>Элемент с таким же названием уже существует.</value>
+  </data>
+  <data name="DuplicateProfileName" xml:space="preserve">
+    <value>Профиль с таким же названием уже существует.</value>
+  </data>
+  <data name="EndDateInvalid" xml:space="preserve">
+    <value>Дата окончания должна быть после даты начала.</value>
+  </data>
+  <data name="ErrorDetailsHeader" xml:space="preserve">
+    <value>Сведения об ошибке:</value>
+  </data>
+  <data name="FailedToConnectToTwitch" xml:space="preserve">
+    <value>Не удалось подключиться к службам Twitch. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FailedToFinalizeInitialization" xml:space="preserve">
+    <value>Не удалось завершить инициализацию. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FailedToGetChannelInformation" xml:space="preserve">
+    <value>Не удалось получить информацию о канале. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FailedToInitializeBotAccount" xml:space="preserve">
+    <value>Не удалось инициализировать учетную запись Bot</value>
+  </data>
+  <data name="FailedToInitializeExternalServices" xml:space="preserve">
+    <value>Не удалось инициализировать внешние службы. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FailedToInitializeSettings" xml:space="preserve">
+    <value>Не удалось инициализировать настройки. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FailedToInitializeStreamerBasedServices" xml:space="preserve">
+    <value>Не удалось инициализировать службы на основе стримеров. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="FollowBonusZeroOrMore" xml:space="preserve">
+    <value>Последующий бонус должен быть больше или равен 0.</value>
+  </data>
+  <data name="FollowsHeader" xml:space="preserve">
+    <value>Следует:</value>
+  </data>
+  <data name="FontColor" xml:space="preserve">
+    <value>Цвет шрифта</value>
+  </data>
+  <data name="FontName" xml:space="preserve">
+    <value>Название шрифта</value>
+  </data>
+  <data name="GoalAmount" xml:space="preserve">
+    <value>Сумма цели</value>
+  </data>
+  <data name="GoalType" xml:space="preserve">
+    <value>Тип цели</value>
+  </data>
+  <data name="HealingBonus" xml:space="preserve">
+    <value>Исцеляющий бонус</value>
+  </data>
+  <data name="HostBonusPerUser" xml:space="preserve">
+    <value>Бонус хоста (на пользователя)</value>
+  </data>
+  <data name="HostBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус Host должен быть больше или равен 0.</value>
+  </data>
+  <data name="HostsHeader" xml:space="preserve">
+    <value>Хозяева:</value>
+  </data>
+  <data name="HotKeyRequired" xml:space="preserve">
+    <value>Конфигурация горячего ключа должна быть установлена.</value>
+  </data>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>Мы не смогли прочитать данные из файла. Пожалуйста, убедитесь, что он еще не открыт в другой программе. Если так будет продолжаться, пожалуйста, обращайтесь за поддержкой.</value>
+  </data>
+  <data name="ImportPointsPrompt1" xml:space="preserve">
+    <value>Это позволит импортировать общие суммы, которые были у каждого пользователя, назначать их на эту {0}, и будет переназначать любые суммы, которые есть у каждого пользователя.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="ImportPointsPrompt2" xml:space="preserve">
+    <value>Этот процесс может занять некоторое время; Вы уверены, что хотите сделать это?</value>
+  </data>
+  <data name="ImportSuccess" xml:space="preserve">
+    <value>{0} пользователи были успешно импортированы.</value>
+    <comment>{0} is the number of successes</comment>
+  </data>
+  <data name="ImportWithFailures" xml:space="preserve">
+    <value>{0} были импортированы успешно, но {1} пользователи не смогли быть импортированы. Это может быть связано с недействительными данными или неспособностью найти их информацию на платформе. Пожалуйста, свяжитесь с поддержкой для дальнейшей помощи с этим, если это необходимо.</value>
+    <comment>{0} is the number of successes, {1} is the number of failures</comment>
+  </data>
+  <data name="InvalidDataFile" xml:space="preserve">
+    <value>Необходимо указано действительное файл данных.</value>
+  </data>
+  <data name="InvalidPosition" xml:space="preserve">
+    <value>Для этого виджета наложения должна быть выбрана действительная позиция.</value>
+  </data>
+  <data name="InventoryNameDuplicate" xml:space="preserve">
+    <value>Уже существует инвентарь с этим именем.</value>
+  </data>
+  <data name="InventoryNameRequired" xml:space="preserve">
+    <value>Необходимо указано кадастровое имя.</value>
+  </data>
+  <data name="ItemBuyAmountZeroOrMore" xml:space="preserve">
+    <value>Сумма покупки товара должна быть пустой или номером больше 0.</value>
+  </data>
+  <data name="ItemMaxAmountZeroOrMore" xml:space="preserve">
+    <value>Максимальная сумма элемента должна быть пустой или число больше 0.</value>
+  </data>
+  <data name="ItemNameRequired" xml:space="preserve">
+    <value>Вы должны указать имя для элемента.</value>
+  </data>
+  <data name="ItemSellAmountZeroOrMore" xml:space="preserve">
+    <value>Сумма продажи товара должна быть пустой или номером больше 0.</value>
+  </data>
+  <data name="LengthSeconds" xml:space="preserve">
+    <value>Длина (секунды)</value>
+  </data>
+  <data name="LessThanMaxLevel" xml:space="preserve">
+    <value>Вы должны указать число меньше или равное уровню Max.</value>
+  </data>
+  <data name="LoopHeader" xml:space="preserve">
+    <value>петля:</value>
+  </data>
+  <data name="MaxAmountMustBeZeroOrMore" xml:space="preserve">
+    <value>Максимальная сумма должна быть больше 0 или может быть оставлена как 0 без максимальной суммы.</value>
+  </data>
+  <data name="MaxCustomLevelCommand" xml:space="preserve">
+    <value>Там не может быть какого-либо пользовательского уровня до команд, которые больше, чем уровень Макса.</value>
+  </data>
+  <data name="MaxLevelGreaterThanZero" xml:space="preserve">
+    <value>Уровень Макса должен быть больше 0.</value>
+  </data>
+  <data name="MinimumActivityRateZeroOrMore" xml:space="preserve">
+    <value>Минимальная скорость активности должна быть 0 или больше.</value>
+  </data>
+  <data name="MinimumAmount" xml:space="preserve">
+    <value>Минимальная сумма</value>
+  </data>
+  <data name="MinimumAmountRequired" xml:space="preserve">
+    <value>Минимальная сумма должна быть указана.</value>
+  </data>
+  <data name="MinSecondsToShow" xml:space="preserve">
+    <value>Мин секунд, чтобы показать</value>
+  </data>
+  <data name="ModeratorBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус Модератора должен быть 0 или больше.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Имя должно быть указано.</value>
+  </data>
+  <data name="NewBossAnimation" xml:space="preserve">
+    <value>Анимация нового босса</value>
+  </data>
+  <data name="NewLeader" xml:space="preserve">
+    <value>Новый лидер</value>
+  </data>
+  <data name="OfflineRateVsInterval" xml:space="preserve">
+    <value>В автономном режиме минут не может быть 0, если в автономном режиме сумма больше, чем 0.</value>
+  </data>
+  <data name="OneCustomLevelCommand" xml:space="preserve">
+    <value>Там может быть только 1 пользовательский уровень вверх команды на отдельный уровень.</value>
+  </data>
+  <data name="OneItemRequired" xml:space="preserve">
+    <value>Необходимо добавить не менее 1 элемента.</value>
+  </data>
+  <data name="OneRankRequired" xml:space="preserve">
+    <value>Необходимо создать по крайней мере один ранг.</value>
+  </data>
+  <data name="OnFollowBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус On Follow должен быть 0 или больше.</value>
+  </data>
+  <data name="OnGoalReached" xml:space="preserve">
+    <value>О достигнутой цели</value>
+  </data>
+  <data name="OnHostBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус On Host должен быть 0 или больше.</value>
+  </data>
+  <data name="OnlineRateMustBeZeroOrMore" xml:space="preserve">
+    <value>Сумма онлайн и минут должна быть 0 или больше.</value>
+  </data>
+  <data name="OnlineRateVsInterval1" xml:space="preserve">
+    <value>Онлайн минут не может быть 0, если онлайн сумма больше, чем 0.</value>
+  </data>
+  <data name="OnlineRateVsInterval2" xml:space="preserve">
+    <value>Оффлайн количество минут и минут должно быть 0 или больше.</value>
+  </data>
+  <data name="OnNewStreamBoss" xml:space="preserve">
+    <value>На Новом Боссе Потока</value>
+  </data>
+  <data name="OnSubscribeBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус On Subscribe должен быть 0 или больше.</value>
+  </data>
+  <data name="OnTimerCompleted" xml:space="preserve">
+    <value>На таймер завершена</value>
+  </data>
+  <data name="OverkillBonus" xml:space="preserve">
+    <value>Излишний бонус</value>
+  </data>
+  <data name="OverlayMissingDetails" xml:space="preserve">
+    <value>Отсутствуют сведения о элементе наложения.</value>
+  </data>
+  <data name="OverlayRequired" xml:space="preserve">
+    <value>Необходимо выбрать наложение на использование.</value>
+  </data>
+  <data name="PointsForLevelUpGreaterThanZero" xml:space="preserve">
+    <value>Очки для уровня up должны быть больше 0.</value>
+  </data>
+  <data name="ProfileType" xml:space="preserve">
+    <value>Тип профиля</value>
+  </data>
+  <data name="ProgressColor" xml:space="preserve">
+    <value>Прогресс Цвет</value>
+  </data>
+  <data name="PromoteUserPrompt" xml:space="preserve">
+    <value>Это будет способствовать {0} к модератору этого канала. Уверен?</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="RaidBonusPerUser" xml:space="preserve">
+    <value>Рейд Бонус (на пользователя)</value>
+  </data>
+  <data name="RaidsHeader" xml:space="preserve">
+    <value>Рейды:</value>
+  </data>
+  <data name="RankRequired" xml:space="preserve">
+    <value>Имя ранга должно быть указано.</value>
+  </data>
+  <data name="RegularBonusZeroOrMore" xml:space="preserve">
+    <value>Регулярный бонус должен быть 0 или больше.</value>
+  </data>
+  <data name="RemoteFailed" xml:space="preserve">
+    <value>Не мог подключиться к удаленному сервису, пожалуйста, попробуйте еще раз.</value>
+  </data>
+  <data name="RemoteServicesFailed" xml:space="preserve">
+    <value>Не мог подключиться к удаленному сервису, пожалуйста, попробуйте еще раз.</value>
+  </data>
+  <data name="RemoteTwoLayersMax" xml:space="preserve">
+    <value>Доски могут быть только до 2 слоев глубиной.</value>
+  </data>
+  <data name="ResetAfterDays" xml:space="preserve">
+    <value>Сброс после нескольких дней</value>
+  </data>
+  <data name="ResetAllItemPrompt" xml:space="preserve">
+    <value>Вы хотите сбросить все суммы элемента?</value>
+  </data>
+  <data name="ResetAllProgressPrompt" xml:space="preserve">
+    <value>Вы уверены, что хотите сбросить прогресс для всех пользователей?</value>
+  </data>
+  <data name="ResetCurrencyRankPointsPrompt" xml:space="preserve">
+    <value>Вы хотите сбросить все {0} точки?</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt1" xml:space="preserve">
+    <value>Эта опция будет сбросить все {0} баллов за этот {0} и назначить сумму для каждого пользователя, который непосредственно равен СЕАВ онлайн ставка, а не в настоящее время редактируется онлайн скорость. Прежде чем использовать эту опцию, пожалуйста, сохраните все правки на {0}, повторно отредактировать его, а затем выбрать эту опцию.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt2" xml:space="preserve">
+    <value>EX: Если онлайн-тариф "1 в час" и пользователь имеет 16 часов просмотра, то {0} то, что пользователь будет установлен на 16.</value>
+    <comment>{0} is the rank/currency name</comment>
+  </data>
+  <data name="RetroactivelyGivePointsPrompt3" xml:space="preserve">
+    <value>Этот процесс может занять некоторое время; Вы уверены, что хотите сделать это?</value>
+  </data>
+  <data name="RetroactiveUnsupported" xml:space="preserve">
+    <value>Тип курса для этой валюты не поддерживает ретроактивно давать очки.</value>
+  </data>
+  <data name="ScorpBotInstallationDirectory" xml:space="preserve">
+    <value>Каталог установки ScorpBot</value>
+  </data>
+  <data name="ScrollWidthPixels" xml:space="preserve">
+    <value>Ширина прокрутки (пиксели)</value>
+  </data>
+  <data name="ServiceDisconnectedLine1" xml:space="preserve">
+    <value>Эти службы отключили</value>
+  </data>
+  <data name="ServiceDisconnectedLine2" xml:space="preserve">
+    <value>и пытаются восстановить связь:</value>
+  </data>
+  <data name="SessionInitializationFailed" xml:space="preserve">
+    <value>Не удалось инициализировать сеанс. Если это продолжается, пожалуйста, посетите Mix It Up Discord за помощью.</value>
+  </data>
+  <data name="SettingsChangedRestartPrompt" xml:space="preserve">
+    <value>Некоторые из измененных параметров требуют перезагрузки, чтобы вступят в силу. Хотите перезапустить Mix It Up сейчас?</value>
+  </data>
+  <data name="SettingsLoadFailure" xml:space="preserve">
+    <value>Один или несколько файлов настроек не были загружены. Пожалуйста, посетите Mix It Up раздора за помощью по этому вопросу.</value>
+  </data>
+  <data name="Shadow" xml:space="preserve">
+    <value>Тень (по желанию)</value>
+  </data>
+  <data name="ShopCurrencyRequired" xml:space="preserve">
+    <value>Валюта должна быть указана для магазина.</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Размер (пиксели)</value>
+  </data>
+  <data name="StartingAmount" xml:space="preserve">
+    <value>Начальная сумма</value>
+  </data>
+  <data name="StartingHealth" xml:space="preserve">
+    <value>Начало здоровья</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Время начала (Secs)</value>
+  </data>
+  <data name="StreamlabsChatBotDataFile" xml:space="preserve">
+    <value>Файл данных Чатбота Streamlabs</value>
+  </data>
+  <data name="StreamPassNameDuplicate" xml:space="preserve">
+    <value>Там уже существует Stream Pass с этим именем.</value>
+  </data>
+  <data name="StreamPassNameInvalid" xml:space="preserve">
+    <value>Название может содержать только буквы, цифры или пробелы.</value>
+  </data>
+  <data name="StreamPassNameRequired" xml:space="preserve">
+    <value>Действительное имя должно быть указано.</value>
+  </data>
+  <data name="SubMultiplierOneOrMore" xml:space="preserve">
+    <value>Субмножитель должен быть больше или равен 1,0.</value>
+  </data>
+  <data name="SubResubsHeader" xml:space="preserve">
+    <value>Запасные/Resubs:</value>
+  </data>
+  <data name="SubscriberBonusZeroOrMore" xml:space="preserve">
+    <value>Бонус абонента должен быть 0 или больше.</value>
+  </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>Переход на темную тему</value>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>Переключиться на тему света</value>
+  </data>
+  <data name="TextSize" xml:space="preserve">
+    <value>Размер текста (пиксели)</value>
+  </data>
+  <data name="TotalFollowsHeader" xml:space="preserve">
+    <value>Всего следует:</value>
+  </data>
+  <data name="TradingCommandRequired" xml:space="preserve">
+    <value>Для торговли необходимо указано имя команды.</value>
+  </data>
+  <data name="TwitchAccountExists" xml:space="preserve">
+    <value>Уже существуют настройки для учетной записи {0}. Пожалуйста, вопишитесь с другой учетной записью или повторно запустите Mix It Up, чтобы выбрать эти настройки из падения вниз.</value>
+    <comment>{0} is the username</comment>
+  </data>
+  <data name="TwitchAccountMismatch" xml:space="preserve">
+    <value>Учетная запись, в которую вы вошли, как на Twitch, не соответствует учетной записи для этих настроек. Пожалуйста, войдите в систему в качестве правильной учетной записи на Twitch.</value>
+  </data>
+  <data name="TwitchFailed" xml:space="preserve">
+    <value>Не удалось подключиться к службам Twitch:</value>
+  </data>
+  <data name="UniqueRankNameAndMinimumAmountRequired" xml:space="preserve">
+    <value>Каждый ранг должен иметь уникальное имя и минимальную сумму.</value>
+  </data>
+  <data name="UpgradePrompt1" xml:space="preserve">
+    <value>Мы обнаружили старую версию ваших настроек, которая должна быть обновлена до нового формата. В зависимости от размера, это может занять некоторое время, чтобы выполнить и требуется использовать Mix It Up.</value>
+  </data>
+  <data name="UpgradePrompt2" xml:space="preserve">
+    <value>Если вы готовы сделать это, пожалуйста, нажмите Да. В противном случае нажмите Нет и близко к приложению, чтобы выполнить позже.</value>
+  </data>
+  <data name="VideoFilePath" xml:space="preserve">
+    <value>Путь видео файла</value>
+  </data>
+  <data name="ViewingRateAmountZeroOrMore" xml:space="preserve">
+    <value>Сумма скорости просмотра должна быть больше или равна 0.</value>
+  </data>
+  <data name="ViewingRateMinutesInvalid" xml:space="preserve">
+    <value>Сумма скорости просмотра и минуты должны быть больше, чем 0 или оба равны 0.</value>
+  </data>
+  <data name="ViewingRateMinutesZeroOrMore" xml:space="preserve">
+    <value>Скорость просмотра минут должна быть больше или равна 0.</value>
+  </data>
+  <data name="VolumeHeader" xml:space="preserve">
+    <value>том:</value>
+  </data>
+  <data name="WebPageURL" xml:space="preserve">
+    <value>URL-адрес веб-страницы</value>
+  </data>
+  <data name="YoutubeVideoURLID" xml:space="preserve">
+    <value>Youtube Видео URL/ID</value>
+  </data>
+  <data name="DiscoardBotGatewayFailed" xml:space="preserve">
+    <value>Не смог получить данные Bot Application Gateway</value>
+  </data>
+  <data name="DiscordBotWebSocketFailed" xml:space="preserve">
+    <value>Не смог подключить Bot Application к веб-разъему</value>
+  </data>
+  <data name="DiscordServerDataFailed" xml:space="preserve">
+    <value>Не смог получить данные сервера</value>
+  </data>
+  <data name="DiscordUserDataFailed" xml:space="preserve">
+    <value>Не смог получить данные пользователя</value>
+  </data>
+  <data name="ExtraLifeTeamDataFailed" xml:space="preserve">
+    <value>Не смог получить данные о команде/участнике</value>
+  </data>
+  <data name="ExtraLifeTeamNotSet" xml:space="preserve">
+    <value>Идентификатор команды Extra Life / идентификатор участника не установлен</value>
+  </data>
+  <data name="JustGivingUserDataFailed" xml:space="preserve">
+    <value>Невозможно получить данные пользователя</value>
+  </data>
+  <data name="NameOfButtonHeader" xml:space="preserve">
+    <value>Имя кнопки:</value>
+  </data>
+  <data name="NameOfFolderHeader" xml:space="preserve">
+    <value>Имя Фолдер:</value>
+  </data>
+  <data name="OBSWebSocketFailed" xml:space="preserve">
+    <value>Не удалось подключиться к веб-разъему OBS Studio</value>
+  </data>
+  <data name="OverlayAddFailed" xml:space="preserve">
+    <value>Не удалось добавить {0} наложения</value>
+    <comment>{0} is the overlay name</comment>
+  </data>
+  <data name="OvrStreamInvalidAddress" xml:space="preserve">
+    <value>Указанный адрес недействительным</value>
+  </data>
+  <data name="PatreonCampaignDataFailed" xml:space="preserve">
+    <value>Не удалось получить данные кампании</value>
+  </data>
+  <data name="PatreonUserDataFailed" xml:space="preserve">
+    <value>Не удалось получить данные пользователя</value>
+  </data>
+  <data name="StreamElementsUserDataFailed" xml:space="preserve">
+    <value>Не удалось получить информацию о пользователе</value>
+  </data>
+  <data name="StreamJarChannelDataFailed" xml:space="preserve">
+    <value>Не удалось получить данные канала</value>
+  </data>
+  <data name="StreamlabsOBSAdminMaybe" xml:space="preserve">
+    <value>Streamlabs OBS может работать в качестве администратора, а Mix It Up — нет. Попробуйте выработать Mix It Up в качестве администратора перед подключением.</value>
+  </data>
+  <data name="StreamlabsOBSFailed" xml:space="preserve">
+    <value>Streamlabs OBS не удалось связаться</value>
+  </data>
+  <data name="StreamlabsWebSocketTokenFailed" xml:space="preserve">
+    <value>Не удалось получить токен веб-разъема</value>
+  </data>
+  <data name="TiltifyUserDataFailed" xml:space="preserve">
+    <value>Не удалось получить данные пользователя</value>
+  </data>
+  <data name="TipeeeStreamSocketFailed" xml:space="preserve">
+    <value>Не удалось подключиться к розетке</value>
+  </data>
+  <data name="TipeeeStreamSocketUrlFailed" xml:space="preserve">
+    <value>Невозможно получить URL-адрес Socket</value>
+  </data>
+  <data name="TipeeeStreamUserDataFailed" xml:space="preserve">
+    <value>Невозможно получить информацию о пользователе</value>
+  </data>
+  <data name="TipeeStreamSocketKeyFailed" xml:space="preserve">
+    <value>Невозможно получить ключ Api Socket</value>
+  </data>
+  <data name="TreatStreamSocketFailed" xml:space="preserve">
+    <value>Не удалось подключиться к Socket</value>
+  </data>
+  <data name="TreatStreamSocketTokenFailed" xml:space="preserve">
+    <value>Не удалось получить токен Socket</value>
+  </data>
+  <data name="TwitchConnectionFailed" xml:space="preserve">
+    <value>Соединение Twitch не установлено</value>
+  </data>
+  <data name="TwitchFailedBotData" xml:space="preserve">
+    <value>Не удалось получить данные бота Twitch</value>
+  </data>
+  <data name="TwitchFailedNewAPIUserData" xml:space="preserve">
+    <value>Не удалось получить новые данные пользователя API Twitch</value>
+  </data>
+  <data name="TwitchFailedV5APIUserData" xml:space="preserve">
+    <value>Не удалось получить данные пользователя V5 API Twitch</value>
+  </data>
+  <data name="TwitterAuthFailed" xml:space="preserve">
+    <value>Не удалось получить разрешение</value>
+  </data>
+  <data name="TwitterRateLimited" xml:space="preserve">
+    <value>Твит, который вы указали, не может быть отправлен, потому что вы уже отправили твит за последние 5 минут</value>
+  </data>
+  <data name="OverlayWidgetChatMessagesDescription" xml:space="preserve">
+    <value>Показывает последние X много сообщений чата с вашего канала. Сообщения чата добавляются по мере их возникновения.</value>
+  </data>
+  <data name="OverlayWidgetEndCreditsDescription" xml:space="preserve">
+    <value>Показывает список прокрутки текста, как фильм кредитов на основе взаимодействия пользователей по всему потоку. Отображение виджета вызывает кредиты, скрывая сбрасывает его.</value>
+  </data>
+  <data name="OverlayWidgetEventListDescription" xml:space="preserve">
+    <value>Показывает последние X много событий, которые произошли в вашем канале. События добавляются по мере их возникновения.</value>
+  </data>
+  <data name="OverlayWidgetGameQueueDescription" xml:space="preserve">
+    <value>Показывает блок текста. События добавляются по мере их возникновения.</value>
+  </data>
+  <data name="OverlayWidgetHTMLDescription" xml:space="preserve">
+    <value>Показывает HTML-код непосредственно на наложении. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="OverlayWidgetImageDescription" xml:space="preserve">
+    <value>Показывает изображение. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="OverlayWidgetLeaderboardDescription" xml:space="preserve">
+    <value>Показывает лучших пользователей X в определенной категории. Позиции лидеров обновляются по мере возникновения событий или с интервалом обновления, определяемым пользователем</value>
+  </data>
+  <data name="OverlayWidgetProgressBarDescription" xml:space="preserve">
+    <value>Показывает планку прогресса для указанной цели. Прогресс обновляется по мере возникновения событий или в интервале обновления, определяемом пользователем.</value>
+  </data>
+  <data name="OverlayWidgetStreamBossDescription" xml:space="preserve">
+    <value>Показывает пользователя с вашего канала в качестве "босса", который может быть поврежден, выполняя действия в вашем канале, пока они не побеждены и новый босс выбран. Повреждение добавляется по мере его возникновения. Специальные идентификаторы Stream Boss могут использоваться параллельно с этим виджетом наложения.</value>
+  </data>
+  <data name="OverlayWidgetTextDescription" xml:space="preserve">
+    <value>Показывает блок текста. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="OverlayWidgetTickerTapeDescription" xml:space="preserve">
+    <value>Показывает список прокрутки текста последнего X многих пользователей, что вызвало указанное событие происходит. Пользователи добавляются в список по мере возникновения события.</value>
+  </data>
+  <data name="OverlayWidgetTimerDescription" xml:space="preserve">
+    <value>Показывает таймер, который отсчитывается, пока он виден. Скрытие таймера сбрасывает сумму.</value>
+  </data>
+  <data name="OverlayWidgetTimerTrainDescription" xml:space="preserve">
+    <value>Показывает таймер, который отсчитывает и может быть увеличен, выполняя определенные действия в вашем канале. Это показано только тогда, когда общее время превышает минимальное значение секунд, чтобы показать. Время обновляется по мере возникновения событий.</value>
+  </data>
+  <data name="OverlayWidgetVideoDescription" xml:space="preserve">
+    <value>Показывает видео. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="OverlayWidgetWebPageDescription" xml:space="preserve">
+    <value>Показывает веб-страницу. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="OverlayWidgetYouTubeDescription" xml:space="preserve">
+    <value>Показывает видео на YouTube. Обновляется на основе определяемого пользователем интервала обновления.</value>
+  </data>
+  <data name="Generic" xml:space="preserve">
+    <value>родовой</value>
+  </data>
+  <data name="DemoteFromMod" xml:space="preserve">
+    <value>Демонстрация от мода</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>отключить</value>
+  </data>
+  <data name="EditUser" xml:space="preserve">
+    <value>Редактировать пользователя</value>
+  </data>
+  <data name="Follow" xml:space="preserve">
+    <value>следовать</value>
+  </data>
+  <data name="Follows" xml:space="preserve">
+    <value>Следует</value>
+  </data>
+  <data name="ModerationStrikes" xml:space="preserve">
+    <value>Умеренные удары</value>
+  </data>
+  <data name="OpenChannelPage" xml:space="preserve">
+    <value>Открытая страница канала</value>
+  </data>
+  <data name="PromoteToMod" xml:space="preserve">
+    <value>Продвижение к моду</value>
+  </data>
+  <data name="Resubscribes" xml:space="preserve">
+    <value>Переподписки</value>
+  </data>
+  <data name="StreamInfo" xml:space="preserve">
+    <value>Информация о потоке</value>
+  </data>
+  <data name="SubPriorityHeader" xml:space="preserve">
+    <value>Под приоритет:</value>
+  </data>
+  <data name="SubscribersReceivePriority" xml:space="preserve">
+    <value>Абоненты получают приоритет</value>
+  </data>
+  <data name="Subscribes" xml:space="preserve">
+    <value>Подписывается</value>
+  </data>
+  <data name="TimeoutFiveMin" xml:space="preserve">
+    <value>Тайм-аут 5 мин</value>
+  </data>
+  <data name="TimeoutOneMin" xml:space="preserve">
+    <value>Тайм-аут 1 мин</value>
+  </data>
+  <data name="Unban" xml:space="preserve">
+    <value>Унбан</value>
+  </data>
+  <data name="Unfollow" xml:space="preserve">
+    <value>Unfollow</value>
   </data>
 </root>

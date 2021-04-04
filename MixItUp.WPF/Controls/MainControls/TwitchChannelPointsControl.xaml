@@ -92,7 +92,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" Width="140" />
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" MinWidth="140" />
 
             <Button x:Name="CreateChannelPointsEditorButton" Grid.Column="2" Command="{Binding CreateChannelPointRewardCommand}" Content="{x:Static resx:Resources.CreateChannelPointReward}" Width="220" />
 

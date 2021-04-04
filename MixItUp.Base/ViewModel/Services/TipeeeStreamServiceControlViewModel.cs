@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public TipeeeStreamServiceControlViewModel()
-            : base("TipeeeStream")
+            : base(Resources.TipeeeStream)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {

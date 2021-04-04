@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.RunNewUserWizard = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ReRunNewUserWizard, MixItUp.Base.Resources.NewUserWizard, this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
+                if (await DialogHelper.ShowConfirmation(Resources.RunNewUserWizardWarning))
                 {
                     ChannelSession.Settings.ReRunWizard = true;
                     GlobalEvents.RestartRequested();
@@ -84,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.DeleteSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.DeleteCurrentSettingsData, MixItUp.Base.Resources.DeleteSettings, this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("This will completely delete the settings of the currently logged in account and is not reversible. Are you sure you wish to do this?"))
+                if (await DialogHelper.ShowConfirmation(Resources.DeleteSettingsWarning))
                 {
                     ChannelSession.AppSettings.SettingsToDelete = ChannelSession.Settings.ID;
                     GlobalEvents.RestartRequested();

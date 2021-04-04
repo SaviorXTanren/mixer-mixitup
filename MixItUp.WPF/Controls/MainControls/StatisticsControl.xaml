@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
+            <Button Grid.Column="0" x:Name="ExportStatsButton" MinWidth="130" Click="ExportStatsButton_Click">Export To File</Button>
         </Grid>-->
     </Grid>
 </local:MainControlBase>

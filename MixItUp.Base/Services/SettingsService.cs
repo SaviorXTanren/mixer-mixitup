@@ -72,9 +72,9 @@ namespace MixItUp.Base.Services
                 {
                     if (!v2SettingsUpgradeNeeded)
                     {
-                        if (!await DialogHelper.ShowConfirmation("We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform & is required to use Mix It Up." +
+                        if (!await DialogHelper.ShowConfirmation(Resources.UpgradePrompt1 +
                             Environment.NewLine + Environment.NewLine +
-                            "If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later"))
+                            Resources.UpgradePrompt2))
                         {
                             return new List<SettingsV3Model>();
                         }
@@ -179,11 +179,11 @@ namespace MixItUp.Base.Services
 
             if (backupSettingsLoaded)
             {
-                await DialogHelper.ShowMessage("One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.");
+                await DialogHelper.ShowMessage(Resources.BackupSettingsLoadedError);
             }
             if (settingsLoadFailure)
             {
-                await DialogHelper.ShowMessage("One or more settings files were unable to be loaded. Please visit the Mix It Up discord for assistance on this issue.");
+                await DialogHelper.ShowMessage(Resources.SettingsLoadFailure);
             }
 
             return allSettings;

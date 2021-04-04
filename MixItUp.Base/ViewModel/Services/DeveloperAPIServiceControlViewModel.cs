@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Services
         }
 
         public DeveloperAPIServiceControlViewModel()
-            : base("Developer API")
+            : base(Resources.DeveloperAPI)
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {

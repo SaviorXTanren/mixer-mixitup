@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (parameters.User.HasPermissionsTo(this.StarterRole))
                 {
                     this.gameActive = true;
-                    this.lastBidAmount = this.GetPrimaryCurrencyRequirement().GetAmount(parameters);
+                    this.lastBidAmount = this.GetPrimaryCurrencyRequirement()?.GetAmount(parameters) ?? 0;
 
                     this.runParameters = parameters;
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.lastBidAmount.ToString();

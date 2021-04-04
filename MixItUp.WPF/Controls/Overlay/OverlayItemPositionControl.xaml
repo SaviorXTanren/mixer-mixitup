@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -23,7 +24,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" HorizontalAlignment="Center">Screen Position:</TextBlock>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.ScreenPosition}"/>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
 
@@ -33,9 +34,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Command="{Binding SimplePositionCommand}" IsEnabled="{Binding IsSimplePosition, Converter={StaticResource InverseBooleanConverter}}">Simple</Button>
-            <Button Grid.Column="1" Command="{Binding PercentagePositionCommand}" IsEnabled="{Binding IsPercentagePosition, Converter={StaticResource InverseBooleanConverter}}">Percentage</Button>
-            <Button Grid.Column="2" Command="{Binding PixelPositionCommand}" IsEnabled="{Binding IsPixelPosition, Converter={StaticResource InverseBooleanConverter}}">Pixels</Button>
+            <Button Grid.Column="0" Command="{Binding SimplePositionCommand}" IsEnabled="{Binding IsSimplePosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Simple}"/>
+            <Button Grid.Column="1" Command="{Binding PercentagePositionCommand}" IsEnabled="{Binding IsPercentagePosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Percentage}"/>
+            <Button Grid.Column="2" Command="{Binding PixelPositionCommand}" IsEnabled="{Binding IsPixelPosition, Converter={StaticResource InverseBooleanConverter}}" Content="{x:Static resx:Resources.Pixels}"/>
 
         </Grid>
 
@@ -81,15 +82,15 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center">Position % From Left:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromLeft}"/>
                 <Slider Value="{Binding Horizontal}" Grid.Column="0" Grid.Row="2" Minimum="0" Maximum="100" Width="150" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,-30,0,0" />
 
-                <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center">Position % From Top:</TextBlock>
+                <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.PositionPercentageFromTop}"/>
                 <Slider Value="{Binding Vertical}" Grid.Column="2" Grid.Row="2" Minimum="0" Maximum="100" Width="150" Style="{StaticResource MaterialDesignDiscreteSlider}" Margin="0,-30,0,0" />
 
             </Grid>
 
-            <TextBox Grid.Row="2" Text="{Binding LayerString}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="Layer Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <TextBox Grid.Row="2" Text="{Binding LayerString}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="{Binding IsPixelPosition, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -106,12 +107,12 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Text="{Binding HorizontalString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Left Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                <TextBox Text="{Binding HorizontalString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LeftPixelPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-                <TextBox Text="{Binding VerticalString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Top Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                <TextBox Text="{Binding VerticalString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TopPixelPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
             </Grid>
 
-            <TextBox Grid.Row="2" Text="{Binding LayerString}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="Layer Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <TextBox Grid.Row="2" Text="{Binding LayerString}" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LayerPosition}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
     </Grid>
 </Controls:LoadingControlBase>

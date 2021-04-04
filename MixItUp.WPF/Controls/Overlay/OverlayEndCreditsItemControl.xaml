@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:DragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:OverlayItemControl.Resources>
@@ -33,7 +35,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Speeds}" Text="{Binding Speed}" MaterialDesign:HintAssist.Hint="Scroll Speed" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Speeds}" Text="{Binding Speed}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScrollSpeed}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -41,7 +43,13 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -52,12 +60,18 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding SectionTextColor}" MaterialDesign:HintAssist.Hint="Section Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
-            <ComboBox Grid.Column="2" x:Name="SectionTextFontComboBox" Text="{Binding SectionTextFont}" MaterialDesign:HintAssist.Hint="Section Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding SectionTextColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SectionTextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SectionTextSizeString}" MaterialDesign:HintAssist.Hint="Section Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
+            <ComboBox Grid.Column="2" x:Name="SectionTextFontComboBox" Text="{Binding SectionTextFont}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SectionTextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+
+            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SectionTextSizeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SectionTextSize}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
@@ -69,14 +83,20 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding ItemTextColor}" MaterialDesign:HintAssist.Hint="Item Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding ItemTextColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox Grid.Column="2" x:Name="ItemTextFontComboBox" Text="{Binding ItemTextFont}" MaterialDesign:HintAssist.Hint="Item Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="2" x:Name="ItemTextFontComboBox" Text="{Binding ItemTextFont}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding ItemTextSizeString}" MaterialDesign:HintAssist.Hint="Item Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding ItemTextSizeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemTextSize}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
         </Grid>
 
-        <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="Title HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="550" Height="75" HorizontalAlignment="Center" />
+        <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TitleHTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="550" Height="75" HorizontalAlignment="Center" />
 
         <Grid Grid.Row="8" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -85,7 +105,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ItemTypes}" Text="{Binding ItemType}" MaterialDesign:HintAssist.Hint="Section Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="145">
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ItemTypes}" Text="{Binding ItemType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SectionType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="145">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -96,7 +116,7 @@
         </Grid>
 
         <GroupBox Grid.Row="10" Width="700" Header="Sections">
-            <ItemsControl ItemsSource="{Binding SectionItems}">
+            <ItemsControl ItemsSource="{Binding SectionItems}" DragDrop:DragDrop.IsDragSource="True" DragDrop:DragDrop.IsDropTarget="True">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="10">
@@ -112,9 +132,9 @@
 
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding SectionTypeName}" />
 
-                            <TextBox Text="{Binding SectionHTML}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Section HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="150" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                            <TextBox Text="{Binding SectionHTML}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SectionHTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="150" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
-                            <TextBox Text="{Binding UserHTML}" Grid.Column="4" MaterialDesign:HintAssist.Hint="User HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="300" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                            <TextBox Text="{Binding UserHTML}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserHTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="300" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
                             <Button Grid.Column="6" VerticalAlignment="Center" Command="{Binding DeleteItemCommand}" Content="{MaterialDesign:PackIcon Trash}" />
                         </Grid>

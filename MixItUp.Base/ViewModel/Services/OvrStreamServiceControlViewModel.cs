@@ -22,7 +22,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand DisconnectCommand { get; set; }
 
         public OvrStreamServiceControlViewModel()
-            : base("OvrStream")
+            : base(Resources.OvrStream)
         {
             this.OvrStreamAddress = OvrStreamServiceControlViewModel.DefaultOvrStreamConnection;
 

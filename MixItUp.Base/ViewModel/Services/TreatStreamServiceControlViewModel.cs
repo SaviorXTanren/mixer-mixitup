@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public TreatStreamServiceControlViewModel()
-            : base("TreatStream")
+            : base(Resources.TreatStream)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {

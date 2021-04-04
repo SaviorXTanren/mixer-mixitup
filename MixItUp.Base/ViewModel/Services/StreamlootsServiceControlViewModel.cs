@@ -24,13 +24,13 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public StreamlootsServiceControlViewModel()
-            : base("Streamloots")
+            : base(Resources.Streamloots)
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
                 if (string.IsNullOrEmpty(this.StreamlootsURL) || (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) && !int.TryParse(this.StreamlootsURL, out int ID)))
                 {
-                    await DialogHelper.ShowMessage("Please enter a valid Streamloots URL (" + StreamlootsStreamURLFormat + ").");
+                    await DialogHelper.ShowMessage(string.Format(Resources.StreamlootsInvalidUrl, StreamlootsStreamURLFormat));
                 }
                 else
                 {

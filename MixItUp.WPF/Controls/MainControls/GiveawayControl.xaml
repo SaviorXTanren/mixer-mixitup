@@ -119,8 +119,8 @@
             </Grid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button Command="{Binding StartGiveawayCommand}" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.StartGiveaway}"/>
-                <Button Command="{Binding EndGiveawayCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.CancelGiveaway}"/>
+                <Button Command="{Binding StartGiveawayCommand}" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" MinWidth="150" Content="{x:Static resx:Resources.StartGiveaway}"/>
+                <Button Command="{Binding EndGiveawayCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" MinWidth="150" Content="{x:Static resx:Resources.CancelGiveaway}"/>
             </Grid>
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">

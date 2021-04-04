@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.color; }
             set
             {
-                this.color = value;
+                this.color = MixItUp.Base.Resources.ResourceManager.GetString(value) ?? value;
                 this.NotifyPropertyChanged();
             }
         }

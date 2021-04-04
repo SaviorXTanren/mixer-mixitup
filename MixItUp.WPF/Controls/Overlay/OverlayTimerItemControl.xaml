@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
@@ -12,6 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <local:OverlayItemControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:OverlayItemControl.Resources>
     
     <Grid>
@@ -33,17 +35,23 @@
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
-            <TextBox Grid.Column="0" Text="{Binding TotalLengthString}" MaterialDesign:HintAssist.Hint="Length (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <TextBox Grid.Column="0" Text="{Binding TotalLengthString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox Grid.Column="6" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
+            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+
+            <ComboBox Grid.Column="6" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextSize}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
         </Grid>
 
-        <GroupBox Header="On Timer Completed" Grid.Row="2" Width="200">
+        <GroupBox Header="{x:Static resx:Resources.OnTimerCompleted}" Grid.Row="2" Width="200">
             <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
                 <Button x:Name="AddCommandButton" Visibility="{Binding IsTimerCompleteCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
@@ -53,6 +61,6 @@
             </Grid>
         </GroupBox>
 
-        <TextBox Grid.Row="4" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="75" VerticalAlignment="Top" />
+        <TextBox Grid.Row="4" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="75" VerticalAlignment="Top" />
     </Grid>
 </local:OverlayItemControl>

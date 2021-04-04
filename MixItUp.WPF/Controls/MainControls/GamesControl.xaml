@@ -46,7 +46,7 @@
         </DataGrid>
 
         <Grid Grid.Row="3" HorizontalAlignment="Center">
-            <Button Click="AddGameButton_Click" Width="100" Content="{x:Static resx:Resources.NewGame}" />
+            <Button Click="AddGameButton_Click" MinWidth="100" Content="{x:Static resx:Resources.NewGame}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

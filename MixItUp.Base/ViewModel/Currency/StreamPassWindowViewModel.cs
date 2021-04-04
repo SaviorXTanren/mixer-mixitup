@@ -263,7 +263,7 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             this.ManualResetCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("Are you sure you want to reset progress for all user?"))
+                if (await DialogHelper.ShowConfirmation(Resources.ResetAllProgressPrompt))
                 {
                     if (this.IsExisting)
                     {
@@ -312,19 +312,19 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             if (this.CustomLevelUpNumber <= 0)
             {
-                await DialogHelper.ShowMessage("You must specify a number greater than 0");
+                await DialogHelper.ShowMessage(Resources.CustomLevelGreaterThanZero);
                 return false;
             }
 
             if (this.CustomLevelUpNumber > this.MaxLevel)
             {
-                await DialogHelper.ShowMessage("You must specify a number less than or equal to the Max Level");
+                await DialogHelper.ShowMessage(Resources.LessThanMaxLevel);
                 return false;
             }
 
             if (this.CustomLevelUpCommands.Any(c => c.Level == this.CustomLevelUpNumber))
             {
-                await DialogHelper.ShowMessage("There already exists a custom command for this level");
+                await DialogHelper.ShowMessage(Resources.CustomCommandAlreadyExists);
                 return false;
             }
 
@@ -350,104 +350,104 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             if (string.IsNullOrEmpty(this.Name))
             {
-                await DialogHelper.ShowMessage("A valid name must be specified");
+                await DialogHelper.ShowMessage(Resources.StreamPassNameRequired);
                 return false;
             }
 
             if (this.Name.Any(c => !char.IsLetterOrDigit(c) && c != ' '))
             {
-                await DialogHelper.ShowMessage("The name can only contain letters, numbers, or spaces");
+                await DialogHelper.ShowMessage(Resources.StreamPassNameInvalid);
                 return false;
             }
 
             StreamPassModel dupeStreamPass = ChannelSession.Settings.StreamPass.Values.FirstOrDefault(s => s.Name.Equals(this.Name));
             if (dupeStreamPass != null && (this.StreamPass == null || !this.StreamPass.ID.Equals(dupeStreamPass.ID)))
             {
-                await DialogHelper.ShowMessage("There already exists a Stream Pass with this name");
+                await DialogHelper.ShowMessage(Resources.StreamPassNameDuplicate);
                 return false;
             }
 
             if (this.MaxLevel <= 0)
             {
-                await DialogHelper.ShowMessage("The Max Level must be greater than 0");
+                await DialogHelper.ShowMessage(Resources.MaxLevelGreaterThanZero);
                 return false;
             }
 
             if (this.PointsForLevelUp <= 0)
             {
-                await DialogHelper.ShowMessage("The Points for Level Up must be greater than 0");
+                await DialogHelper.ShowMessage(Resources.PointsForLevelUpGreaterThanZero);
                 return false;
             }
 
             if (this.SubMultiplier < 1.0)
             {
-                await DialogHelper.ShowMessage("The Sub Multiplier must be greater than or equal to 1.0");
+                await DialogHelper.ShowMessage(Resources.SubMultiplierOneOrMore);
                 return false;
             }
 
             if (this.StartDate >= this.EndDate)
             {
-                await DialogHelper.ShowMessage("The End Date must be after the Start Date");
+                await DialogHelper.ShowMessage(Resources.EndDateInvalid);
                 return false;
             }
 
             if (this.ViewingRateAmount < 0)
             {
-                await DialogHelper.ShowMessage("The Viewing Rate Amount must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.ViewingRateAmountZeroOrMore);
                 return false;
             }
 
             if (this.ViewingRateMinutes < 0)
             {
-                await DialogHelper.ShowMessage("The Viewing Rate Minutes must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.ViewingRateMinutesZeroOrMore);
                 return false;
             }
 
             if (this.ViewingRateAmount == 0 ^ this.ViewingRateMinutes == 0)
             {
-                await DialogHelper.ShowMessage("The Viewing Rate Amount & Minutes must both be greater than 0 or both equal to 0");
+                await DialogHelper.ShowMessage(Resources.ViewingRateMinutesInvalid);
                 return false;
             }
 
             if (this.FollowBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Follow Bonus must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.FollowBonusZeroOrMore);
                 return false;
             }
 
             if (this.HostBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Host Bonus must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.HostBonusZeroOrMore);
                 return false;
             }
 
             if (this.SubscribeBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Subscribe Bonus must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.SubscriberBonusZeroOrMore);
                 return false;
             }
 
             if (this.DonationBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Donation Bonus must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.DonationBonusZeroOrMore);
                 return false;
             }
 
             if (this.BitsBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Bits Bonus must be greater than or equal to 0");
+                await DialogHelper.ShowMessage(Resources.BitsBonusZeroOrMore);
                 return false;
             }
 
             if (this.CustomLevelUpCommands.GroupBy(c => c.Level).Any(c => c.Count() > 1))
             {
-                await DialogHelper.ShowMessage("There can only be 1 custom level up command per individual level");
+                await DialogHelper.ShowMessage(Resources.OneCustomLevelCommand);
                 return false;
             }
 
             if (this.CustomLevelUpCommands.Any(c => c.Level > this.MaxLevel))
             {
-                await DialogHelper.ShowMessage("There can not be any custom level up commands that are greater than the Max Level");
+                await DialogHelper.ShowMessage(Resources.MaxCustomLevelCommand);
                 return false;
             }
 

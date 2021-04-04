@@ -168,6 +168,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private void AddSpecialIdentifiersToParameters(CommandParametersModel parameters)
         {
+            parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.TotalAmount.ToString();
             parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
             parameters.SpecialIdentifiers[HangmanGameCommandModel.GameHangmanAnswerSpecialIdentifier] = this.CurrentWord;
             parameters.SpecialIdentifiers[HangmanGameCommandModel.GameHangmanFailedGuessesSpecialIdentifier] = string.Join(", ", this.FailedGuesses);

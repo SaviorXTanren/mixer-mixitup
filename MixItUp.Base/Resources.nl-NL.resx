@@ -116,10 +116,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 per Spark</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
     <value>Installatiemap van Mix It Up</value>
     <comment>Manual</comment>
@@ -492,6 +488,14 @@
     <value>Sneltoets</value>
     <comment>Manual</comment>
   </data>
+  <data name="HTML" xml:space="preserve">
+    <value>HTML</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="IFTTT" xml:space="preserve">
+    <value>IFTTT</value>
+    <comment>Manual</comment>
+  </data>
   <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
     <value>Opdrachten van Uw Bot-account negeren</value>
     <comment>Manual</comment>
@@ -574,6 +578,10 @@
   </data>
   <data name="OneStrikeCommand" xml:space="preserve">
     <value>1 Strike opdracht</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="OvrStream" xml:space="preserve">
+    <value>OvrStream</value>
     <comment>Manual</comment>
   </data>
   <data name="PollResultCommandType" xml:space="preserve">
@@ -688,20 +696,8 @@
     <value>Muziek aanvragen</value>
     <comment>Manual</comment>
   </data>
-  <data name="SparkCost" xml:space="preserve">
-    <value>Spark kosten</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Spark kristal</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark vrijgesteld</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Sparks besteed</value>
     <comment>Manual</comment>
   </data>
   <data name="StrikeCommands" xml:space="preserve">
@@ -820,32 +816,76 @@
     <value>ExtraLife Donatie</value>
     <comment>Manual</comment>
   </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixerkanaal Fan-Progressie Level-Up</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixerkanaal opnieuw geabboneerd</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mixerkanaal Sparks besteed</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Mixerkanaal stream starten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixerkanaal stream stoppen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixerkanaal abonnement cadeau</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TiltifyDonation" xml:space="preserve">
     <value>Tiltify Donatie</value>
+    <comment>Manual</comment>
+  </data>
+<data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="OBSStudio" xml:space="preserve">
+    <value>OBS Studio</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatars</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>Streamlabs</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="XSplit" xml:space="preserve">
+    <value>XSplit</value>
     <comment>Manual</comment>
   </data>
 </root>
