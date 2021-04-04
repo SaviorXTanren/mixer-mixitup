@@ -931,6 +931,7 @@
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Util\ActionListDropHandler.cs" />
     <Compile Include="Util\StrikethroughConverter.cs" />
     <Compile Include="Util\FrameworkElementHelpers.cs" />
     <Compile Include="Util\InstalledFonts.cs" />
