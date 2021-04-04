@@ -577,6 +577,15 @@ namespace MixItUp.Base.Model.Settings
                         this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
+#pragma warning disable CS0612 // Type or member is obsolete
+                else if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+                {
+                    if (!string.IsNullOrEmpty(userData.MixerUsername))
+                    {
+                        this.UsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
             });
             this.UserData.ClearTracking();
 
