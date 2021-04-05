@@ -1,4 +1,6 @@
-﻿using System.Resources;
+﻿using StreamingClient.Base.Util;
+using System;
+using System.Resources;
 
 namespace MixItUp.Base.Util
 {
@@ -8,7 +10,14 @@ namespace MixItUp.Base.Util
         {
             if (!string.IsNullOrEmpty(name))
             {
-                return resourceManager.GetString(name) ?? name;
+                try
+                {
+                    return resourceManager.GetString(name) ?? name;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             }
             return name;
         }
