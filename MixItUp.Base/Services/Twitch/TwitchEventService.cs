@@ -72,6 +72,36 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    public class TwitchGiftedSubEventModel
+    {
+        public UserViewModel Gifter { get; set; }
+
+        public UserViewModel Receiver { get; set; }
+
+        public bool IsAnonymous { get; set; }
+
+        public int MonthsGifted { get; set; }
+
+        public int PlanTierNumber { get; set; }
+
+        public string PlanTier { get; set; }
+
+        public string PlanName { get; set; }
+
+        public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
+
+        public TwitchGiftedSubEventModel(UserViewModel gifter, UserViewModel receiver, PubSubSubscriptionsGiftEventModel packet)
+        {
+            this.Gifter = gifter;
+            this.Receiver = receiver;
+            this.IsAnonymous = packet.IsAnonymousGiftedSubscription;
+            this.MonthsGifted = packet.IsMultiMonth ? packet.multi_month_duration : 1;
+            this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
+            this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+            this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+        }
+    }
+
     public class TwitchMassGiftedSubEventModel
     {
         private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
@@ -87,6 +117,8 @@ namespace MixItUp.Base.Services.Twitch
         public int PlanTierNumber { get; set; }
 
         public bool IsAnonymous { get; set; }
+
+        public List<TwitchGiftedSubEventModel> Subs { get; set; } = new List<TwitchGiftedSubEventModel>();
 
         public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
 
@@ -127,36 +159,6 @@ namespace MixItUp.Base.Services.Twitch
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
         public const string PrimeSubPlan = "Prime";
-
-        private class TwitchGiftedSubEventModel
-        {
-            public UserViewModel Gifter { get; set; }
-
-            public UserViewModel Receiver { get; set; }
-            
-            public bool IsAnonymous { get; set; }
-
-            public int MonthsGifted { get; set; }
-
-            public int PlanTierNumber { get; set; }
-
-            public string PlanTier { get; set; }
-
-            public string PlanName { get; set; }
-
-            public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
-
-            public TwitchGiftedSubEventModel(UserViewModel gifter, UserViewModel receiver, PubSubSubscriptionsGiftEventModel packet)
-            {
-                this.Gifter = gifter;
-                this.Receiver = receiver;
-                this.IsAnonymous = packet.IsAnonymousGiftedSubscription;
-                this.MonthsGifted = packet.IsMultiMonth ? packet.multi_month_duration : 1;
-                this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
-                this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-                this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-            }
-        }
 
         public const int BackgroundGiftedSubProcessorTime = 3000;
 
@@ -696,6 +698,9 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         TwitchGiftedSubEventModel giftedSub = giftedSubs[gifterID][0];
                         giftedSubs[gifterID].Remove(giftedSub);
+
+                        massGiftedSub.Subs.Add(giftedSub);
+
                         await ProcessGiftedSub(giftedSub, fireEventCommand: false);
                     }
                 }
@@ -759,6 +764,12 @@ namespace MixItUp.Base.Services.Twitch
             trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
             trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+
+            foreach (TwitchGiftedSubEventModel sub in massGiftedSubEvent.Subs)
+            {
+                trigger.Arguments.Add(sub.Receiver.Username);
+            }
+
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Gifter, string.Format("{0} Gifted {1} {2} Subs", massGiftedSubEvent.Gifter.DisplayName, massGiftedSubEvent.TotalGifted, massGiftedSubEvent.PlanTier), ChannelSession.Settings.AlertMassGiftedSubColor));
