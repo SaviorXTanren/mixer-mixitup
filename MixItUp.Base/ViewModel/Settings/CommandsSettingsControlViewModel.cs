@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Settings
             foreach (ActionTypeEnum action in actions.OrderBy(at => EnumLocalizationHelper.GetLocalizedName(at)))
             {
                 string name = EnumHelper.GetEnumName(action);
-                name = MixItUp.Base.Resources.ResourceManager.GetString(name) ?? name;
+                name = MixItUp.Base.Resources.ResourceManager.GetSafeString(name);
                 this.HideActionsList.Add(new GenericToggleSettingsOptionControlViewModel(name, ChannelSession.Settings.ActionsToHide.Contains(action),
                     (value) =>
                     {

@@ -59,7 +59,7 @@ namespace MixItUp.Base.Util
                 return ColorSchemes.HTMLColorSchemeDictionary[name];
             }
 
-            var locLookup = HTMLColorSchemeDictionary.Select(kvp => kvp.Key).SingleOrDefault(key => MixItUp.Base.Resources.ResourceManager.GetString(key) == name);
+            var locLookup = HTMLColorSchemeDictionary.Select(kvp => kvp.Key).SingleOrDefault(key => MixItUp.Base.Resources.ResourceManager.GetSafeString(key) == name);
             if (locLookup != null)
             {
                 return ColorSchemes.HTMLColorSchemeDictionary[locLookup];
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Util
             if (!string.IsNullOrEmpty(code) && ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(code))
             {
                 var key = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(code)).Key;
-                return MixItUp.Base.Resources.ResourceManager.GetString(key) ?? key;
+                return MixItUp.Base.Resources.ResourceManager.GetSafeString(key);
             }
             return code;
         }

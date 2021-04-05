@@ -4726,7 +4726,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Subscribed</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Gifted</value>
+    <value>Twitch Channel Subscription Gifted</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch Channel Unfollowed</value>
@@ -5906,5 +5906,8 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   </data>
   <data name="Unfollow" xml:space="preserve">
     <value>Unfollow</value>
+  </data>
+  <data name="FollowEventModeration" xml:space="preserve">
+    <value>Follow Event Moderation</value>
   </data>
 </root>

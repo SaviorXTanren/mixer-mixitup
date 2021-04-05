@@ -120,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Settings
             foreach (UserRoleEnum role in UserDataModel.GetSelectableUserRoles().OrderBy(r => r))
             {
                 string name = EnumHelper.GetEnumName(role);
-                name = MixItUp.Base.Resources.ResourceManager.GetString(name) ?? name;
+                name = MixItUp.Base.Resources.ResourceManager.GetSafeString(name);
                 this.CustomUsernameColorsList.Add(new GenericColorComboBoxSettingsOptionControlViewModel(name,
                     ChannelSession.Settings.CustomUsernameColors.ContainsKey(role) ? ChannelSession.Settings.CustomUsernameColors[role] : null,
                     (value) =>
