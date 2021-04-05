@@ -4726,7 +4726,7 @@ Ingeschakeld. Je het zien als vergelijkbaar met het gebruik van de optie Opdrach
     <value>Twitch-kanaal geabonneerd</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscriptie Hoogbegaafd</value>
+    <value>Twitch Channel-abonnement hoogbegaafd</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch-kanaal niet gevolgd</value>

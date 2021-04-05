@@ -4726,7 +4726,7 @@ Habilitado. Você pode pensar nisso como semelhante à opção "Desbloquear Coma
     <value>Twitch Channel Inscrito</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Presenteado</value>
+    <value>Assinatura do Twitch Channel</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch Channel Unfollowed</value>

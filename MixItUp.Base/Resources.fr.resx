@@ -4726,7 +4726,7 @@ Activé. Vous pouvez penser que c’est similaire à la toggling l’option « 
     <value>Twitch Channel Abonnés</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription doué</value>
+    <value>Abonnement Twitch Channel doué</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch Channel Non suivi</value>

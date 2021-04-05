@@ -181,7 +181,7 @@ namespace MixItUp.Base.Model.Commands
 
         public async Task Perform() { await this.Perform(new CommandParametersModel()); }
 
-        public async Task Perform(CommandParametersModel parameters)
+        public virtual async Task Perform(CommandParametersModel parameters)
         {
             if (this.IsEnabled && this.DoesCommandHaveWork)
             {

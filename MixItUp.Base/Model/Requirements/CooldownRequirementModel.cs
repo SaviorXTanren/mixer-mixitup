@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class CooldownRequirementModel : RequirementModelBase
     {
+        private const int InitialCooldownAmount = 5;
+
         private static Dictionary<string, DateTimeOffset> groupCooldowns = new Dictionary<string, DateTimeOffset>();
 
         [DataMember]
@@ -117,20 +118,25 @@ namespace MixItUp.Base.Model.Requirements
             await base.Perform(parameters);
 
             int amount = this.Amount;
-            if (this.Type == CooldownTypeEnum.Standard)
+            if (amount > 0)
             {
-                this.globalCooldown = DateTimeOffset.Now.AddSeconds(amount);
-            }
-            else if (this.Type == CooldownTypeEnum.Group)
-            {
-                if (!string.IsNullOrEmpty(this.GroupName))
+                this.errorCooldown = DateTimeOffset.Now.AddSeconds(InitialCooldownAmount);
+
+                if (this.Type == CooldownTypeEnum.Standard)
                 {
-                    CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.AddSeconds(amount);
+                    this.globalCooldown = DateTimeOffset.Now.AddSeconds(amount);
                 }
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
-                this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now.AddSeconds(amount);
+                else if (this.Type == CooldownTypeEnum.Group)
+                {
+                    if (!string.IsNullOrEmpty(this.GroupName))
+                    {
+                        CooldownRequirementModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.AddSeconds(amount);
+                    }
+                }
+                else if (this.Type == CooldownTypeEnum.PerPerson)
+                {
+                    this.individualCooldowns[parameters.User.ID] = DateTimeOffset.Now.AddSeconds(amount);
+                }
             }
         }
 

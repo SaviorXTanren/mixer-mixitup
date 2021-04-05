@@ -4726,7 +4726,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
     <value>Twitch Channel Subscribed</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Gifted</value>
+    <value>Twitch Channel Subscription Gifted</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch Channel Unfollowed</value>
@@ -5943,5 +5943,11 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="TwitchActionChannelPointRewardMustBeCreatedInMixItUp" xml:space="preserve">
     <value>Channel Point Rewards must be created through Mix It Up to allow the app to be able to update them.
 This can be done by clicking on Create Channel Point Reward on the Channel Points page in Mix It Up.</value>
+  </data>
+  <data name="FollowEventModeration" xml:space="preserve">
+    <value>Follow Event Moderation</value>
+  </data>
+  <data name="FollowEventModerationMaxQueue" xml:space="preserve">
+    <value>Max Queue</value>
   </data>
 </root>

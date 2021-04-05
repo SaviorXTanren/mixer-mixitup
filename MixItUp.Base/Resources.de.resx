@@ -4726,7 +4726,7 @@ Aktiviert. Sie können es sich vorstellen, wie das Umschalten der Option "Unlock
     <value>Twitch-Kanal abonniert</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Begabt</value>
+    <value>Twitch Channel Abonnement begabt</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch-Kanal unfollowed</value>

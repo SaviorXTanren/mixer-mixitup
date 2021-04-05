@@ -4936,6 +4936,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow Event Moderation.
+        /// </summary>
+        public static string FollowEventModeration {
+            get {
+                return ResourceManager.GetString("FollowEventModeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Queue.
+        /// </summary>
+        public static string FollowEventModerationMaxQueue {
+            get {
+                return ResourceManager.GetString("FollowEventModerationMaxQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follows.
         /// </summary>
         public static string Follows {
@@ -15683,7 +15701,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch ChannelSubscription Gifted.
+        ///   Looks up a localized string similar to Twitch Channel Subscription Gifted.
         /// </summary>
         public static string TwitchChannelSubscriptionGifted {
             get {
