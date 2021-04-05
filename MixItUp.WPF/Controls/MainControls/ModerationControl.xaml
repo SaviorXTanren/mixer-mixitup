@@ -232,7 +232,7 @@
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
+                                <RowDefinition Height="20" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
@@ -295,7 +295,7 @@
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
+                                <RowDefinition Height="15" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
@@ -310,7 +310,7 @@
                                 <ToggleButton x:Name="FollowEventModerationToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
 
-                            <TextBox x:Name="FollowEventModerationMaxQueueTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
+                            <TextBox x:Name="FollowEventModerationMaxQueueTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowEventModerationMaxQueue}" LostFocus="TextBoxes_LostFocus" />
                         </Grid>
                     </GroupBox>
                 </Grid>

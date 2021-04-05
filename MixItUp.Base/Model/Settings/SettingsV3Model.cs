@@ -360,6 +360,11 @@ namespace MixItUp.Base.Model.Settings
         public UserRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = UserRoleEnum.Mod;
 
         [DataMember]
+        public bool ModerationFollowEvent { get; set; }
+        [DataMember]
+        public int ModerationFollowEventMaxInQueue { get; set; } = 10;
+
+        [DataMember]
         public bool ModerationResetStrikesOnLaunch { get; set; }
 
         [DataMember]

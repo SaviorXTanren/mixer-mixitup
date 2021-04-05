@@ -4864,6 +4864,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Queue.
+        /// </summary>
+        public static string FollowEventModerationMaxQueue {
+            get {
+                return ResourceManager.GetString("FollowEventModerationMaxQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follows.
         /// </summary>
         public static string Follows {

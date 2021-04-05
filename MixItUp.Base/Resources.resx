@@ -5910,4 +5910,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="FollowEventModeration" xml:space="preserve">
     <value>Follow Event Moderation</value>
   </data>
+  <data name="FollowEventModerationMaxQueue" xml:space="preserve">
+    <value>Max Queue</value>
+  </data>
 </root>

@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands
 {
@@ -11,6 +14,9 @@ namespace MixItUp.Base.Model.Commands
     public class EventCommandModel : CommandModelBase
     {
         private const string genericImage = "https://static-cdn.jtvnw.net/jtv_user_pictures/12caba55-1276-49b7-a8bc-88b960ecb5da-profile_image-70x70.png";
+
+        private static SemaphoreSlim followEventsInQueueSemaphore = new SemaphoreSlim(1);
+        public static int FollowEventsInQueue = 0;
 
         private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
 
@@ -136,5 +142,54 @@ namespace MixItUp.Base.Model.Commands
         protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
+
+        public override async Task Perform(CommandParametersModel parameters)
+        {
+            if (this.IsEnabled && this.DoesCommandHaveWork)
+            {
+                if (this.UpdateFollowEventModerationCount())
+                {
+                    bool allowFollowEvent = false;
+                    await EventCommandModel.followEventsInQueueSemaphore.WaitAndRelease(() =>
+                    {
+                        if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
+                        {
+                            EventCommandModel.FollowEventsInQueue++;
+                            allowFollowEvent = true;
+                        }
+                        return Task.FromResult(0);
+                    });
+
+                    if (!allowFollowEvent)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            await base.Perform(parameters);
+        }
+
+        protected override async Task PerformInternal(CommandParametersModel parameters)
+        {
+            await base.PerformInternal(parameters);
+
+            if (this.UpdateFollowEventModerationCount())
+            {
+                EventCommandModel.FollowEventsInQueue = Math.Max(EventCommandModel.FollowEventsInQueue - 1, 0);
+            }
+        }
+
+        private bool UpdateFollowEventModerationCount()
+        {
+            if (ChannelSession.Settings.ModerationFollowEvent)
+            {
+                if (this.EventType == EventTypeEnum.TwitchChannelFollowed)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
