@@ -4726,7 +4726,7 @@ Habilitado. Usted puede pensar en él como similar a alternar la opción "Desblo
     <value>Canal Twitch suscrito</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Regalado</value>
+    <value>Suscripción al canal Twitch regalada</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch Channel No seguir</value>

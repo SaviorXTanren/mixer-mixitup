@@ -4726,7 +4726,7 @@ EX: !&lt;ИЗБРАННЫЙ USER&gt;</value>
     <value>Twitch канал Подписано</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>Twitch ChannelSubscription Одаренный</value>
+    <value>Подписка twitch Channel Одаренный</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>Twitch канал Unfollowed</value>

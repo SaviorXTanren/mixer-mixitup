@@ -4726,7 +4726,7 @@ EX:宝&lt;選択されたユーザー&gt;</value>
     <value>Twitchチャンネル購読</value>
   </data>
   <data name="TwitchChannelSubscriptionGifted" xml:space="preserve">
-    <value>トゥイッチチャンネルサブスクリプションギフテッド</value>
+    <value>Twitchチャンネルサブスクリプションギフテッド</value>
   </data>
   <data name="TwitchChannelUnfollowed" xml:space="preserve">
     <value>ツイッチチャンネルアンフォロー</value>
