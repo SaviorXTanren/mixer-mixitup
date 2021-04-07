@@ -664,36 +664,6 @@
     <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
       <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Remote\Details\RemoteCommandDetailsControl.xaml.cs">
-      <DependentUpon>RemoteCommandDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Details\RemoteDetailsContainerControl.xaml.cs">
-      <DependentUpon>RemoteDetailsContainerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Details\RemoteFolderDetailsControl.xaml.cs">
-      <DependentUpon>RemoteFolderDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Items\RemoteBackItemControl.xaml.cs">
-      <DependentUpon>RemoteBackItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Items\RemoteCommandItemControl.xaml.cs">
-      <DependentUpon>RemoteCommandItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Items\RemoteEmptyItemControl.xaml.cs">
-      <DependentUpon>RemoteEmptyItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Items\RemoteFolderItemControl.xaml.cs">
-      <DependentUpon>RemoteFolderItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\Items\RemoteItemContainerControl.xaml.cs">
-      <DependentUpon>RemoteItemContainerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Remote\RemoteBoardSettingsControl.xaml.cs">
-      <DependentUpon>RemoteBoardSettingsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
-      <DependentUpon>RemoteControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
@@ -868,9 +838,6 @@
     </Compile>
     <Compile Include="Controls\Settings\OverlaySettingsControl.xaml.cs">
       <DependentUpon>OverlaySettingsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Settings\RemoteSettingsControl.xaml.cs">
-      <DependentUpon>RemoteSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\SerialDevicesSettingsControl.xaml.cs">
       <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
@@ -1386,46 +1353,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Remote\Details\RemoteCommandDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Details\RemoteDetailsContainerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Details\RemoteFolderDetailsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Items\RemoteBackItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Items\RemoteCommandItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Items\RemoteEmptyItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Items\RemoteFolderItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\Items\RemoteItemContainerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Remote\RemoteBoardSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MainControls\RemoteControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1659,10 +1586,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\OverlaySettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Settings\RemoteSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
