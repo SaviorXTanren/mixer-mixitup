@@ -85,7 +85,7 @@ namespace MixItUp.Base.Services
                 }
 
                 int position = this.queue.IndexOf(user);
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID).Perform(new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Services
             if (await this.ValidateJoin(user))
             {
                 this.queue.Insert(0, user);
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID).Perform(new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserJoinedCommandID, new CommandParametersModel(user, new Dictionary<string, string>() { { QueuePositionSpecialIdentifier, this.GetUserPosition(user).ToString() } }));
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -127,7 +127,7 @@ namespace MixItUp.Base.Services
             {
                 UserViewModel user = this.queue.ElementAt(0);
                 this.queue.Remove(user);
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }
@@ -140,7 +140,7 @@ namespace MixItUp.Base.Services
                 if (result.Success)
                 {
                     this.queue.Remove(user);
-                    await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
+                    await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                     GlobalEvents.GameQueueUpdated();
                     return;
                 }
@@ -155,7 +155,7 @@ namespace MixItUp.Base.Services
                 int index = RandomHelper.GenerateRandomNumber(this.queue.Count());
                 UserViewModel user = this.queue.ElementAt(index);
                 this.queue.Remove(user);
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID).Perform(new CommandParametersModel(user));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.GameQueueUserSelectedCommandID, new CommandParametersModel(user));
                 GlobalEvents.GameQueueUpdated();
             }
         }

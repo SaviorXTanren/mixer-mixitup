@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Currency
@@ -202,9 +203,7 @@ namespace MixItUp.Base.Model.Currency
                             {
                                 userViewModel = new UserViewModel(user);
                             }
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform(new CommandParametersModel(userViewModel, specialIdentifiers: specialIdentifiers));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(command, new CommandParametersModel(userViewModel, specialIdentifiers: specialIdentifiers)), new CancellationToken());
                         }
                     }
                 }

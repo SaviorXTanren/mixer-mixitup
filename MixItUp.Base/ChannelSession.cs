@@ -690,11 +690,7 @@ namespace MixItUp.Base
             if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
             {
                 HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
-                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKeyConfiguration.CommandID);
-                if (command != null)
-                {
-                    await command.Perform();
-                }
+                await ChannelSession.Services.Command.Queue(hotKeyConfiguration.CommandID);
             }
         }
     }

@@ -28,9 +28,25 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Queue(CommandModelBase command) { await this.Queue(new CommandInstanceModel(command)); }
+        public async Task Queue(Guid commandID) { await this.Queue(ChannelSession.Settings.GetCommand(commandID)); }
 
-        public async Task Queue(CommandModelBase command, CommandParametersModel parameters) { await this.Queue(new CommandInstanceModel(command, parameters)); }
+        public async Task Queue(Guid commandID, CommandParametersModel parameters) { await this.Queue(ChannelSession.Settings.GetCommand(commandID), parameters); }
+
+        public async Task Queue(CommandModelBase command)
+        {
+            if (command != null)
+            {
+                await this.Queue(new CommandInstanceModel(command));
+            }
+        }
+
+        public async Task Queue(CommandModelBase command, CommandParametersModel parameters)
+        {
+            if (command != null && parameters != null)
+            {
+                await this.Queue(new CommandInstanceModel(command, parameters));
+            }
+        }
 
         public async Task Queue(CommandInstanceModel commandInstance)
         {
@@ -76,6 +92,11 @@ namespace MixItUp.Base.Services
                 CommandModelBase command = commandInstance.Command;
                 if (command != null)
                 {
+                    if (!command.IsEnabled || !command.HasWork)
+                    {
+                        return;
+                    }
+
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
 
                     command.TrackTelemetry();
@@ -145,18 +166,18 @@ namespace MixItUp.Base.Services
         private async Task RunDirectlyInternal(CommandInstanceModel commandInstance, CommandParametersModel parameters)
         {
             CommandModelBase command = commandInstance.Command;
+            if (command != null)
+            {
+                await command.PreRun(parameters);
+            }
+
             if (command != null && command.HasCustomRun)
             {
                 await commandInstance.Command.CustomRun(parameters);
             }
             else
             {
-                List<ActionModelBase> actions = new List<ActionModelBase>(commandInstance.Actions);
-                if (command != null)
-                {
-                    actions.AddRange(command.Actions);
-                }
-
+                List<ActionModelBase> actions = commandInstance.GetActions();
                 for (int i = 0; i < actions.Count; i++)
                 {
                     if (commandInstance.State == CommandInstanceStateEnum.Canceled)
@@ -180,6 +201,11 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
+            }
+
+            if (command != null)
+            {
+                await command.PostRun(parameters);
             }
         }
     }

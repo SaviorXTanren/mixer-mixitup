@@ -105,7 +105,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (this.runParameters == null)
             {
@@ -194,7 +194,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();
-                    await this.UserSuccessCommand.Perform(winner);
+                    await this.RunSubCommand(this.UserSuccessCommand, winner);
                 }
             }
             catch (Exception ex)

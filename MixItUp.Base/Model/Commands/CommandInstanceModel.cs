@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -80,6 +81,30 @@ namespace MixItUp.Base.Model.Commands
         {
             this.Actions = new List<ActionModelBase>(actions);
             this.Parameters = parameters;
+        }
+
+        public List<ActionModelBase> GetActions()
+        {
+            List<ActionModelBase> actions = new List<ActionModelBase>();
+
+            CommandModelBase command = this.Command;
+            if (command != null)
+            {
+                if (command is ActionGroupCommandModel && ((ActionGroupCommandModel)command).RunOneRandomly)
+                {
+                    actions.Add(command.Actions.Random());
+                }
+                else
+                {
+                    actions.AddRange(command.Actions);
+                }
+            }
+            else
+            {
+                actions.AddRange(this.Actions);
+            }
+
+            return actions;
         }
 
         public override string ToString()

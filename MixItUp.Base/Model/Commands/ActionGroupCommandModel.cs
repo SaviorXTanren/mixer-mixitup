@@ -1,17 +1,11 @@
-﻿using MixItUp.Base.Model.Actions;
-using MixItUp.Base.Util;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands
 {
     [DataContract]
     public class ActionGroupCommandModel : CommandModelBase
     {
-        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
-
         [DataMember]
         public bool RunOneRandomly { get; set; }
 
@@ -32,17 +26,5 @@ namespace MixItUp.Base.Model.Commands
 #pragma warning restore CS0612 // Type or member is obsolete
 
         protected ActionGroupCommandModel() : base() { }
-
-        protected override async Task PerformInternal(CommandParametersModel parameters)
-        {
-            if (this.RunOneRandomly)
-            {
-                await ChannelSession.Services.Command.Queue(new CommandInstanceModel(new List<ActionModelBase>() { this.Actions.Random() }, parameters));
-            }
-            else
-            {
-                await base.PerformInternal(parameters);
-            }
-        }
     }
 }

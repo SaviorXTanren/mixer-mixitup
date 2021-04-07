@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
 
-                    await command.Perform(new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
                 }
             }
         }

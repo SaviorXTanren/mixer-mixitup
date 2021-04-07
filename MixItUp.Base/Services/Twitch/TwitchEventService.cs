@@ -809,7 +809,7 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (command != null)
                 {
-                    await command.Perform(new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
                 }
             }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.DisplayName, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));

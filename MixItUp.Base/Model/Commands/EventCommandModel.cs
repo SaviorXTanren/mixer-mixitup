@@ -139,36 +139,33 @@ namespace MixItUp.Base.Model.Commands
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
 
-        public override async Task Perform(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
-            if (this.IsEnabled && this.DoesCommandHaveWork)
+            if (this.UpdateFollowEventModerationCount())
             {
-                if (this.UpdateFollowEventModerationCount())
+                bool allowFollowEvent = false;
+                await EventCommandModel.followEventsInQueueSemaphore.WaitAndRelease(() =>
                 {
-                    bool allowFollowEvent = false;
-                    await EventCommandModel.followEventsInQueueSemaphore.WaitAndRelease(() =>
+                    if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
                     {
-                        if (EventCommandModel.FollowEventsInQueue < ChannelSession.Settings.ModerationFollowEventMaxInQueue)
-                        {
-                            EventCommandModel.FollowEventsInQueue++;
-                            allowFollowEvent = true;
-                        }
-                        return Task.FromResult(0);
-                    });
-
-                    if (!allowFollowEvent)
-                    {
-                        return;
+                        EventCommandModel.FollowEventsInQueue++;
+                        allowFollowEvent = true;
                     }
+                    return Task.FromResult(0);
+                });
+
+                if (!allowFollowEvent)
+                {
+                    return false;
                 }
             }
 
-            await base.Perform(parameters);
+            return await base.CustomValidation(parameters);
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task PostRun(CommandParametersModel parameters)
         {
-            await base.PerformInternal(parameters);
+            await base.PostRun(parameters);
 
             if (this.UpdateFollowEventModerationCount())
             {

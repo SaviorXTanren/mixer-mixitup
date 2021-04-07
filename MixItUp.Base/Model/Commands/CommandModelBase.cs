@@ -140,11 +140,13 @@ namespace MixItUp.Base.Model.Commands
 
         public bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
-        public bool DoesCommandHaveWork { get { return this.Actions.Count > 0 || this.HasCustomRun; } }
+        public bool HasWork { get { return this.Actions.Count > 0 || this.HasCustomRun; } }
 
         public virtual bool HasCustomRun { get { return false; } }
 
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
+
+        public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
 
         public virtual Task<bool> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(true); }
 
@@ -162,9 +164,11 @@ namespace MixItUp.Base.Model.Commands
 
         public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters) { return this.Requirements.GetPerformingUsers(parameters); }
 
+        public virtual Task PreRun(CommandParametersModel parameters) { return Task.FromResult(0); }
+
         public virtual Task CustomRun(CommandParametersModel parameters) { return Task.FromResult(0); }
 
-        public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+        public virtual Task PostRun(CommandParametersModel parameters) { return Task.FromResult(0); }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 

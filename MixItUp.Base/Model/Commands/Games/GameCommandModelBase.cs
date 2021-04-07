@@ -217,10 +217,11 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        public override Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task PreRun(CommandParametersModel parameters)
         {
+            await base.PreRun(parameters);
+
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
-            return base.CustomValidation(parameters);
         }
 
         public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
