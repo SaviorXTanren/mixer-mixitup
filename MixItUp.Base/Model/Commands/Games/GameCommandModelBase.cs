@@ -174,7 +174,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected override SemaphoreSlim CommandLockSemaphore { get { return GameCommandModelBase.commandLockSemaphore; } }
 
-        public override bool DoesCommandHaveWork { get { return true; } }
+        public override bool HasCustomPerform { get { return true; } }
 
         public virtual IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>(); }
 

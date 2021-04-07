@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Commands
             return Task.FromResult(0);
         }
 
-        public override bool DoesCommandHaveWork { get { return true; } }
+        public override bool HasCustomPerform { get { return true; } }
     }
 
     public class MixItUpPreMadeChatCommandModel : PreMadeChatCommandModelBase

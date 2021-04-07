@@ -33,17 +33,15 @@ namespace MixItUp.Base.Model.Commands
 
         protected ActionGroupCommandModel() : base() { }
 
-        protected override SemaphoreSlim CommandLockSemaphore { get { return ActionGroupCommandModel.commandLockSemaphore; } }
-
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             if (this.RunOneRandomly)
             {
-                await CommandModelBase.RunActions(new List<ActionModelBase>() { this.Actions.Random() }, parameters);
+                await ChannelSession.Services.Command.Run(new CommandInstanceModel(new List<ActionModelBase>() { this.Actions.Random() }, parameters));
             }
             else
             {
-                await CommandModelBase.RunActions(this.Actions, parameters);
+                await base.PerformInternal(parameters);
             }
         }
     }

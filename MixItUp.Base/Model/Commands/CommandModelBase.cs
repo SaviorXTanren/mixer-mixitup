@@ -1,12 +1,10 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Commands
@@ -62,29 +60,6 @@ namespace MixItUp.Base.Model.Commands
             types.Remove(CommandTypeEnum.UserOnlyChat);
             types.Remove(CommandTypeEnum.Custom);
             return types;
-        }
-
-        public static async Task RunActions(IEnumerable<ActionModelBase> actions, CommandParametersModel parameters)
-        {
-            List<ActionModelBase> actionsToRun = new List<ActionModelBase>(actions);
-            for (int i = 0; i < actionsToRun.Count; i++)
-            {
-                ActionModelBase action = actionsToRun[i];
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
-                {
-                    ChannelSession.Services.Overlay.StartBatching();
-                }
-
-                await action.Perform(parameters);
-
-                if (action is OverlayActionModel && ChannelSession.Services.Overlay.IsConnected)
-                {
-                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayActionModel))
-                    {
-                        await ChannelSession.Services.Overlay.EndBatching();
-                    }
-                }
-            }
         }
 
         public static Dictionary<string, string> GetGeneralTestSpecialIdentifiers() { return new Dictionary<string, string>(); }
@@ -157,9 +132,6 @@ namespace MixItUp.Base.Model.Commands
 
         protected CommandModelBase() { }
 
-        [JsonIgnore]
-        protected abstract SemaphoreSlim CommandLockSemaphore { get; }
-
         public string TriggersString { get { return string.Join(" ", this.Triggers); } }
 
         public virtual IEnumerable<string> GetFullTriggers() { return this.Triggers; }
@@ -169,6 +141,8 @@ namespace MixItUp.Base.Model.Commands
         public bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
+
+        public virtual Task<bool> CustomValidation() { return Task.FromResult(true); }
 
         public virtual async Task TestPerform()
         {
@@ -183,60 +157,10 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual async Task Perform(CommandParametersModel parameters)
         {
-            if (this.IsEnabled && this.DoesCommandHaveWork)
-            {
-                bool waitForFinish = parameters.WaitForCommandToFinish;
-                Task commandTask = Task.Run(async () =>
-                {
-                    bool lockPerformed = false;
-                    try
-                    {
-                        Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
-                        if (!this.IsUnlocked && !parameters.DontLockCommand)
-                        {
-                            lockPerformed = true;
-                            await this.CommandLockSemaphore.WaitAsync();
-                        }
-
-                        parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = this.Name;
-
-                        if (await this.ValidateRequirements(parameters))
-                        {
-                            List<CommandParametersModel> runnerParameters = new List<CommandParametersModel>() { parameters };
-                            if (this.Requirements != null)
-                            {
-                                await this.PerformRequirements(parameters);
-                                runnerParameters = new List<CommandParametersModel>(this.Requirements.GetPerformingUsers(parameters));
-                            }
-
-                            this.TrackTelemetry();
-
-                            foreach (CommandParametersModel p in runnerParameters)
-                            {
-                                p.WaitForCommandToFinish = true;
-                                p.User.Data.TotalCommandsRun++;
-                                await this.PerformInternal(p);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
-
-                    if (lockPerformed)
-                    {
-                        this.CommandLockSemaphore.Release();
-                    }
-                });
-
-                if (waitForFinish)
-                {
-                    await commandTask;
-                }
-            }
         }
+
+        public virtual Task CustomPerform(CommandParametersModel parameters) { return Task.FromResult(0); }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
@@ -264,9 +188,11 @@ namespace MixItUp.Base.Model.Commands
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
-        public virtual bool DoesCommandHaveWork { get { return this.Actions.Count > 0; } }
+        public bool DoesCommandHaveWork { get { return this.Actions.Count > 0 || this.HasCustomPerform; } }
 
-        protected virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public virtual bool HasCustomPerform { get { return false; } }
+
+        public virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
             if (this.Requirements != null)
             {
@@ -276,16 +202,19 @@ namespace MixItUp.Base.Model.Commands
             return true;
         }
 
-        protected virtual async Task PerformRequirements(CommandParametersModel parameters)
+        public async Task PerformRequirements(CommandParametersModel parameters)
         {
             await this.Requirements.Perform(parameters);
         }
 
-        protected virtual async Task PerformInternal(CommandParametersModel parameters)
+        public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters)
         {
-            await CommandModelBase.RunActions(this.Actions, parameters);
+            return this.Requirements.GetPerformingUsers(parameters);
         }
 
-        protected virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+        protected virtual async Task PerformInternal(CommandParametersModel parameters)
+        {
+
+        }
     }
 }

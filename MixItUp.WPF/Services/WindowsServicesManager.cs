@@ -19,6 +19,7 @@ namespace MixItUp.WPF.Services
             this.Events = new EventService();
             this.Alerts = new AlertsService();
 
+            this.Command = new CommandService();
             this.Settings = new SettingsService();
             this.Statistics = new StatisticsService();
             this.Database = new WindowsDatabaseService();

@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services
         public IEventService Events { get; protected set; }
         public IAlertsService Alerts { get; protected set; }
 
+        public CommandService Command { get; protected set; }
         public ISettingsService Settings { get; protected set; }
         public SecretsService Secrets { get; protected set; }
         public StatisticsService Statistics { get; protected set; }

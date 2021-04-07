@@ -141,7 +141,7 @@ namespace MixItUp.Base.ViewModel.Commands
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await CommandModelBase.RunActions(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers()));
+                        await ChannelSession.Services.Command.Run(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
                     }
                 }
             });

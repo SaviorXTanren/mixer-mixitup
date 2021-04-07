@@ -129,7 +129,7 @@ namespace MixItUp.Base.Model.Actions
 
             if (finalResult)
             {
-                await CommandModelBase.RunActions(this.Actions, parameters);
+                await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(this.Actions, parameters));
             }
         }
 
