@@ -37,7 +37,7 @@ namespace MixItUp.Base.Model.Commands
         {
             if (this.RunOneRandomly)
             {
-                await ChannelSession.Services.Command.Run(new CommandInstanceModel(new List<ActionModelBase>() { this.Actions.Random() }, parameters));
+                await ChannelSession.Services.Command.Queue(new CommandInstanceModel(new List<ActionModelBase>() { this.Actions.Random() }, parameters));
             }
             else
             {

@@ -140,27 +140,31 @@ namespace MixItUp.Base.Model.Commands
 
         public bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
 
+        public bool DoesCommandHaveWork { get { return this.Actions.Count > 0 || this.HasCustomRun; } }
+
+        public virtual bool HasCustomRun { get { return false; } }
+
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
-        public virtual Task<bool> CustomValidation() { return Task.FromResult(true); }
+        public virtual Task<bool> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(true); }
 
-        public virtual async Task TestPerform()
+        public virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
         {
-            await this.Perform(CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers()));
-            if (this.Requirements.Cooldown != null)
+            if (this.Requirements != null)
             {
-                this.Requirements.Reset();
+                Result result = await this.Requirements.Validate(parameters);
+                return result.Success;
             }
+            return true;
         }
 
-        public async Task Perform() { await this.Perform(new CommandParametersModel()); }
+        public async Task PerformRequirements(CommandParametersModel parameters) { await this.Requirements.Perform(parameters); }
 
-        public virtual async Task Perform(CommandParametersModel parameters)
-        {
+        public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters) { return this.Requirements.GetPerformingUsers(parameters); }
 
-        }
+        public virtual Task CustomRun(CommandParametersModel parameters) { return Task.FromResult(0); }
 
-        public virtual Task CustomPerform(CommandParametersModel parameters) { return Task.FromResult(0); }
+        public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
@@ -187,34 +191,5 @@ namespace MixItUp.Base.Model.Commands
         public bool Equals(CommandModelBase other) { return this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
-
-        public bool DoesCommandHaveWork { get { return this.Actions.Count > 0 || this.HasCustomPerform; } }
-
-        public virtual bool HasCustomPerform { get { return false; } }
-
-        public virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
-        {
-            if (this.Requirements != null)
-            {
-                Result result = await this.Requirements.Validate(parameters);
-                return result.Success;
-            }
-            return true;
-        }
-
-        public async Task PerformRequirements(CommandParametersModel parameters)
-        {
-            await this.Requirements.Perform(parameters);
-        }
-
-        public IEnumerable<CommandParametersModel> GetPerformingUsers(CommandParametersModel parameters)
-        {
-            return this.Requirements.GetPerformingUsers(parameters);
-        }
-
-        protected virtual async Task PerformInternal(CommandParametersModel parameters)
-        {
-
-        }
     }
 }

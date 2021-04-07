@@ -149,8 +149,6 @@ namespace MixItUp.Base.Model.Commands.Games
 
         private static readonly HashSet<Type> RequirementSkipTypes = new HashSet<Type>() { typeof(CooldownRequirementModel) };
 
-        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
-
         [DataMember]
         public GameCommandTypeEnum GameType { get; set; }
 
@@ -172,9 +170,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected GameCommandModelBase() : base() { }
 
-        protected override SemaphoreSlim CommandLockSemaphore { get { return GameCommandModelBase.commandLockSemaphore; } }
-
-        public override bool HasCustomPerform { get { return true; } }
+        public override bool HasCustomRun { get { return true; } }
 
         public virtual IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>(); }
 
@@ -221,23 +217,13 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override Task<bool> ValidateRequirements(CommandParametersModel parameters)
-        {
-            return base.ValidateRequirements(parameters);
-        }
-
-        protected override async Task PerformRequirements(CommandParametersModel parameters)
+        public override Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
-            await this.Requirements.Perform(parameters, RequirementSkipTypes);
+            return base.CustomValidation(parameters);
         }
 
-        protected override Task PerformInternal(CommandParametersModel parameters)
-        {
-            return base.PerformInternal(parameters);
-        }
-
-        protected override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
@@ -299,17 +285,22 @@ namespace MixItUp.Base.Model.Commands.Games
             return outcomes.Last();
         }
 
-        protected async Task<int> PerformOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
+        protected async Task<int> RunOutcome(CommandParametersModel parameters, GameOutcomeModel outcome)
         {
             int payout = this.PerformPrimaryMultiplierPayout(parameters, outcome.GetPayoutMultiplier(parameters.User));
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
             parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
             if (outcome.Command != null)
             {
-                await outcome.Command.Perform(parameters);
+                await this.RunSubCommand(outcome.Command, parameters);
             }
 
             return payout;
+        }
+
+        protected async Task RunSubCommand(CommandModelBase command, CommandParametersModel parameters)
+        {
+            await ChannelSession.Services.Command.Queue(command, parameters);
         }
 
         protected void PerformPrimarySetPayout(UserViewModel user, int payout)

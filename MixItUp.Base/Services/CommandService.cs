@@ -28,11 +28,15 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Run(CommandInstanceModel commandInstance)
+        public async Task Queue(CommandModelBase command) { await this.Queue(new CommandInstanceModel(command)); }
+
+        public async Task Queue(CommandModelBase command, CommandParametersModel parameters) { await this.Queue(new CommandInstanceModel(command, parameters)); }
+
+        public async Task Queue(CommandInstanceModel commandInstance)
         {
             this.instances.Add(commandInstance);
 
-            CommandTypeEnum type = commandInstance.CommandType;
+            CommandTypeEnum type = commandInstance.QueueCommandType;
             if (commandInstance.DontQueue)
             {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -49,7 +53,7 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.RunCommandTypeInstance(type));
+                        commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                     }
                     return Task.FromResult(0);
                 });
@@ -73,9 +77,10 @@ namespace MixItUp.Base.Services
                 if (command != null)
                 {
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
-                    ChannelSession.Services.Telemetry.TrackCommand(command.Type);
 
-                    if (await command.CustomValidation() && await command.ValidateRequirements(commandInstance.Parameters))
+                    command.TrackTelemetry();
+
+                    if (await command.CustomValidation(commandInstance.Parameters) && await command.ValidateRequirements(commandInstance.Parameters))
                     {
                         if (command.Requirements != null)
                         {
@@ -92,7 +97,7 @@ namespace MixItUp.Base.Services
                 foreach (CommandParametersModel p in runnerParameters)
                 {
                     p.User.Data.TotalCommandsRun++;
-                    await this.RunActionsDirectly(commandInstance, p);
+                    await this.RunDirectlyInternal(commandInstance, p);
                 }
 
                 commandInstance.State = CommandInstanceStateEnum.Completed;
@@ -111,7 +116,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task RunCommandTypeInstance(CommandTypeEnum type)
+        private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)
         {
             CommandInstanceModel instance;
             do
@@ -137,12 +142,12 @@ namespace MixItUp.Base.Services
             } while (instance != null);
         }
 
-        private async Task RunActionsDirectly(CommandInstanceModel commandInstance, CommandParametersModel parameters)
+        private async Task RunDirectlyInternal(CommandInstanceModel commandInstance, CommandParametersModel parameters)
         {
             CommandModelBase command = commandInstance.Command;
-            if (command != null && command.HasCustomPerform)
+            if (command != null && command.HasCustomRun)
             {
-                await commandInstance.Command.CustomPerform(parameters);
+                await commandInstance.Command.CustomRun(parameters);
             }
             else
             {

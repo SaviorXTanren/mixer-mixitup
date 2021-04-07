@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -101,7 +101,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 this.AddSpecialIdentifiersToParameters(parameters);
-                await this.StatusCommand.Perform(parameters);
+                await this.RunSubCommand(this.StatusCommand, parameters);
 
                 return false;
             }
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == 1)
             {
@@ -125,12 +125,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (this.CurrentWord.All(c => this.SuccessfulGuesses.Contains(c)))
                     {
                         this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
-                        await this.GameWonCommand.Perform(parameters);
+                        await this.RunSubCommand(this.GameWonCommand, parameters);
                         await this.ClearData();
                     }
                     else
                     {
-                        await this.SuccessfulGuessCommand.Perform(parameters);
+                        await this.RunSubCommand(this.SuccessfulGuessCommand, parameters);
                     }
                 }
                 else
@@ -140,12 +140,12 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.FailedGuesses.Count >= this.MaxFailures)
                     {
-                        await this.GameLostCommand.Perform(parameters);
+                        await this.RunSubCommand(this.GameLostCommand, parameters);
                         await this.ClearData();
                     }
                     else
                     {
-                        await this.FailedGuessCommand.Perform(parameters);
+                        await this.RunSubCommand(this.FailedGuessCommand, parameters);
                     }
                 }
                 await this.PerformCooldown(parameters);

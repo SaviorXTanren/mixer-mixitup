@@ -85,7 +85,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (this.runParameters == null)
             {
@@ -101,7 +101,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.runUsers.Count < this.MinimumParticipants)
                     {
-                        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                        await this.RunSubCommand(this.NotEnoughPlayersCommand, this.runParameters);
                         foreach (var kvp in this.runUsers.ToList())
                         {
                             await this.Requirements.Refund(kvp.Value);
@@ -125,35 +125,35 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     foreach (CommandParametersModel loser in participants)
                     {
-                        await this.UserFailureCommand.Perform(loser);
+                        await this.RunSubCommand(this.UserFailureCommand, loser);
                     }
 
                     foreach (CommandParametersModel winner in winners)
                     {
                         this.PerformPrimarySetPayout(winner.User, individualPayout);
                         winner.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
-                        await this.UserSuccessCommand.Perform(winner);
+                        await this.RunSubCommand(this.UserSuccessCommand, winner);
                     }
 
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count.ToString();
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
-                    await this.GameCompleteCommand.Perform(this.runParameters);
+                    await this.RunSubCommand(this.GameCompleteCommand, this.runParameters);
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();
                 }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                await this.StartedCommand.Perform(this.runParameters);
-                await this.UserJoinCommand.Perform(this.runParameters);
+                await this.RunSubCommand(this.StartedCommand, this.runParameters);
+                await this.RunSubCommand(this.UserJoinCommand, this.runParameters);
                 return;
             }
             else if (this.runParameters != null && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
-                await this.UserJoinCommand.Perform(parameters);
+                await this.RunSubCommand(this.UserJoinCommand, parameters);
                 return;
             }
             else

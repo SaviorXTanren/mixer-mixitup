@@ -36,14 +36,19 @@ namespace MixItUp.Base.Model.Commands
         public CommandModelBase Command { get { return ChannelSession.Settings.GetCommand(this.CommandID); } }
 
         [JsonIgnore]
-        public CommandTypeEnum CommandType
+        public CommandTypeEnum QueueCommandType
         {
             get
             {
                 CommandModelBase command = this.Command;
                 if (command != null)
                 {
-                    return command.Type;
+                    switch (command.Type)
+                    {
+                        case CommandTypeEnum.PreMade: return CommandTypeEnum.Chat;
+                        case CommandTypeEnum.UserOnlyChat: return CommandTypeEnum.Chat;
+                        default: return command.Type;
+                    }
                 }
                 return CommandTypeEnum.Custom;
             }
@@ -62,6 +67,8 @@ namespace MixItUp.Base.Model.Commands
                 return true;
             }
         }
+
+        public CommandInstanceModel(CommandModelBase command) : this(command, new CommandParametersModel()) { }
 
         public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters)
         {

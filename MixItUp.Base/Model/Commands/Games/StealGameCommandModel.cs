@@ -52,7 +52,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
             if (parameters.TargetUser != null)
@@ -65,11 +65,11 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.PerformPrimarySetPayout(parameters.User, betAmount * 2);
                         this.PerformPrimarySetPayout(parameters.TargetUser, -betAmount);
-                        await this.SuccessfulOutcome.Command.Perform(parameters);
+                        await this.RunSubCommand(this.SuccessfulOutcome.Command, parameters);
                     }
                     else
                     {
-                        await this.FailedCommand.Perform(parameters);
+                        await this.RunSubCommand(this.FailedCommand, parameters);
                     }
                     await this.PerformCooldown(parameters);
                     return;

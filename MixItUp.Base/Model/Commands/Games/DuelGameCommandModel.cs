@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -88,12 +88,12 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.PerformPrimaryMultiplierPayout(this.runParameters, 2);
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, -1);
-                        await this.SuccessfulOutcome.Command.Perform(this.runParameters);
+                        await this.RunSubCommand(this.SuccessfulOutcome.Command, this.runParameters);
                     }
                     else
                     {
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, 1);
-                        await this.FailedCommand.Perform(this.runParameters);
+                        await this.RunSubCommand(this.FailedCommand, this.runParameters);
                     }
 
                     await this.PerformCooldown(this.runParameters);
@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
             if (parameters.TargetUser != null)
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         if (this.gameActive && cancellationToken != null && !cancellationToken.IsCancellationRequested)
                         {
                             this.gameActive = false;
-                            await this.NotAcceptedCommand.Perform(parameters);
+                            await this.RunSubCommand(this.NotAcceptedCommand, parameters);
                             await this.Requirements.Refund(parameters);
                             await this.PerformCooldown(parameters);
                         }
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     this.gameActive = true;
-                    await this.StartedCommand.Perform(parameters);
+                    await this.RunSubCommand(this.StartedCommand, parameters);
                     return;
                 }
             }

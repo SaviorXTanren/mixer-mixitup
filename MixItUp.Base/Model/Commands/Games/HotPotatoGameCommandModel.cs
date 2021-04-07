@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             var lastTargetUser = this.lastTossParameters?.TargetUser;
             if (this.gameActive && lastTargetUser != parameters.User)
@@ -118,14 +118,14 @@ namespace MixItUp.Base.Model.Commands.Games
                             await DelayNoThrow(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit), token);
 
                             this.gameActive = false;
-                            await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
+                            await this.RunSubCommand(this.PotatoExplodeCommand, this.lastTossParameters);
 
                             await this.PerformCooldown(this.startParameters);
                             this.ClearData();
                         }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
-                    await this.StartedCommand.Perform(parameters);
+                    await this.RunSubCommand(this.StartedCommand, parameters);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.RestartTossTime();
                     }
-                    await this.TossPotatoCommand.Perform(parameters);
+                    await this.RunSubCommand(this.TossPotatoCommand, parameters);
                 }
 
                 this.lastTossParameters = parameters;
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (this.gameActive && !token.IsCancellationRequested)
                 {
                     this.gameActive = false;
-                    await this.PotatoExplodeCommand.Perform(this.lastTossParameters);
+                    await this.RunSubCommand(this.PotatoExplodeCommand, this.lastTossParameters);
                     await this.PerformCooldown(this.lastTossParameters);
                     this.ClearData();
                 }

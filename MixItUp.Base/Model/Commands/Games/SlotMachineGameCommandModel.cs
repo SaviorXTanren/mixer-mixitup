@@ -103,7 +103,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             List<string> symbols = new List<string>();
             symbols.Add(this.Symbols[this.GenerateRandomNumber(this.Symbols.Count)]);
@@ -116,11 +116,11 @@ namespace MixItUp.Base.Model.Commands.Games
             {
                 if (outcome.ValidateSymbols(symbols))
                 {
-                    await this.PerformOutcome(parameters, outcome);
+                    await this.RunOutcome(parameters, outcome);
                     return;
                 }
             }
-            await this.FailureCommand.Perform(parameters);
+            await this.RunSubCommand(this.FailureCommand, parameters);
         }
     }
 }

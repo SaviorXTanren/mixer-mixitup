@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             if (this.collectActive)
             {
@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.PerformPrimarySetPayout(parameters.User, payout);
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
-                        await this.CollectCommand.Perform(parameters);
+                        await this.RunSubCommand(this.CollectCommand, parameters);
                     }
                     else
                     {
@@ -161,15 +161,15 @@ namespace MixItUp.Base.Model.Commands.Games
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 if (this.TotalAmount >= this.Stage3MinimumAmount)
                 {
-                    await this.Stage3StatusCommand.Perform(parameters);
+                    await this.RunSubCommand(this.Stage3StatusCommand, parameters);
                 }
                 else if (this.TotalAmount >= this.Stage2MinimumAmount)
                 {
-                    await this.Stage2StatusCommand.Perform(parameters);
+                    await this.RunSubCommand(this.Stage2StatusCommand, parameters);
                 }
                 else
                 {
-                    await this.Stage1StatusCommand.Perform(parameters);
+                    await this.RunSubCommand(this.Stage1StatusCommand, parameters);
                 }
                 return false;
             }
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             this.TotalAmount += this.GetPrimaryBetAmount(parameters);
             parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
@@ -202,20 +202,20 @@ namespace MixItUp.Base.Model.Commands.Games
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    await this.PayoutCommand.Perform(parameters);
+                    await this.RunSubCommand(this.PayoutCommand, parameters);
                 }
                 else
                 {
-                    await this.Stage3DepositCommand.Perform(parameters);
+                    await this.RunSubCommand(this.Stage3DepositCommand, parameters);
                 }
             }
             else if (this.TotalAmount >= this.Stage2MinimumAmount)
             {
-                await this.Stage2DepositCommand.Perform(parameters);
+                await this.RunSubCommand(this.Stage2DepositCommand, parameters);
             }
             else
             {
-                await this.Stage1DepositCommand.Perform(parameters);
+                await this.RunSubCommand(this.Stage1DepositCommand, parameters);
             }
             await this.PerformCooldown(parameters);
         }

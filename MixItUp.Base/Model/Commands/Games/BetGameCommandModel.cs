@@ -96,7 +96,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -116,12 +116,12 @@ namespace MixItUp.Base.Model.Commands.Games
                             GameOutcomeModel winningOutcome = this.BetOptions[answer - 1];
 
                             this.runParameters.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
-                            await this.GameCompleteCommand.Perform(this.runParameters);
+                            await this.RunSubCommand(this.GameCompleteCommand, this.runParameters);
 
                             foreach (CommandParametersModel winner in this.runUserSelections.Where(kvp => kvp.Value == answer).Select(kvp => this.runUsers[kvp.Key]))
                             {
                                 winner.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
-                                await this.PerformOutcome(winner, winningOutcome);
+                                await this.RunOutcome(winner, winningOutcome);
                             }
 
                             await this.PerformCooldown(this.runParameters);
@@ -170,7 +170,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                         if (this.runUsers.Count < this.MinimumParticipants)
                         {
-                            await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                            await this.RunSubCommand(this.NotEnoughPlayersCommand, this.runParameters);
                             foreach (var kvp in this.runUsers.ToList())
                             {
                                 await this.Requirements.Refund(kvp.Value);
@@ -181,11 +181,11 @@ namespace MixItUp.Base.Model.Commands.Games
                         }
 
                         this.betsClosed = true;
-                        await this.BetsClosedCommand.Perform(this.runParameters);
+                        await this.RunSubCommand(this.BetsClosedCommand, this.runParameters);
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    await this.StartedCommand.Perform(parameters);
+                    await this.RunSubCommand(this.StartedCommand, parameters);
                     return false;
                 }
                 await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
@@ -193,13 +193,13 @@ namespace MixItUp.Base.Model.Commands.Games
             return false;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             int.TryParse(parameters.Arguments[0], out int choice);
             this.runUsers[parameters.User] = parameters;
             this.runUserSelections[parameters.User] = choice;
 
-            await this.UserJoinCommand.Perform(parameters);
+            await this.RunSubCommand(this.UserJoinCommand, parameters);
             await this.PerformCooldown(parameters);
         }
 

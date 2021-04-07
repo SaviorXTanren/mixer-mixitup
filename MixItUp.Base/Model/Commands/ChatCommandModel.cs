@@ -54,8 +54,6 @@ namespace MixItUp.Base.Model.Commands
             return false;
         }
 
-        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
-
         [DataMember]
         public bool IncludeExclamation { get; set; }
 
@@ -87,8 +85,6 @@ namespace MixItUp.Base.Model.Commands
         }
 
         protected ChatCommandModel() : base() { }
-
-        protected override SemaphoreSlim CommandLockSemaphore { get { return ChatCommandModel.commandLockSemaphore; } }
 
         public override IEnumerable<string> GetFullTriggers() { return this.IncludeExclamation ? this.Triggers.Select(t => "!" + t) : this.Triggers; }
 

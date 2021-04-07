@@ -81,7 +81,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             if (this.gameActive)
             {
@@ -104,11 +104,11 @@ namespace MixItUp.Base.Model.Commands.Games
 
                         if (this.lastBidParameters != null)
                         {
-                            await this.GameCompleteCommand.Perform(this.lastBidParameters);
+                            await this.RunSubCommand(this.GameCompleteCommand, this.lastBidParameters);
                         }
                         else
                         {
-                            await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                            await this.RunSubCommand(this.NotEnoughPlayersCommand, this.runParameters);
                         }
 
                         await this.PerformCooldown(this.runParameters);
@@ -116,7 +116,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     }, new CancellationToken());
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    await this.StartedCommand.Perform(this.runParameters);
+                    await this.RunSubCommand(this.StartedCommand, this.runParameters);
                     return false;
                 }
                 await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return false;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             int betAmount = this.GetPrimaryBetAmount(parameters);
             if (betAmount > this.lastBidAmount)
@@ -137,7 +137,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.lastBidParameters = parameters;
                 this.lastBidAmount = this.GetPrimaryBetAmount(parameters);
 
-                await this.NewTopBidderCommand.Perform(parameters);
+                await this.RunSubCommand(this.NewTopBidderCommand, parameters);
             }
             else
             {

@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 this.AddSpecialIdentifiersToParameters(parameters);
-                await this.StatusCommand.Perform(parameters);
+                await this.RunSubCommand(this.StatusCommand, parameters);
 
                 return false;
             }
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     int index = this.GenerateRandomNumber(currentCombinationString.Length);
                     this.AddSpecialIdentifiersToParameters(parameters);
                     parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanInspectionSpecialIdentifier] = currentCombinationString.ElementAt(index).ToString();
-                    await this.InspectionCommand.Perform(parameters);
+                    await this.RunSubCommand(this.InspectionCommand, parameters);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == this.CombinationLength)
             {
@@ -138,13 +138,13 @@ namespace MixItUp.Base.Model.Commands.Games
                         this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         this.ClearData();
 
-                        await this.SuccessfulCommand.Perform(parameters);
+                        await this.RunSubCommand(this.SuccessfulCommand, parameters);
                     }
                     else
                     {
                         parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanHintSpecialIdentifier] =
                             (guess < this.CurrentCombination) ? MixItUp.Base.Resources.GameCommandLockBoxLow : MixItUp.Base.Resources.GameCommandLockBoxHigh;
-                        await this.FailureCommand.Perform(parameters);
+                        await this.RunSubCommand(this.FailureCommand, parameters);
                     }
                     await this.PerformCooldown(parameters);
                     return;

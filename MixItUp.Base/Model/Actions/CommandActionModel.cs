@@ -143,7 +143,7 @@ namespace MixItUp.Base.Model.Actions
                     }
                     else
                     {
-                        await ChannelSession.Services.Command.Run(commandInstance);
+                        await ChannelSession.Services.Command.Queue(commandInstance);
                     }
                 }
             }

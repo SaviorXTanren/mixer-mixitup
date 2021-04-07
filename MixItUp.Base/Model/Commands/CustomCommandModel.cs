@@ -2,15 +2,12 @@
 using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 
 namespace MixItUp.Base.Model.Commands
 {
     [DataContract]
     public class CustomCommandModel : CommandModelBase
     {
-        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
-
         public static Dictionary<string, string> GetCustomTestSpecialIdentifiers(string name)
         {
             Dictionary<string, string> specialIdentifiers = CommandModelBase.GetGeneralTestSpecialIdentifiers();
@@ -56,8 +53,6 @@ namespace MixItUp.Base.Model.Commands
 #pragma warning restore CS0612 // Type or member is obsolete
 
         protected CustomCommandModel() : base() { }
-
-        protected override SemaphoreSlim CommandLockSemaphore { get { return CustomCommandModel.commandLockSemaphore; } }
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return CustomCommandModel.GetCustomTestSpecialIdentifiers(this.Name); }
     }

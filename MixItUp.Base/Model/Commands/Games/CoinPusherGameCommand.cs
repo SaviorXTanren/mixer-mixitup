@@ -70,12 +70,12 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
-                await this.StatusCommand.Perform(parameters);
+                await this.RunSubCommand(this.StatusCommand, parameters);
                 return false;
             }
             else
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             int betAmount = this.GetPrimaryBetAmount(parameters);
             this.TotalAmount += betAmount;
@@ -97,12 +97,12 @@ namespace MixItUp.Base.Model.Commands.Games
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
-                await this.SuccessCommand.Perform(parameters);
+                await this.RunSubCommand(this.SuccessCommand, parameters);
             }
             else
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
-                await this.FailureCommand.Perform(parameters);
+                await this.RunSubCommand(this.FailureCommand, parameters);
             }
             await this.PerformCooldown(parameters);
         }

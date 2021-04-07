@@ -18,8 +18,6 @@ namespace MixItUp.Base.Model.Commands
         private static SemaphoreSlim followEventsInQueueSemaphore = new SemaphoreSlim(1);
         public static int FollowEventsInQueue = 0;
 
-        private static SemaphoreSlim commandLockSemaphore = new SemaphoreSlim(1);
-
         public static Dictionary<string, string> GetEventTestSpecialIdentifiers(EventTypeEnum eventType)
         {
             Dictionary<string, string> specialIdentifiers = CommandModelBase.GetGeneralTestSpecialIdentifiers();
@@ -139,8 +137,6 @@ namespace MixItUp.Base.Model.Commands
 
         protected EventCommandModel() : base() { }
 
-        protected override SemaphoreSlim CommandLockSemaphore { get { return EventCommandModel.commandLockSemaphore; } }
-
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
 
         public override async Task Perform(CommandParametersModel parameters)
@@ -191,5 +187,7 @@ namespace MixItUp.Base.Model.Commands
             }
             return false;
         }
+
+        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.EventType.ToString()); }
     }
 }
