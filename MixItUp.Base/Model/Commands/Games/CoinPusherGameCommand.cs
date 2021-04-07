@@ -105,6 +105,8 @@ namespace MixItUp.Base.Model.Commands.Games
                 await this.FailureCommand.Perform(parameters);
             }
             await this.PerformCooldown(parameters);
+
+            ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
         }
     }
 }

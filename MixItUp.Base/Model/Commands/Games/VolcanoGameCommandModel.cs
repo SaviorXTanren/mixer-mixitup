@@ -218,6 +218,8 @@ namespace MixItUp.Base.Model.Commands.Games
                 await this.Stage1DepositCommand.Perform(parameters);
             }
             await this.PerformCooldown(parameters);
+
+            ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
         }
 
         private void ClearData()
@@ -225,6 +227,8 @@ namespace MixItUp.Base.Model.Commands.Games
             this.TotalAmount = 0;
             this.collectActive = false;
             this.collectUsers.Clear();
+
+            ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
         }
     }
 }
