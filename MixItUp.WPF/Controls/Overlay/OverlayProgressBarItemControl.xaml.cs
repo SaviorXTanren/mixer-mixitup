@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.ProgressBarGoalReached);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -34,9 +34,9 @@ namespace MixItUp.WPF.Controls.Overlay
             CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += Window_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 

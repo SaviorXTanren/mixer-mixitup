@@ -13,9 +13,9 @@ namespace MixItUp.WPF.Controls.Commands.Games
             GameOutcomeViewModel outcome = FrameworkElementHelpers.GetDataContext<GameOutcomeViewModel>(sender);
             if (outcome.Command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(outcome.Command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(outcome.Command);
                 window.CommandSaved += (object s, CommandModelBase command) => { outcome.Command = (CustomCommandModel)command; };
-                window.Show();
+                window.ForceShow();
             }
         }
 

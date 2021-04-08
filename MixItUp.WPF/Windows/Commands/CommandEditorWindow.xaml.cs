@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Commands
@@ -12,15 +13,32 @@ namespace MixItUp.WPF.Windows.Commands
     /// </summary>
     public partial class CommandEditorWindow : LoadingWindowBase
     {
+        private Guid commandId = Guid.Empty;
+
         public CommandEditorDetailsControlBase editorDetailsControl { get; private set; }
 
         public CommandEditorWindowViewModelBase viewModel { get; private set; }
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
-        public CommandEditorWindow(CommandModelBase existingCommand)
+        private static Dictionary<Guid, CommandEditorWindow> OpenWindows = new Dictionary<Guid, CommandEditorWindow>();
+        public static CommandEditorWindow GetCommandEditorWindow(CommandModelBase existingCommand)
+        {
+            if (OpenWindows.TryGetValue(existingCommand.ID, out var window))
+            {
+                return window;
+            }
+
+            window = new CommandEditorWindow(existingCommand);
+            OpenWindows.Add(existingCommand.ID, window);
+            return window;
+        }
+
+        private CommandEditorWindow(CommandModelBase existingCommand)
             : this()
         {
+            commandId = existingCommand.ID;
+
             switch (existingCommand.Type)
             {
                 case CommandTypeEnum.Chat:
@@ -134,10 +152,34 @@ namespace MixItUp.WPF.Windows.Commands
             await base.OnLoaded();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            OpenWindows.Remove(this.commandId);
+            base.OnClosed(e);
+        }
+
         private void ViewModel_CommandSaved(object sender, CommandModelBase command)
         {
             this.CommandSaved(this, command);
             this.Close();
+        }
+
+        public void ForceShow()
+        {
+            if (!this.IsVisible)
+            {
+                this.Show();
+            }
+
+            if (this.WindowState == System.Windows.WindowState.Minimized)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+            }
+
+            this.Activate();
+            this.Topmost = true;  // important
+            this.Topmost = false; // important
+            this.Focus();         // important
         }
     }
 }

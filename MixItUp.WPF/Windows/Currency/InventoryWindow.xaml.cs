@@ -69,23 +69,23 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void ShopBuyCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.ShopBuyCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void ShopSellCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.ShopSellCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void TradeCommand_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.TradeCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }
