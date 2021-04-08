@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         TeamMembers,
         SameGame,
         SameLanguage,
-        Featured
+        Featured,
     }
 
     public class SearchFindChannelToRaidItemViewModel : UIViewModelBase

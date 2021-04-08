@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Actions
         YouTube,
         WebPage,
         HTML,
-        ShowHideWidget
+        ShowHideWidget,
     }
 
     public class OverlayActionEditorControlViewModel : ActionEditorControlViewModelBase

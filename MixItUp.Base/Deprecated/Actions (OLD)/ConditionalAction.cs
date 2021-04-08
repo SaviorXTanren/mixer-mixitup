@@ -25,7 +25,7 @@ namespace MixItUp.Base.Actions
         DoesNotContain,
         Between,
         Replaced,
-        NotReplaced
+        NotReplaced,
     }
 
     [Obsolete]

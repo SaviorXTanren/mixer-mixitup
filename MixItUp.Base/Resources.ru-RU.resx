@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -165,28 +165,8 @@
     <value>Действия</value>
     <comment>Manual</comment>
   </data>
-  <data name="ActionToPeform" xml:space="preserve">
-    <value>Действия для выполнения</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AddClause" xml:space="preserve">
     <value>Добавить пункт</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
-    <value>Пользователь уже находится в этой группе.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>Пользователь с таким именем не найден.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>Вы уже в фаворитах у этой команды.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>Команда с таким именем не найдена.</value>
     <comment>Manual</comment>
   </data>
   <data name="AddItem" xml:space="preserve">
@@ -211,14 +191,6 @@
   </data>
   <data name="Advanced" xml:space="preserve">
     <value>Дополнительно</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AdvancedCommand" xml:space="preserve">
-    <value>Продвинутая команда</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>Разрешить команды только на вашем канале во время совместных стримов</value>
     <comment>Manual</comment>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
@@ -253,14 +225,6 @@
     <value>Подтвержденные устройства</value>
     <comment>Manual</comment>
   </data>
-  <data name="Assets" xml:space="preserve">
-    <value>Ассеты</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Audience" xml:space="preserve">
-    <value>Аудитория</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Аудиовывод</value>
     <comment>Manual</comment>
@@ -289,10 +253,6 @@
     <value>Забанены</value>
     <comment>Manual</comment>
   </data>
-  <data name="BasicTimerDescription" xml:space="preserve">
-    <value>Как назвать эту команду для таймера?</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Black" xml:space="preserve">
     <value>Чёрный</value>
     <comment>Manual</comment>
@@ -317,32 +277,8 @@
     <value>Запрещенные слова (по одному на строку) (* = любой символ)</value>
     <comment>Manual</comment>
   </data>
-  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>Необходимо выбрать возрастной рейтинг.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChannelErrorInvalidGame" xml:space="preserve">
-    <value>Необходимо выбрать правильное и существующее название игры.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>Название стрима должно быть указано.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Сообщение чата отправлено</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChatMessageTranslatedText" xml:space="preserve">
-    <value>Сообщение чата ($translationresult = переведенный текст)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChatMessageWebRequest" xml:space="preserve">
-    <value>Сообщение чата ($webrequestresult = текст результата)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChatMixPlayParticipation" xml:space="preserve">
-    <value>Участие в чате / MixPlay</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
@@ -429,22 +365,6 @@
     <value>Управление</value>
     <comment>Manual</comment>
   </data>
-  <data name="ControlID" xml:space="preserve">
-    <value>ID управления</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ConvertToAdvanced" xml:space="preserve">
-    <value>Преобразовать в продвинутую команду</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="CooldownSeconds" xml:space="preserve">
-    <value>Перезарядка (секунд)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Costream" xml:space="preserve">
-    <value>Совм. стрим</value>
-    <comment>Manual</comment>
-  </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Счетчик (Создать и обновить)</value>
     <comment>Manual</comment>
@@ -459,10 +379,6 @@
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Сумма месяцев подписки</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="CurrenciesRanksInventories" xml:space="preserve">
-    <value>Валюты/ранги/инвентари</value>
     <comment>Manual</comment>
   </data>
   <data name="Currency" xml:space="preserve">
@@ -493,16 +409,8 @@
     <value>Команда при входе</value>
     <comment>Manual</comment>
   </data>
-  <data name="CustomizeCommand" xml:space="preserve">
-    <value>Настройка команды</value>
-    <comment>Manual</comment>
-  </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>Настройка инвентаря</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="CustomMixPlayProjects" xml:space="preserve">
-    <value>Свой проект MixPlay</value>
     <comment>Manual</comment>
   </data>
   <data name="CustomTitle" xml:space="preserve">
@@ -549,10 +457,6 @@
     <value>Макс. сумма по умолчанию</value>
     <comment>Manual</comment>
   </data>
-  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
-    <value>Игрп MixPlay по умолчанию</value>
-    <comment>Manual</comment>
-  </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>Вывод по умолчанию</value>
     <comment>Manual</comment>
@@ -597,24 +501,8 @@
     <value>Discord</value>
     <comment>Manual</comment>
   </data>
-  <data name="DisplayImage" xml:space="preserve">
-    <value>Показывать изображения (необязательно)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Donators" xml:space="preserve">
     <value>Жертвователи</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DownloadDirectory" xml:space="preserve">
-    <value>Скачать папку</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DownloadFrom" xml:space="preserve">
-    <value>DownloadFrom</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Drop" xml:space="preserve">
-    <value>DROP</value>
     <comment>Manual</comment>
   </data>
   <data name="DTR" xml:space="preserve">
@@ -633,20 +521,12 @@
     <value>Изменить команду</value>
     <comment>Manual</comment>
   </data>
-  <data name="EmptySoundFilePath" xml:space="preserve">
-    <value>Путь к звуковому файлу не должен быть пустым.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="EnableCommand" xml:space="preserve">
     <value>Включить команду</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableCommandGroup" xml:space="preserve">
     <value>Включить группу команд</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EnableDiscord" xml:space="preserve">
-    <value>Пожалуйста, подключите Discord в разделе Службы!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
@@ -663,10 +543,6 @@
   </data>
   <data name="EnableOvrStream" xml:space="preserve">
     <value>Пожалуйста, подключите OvrStream в разделе Службы!</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EnableReplayBuffer" xml:space="preserve">
-    <value>Буфер повтора не включен. Откройте в OBS Настройки -&gt; Вывод и включите буфер повтора!</value>
     <comment>Manual</comment>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
@@ -725,24 +601,8 @@
     <value>Данные для экспорта</value>
     <comment>Manual</comment>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>Семья</value>
-    <comment>Manual</comment>
-  </data>
   <data name="FanProgression" xml:space="preserve">
     <value>Прогресс фанатов</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FavoritedUsersTeams" xml:space="preserve">
-    <value>Избранные пользователи/команды</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FavoriteStreamers" xml:space="preserve">
-    <value>Избранные стримеры</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FeatureMixItUpStreamer" xml:space="preserve">
-    <value>Указать меня как Mix It Up стримера</value>
     <comment>Manual</comment>
   </data>
   <data name="FilePath" xml:space="preserve">
@@ -761,14 +621,6 @@
     <value>Заблокированные слова (по одному на строку) ( * = любой символ)</value>
     <comment>Manual</comment>
   </data>
-  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>Необходимо выбрать критерии для поиска канала для рейда.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>Не удается найти канал, соответствующий условиям поиска, пожалуйста, выберите другие варианты.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="FollowAge" xml:space="preserve">
     <value>Время отслеживания</value>
     <comment>Manual</comment>
@@ -783,10 +635,6 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>Игровая очередь</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameQueueAction" xml:space="preserve">
-    <value>Действия с игровой очередью</value>
     <comment>Manual</comment>
   </data>
   <data name="German" xml:space="preserve">
@@ -821,16 +669,8 @@
     <value>Группа</value>
     <comment>Manual</comment>
   </data>
-  <data name="GroupNameCaseSensitive" xml:space="preserve">
-    <value>Название группы (Учитывайте регистр)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
     <value>Скрыть кол-во зрителей и чаттеров</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="HostChannel" xml:space="preserve">
-    <value>Канал для ретрансляции</value>
     <comment>Manual</comment>
   </data>
   <data name="HotKey" xml:space="preserve">
@@ -839,10 +679,6 @@
   </data>
   <data name="HotKeys" xml:space="preserve">
     <value>Хоткеи</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="HowLongBeforeRun" xml:space="preserve">
-    <value>Через какое время команда может быть запущена снова (в секундах)?</value>
     <comment>Manual</comment>
   </data>
   <data name="HTML" xml:space="preserve">
@@ -867,14 +703,6 @@
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Импорт данных</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="IncludeCommandAssets" xml:space="preserve">
-    <value>Включить ассеты команд</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="IncorrectBotAccount" xml:space="preserve">
-    <value>Вы должны войти в другой аккаунт, отличный от аккаунта стримера.</value>
     <comment>Manual</comment>
   </data>
   <data name="Individual" xml:space="preserve">
@@ -973,10 +801,6 @@
     <value>НАЛЕВО</value>
     <comment>Manual</comment>
   </data>
-  <data name="LengthSecs" xml:space="preserve">
-    <value>Длина (секунд)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="License" xml:space="preserve">
     <value>Лицензия</value>
     <comment>Manual</comment>
@@ -1029,16 +853,8 @@
     <value>Макс. символы пунктуации / знаки / смайлы</value>
     <comment>Manual</comment>
   </data>
-  <data name="MaxTime" xml:space="preserve">
-    <value>Макс. время</value>
-    <comment>Manual</comment>
-  </data>
   <data name="MaxValue" xml:space="preserve">
     <value>Макс. стоимость</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MetadataName" xml:space="preserve">
-    <value>Название метаданных</value>
     <comment>Manual</comment>
   </data>
   <data name="MinimumChannelActivityMins" xml:space="preserve">
@@ -1069,22 +885,6 @@
     <value>Mix It Up - Оверлей</value>
     <comment>Manual</comment>
   </data>
-  <data name="MixItUpStore" xml:space="preserve">
-    <value>Mix It Up - Магазин</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixPlayCooldownHeader" xml:space="preserve">
-    <value>Сколько секунд будет составлять перезарядка?</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
-    <value>Эта кнопка перезаряжается сама по себе или вместе со всеми?</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixPlayTextboxModeration" xml:space="preserve">
-    <value>Хотите использовать модерацию чата для всех вводимых сообщений?</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Mod" xml:space="preserve">
     <value>Модератор</value>
     <comment>Manual</comment>
@@ -1111,10 +911,6 @@
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Переместить вверх</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Must" xml:space="preserve">
-    <value>Должно</value>
     <comment>Manual</comment>
   </data>
   <data name="Mute" xml:space="preserve">
@@ -1209,10 +1005,6 @@
     <value>Оверлеи</value>
     <comment>Manual</comment>
   </data>
-  <data name="OverlayToUse" xml:space="preserve">
-    <value>Оверлей для использования</value>
-    <comment>Manual</comment>
-  </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
     <value>Виджет оверлея - Редактор</value>
     <comment>Manual</comment>
@@ -1233,32 +1025,12 @@
     <value>OvrStream</value>
     <comment>Manual</comment>
   </data>
-  <data name="OvrStreamTitleName" xml:space="preserve">
-    <value>Название в OvrStream</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PartneredStreamer" xml:space="preserve">
-    <value>Стример-партнёр</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PatreonBenefitRequirement" xml:space="preserve">
-    <value>Требуются бонусы от Patreon</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Pink" xml:space="preserve">
     <value>Розовая</value>
     <comment>Manual</comment>
   </data>
   <data name="Pitch" xml:space="preserve">
     <value>Высота (0% - 200%)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PollResultCommand" xml:space="preserve">
-    <value>Команда для результатов опроса (необязательно)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PollResultCommandType" xml:space="preserve">
-    <value>Тип команды для результатов опроса</value>
     <comment>Manual</comment>
   </data>
   <data name="Position" xml:space="preserve">
@@ -1271,14 +1043,6 @@
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Предустановленные команды</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>Не допускать маленькие перезарядки к перезаписи</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>Не допускать неизвестных пользователей MixPlay</value>
     <comment>Manual</comment>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
@@ -1327,10 +1091,6 @@
   </data>
   <data name="Rate" xml:space="preserve">
     <value>Скорость (0% - 150%)</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="RateSecs" xml:space="preserve">
-    <value>Скорость (сек)</value>
     <comment>Manual</comment>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
@@ -1413,10 +1173,6 @@
     <value>Дать очки задним числом</value>
     <comment>Manual</comment>
   </data>
-  <data name="Reviews" xml:space="preserve">
-    <value>Отзывы</value>
-    <comment>Manual</comment>
-  </data>
   <data name="RoleBonuses" xml:space="preserve">
     <value>Бонусы для роли</value>
     <comment>Manual</comment>
@@ -1441,10 +1197,6 @@
     <value>Выполнить одну случайную</value>
     <comment>Manual</comment>
   </data>
-  <data name="SameAgeRating" xml:space="preserve">
-    <value>Такой же возрастной рейтинг</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SaveChatEventLogs" xml:space="preserve">
     <value>Сохранить чат / журнал событий</value>
     <comment>Manual</comment>
@@ -1461,24 +1213,12 @@
     <value>Название сцены (Регистр учитывается)</value>
     <comment>Manual</comment>
   </data>
-  <data name="SecondsAllCaps" xml:space="preserve">
-    <value>СЕКУНД</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SelectFirst" xml:space="preserve">
     <value>Выберите пользователя в начале очереди</value>
     <comment>Manual</comment>
   </data>
   <data name="SelectFirstType" xml:space="preserve">
     <value>Выберите первого пользователя данного типа в очереди</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SelectGameHeader" xml:space="preserve">
-    <value>Выберите тип игры, который вы хотите создать</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SelectTypeOfCommand" xml:space="preserve">
-    <value>Выберите тип команды, которую вы хотите создать:</value>
     <comment>Manual</comment>
   </data>
   <data name="SendAsStreamer" xml:space="preserve">
@@ -1509,10 +1249,6 @@
     <value>Валюта магазина</value>
     <comment>Manual</comment>
   </data>
-  <data name="ShowEventAlerts" xml:space="preserve">
-    <value>Показывать оповещения о событиях</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ShowInfoInChat" xml:space="preserve">
     <value>Показывать информацию в чате</value>
     <comment>Manual</comment>
@@ -1523,10 +1259,6 @@
   </data>
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Показывать время отправки сообщения</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ShowMixrElixrEmotes" xml:space="preserve">
-    <value>Показывать смайлы MixrElixr (требует перезапуска)</value>
     <comment>Manual</comment>
   </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
@@ -1617,10 +1349,6 @@
     <value>Стримы смотрели</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamTitle" xml:space="preserve">
-    <value>Название стрима</value>
-    <comment>Manual</comment>
-  </data>
   <data name="StrikeCommands" xml:space="preserve">
     <value>Команды страйков</value>
     <comment>Manual</comment>
@@ -1689,16 +1417,8 @@
     <value>Бирюзовая</value>
     <comment>Manual</comment>
   </data>
-  <data name="Teen" xml:space="preserve">
-    <value>Молодёжь</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TestCommand" xml:space="preserve">
     <value>Тест команды</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TestStreamWarning" xml:space="preserve">
-    <value>Поскольку включены настройки тестового стрима, ваш бот-аккаунт не сможет правильно. Вам нужно отключить тестовый стрим для того, чтобы использовать аккаунт бота для сообщений в чате и ЛС. Вы действительно хотите подключить его?</value>
     <comment>Manual</comment>
   </data>
   <data name="Text" xml:space="preserve">
@@ -1765,10 +1485,6 @@
     <value>Команды торговли</value>
     <comment>Manual</comment>
   </data>
-  <data name="TriggerHint" xml:space="preserve">
-    <value>Триггер(ы) в чате ("!" не требуется)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TweetMessage" xml:space="preserve">
     <value>Сообщение в твиттере (@mentions не разрешены)</value>
     <comment>Manual</comment>
@@ -1779,18 +1495,6 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Напечатать</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TypeToAdd" xml:space="preserve">
-    <value>Напечатать для добавления</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UnbanAllUsers" xml:space="preserve">
-    <value>Разбанить всех пользователей</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UnbanAllUsersHeader" xml:space="preserve">
-    <value>Разбанить всех пользователей вашего канала</value>
     <comment>Manual</comment>
   </data>
   <data name="Ungrouped" xml:space="preserve">
@@ -1881,10 +1585,6 @@
     <value>Значение переменной</value>
     <comment>Manual</comment>
   </data>
-  <data name="VersionID" xml:space="preserve">
-    <value>ID версии</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Visible" xml:space="preserve">
     <value>Видимость</value>
     <comment>Manual</comment>
@@ -1917,10 +1617,6 @@
     <value>ЛС</value>
     <comment>Manual</comment>
   </data>
-  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
-    <value>Отправлять в ЛС все оповещения для аккаунта стримера</value>
-    <comment>Manual</comment>
-  </data>
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>ЛС пользователю (необязательно)</value>
     <comment>Manual</comment>
@@ -1929,16 +1625,8 @@
     <value>Белая</value>
     <comment>Manual</comment>
   </data>
-  <data name="WhoCanRun" xml:space="preserve">
-    <value>Кому разрешено использовать эту команду?</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Символы для подстановки</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="WinnerAllCaps" xml:space="preserve">
-    <value>ПОБЕДИТЕЛЬ</value>
     <comment>Manual</comment>
   </data>
   <data name="XLarge" xml:space="preserve">
@@ -2049,14 +1737,6 @@
     <value>Настройка стрим-пропуска</value>
     <comment>Manual</comment>
   </data>
-  <data name="ActivityRate" xml:space="preserve">
-    <value>Коэфф. активности:</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmberBonus" xml:space="preserve">
-    <value>Бонус за угольки</value>
-    <comment>Manual</comment>
-  </data>
   <data name="FollowBonus" xml:space="preserve">
     <value>Бонус за отслеживание</value>
     <comment>Manual</comment>
@@ -2101,10 +1781,6 @@
     <value>Стрим-пропуск</value>
     <comment>Manual</comment>
   </data>
-  <data name="TotalLevels" xml:space="preserve">
-    <value>Всего уровней</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Dutch" xml:space="preserve">
     <value>Нидерландский</value>
     <comment>Manual</comment>
@@ -2131,10 +1807,6 @@
   </data>
   <data name="LevelUp" xml:space="preserve">
     <value>Повышение уровня</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить эту команду повышения уровня?</value>
     <comment>Manual</comment>
   </data>
   <data name="MaxLevel" xml:space="preserve">
@@ -2321,10 +1993,6 @@
     <value>Баллы канала Twitch</value>
     <comment>Manual</comment>
   </data>
-  <data name="AddRewardCommand" xml:space="preserve">
-    <value>Добавить команду для награды</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ChannelPoints" xml:space="preserve">
     <value>Баллы канала</value>
     <comment>Manual</comment>
@@ -2375,10 +2043,6 @@
   </data>
   <data name="Changelog" xml:space="preserve">
     <value>Список изменений</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SubTier" xml:space="preserve">
-    <value>Уровень подписчика</value>
     <comment>Manual</comment>
   </data>
   <data name="FailedToUpdateGame" xml:space="preserve">
@@ -2599,10 +2263,6 @@
     <value>Действия с файлом: Отсутствует строка для чтения</value>
     <comment>Manual</comment>
   </data>
-  <data name="FileActionMissingTextToSave" xml:space="preserve">
-    <value>Действия с файлом: Отсутствует текст для сохранения</value>
-    <comment>Manual</comment>
-  </data>
   <data name="IFTTTActionMissingEventName" xml:space="preserve">
     <value>Действия с IFTTT: Название события отсутствует</value>
     <comment>Manual</comment>
@@ -2711,14 +2371,6 @@
     <value>Действия TTS: Голос отсутствует</value>
     <comment>Manual</comment>
   </data>
-  <data name="TranslationActionMissingLanguage" xml:space="preserve">
-    <value>Действие перевода: Язык отсутствует</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TranslationActionMissingText" xml:space="preserve">
-    <value>Действие перевода: Текст отсутствует</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
     <value>Действия с Twitter: твит не может содержать какие-либо "@" теги</value>
     <comment>Manual</comment>
@@ -2787,20 +2439,8 @@
     <value>Действия со стриминговым ПО: Отсутствует путь к браузерному источнику</value>
     <comment>Manual</comment>
   </data>
-  <data name="SuccessTriggerType" xml:space="preserve">
-    <value>Печать успешного триггера</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ConditionalActionClauseMissingValue" xml:space="preserve">
     <value>Действия с условиями: Пропущено значение</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ConditionalActionMissingSuccessTrigger" xml:space="preserve">
-    <value>Действия с условиями: Отсутствует триггер успешного действия</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
-    <value>Действия с условиями: успешное действие триггера имеет ошибки</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatCommandMissingTriggers" xml:space="preserve">
@@ -2889,10 +2529,6 @@
   </data>
   <data name="GameCommandCouldNotFindUser" xml:space="preserve">
     <value>Пользователь не может быть найден</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandInvalidBetAmount" xml:space="preserve">
-    <value>Корректная сумма ставки должна быть указана</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanNotLetter" xml:space="preserve">
@@ -2991,20 +2627,12 @@
     <value>В дуэльной игре пользователь бросает вызов конкретному пользователю, указывая сумму ставки. В случае успеха инициатор дуэли забирает сумму ставки у противника. В случае неудачи противник забирает сумму ставки у инициатора.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandDuelExample" xml:space="preserve">
-    <value>EX: !duel &lt;НИКНЕЙМ&gt; 100</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Hangman" xml:space="preserve">
     <value>Висельник</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
     <value>Игра позволяет пользователям угадывать по буквам случайное слово, чтобы выиграть накопленный банк валюты. Каждое неудачное предположение помещает указанную сумму валюты в банк и добавляет ошибку, в то время как правильная догадка добавляет букву. Человек, угадавший последнюю недостающую букву получает всю накопленную валюту. Пользователи имеют возможность увидеть состояние игры, чтобы увидеть, сколько валюты в банке и что уже угадано.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandHangmanExample" xml:space="preserve">
-    <value>EX: !hangman &lt;БУКВА&gt;</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHeistDescription" xml:space="preserve">
@@ -3019,21 +2647,12 @@
     <value>Игра позволяет пользователю сделать ставку типа «победитель получает все» для всех участвующих пользователей. После определённого срока в чате появится киллер с определенным именем. Если пользователь напечатает имя киллера в чате в течение срока, он выигрывает весь банк. В противном случае, все теряют свои деньги.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandHitmanExample" xml:space="preserve">
-    <value>EX: !hitman 100</value>
-    <comment>Manual</comment>
-  </data>
   <data name="HotPotato" xml:space="preserve">
     <value>Горячая картошка</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
     <value>Игра выдаёт тикающую картофельную бомбу игроку, который должен передать её кому-то еще, прежде чем бомба взорвется. Пользователь, который держал бомбу последним и выжил становится победителем ($username), а пользователь, который взорвался, становится проигравшим ($targetusername). По умолчанию передача картофельной бомбы делается случайному пользователю, но вы можете дополнительно позволить указать, кому она попадёт. Вы также можете установить, сбрасывается ли ограничение по времени на взрыв бомбы с каждым перебросом.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandHotPotatoExample" xml:space="preserve">
-    <value>EX: !potato
-EX: !potato &lt;НИКНЕЙМ ЦЕЛИ&gt;</value>
     <comment>Manual</comment>
   </data>
   <data name="LockBox" xml:space="preserve">
@@ -3052,10 +2671,6 @@ EX: !potato &lt;НИКНЕЙМ ЦЕЛИ&gt;</value>
     <value>Игра позволяет начать игру групповых ставок среди всех пользователей, которые могут делать ставку на определенное число или имя. Если игра основана на диапазоне номеров, то пользователь может выбрать любой номер в этом диапазоне. Если игра основана на серии имен, пользователь может выбрать любое из имен. Все пользователи, сделавшие выигрышную ставку, получают выплату за свою ставку, все остальные теряют свою ставку.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandRouletteExample" xml:space="preserve">
-    <value>EX: !roulette &lt;ЧИСЛО&gt; 100</value>
-    <comment>Manual</comment>
-  </data>
   <data name="GameCommandRussianRouletteDescription" xml:space="preserve">
     <value>Игра в русскую рулетку позволяет пользователю сделать ставку типа «победитель получает все» среди всех участвующих пользователей. По умолчанию пользователь, который начинает игру, определяет величину ставки, а все остальные должны поставить эту же сумму, чтобы присоединиться. Все победители игры разделяют общую внесённую сумму поровну.</value>
     <comment>Manual</comment>
@@ -3064,20 +2679,12 @@ EX: !potato &lt;НИКНЕЙМ ЦЕЛИ&gt;</value>
     <value>Игра выбирает случайный набор из 3 символов из заранее определенного списка и выбирает любой результат, который соответствует этим символам. Помимо выбора выплаты для каждого исхода, вы также можете запустить настроенную команду для каждого результата.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandSlotMachineExample" xml:space="preserve">
-    <value>EX: !slots 100</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Spin" xml:space="preserve">
     <value>Вращение</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
     <value>Игра выбирает случайное число и выбирает результат на основе этого числа. Помимо выбора выплаты для каждого исхода, вы также можете запустить настроенную команду для каждого результата.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandSpinExample" xml:space="preserve">
-    <value>EX: !spin 100</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandSpinLoseExample" xml:space="preserve">
@@ -3096,21 +2703,10 @@ EX: !potato &lt;НИКНЕЙМ ЦЕЛИ&gt;</value>
     <value>Игра позволяет пользователю попытаться украсть валюту у другого пользователя. В случае успеха пользователь крадет сумму ставки у другого пользователя. В случае неудачи они оба теряют сумму ставки.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandStealExample" xml:space="preserve">
-    <value>EX: !steal 100
-EX: !steal &lt;НИКНЕЙМ&gt; 100</value>
-    <comment>Manual</comment>
-  </data>
   <data name="GameCommandTreasureDefenseDescription" xml:space="preserve">
     <value>Игра позволяет пользователю начать ставку типа «победитель получает все» среди всех участвующих пользователей. По умолчанию пользователь, который начинает игру, определяет величину ставки, а все следующие пользователи должны поставить эту сумму, чтобы присоединиться. Все победителями игры делят общую сумму ставок поровну.
 
 После окончания срока кто-то из участников выбирается королем. Все остальные пользователи становятся либо рыцарями, либо ворами. Король выбирает одного из пользователей в надежде, что он рыцарь, чтобы защитить сокровище. Если король выбирает Рыцаря, то король и рыцари делят выигрыш. Если король выбирает вора, то воры делят выигрыш.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandTreasureDefenseExample" xml:space="preserve">
-    <value>EX: !treasure &lt;СУММА&gt;
-EX: !treasure
-EX: !treasure &lt;ВЫБРАННЫЙ ПОЛЬЗОВАТЕЛЬ&gt;</value>
     <comment>Manual</comment>
   </data>
   <data name="Trivia" xml:space="preserve">
@@ -3121,18 +2717,10 @@ EX: !treasure &lt;ВЫБРАННЫЙ ПОЛЬЗОВАТЕЛЬ&gt;</value>
     <value>Игра выбирает случайный вопрос из заранее определённого списка и просит всех пользователей выбрать правильный ответ. Всем пользователям, выбранным правильный ответ, присуждается выплата.</value>
     <comment>Manual</comment>
   </data>
-  <data name="GameCommandTriviaExample" xml:space="preserve">
-    <value>EX: !trivia</value>
-    <comment>Manual</comment>
-  </data>
   <data name="GameCommandVolcanoDescription" xml:space="preserve">
     <value>Игра позволяет пользователю внести определенное количество валюты в вулкан с шансом на личную выплату и выплату для всех пользователей в чате. Вулкан проходит через 3 этапа, зависящих от общей вложенной суммы, на каждом из которых используются разные суммы взносов и команды.
 
 Как только вулкан достигает стадии 3, каждый следующий взнос имеет шанс вызвать извержение. Когда происходит извержение, пользователь, который вызвал его получает специальную выплату. После извержения, все пользователи могут собирать извергаемую валюту во время срока сбора. После того, как сбор будет окончен, содержимое вулкана сбрасывается на 0.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandVolcanoExample" xml:space="preserve">
-    <value>EX: !volcano 100</value>
     <comment>Manual</comment>
   </data>
   <data name="WordScramble" xml:space="preserve">
@@ -3189,10 +2777,6 @@ EX: !treasure &lt;ВЫБРАННЫЙ ПОЛЬЗОВАТЕЛЬ&gt;</value>
   </data>
   <data name="GameCurrency" xml:space="preserve">
     <value>Валюта игры</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandAtLeast1Currency" xml:space="preserve">
-    <value>По крайней мере, 1 валюта должна быть создана прежде чем игры смогут использоваться</value>
     <comment>Manual</comment>
   </data>
   <data name="Random" xml:space="preserve">
@@ -3461,10 +3045,6 @@ EX: !treasure &lt;ВЫБРАННЫЙ ПОЛЬЗОВАТЕЛЬ&gt;</value>
   </data>
   <data name="GameCommandRouletteStartedExample" xml:space="preserve">
     <value>@$username начал игру в рулетку! Напечатайте !roulette &lt;СТАВКА&gt; в чате, чтобы сыграть! Возможные типы ставок: $gamevalidbettypes</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
-    <value>@$username выиграл $gamepayout {0}!</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
@@ -4057,10 +3637,6 @@ EX: !treasure &lt;ВЫБРАННЫЙ ПОЛЬЗОВАТЕЛЬ&gt;</value>
   </data>
   <data name="InventoryItemDoesNotExist" xml:space="preserve">
     <value>Предмета инвентаря не существует</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
-    <value>У пользователя нет нужной суммы</value>
     <comment>Manual</comment>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
