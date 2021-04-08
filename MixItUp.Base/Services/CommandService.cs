@@ -144,15 +144,17 @@ namespace MixItUp.Base.Services
             {
                 instance = await this.commandTypeLock.WaitAndRelease(() =>
                 {
-                    if (commandTypeInstances.ContainsKey(type))
+                    CommandInstanceModel commandInstance = null;
+                    if (commandTypeInstances.ContainsKey(type) && commandTypeInstances[type].Count > 0)
                     {
-                        return Task.FromResult(commandTypeInstances[type].FirstOrDefault());
+                        commandInstance = commandTypeInstances[type].FirstOrDefault();
+                        commandTypeInstances[type].Remove(commandInstance);
                     }
                     else
                     {
                         commandTypeTasks[type] = null;
-                        return Task.FromResult<CommandInstanceModel>(null);
                     }
+                    return Task.FromResult(commandInstance);
                 });
 
                 if (instance != null)
