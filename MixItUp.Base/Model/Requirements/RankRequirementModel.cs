@@ -92,18 +92,19 @@ namespace MixItUp.Base.Model.Requirements
 
             if (!parameters.User.Data.IsCurrencyRankExempt)
             {
+                RankModel currentRank = rankSystem.GetRank(parameters.User.Data);
                 if (this.MatchType == RankRequirementMatchTypeEnum.GreaterThanOrEqualTo)
                 {
                     if (!rankSystem.HasAmount(parameters.User.Data, rank.Amount))
                     {
-                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.EqualTo)
                 {
                     if (rankSystem.GetRank(parameters.User.Data) != rank)
                     {
-                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name)));
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotGreaterThanOrEqual, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
                 else if (this.MatchType == RankRequirementMatchTypeEnum.LessThanOrEqualTo)
@@ -111,7 +112,7 @@ namespace MixItUp.Base.Model.Requirements
                     RankModel nextRank = rankSystem.GetNextRank(parameters.User.Data);
                     if (nextRank != CurrencyModel.NoRank && rankSystem.HasAmount(parameters.User.Data, nextRank.Amount))
                     {
-                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name)));
+                        return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.RankRequirementNotLessThan, rank.Name, rank.Amount, rankSystem.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentRank)));
                     }
                 }
             }

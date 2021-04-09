@@ -80,6 +80,8 @@ namespace MixItUp.Base.Model.Currency
         }
 
         public int Compare(RankModel x, RankModel y) { return x.CompareTo(y); }
+
+        public override string ToString() { return this.Name; }
     }
 
     [DataContract]
