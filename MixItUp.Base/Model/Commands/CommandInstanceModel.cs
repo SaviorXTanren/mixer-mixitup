@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Commands
     [DataContract]
     public class CommandInstanceModel
     {
+        public event EventHandler<CommandInstanceStateEnum> OnStateUpdated = delegate { };
+
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
         
@@ -29,7 +31,16 @@ namespace MixItUp.Base.Model.Commands
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
         [DataMember]
-        public CommandInstanceStateEnum State { get; set; } = CommandInstanceStateEnum.Pending;
+        public CommandInstanceStateEnum State
+        {
+            get { return this.state; }
+            set
+            {
+                this.state = value;
+                this.OnStateUpdated(null, this.State);
+            }
+        }
+        private CommandInstanceStateEnum state;
 
         [DataMember]
         public CommandParametersModel Parameters { get; set; }
@@ -78,9 +89,11 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandInstanceModel(CommandModelBase command) : this(command, new CommandParametersModel()) { }
 
-        public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters)
+        public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters) : this(command.ID, parameters) { }
+
+        public CommandInstanceModel(Guid commandID, CommandParametersModel parameters)
         {
-            this.CommandID = command.ID;
+            this.CommandID = commandID;
             this.Parameters = parameters;
         }
 
@@ -112,6 +125,18 @@ namespace MixItUp.Base.Model.Commands
             }
 
             return actions;
+        }
+
+        public CommandInstanceModel Duplicate()
+        {
+            if (this.CommandID != Guid.Empty)
+            {
+                return new CommandInstanceModel(this.CommandID, this.Parameters);
+            }
+            else
+            {
+                return new CommandInstanceModel(this.Actions, this.Parameters);
+            }
         }
 
         public override string ToString()

@@ -4,6 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
 
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -14,9 +19,53 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:MainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <Util:TimeConverter x:Key="TimeConverter" />
     </local:MainControlBase.Resources>
 
-    <Grid Margin="40">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <DataGrid x:Name="CommandHistoryGridView" Grid.Row="2" ItemsSource="{Binding CommandInstances}" EnableRowVirtualization="True" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Visible">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding CommandName}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Type}" IsReadOnly="True" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding CommandType, Converter={StaticResource LocalizationConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="150" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.State}" Binding="{Binding State, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="80" />
+                <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="{Binding ErrorMessage}" Kind="MessageText" Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="{x:Static resx:Resources.Time}" Binding="{Binding DateTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True" Width="100" />
+                <DataGridTemplateColumn Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="CommandInstanceCancelButton" Visibility="{Binding ShowCancelButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding CancelCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
+                                    <MaterialDesign:PackIcon Kind="Cancel" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="CommandInstanceReplayButton" Visibility="{Binding ShowReplayButton, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding ReplayCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
+                                    <MaterialDesign:PackIcon Kind="Replay" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </local:MainControlBase>

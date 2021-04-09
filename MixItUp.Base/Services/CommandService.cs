@@ -13,8 +13,12 @@ namespace MixItUp.Base.Services
 {
     public class CommandService
     {
-        public IEnumerable<CommandInstanceModel> Instances { get { return this.instances; } }
-        private List<CommandInstanceModel> instances = new List<CommandInstanceModel>();
+        private const int MaxCommandInstancesTracked = 200;
+
+        public event EventHandler<CommandInstanceModel> OnCommandInstanceAdded = delegate { };
+
+        public IEnumerable<CommandInstanceModel> CommandInstances { get { return this.commandInstances.ToList(); } }
+        private List<CommandInstanceModel> commandInstances = new List<CommandInstanceModel>();
 
         private SemaphoreSlim commandTypeLock = new SemaphoreSlim(1);
         private Dictionary<CommandTypeEnum, Task> commandTypeTasks = new Dictionary<CommandTypeEnum, Task>();
@@ -51,7 +55,14 @@ namespace MixItUp.Base.Services
 
         public async Task Queue(CommandInstanceModel commandInstance)
         {
-            this.instances.Add(commandInstance);
+            lock (CommandInstances)
+            {
+                this.commandInstances.Insert(0, commandInstance);
+                while (this.commandInstances.Count > MaxCommandInstancesTracked)
+                {
+                    this.commandInstances.RemoveAt(this.commandInstances.Count - 1);
+                }
+            }
 
             CommandTypeEnum type = commandInstance.QueueCommandType;
             if (commandInstance.DontQueue)
@@ -75,6 +86,8 @@ namespace MixItUp.Base.Services
                     return Task.FromResult(0);
                 });
             }
+
+            this.OnCommandInstanceAdded(this, commandInstance);
         }
 
         public async Task RunDirectly(CommandInstanceModel commandInstance)
@@ -134,8 +147,8 @@ namespace MixItUp.Base.Services
                     {
                         if (!string.IsNullOrEmpty(validationResult.Message))
                         {
-                            commandInstance.State = CommandInstanceStateEnum.Failed;
                             commandInstance.ErrorMessage = validationResult.Message;
+                            commandInstance.State = CommandInstanceStateEnum.Failed;
                         }
                         else
                         {
@@ -169,6 +182,11 @@ namespace MixItUp.Base.Services
             {
                 commandInstance.State = CommandInstanceStateEnum.Canceled;
             }
+        }
+
+        public async Task Replay(CommandInstanceModel commandInstance)
+        {
+            await this.Queue(commandInstance);
         }
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)
