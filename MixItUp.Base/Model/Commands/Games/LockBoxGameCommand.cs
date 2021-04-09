@@ -112,6 +112,8 @@ namespace MixItUp.Base.Model.Commands.Games
                     parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanInspectionSpecialIdentifier] = currentCombinationString.ElementAt(index).ToString();
                     await this.RunSubCommand(this.InspectionCommand, parameters);
 
+                    ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
+
                     return new Result(success: false);
                 }
                 else
@@ -147,6 +149,9 @@ namespace MixItUp.Base.Model.Commands.Games
                         await this.RunSubCommand(this.FailureCommand, parameters);
                     }
                     await this.PerformCooldown(parameters);
+
+                    ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
+
                     return;
                 }
                 else
