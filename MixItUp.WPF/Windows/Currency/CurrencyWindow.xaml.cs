@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.UserRankChanged);
             window.CommandSaved += RankUpWindow_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private void RankUpCommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -64,9 +64,9 @@ namespace MixItUp.WPF.Windows.Currency
             CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += RankUpWindow_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 
@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.UserRankDown);
             window.CommandSaved += RankDownWindow_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private void RankDownCommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -96,9 +96,9 @@ namespace MixItUp.WPF.Windows.Currency
             CustomCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<CustomCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += RankDownWindow_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 

@@ -17,7 +17,7 @@ namespace MixItUp.Base.Model.Actions
         RemoveSpecificLineFromFile,
         RemoveRandomLineFromFile,
         InsertInFileAtSpecificLine,
-        InsertInFileAtRandomLine
+        InsertInFileAtRandomLine,
     }
 
     [DataContract]

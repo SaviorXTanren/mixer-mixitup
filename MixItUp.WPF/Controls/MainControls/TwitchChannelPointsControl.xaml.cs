@@ -42,9 +42,9 @@ namespace MixItUp.WPF.Controls.MainControls
             TwitchChannelPointsCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TwitchChannelPointsCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += Window_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 
@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.TwitchChannelPoints);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

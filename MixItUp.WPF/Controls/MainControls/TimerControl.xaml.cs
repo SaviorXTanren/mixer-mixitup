@@ -42,9 +42,9 @@ namespace MixItUp.WPF.Controls.MainControls
             TimerCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TimerCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += TimerWindow_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 

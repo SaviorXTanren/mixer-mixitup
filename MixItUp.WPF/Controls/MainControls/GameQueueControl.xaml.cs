@@ -29,16 +29,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void UserJoinedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((GameQueueMainControlViewModel)this.DataContext).GameQueueUserJoinedCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserSelectedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((GameQueueMainControlViewModel)this.DataContext).GameQueueUserSelectedCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private async void MoveUpButton_Click(object sender, System.Windows.RoutedEventArgs e)

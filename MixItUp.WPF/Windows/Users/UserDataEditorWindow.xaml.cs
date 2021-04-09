@@ -58,14 +58,14 @@ namespace MixItUp.WPF.Windows.Users
                 this.viewModel.AddUserOnlyChatCommand((UserOnlyChatCommandModel)command);
                 this.viewModel.RefreshUserOnlyChatCommands();
             };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserOnlyChatCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.RefreshUserOnlyChatCommands(); };
-            window.Show();
+            window.ForceShow();
         }
 
         private async void UserOnlyChatCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
@@ -87,14 +87,14 @@ namespace MixItUp.WPF.Windows.Users
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, UserDataEditorWindowViewModel.UserEntranceCommandName);
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.EntranceCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void ExistingEntranceCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CommandModelBase>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CommandModelBase>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { this.viewModel.EntranceCommand = command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private async void ExistingEntranceCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)

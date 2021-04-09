@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<EventCommandItemViewModel>(sender).EventType);
             window.Closed += Window_Closed;
-            window.Show();
+            window.ForceShow();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -40,9 +40,9 @@ namespace MixItUp.WPF.Controls.MainControls
             EventCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<EventCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.Closed += Window_Closed;
-                window.Show();
+                window.ForceShow();
             }
         }
 

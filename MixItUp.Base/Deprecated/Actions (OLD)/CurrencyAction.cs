@@ -22,7 +22,7 @@ namespace MixItUp.Base.Actions
         SubtractFromAllChatUsers,
 
         ResetForAllUsers,
-        ResetForUser
+        ResetForUser,
     }
 
     [Obsolete]
