@@ -38,7 +38,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             if (!this.filterApplied)
             {
-                this.CommandInstances.Add(new CommandInstanceViewModel(commandInstance));
+                this.CommandInstances.Insert(0, new CommandInstanceViewModel(commandInstance));
             }
         }
     }
