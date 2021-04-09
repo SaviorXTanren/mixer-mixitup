@@ -5975,4 +5975,7 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
   <data name="CommandHistory" xml:space="preserve">
     <value>Command History</value>
   </data>
+  <data name="Replay" xml:space="preserve">
+    <value>Replay</value>
+  </data>
 </root>

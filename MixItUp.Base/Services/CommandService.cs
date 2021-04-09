@@ -254,6 +254,11 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            if (commandInstance.State == CommandInstanceStateEnum.Canceled)
+            {
+                return;
+            }
+
             if (command != null)
             {
                 await command.PostRun(parameters);

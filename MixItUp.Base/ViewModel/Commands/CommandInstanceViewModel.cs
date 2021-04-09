@@ -31,7 +31,12 @@ namespace MixItUp.Base.ViewModel.Commands
                 CommandModelBase command = this.model.Command;
                 if (command != null)
                 {
-                    return command.Type;
+                    switch (command.Type)
+                    {
+                        case CommandTypeEnum.PreMade: return CommandTypeEnum.Chat;
+                        case CommandTypeEnum.UserOnlyChat: return CommandTypeEnum.Chat;
+                        default: return command.Type;
+                    }
                 }
                 return CommandTypeEnum.Custom;
             }
@@ -67,6 +72,8 @@ namespace MixItUp.Base.ViewModel.Commands
                 await ChannelSession.Services.Command.Replay(this.model.Duplicate());
             });
         }
+
+        public bool ShowActionButtons { get { return this.CommandType != CommandTypeEnum.Game; } }
 
         public bool ShowCancelButton { get { return this.State == CommandInstanceStateEnum.Pending || this.State == CommandInstanceStateEnum.Running; } }
 

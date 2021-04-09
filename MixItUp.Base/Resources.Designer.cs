@@ -11992,6 +11992,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replay.
+        /// </summary>
+        public static string Replay {
+            get {
+                return ResourceManager.GetString("Replay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Report.
         /// </summary>
         public static string Report {
