@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Services
         {
             this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudioConnection;
 
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OBSStudioServerIP = this.IPAddress;
                 ChannelSession.Settings.OBSStudioServerPassword = this.Password();
@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OBSStudioServerIP = null;
                 ChannelSession.Settings.OBSStudioServerPassword = null;
@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
+            this.TestConnectionCommand = this.CreateCommand(async () =>
             {
                 if (await ChannelSession.Services.OBSStudio.TestConnection())
                 {

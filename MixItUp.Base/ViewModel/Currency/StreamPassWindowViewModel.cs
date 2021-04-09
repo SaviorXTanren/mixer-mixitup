@@ -261,7 +261,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
         public StreamPassWindowViewModel()
         {
-            this.ManualResetCommand = this.CreateCommand(async (parameter) =>
+            this.ManualResetCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(Resources.ResetAllProgressPrompt))
                 {

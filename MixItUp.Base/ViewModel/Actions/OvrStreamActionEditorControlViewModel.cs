@@ -50,10 +50,9 @@ namespace MixItUp.Base.ViewModel.Actions
         public OvrStreamVariableViewModel(OvrStreamActionEditorControlViewModel viewModel)
         {
             this.viewModel = viewModel;
-            this.DeleteVariableCommand = this.CreateCommand((parameter) =>
+            this.DeleteVariableCommand = this.CreateCommand(() =>
             {
                 this.viewModel.Variables.Remove(this);
-                return Task.FromResult(0);
             });
         }
     }
@@ -135,10 +134,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            this.AddVariableCommand = this.CreateCommand((parameter) =>
+            this.AddVariableCommand = this.CreateCommand(() =>
             {
                 this.Variables.Add(new OvrStreamVariableViewModel(this));
-                return Task.FromResult(0);
             });
 
             if (ChannelSession.Services.OvrStream.IsConnected)

@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
             }
 
-            this.UserAccountCommand = this.CreateCommand(async (parameter) =>
+            this.UserAccountCommand = this.CreateCommand(async () =>
             {
                 if (this.IsUserAccountConnected)
                 {
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 this.NotifyAllProperties();
             });
 
-            this.BotAccountCommand = this.CreateCommand(async (parameter) =>
+            this.BotAccountCommand = this.CreateCommand(async () =>
             {
                 if (this.IsBotAccountConnected)
                 {

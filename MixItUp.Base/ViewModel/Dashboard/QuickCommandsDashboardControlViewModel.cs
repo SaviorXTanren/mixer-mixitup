@@ -89,11 +89,11 @@ namespace MixItUp.Base.ViewModel.Dashboard
             this.commandFour = this.GetCommand(3);
             this.commandFive = this.GetCommand(4);
 
-            this.CommandOneCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandOne); });
-            this.CommandTwoCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandTwo); });
-            this.CommandThreeCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandThree); });
-            this.CommandFourCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFour); });
-            this.CommandFiveCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFive); });
+            this.CommandOneCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandOne); });
+            this.CommandTwoCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandTwo); });
+            this.CommandThreeCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandThree); });
+            this.CommandFourCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandFour); });
+            this.CommandFiveCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandFive); });
 
             this.NotifyPropertiesChanged();
         }

@@ -472,7 +472,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.AutomaticResetRate = CurrencyResetRateEnum.Never;
 
-            this.AddRankCommand = this.CreateCommand(async (parameter) =>
+            this.AddRankCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.NewRankName))
                 {
@@ -503,7 +503,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.NewRankAmount = 0;
             });
 
-            this.ManualResetCommand = this.CreateCommand(async (parameter) =>
+            this.ManualResetCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(string.Format(Resources.ResetCurrencyRankPointsPrompt, this.CurrencyRankIdentifierString)))
                 {
@@ -514,7 +514,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.RetroactivelyGivePointsCommand = this.CreateCommand(async (parameter) =>
+            this.RetroactivelyGivePointsCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(string.Format(Resources.RetroactivelyGivePointsPrompt1 +
                     Environment.NewLine + Environment.NewLine + Resources.RetroactivelyGivePointsPrompt2 +
@@ -547,7 +547,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.ImportFromFileCommand = this.CreateCommand(async (parameter) =>
+            this.ImportFromFileCommand = this.CreateCommand(async () =>
             {
                 this.userImportData.Clear();
                 if (await DialogHelper.ShowConfirmation(string.Format(Resources.ImportPointsPrompt1 +
@@ -666,7 +666,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.ExportToFileCommand = this.CreateCommand(async (parameter) =>
+            this.ExportToFileCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
@@ -680,10 +680,9 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.HelpCommand = this.CreateCommand((parameter) =>
+            this.HelpCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                return Task.FromResult(0);
             });
         }
 

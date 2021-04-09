@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.GameQueueUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID);
             this.GameQueueUserSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID);
 
-            this.EnableDisableCommand = this.CreateCommand(async (x) =>
+            this.EnableDisableCommand = this.CreateCommand(async () =>
             {
                 if (this.IsEnabled)
                 {
@@ -111,7 +111,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanges();
             });
 
-            this.ClearQueueCommand = this.CreateCommand(async (x) =>
+            this.ClearQueueCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(Resources.ClearGameQueuePrompt))
                 {

@@ -172,7 +172,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.GiveawayUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayUserJoinedCommandID);
             this.GiveawayWinnerSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GiveawayWinnerSelectedCommandID);
 
-            this.StartGiveawayCommand = this.CreateCommand(async (x) =>
+            this.StartGiveawayCommand = this.CreateCommand(async () =>
             {
                 IEnumerable<Result> requirementsValidation = await this.Requirements.Validate();
                 if (requirementsValidation.Any(r => !r.Success))
@@ -190,7 +190,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanges();
             });
 
-            this.EndGiveawayCommand = this.CreateCommand(async (x) =>
+            this.EndGiveawayCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.GiveawayService.End();
                 this.NotifyPropertyChanges();

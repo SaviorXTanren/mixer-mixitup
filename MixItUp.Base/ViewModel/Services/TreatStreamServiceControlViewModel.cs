@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Services
         public TreatStreamServiceControlViewModel()
             : base(Resources.TreatStream)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 Result result = await ChannelSession.Services.TreatStream.Connect();
                 if (result.Success)
@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.TreatStream.Disconnect();
 

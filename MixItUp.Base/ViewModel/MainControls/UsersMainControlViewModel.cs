@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.ExportDataCommand = this.CreateCommand(async (parameter) =>
+            this.ExportDataCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))

@@ -29,10 +29,9 @@ namespace MixItUp.Base.ViewModel.Actions
         public WebRequestActionJSONToSpecialIdentifierViewModel(WebRequestActionEditorControlViewModel viewModel)
         {
             this.viewModel = viewModel;
-            this.DeleteJSONParameterCommand = this.CreateCommand((parameter) =>
+            this.DeleteJSONParameterCommand = this.CreateCommand(() =>
             {
                 this.viewModel.JSONParameters.Remove(this);
-                return Task.FromResult(0);
             });
         }
     }
@@ -90,10 +89,9 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            this.AddJSONParameterCommand = this.CreateCommand((parameter) =>
+            this.AddJSONParameterCommand = this.CreateCommand(() =>
             {
                 this.JSONParameters.Add(new WebRequestActionJSONToSpecialIdentifierViewModel(this));
-                return Task.FromResult(0);
             });
             await base.OnLoadedInternal();
         }

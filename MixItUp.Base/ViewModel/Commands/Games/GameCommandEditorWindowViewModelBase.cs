@@ -320,16 +320,14 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            this.AddOutcomeCommand = this.CreateCommand(() =>
             {
                 this.Outcomes.Add(new GameOutcomeViewModel());
-                return Task.FromResult(0);
             });
 
             this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
             {
                 this.Outcomes.Remove((GameOutcomeViewModel)parameter);
-                return Task.FromResult(0);
             });
         }
     }

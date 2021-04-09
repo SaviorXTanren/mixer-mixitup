@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using System.Windows.Input;
 
@@ -24,7 +23,7 @@ namespace MixItUp.Base.ViewModel.Services
         public IFTTTServiceControlViewModel()
             : base(Resources.IFTTT)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.IFTTTWebHookKey))
                 {
@@ -44,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.IFTTT.Disconnect();
 

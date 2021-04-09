@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public QuotesMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.AddQuoteCommand = this.CreateCommand((parameter) =>
+            this.AddQuoteCommand = this.CreateCommand(() =>
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
@@ -61,10 +61,9 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                     this.AddQuoteText = string.Empty;
                 }
-                return Task.FromResult(0);
             });
 
-            this.ExportQuotesCommand = this.CreateCommand(async (parameter) =>
+            this.ExportQuotesCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("Quotes.txt");
                 if (!string.IsNullOrEmpty(filePath))

@@ -296,16 +296,14 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.AddQuestionCommand = this.CreateCommand((parameter) =>
+            this.AddQuestionCommand = this.CreateCommand(() =>
             {
                 this.CustomQuestions.Add(new TriviaGameQuestionViewModel());
-                return Task.FromResult(0);
             });
 
             this.DeleteQuestionCommand = this.CreateCommand((parameter) =>
             {
                 this.CustomQuestions.Remove((TriviaGameQuestionViewModel)parameter);
-                return Task.FromResult(0);
             });
         }
     }

@@ -40,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             this.ActionTypes.AddRange(actionTypes.OrderBy(a => a.ToString()));
 
-            this.AddCommand = this.CreateCommand(async (parameter) =>
+            this.AddCommand = this.CreateCommand(async () =>
             {
                 if (this.ActionTypes.Contains(this.SelectedActionType))
                 {

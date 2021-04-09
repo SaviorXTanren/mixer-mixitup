@@ -99,17 +99,16 @@ namespace MixItUp.Base.ViewModel.User
                 this.columnDictionary[column.Name] = column;
             }
 
-            this.UserDataFileBrowseCommand = this.CreateCommand((parameter) =>
+            this.UserDataFileBrowseCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.UserDataFilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
 
-            this.ImportButtonCommand = this.CreateCommand(async (parameter) =>
+            this.ImportButtonCommand = this.CreateCommand(async () =>
             {
                 try
                 {

@@ -61,13 +61,13 @@ namespace MixItUp.Base.ViewModel.Commands
             this.model = model;
             this.model.OnStateUpdated += Model_OnStateUpdated;
 
-            this.CancelCommand = this.CreateCommand((parameter) =>
+            this.CancelCommand = this.CreateCommand(() =>
             {
                 ChannelSession.Services.Command.Cancel(this.model);
                 return Task.FromResult(0);
             });
 
-            this.ReplayCommand = this.CreateCommand(async (parameter) =>
+            this.ReplayCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Command.Replay(this.model.Duplicate());
             });

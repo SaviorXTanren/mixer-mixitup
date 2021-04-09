@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Services
         public DiscordServiceControlViewModel()
             : base(Resources.Discord)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.DiscordCustomClientID = null;
                 ChannelSession.Settings.DiscordCustomClientSecret = null;
@@ -98,7 +98,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Discord.Disconnect();
 

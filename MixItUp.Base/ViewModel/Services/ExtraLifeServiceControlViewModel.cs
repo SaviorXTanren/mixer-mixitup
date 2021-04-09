@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Services
         public ExtraLifeServiceControlViewModel()
             : base(Resources.ExtraLife)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 if (this.ExtraLifeTeamID <= 0)
                 {
@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.ExtraLife.Disconnect();
 
@@ -96,7 +96,7 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.GetTeamParticipantsCommand = this.CreateCommand(async (parameter) =>
+            this.GetTeamParticipantsCommand = this.CreateCommand(async () =>
             {
                 await this.GetTeamParticipants();
             });

@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Services
         public OverlayServiceControlViewModel()
             : base(Resources.Overlay)
         {
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 Result result = await ChannelSession.Services.Overlay.Connect();
                 if (result.Success)
@@ -37,13 +37,13 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Overlay.Disconnect();
                 this.IsConnected = false;
             });
 
-            this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
+            this.TestConnectionCommand = this.CreateCommand(async () =>
             {
                 int total = await ChannelSession.Services.Overlay.TestConnections();
                 if (total > 0)

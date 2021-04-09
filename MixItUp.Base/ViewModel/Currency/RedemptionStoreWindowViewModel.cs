@@ -69,13 +69,12 @@ namespace MixItUp.Base.ViewModel.Currency
             this.viewModel = viewModel;
             this.Product = product;
 
-            this.EditProductCommand = this.CreateCommand((parameter) =>
+            this.EditProductCommand = this.CreateCommand(() =>
             {
                 this.viewModel.EditProduct(this);
-                return Task.FromResult(0);
             });
 
-            this.DeleteProductCommand = this.CreateCommand(async (parameter) =>
+            this.DeleteProductCommand = this.CreateCommand(async () =>
             {
                 await this.viewModel.DeleteProduct(this);
             });
@@ -241,7 +240,7 @@ namespace MixItUp.Base.ViewModel.Currency
             this.ManualRedeemNeededCommand = (CustomCommandModel)ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
             this.DefaultRedemptionCommand = (CustomCommandModel)ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreDefaultRedemptionCommandID);
 
-            this.SaveProductCommand = this.CreateCommand(async (parameter) =>
+            this.SaveProductCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.ProductName))
                 {

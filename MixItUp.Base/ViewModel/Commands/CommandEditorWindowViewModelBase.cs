@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             this.Type = type;
 
-            this.SaveCommand = this.CreateCommand(async (parameter) =>
+            this.SaveCommand = this.CreateCommand(async () =>
             {
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
@@ -134,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
 
-            this.TestCommand = this.CreateCommand(async (parameter) =>
+            this.TestCommand = this.CreateCommand(async () =>
             {
                 if (!await this.CheckForResultErrors(await this.ValidateActions()))
                 {
@@ -146,7 +146,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
 
-            this.ExportCommand = this.CreateCommand(async (parameter) =>
+            this.ExportCommand = this.CreateCommand(async () =>
             {
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
@@ -159,7 +159,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
 
-            this.ImportCommand = this.CreateCommand(async (parameter) =>
+            this.ImportCommand = this.CreateCommand(async () =>
             {
                 try
                 {

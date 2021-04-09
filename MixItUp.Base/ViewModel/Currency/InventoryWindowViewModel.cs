@@ -245,7 +245,7 @@ namespace MixItUp.Base.ViewModel.Currency
             tradeCommand.Actions.Add(new ChatActionModel("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
             this.TradeCommand = tradeCommand;
 
-            this.SaveItemCommand = this.CreateCommand(async (parameter) =>
+            this.SaveItemCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.ItemName))
                 {
@@ -296,7 +296,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.SelectedItem = null;
             });
 
-            this.ManualResetCommand = this.CreateCommand(async (parameter) =>
+            this.ManualResetCommand = this.CreateCommand(async () =>
             {
                 if (this.Inventory != null)
                 {
@@ -307,10 +307,9 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.HelpCommand = this.CreateCommand((parameter) =>
+            this.HelpCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                return Task.FromResult(0);
             });
         }
 

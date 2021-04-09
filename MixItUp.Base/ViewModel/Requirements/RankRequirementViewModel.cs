@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public RankListRequirementViewModel()
         {
-            this.AddItemCommand = this.CreateCommand((parameter) =>
+            this.AddItemCommand = this.CreateCommand(() =>
             {
                 this.Items.Add(new RankRequirementViewModel(this));
                 return Task.FromResult(0);
@@ -98,10 +98,9 @@ namespace MixItUp.Base.ViewModel.Requirements
         {
             this.viewModel = viewModel;
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.Delete(this);
-                return Task.FromResult(0);
             });
         }
 

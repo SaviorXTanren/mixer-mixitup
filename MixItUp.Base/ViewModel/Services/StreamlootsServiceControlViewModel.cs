@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Services
         public StreamlootsServiceControlViewModel()
             : base(Resources.Streamloots)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.StreamlootsURL) || (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) && !int.TryParse(this.StreamlootsURL, out int ID)))
                 {
@@ -48,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Streamloots.Disconnect();
 

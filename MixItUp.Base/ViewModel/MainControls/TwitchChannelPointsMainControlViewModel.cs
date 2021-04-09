@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public TwitchChannelPointsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.CreateChannelPointRewardCommand = this.CreateCommand(async (parameters) =>
+            this.CreateChannelPointRewardCommand = this.CreateCommand(async () =>
             {
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
                 if (!string.IsNullOrEmpty(name))
@@ -42,13 +42,12 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.ChannelPointsEditorCommand = this.CreateCommand((parameters) =>
+            this.ChannelPointsEditorCommand = this.CreateCommand(() =>
             {
                 if (ChannelSession.TwitchUserConnection != null)
                 {
                     ProcessHelper.LaunchLink(this.GetChannelPointsEditorURL());
                 }
-                return Task.FromResult(0);
             });
         }
 

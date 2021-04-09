@@ -200,10 +200,9 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            this.AddOutcomeCommand = this.CreateCommand(() =>
             {
                 this.Outcomes.Add(new SlotMachineGameOutcomeViewModel(this.CreateBasicChatCommand(string.Format(MixItUp.Base.Resources.GameCommandSlotMachineWinExample, this.PrimaryCurrencyName))));
-                return Task.FromResult(0);
             });
         }
     }

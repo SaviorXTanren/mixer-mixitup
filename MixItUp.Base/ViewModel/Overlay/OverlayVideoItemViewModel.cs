@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             this.height = OverlayVideoItemModel.DefaultHeight;
             this.Volume = 100;
 
-            this.BrowseFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.VideoFileFilter());
                 if (!string.IsNullOrEmpty(filePath))

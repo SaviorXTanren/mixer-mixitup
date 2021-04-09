@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.volume = initialVolume;
             this.volumeSetter = volumeSetter;
 
-            this.PlayCommand = this.CreateCommand(async (parameter) =>
+            this.PlayCommand = this.CreateCommand(async () =>
             {
                 string sound = this.valueGetter();
                 if (!string.IsNullOrEmpty(sound))

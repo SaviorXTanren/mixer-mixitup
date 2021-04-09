@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.Name = name;
             this.Port = port;
 
-            this.DeleteCommand = this.CreateCommand(async (parameter) =>
+            this.DeleteCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OverlayCustomNameAndPorts.Remove(this.Name);
                 await ChannelSession.Services.Overlay.RemoveOverlay(this.Name);
@@ -55,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public OverlaySettingsControlViewModel()
         {
-            this.AddCommand = this.CreateCommand(async (parameter) =>
+            this.AddCommand = this.CreateCommand(async () =>
             {
                 if (!string.IsNullOrEmpty(this.NewEndpointName))
                 {

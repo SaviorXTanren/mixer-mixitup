@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.OverlayTypeListings.AddRange(widgets);
 
-            this.OverlayTypeSelectedCommand = this.CreateCommand((parameter) =>
+            this.OverlayTypeSelectedCommand = this.CreateCommand(() =>
             {
                 this.OverlayTypeToMake = this.SelectedOverlayType;
 
@@ -139,8 +139,6 @@ namespace MixItUp.Base.ViewModel.Overlay
                 this.NotifyPropertyChanged("OverlayTypeIsNotSelected");
 
                 this.OverlayTypeSelected(this, this.OverlayTypeToMake);
-
-                return Task.FromResult(0);
             });
         }
 

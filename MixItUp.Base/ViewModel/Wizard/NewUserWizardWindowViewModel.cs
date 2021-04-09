@@ -147,15 +147,15 @@ namespace MixItUp.Base.ViewModel.Wizard
 
         public NewUserWizardWindowViewModel()
         {
-            this.DiscordCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); return Task.FromResult(0); });
-            this.TwitterCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); return Task.FromResult(0); });
-            this.YouTubeCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); return Task.FromResult(0); });
-            this.WikiCommand = this.CreateCommand((parameter) => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); return Task.FromResult(0); });
+            this.DiscordCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://mixitupapp.com/discord"); });
+            this.TwitterCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); });
+            this.YouTubeCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); });
+            this.WikiCommand = this.CreateCommand(() => { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); });
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
 
-            this.SetBackupLocationCommand = this.CreateCommand((parameter) =>
+            this.SetBackupLocationCommand = this.CreateCommand(() =>
             {
                 string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
@@ -169,11 +169,9 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
 
                 this.NotifyPropertyChanged("IsBackupLocationSet");
-
-                return Task.FromResult(0);
             });
 
-            this.NextCommand = this.CreateCommand(async (parameter) =>
+            this.NextCommand = this.CreateCommand(async () =>
             {
                 this.StatusMessage = string.Empty;
 
@@ -218,7 +216,7 @@ namespace MixItUp.Base.ViewModel.Wizard
                 this.StatusMessage = string.Empty;
             });
 
-            this.BackCommand = this.CreateCommand((parameter) =>
+            this.BackCommand = this.CreateCommand(() =>
             {
                 if (this.StreamerAccountsPageVisible)
                 {
@@ -238,7 +236,6 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
 
                 this.StatusMessage = string.Empty;
-                return Task.FromResult(0);
             });
         }
     }

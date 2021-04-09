@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Services
         public StreamlabsOBSServiceControlViewModel()
             : base(Resources.StreamlabsOBS)
         {
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.EnableStreamlabsOBSConnection = false;
                 Result result = await ChannelSession.Services.StreamlabsOBS.Connect();
@@ -29,14 +29,14 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.StreamlabsOBS.Disconnect();
                 ChannelSession.Settings.EnableStreamlabsOBSConnection = false;
                 this.IsConnected = false;
             });
 
-            this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
+            this.TestConnectionCommand = this.CreateCommand(async () =>
             {
                 if (await ChannelSession.Services.StreamlabsOBS.TestConnection())
                 {

@@ -37,10 +37,9 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.viewModel = viewModel;
             this.Tag = tag;
 
-            this.DeleteTagCommand = this.CreateCommand((parameter) =>
+            this.DeleteTagCommand = this.CreateCommand(() =>
             {
                 this.viewModel.RemoveTag(this);
-                return Task.FromResult(0);
             });
         }
 
@@ -100,13 +99,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private SearchFindChannelToRaidItemViewModel()
         {
-            this.OpenChannelCommand = this.CreateCommand((parameter) =>
+            this.OpenChannelCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink(this.URL);
-                return Task.FromResult(0);
             });
 
-            this.RaidChannelCommand = this.CreateCommand(async (parameter) =>
+            this.RaidChannelCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Chat.SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             });
@@ -188,7 +186,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ChannelMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.AddTagCommand = this.CreateCommand((parameter) =>
+            this.AddTagCommand = this.CreateCommand(() =>
             {
                 if (this.Tag != null && !this.CustomTags.Contains(tag))
                 {
@@ -196,10 +194,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                     this.Tag = null;
                 }
                 this.NotifyPropertyChanged("CanAddMoreTags");
-                return Task.FromResult(0);
             });
 
-            this.UpdateChannelInformationCommand = this.CreateCommand(async (parameter) =>
+            this.UpdateChannelInformationCommand = this.CreateCommand(async () =>
             {
                 bool failedToFindGame = false;
                 if (this.currentGame != null && !string.IsNullOrEmpty(this.GameName) && this.GameName.Length > 3 && !string.Equals(this.currentGame.name, this.GameName, StringComparison.InvariantCultureIgnoreCase))
@@ -228,7 +225,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.SearchFindChannelToRaidCommand = this.CreateCommand(async (parameter) =>
+            this.SearchFindChannelToRaidCommand = this.CreateCommand(async () =>
             {
                 this.SearchFindChannelToRaidResults.Clear();
 

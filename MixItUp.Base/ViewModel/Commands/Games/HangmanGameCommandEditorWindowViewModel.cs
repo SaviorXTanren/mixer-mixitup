@@ -191,14 +191,13 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseCustomWordsFilePathCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
         }
     }

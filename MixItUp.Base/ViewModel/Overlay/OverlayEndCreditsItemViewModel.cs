@@ -56,10 +56,9 @@ namespace MixItUp.Base.ViewModel.Overlay
         private OverlayEndCreditsSectionItemViewModel(OverlayEndCreditsItemViewModel container)
         {
             this.container = container;
-            this.DeleteItemCommand = this.CreateCommand((parameter) =>
+            this.DeleteItemCommand = this.CreateCommand(() =>
             {
                 this.container.DeleteItem(this);
-                return Task.FromResult(0);
             });
         }
 
@@ -196,11 +195,10 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.HTML = OverlayEndCreditsItemModel.TitleHTMLTemplate;
 
-            this.AddItemCommand = this.CreateCommand((parameter) =>
+            this.AddItemCommand = this.CreateCommand(() =>
             {
                 this.SectionItems.Add(new OverlayEndCreditsSectionItemViewModel(this, this.itemType));
                 this.ItemType = OverlayEndCreditsSectionTypeEnum.Chatters; // The first
-                return Task.FromResult(0);
             });
         }
 
