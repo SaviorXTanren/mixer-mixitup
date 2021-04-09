@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 ChannelSession.Settings.UnlockAllCommands, (value) => { ChannelSession.Settings.UnlockAllCommands = value; }, MixItUp.Base.Resources.UnlockAllCommandTypesTooltip);
 
             this.RequirementErrorsCooldownType = new GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum>(MixItUp.Base.Resources.RequirementErrorsCooldownType, EnumHelper.GetEnumList<RequirementErrorCooldownTypeEnum>(),
-                ChannelSession.Settings.RequirementErrorsCooldownType, (value) => { ChannelSession.Settings.RequirementErrorsCooldownType = value }, MixItUp.Base.Resources.RequirementErrorsCooldownTypeTooltip);
+                ChannelSession.Settings.RequirementErrorsCooldownType, (value) => { ChannelSession.Settings.RequirementErrorsCooldownType = value; }, MixItUp.Base.Resources.RequirementErrorsCooldownTypeTooltip);
             this.RequirementErrorsCooldownAmount = new GenericNumberSettingsOptionControlViewModel(MixItUp.Base.Resources.RequirementErrorsCooldownAmount,
                 ChannelSession.Settings.RequirementErrorsCooldownAmount, (value) => { ChannelSession.Settings.RequirementErrorsCooldownAmount = value; });
             this.IncludeUsernameWithRequirementErrors = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.IncludeUsernameWithRequirementErrors,
