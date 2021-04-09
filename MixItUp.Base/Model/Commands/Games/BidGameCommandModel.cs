@@ -81,13 +81,9 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
-            if (this.gameActive)
-            {
-                return await base.ValidateRequirements(parameters);
-            }
-            else
+            if (!this.gameActive)
             {
                 if (parameters.User.HasPermissionsTo(this.StarterRole))
                 {
@@ -117,11 +113,11 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     await this.RunSubCommand(this.StartedCommand, this.runParameters);
-                    return false;
+                    return new Result(success: false);
                 }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
             }
-            return false;
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -82,7 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -96,7 +97,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.AddSpecialIdentifiersToParameters(parameters);
                 await this.RunSubCommand(this.StatusCommand, parameters);
 
-                return false;
+                return new Result(success: false);
             }
             else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.InspectionArgument, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -110,17 +111,16 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.AddSpecialIdentifiersToParameters(parameters);
                     parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanInspectionSpecialIdentifier] = currentCombinationString.ElementAt(index).ToString();
                     await this.RunSubCommand(this.InspectionCommand, parameters);
+
+                    return new Result(success: false);
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GetPrimaryCurrencyRequirement().Currency.Name));
+                    return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GetPrimaryCurrencyRequirement().Currency.Name));
                 }
-                return false;
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

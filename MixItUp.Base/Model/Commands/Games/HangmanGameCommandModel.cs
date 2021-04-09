@@ -89,7 +89,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -103,12 +103,10 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.AddSpecialIdentifiersToParameters(parameters);
                 await this.RunSubCommand(this.StatusCommand, parameters);
 
-                return false;
+                return new Result(success: false);
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

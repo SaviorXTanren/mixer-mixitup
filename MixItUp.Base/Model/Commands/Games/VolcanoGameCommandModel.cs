@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             if (this.collectActive)
             {
@@ -147,14 +147,14 @@ namespace MixItUp.Base.Model.Commands.Games
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
+                        return new Result(MixItUp.Base.Resources.GameCommandVolcanoAlreadyCollected);
                     }
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
+                    return new Result(MixItUp.Base.Resources.GameCommandVolcanoCollectUnderway);
                 }
-                return false;
+                return new Result(success: false);
             }
             else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -171,12 +171,9 @@ namespace MixItUp.Base.Model.Commands.Games
                 {
                     await this.RunSubCommand(this.Stage1StatusCommand, parameters);
                 }
-                return false;
+                return new Result(success: false);
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

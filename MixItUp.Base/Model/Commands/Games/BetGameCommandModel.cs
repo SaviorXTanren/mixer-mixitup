@@ -96,7 +96,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -130,21 +130,21 @@ namespace MixItUp.Base.Model.Commands.Games
                         else
                         {
                             string trigger = this.GetFullTriggers().FirstOrDefault() ?? "!bet";
-                            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
+                            return new Result(string.Format(MixItUp.Base.Resources.GameCommandBetAnswerExample, trigger));
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                        return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
                     }
                 }
                 else
                 {
                     if (parameters.Arguments.Count > 0 && int.TryParse(parameters.Arguments[0], out int choice) && choice > 0 && choice <= this.BetOptions.Count)
                     {
-                        return await base.ValidateRequirements(parameters);
+                        return new Result();
                     }
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
+                    return new Result(string.Format(MixItUp.Base.Resources.GameCommandBetInvalidSelection, parameters.User.Username));
                 }
             }
             else
@@ -186,11 +186,11 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     await this.RunSubCommand(this.StartedCommand, parameters);
-                    return false;
+                    return new Result(success: false);
                 }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
+                return new Result(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, this.StarterRole));
             }
-            return false;
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

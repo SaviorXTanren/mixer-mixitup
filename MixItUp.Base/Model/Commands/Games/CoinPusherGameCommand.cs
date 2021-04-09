@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -70,18 +71,15 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 await this.RunSubCommand(this.StatusCommand, parameters);
-                return false;
+                return new Result(success: false);
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

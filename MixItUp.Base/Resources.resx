@@ -5950,4 +5950,10 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
   <data name="FollowEventModerationMaxQueue" xml:space="preserve">
     <value>Max Queue</value>
   </data>
+  <data name="RequirementCurrentAmount" xml:space="preserve">
+    <value>(Current: {0})</value>
+  </data>
+  <data name="ModerationFollowEventCommandCanceledMessage" xml:space="preserve">
+    <value>Follow Event Max Queue Reached</value>
+  </data>
 </root>

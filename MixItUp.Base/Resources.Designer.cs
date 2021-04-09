@@ -9418,6 +9418,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow Event Max Queue Reached.
+        /// </summary>
+        public static string ModerationFollowEventCommandCanceledMessage {
+            get {
+                return ResourceManager.GetString("ModerationFollowEventCommandCanceledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moderation Reason (Optional).
         /// </summary>
         public static string ModerationReasonOptional {
@@ -11997,6 +12006,15 @@ namespace MixItUp.Base {
         public static string RequiredUsers {
             get {
                 return ResourceManager.GetString("RequiredUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Current: {0}).
+        /// </summary>
+        public static string RequirementCurrentAmount {
+            get {
+                return ResourceManager.GetString("RequirementCurrentAmount", resourceCulture);
             }
         }
         
@@ -15556,15 +15574,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ERROR: Could not update Channel Point Reward, please try again later. If this reward was not created through the Mix It Up UI, you will need to delete it and re-add it on the Channel Points page as they must be created through Mix It Up to allow the app to be able to update them..
-        /// </summary>
-        public static string TwitchActionChannelPointRewardCouldNotBeUpdated {
-            get {
-                return ResourceManager.GetString("TwitchActionChannelPointRewardCouldNotBeUpdated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Twitch.
         /// </summary>
         public static string Twitch {
@@ -15588,6 +15597,25 @@ namespace MixItUp.Base {
         public static string TwitchAccountMismatch {
             get {
                 return ResourceManager.GetString("TwitchAccountMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR: Could not update Channel Point Reward, please try again later. If this reward was not created through the Mix It Up UI, you will need to delete it and re-add it on the Channel Points page as they must be created through Mix It Up to allow the app to be able to update them..
+        /// </summary>
+        public static string TwitchActionChannelPointRewardCouldNotBeUpdated {
+            get {
+                return ResourceManager.GetString("TwitchActionChannelPointRewardCouldNotBeUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel Point Rewards must be created through Mix It Up to allow the app to be able to update them.
+        ///This can be done by clicking on Create Channel Point Reward on the Channel Points page in Mix It Up..
+        /// </summary>
+        public static string TwitchActionChannelPointRewardMustBeCreatedInMixItUp {
+            get {
+                return ResourceManager.GetString("TwitchActionChannelPointRewardMustBeCreatedInMixItUp", resourceCulture);
             }
         }
         
@@ -15624,16 +15652,6 @@ namespace MixItUp.Base {
         public static string TwitchChannelMassSubscriptionsGifted {
             get {
                 return ResourceManager.GetString("TwitchChannelMassSubscriptionsGifted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Channel Point Rewards must be created through Mix It Up to allow the app to be able to update them.
-        ///This can be done by clicking on Create Channel Point Reward on the Channel Points page in Mix It Up..
-        /// </summary>
-        public static string TwitchActionChannelPointRewardMustBeCreatedInMixItUp {
-            get {
-                return ResourceManager.GetString("TwitchActionChannelPointRewardMustBeCreatedInMixItUp", resourceCulture);
             }
         }
         

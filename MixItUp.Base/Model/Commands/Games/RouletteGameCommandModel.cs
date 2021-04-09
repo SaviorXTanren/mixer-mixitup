@@ -100,16 +100,16 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
-            if (parameters.Arguments.Count > 0 && IsValidBetTypes(parameters.Arguments[0]))
+            if (parameters.Arguments.Count == 0 || !this.IsValidBetTypes(parameters.Arguments[0]))
             {
-                return await base.ValidateRequirements(parameters);
+                return Task.FromResult(new Result(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, this.GetValidBetTypes())));
             }
-            await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandRouletteValidBetTypes, this.GetValidBetTypes()));
-            return false;
+
+            return Task.FromResult(new Result());
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)

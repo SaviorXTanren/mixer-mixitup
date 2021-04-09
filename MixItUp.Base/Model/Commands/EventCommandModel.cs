@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Commands
 
         public override Dictionary<string, string> GetTestSpecialIdentifiers() { return EventCommandModel.GetEventTestSpecialIdentifiers(this.EventType); }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             if (this.UpdateFollowEventModerationCount())
             {
@@ -156,7 +156,7 @@ namespace MixItUp.Base.Model.Commands
 
                 if (!allowFollowEvent)
                 {
-                    return false;
+                    return new Result(MixItUp.Base.Resources.ModerationFollowEventCommandCanceledMessage) { DisplayMessage = false };
                 }
             }
 

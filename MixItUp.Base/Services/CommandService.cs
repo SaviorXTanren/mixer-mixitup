@@ -101,13 +101,39 @@ namespace MixItUp.Base.Services
 
                     command.TrackTelemetry();
 
-                    if (await command.CustomValidation(commandInstance.Parameters) && await command.ValidateRequirements(commandInstance.Parameters))
+                    Result validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                    if (validationResult.Success)
+                    {
+                        validationResult = await command.CustomValidation(commandInstance.Parameters);
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                        }
+                    }
+
+                    if (validationResult.Success)
                     {
                         if (command.Requirements != null)
                         {
                             await command.PerformRequirements(commandInstance.Parameters);
                             runnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
                         }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(validationResult.Message))
+                        {
+                            commandInstance.State = CommandInstanceStateEnum.Failed;
+                            commandInstance.ErrorMessage = validationResult.Message;
+                        }
+                        else
+                        {
+                            commandInstance.State = CommandInstanceStateEnum.Completed;
+                        }
+                        return;
                     }
                 }
 

@@ -12,6 +12,7 @@ namespace MixItUp.Base.Model.Commands
         Pending,
         Running,
         Completed,
+        Failed,
         Canceled
     }
 
@@ -32,6 +33,9 @@ namespace MixItUp.Base.Model.Commands
 
         [DataMember]
         public CommandParametersModel Parameters { get; set; }
+
+        [DataMember]
+        public string ErrorMessage { get; set; }
 
         [JsonIgnore]
         public CommandModelBase Command { get { return ChannelSession.Settings.GetCommand(this.CommandID); } }

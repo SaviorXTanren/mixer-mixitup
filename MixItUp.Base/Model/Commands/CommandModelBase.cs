@@ -148,16 +148,15 @@ namespace MixItUp.Base.Model.Commands
 
         public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
 
-        public virtual Task<bool> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(true); }
+        public virtual Task<Result> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(new Result()); }
 
-        public virtual async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public virtual async Task<Result> ValidateRequirements(CommandParametersModel parameters)
         {
             if (this.Requirements != null)
             {
-                Result result = await this.Requirements.Validate(parameters);
-                return result.Success;
+                return await this.Requirements.Validate(parameters);
             }
-            return true;
+            return new Result();
         }
 
         public async Task PerformRequirements(CommandParametersModel parameters) { await this.Requirements.Perform(parameters); }

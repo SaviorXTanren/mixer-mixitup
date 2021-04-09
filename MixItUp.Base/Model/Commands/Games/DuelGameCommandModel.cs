@@ -72,7 +72,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        public override async Task<bool> CustomValidation(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -98,18 +98,16 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();
-                    return false;
+
+                    return new Result(success: false);
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
-                    return false;
+                    return new Result(MixItUp.Base.Resources.GameCommandAlreadyUnderway);
                 }
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+
+            return new Result();
         }
 
         public override async Task CustomRun(CommandParametersModel parameters)
