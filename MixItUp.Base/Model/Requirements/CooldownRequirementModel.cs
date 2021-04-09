@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Requirements
     {
         private const int InitialCooldownAmount = 5;
 
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         private static Dictionary<string, DateTimeOffset> groupCooldowns = new Dictionary<string, DateTimeOffset>();
 
         [DataMember]
@@ -55,6 +57,8 @@ namespace MixItUp.Base.Model.Requirements
             this.IndividualAmount = amount;
             this.GroupName = groupName;
         }
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return CooldownRequirementModel.requirementErrorCooldown; } set { CooldownRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
         public bool IsGroup { get { return this.Type == CooldownTypeEnum.Group && !string.IsNullOrEmpty(this.GroupName); } }
@@ -120,7 +124,7 @@ namespace MixItUp.Base.Model.Requirements
             int amount = this.Amount;
             if (amount > 0)
             {
-                this.errorCooldown = DateTimeOffset.Now.AddSeconds(InitialCooldownAmount);
+                this.individualErrorCooldown = DateTimeOffset.Now.AddSeconds(InitialCooldownAmount);
 
                 if (this.Type == CooldownTypeEnum.Standard)
                 {

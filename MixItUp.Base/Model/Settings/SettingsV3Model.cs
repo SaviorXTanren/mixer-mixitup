@@ -169,6 +169,8 @@ namespace MixItUp.Base.Model.Settings
         public bool UnlockAllCommands { get; set; }
 
         [DataMember]
+        public RequirementErrorCooldownTypeEnum RequirementErrorsCooldownType { get; set; } = RequirementErrorCooldownTypeEnum.Default;
+        [DataMember]
         public int RequirementErrorsCooldownAmount { get; set; } = 10;
         [DataMember]
         public bool IncludeUsernameWithRequirementErrors { get; set; }

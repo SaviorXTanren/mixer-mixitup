@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class CurrencyRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public Guid CurrencyID { get; set; }
 
@@ -64,6 +66,8 @@ namespace MixItUp.Base.Model.Requirements
 #pragma warning restore CS0612 // Type or member is obsolete
 
         protected CurrencyRequirementModel() { }
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return CurrencyRequirementModel.requirementErrorCooldown; } set { CurrencyRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
         public CurrencyModel Currency

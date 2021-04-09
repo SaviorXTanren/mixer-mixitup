@@ -4522,9 +4522,6 @@ This setting will change all role requirements to be explicit and require that t
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Requirement Errors Cooldown Amount</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won't be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times.</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>Wait Until Complete</value>
   </data>
@@ -5955,5 +5952,24 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
   </data>
   <data name="ModerationFollowEventCommandCanceledMessage" xml:space="preserve">
     <value>Follow Event Max Queue Reached</value>
+  </data>
+  <data name="PerCommand" xml:space="preserve">
+    <value>Per Command</value>
+  </data>
+  <data name="PerRequirement" xml:space="preserve">
+    <value>Per Requirement</value>
+  </data>
+  <data name="Singular" xml:space="preserve">
+    <value>Singular</value>
+  </data>
+  <data name="RequirementErrorsCooldownType" xml:space="preserve">
+    <value>Requirement Errors Cooldown Type</value>
+  </data>
+  <data name="RequirementErrorsCooldownTypeTooltip" xml:space="preserve">
+    <value>- Default: Each requirement for each command tracks it's own error message cooldown
+- Per Command: Each command tracks it's own error message cooldown for all of it's requirements
+- Per Requirement: Each requirement type tracks it's own error message cooldown across all commands
+- Singular: One universal error message cooldown that applies to all commands &amp; requirements
+- None: No requirement error messages will be shown</value>
   </data>
 </root>

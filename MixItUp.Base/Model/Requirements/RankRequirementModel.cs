@@ -19,6 +19,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class RankRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public Guid RankSystemID { get; set; }
 
@@ -44,6 +46,8 @@ namespace MixItUp.Base.Model.Requirements
             this.MatchType = (requirement.MustEqual) ? RankRequirementMatchTypeEnum.EqualTo : RankRequirementMatchTypeEnum.GreaterThanOrEqualTo;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return RankRequirementModel.requirementErrorCooldown; } set { RankRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
         public CurrencyModel RankSystem

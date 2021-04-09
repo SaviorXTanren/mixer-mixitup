@@ -19,6 +19,7 @@
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownType}" />
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownAmount}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
 

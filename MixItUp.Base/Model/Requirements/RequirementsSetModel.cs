@@ -80,6 +80,14 @@ namespace MixItUp.Base.Model.Requirements
 
         public SettingsRequirementModel Settings { get { return (SettingsRequirementModel)this.Requirements.FirstOrDefault(r => r is SettingsRequirementModel); } }
 
+        public void SetIndividualErrorCooldown(DateTimeOffset datetime)
+        {
+            foreach (RequirementModelBase requirement in this.Requirements)
+            {
+                requirement.SetIndividualErrorCooldown(datetime);
+            }
+        }
+
         public async Task<Result> Validate(CommandParametersModel parameters)
         {
             foreach (RequirementModelBase requirement in this.Requirements)

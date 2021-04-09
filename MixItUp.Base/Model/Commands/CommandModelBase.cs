@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -94,6 +95,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public List<ActionModelBase> Actions { get; set; } = new List<ActionModelBase>();
 
+        [JsonIgnore]
+        public DateTimeOffset CommandErrorCooldown = DateTimeOffset.MinValue;
+
         public CommandModelBase(string name, CommandTypeEnum type)
         {
             this.ID = Guid.NewGuid();
@@ -154,6 +158,10 @@ namespace MixItUp.Base.Model.Commands
         {
             if (this.Requirements != null)
             {
+                if (ChannelSession.Settings.RequirementErrorsCooldownType == RequirementErrorCooldownTypeEnum.PerCommand)
+                {
+                    this.Requirements.SetIndividualErrorCooldown(this.CommandErrorCooldown);
+                }
                 return await this.Requirements.Validate(parameters);
             }
             return new Result();

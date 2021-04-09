@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -101,16 +102,23 @@ namespace MixItUp.Base.Services
 
                     command.TrackTelemetry();
 
-                    Result validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                    Result validationResult = await command.CustomValidation(commandInstance.Parameters);
                     if (validationResult.Success)
                     {
-                        validationResult = await command.CustomValidation(commandInstance.Parameters);
+                        validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                        if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                        {
+                            command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                        }
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
+                        if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
                         {
-                            await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                            if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
+                            {
+                                await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                            }
                         }
                     }
 

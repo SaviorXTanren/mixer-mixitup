@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class InventoryRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public Guid InventoryID { get; set; }
         [DataMember]
@@ -37,6 +39,8 @@ namespace MixItUp.Base.Model.Requirements
             this.Amount = requirement.Amount;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return InventoryRequirementModel.requirementErrorCooldown; } set { InventoryRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
         public InventoryModel Inventory

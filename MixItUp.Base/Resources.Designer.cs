@@ -10975,6 +10975,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Per Command.
+        /// </summary>
+        public static string PerCommand {
+            get {
+                return ResourceManager.GetString("PerCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permissions.
         /// </summary>
         public static string Permissions {
@@ -10989,6 +10998,15 @@ namespace MixItUp.Base {
         public static string PerPerson {
             get {
                 return ResourceManager.GetString("PerPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per Requirement.
+        /// </summary>
+        public static string PerRequirement {
+            get {
+                return ResourceManager.GetString("PerRequirement", resourceCulture);
             }
         }
         
@@ -12028,11 +12046,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When a command fails due to a requirement check, an error message will be sent to chat indicating what the failure was. This option allows you to set how long before the same type of requirement error can be shown again. For example, if this is set to 10 seconds, then after a cooldown error message it shown, another won&apos;t be shown for the same command until after 10 seconds. Note that this only applies to requirements of the same type, so cooldowns &amp; role requirements keep track of separate times..
+        ///   Looks up a localized string similar to Requirement Errors Cooldown Type.
         /// </summary>
-        public static string RequirementErrorsCooldownAmountTooltip {
+        public static string RequirementErrorsCooldownType {
             get {
-                return ResourceManager.GetString("RequirementErrorsCooldownAmountTooltip", resourceCulture);
+                return ResourceManager.GetString("RequirementErrorsCooldownType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to - Default: Each requirement for each command tracks it&apos;s own error message cooldown
+        ///- Per Command: Each command tracks it&apos;s own error message cooldown for all of it&apos;s requirements
+        ///- Per Requirement: Each requirement type tracks it&apos;s own error message cooldown across all commands
+        ///- Singular: One universal error message cooldown that applies to all commands &amp; requirements
+        ///- None: No requirement error messages will be shown.
+        /// </summary>
+        public static string RequirementErrorsCooldownTypeTooltip {
+            get {
+                return ResourceManager.GetString("RequirementErrorsCooldownTypeTooltip", resourceCulture);
             }
         }
         
@@ -13374,6 +13405,15 @@ namespace MixItUp.Base {
         public static string SingleAction {
             get {
                 return ResourceManager.GetString("SingleAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singular.
+        /// </summary>
+        public static string Singular {
+            get {
+                return ResourceManager.GetString("Singular", resourceCulture);
             }
         }
         

@@ -35,6 +35,9 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel Parameters { get; set; }
 
         [DataMember]
+        public DateTimeOffset DateTime { get; set; } = DateTimeOffset.Now;
+
+        [DataMember]
         public string ErrorMessage { get; set; }
 
         [JsonIgnore]
