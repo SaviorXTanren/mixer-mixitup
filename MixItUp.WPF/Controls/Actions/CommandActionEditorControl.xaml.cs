@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Actions;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Windows.Commands;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -48,6 +49,11 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     viewModel.SelectedCommandType = command.Type;
                     viewModel.SelectedCommand = command;
+                }
+
+                if (command is ActionGroupCommandModel)
+                {
+                    ActionGroupMainControlViewModel.ActionGroupAddedEdited((ActionGroupCommandModel)command);
                 }
             }
         }
