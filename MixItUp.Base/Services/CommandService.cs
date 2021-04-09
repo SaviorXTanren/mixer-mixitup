@@ -75,11 +75,8 @@ namespace MixItUp.Base.Services
             {
                 await this.commandTypeLock.WaitAndRelease(() =>
                 {
-                    if (commandTypeTasks.ContainsKey(type) && commandTypeTasks[type] != null)
-                    {
-                        commandTypeInstances[type].Add(commandInstance);
-                    }
-                    else
+                    commandTypeInstances[type].Add(commandInstance);
+                    if (commandTypeTasks[type] == null)
                     {
                         commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
                     }
