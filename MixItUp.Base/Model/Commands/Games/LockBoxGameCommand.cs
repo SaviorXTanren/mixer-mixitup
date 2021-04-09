@@ -136,6 +136,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (guess == this.CurrentCombination)
                     {
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.TotalAmount.ToString();
+                        this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
 
                         this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         this.ClearData();

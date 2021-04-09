@@ -104,6 +104,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                         if (this.lastBidParameters != null)
                         {
+                            this.SetGameWinners(this.lastBidParameters, new List<CommandParametersModel>() { this.lastBidParameters });
                             await this.GameCompleteCommand.Perform(this.lastBidParameters);
                         }
                         else

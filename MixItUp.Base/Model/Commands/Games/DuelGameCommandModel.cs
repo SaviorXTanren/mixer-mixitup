@@ -88,11 +88,13 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.PerformPrimaryMultiplierPayout(this.runParameters, 2);
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, -1);
+                        this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
                         await this.SuccessfulOutcome.Command.Perform(this.runParameters);
                     }
                     else
                     {
                         this.PerformPrimaryMultiplierPayout(this.targetParameters, 1);
+                        this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
                         await this.FailedCommand.Perform(this.runParameters);
                     }
 

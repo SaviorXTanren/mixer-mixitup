@@ -207,8 +207,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = individualPayout.ToString();
                         parameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = payout.ToString();
-                        parameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winnerParameters.Count().ToString();
-                        parameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winnerParameters.Select(u => "@" + u.User.Username));
+                        this.SetGameWinners(this.runParameters, winnerParameters);
                         if (selectedType == WinLosePlayerType.Knight)
                         {
                             await this.KnightSelectedCommand.Perform(parameters);

@@ -126,6 +126,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (this.currentWord.All(c => this.successfulGuesses.Contains(c)))
                     {
                         this.PerformPrimarySetPayout(parameters.User, this.totalAmount);
+                        this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
                         await this.GameWonCommand.Perform(parameters);
                         await this.ClearData();
                     }

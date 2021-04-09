@@ -240,8 +240,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 }
             }
 
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count.ToString();
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+            this.SetGameWinners(this.runParameters, winners);
             this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
             this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = (this.WinAmount * winners.Count).ToString();
             await this.CorrectAnswerCommand.Perform(this.runParameters);

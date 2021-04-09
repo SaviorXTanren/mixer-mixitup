@@ -333,6 +333,12 @@ namespace MixItUp.Base.Model.Commands.Games
             return payout;
         }
 
+        protected void SetGameWinners(CommandParametersModel parameters, IEnumerable<CommandParametersModel> winners)
+        {
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count().ToString();
+            parameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+        }
+
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {
             HashSet<string> wordsToUse = GameCommandModelBase.DefaultWords;
