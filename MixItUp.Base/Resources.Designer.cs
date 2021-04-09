@@ -2144,6 +2144,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Command History.
+        /// </summary>
+        public static string CommandHistory {
+            get {
+                return ResourceManager.GetString("CommandHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least 1 action must be added to the command.
         /// </summary>
         public static string CommandMustHaveAtLeast1Action {

@@ -5972,4 +5972,7 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
 - Singular: One universal error message cooldown that applies to all commands &amp; requirements
 - None: No requirement error messages will be shown</value>
   </data>
+  <data name="CommandHistory" xml:space="preserve">
+    <value>Command History</value>
+  </data>
 </root>
