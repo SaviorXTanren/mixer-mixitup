@@ -745,6 +745,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatic Backups Folder.
+        /// </summary>
+        public static string AutomaticBackupsFolder {
+            get {
+                return ResourceManager.GetString("AutomaticBackupsFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatic Reset.
         /// </summary>
         public static string AutomaticReset {
@@ -8302,6 +8311,15 @@ namespace MixItUp.Base {
         public static string MixItUpDashboard {
             get {
                 return ResourceManager.GetString("MixItUpDashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Install Folder.
+        /// </summary>
+        public static string MixItUpInstallFolder {
+            get {
+                return ResourceManager.GetString("MixItUpInstallFolder", resourceCulture);
             }
         }
         

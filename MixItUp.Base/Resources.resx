@@ -5454,4 +5454,10 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
   <data name="ShowStreamloots" xml:space="preserve">
     <value>Show Streamloots</value>
   </data>
+  <data name="AutomaticBackupsFolder" xml:space="preserve">
+    <value>Automatic Backups Folder</value>
+  </data>
+  <data name="MixItUpInstallFolder" xml:space="preserve">
+    <value>Mix It Up Install Folder</value>
+  </data>
 </root>

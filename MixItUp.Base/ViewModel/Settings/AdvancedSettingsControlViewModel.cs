@@ -15,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericComboBoxSettingsOptionControlViewModel<SettingsBackupRateEnum> AutomaticBackupRate { get; set; }
         public GenericButtonSettingsOptionControlViewModel AutomaticBackupLocation { get; set; }
 
+        public string AutomaticBackupLocationFolderPath { get { return !string.IsNullOrEmpty(ChannelSession.Settings.SettingsBackupLocation) ? ChannelSession.Settings.SettingsBackupLocation : MixItUp.Base.Resources.MixItUpInstallFolder; } }
+
         public GenericButtonSettingsOptionControlViewModel InstallationFolder { get; set; }
         public GenericToggleSettingsOptionControlViewModel DiagnosticLogging { get; set; }
         public GenericButtonSettingsOptionControlViewModel RunNewUserWizard { get; set; }
@@ -59,6 +61,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
                 {
                     ChannelSession.Settings.SettingsBackupLocation = folderPath;
+                    this.NotifyPropertyChanged("AutomaticBackupLocationFolderPath");
                 }
             }));
 

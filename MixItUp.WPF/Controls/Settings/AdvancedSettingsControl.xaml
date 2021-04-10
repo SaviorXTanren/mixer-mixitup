@@ -16,6 +16,16 @@
             <GenericSettingsControls:GenericButtonSettingsOptionControl DataContext="{Binding RestoreSettings}" />
             <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding AutomaticBackupRate}" />
             <GenericSettingsControls:GenericButtonSettingsOptionControl DataContext="{Binding AutomaticBackupLocation}" />
+            <Grid Margin="20, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.AutomaticBackupsFolder}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                <TextBlock Grid.Column="2" Text="{Binding AutomaticBackupLocationFolderPath}" />
+            </Grid>
 
             <Separator Margin="10" />
 
