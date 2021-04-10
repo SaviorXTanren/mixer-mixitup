@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </local:MainControlBase.Resources>
 
@@ -30,9 +32,8 @@
                         <ListBox x:Name="MenuItemsListBox" Margin="0 16 0 16" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" SelectionChanged="MenuItemsListBox_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="20 0 15 0">
-                                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Margin="0 0 5 0" VerticalAlignment="Center" />
-                                        <MaterialDesign:PackIcon Kind="Launch" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryHueMidBrush}" Visibility="{Binding LinkIconVisibility}" />
+                                    <StackPanel Orientation="Horizontal" Margin="20 0 15 0" Visibility="{Binding Visible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

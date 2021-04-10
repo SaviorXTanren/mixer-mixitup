@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Twitch.Base.Models.NewAPI.ChannelPoints;
 

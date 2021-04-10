@@ -19,9 +19,16 @@ namespace MixItUp.WPF.Controls.MainControls
         public MainControlBase Control { get; private set; }
         public string HelpLink { get; private set; }
 
-        public string Link { get; private set; }
-
-        public Visibility LinkIconVisibility { get { return (!string.IsNullOrEmpty(this.Link)) ? Visibility.Visible : Visibility.Collapsed; } }
+        public bool Visible
+        {
+            get { return this.visible; }
+            set
+            {
+                this.visible = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool visible = true;
 
         public Visibility HelpLinkVisibility { get { return (!string.IsNullOrEmpty(this.HelpLink)) ? Visibility.Visible : Visibility.Collapsed; } }
 
@@ -30,12 +37,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.Name = name;
             this.Control = control;
             this.HelpLink = helpLink;
-        }
-
-        public MainMenuItem(string name, string link)
-        {
-            this.Name = name;
-            this.Link = link;
         }
     }
 
@@ -61,15 +62,12 @@ namespace MixItUp.WPF.Controls.MainControls
             GlobalEvents.OnServiceReconnect += GlobalEvents_OnServiceReconnect;
         }
 
-        public async Task AddMenuItem(string name, MainControlBase control, string helpLink = null)
+        public async Task<MainMenuItem> AddMenuItem(string name, MainControlBase control, string helpLink = null)
         {
             await control.Initialize(this.Window);
-            this.menuItems.Add(new MainMenuItem(name, control, helpLink));
-        }
-
-        public void AddMenuItem(string name, string link)
-        {
-            this.menuItems.Add(new MainMenuItem(name, link));
+            MainMenuItem item = new MainMenuItem(name, control, helpLink);
+            this.menuItems.Add(item);
+            return item;
         }
 
         public void MenuItemSelected(string name)
