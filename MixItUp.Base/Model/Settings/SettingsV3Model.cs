@@ -215,6 +215,8 @@ namespace MixItUp.Base.Model.Settings
         public string AlertChannelPointsColor { get; set; }
         [DataMember]
         public string AlertModerationColor { get; set; }
+        [DataMember]
+        public string AlertStreamlootsColor { get; set; }
 
         #endregion Alerts
 
@@ -618,6 +620,10 @@ namespace MixItUp.Base.Model.Settings
                 {
                     command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
                 }
+                else if (type == CommandTypeEnum.StreamlootsCard)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<StreamlootsCardCommandModel>(commandData);
+                }
                 else if (type == CommandTypeEnum.Custom)
                 {
                     command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
@@ -640,6 +646,8 @@ namespace MixItUp.Base.Model.Settings
             ChannelSession.ActionGroupCommands.Clear();
             ChannelSession.GameCommands.Clear();
             ChannelSession.TwitchChannelPointsCommands.Clear();
+            ChannelSession.StreamlootsCardCommands.Clear();
+
             foreach (CommandModelBase command in this.Commands.Values.ToList())
             {
                 if (command is ChatCommandModel)
@@ -652,6 +660,7 @@ namespace MixItUp.Base.Model.Settings
                 else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
                 else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
                 else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+                else if (command is StreamlootsCardCommandModel) { ChannelSession.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
             }
 
             foreach (CounterModel counter in this.Counters.Values.ToList())

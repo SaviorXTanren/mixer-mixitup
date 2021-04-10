@@ -38,7 +38,7 @@
         <ScrollViewer Grid.Row="2" Visibility="{Binding ShowList, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
             <DataGrid ItemsSource="{Binding DefaultGroup}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.StreamlootsCardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -66,7 +66,7 @@
 
                                 <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="{x:Static resx:Resources.RewardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.StreamlootsCardName}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                                         <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="220">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -88,17 +88,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" MinWidth="140" />
 
-            <Button x:Name="CreateChannelPointsEditorButton" Grid.Column="2" Command="{Binding CreateChannelPointRewardCommand}" Content="{x:Static resx:Resources.CreateChannelPointReward}" Width="220" />
-
-            <Button x:Name="ChannelPointsEditorButton" Grid.Column="4" Command="{Binding ChannelPointsEditorCommand}" Width="195">
+            <Button x:Name="ChannelPointsEditorButton" Grid.Column="2" Command="{Binding StreamlootsManageCollectionCommand}" Width="195">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Static resx:Resources.ChannelPointsEditor}" />
+                    <TextBlock Text="{x:Static resx:Resources.StreamlootsManageCollection}" />
                     <MaterialDesign:PackIcon Kind="OpenInNew" Height="20" Width="20" Margin="5,-2,0,0" Foreground="{StaticResource WhiteColor}" />
                 </StackPanel>
             </Button>

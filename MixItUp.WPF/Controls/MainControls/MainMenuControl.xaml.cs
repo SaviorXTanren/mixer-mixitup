@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private bool visible = true;
+        private bool visible;
 
         public Visibility HelpLinkVisibility { get { return (!string.IsNullOrEmpty(this.HelpLink)) ? Visibility.Visible : Visibility.Collapsed; } }
 
@@ -53,6 +53,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private HashSet<string> serviceDisconnections = new HashSet<string>();
 
         private ObservableCollection<MainMenuItem> menuItems = new ThreadSafeObservableCollection<MainMenuItem>();
+        private List<MainMenuItem> allMenuItems = new List<MainMenuItem>();
 
         public MainMenuControl()
         {
@@ -67,7 +68,28 @@ namespace MixItUp.WPF.Controls.MainControls
             await control.Initialize(this.Window);
             MainMenuItem item = new MainMenuItem(name, control, helpLink);
             this.menuItems.Add(item);
+            this.allMenuItems.Add(item);
             return item;
+        }
+
+        public void ShowMenuItem(MainMenuItem item)
+        {
+            if (!this.menuItems.Contains(item))
+            {
+                for (int i = this.allMenuItems.IndexOf(item) - 1; i >= 0; i--)
+                {
+                    if (this.menuItems.Contains(this.allMenuItems[i]))
+                    {
+                        this.menuItems.Insert(this.menuItems.IndexOf(this.allMenuItems[i]) + 1, item);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void HideMenuItem(MainMenuItem item)
+        {
+            this.menuItems.Remove(item);
         }
 
         public void MenuItemSelected(string name)
@@ -85,10 +107,6 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.DataContext = item;
                 this.ActiveControlContentControl.Content = item.Control;
-            }
-            else if (!string.IsNullOrEmpty(item.Link))
-            {
-                ProcessHelper.LaunchLink(item.Link);
             }
             this.MenuToggleButton.IsChecked = false;
         }

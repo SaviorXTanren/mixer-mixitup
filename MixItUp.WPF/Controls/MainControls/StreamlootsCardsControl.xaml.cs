@@ -39,12 +39,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            TwitchChannelPointsCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TwitchChannelPointsCommandModel>();
+            StreamlootsCardCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<StreamlootsCardCommandModel>();
             if (command != null)
             {
-                //CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
-                //window.CommandSaved += Window_CommandSaved;
-                //window.ForceShow();
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
+                window.CommandSaved += Window_CommandSaved;
+                window.ForceShow();
             }
         }
 
@@ -52,10 +52,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                TwitchChannelPointsCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<TwitchChannelPointsCommandModel>();
+                StreamlootsCardCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<StreamlootsCardCommandModel>();
                 if (command != null)
                 {
-                    ChannelSession.TwitchChannelPointsCommands.Remove(command);
+                    ChannelSession.StreamlootsCardCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
                     this.viewModel.RemoveCommand(command);
                     await ChannelSession.SaveSettings();
@@ -65,9 +65,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            //CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.TwitchChannelPoints);
-            //window.CommandSaved += Window_CommandSaved;
-            //window.ForceShow();
+            CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.StreamlootsCard);
+            window.CommandSaved += Window_CommandSaved;
+            window.ForceShow();
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

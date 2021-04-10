@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (ChannelSession.TwitchUserConnection != null)
                 {
-                    ProcessHelper.LaunchLink(this.GetChannelPointsEditorURL());
+                    ProcessHelper.LaunchLink($"https://dashboard.twitch.tv/u/{ChannelSession.TwitchUserNewAPI.login}/viewer-rewards/channel-points");
                 }
             });
         }
@@ -53,15 +53,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
             return ChannelSession.TwitchChannelPointsCommands.ToList();
-        }
-
-        private string GetChannelPointsEditorURL()
-        {
-            if (ChannelSession.TwitchUserConnection != null)
-            {
-                return $"https://dashboard.twitch.tv/u/{ChannelSession.TwitchUserNewAPI.login}/viewer-rewards/channel-points";
-            }
-            return null;
         }
     }
 }

@@ -5439,4 +5439,19 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
   <data name="Replay" xml:space="preserve">
     <value>Replay</value>
   </data>
+  <data name="StreamlootsCardNameMissing" xml:space="preserve">
+    <value>Streamloots Card Name missing</value>
+  </data>
+  <data name="StreamlootsCards" xml:space="preserve">
+    <value>Streamloots Cards</value>
+  </data>
+  <data name="StreamlootsManageCollection" xml:space="preserve">
+    <value>Manage Collection</value>
+  </data>
+  <data name="StreamlootsCardName" xml:space="preserve">
+    <value>Card Name</value>
+  </data>
+  <data name="ShowStreamloots" xml:space="preserve">
+    <value>Show Streamloots</value>
+  </data>
 </root>

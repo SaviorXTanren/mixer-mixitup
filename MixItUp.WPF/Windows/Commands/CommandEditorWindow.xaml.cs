@@ -67,6 +67,10 @@ namespace MixItUp.WPF.Windows.Commands
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
                     this.viewModel = new ActionGroupCommandEditorWindowViewModel((ActionGroupCommandModel)existingCommand);
                     break;
+                case CommandTypeEnum.StreamlootsCard:
+                    this.editorDetailsControl = new StreamlootsCardCommandEditorDetailsControl();
+                    this.viewModel = new StreamlootsCardCommandEditorWindowViewModel((StreamlootsCardCommandModel)existingCommand);
+                    break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
                     this.viewModel = new CustomCommandEditorWindowViewModel((CustomCommandModel)existingCommand);
@@ -102,6 +106,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.ActionGroup:
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
                     this.viewModel = new ActionGroupCommandEditorWindowViewModel();
+                    break;
+                case CommandTypeEnum.StreamlootsCard:
+                    this.editorDetailsControl = new StreamlootsCardCommandEditorDetailsControl();
+                    this.viewModel = new StreamlootsCardCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();

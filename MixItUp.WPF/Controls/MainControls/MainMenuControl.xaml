@@ -32,7 +32,7 @@
                         <ListBox x:Name="MenuItemsListBox" Margin="0 16 0 16" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" SelectionChanged="MenuItemsListBox_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="20 0 15 0" Visibility="{Binding Visible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal" Margin="20 0 15 0">
                                         <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>

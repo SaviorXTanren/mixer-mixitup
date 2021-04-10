@@ -522,6 +522,9 @@
     <Compile Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>WordScrambleGameCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml.cs">
+      <DependentUpon>StreamlootsCardCommandEditorDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Commands\TimerCommandEditorDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandEditorDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -1173,6 +1176,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Commands\Games\WordScrambleGameCommandEditorDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Commands\StreamlootsCardCommandEditorDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

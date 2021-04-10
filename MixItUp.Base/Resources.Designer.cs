@@ -2189,15 +2189,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Created By.
-        /// </summary>
-        public static string CreatedBy {
-            get {
-                return ResourceManager.GetString("CreatedBy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Create New Command.
         /// </summary>
         public static string CreateNewCommand {
@@ -12045,6 +12036,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Streamloots.
+        /// </summary>
+        public static string ShowStreamloots {
+            get {
+                return ResourceManager.GetString("ShowStreamloots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Subs.
         /// </summary>
         public static string ShowSubs {
@@ -12086,15 +12086,6 @@ namespace MixItUp.Base {
         public static string Simple {
             get {
                 return ResourceManager.GetString("Simple", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Single Action.
-        /// </summary>
-        public static string SingleAction {
-            get {
-                return ResourceManager.GetString("SingleAction", resourceCulture);
             }
         }
         
@@ -12990,11 +12981,38 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Card Name.
+        /// </summary>
+        public static string StreamlootsCardName {
+            get {
+                return ResourceManager.GetString("StreamlootsCardName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots Card Name missing.
+        /// </summary>
+        public static string StreamlootsCardNameMissing {
+            get {
+                return ResourceManager.GetString("StreamlootsCardNameMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Streamloots Card Redeemed.
         /// </summary>
         public static string StreamlootsCardRedeemed {
             get {
                 return ResourceManager.GetString("StreamlootsCardRedeemed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots Cards.
+        /// </summary>
+        public static string StreamlootsCards {
+            get {
+                return ResourceManager.GetString("StreamlootsCards", resourceCulture);
             }
         }
         
@@ -13022,6 +13040,15 @@ namespace MixItUp.Base {
         public static string StreamlootsInvalidUrl {
             get {
                 return ResourceManager.GetString("StreamlootsInvalidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Collection.
+        /// </summary>
+        public static string StreamlootsManageCollection {
+            get {
+                return ResourceManager.GetString("StreamlootsManageCollection", resourceCulture);
             }
         }
         
@@ -14622,15 +14649,6 @@ namespace MixItUp.Base {
         public static string Update {
             get {
                 return ResourceManager.GetString("Update", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Update Channel.
-        /// </summary>
-        public static string UpdateChannel {
-            get {
-                return ResourceManager.GetString("UpdateChannel", resourceCulture);
             }
         }
         

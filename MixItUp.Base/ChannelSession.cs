@@ -68,6 +68,8 @@ namespace MixItUp.Base
 
         public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
 
+        public static List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
+
         public static IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
             get
@@ -92,6 +94,7 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.TimerCommands);
                 commands.AddRange(ChannelSession.ActionGroupCommands);
                 commands.AddRange(ChannelSession.TwitchChannelPointsCommands);
+                commands.AddRange(ChannelSession.StreamlootsCardCommands);
                 return commands;
             }
         }

@@ -22,6 +22,7 @@ namespace MixItUp.Base.Model.Commands
         Remote = 6,
         TwitchChannelPoints = 7,
         PreMade = 8,
+        StreamlootsCard = 9,
 
         // Specialty Command Types
         UserOnlyChat = 1000,

@@ -786,18 +786,18 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             List<string> arguments = null;
-            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-            specialIdentifiers["rewardname"] = redemption.reward.title;
-            specialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["rewardname"] = redemption.reward.title;
+            eventCommandSpecialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
             if (!string.IsNullOrEmpty(redemption.user_input))
             {
-                specialIdentifiers["message"] = redemption.user_input;
+                eventCommandSpecialIdentifiers["message"] = redemption.user_input;
                 arguments = new List<string>(redemption.user_input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }
 
             if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, redemption.user_input)))
             {
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, specialIdentifiers);
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, eventCommandSpecialIdentifiers);
                 trigger.Arguments = arguments;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -809,7 +809,8 @@ namespace MixItUp.Base.Services.Twitch
 
                 if (command != null)
                 {
-                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                    Dictionary<string, string> channelPointSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: channelPointSpecialIdentifiers));
                 }
             }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.DisplayName, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));
