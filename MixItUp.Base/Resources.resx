@@ -171,15 +171,6 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="ActionToPeform" xml:space="preserve">
-    <value>Action To Peform</value>
-  </data>
-  <data name="ActionToPerformWithResponse" xml:space="preserve">
-    <value>Action To Perform With Response</value>
-  </data>
-  <data name="ActionToPerformWithTranslation" xml:space="preserve">
-    <value>Action To Perform With Translation</value>
-  </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -191,18 +182,6 @@
   </data>
   <data name="AddCurrencyRank" xml:space="preserve">
     <value>Add Currency/Rank</value>
-  </data>
-  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
-    <value>This user already exists in this group.</value>
-  </data>
-  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>Could not find a user by that name.</value>
-  </data>
-  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>You have already favorited this team.</value>
-  </data>
-  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>Could not find a team by that name.</value>
   </data>
   <data name="AddInventory" xml:space="preserve">
     <value>Add Inventory</value>
@@ -234,23 +213,11 @@
   <data name="AddToUser" xml:space="preserve">
     <value>Add to user</value>
   </data>
-  <data name="Adult" xml:space="preserve">
-    <value>18+</value>
-  </data>
   <data name="Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
-  <data name="AdvancedCommand" xml:space="preserve">
-    <value>Advanced Command</value>
-  </data>
-  <data name="AgeRating" xml:space="preserve">
-    <value>Age Rating</value>
-  </data>
   <data name="Alerts" xml:space="preserve">
     <value>Alerts</value>
-  </data>
-  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>Allow Commands Only in Your Channel During a Co-Stream</value>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
     <value>Allow Commands to be Whispered</value>
@@ -260,9 +227,6 @@
   </data>
   <data name="AllowProfanity" xml:space="preserve">
     <value>Allow Profanity</value>
-  </data>
-  <data name="AlreadyInstalled" xml:space="preserve">
-    <value>Already Installed</value>
   </data>
   <data name="Alt" xml:space="preserve">
     <value>Alt</value>
@@ -282,18 +246,6 @@
   <data name="AmountSeconds" xml:space="preserve">
     <value>Amount (Seconds)</value>
   </data>
-  <data name="Answer1" xml:space="preserve">
-    <value>Answer 1</value>
-  </data>
-  <data name="Answer2" xml:space="preserve">
-    <value>Answer 2</value>
-  </data>
-  <data name="Answer3" xml:space="preserve">
-    <value>Answer 3 (Optional)</value>
-  </data>
-  <data name="Answer4" xml:space="preserve">
-    <value>Answer 4 (Optional)</value>
-  </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Any Chat Message Sound</value>
   </data>
@@ -308,18 +260,6 @@
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
     <value>Approved Devices</value>
-  </data>
-  <data name="ArgumentsTranslatedText" xml:space="preserve">
-    <value>Arguments ($translationresult = Translated Text)</value>
-  </data>
-  <data name="ArgumentsWebRequest" xml:space="preserve">
-    <value>Arguments ($webrequestresult = Result Text)</value>
-  </data>
-  <data name="Assets" xml:space="preserve">
-    <value>Assets</value>
-  </data>
-  <data name="Audience" xml:space="preserve">
-    <value>Audience</value>
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>Audio Output Device</value>
@@ -354,18 +294,6 @@
   <data name="Banned" xml:space="preserve">
     <value>Banned</value>
   </data>
-  <data name="BasicChatCommand" xml:space="preserve">
-    <value>Basic Chat Command</value>
-  </data>
-  <data name="BasicSoundCommand" xml:space="preserve">
-    <value>Basic Sound Command</value>
-  </data>
-  <data name="BasicTimerDescription" xml:space="preserve">
-    <value>What should we call this Timer command?</value>
-  </data>
-  <data name="BasicTimerNameHint" xml:space="preserve">
-    <value>Name (EX: "Follow Me")</value>
-  </data>
   <data name="BaudRate" xml:space="preserve">
     <value>Baud Rate</value>
   </data>
@@ -396,9 +324,6 @@
   <data name="ButtonName" xml:space="preserve">
     <value>Button Name</value>
   </data>
-  <data name="ButtonTrigger" xml:space="preserve">
-    <value>Button Trigger</value>
-  </data>
   <data name="BuyPrice" xml:space="preserve">
     <value>Buy Price</value>
   </data>
@@ -420,15 +345,6 @@
   <data name="ChannelEditor" xml:space="preserve">
     <value>Channel Editor</value>
   </data>
-  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>A valid age rating must be selected.</value>
-  </data>
-  <data name="ChannelErrorInvalidGame" xml:space="preserve">
-    <value>A valid &amp; existing game name must be selected.</value>
-  </data>
-  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>A stream title must be specified.</value>
-  </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>Channel Info</value>
   </data>
@@ -446,15 +362,6 @@
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Chat Messages Sent</value>
-  </data>
-  <data name="ChatMessageTranslatedText" xml:space="preserve">
-    <value>Chat Message ($translationresult = Translated Text)</value>
-  </data>
-  <data name="ChatMessageWebRequest" xml:space="preserve">
-    <value>Chat Message ($webrequestresult = Result Text)</value>
-  </data>
-  <data name="ChatMixPlayParticipation" xml:space="preserve">
-    <value>Chat / MixPlay Participation</value>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
     <value>Chat Tagged Sound</value>
@@ -488,12 +395,6 @@
   </data>
   <data name="Click" xml:space="preserve">
     <value>Click</value>
-  </data>
-  <data name="ClipLength" xml:space="preserve">
-    <value>Length (15-300 Secs)</value>
-  </data>
-  <data name="ClipName" xml:space="preserve">
-    <value>Clip Name</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
@@ -543,23 +444,11 @@
   <data name="Control" xml:space="preserve">
     <value>Control</value>
   </data>
-  <data name="ControlID" xml:space="preserve">
-    <value>Control ID</value>
-  </data>
-  <data name="ConvertToAdvanced" xml:space="preserve">
-    <value>Convert To Advanced</value>
-  </data>
   <data name="Cooldown" xml:space="preserve">
     <value>Cooldown</value>
   </data>
-  <data name="CooldownSeconds" xml:space="preserve">
-    <value>Cooldown (Seconds)</value>
-  </data>
   <data name="Cost" xml:space="preserve">
     <value>Cost</value>
-  </data>
-  <data name="Costream" xml:space="preserve">
-    <value>Costream</value>
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Counter (Create &amp; Update)</value>
@@ -570,14 +459,8 @@
   <data name="CountersFolder" xml:space="preserve">
     <value>Counters Folder</value>
   </data>
-  <data name="CreatedBy" xml:space="preserve">
-    <value>Created By</value>
-  </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Cumulative Months Subbed</value>
-  </data>
-  <data name="CurrenciesRanksInventories" xml:space="preserve">
-    <value>Currencies/Ranks/Inventories</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>Currency</value>
@@ -612,20 +495,11 @@
   <data name="CustomEntranceCommand" xml:space="preserve">
     <value>Custom Entrance Command</value>
   </data>
-  <data name="CustomizeCommand" xml:space="preserve">
-    <value>Customize Command</value>
-  </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Customize Currency/Rank</value>
   </data>
-  <data name="CustomizeGame" xml:space="preserve">
-    <value>Customize Game</value>
-  </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>Customize Inventory</value>
-  </data>
-  <data name="CustomMixPlayProjects" xml:space="preserve">
-    <value>Custom MixPlay Projects</value>
   </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>Custom Title</value>
@@ -672,9 +546,6 @@
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>Default Max Amount</value>
   </data>
-  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
-    <value>Default MixPlay Game to Connect</value>
-  </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>Default Output</value>
   </data>
@@ -689,9 +560,6 @@
   </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>Delete Command</value>
-  </data>
-  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
-    <value>Are you sure you wish to remove this group?</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
@@ -714,9 +582,6 @@
   <data name="Disabled" xml:space="preserve">
     <value>Disabled</value>
   </data>
-  <data name="DisableDiagnostics" xml:space="preserve">
-    <value>Disable Diagnostics</value>
-  </data>
   <data name="DisableQueue" xml:space="preserve">
     <value>Disable Queue</value>
   </data>
@@ -726,35 +591,11 @@
   <data name="Discord" xml:space="preserve">
     <value>Discord</value>
   </data>
-  <data name="DisplayImage" xml:space="preserve">
-    <value>Display Image (Optional)</value>
-  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; Contains</value>
   </data>
   <data name="Donators" xml:space="preserve">
     <value>Donators</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>Download</value>
-  </data>
-  <data name="DownloadAndInstall" xml:space="preserve">
-    <value>Download &amp; Install</value>
-  </data>
-  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
-    <value>Download &amp; Install ffmpeg</value>
-  </data>
-  <data name="DownloadClip" xml:space="preserve">
-    <value>Download Clip</value>
-  </data>
-  <data name="DownloadDirectory" xml:space="preserve">
-    <value>Download Directory</value>
-  </data>
-  <data name="DownloadFrom" xml:space="preserve">
-    <value>DownloadFrom</value>
-  </data>
-  <data name="Drop" xml:space="preserve">
-    <value>DROP</value>
   </data>
   <data name="DTR" xml:space="preserve">
     <value>DTR</value>
@@ -771,9 +612,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
   </data>
-  <data name="EmptySoundFilePath" xml:space="preserve">
-    <value>The sound file path must not be empty.</value>
-  </data>
   <data name="Enable" xml:space="preserve">
     <value>Enable</value>
   </data>
@@ -786,23 +624,14 @@
   <data name="EnableCommandGroup" xml:space="preserve">
     <value>Enable Command Group</value>
   </data>
-  <data name="EnableDiagnostics" xml:space="preserve">
-    <value>Enable Diagnostics</value>
-  </data>
   <data name="EnableDisable" xml:space="preserve">
     <value>Enable/Disable</value>
   </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>Enable/Disable Command</value>
   </data>
-  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
-    <value>Enable/Disable Diagnostic logging for finding issues</value>
-  </data>
   <data name="EnableDisableQueue" xml:space="preserve">
     <value>Enable/Disable Queue</value>
-  </data>
-  <data name="EnableDiscord" xml:space="preserve">
-    <value>Please enable Discord connection on the Services page!</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
     <value>Please enable IFTTT connection on the Services page!</value>
@@ -818,9 +647,6 @@
   </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>Enable Queue</value>
-  </data>
-  <data name="EnableReplayBuffer" xml:space="preserve">
-    <value>Replay buffer has not been enabled. Open OBS Settings -&gt; Output and enable the replay buffer!</value>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
     <value>Please enable Streamlabs connection on the Services page!</value>
@@ -845,12 +671,6 @@
   </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>=</value>
-  </data>
-  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
-    <value>You must be a {0} to pick the answer.</value>
-  </data>
-  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
-    <value>You must be a {0} to start this game.</value>
   </data>
   <data name="Event" xml:space="preserve">
     <value>Event</value>
@@ -885,23 +705,8 @@
   <data name="ExternalProgram" xml:space="preserve">
     <value>External Program</value>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>Family</value>
-  </data>
   <data name="FanProgression" xml:space="preserve">
     <value>Fan Progression</value>
-  </data>
-  <data name="FavoritedUsersTeams" xml:space="preserve">
-    <value>Favorited Users/Teams</value>
-  </data>
-  <data name="FavoriteStreamers" xml:space="preserve">
-    <value>Favorite Streamers</value>
-  </data>
-  <data name="FeatureMixItUpStreamer" xml:space="preserve">
-    <value>Feature me as a Mix It Up Streamer</value>
-  </data>
-  <data name="FFMPEGMustBeInstalled" xml:space="preserve">
-    <value>FFMPEG must be installed through the Mix It Up Settings to use this feature!</value>
   </data>
   <data name="FieldName" xml:space="preserve">
     <value>Field Name</value>
@@ -923,12 +728,6 @@
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>Find Channel To Raid</value>
-  </data>
-  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>Must select a search criteria for finding a channel to raid.</value>
-  </data>
-  <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>Unable to find a channel that met your search critera, please try selecting a different option.</value>
   </data>
   <data name="FirstValue" xml:space="preserve">
     <value>First Value</value>
@@ -959,9 +758,6 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>Game Queue</value>
-  </data>
-  <data name="GameQueueAction" xml:space="preserve">
-    <value>Game Queue Action</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>Games</value>
@@ -1008,17 +804,11 @@
   <data name="GroupName" xml:space="preserve">
     <value>Group Name</value>
   </data>
-  <data name="GroupNameCaseSensitive" xml:space="preserve">
-    <value>Group Name (Case Sensitive)</value>
-  </data>
   <data name="Groups" xml:space="preserve">
     <value>Groups</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
-  </data>
-  <data name="HelpfulLinks" xml:space="preserve">
-    <value>Helpful Links</value>
   </data>
   <data name="HideChatUserList" xml:space="preserve">
     <value>Hide Chat User List</value>
@@ -1029,9 +819,6 @@
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
     <value>Hide Viewer &amp; Chatter Numbers</value>
   </data>
-  <data name="HostChannel" xml:space="preserve">
-    <value>Host Channel</value>
-  </data>
   <data name="HotKey" xml:space="preserve">
     <value>Hot Key</value>
   </data>
@@ -1040,9 +827,6 @@
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Hours</value>
-  </data>
-  <data name="HowLongBeforeRun" xml:space="preserve">
-    <value>How long before this command can be run again (in seconds)?</value>
   </data>
   <data name="HTML" xml:space="preserve">
     <value>HTML</value>
@@ -1061,12 +845,6 @@
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Import Data</value>
-  </data>
-  <data name="IncludeCommandAssets" xml:space="preserve">
-    <value>Include Command Assets</value>
-  </data>
-  <data name="IncorrectBotAccount" xml:space="preserve">
-    <value>You must sign in to a different account than your Streamer account.</value>
   </data>
   <data name="Indigo" xml:space="preserve">
     <value>Indigo</value>
@@ -1143,14 +921,8 @@
   <data name="Language" xml:space="preserve">
     <value>Language (Requires Restart)</value>
   </data>
-  <data name="LanguageToTranslateTo" xml:space="preserve">
-    <value>Language To Translate To</value>
-  </data>
   <data name="Large" xml:space="preserve">
     <value>Large</value>
-  </data>
-  <data name="LargeStreamer" xml:space="preserve">
-    <value>Large Streamer (&gt;25)</value>
   </data>
   <data name="LastQuote" xml:space="preserve">
     <value>Last Quote</value>
@@ -1175,9 +947,6 @@
   </data>
   <data name="LeftButton" xml:space="preserve">
     <value>Left Button</value>
-  </data>
-  <data name="LengthSecs" xml:space="preserve">
-    <value>Length (Secs)</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>&lt;</value>
@@ -1218,14 +987,8 @@
   <data name="Login" xml:space="preserve">
     <value>Log In</value>
   </data>
-  <data name="LoginErrorNoChannelName" xml:space="preserve">
-    <value>A channel name must be entered.</value>
-  </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
     <value>You must select a Streamer account to log in to.</value>
-  </data>
-  <data name="LoginErrorNotModerator" xml:space="preserve">
-    <value>You are not a moderator for this channel.</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>Log Out</value>
@@ -1257,26 +1020,14 @@
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
     <value>Max Punct. / Symbols / Emotes</value>
   </data>
-  <data name="MaxTime" xml:space="preserve">
-    <value>Max Time</value>
-  </data>
   <data name="MaxValue" xml:space="preserve">
     <value>Max Value</value>
-  </data>
-  <data name="MediumStreamer" xml:space="preserve">
-    <value>Medium Streamer (10-25)</value>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
     <value>Meet The Team</value>
   </data>
   <data name="Message" xml:space="preserve">
     <value>Message</value>
-  </data>
-  <data name="MetadataName" xml:space="preserve">
-    <value>Metadata Name</value>
-  </data>
-  <data name="MetadataValue" xml:space="preserve">
-    <value>Metadata Value</value>
   </data>
   <data name="MiddleButton" xml:space="preserve">
     <value>Middle Button</value>
@@ -1311,20 +1062,8 @@
   <data name="MixItUpOverlay" xml:space="preserve">
     <value>Mix It Up Overlay</value>
   </data>
-  <data name="MixItUpStore" xml:space="preserve">
-    <value>Mix It Up Store</value>
-  </data>
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
-  </data>
-  <data name="MixPlayCooldownHeader" xml:space="preserve">
-    <value>How many seconds should the cooldown be?</value>
-  </data>
-  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
-    <value>Should this button cooldown on its or together with all?</value>
-  </data>
-  <data name="MixPlayTextboxModeration" xml:space="preserve">
-    <value>Would you like to use Chat Moderation on all entered text?</value>
   </data>
   <data name="Mod" xml:space="preserve">
     <value>Mod</value>
@@ -1365,9 +1104,6 @@
   <data name="MoveUp" xml:space="preserve">
     <value>Move Up</value>
   </data>
-  <data name="Must" xml:space="preserve">
-    <value>Must</value>
-  </data>
   <data name="Mute" xml:space="preserve">
     <value>Mute</value>
   </data>
@@ -1407,9 +1143,6 @@
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
-  <data name="NoResultsFound" xml:space="preserve">
-    <value>No Results Found</value>
-  </data>
   <data name="Normal" xml:space="preserve">
     <value>Normal</value>
   </data>
@@ -1439,9 +1172,6 @@
   </data>
   <data name="OnHost" xml:space="preserve">
     <value>On Host</value>
-  </data>
-  <data name="OnlineMinutes" xml:space="preserve">
-    <value>Online Minutes</value>
   </data>
   <data name="OnlineRate" xml:space="preserve">
     <value>Online Rate</value>
@@ -1485,9 +1215,6 @@
   <data name="Overlays" xml:space="preserve">
     <value>Overlays</value>
   </data>
-  <data name="OverlayToUse" xml:space="preserve">
-    <value>Overlay To Use</value>
-  </data>
   <data name="OverlayWarning1" xml:space="preserve">
     <value>WARNING: Animations may not work correctly.</value>
   </data>
@@ -1512,20 +1239,8 @@
   <data name="OvrStream" xml:space="preserve">
     <value>OvrStream</value>
   </data>
-  <data name="OvrStreamTitleName" xml:space="preserve">
-    <value>OvrStream Title Name</value>
-  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
-  </data>
-  <data name="PartneredStreamer" xml:space="preserve">
-    <value>Partnered Streamer</value>
-  </data>
-  <data name="PartnersOnly" xml:space="preserve">
-    <value>This feature is currently available for Partners only.</value>
-  </data>
-  <data name="PatreonBenefitRequirement" xml:space="preserve">
-    <value>Patreon Benefit Requirement</value>
   </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>Patreon User</value>
@@ -1548,12 +1263,6 @@
   <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
-  <data name="PollResultCommand" xml:space="preserve">
-    <value>Poll Result Command (Optional)</value>
-  </data>
-  <data name="PollResultCommandType" xml:space="preserve">
-    <value>Poll Result Command Type</value>
-  </data>
   <data name="PortName" xml:space="preserve">
     <value>Port Name</value>
   </data>
@@ -1568,12 +1277,6 @@
   </data>
   <data name="Press" xml:space="preserve">
     <value>Press</value>
-  </data>
-  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>Prevent Smaller Cooldowns from Overwriting</value>
-  </data>
-  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>Prevent Unknown MixPlay Users</value>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
     <value>Primary Currency</value>
@@ -1626,14 +1329,8 @@
   <data name="Quotes" xml:space="preserve">
     <value>Quotes</value>
   </data>
-  <data name="RandomStreamer" xml:space="preserve">
-    <value>Random Streamer</value>
-  </data>
   <data name="Rank" xml:space="preserve">
     <value>Rank</value>
-  </data>
-  <data name="RankMinimum" xml:space="preserve">
-    <value>Rank Minimum</value>
   </data>
   <data name="RankName" xml:space="preserve">
     <value>Rank Name</value>
@@ -1643,15 +1340,6 @@
   </data>
   <data name="Rate" xml:space="preserve">
     <value>Rate (0% - 150%)</value>
-  </data>
-  <data name="RateReview" xml:space="preserve">
-    <value>Rate/Review</value>
-  </data>
-  <data name="RateSecs" xml:space="preserve">
-    <value>Rate (Secs)</value>
-  </data>
-  <data name="Rating" xml:space="preserve">
-    <value>Rating</value>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>Read From File</value>
@@ -1737,12 +1425,6 @@
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Retroactively Give Points</value>
   </data>
-  <data name="Review" xml:space="preserve">
-    <value>Review</value>
-  </data>
-  <data name="Reviews" xml:space="preserve">
-    <value>Reviews</value>
-  </data>
   <data name="RightButton" xml:space="preserve">
     <value>Right Button</value>
   </data>
@@ -1770,14 +1452,8 @@
   <data name="RunOneRandomly" xml:space="preserve">
     <value>Run One Randomly</value>
   </data>
-  <data name="SameAgeRating" xml:space="preserve">
-    <value>Same Age Rating</value>
-  </data>
   <data name="SameGame" xml:space="preserve">
     <value>Same Game</value>
-  </data>
-  <data name="SameTeam" xml:space="preserve">
-    <value>Same Team</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -1809,14 +1485,8 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>Search Criteria</value>
   </data>
-  <data name="SearchTerms" xml:space="preserve">
-    <value>Search Terms</value>
-  </data>
   <data name="Seconds" xml:space="preserve">
     <value>Seconds</value>
-  </data>
-  <data name="SecondsAllCaps" xml:space="preserve">
-    <value>SECONDS</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Second Value</value>
@@ -1827,14 +1497,8 @@
   <data name="SelectFirstType" xml:space="preserve">
     <value>Select First User of Type in Queue</value>
   </data>
-  <data name="SelectGameHeader" xml:space="preserve">
-    <value>Select the Game Type you would like to create</value>
-  </data>
   <data name="SelectRandom" xml:space="preserve">
     <value>Select Random User in Queue</value>
-  </data>
-  <data name="SelectTypeOfCommand" xml:space="preserve">
-    <value>Select the type of command you would like to build:</value>
   </data>
   <data name="SellPrice" xml:space="preserve">
     <value>Sell Price</value>
@@ -1875,9 +1539,6 @@
   <data name="Set" xml:space="preserve">
     <value>Set</value>
   </data>
-  <data name="SetAudience" xml:space="preserve">
-    <value>Set Audience</value>
-  </data>
   <data name="SetGame" xml:space="preserve">
     <value>Set Game</value>
   </data>
@@ -1893,9 +1554,6 @@
   <data name="SetUserTitle" xml:space="preserve">
     <value>Set User Title</value>
   </data>
-  <data name="ShareCode" xml:space="preserve">
-    <value>Share Code</value>
-  </data>
   <data name="Shift" xml:space="preserve">
     <value>Shift</value>
   </data>
@@ -1908,9 +1566,6 @@
   <data name="ShopCurrency" xml:space="preserve">
     <value>Shop Currency</value>
   </data>
-  <data name="ShowEventAlerts" xml:space="preserve">
-    <value>Show Event Alerts</value>
-  </data>
   <data name="ShowInfoInChat" xml:space="preserve">
     <value>Show Info In Chat</value>
   </data>
@@ -1920,9 +1575,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>Show Message Timestamp</value>
   </data>
-  <data name="ShowMixrElixrEmotes" xml:space="preserve">
-    <value>Show MixrElixr Emotes (Requires Restart)</value>
-  </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
     <value>Show On Chat List Context Menu</value>
   </data>
@@ -1931,15 +1583,6 @@
   </data>
   <data name="ShowWindow" xml:space="preserve">
     <value>Show Window</value>
-  </data>
-  <data name="SingleAction" xml:space="preserve">
-    <value>Single Action</value>
-  </data>
-  <data name="SkillsUsed" xml:space="preserve">
-    <value>Skills Used</value>
-  </data>
-  <data name="SmallStreamer" xml:space="preserve">
-    <value>Small Streamer (&lt;10)</value>
   </data>
   <data name="SongRequest" xml:space="preserve">
     <value>Song Request</value>
@@ -2028,9 +1671,6 @@
   <data name="StreamsWatched" xml:space="preserve">
     <value>Streams Watched</value>
   </data>
-  <data name="StreamTitle" xml:space="preserve">
-    <value>Stream Title</value>
-  </data>
   <data name="StrikeCommands" xml:space="preserve">
     <value>Strike Commands</value>
   </data>
@@ -2073,9 +1713,6 @@
   <data name="TaggedInChat" xml:space="preserve">
     <value>Tagged In Chat</value>
   </data>
-  <data name="Tags" xml:space="preserve">
-    <value>Tags</value>
-  </data>
   <data name="TargetUser" xml:space="preserve">
     <value>Target User</value>
   </data>
@@ -2088,17 +1725,8 @@
   <data name="Team" xml:space="preserve">
     <value>Team</value>
   </data>
-  <data name="TeamName" xml:space="preserve">
-    <value>Team Name</value>
-  </data>
-  <data name="Teen" xml:space="preserve">
-    <value>Teen</value>
-  </data>
   <data name="TestCommand" xml:space="preserve">
     <value>Test Command</value>
-  </data>
-  <data name="TestStreamWarning" xml:space="preserve">
-    <value>Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages &amp; whispers. Are you sure you still wish to connect it?</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
@@ -2111,9 +1739,6 @@
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>Text To Speech</value>
-  </data>
-  <data name="TextToTranslate" xml:space="preserve">
-    <value>Text To Translate</value>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
     <value>Themes &amp; Colors</value>
@@ -2163,9 +1788,6 @@
   <data name="TotalTimeMins" xml:space="preserve">
     <value>Total Time (Mins)</value>
   </data>
-  <data name="TotalUsers" xml:space="preserve">
-    <value>Total Users</value>
-  </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
     <value>Track Whisperer Numbers</value>
   </data>
@@ -2180,9 +1802,6 @@
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value />
-  </data>
-  <data name="TriggerHint" xml:space="preserve">
-    <value>Trigger(s) in Chat (No "!" needed)</value>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>Tweet Image URL (Optional)</value>
@@ -2202,17 +1821,8 @@
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="TypeToAdd" xml:space="preserve">
-    <value>Type To Add</value>
-  </data>
   <data name="Unassigned" xml:space="preserve">
     <value>Unassigned</value>
-  </data>
-  <data name="UnbanAllUsers" xml:space="preserve">
-    <value>Unban All Users</value>
-  </data>
-  <data name="UnbanAllUsersHeader" xml:space="preserve">
-    <value>Un-ban all users from your channel</value>
   </data>
   <data name="Ungrouped" xml:space="preserve">
     <value>Ungrouped</value>
@@ -2229,14 +1839,8 @@
   <data name="Update" xml:space="preserve">
     <value>Update</value>
   </data>
-  <data name="UpdateChannel" xml:space="preserve">
-    <value>Update Channel</value>
-  </data>
   <data name="UpdateCommand" xml:space="preserve">
     <value>Update Command</value>
-  </data>
-  <data name="UpdatedValue" xml:space="preserve">
-    <value>Updated Value</value>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Update Preview Program</value>
@@ -2246,9 +1850,6 @@
   </data>
   <data name="UploadFilePath" xml:space="preserve">
     <value>Upload File Path (Optional)</value>
-  </data>
-  <data name="UploadTo" xml:space="preserve">
-    <value>Upload To</value>
   </data>
   <data name="Uptime" xml:space="preserve">
     <value>Uptime</value>
@@ -2313,9 +1914,6 @@
   <data name="UserTitles" xml:space="preserve">
     <value>User Titles</value>
   </data>
-  <data name="UserToMove" xml:space="preserve">
-    <value>User To Move (Optional)</value>
-  </data>
   <data name="Value1" xml:space="preserve">
     <value>Value 1 (Optional)</value>
   </data>
@@ -2333,9 +1931,6 @@
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
-  </data>
-  <data name="VersionID" xml:space="preserve">
-    <value>Version ID</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
@@ -2397,29 +1992,17 @@
   <data name="WebRequestURL" xml:space="preserve">
     <value>Web Request URL</value>
   </data>
-  <data name="WebShow" xml:space="preserve">
-    <value>Web Show</value>
-  </data>
   <data name="Weekly" xml:space="preserve">
     <value>Weekly</value>
   </data>
-  <data name="WhatIsTrigger" xml:space="preserve">
-    <value>What text in chat will trigger this command (EX: "!follow")?</value>
-  </data>
   <data name="Whisper" xml:space="preserve">
     <value>Whisper</value>
-  </data>
-  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
-    <value>Whisper All Alerts to Streamer Account</value>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>Whisper User (Optional)</value>
   </data>
   <data name="White" xml:space="preserve">
     <value>White</value>
-  </data>
-  <data name="WhoCanRun" xml:space="preserve">
-    <value>Who should be allowed to run this command?</value>
   </data>
   <data name="Widget" xml:space="preserve">
     <value>Widget</value>
@@ -2429,9 +2012,6 @@
   </data>
   <data name="Winner" xml:space="preserve">
     <value>Winner</value>
-  </data>
-  <data name="WinnerAllCaps" xml:space="preserve">
-    <value>WINNER</value>
   </data>
   <data name="WinnerSelected" xml:space="preserve">
     <value>Winner Selected</value>
@@ -2496,9 +2076,6 @@
   <data name="ExtraLifeDonation" xml:space="preserve">
     <value>Extra Life Donation</value>
   </data>
-  <data name="GawkBoxDonation" xml:space="preserve">
-    <value>GawkBox Donation</value>
-  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Donation</value>
   </data>
@@ -2538,17 +2115,11 @@
   <data name="Ban" xml:space="preserve">
     <value>Ban</value>
   </data>
-  <data name="GlobalTimeout" xml:space="preserve">
-    <value>Global Timeout</value>
-  </data>
   <data name="Purge" xml:space="preserve">
     <value>Purge</value>
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>Timeout</value>
-  </data>
-  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
-    <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
   </data>
   <data name="Imported" xml:space="preserve">
     <value>Imported</value>
@@ -2562,14 +2133,8 @@
   <data name="CustomizeStreamPass" xml:space="preserve">
     <value>Customize Stream Pass</value>
   </data>
-  <data name="ActivityRate" xml:space="preserve">
-    <value>Activity Rate:</value>
-  </data>
   <data name="DonationBonus" xml:space="preserve">
     <value>Donation Bonus</value>
-  </data>
-  <data name="EmberBonus" xml:space="preserve">
-    <value>Ember Bonus</value>
   </data>
   <data name="FollowBonus" xml:space="preserve">
     <value>Follow Bonus</value>
@@ -2625,9 +2190,6 @@
   <data name="StreamPass" xml:space="preserve">
     <value>Stream Pass</value>
   </data>
-  <data name="TotalLevels" xml:space="preserve">
-    <value>Total Levels</value>
-  </data>
   <data name="Dutch" xml:space="preserve">
     <value>Dutch</value>
   </data>
@@ -2651,9 +2213,6 @@
   </data>
   <data name="ConfirmDeleteCommand" xml:space="preserve">
     <value>Are you sure you want to delete this command?</value>
-  </data>
-  <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
-    <value>Are you sure you want to delete this custom level up command?</value>
   </data>
   <data name="MaxLevel" xml:space="preserve">
     <value>Max Level</value>
@@ -2811,9 +2370,6 @@
   <data name="LessThanOrEqualTo" xml:space="preserve">
     <value>&lt;=</value>
   </data>
-  <data name="NotEqualTo" xml:space="preserve">
-    <value>&lt;&gt;</value>
-  </data>
   <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
     <value>There are no more of this product</value>
   </data>
@@ -2843,9 +2399,6 @@
   </data>
   <data name="TwitchChannelPoints" xml:space="preserve">
     <value>Twitch Channel Points</value>
-  </data>
-  <data name="AddRewardCommand" xml:space="preserve">
-    <value>Add Reward Command</value>
   </data>
   <data name="ChannelPoints" xml:space="preserve">
     <value>Channel Points</value>
@@ -2909,9 +2462,6 @@
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>Clip Playback</value>
-  </data>
-  <data name="SubTier" xml:space="preserve">
-    <value>Sub Tier</value>
   </data>
   <data name="1" xml:space="preserve">
     <value>1</value>
@@ -3119,9 +2669,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="FileActionMissingLineToRead" xml:space="preserve">
     <value>File Action: Missing line to read</value>
   </data>
-  <data name="FileActionMissingTextToSave" xml:space="preserve">
-    <value>File Action: Missing text to save</value>
-  </data>
   <data name="IFTTTActionMissingEventName" xml:space="preserve">
     <value>IFTTT Action: Missing event name</value>
   </data>
@@ -3203,12 +2750,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="TextToSpeechActionMissingVoice" xml:space="preserve">
     <value>Text to Speech Action: Missing voice</value>
   </data>
-  <data name="TranslationActionMissingLanguage" xml:space="preserve">
-    <value>Translation Action: Missing language</value>
-  </data>
-  <data name="TranslationActionMissingText" xml:space="preserve">
-    <value>Translation Action: Missing text</value>
-  </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
     <value>Twitter Action: Tweet can not contain any "@" tags</value>
   </data>
@@ -3281,17 +2822,8 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="StreamingSoftwareActionMissingWebBrowserSourceFilePath" xml:space="preserve">
     <value>Streaming Software Action: Missing web browser source file path</value>
   </data>
-  <data name="SuccessTriggerType" xml:space="preserve">
-    <value>Success Trigger Type</value>
-  </data>
   <data name="ConditionalActionClauseMissingValue" xml:space="preserve">
     <value>Conditional Action: Clause missing value</value>
-  </data>
-  <data name="ConditionalActionMissingSuccessTrigger" xml:space="preserve">
-    <value>Conditional Action: Missing success trigger</value>
-  </data>
-  <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
-    <value>Conditional Action: Success trigger action has errors</value>
   </data>
   <data name="ShowHideWidget" xml:space="preserve">
     <value>Show/Hide Widget</value>
@@ -3370,9 +2902,6 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   </data>
   <data name="GameCommandCouldNotFindUser" xml:space="preserve">
     <value>A valid user could not be found</value>
-  </data>
-  <data name="GameCommandInvalidBetAmount" xml:space="preserve">
-    <value>A valid bet amount must be specified</value>
   </data>
   <data name="GameCommandTargetUserInvalidAmount" xml:space="preserve">
     <value>The user does not have {0} {1}</value>
@@ -3454,17 +2983,11 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandBidDescription" xml:space="preserve">
     <value>The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn't abused, such as Moderators or higher only.</value>
   </data>
-  <data name="GameCommandBidExample" xml:space="preserve">
-    <value>EX: !bid 100</value>
-  </data>
   <data name="CoinPusher" xml:space="preserve">
     <value>Coin Pusher</value>
   </data>
   <data name="GameCommandCoinPusherDescription" xml:space="preserve">
     <value>The Coin Pusher game allows a user to deposit a specific amount of currency into a machine with the chance for a large payout. A minimum amount of currency must be inserted into the machine to allow for a payout and a minimum &amp; maximum payout percentage can be specified when a payout occurs.</value>
-  </data>
-  <data name="GameCommandCoinPusherExample" xml:space="preserve">
-    <value>EX: !pusher 100</value>
   </data>
   <data name="Duel" xml:space="preserve">
     <value>Duel</value>
@@ -3472,17 +2995,11 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandDuelDescription" xml:space="preserve">
     <value>The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user.</value>
   </data>
-  <data name="GameCommandDuelExample" xml:space="preserve">
-    <value>EX: !duel &lt;USERNAME&gt; 100</value>
-  </data>
   <data name="Hangman" xml:space="preserve">
     <value>Hangman</value>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
     <value>The Hangman game allows users to guess the letter combination of a random word to win an accumulated pot of currency. Every failed guess puts the required currency amount into the pot and adds a failure, while a correct guess adds the letter. The person to guess the last missing letter gets the whole pot. Users have the ability to see the status of the game to see how much the pot is and what has been guessed already.</value>
-  </data>
-  <data name="GameCommandHangmanExample" xml:space="preserve">
-    <value>EX: !hangman &lt;LETTER&gt;</value>
   </data>
   <data name="Heist" xml:space="preserve">
     <value>Heist</value>
@@ -3490,17 +3007,11 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandHeistDescription" xml:space="preserve">
     <value>The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet</value>
   </data>
-  <data name="GameCommandHeistExample" xml:space="preserve">
-    <value>EX: !heist 100</value>
-  </data>
   <data name="Hitman" xml:space="preserve">
     <value>Hitman</value>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
     <value>The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
-  </data>
-  <data name="GameCommandHitmanExample" xml:space="preserve">
-    <value>EX: !hitman 100</value>
   </data>
   <data name="HotPotato" xml:space="preserve">
     <value>Hot Potato</value>
@@ -3508,18 +3019,11 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
     <value>The Hot Potato game gives a ticking potato bomb to a player, who must then pass it off to someone else before it explodes. The user who passed the potato bomb last is dubbed the winner ($username) and the user who had the potato bomb when it exploded is dubbed the loser ($targetusername). By default, the passing of the potato bomb is done randomly to a new user, but you can optionally allow the passer to specify who it gets tossed to. You may also set whether the time limit on the hot potato resets with each toss.</value>
   </data>
-  <data name="GameCommandHotPotatoExample" xml:space="preserve">
-    <value>EX: !potato
-EX: !potato &lt;TARGET USER&gt;</value>
-  </data>
   <data name="LockBox" xml:space="preserve">
     <value>Lock Box</value>
   </data>
   <data name="GameCommandLockBoxDescription" xml:space="preserve">
     <value>The Lock Box game allows you to guess the combination of a locked box using the numbers 0 - 9 that contains a large amount of currency. Every failed guess puts the required currency amount into the box and gives a hint to the combination, while a correct guess gets all the currency inside. Users have the ability to see the status of the lock box to see how much is in it and inspect the lock box for a hint as to the combination.</value>
-  </data>
-  <data name="GameCommandLockBoxExample" xml:space="preserve">
-    <value>EX: !lockbox 109</value>
   </data>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
     <value>The probability for the role {0} does not add up to 100 across all outcomes</value>
@@ -3530,18 +3034,11 @@ EX: !potato &lt;TARGET USER&gt;</value>
   <data name="GameCommandRouletteDescription" xml:space="preserve">
     <value>The Roulette game allows a user to start a group betting game amongst all users to bet on a specific number or name. If the game is based on a number range, then a user can select any number in that range. If the game is based on a series of names, a user can select any one of the names. All users who select the winning bet type get the payout for their bet, everyone else losses their bet.</value>
   </data>
-  <data name="GameCommandRouletteExample" xml:space="preserve">
-    <value>EX: !roulette &lt;NUMBER&gt; 100</value>
-  </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>Russian Roulette</value>
   </data>
   <data name="GameCommandRussianRouletteDescription" xml:space="preserve">
     <value>The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally.</value>
-  </data>
-  <data name="GameCommandRussianRouletteExample" xml:space="preserve">
-    <value>EX: !rr 100
-EX: !rr</value>
   </data>
   <data name="SlotMachine" xml:space="preserve">
     <value>Slot Machine</value>
@@ -3549,17 +3046,11 @@ EX: !rr</value>
   <data name="GameCommandSlotMachineDescription" xml:space="preserve">
     <value>The Slot Machine game picks a random set of 3 symbols from a pre-defined list and selects any outcome that matches those symbols. Besides selecting a payout for each outcome, you can also run a customized command for each outcome.</value>
   </data>
-  <data name="GameCommandSlotMachineExample" xml:space="preserve">
-    <value>EX: !slots 100</value>
-  </data>
   <data name="Spin" xml:space="preserve">
     <value>Spin</value>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
     <value>The Spin game picks a random number and selects an outcome based on that number. Besides selecting a payout for each outcome, you can also run a customized command for each outcome.</value>
-  </data>
-  <data name="GameCommandSpinExample" xml:space="preserve">
-    <value>EX: !spin 100</value>
   </data>
   <data name="GameCommandSpinLoseExample" xml:space="preserve">
     <value>Sorry @$username, you lost the spin!</value>
@@ -3573,10 +3064,6 @@ EX: !rr</value>
   <data name="GameCommandStealDescription" xml:space="preserve">
     <value>The Steal game allows the user to attempt to steal currency from another user. If successful, the user steals the bet amount from the other user. If failed, they lose the bet amount.</value>
   </data>
-  <data name="GameCommandStealExample" xml:space="preserve">
-    <value>EX: !steal 100
-EX: !steal &lt;USERNAME&gt; 100</value>
-  </data>
   <data name="TreasureDefense" xml:space="preserve">
     <value>Treasure Defense</value>
   </data>
@@ -3585,19 +3072,11 @@ EX: !steal &lt;USERNAME&gt; 100</value>
 
 After the time limit is up, a user from the participants is selected to be King. All other users are either then selected to be Knights or Thieves. It is the job of the King to pick one participant in hopes that they are a Knight to defend the treasure they found. If the King selects a Knight, then the King &amp; Knights share the winnings. If the King selects a Thief, then the Thieves share the winnings.</value>
   </data>
-  <data name="GameCommandTreasureDefenseExample" xml:space="preserve">
-    <value>EX: !treasure &lt;AMOUNT&gt;
-EX: !treasure
-EX: !treasure &lt;SELECTED USER&gt;</value>
-  </data>
   <data name="Trivia" xml:space="preserve">
     <value>Trivia</value>
   </data>
   <data name="GameCommandTriviaDescription" xml:space="preserve">
     <value>The Trivia game picks a random question from a pre-determined list and asks all users to select the correct answer from a list of possible ones. All users that selected the correct answer are awarded a payout.</value>
-  </data>
-  <data name="GameCommandTriviaExample" xml:space="preserve">
-    <value>EX: !trivia</value>
   </data>
   <data name="Volcano" xml:space="preserve">
     <value>Volcano</value>
@@ -3607,17 +3086,11 @@ EX: !treasure &lt;SELECTED USER&gt;</value>
 
 Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized payout for them. After the eruption, all users have a chance to collect erupted currency during the collection time limit. After the collection is done, the volcano contents resets back to 0.</value>
   </data>
-  <data name="GameCommandVolcanoExample" xml:space="preserve">
-    <value>EX: !volcano 100</value>
-  </data>
   <data name="WordScramble" xml:space="preserve">
     <value>Word Scramble</value>
   </data>
   <data name="GameCommandWordScrambleDescription" xml:space="preserve">
     <value>The Word Scramble game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a scrambled word will appear in chat. If a user types the unscrambled word in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money.</value>
-  </data>
-  <data name="GameCommandWordScrambleExample" xml:space="preserve">
-    <value>EX: !scramble 100</value>
   </data>
   <data name="Outcomes" xml:space="preserve">
     <value>Outcomes</value>
@@ -3652,17 +3125,11 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   <data name="MinimumOnly" xml:space="preserve">
     <value>Minimum Only</value>
   </data>
-  <data name="NoCost" xml:space="preserve">
-    <value>No Cost</value>
-  </data>
   <data name="RequiredAmount" xml:space="preserve">
     <value>Required Amount</value>
   </data>
   <data name="GameCurrency" xml:space="preserve">
     <value>Game Currency</value>
-  </data>
-  <data name="GameCommandAtLeast1Currency" xml:space="preserve">
-    <value>At least 1 currency must be created before Games can be used</value>
   </data>
   <data name="NewGame" xml:space="preserve">
     <value>New Game</value>
@@ -3939,9 +3406,6 @@ Once the volcano reaches stage 3, each subsequent deposit has a chance to trigge
   </data>
   <data name="GameCommandRouletteStartedExample" xml:space="preserve">
     <value>@$username has started a game of roulette! Type !roulette &lt;BET TYPE&gt; in chat to play! Valid Bet Types: $gamevalidbettypes</value>
-  </data>
-  <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
-    <value>@$username won $gamepayout {0}!</value>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
     <value>The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gamepayout {0}!</value>
@@ -4504,9 +3968,6 @@ that this could cause some unforeseen issues, so please use with caution.</value
   </data>
   <data name="RankSystemDoesNotExist" xml:space="preserve">
     <value>Rank System does not exist</value>
-  </data>
-  <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
-    <value>Target user does not have the correct amount</value>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
     <value>Primary currency must be set to Minimum Only</value>

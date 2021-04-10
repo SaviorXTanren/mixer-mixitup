@@ -83,7 +83,10 @@ namespace MixItUp.Base.Model.Commands.Games
                     this.targetParameters = parameters;
 
                     this.gameActive = false;
+
                     this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.GetPrimaryBetAmount(this.runParameters).ToString();
+                    this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
+
                     if (this.GenerateProbability() <= this.SuccessfulOutcome.GetRoleProbabilityPayout(this.runParameters.User).Probability)
                     {
                         this.PerformPrimaryMultiplierPayout(this.runParameters, 2);

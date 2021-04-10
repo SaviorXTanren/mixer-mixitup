@@ -37,13 +37,13 @@ namespace MixItUp.WPF.Windows.Currency
             this.lastSelectedProductCommand = (RedemptionStoreProductViewModel)button.DataContext;
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, MixItUp.Base.Resources.CustomProductRedemption);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private void CustomProductCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
-            window.Show();
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
+            window.ForceShow();
         }
 
         private void CustomProductCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
@@ -55,14 +55,14 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void ManualRedeemNeededCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(this.viewModel.ManualRedeemNeededCommand);
-            window.Show();
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(this.viewModel.ManualRedeemNeededCommand);
+            window.ForceShow();
         }
 
         private void DefaultRedeemCommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(this.viewModel.DefaultRedemptionCommand);
-            window.Show();
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(this.viewModel.DefaultRedemptionCommand);
+            window.ForceShow();
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)

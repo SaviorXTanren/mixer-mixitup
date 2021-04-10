@@ -71,14 +71,14 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.Custom, string.Format("{0} - {1}", MixItUp.Base.Resources.LevelUp, this.viewModel.CustomLevelUpNumber));
                 window.CommandSaved += CustomLevelUpWindow_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 
         private void LevelCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
-            window.Show();
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(((CommandListingButtonsControl)sender).GetCommandFromCommandButtons());
+            window.ForceShow();
         }
 
         private void LevelCommandButtons_DeleteClicked(object sender, System.Windows.RoutedEventArgs e)
@@ -90,9 +90,9 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void DefaultLevelUpCommandButtons_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(this.viewModel.DefaultLevelUpCommand);
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(this.viewModel.DefaultLevelUpCommand);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)

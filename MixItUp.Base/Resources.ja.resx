@@ -171,15 +171,6 @@
   <data name="Actions" xml:space="preserve">
     <value>アクション</value>
   </data>
-  <data name="ActionToPeform" xml:space="preserve">
-    <value>アクション・フォーフォーム</value>
-  </data>
-  <data name="ActionToPerformWithResponse" xml:space="preserve">
-    <value>応答を使用して実行するアクション</value>
-  </data>
-  <data name="ActionToPerformWithTranslation" xml:space="preserve">
-    <value>翻訳を使用して実行するアクション</value>
-  </data>
   <data name="Add" xml:space="preserve">
     <value>追加</value>
   </data>
@@ -191,18 +182,6 @@
   </data>
   <data name="AddCurrencyRank" xml:space="preserve">
     <value>通貨/ランクの追加</value>
-  </data>
-  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
-    <value>このユーザーは既にこのグループに存在します。</value>
-  </data>
-  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>その名前のユーザーが見つかりませんでした。</value>
-  </data>
-  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>あなたはすでにこのチームを好きになっとりしています。</value>
-  </data>
-  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>その名前のチームが見つかりませんでした。</value>
   </data>
   <data name="AddInventory" xml:space="preserve">
     <value>インベントリの追加</value>
@@ -234,23 +213,11 @@
   <data name="AddToUser" xml:space="preserve">
     <value>ユーザーに追加</value>
   </data>
-  <data name="Adult" xml:space="preserve">
-    <value>18+</value>
-  </data>
   <data name="Advanced" xml:space="preserve">
     <value>詳細</value>
   </data>
-  <data name="AdvancedCommand" xml:space="preserve">
-    <value>詳細コマンド</value>
-  </data>
-  <data name="AgeRating" xml:space="preserve">
-    <value>年齢区分</value>
-  </data>
   <data name="Alerts" xml:space="preserve">
     <value>アラート</value>
-  </data>
-  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>共同ストリーミング中にチャネルでのみコマンドを許可する</value>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
     <value>コマンドのささやきを許可する</value>
@@ -260,9 +227,6 @@
   </data>
   <data name="AllowProfanity" xml:space="preserve">
     <value>冒涜を許可する</value>
-  </data>
-  <data name="AlreadyInstalled" xml:space="preserve">
-    <value>既にインストール済み</value>
   </data>
   <data name="Alt" xml:space="preserve">
     <value>アルト</value>
@@ -282,18 +246,6 @@
   <data name="AmountSeconds" xml:space="preserve">
     <value>金額 (秒)</value>
   </data>
-  <data name="Answer1" xml:space="preserve">
-    <value>回答 1</value>
-  </data>
-  <data name="Answer2" xml:space="preserve">
-    <value>回答 2</value>
-  </data>
-  <data name="Answer3" xml:space="preserve">
-    <value>回答 3 (オプション)</value>
-  </data>
-  <data name="Answer4" xml:space="preserve">
-    <value>回答 4 (オプション)</value>
-  </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>任意のチャットメッセージサウンド</value>
   </data>
@@ -308,18 +260,6 @@
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
     <value>承認済みデバイス</value>
-  </data>
-  <data name="ArgumentsTranslatedText" xml:space="preserve">
-    <value>引数 ($translationresult = 翻訳済みテキスト)</value>
-  </data>
-  <data name="ArgumentsWebRequest" xml:space="preserve">
-    <value>引数 ($webrequestresult = 結果テキスト)</value>
-  </data>
-  <data name="Assets" xml:space="preserve">
-    <value>資産</value>
-  </data>
-  <data name="Audience" xml:space="preserve">
-    <value>聴衆</value>
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>オーディオ出力デバイス</value>
@@ -354,18 +294,6 @@
   <data name="Banned" xml:space="preserve">
     <value>禁止</value>
   </data>
-  <data name="BasicChatCommand" xml:space="preserve">
-    <value>基本的なチャットコマンド</value>
-  </data>
-  <data name="BasicSoundCommand" xml:space="preserve">
-    <value>基本サウンド コマンド</value>
-  </data>
-  <data name="BasicTimerDescription" xml:space="preserve">
-    <value>このタイマーコマンドを何と呼ぶべきですか?</value>
-  </data>
-  <data name="BasicTimerNameHint" xml:space="preserve">
-    <value>名前(EX:「フォローミー」)</value>
-  </data>
   <data name="BaudRate" xml:space="preserve">
     <value>ボーレート</value>
   </data>
@@ -396,9 +324,6 @@
   <data name="ButtonName" xml:space="preserve">
     <value>ボタン名</value>
   </data>
-  <data name="ButtonTrigger" xml:space="preserve">
-    <value>ボタントリガー</value>
-  </data>
   <data name="BuyPrice" xml:space="preserve">
     <value>価格を購入</value>
   </data>
@@ -420,15 +345,6 @@
   <data name="ChannelEditor" xml:space="preserve">
     <value>チャンネルエディタ</value>
   </data>
-  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>有効な年齢区分を選択する必要があります。</value>
-  </data>
-  <data name="ChannelErrorInvalidGame" xml:space="preserve">
-    <value>有効な既存のゲーム名を選択する必要があります。</value>
-  </data>
-  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>ストリームのタイトルを指定する必要があります。</value>
-  </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>チャンネル情報</value>
   </data>
@@ -446,15 +362,6 @@
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>チャット メッセージの送信</value>
-  </data>
-  <data name="ChatMessageTranslatedText" xml:space="preserve">
-    <value>チャットメッセージ ($translationresult = 翻訳済みテキスト)</value>
-  </data>
-  <data name="ChatMessageWebRequest" xml:space="preserve">
-    <value>チャットメッセージ ($webrequestresult = 結果テキスト)</value>
-  </data>
-  <data name="ChatMixPlayParticipation" xml:space="preserve">
-    <value>チャット/ミックスプレイ参加</value>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
     <value>チャットタグ付きサウンド</value>
@@ -488,12 +395,6 @@
   </data>
   <data name="Click" xml:space="preserve">
     <value>クリック</value>
-  </data>
-  <data name="ClipLength" xml:space="preserve">
-    <value>長さ(15-300秒)</value>
-  </data>
-  <data name="ClipName" xml:space="preserve">
-    <value>クリップ名</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>閉じる</value>
@@ -543,23 +444,11 @@
   <data name="Control" xml:space="preserve">
     <value>コントロール</value>
   </data>
-  <data name="ControlID" xml:space="preserve">
-    <value>コントロール ID</value>
-  </data>
-  <data name="ConvertToAdvanced" xml:space="preserve">
-    <value>高度に変換</value>
-  </data>
   <data name="Cooldown" xml:space="preserve">
     <value>クールダウン</value>
   </data>
-  <data name="CooldownSeconds" xml:space="preserve">
-    <value>クールダウン (秒)</value>
-  </data>
   <data name="Cost" xml:space="preserve">
     <value>費用</value>
-  </data>
-  <data name="Costream" xml:space="preserve">
-    <value>コストリーム</value>
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>カウンター(作成と更新)</value>
@@ -570,14 +459,8 @@
   <data name="CountersFolder" xml:space="preserve">
     <value>カウンタ フォルダ</value>
   </data>
-  <data name="CreatedBy" xml:space="preserve">
-    <value>作成者</value>
-  </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>サブベッドの累積月数</value>
-  </data>
-  <data name="CurrenciesRanksInventories" xml:space="preserve">
-    <value>通貨/ランク/在庫</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>通貨</value>
@@ -612,20 +495,11 @@
   <data name="CustomEntranceCommand" xml:space="preserve">
     <value>カスタムエントランスコマンド</value>
   </data>
-  <data name="CustomizeCommand" xml:space="preserve">
-    <value>[コマンドのカスタマイズ]</value>
-  </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>通貨/ランクのカスタマイズ</value>
   </data>
-  <data name="CustomizeGame" xml:space="preserve">
-    <value>ゲームをカスタマイズする</value>
-  </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>インベントリのカスタマイズ</value>
-  </data>
-  <data name="CustomMixPlayProjects" xml:space="preserve">
-    <value>カスタム ミックスプレイ プロジェクト</value>
   </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>カスタム タイトル</value>
@@ -672,9 +546,6 @@
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>既定の最大金額</value>
   </data>
-  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
-    <value>接続するデフォルトのミックスプレイゲーム</value>
-  </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>デフォルト出力</value>
   </data>
@@ -689,9 +560,6 @@
   </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>コマンドの削除</value>
-  </data>
-  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
-    <value>このグループを削除しますか?</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>説明</value>
@@ -714,9 +582,6 @@
   <data name="Disabled" xml:space="preserve">
     <value>無効</value>
   </data>
-  <data name="DisableDiagnostics" xml:space="preserve">
-    <value>診断を無効にする</value>
-  </data>
   <data name="DisableQueue" xml:space="preserve">
     <value>キューを無効にする</value>
   </data>
@@ -726,35 +591,11 @@
   <data name="Discord" xml:space="preserve">
     <value>不和</value>
   </data>
-  <data name="DisplayImage" xml:space="preserve">
-    <value>画像の表示 (オプション)</value>
-  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; 含む</value>
   </data>
   <data name="Donators" xml:space="preserve">
     <value>寄付</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>ダウンロード</value>
-  </data>
-  <data name="DownloadAndInstall" xml:space="preserve">
-    <value>ダウンロードとインストール</value>
-  </data>
-  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
-    <value>ffmpegをダウンロードしてインストールする</value>
-  </data>
-  <data name="DownloadClip" xml:space="preserve">
-    <value>クリップをダウンロード</value>
-  </data>
-  <data name="DownloadDirectory" xml:space="preserve">
-    <value>ディレクトリをダウンロード</value>
-  </data>
-  <data name="DownloadFrom" xml:space="preserve">
-    <value>ダウンロードから</value>
-  </data>
-  <data name="Drop" xml:space="preserve">
-    <value>落とす</value>
   </data>
   <data name="DTR" xml:space="preserve">
     <value>DTR</value>
@@ -771,9 +612,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>編集コマンド</value>
   </data>
-  <data name="EmptySoundFilePath" xml:space="preserve">
-    <value>サウンド ファイルのパスは空にできません。</value>
-  </data>
   <data name="Enable" xml:space="preserve">
     <value>有効</value>
   </data>
@@ -786,23 +624,14 @@
   <data name="EnableCommandGroup" xml:space="preserve">
     <value>コマンド グループを有効にする</value>
   </data>
-  <data name="EnableDiagnostics" xml:space="preserve">
-    <value>診断を有効にする</value>
-  </data>
   <data name="EnableDisable" xml:space="preserve">
     <value>有効/無効</value>
   </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>有効/無効コマンド</value>
   </data>
-  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
-    <value>問題を見つけるための診断ログの有効化/無効化</value>
-  </data>
   <data name="EnableDisableQueue" xml:space="preserve">
     <value>キューの有効化/無効化</value>
-  </data>
-  <data name="EnableDiscord" xml:space="preserve">
-    <value>[サービス] ページで不和接続を有効にしてください。</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
     <value>IFTTT 接続はサービスページで有効にしてください!</value>
@@ -818,9 +647,6 @@
   </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>キューを有効にする</value>
-  </data>
-  <data name="EnableReplayBuffer" xml:space="preserve">
-    <value>再生バッファが有効になっていません。OBS設定 -&gt;出力を開き、再生バッファを有効にします!</value>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
     <value>[サービス] ページでストリームラボ接続を有効にしてください。</value>
@@ -845,12 +671,6 @@
   </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>=</value>
-  </data>
-  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
-    <value>答えを選ぶには{0}に違いない。</value>
-  </data>
-  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
-    <value>このゲームを始めるには{0}にならなければなりません。</value>
   </data>
   <data name="Event" xml:space="preserve">
     <value>イベント</value>
@@ -885,23 +705,8 @@
   <data name="ExternalProgram" xml:space="preserve">
     <value>外部プログラム</value>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>家族</value>
-  </data>
   <data name="FanProgression" xml:space="preserve">
     <value>ファンの進行</value>
-  </data>
-  <data name="FavoritedUsersTeams" xml:space="preserve">
-    <value>お気に入りのユーザー/チーム</value>
-  </data>
-  <data name="FavoriteStreamers" xml:space="preserve">
-    <value>お気に入りのストリーマー</value>
-  </data>
-  <data name="FeatureMixItUpStreamer" xml:space="preserve">
-    <value>ミックス・イット・アップ・ストリーマーとして私をフィーチャー</value>
-  </data>
-  <data name="FFMPEGMustBeInstalled" xml:space="preserve">
-    <value>この機能を使用するには、ミックス・イット・アップ設定を介してFFMPEGをインストールする必要があります!</value>
   </data>
   <data name="FieldName" xml:space="preserve">
     <value>フィールド名</value>
@@ -923,12 +728,6 @@
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>レイドするチャンネルを探す</value>
-  </data>
-  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>襲撃するチャンネルを検索するための検索条件を選択する必要があります。</value>
-  </data>
-  <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>検索のクリテラに合ったチャンネルが見つかりません。</value>
   </data>
   <data name="FirstValue" xml:space="preserve">
     <value>最初の値</value>
@@ -959,9 +758,6 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>ゲームキュー</value>
-  </data>
-  <data name="GameQueueAction" xml:space="preserve">
-    <value>ゲームキューアクション</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>ゲーム</value>
@@ -1008,17 +804,11 @@
   <data name="GroupName" xml:space="preserve">
     <value>グループ名</value>
   </data>
-  <data name="GroupNameCaseSensitive" xml:space="preserve">
-    <value>グループ名 (大文字と小文字の区別)</value>
-  </data>
   <data name="Groups" xml:space="preserve">
     <value>グループ</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>ヘルプ</value>
-  </data>
-  <data name="HelpfulLinks" xml:space="preserve">
-    <value>役に立つリンク</value>
   </data>
   <data name="HideChatUserList" xml:space="preserve">
     <value>チャット ユーザー リストを非表示にする</value>
@@ -1029,9 +819,6 @@
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
     <value>ビューアと Chatter 番号を非表示にする</value>
   </data>
-  <data name="HostChannel" xml:space="preserve">
-    <value>ホスト チャネル</value>
-  </data>
   <data name="HotKey" xml:space="preserve">
     <value>ホットキー</value>
   </data>
@@ -1040,9 +827,6 @@
   </data>
   <data name="Hours" xml:space="preserve">
     <value>時間</value>
-  </data>
-  <data name="HowLongBeforeRun" xml:space="preserve">
-    <value>このコマンドを再実行できる時間 (秒単位) はどれくらいですか。</value>
   </data>
   <data name="HTML" xml:space="preserve">
     <value>Html</value>
@@ -1061,12 +845,6 @@
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>データのインポート</value>
-  </data>
-  <data name="IncludeCommandAssets" xml:space="preserve">
-    <value>コマンドアセットを含める</value>
-  </data>
-  <data name="IncorrectBotAccount" xml:space="preserve">
-    <value>ストリーマーアカウントとは別のアカウントにログインする必要があります。</value>
   </data>
   <data name="Indigo" xml:space="preserve">
     <value>インジゴ</value>
@@ -1143,14 +921,8 @@
   <data name="Language" xml:space="preserve">
     <value>言語 (再起動が必要)</value>
   </data>
-  <data name="LanguageToTranslateTo" xml:space="preserve">
-    <value>翻訳する言語</value>
-  </data>
   <data name="Large" xml:space="preserve">
     <value>大きな</value>
-  </data>
-  <data name="LargeStreamer" xml:space="preserve">
-    <value>ラージストリーマー (&gt;25)</value>
   </data>
   <data name="LastQuote" xml:space="preserve">
     <value>最後の引用</value>
@@ -1175,9 +947,6 @@
   </data>
   <data name="LeftButton" xml:space="preserve">
     <value>左ボタン</value>
-  </data>
-  <data name="LengthSecs" xml:space="preserve">
-    <value>長さ (秒)</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>&lt;</value>
@@ -1218,14 +987,8 @@
   <data name="Login" xml:space="preserve">
     <value>ログイン</value>
   </data>
-  <data name="LoginErrorNoChannelName" xml:space="preserve">
-    <value>チャネル名を入力する必要があります。</value>
-  </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
     <value>ログインするには、ストリーマー アカウントを選択する必要があります。</value>
-  </data>
-  <data name="LoginErrorNotModerator" xml:space="preserve">
-    <value>このチャンネルのモデレーターではありません。</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>ログアウトする</value>
@@ -1257,26 +1020,14 @@
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
     <value>マックス・パンクト/ 記号 / エモート</value>
   </data>
-  <data name="MaxTime" xml:space="preserve">
-    <value>最大時間</value>
-  </data>
   <data name="MaxValue" xml:space="preserve">
     <value>最大値</value>
-  </data>
-  <data name="MediumStreamer" xml:space="preserve">
-    <value>ミディアムストリーマー (10-25)</value>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
     <value>チームに会う</value>
   </data>
   <data name="Message" xml:space="preserve">
     <value>メッセージ</value>
-  </data>
-  <data name="MetadataName" xml:space="preserve">
-    <value>メタデータ名</value>
-  </data>
-  <data name="MetadataValue" xml:space="preserve">
-    <value>メタデータ値</value>
   </data>
   <data name="MiddleButton" xml:space="preserve">
     <value>中央ボタン</value>
@@ -1311,20 +1062,8 @@
   <data name="MixItUpOverlay" xml:space="preserve">
     <value>ミックス・イット・アップ・オーバーレイ</value>
   </data>
-  <data name="MixItUpStore" xml:space="preserve">
-    <value>ミックス・イット・アップ・ストア</value>
-  </data>
   <data name="MixPlay" xml:space="preserve">
     <value>ミックスプレイ</value>
-  </data>
-  <data name="MixPlayCooldownHeader" xml:space="preserve">
-    <value>クールダウンは何秒にしますか?</value>
-  </data>
-  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
-    <value>このボタンは、その上で、またはすべてと一緒にクールダウンする必要がありますか?</value>
-  </data>
-  <data name="MixPlayTextboxModeration" xml:space="preserve">
-    <value>入力したすべてのテキストに対してチャット モデレーションを使用しますか?</value>
   </data>
   <data name="Mod" xml:space="preserve">
     <value>Mod</value>
@@ -1365,9 +1104,6 @@
   <data name="MoveUp" xml:space="preserve">
     <value>上へ移動</value>
   </data>
-  <data name="Must" xml:space="preserve">
-    <value>べし</value>
-  </data>
   <data name="Mute" xml:space="preserve">
     <value>ミュート</value>
   </data>
@@ -1407,9 +1143,6 @@
   <data name="None" xml:space="preserve">
     <value>なし</value>
   </data>
-  <data name="NoResultsFound" xml:space="preserve">
-    <value>結果が見つかりません</value>
-  </data>
   <data name="Normal" xml:space="preserve">
     <value>通常</value>
   </data>
@@ -1439,9 +1172,6 @@
   </data>
   <data name="OnHost" xml:space="preserve">
     <value>ホスト上</value>
-  </data>
-  <data name="OnlineMinutes" xml:space="preserve">
-    <value>オンライン分</value>
   </data>
   <data name="OnlineRate" xml:space="preserve">
     <value>オンライン料金</value>
@@ -1485,9 +1215,6 @@
   <data name="Overlays" xml:space="preserve">
     <value>オーバーレイ</value>
   </data>
-  <data name="OverlayToUse" xml:space="preserve">
-    <value>使用するオーバーレイ</value>
-  </data>
   <data name="OverlayWarning1" xml:space="preserve">
     <value>警告: アニメーションが正しく動作しない場合があります。</value>
   </data>
@@ -1512,20 +1239,8 @@
   <data name="OvrStream" xml:space="preserve">
     <value>オーヴストリーム</value>
   </data>
-  <data name="OvrStreamTitleName" xml:space="preserve">
-    <value>OvrStream タイトル名</value>
-  </data>
   <data name="Partner" xml:space="preserve">
     <value>パートナー</value>
-  </data>
-  <data name="PartneredStreamer" xml:space="preserve">
-    <value>パートナード・ストリーマー</value>
-  </data>
-  <data name="PartnersOnly" xml:space="preserve">
-    <value>この機能は現在パートナーでのみ使用できます。</value>
-  </data>
-  <data name="PatreonBenefitRequirement" xml:space="preserve">
-    <value>パトリーンのメリット要件</value>
   </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>パトリーンユーザー</value>
@@ -1548,12 +1263,6 @@
   <data name="Play" xml:space="preserve">
     <value>再生</value>
   </data>
-  <data name="PollResultCommand" xml:space="preserve">
-    <value>ポーリング結果コマンド (オプション)</value>
-  </data>
-  <data name="PollResultCommandType" xml:space="preserve">
-    <value>ポーリング結果コマンドの種類</value>
-  </data>
   <data name="PortName" xml:space="preserve">
     <value>ポート名</value>
   </data>
@@ -1568,12 +1277,6 @@
   </data>
   <data name="Press" xml:space="preserve">
     <value>プレス</value>
-  </data>
-  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>小さなクールダウンによる上書きを防止する</value>
-  </data>
-  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>不明な MixPlay ユーザーを防止する</value>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
     <value>主要通貨</value>
@@ -1626,14 +1329,8 @@
   <data name="Quotes" xml:space="preserve">
     <value>引用符</value>
   </data>
-  <data name="RandomStreamer" xml:space="preserve">
-    <value>ランダムストリーマー</value>
-  </data>
   <data name="Rank" xml:space="preserve">
     <value>ランク</value>
-  </data>
-  <data name="RankMinimum" xml:space="preserve">
-    <value>ランクの最小値</value>
   </data>
   <data name="RankName" xml:space="preserve">
     <value>ランク名</value>
@@ -1643,15 +1340,6 @@
   </data>
   <data name="Rate" xml:space="preserve">
     <value>レート (0% - 150%)</value>
-  </data>
-  <data name="RateReview" xml:space="preserve">
-    <value>レート/レビュー</value>
-  </data>
-  <data name="RateSecs" xml:space="preserve">
-    <value>レート (秒)</value>
-  </data>
-  <data name="Rating" xml:space="preserve">
-    <value>評価</value>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>ファイルから読み取り</value>
@@ -1737,12 +1425,6 @@
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>さかのぼってポイントを与える</value>
   </data>
-  <data name="Review" xml:space="preserve">
-    <value>レビュー</value>
-  </data>
-  <data name="Reviews" xml:space="preserve">
-    <value>レビュー</value>
-  </data>
   <data name="RightButton" xml:space="preserve">
     <value>右ボタン</value>
   </data>
@@ -1770,14 +1452,8 @@
   <data name="RunOneRandomly" xml:space="preserve">
     <value>ランダムに実行</value>
   </data>
-  <data name="SameAgeRating" xml:space="preserve">
-    <value>同じ年齢区分</value>
-  </data>
   <data name="SameGame" xml:space="preserve">
     <value>同じゲーム</value>
-  </data>
-  <data name="SameTeam" xml:space="preserve">
-    <value>同じチーム</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>保存</value>
@@ -1809,14 +1485,8 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>検索条件</value>
   </data>
-  <data name="SearchTerms" xml:space="preserve">
-    <value>検索語句</value>
-  </data>
   <data name="Seconds" xml:space="preserve">
     <value>秒</value>
-  </data>
-  <data name="SecondsAllCaps" xml:space="preserve">
-    <value>お代わり</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>2 番目の値</value>
@@ -1827,14 +1497,8 @@
   <data name="SelectFirstType" xml:space="preserve">
     <value>キュー内のタイプの最初のユーザーの選択</value>
   </data>
-  <data name="SelectGameHeader" xml:space="preserve">
-    <value>作成するゲームタイプを選択します。</value>
-  </data>
   <data name="SelectRandom" xml:space="preserve">
     <value>キュー内のランダム ユーザーの選択</value>
-  </data>
-  <data name="SelectTypeOfCommand" xml:space="preserve">
-    <value>ビルドするコマンドの種類を選択してください:</value>
   </data>
   <data name="SellPrice" xml:space="preserve">
     <value>価格を売る</value>
@@ -1875,9 +1539,6 @@
   <data name="Set" xml:space="preserve">
     <value>セット</value>
   </data>
-  <data name="SetAudience" xml:space="preserve">
-    <value>オーディエンスの設定</value>
-  </data>
   <data name="SetGame" xml:space="preserve">
     <value>ゲームを設定する</value>
   </data>
@@ -1893,9 +1554,6 @@
   <data name="SetUserTitle" xml:space="preserve">
     <value>ユーザー タイトルの設定</value>
   </data>
-  <data name="ShareCode" xml:space="preserve">
-    <value>コードの共有</value>
-  </data>
   <data name="Shift" xml:space="preserve">
     <value>動く</value>
   </data>
@@ -1908,9 +1566,6 @@
   <data name="ShopCurrency" xml:space="preserve">
     <value>ショップ通貨</value>
   </data>
-  <data name="ShowEventAlerts" xml:space="preserve">
-    <value>イベントアラートの表示</value>
-  </data>
   <data name="ShowInfoInChat" xml:space="preserve">
     <value>チャットで情報を表示する</value>
   </data>
@@ -1920,9 +1575,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>メッセージのタイムスタンプを表示</value>
   </data>
-  <data name="ShowMixrElixrEmotes" xml:space="preserve">
-    <value>ミクサーリクサーエモートを表示する (再起動が必要)</value>
-  </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
     <value>[チャットリストのコンテキスト メニューに表示]</value>
   </data>
@@ -1931,15 +1583,6 @@
   </data>
   <data name="ShowWindow" xml:space="preserve">
     <value>ショーウインドー</value>
-  </data>
-  <data name="SingleAction" xml:space="preserve">
-    <value>単一アクション</value>
-  </data>
-  <data name="SkillsUsed" xml:space="preserve">
-    <value>使用されるスキル</value>
-  </data>
-  <data name="SmallStreamer" xml:space="preserve">
-    <value>スモールストリーマー (&lt;10)</value>
   </data>
   <data name="SongRequest" xml:space="preserve">
     <value>曲リクエスト</value>
@@ -2028,9 +1671,6 @@
   <data name="StreamsWatched" xml:space="preserve">
     <value>視聴されたストリーム</value>
   </data>
-  <data name="StreamTitle" xml:space="preserve">
-    <value>ストリームタイトル</value>
-  </data>
   <data name="StrikeCommands" xml:space="preserve">
     <value>ストライクコマンド</value>
   </data>
@@ -2073,9 +1713,6 @@
   <data name="TaggedInChat" xml:space="preserve">
     <value>チャットでタグ付け</value>
   </data>
-  <data name="Tags" xml:space="preserve">
-    <value>タグ</value>
-  </data>
   <data name="TargetUser" xml:space="preserve">
     <value>ターゲット ユーザー</value>
   </data>
@@ -2088,17 +1725,8 @@
   <data name="Team" xml:space="preserve">
     <value>チーム</value>
   </data>
-  <data name="TeamName" xml:space="preserve">
-    <value>チーム名</value>
-  </data>
-  <data name="Teen" xml:space="preserve">
-    <value>十代</value>
-  </data>
   <data name="TestCommand" xml:space="preserve">
     <value>テスト コマンド</value>
-  </data>
-  <data name="TestStreamWarning" xml:space="preserve">
-    <value>テスト ストリームの設定が有効になっているため、ボット アカウントは正しく接続できません。チャットメッセージやささやきなどのボットアカウントを使用するには、テストストリームを無効にする必要があります。接続してもよいですか?</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>テキスト</value>
@@ -2111,9 +1739,6 @@
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>テキスト読み上げ</value>
-  </data>
-  <data name="TextToTranslate" xml:space="preserve">
-    <value>翻訳するテキスト</value>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
     <value>テーマと色</value>
@@ -2163,9 +1788,6 @@
   <data name="TotalTimeMins" xml:space="preserve">
     <value>合計時間 (分)</value>
   </data>
-  <data name="TotalUsers" xml:space="preserve">
-    <value>合計ユーザー数</value>
-  </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
     <value>トラックウィスパラー番号</value>
   </data>
@@ -2180,9 +1802,6 @@
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value />
-  </data>
-  <data name="TriggerHint" xml:space="preserve">
-    <value>チャットでトリガー (不要)</value>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>ツイート画像の URL (オプション)</value>
@@ -2202,17 +1821,8 @@
   <data name="Type" xml:space="preserve">
     <value>型</value>
   </data>
-  <data name="TypeToAdd" xml:space="preserve">
-    <value>追加するタイプ</value>
-  </data>
   <data name="Unassigned" xml:space="preserve">
     <value>未割り当て</value>
-  </data>
-  <data name="UnbanAllUsers" xml:space="preserve">
-    <value>すべてのユーザーの禁止を解除する</value>
-  </data>
-  <data name="UnbanAllUsersHeader" xml:space="preserve">
-    <value>チャンネルからすべてのユーザーを禁止解除する</value>
   </data>
   <data name="Ungrouped" xml:space="preserve">
     <value>グループ化解除</value>
@@ -2229,14 +1839,8 @@
   <data name="Update" xml:space="preserve">
     <value>更新</value>
   </data>
-  <data name="UpdateChannel" xml:space="preserve">
-    <value>チャンネルの更新</value>
-  </data>
   <data name="UpdateCommand" xml:space="preserve">
     <value>コマンドの更新</value>
-  </data>
-  <data name="UpdatedValue" xml:space="preserve">
-    <value>更新された値</value>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>更新プレビュー プログラム</value>
@@ -2246,9 +1850,6 @@
   </data>
   <data name="UploadFilePath" xml:space="preserve">
     <value>ファイル パスのアップロード (オプション)</value>
-  </data>
-  <data name="UploadTo" xml:space="preserve">
-    <value>アップロードする</value>
   </data>
   <data name="Uptime" xml:space="preserve">
     <value>アップタイム</value>
@@ -2313,9 +1914,6 @@
   <data name="UserTitles" xml:space="preserve">
     <value>ユーザー タイトル</value>
   </data>
-  <data name="UserToMove" xml:space="preserve">
-    <value>移動するユーザー (オプション)</value>
-  </data>
   <data name="Value1" xml:space="preserve">
     <value>値 1 (オプション)</value>
   </data>
@@ -2333,9 +1931,6 @@
   </data>
   <data name="Version" xml:space="preserve">
     <value>バージョン</value>
-  </data>
-  <data name="VersionID" xml:space="preserve">
-    <value>バージョン ID</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>ビデオ</value>
@@ -2397,29 +1992,17 @@
   <data name="WebRequestURL" xml:space="preserve">
     <value>Web リクエスト URL</value>
   </data>
-  <data name="WebShow" xml:space="preserve">
-    <value>ウェブショー</value>
-  </data>
   <data name="Weekly" xml:space="preserve">
     <value>毎 週</value>
   </data>
-  <data name="WhatIsTrigger" xml:space="preserve">
-    <value>チャットでどのようなテキストがこのコマンドをトリガーします (EX: "!フォロー")?</value>
-  </data>
   <data name="Whisper" xml:space="preserve">
     <value>囁く</value>
-  </data>
-  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
-    <value>ストリーマーアカウントへのすべてのアラートをささやきます</value>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>ウィスパーユーザー(オプション)</value>
   </data>
   <data name="White" xml:space="preserve">
     <value>白</value>
-  </data>
-  <data name="WhoCanRun" xml:space="preserve">
-    <value>このコマンドの実行を許可するユーザー</value>
   </data>
   <data name="Widget" xml:space="preserve">
     <value>ウィジェット</value>
@@ -2428,9 +2011,6 @@
     <value>ワイルドカード</value>
   </data>
   <data name="Winner" xml:space="preserve">
-    <value>勝者</value>
-  </data>
-  <data name="WinnerAllCaps" xml:space="preserve">
     <value>勝者</value>
   </data>
   <data name="WinnerSelected" xml:space="preserve">
@@ -2496,9 +2076,6 @@
   <data name="ExtraLifeDonation" xml:space="preserve">
     <value>余分な人生の寄付</value>
   </data>
-  <data name="GawkBoxDonation" xml:space="preserve">
-    <value>ガウクボックス寄付</value>
-  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>ジャストギビング寄付</value>
   </data>
@@ -2538,17 +2115,11 @@
   <data name="Ban" xml:space="preserve">
     <value>禁止</value>
   </data>
-  <data name="GlobalTimeout" xml:space="preserve">
-    <value>グローバル タイムアウト</value>
-  </data>
   <data name="Purge" xml:space="preserve">
     <value>粛清</value>
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>タイムアウト</value>
-  </data>
-  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
-    <value>この機能は現在、パートナーと確認済みチャネルでのみご利用いただけます。</value>
   </data>
   <data name="Imported" xml:space="preserve">
     <value>インポート</value>
@@ -2562,14 +2133,8 @@
   <data name="CustomizeStreamPass" xml:space="preserve">
     <value>ストリームパスのカスタマイズ</value>
   </data>
-  <data name="ActivityRate" xml:space="preserve">
-    <value>アクティビティレート:</value>
-  </data>
   <data name="DonationBonus" xml:space="preserve">
     <value>寄付ボーナス</value>
-  </data>
-  <data name="EmberBonus" xml:space="preserve">
-    <value>エンバーボーナス</value>
   </data>
   <data name="FollowBonus" xml:space="preserve">
     <value>ボーナスに従う</value>
@@ -2625,9 +2190,6 @@
   <data name="StreamPass" xml:space="preserve">
     <value>ストリームパス</value>
   </data>
-  <data name="TotalLevels" xml:space="preserve">
-    <value>総レベル</value>
-  </data>
   <data name="Dutch" xml:space="preserve">
     <value>オランダ語</value>
   </data>
@@ -2651,9 +2213,6 @@
   </data>
   <data name="ConfirmDeleteCommand" xml:space="preserve">
     <value>このコマンドを削除しますか?</value>
-  </data>
-  <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
-    <value>このカスタム レベル アップ コマンドを削除しますか?</value>
   </data>
   <data name="MaxLevel" xml:space="preserve">
     <value>最大レベル</value>
@@ -2811,9 +2370,6 @@
   <data name="LessThanOrEqualTo" xml:space="preserve">
     <value>&lt;=</value>
   </data>
-  <data name="NotEqualTo" xml:space="preserve">
-    <value>&lt;&gt;</value>
-  </data>
   <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
     <value>この製品はもうありません</value>
   </data>
@@ -2843,9 +2399,6 @@
   </data>
   <data name="TwitchChannelPoints" xml:space="preserve">
     <value>ツイッチチャンネルポイント</value>
-  </data>
-  <data name="AddRewardCommand" xml:space="preserve">
-    <value>報酬コマンドの追加</value>
   </data>
   <data name="ChannelPoints" xml:space="preserve">
     <value>チャンネルポイント</value>
@@ -2909,9 +2462,6 @@
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>クリップ再生</value>
-  </data>
-  <data name="SubTier" xml:space="preserve">
-    <value>サブ層</value>
   </data>
   <data name="1" xml:space="preserve">
     <value>1</value>
@@ -3119,9 +2669,6 @@
   <data name="FileActionMissingLineToRead" xml:space="preserve">
     <value>ファイルアクション: 読み取る行がありません</value>
   </data>
-  <data name="FileActionMissingTextToSave" xml:space="preserve">
-    <value>ファイルアクション: 保存するテキストがありません</value>
-  </data>
   <data name="IFTTTActionMissingEventName" xml:space="preserve">
     <value>IFTTT アクション: イベント名がありません</value>
   </data>
@@ -3203,12 +2750,6 @@
   <data name="TextToSpeechActionMissingVoice" xml:space="preserve">
     <value>音声合成アクション: 音声が欠落しています</value>
   </data>
-  <data name="TranslationActionMissingLanguage" xml:space="preserve">
-    <value>翻訳アクション: 言語が欠落しています</value>
-  </data>
-  <data name="TranslationActionMissingText" xml:space="preserve">
-    <value>翻訳アクション: テキストが見つかりません</value>
-  </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
     <value>Twitterアクション: ツイートに「@」タグを含めることはできません</value>
   </data>
@@ -3281,17 +2822,8 @@
   <data name="StreamingSoftwareActionMissingWebBrowserSourceFilePath" xml:space="preserve">
     <value>ストリーミング ソフトウェア アクション: Web ブラウザーのソース ファイル パスがありません</value>
   </data>
-  <data name="SuccessTriggerType" xml:space="preserve">
-    <value>成功のトリガーの種類</value>
-  </data>
   <data name="ConditionalActionClauseMissingValue" xml:space="preserve">
     <value>条件付きアクション: 句に値がありません</value>
-  </data>
-  <data name="ConditionalActionMissingSuccessTrigger" xml:space="preserve">
-    <value>条件付きアクション: 成功のトリガーがありません</value>
-  </data>
-  <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
-    <value>条件付きアクション: 成功のトリガー アクションにエラーがある</value>
   </data>
   <data name="ShowHideWidget" xml:space="preserve">
     <value>ウィジェットの表示/非表示</value>
@@ -3370,9 +2902,6 @@
   </data>
   <data name="GameCommandCouldNotFindUser" xml:space="preserve">
     <value>有効なユーザーが見つかりませんでした</value>
-  </data>
-  <data name="GameCommandInvalidBetAmount" xml:space="preserve">
-    <value>有効なベット金額を指定する必要があります</value>
   </data>
   <data name="GameCommandTargetUserInvalidAmount" xml:space="preserve">
     <value>ユーザーが{0} {1}を持っていません</value>
@@ -3454,17 +2983,11 @@
   <data name="GameCommandBidDescription" xml:space="preserve">
     <value>入札ゲームでは、ユーザーが賞金や特別な特権を獲得するために、すべてのユーザーの間で入札競争を開始することができます。ユーザーが入札者のトップになるには、最高入札額より少なくとも 1 通貨以上の入札を行う必要があります。ユーザーが追い出されると、時間がなくなるとベット通貨が返され、最高入札者が勝利を収めます。また、このゲームを開始できるユーザーロールを指定して、モデレータ以上のユーザーのみなど、ゲームが悪用されないようにすることができます。</value>
   </data>
-  <data name="GameCommandBidExample" xml:space="preserve">
-    <value>EX: 入札 100</value>
-  </data>
   <data name="CoinPusher" xml:space="preserve">
     <value>コインプッシャー</value>
   </data>
   <data name="GameCommandCoinPusherDescription" xml:space="preserve">
     <value>コインプッシャーゲームは、ユーザーが大規模な支払いのチャンスとマシンに通貨の特定の量を入金することができます。支払いを可能にするために最低通貨をマシンに挿入する必要があり、支払いが発生したときに最小および最大支払い率を指定することができます。</value>
-  </data>
-  <data name="GameCommandCoinPusherExample" xml:space="preserve">
-    <value>EX:プッシャー100</value>
   </data>
   <data name="Duel" xml:space="preserve">
     <value>決闘</value>
@@ -3472,17 +2995,11 @@
   <data name="GameCommandDuelDescription" xml:space="preserve">
     <value>デュエルゲームは、指定されたユーザーにベット金額の勝者テイクオールに挑戦します。成功した場合、ユーザーは指定されたユーザーからベット金額を取得します。失敗した場合、指定されたユーザーはユーザーからベット金額を取得します。</value>
   </data>
-  <data name="GameCommandDuelExample" xml:space="preserve">
-    <value>EX:決闘&lt;USERNAME&gt;100</value>
-  </data>
   <data name="Hangman" xml:space="preserve">
     <value>絞首刑 執行 人</value>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
     <value>ハングマンゲームは、ユーザーが通貨の蓄積ポットを獲得するためにランダムな単語の文字の組み合わせを推測することができます。すべての失敗した推測は、ポットに必要な通貨の量を入れ、失敗を追加しますが、正しい推測は文字を追加します。最後の欠落した文字を推測する人は、全体のポットを取得します。ユーザーは、ポットの量と既に推測されているものを確認するために、ゲームの状態を確認する機能を持っています。</value>
-  </data>
-  <data name="GameCommandHangmanExample" xml:space="preserve">
-    <value>EX:!ハングマン&lt;LETTER&gt;</value>
   </data>
   <data name="Heist" xml:space="preserve">
     <value>強盗</value>
@@ -3490,17 +3007,11 @@
   <data name="GameCommandHeistDescription" xml:space="preserve">
     <value>Heist ゲームでは、ユーザーが参加するときに個別にベットするグループ アクティビティを開始できます。各ユーザーは成功し、より多くを取り戻すか、失敗して賭けを失う独自の個々のチャンスを持っています</value>
   </data>
-  <data name="GameCommandHeistExample" xml:space="preserve">
-    <value>EX:強盗100</value>
-  </data>
   <data name="Hitman" xml:space="preserve">
     <value>ヒットマン</value>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
     <value>ヒットマンゲームでは、ユーザーが入力したすべてのユーザーの間で勝者テイクオールベットを開始することができます。最初の制限時間が経過すると、特定の名前のヒットマンがチャットに表示されます。ユーザーが制限時間内にチャットでヒットマンの名前を入力すると、ポット全体が獲得されます。さもなければ、誰もが自分のお金を失います。</value>
-  </data>
-  <data name="GameCommandHitmanExample" xml:space="preserve">
-    <value>EX:ヒットマン100</value>
   </data>
   <data name="HotPotato" xml:space="preserve">
     <value>ホットポテト</value>
@@ -3508,18 +3019,11 @@
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
     <value>ホットポテトゲームは、それが爆発する前に、他の誰かにそれを渡さなければならないプレイヤーにカチカチポテト爆弾を与えます。最後にジャガイモ爆弾を通過したユーザーは勝者($username)と呼ばれ、爆発時にジャガイモ爆弾を持っていたユーザーは敗者($targetusername)と呼ばれています。デフォルトでは、ポテト爆弾の通過は新しいユーザーにランダムに行われますが、必要に応じて、通行人に投げ込まれる人を指定することができます。また、ホットポテトの制限時間を各回の回りでリセットするかどうかを設定することもできます。</value>
   </data>
-  <data name="GameCommandHotPotatoExample" xml:space="preserve">
-    <value>EX: ポテト
-EX: ポテト&lt;ユーザーをターゲットに&gt;</value>
-  </data>
   <data name="LockBox" xml:space="preserve">
     <value>ロックボックス</value>
   </data>
   <data name="GameCommandLockBoxDescription" xml:space="preserve">
     <value>ロックボックスゲームでは、通貨の多くを含む数字0 - 9を使用してロックされたボックスの組み合わせを推測することができます。すべての失敗した推測は、ボックスに必要な通貨の量を入れて、組み合わせにヒントを与えます, 正しい推測は、内部のすべての通貨を取得しながら、.ユーザーはロックボックスの状態を確認してその中にどれくらいあるかを確認し、ロックボックスを調べて、その組み合わせに関するヒントを確認することができます。</value>
-  </data>
-  <data name="GameCommandLockBoxExample" xml:space="preserve">
-    <value>EX: !ロックボックス 109</value>
   </data>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
     <value>ロール{0}の確率は、すべての結果で最大 100 を加算するわけではありません</value>
@@ -3530,18 +3034,11 @@ EX: ポテト&lt;ユーザーをターゲットに&gt;</value>
   <data name="GameCommandRouletteDescription" xml:space="preserve">
     <value>ルーレットゲームでは、ユーザーが特定の番号または名前に賭けるためにすべてのユーザーの間でグループベッティングゲームを開始することができます。ゲームが番号範囲に基づいている場合、ユーザーはその範囲内の任意の番号を選択できます。ゲームが一連の名前に基づいている場合、ユーザーは名前のいずれかを選択できます。当選ベットタイプを選択したすべてのユーザーは、ベットの支払いを受け取り、他の誰もがベットを失います。</value>
   </data>
-  <data name="GameCommandRouletteExample" xml:space="preserve">
-    <value>EX: ルーレット &lt;NUMBER&gt;100</value>
-  </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>ロシアンルーレット</value>
   </data>
   <data name="GameCommandRussianRouletteDescription" xml:space="preserve">
     <value>ロシアンルーレットゲームは、ユーザーが入力されたすべてのユーザーの間で勝者テイクオールベットを開始することができます。デフォルトでは、ゲームを開始するユーザーはベットの金額を指定し、その後のすべてのユーザーはその金額をベットして参加する必要があり、ゲームのすべての勝者は合計支払いを均等に分割します。</value>
-  </data>
-  <data name="GameCommandRussianRouletteExample" xml:space="preserve">
-    <value>EX: !rr 100
-EX: !rr</value>
   </data>
   <data name="SlotMachine" xml:space="preserve">
     <value>スロットマシン</value>
@@ -3549,17 +3046,11 @@ EX: !rr</value>
   <data name="GameCommandSlotMachineDescription" xml:space="preserve">
     <value>スロットマシンゲームは、事前定義されたリストから3シンボルのランダムセットを選択し、それらのシンボルに一致する結果を選択します。各結果の支払いを選択するだけでなく、結果ごとにカスタマイズされたコマンドを実行することもできます。</value>
   </data>
-  <data name="GameCommandSlotMachineExample" xml:space="preserve">
-    <value>EX: スロット 100</value>
-  </data>
   <data name="Spin" xml:space="preserve">
     <value>スピン</value>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
     <value>スピンゲームは乱数を選択し、その数に基づいて結果を選択します。各結果の支払いを選択するだけでなく、結果ごとにカスタマイズされたコマンドを実行することもできます。</value>
-  </data>
-  <data name="GameCommandSpinExample" xml:space="preserve">
-    <value>EX: スピン 100</value>
   </data>
   <data name="GameCommandSpinLoseExample" xml:space="preserve">
     <value>申し訳ありません@$username、あなたはスピンを失った!</value>
@@ -3573,10 +3064,6 @@ EX: !rr</value>
   <data name="GameCommandStealDescription" xml:space="preserve">
     <value>盗みゲームは、ユーザーが他のユーザーから通貨を盗もうとすることを可能にします。成功した場合、ユーザーは他のユーザーからベット金額を盗みます。失敗した場合、ベット金額が失われます。</value>
   </data>
-  <data name="GameCommandStealExample" xml:space="preserve">
-    <value>EX:100を盗む
-EX:盗む&lt;USERNAME&gt;100</value>
-  </data>
   <data name="TreasureDefense" xml:space="preserve">
     <value>トレジャーディフェンス</value>
   </data>
@@ -3585,19 +3072,11 @@ EX:盗む&lt;USERNAME&gt;100</value>
 
 制限時間が過ぎると、参加者のユーザーが King に選択されます。その後、他のすべてのユーザーが騎士か泥棒に選ばれます。彼らが見つけた宝物を守るために騎士であることを期待して1人の参加者を選ぶのは王の仕事です。王が騎士を選んだら、キング&amp;ナイツが賞金を分担します。王が泥棒を選択した場合、泥棒は賞金を共有します。</value>
   </data>
-  <data name="GameCommandTreasureDefenseExample" xml:space="preserve">
-    <value>EX:宝物&lt;AMOUNT&gt;
-EX:宝物
-EX:宝&lt;選択されたユーザー&gt;</value>
-  </data>
   <data name="Trivia" xml:space="preserve">
     <value>トリビア</value>
   </data>
   <data name="GameCommandTriviaDescription" xml:space="preserve">
     <value>トリビアゲームは、事前に決定されたリストからランダムな質問を選び、可能なもののリストから正しい答えを選択するようにすべてのユーザーに求めます。正解を選択したすべてのユーザーに支払いが与えられます。</value>
-  </data>
-  <data name="GameCommandTriviaExample" xml:space="preserve">
-    <value>EX: !トリビア</value>
   </data>
   <data name="Volcano" xml:space="preserve">
     <value>火山</value>
@@ -3607,17 +3086,11 @@ EX:宝&lt;選択されたユーザー&gt;</value>
 
 火山がステージ3に達すると、その後の各堆積物は噴火を引き起こす機会があります。噴火が発生すると、それをトリガーしたユーザーは、それらに対して特別な支払いを受け取ります。噴火後、すべてのユーザーは収集の制限時間内に噴火した通貨を収集する機会があります。収集が完了すると、火山の内容は 0 にリセットされます。</value>
   </data>
-  <data name="GameCommandVolcanoExample" xml:space="preserve">
-    <value>EX: 火山 100</value>
-  </data>
   <data name="WordScramble" xml:space="preserve">
     <value>ワードスクランブル</value>
   </data>
   <data name="GameCommandWordScrambleDescription" xml:space="preserve">
     <value>ワードスクランブルゲームは、ユーザーが入力されたすべてのユーザーの間で勝者テイクオールベットを開始することができます。最初の制限時間が経過すると、スクランブルされた単語がチャットに表示されます。ユーザーが制限時間内にチャットでスクランブルされていない単語を入力すると、ポット全体が獲得されます。さもなければ、誰もが自分のお金を失います。</value>
-  </data>
-  <data name="GameCommandWordScrambleExample" xml:space="preserve">
-    <value>EX:スクランブル100</value>
   </data>
   <data name="Outcomes" xml:space="preserve">
     <value>結果</value>
@@ -3652,17 +3125,11 @@ EX:宝&lt;選択されたユーザー&gt;</value>
   <data name="MinimumOnly" xml:space="preserve">
     <value>最小のみ</value>
   </data>
-  <data name="NoCost" xml:space="preserve">
-    <value>費用なし</value>
-  </data>
   <data name="RequiredAmount" xml:space="preserve">
     <value>必要額</value>
   </data>
   <data name="GameCurrency" xml:space="preserve">
     <value>ゲーム通貨</value>
-  </data>
-  <data name="GameCommandAtLeast1Currency" xml:space="preserve">
-    <value>ゲームを使用するには、少なくとも 1 つの通貨を作成する必要があります。</value>
   </data>
   <data name="NewGame" xml:space="preserve">
     <value>新しいゲーム</value>
@@ -3939,9 +3406,6 @@ EX:宝&lt;選択されたユーザー&gt;</value>
   </data>
   <data name="GameCommandRouletteStartedExample" xml:space="preserve">
     <value>@$usernameはルーレットのゲームを開始しました!タイプ!ルーレット&lt;BET TYPE&gt;プレイするチャットで!有効なベットタイプ: $gamevalidbettypes</value>
-  </data>
-  <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
-    <value>@$usernameは$gamepayout {0}勝った!</value>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
     <value>激しいマッチアップの後、ほこりが落ち着きます.それは$gamewinnersです!勝者1人あたりの合計金額:$gamepayout {0}!</value>
@@ -4504,9 +3968,6 @@ EX:宝&lt;選択されたユーザー&gt;</value>
   </data>
   <data name="RankSystemDoesNotExist" xml:space="preserve">
     <value>ランクシステムが存在しません</value>
-  </data>
-  <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
-    <value>対象ユーザーに正しい金額がありません</value>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
     <value>基本通貨は最小のみに設定する必要があります</value>

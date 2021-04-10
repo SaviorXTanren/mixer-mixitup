@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.ActionGroup);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private async void EditCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -34,8 +34,8 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-                    CommandEditorWindow window = new CommandEditorWindow(viewModel.SelectedCommand);
-                    window.Show();
+                    CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(viewModel.SelectedCommand);
+                    window.ForceShow();
                 }
             }
         }

@@ -171,15 +171,6 @@
   <data name="Actions" xml:space="preserve">
     <value>[!!! Âçţïôñš !!!]</value>
   </data>
-  <data name="ActionToPeform" xml:space="preserve">
-    <value>[!!! Âçţïôñ Ţô Þèƒôř₥ !!!]</value>
-  </data>
-  <data name="ActionToPerformWithResponse" xml:space="preserve">
-    <value>[!!! Âçţïôñ Ţô Þèřƒôř₥ Wïţĥ Rèšƥôñšè !!!]</value>
-  </data>
-  <data name="ActionToPerformWithTranslation" xml:space="preserve">
-    <value>[!!! Âçţïôñ Ţô Þèřƒôř₥ Wïţĥ Ţřáñšℓáţïôñ !!!]</value>
-  </data>
   <data name="Add" xml:space="preserve">
     <value>[!!! Âδδ !!!]</value>
   </data>
@@ -191,18 +182,6 @@
   </data>
   <data name="AddCurrencyRank" xml:space="preserve">
     <value>[!!! Âδδ Çúřřèñç¥/Ráñƙ !!!]</value>
-  </data>
-  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
-    <value>[!!! Ţĥïš úšèř áℓřèáδ¥ èжïšţš ïñ ţĥïš ĝřôúƥ. !!!]</value>
-  </data>
-  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>[!!! Çôúℓδ ñôţ ƒïñδ á úšèř β¥ ţĥáţ ñá₥è. !!!]</value>
-  </data>
-  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>[!!! Ýôú ĥáƲè áℓřèáδ¥ ƒáƲôřïţèδ ţĥïš ţèá₥. !!!]</value>
-  </data>
-  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>[!!! Çôúℓδ ñôţ ƒïñδ á ţèá₥ β¥ ţĥáţ ñá₥è. !!!]</value>
   </data>
   <data name="AddInventory" xml:space="preserve">
     <value>[!!! Âδδ ÌñƲèñţôř¥ !!!]</value>
@@ -234,23 +213,11 @@
   <data name="AddToUser" xml:space="preserve">
     <value>[!!! Âδδ ţô úšèř !!!]</value>
   </data>
-  <data name="Adult" xml:space="preserve">
-    <value>[!!! 18+ !!!]</value>
-  </data>
   <data name="Advanced" xml:space="preserve">
     <value>[!!! ÂδƲáñçèδ !!!]</value>
   </data>
-  <data name="AdvancedCommand" xml:space="preserve">
-    <value>[!!! ÂδƲáñçèδ Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="AgeRating" xml:space="preserve">
-    <value>[!!! Âĝè Ráţïñĝ !!!]</value>
-  </data>
   <data name="Alerts" xml:space="preserve">
     <value>[!!! Âℓèřţš !!!]</value>
-  </data>
-  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>[!!! Âℓℓôω Çô₥₥áñδš Óñℓ¥ ïñ Ýôúř Çĥáññèℓ Ðúřïñĝ á Çô-Šţřèá₥ !!!]</value>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
     <value>[!!! Âℓℓôω Çô₥₥áñδš ţô βè Wĥïšƥèřèδ !!!]</value>
@@ -260,9 +227,6 @@
   </data>
   <data name="AllowProfanity" xml:space="preserve">
     <value>[!!! Âℓℓôω Þřôƒáñïţ¥ !!!]</value>
-  </data>
-  <data name="AlreadyInstalled" xml:space="preserve">
-    <value>[!!! Âℓřèáδ¥ Ìñšţáℓℓèδ !!!]</value>
   </data>
   <data name="Alt" xml:space="preserve">
     <value>[!!! Âℓţ !!!]</value>
@@ -282,18 +246,6 @@
   <data name="AmountSeconds" xml:space="preserve">
     <value>[!!! Â₥ôúñţ (Šèçôñδš) !!!]</value>
   </data>
-  <data name="Answer1" xml:space="preserve">
-    <value>[!!! Âñšωèř 1 !!!]</value>
-  </data>
-  <data name="Answer2" xml:space="preserve">
-    <value>[!!! Âñšωèř 2 !!!]</value>
-  </data>
-  <data name="Answer3" xml:space="preserve">
-    <value>[!!! Âñšωèř 3 (Óƥţïôñáℓ) !!!]</value>
-  </data>
-  <data name="Answer4" xml:space="preserve">
-    <value>[!!! Âñšωèř 4 (Óƥţïôñáℓ) !!!]</value>
-  </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>[!!! Âñ¥ Çĥáţ Mèššáĝè Šôúñδ !!!]</value>
   </data>
@@ -308,18 +260,6 @@
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
     <value>[!!! ÂƥƥřôƲèδ ÐèƲïçèš !!!]</value>
-  </data>
-  <data name="ArgumentsTranslatedText" xml:space="preserve">
-    <value>[!!! Âřĝú₥èñţš ($translationresult = Ţřáñšℓáţèδ Ţèжţ) !!!]</value>
-  </data>
-  <data name="ArgumentsWebRequest" xml:space="preserve">
-    <value>[!!! Âřĝú₥èñţš ($webrequestresult = Rèšúℓţ Ţèжţ) !!!]</value>
-  </data>
-  <data name="Assets" xml:space="preserve">
-    <value>[!!! Âššèţš !!!]</value>
-  </data>
-  <data name="Audience" xml:space="preserve">
-    <value>[!!! Âúδïèñçè !!!]</value>
   </data>
   <data name="AudioOutputDevice" xml:space="preserve">
     <value>[!!! Âúδïô Óúţƥúţ ÐèƲïçè !!!]</value>
@@ -354,18 +294,6 @@
   <data name="Banned" xml:space="preserve">
     <value>[!!! ßáññèδ !!!]</value>
   </data>
-  <data name="BasicChatCommand" xml:space="preserve">
-    <value>[!!! ßášïç Çĥáţ Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="BasicSoundCommand" xml:space="preserve">
-    <value>[!!! ßášïç Šôúñδ Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="BasicTimerDescription" xml:space="preserve">
-    <value>[!!! Wĥáţ šĥôúℓδ ωè çáℓℓ ţĥïš Ţï₥èř çô₥₥áñδ? !!!]</value>
-  </data>
-  <data name="BasicTimerNameHint" xml:space="preserve">
-    <value>[!!! Ná₥è (ÉX: "Fôℓℓôω Mè") !!!]</value>
-  </data>
   <data name="BaudRate" xml:space="preserve">
     <value>[!!! ßáúδ Ráţè !!!]</value>
   </data>
@@ -396,9 +324,6 @@
   <data name="ButtonName" xml:space="preserve">
     <value>[!!! ßúţţôñ Ná₥è !!!]</value>
   </data>
-  <data name="ButtonTrigger" xml:space="preserve">
-    <value>[!!! ßúţţôñ Ţřïĝĝèř !!!]</value>
-  </data>
   <data name="BuyPrice" xml:space="preserve">
     <value>[!!! ßú¥ Þřïçè !!!]</value>
   </data>
@@ -420,15 +345,6 @@
   <data name="ChannelEditor" xml:space="preserve">
     <value>[!!! Çĥáññèℓ Éδïţôř !!!]</value>
   </data>
-  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>[!!! Â Ʋáℓïδ áĝè řáţïñĝ ₥úšţ βè šèℓèçţèδ. !!!]</value>
-  </data>
-  <data name="ChannelErrorInvalidGame" xml:space="preserve">
-    <value>[!!! Â Ʋáℓïδ &amp; èжïšţïñĝ ĝá₥è ñá₥è ₥úšţ βè šèℓèçţèδ. !!!]</value>
-  </data>
-  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>[!!! Â šţřèá₥ ţïţℓè ₥úšţ βè šƥèçïƒïèδ. !!!]</value>
-  </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>[!!! Çĥáññèℓ Ìñƒô !!!]</value>
   </data>
@@ -446,15 +362,6 @@
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>[!!! Çĥáţ Mèššáĝèš Šèñţ !!!]</value>
-  </data>
-  <data name="ChatMessageTranslatedText" xml:space="preserve">
-    <value>[!!! Çĥáţ Mèššáĝè ($translationresult = Ţřáñšℓáţèδ Ţèжţ) !!!]</value>
-  </data>
-  <data name="ChatMessageWebRequest" xml:space="preserve">
-    <value>[!!! Çĥáţ Mèššáĝè ($webrequestresult = Rèšúℓţ Ţèжţ) !!!]</value>
-  </data>
-  <data name="ChatMixPlayParticipation" xml:space="preserve">
-    <value>[!!! Çĥáţ / MïжÞℓá¥ Þářţïçïƥáţïôñ !!!]</value>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
     <value>[!!! Çĥáţ Ţáĝĝèδ Šôúñδ !!!]</value>
@@ -488,12 +395,6 @@
   </data>
   <data name="Click" xml:space="preserve">
     <value>[!!! Çℓïçƙ !!!]</value>
-  </data>
-  <data name="ClipLength" xml:space="preserve">
-    <value>[!!! Ļèñĝţĥ (15-300 Šèçš) !!!]</value>
-  </data>
-  <data name="ClipName" xml:space="preserve">
-    <value>[!!! Çℓïƥ Ná₥è !!!]</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>[!!! Çℓôšè !!!]</value>
@@ -543,23 +444,11 @@
   <data name="Control" xml:space="preserve">
     <value>[!!! Çôñţřôℓ !!!]</value>
   </data>
-  <data name="ControlID" xml:space="preserve">
-    <value>[!!! Çôñţřôℓ ÌÐ !!!]</value>
-  </data>
-  <data name="ConvertToAdvanced" xml:space="preserve">
-    <value>[!!! ÇôñƲèřţ Ţô ÂδƲáñçèδ !!!]</value>
-  </data>
   <data name="Cooldown" xml:space="preserve">
     <value>[!!! Çôôℓδôωñ !!!]</value>
   </data>
-  <data name="CooldownSeconds" xml:space="preserve">
-    <value>[!!! Çôôℓδôωñ (Šèçôñδš) !!!]</value>
-  </data>
   <data name="Cost" xml:space="preserve">
     <value>[!!! Çôšţ !!!]</value>
-  </data>
-  <data name="Costream" xml:space="preserve">
-    <value>[!!! Çôšţřèá₥ !!!]</value>
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>[!!! Çôúñţèř (Çřèáţè &amp; Ûƥδáţè) !!!]</value>
@@ -570,14 +459,8 @@
   <data name="CountersFolder" xml:space="preserve">
     <value>[!!! Çôúñţèřš Fôℓδèř !!!]</value>
   </data>
-  <data name="CreatedBy" xml:space="preserve">
-    <value>[!!! Çřèáţèδ ß¥ !!!]</value>
-  </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>[!!! Çú₥úℓáţïƲè Môñţĥš Šúββèδ !!!]</value>
-  </data>
-  <data name="CurrenciesRanksInventories" xml:space="preserve">
-    <value>[!!! Çúřřèñçïèš/Ráñƙš/ÌñƲèñţôřïèš !!!]</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>[!!! Çúřřèñç¥ !!!]</value>
@@ -612,20 +495,11 @@
   <data name="CustomEntranceCommand" xml:space="preserve">
     <value>[!!! Çúšţô₥ Éñţřáñçè Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="CustomizeCommand" xml:space="preserve">
-    <value>[!!! Çúšţô₥ïƺè Çô₥₥áñδ !!!]</value>
-  </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>[!!! Çúšţô₥ïƺè Çúřřèñç¥/Ráñƙ !!!]</value>
   </data>
-  <data name="CustomizeGame" xml:space="preserve">
-    <value>[!!! Çúšţô₥ïƺè Gá₥è !!!]</value>
-  </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>[!!! Çúšţô₥ïƺè ÌñƲèñţôř¥ !!!]</value>
-  </data>
-  <data name="CustomMixPlayProjects" xml:space="preserve">
-    <value>[!!! Çúšţô₥ MïжÞℓá¥ ÞřôJèçţš !!!]</value>
   </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>[!!! Çúšţô₥ Ţïţℓè !!!]</value>
@@ -672,9 +546,6 @@
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>[!!! Ðèƒáúℓţ Máж Â₥ôúñţ !!!]</value>
   </data>
-  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
-    <value>[!!! Ðèƒáúℓţ MïжÞℓá¥ Gá₥è ţô Çôññèçţ !!!]</value>
-  </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>[!!! Ðèƒáúℓţ Óúţƥúţ !!!]</value>
   </data>
@@ -689,9 +560,6 @@
   </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>[!!! Ðèℓèţè Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
-    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωïšĥ ţô řè₥ôƲè ţĥïš ĝřôúƥ? !!!]</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>[!!! Ðèšçřïƥţïôñ !!!]</value>
@@ -714,9 +582,6 @@
   <data name="Disabled" xml:space="preserve">
     <value>[!!! Ðïšáβℓèδ !!!]</value>
   </data>
-  <data name="DisableDiagnostics" xml:space="preserve">
-    <value>[!!! Ðïšáβℓè Ðïáĝñôšţïçš !!!]</value>
-  </data>
   <data name="DisableQueue" xml:space="preserve">
     <value>[!!! Ðïšáβℓè Qúèúè !!!]</value>
   </data>
@@ -726,35 +591,11 @@
   <data name="Discord" xml:space="preserve">
     <value>[!!! Ðïšçôřδ !!!]</value>
   </data>
-  <data name="DisplayImage" xml:space="preserve">
-    <value>[!!! Ðïšƥℓá¥ Ì₥áĝè (Óƥţïôñáℓ) !!!]</value>
-  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>[!!! &lt;&gt; Çôñţáïñš !!!]</value>
   </data>
   <data name="Donators" xml:space="preserve">
     <value>[!!! Ðôñáţôřš !!!]</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>[!!! Ðôωñℓôáδ !!!]</value>
-  </data>
-  <data name="DownloadAndInstall" xml:space="preserve">
-    <value>[!!! Ðôωñℓôáδ &amp; Ìñšţáℓℓ !!!]</value>
-  </data>
-  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
-    <value>[!!! Ðôωñℓôáδ &amp; Ìñšţáℓℓ ƒƒ₥ƥèĝ !!!]</value>
-  </data>
-  <data name="DownloadClip" xml:space="preserve">
-    <value>[!!! Ðôωñℓôáδ Çℓïƥ !!!]</value>
-  </data>
-  <data name="DownloadDirectory" xml:space="preserve">
-    <value>[!!! Ðôωñℓôáδ Ðïřèçţôř¥ !!!]</value>
-  </data>
-  <data name="DownloadFrom" xml:space="preserve">
-    <value>[!!! ÐôωñℓôáδFřô₥ !!!]</value>
-  </data>
-  <data name="Drop" xml:space="preserve">
-    <value>[!!! ÐRÓÞ !!!]</value>
   </data>
   <data name="DTR" xml:space="preserve">
     <value>[!!! ÐŢR !!!]</value>
@@ -771,9 +612,6 @@
   <data name="EditCommand" xml:space="preserve">
     <value>[!!! Éδïţ Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="EmptySoundFilePath" xml:space="preserve">
-    <value>[!!! Ţĥè šôúñδ ƒïℓè ƥáţĥ ₥úšţ ñôţ βè è₥ƥţ¥. !!!]</value>
-  </data>
   <data name="Enable" xml:space="preserve">
     <value>[!!! Éñáβℓè !!!]</value>
   </data>
@@ -786,23 +624,14 @@
   <data name="EnableCommandGroup" xml:space="preserve">
     <value>[!!! Éñáβℓè Çô₥₥áñδ Gřôúƥ !!!]</value>
   </data>
-  <data name="EnableDiagnostics" xml:space="preserve">
-    <value>[!!! Éñáβℓè Ðïáĝñôšţïçš !!!]</value>
-  </data>
   <data name="EnableDisable" xml:space="preserve">
     <value>[!!! Éñáβℓè/Ðïšáβℓè !!!]</value>
   </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>[!!! Éñáβℓè/Ðïšáβℓè Çô₥₥áñδ !!!]</value>
   </data>
-  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
-    <value>[!!! Éñáβℓè/Ðïšáβℓè Ðïáĝñôšţïç ℓôĝĝïñĝ ƒôř ƒïñδïñĝ ïššúèš !!!]</value>
-  </data>
   <data name="EnableDisableQueue" xml:space="preserve">
     <value>[!!! Éñáβℓè/Ðïšáβℓè Qúèúè !!!]</value>
-  </data>
-  <data name="EnableDiscord" xml:space="preserve">
-    <value>[!!! Þℓèášè èñáβℓè Ðïšçôřδ çôññèçţïôñ ôñ ţĥè ŠèřƲïçèš ƥáĝè! !!!]</value>
   </data>
   <data name="EnableIFTTT" xml:space="preserve">
     <value>[!!! Þℓèášè èñáβℓè ÌFŢŢŢ çôññèçţïôñ ôñ ţĥè ŠèřƲïçèš ƥáĝè! !!!]</value>
@@ -818,9 +647,6 @@
   </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>[!!! Éñáβℓè Qúèúè !!!]</value>
-  </data>
-  <data name="EnableReplayBuffer" xml:space="preserve">
-    <value>[!!! Rèƥℓá¥ βúƒƒèř ĥáš ñôţ βèèñ èñáβℓèδ. Óƥèñ ÓßŠ Šèţţïñĝš -&gt; Óúţƥúţ áñδ èñáβℓè ţĥè řèƥℓá¥ βúƒƒèř! !!!]</value>
   </data>
   <data name="EnableStreamlabs" xml:space="preserve">
     <value>[!!! Þℓèášè èñáβℓè Šţřèá₥ℓáβš çôññèçţïôñ ôñ ţĥè ŠèřƲïçèš ƥáĝè! !!!]</value>
@@ -845,12 +671,6 @@
   </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>[!!! = !!!]</value>
-  </data>
-  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
-    <value>[!!! Ýôú ₥úšţ βè á {0} ţô ƥïçƙ ţĥè áñšωèř. !!!]</value>
-  </data>
-  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
-    <value>[!!! Ýôú ₥úšţ βè á {0} ţô šţářţ ţĥïš ĝá₥è. !!!]</value>
   </data>
   <data name="Event" xml:space="preserve">
     <value>[!!! ÉƲèñţ !!!]</value>
@@ -885,23 +705,8 @@
   <data name="ExternalProgram" xml:space="preserve">
     <value>[!!! Éжţèřñáℓ Þřôĝřá₥ !!!]</value>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>[!!! Fá₥ïℓ¥ !!!]</value>
-  </data>
   <data name="FanProgression" xml:space="preserve">
     <value>[!!! Fáñ Þřôĝřèššïôñ !!!]</value>
-  </data>
-  <data name="FavoritedUsersTeams" xml:space="preserve">
-    <value>[!!! FáƲôřïţèδ Ûšèřš/Ţèá₥š !!!]</value>
-  </data>
-  <data name="FavoriteStreamers" xml:space="preserve">
-    <value>[!!! FáƲôřïţè Šţřèá₥èřš !!!]</value>
-  </data>
-  <data name="FeatureMixItUpStreamer" xml:space="preserve">
-    <value>[!!! Fèáţúřè ₥è áš á Mïж Ìţ Ûƥ Šţřèá₥èř !!!]</value>
-  </data>
-  <data name="FFMPEGMustBeInstalled" xml:space="preserve">
-    <value>[!!! FFMÞÉG ₥úšţ βè ïñšţáℓℓèδ ţĥřôúĝĥ ţĥè Mïж Ìţ Ûƥ Šèţţïñĝš ţô úšè ţĥïš ƒèáţúřè! !!!]</value>
   </data>
   <data name="FieldName" xml:space="preserve">
     <value>[!!! Fïèℓδ Ná₥è !!!]</value>
@@ -923,12 +728,6 @@
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>[!!! Fïñδ Çĥáññèℓ Ţô Ráïδ !!!]</value>
-  </data>
-  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>[!!! Múšţ šèℓèçţ á šèářçĥ çřïţèřïá ƒôř ƒïñδïñĝ á çĥáññèℓ ţô řáïδ. !!!]</value>
-  </data>
-  <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>[!!! Ûñáβℓè ţô ƒïñδ á çĥáññèℓ ţĥáţ ₥èţ ¥ôúř šèářçĥ çřïţèřá, ƥℓèášè ţř¥ šèℓèçţïñĝ á δïƒƒèřèñţ ôƥţïôñ. !!!]</value>
   </data>
   <data name="FirstValue" xml:space="preserve">
     <value>[!!! Fïřšţ Váℓúè !!!]</value>
@@ -959,9 +758,6 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>[!!! Gá₥è Qúèúè !!!]</value>
-  </data>
-  <data name="GameQueueAction" xml:space="preserve">
-    <value>[!!! Gá₥è Qúèúè Âçţïôñ !!!]</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>[!!! Gá₥èš !!!]</value>
@@ -1008,17 +804,11 @@
   <data name="GroupName" xml:space="preserve">
     <value>[!!! Gřôúƥ Ná₥è !!!]</value>
   </data>
-  <data name="GroupNameCaseSensitive" xml:space="preserve">
-    <value>[!!! Gřôúƥ Ná₥è (Çášè ŠèñšïţïƲè) !!!]</value>
-  </data>
   <data name="Groups" xml:space="preserve">
     <value>[!!! Gřôúƥš !!!]</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>[!!! Hèℓƥ !!!]</value>
-  </data>
-  <data name="HelpfulLinks" xml:space="preserve">
-    <value>[!!! Hèℓƥƒúℓ Ļïñƙš !!!]</value>
   </data>
   <data name="HideChatUserList" xml:space="preserve">
     <value>[!!! Hïδè Çĥáţ Ûšèř Ļïšţ !!!]</value>
@@ -1029,9 +819,6 @@
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
     <value>[!!! Hïδè Vïèωèř &amp; Çĥáţţèř Nú₥βèřš !!!]</value>
   </data>
-  <data name="HostChannel" xml:space="preserve">
-    <value>[!!! Hôšţ Çĥáññèℓ !!!]</value>
-  </data>
   <data name="HotKey" xml:space="preserve">
     <value>[!!! Hôţ Kè¥ !!!]</value>
   </data>
@@ -1040,9 +827,6 @@
   </data>
   <data name="Hours" xml:space="preserve">
     <value>[!!! Hôúřš !!!]</value>
-  </data>
-  <data name="HowLongBeforeRun" xml:space="preserve">
-    <value>[!!! Hôω ℓôñĝ βèƒôřè ţĥïš çô₥₥áñδ çáñ βè řúñ áĝáïñ (ïñ šèçôñδš)? !!!]</value>
   </data>
   <data name="HTML" xml:space="preserve">
     <value>[!!! HŢMĻ !!!]</value>
@@ -1061,12 +845,6 @@
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>[!!! Ì₥ƥôřţ Ðáţá !!!]</value>
-  </data>
-  <data name="IncludeCommandAssets" xml:space="preserve">
-    <value>[!!! Ìñçℓúδè Çô₥₥áñδ Âššèţš !!!]</value>
-  </data>
-  <data name="IncorrectBotAccount" xml:space="preserve">
-    <value>[!!! Ýôú ₥úšţ šïĝñ ïñ ţô á δïƒƒèřèñţ áççôúñţ ţĥáñ ¥ôúř Šţřèá₥èř áççôúñţ. !!!]</value>
   </data>
   <data name="Indigo" xml:space="preserve">
     <value>[!!! Ìñδïĝô !!!]</value>
@@ -1143,14 +921,8 @@
   <data name="Language" xml:space="preserve">
     <value>[!!! Ļáñĝúáĝè (Rè9úïřèš Rèšţářţ) !!!]</value>
   </data>
-  <data name="LanguageToTranslateTo" xml:space="preserve">
-    <value>[!!! Ļáñĝúáĝè Ţô Ţřáñšℓáţè Ţô !!!]</value>
-  </data>
   <data name="Large" xml:space="preserve">
     <value>[!!! Ļářĝè !!!]</value>
-  </data>
-  <data name="LargeStreamer" xml:space="preserve">
-    <value>[!!! Ļářĝè Šţřèá₥èř (&gt;25) !!!]</value>
   </data>
   <data name="LastQuote" xml:space="preserve">
     <value>[!!! Ļášţ Qúôţè !!!]</value>
@@ -1175,9 +947,6 @@
   </data>
   <data name="LeftButton" xml:space="preserve">
     <value>[!!! Ļèƒţ ßúţţôñ !!!]</value>
-  </data>
-  <data name="LengthSecs" xml:space="preserve">
-    <value>[!!! Ļèñĝţĥ (Šèçš) !!!]</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>[!!! &lt; !!!]</value>
@@ -1218,14 +987,8 @@
   <data name="Login" xml:space="preserve">
     <value>[!!! Ļôĝ Ìñ !!!]</value>
   </data>
-  <data name="LoginErrorNoChannelName" xml:space="preserve">
-    <value>[!!! Â çĥáññèℓ ñá₥è ₥úšţ βè èñţèřèδ. !!!]</value>
-  </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
     <value>[!!! Ýôú ₥úšţ šèℓèçţ á Šţřèá₥èř áççôúñţ ţô ℓôĝ ïñ ţô. !!!]</value>
-  </data>
-  <data name="LoginErrorNotModerator" xml:space="preserve">
-    <value>[!!! Ýôú ářè ñôţ á ₥ôδèřáţôř ƒôř ţĥïš çĥáññèℓ. !!!]</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>[!!! Ļôĝ Óúţ !!!]</value>
@@ -1257,26 +1020,14 @@
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
     <value>[!!! Máж Þúñçţ. / Š¥₥βôℓš / É₥ôţèš !!!]</value>
   </data>
-  <data name="MaxTime" xml:space="preserve">
-    <value>[!!! Máж Ţï₥è !!!]</value>
-  </data>
   <data name="MaxValue" xml:space="preserve">
     <value>[!!! Máж Váℓúè !!!]</value>
-  </data>
-  <data name="MediumStreamer" xml:space="preserve">
-    <value>[!!! Mèδïú₥ Šţřèá₥èř (10-25) !!!]</value>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
     <value>[!!! Mèèţ Ţĥè Ţèá₥ !!!]</value>
   </data>
   <data name="Message" xml:space="preserve">
     <value>[!!! Mèššáĝè !!!]</value>
-  </data>
-  <data name="MetadataName" xml:space="preserve">
-    <value>[!!! Mèţáδáţá Ná₥è !!!]</value>
-  </data>
-  <data name="MetadataValue" xml:space="preserve">
-    <value>[!!! Mèţáδáţá Váℓúè !!!]</value>
   </data>
   <data name="MiddleButton" xml:space="preserve">
     <value>[!!! Mïδδℓè ßúţţôñ !!!]</value>
@@ -1311,20 +1062,8 @@
   <data name="MixItUpOverlay" xml:space="preserve">
     <value>[!!! Mïж Ìţ Ûƥ ÓƲèřℓá¥ !!!]</value>
   </data>
-  <data name="MixItUpStore" xml:space="preserve">
-    <value>[!!! Mïж Ìţ Ûƥ Šţôřè !!!]</value>
-  </data>
   <data name="MixPlay" xml:space="preserve">
     <value>[!!! MïжÞℓá¥ !!!]</value>
-  </data>
-  <data name="MixPlayCooldownHeader" xml:space="preserve">
-    <value>[!!! Hôω ₥áñ¥ šèçôñδš šĥôúℓδ ţĥè çôôℓδôωñ βè? !!!]</value>
-  </data>
-  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
-    <value>[!!! Šĥôúℓδ ţĥïš βúţţôñ çôôℓδôωñ ôñ ïţš ôř ţôĝèţĥèř ωïţĥ áℓℓ? !!!]</value>
-  </data>
-  <data name="MixPlayTextboxModeration" xml:space="preserve">
-    <value>[!!! Wôúℓδ ¥ôú ℓïƙè ţô úšè Çĥáţ Môδèřáţïôñ ôñ áℓℓ èñţèřèδ ţèжţ? !!!]</value>
   </data>
   <data name="Mod" xml:space="preserve">
     <value>[!!! Môδ !!!]</value>
@@ -1365,9 +1104,6 @@
   <data name="MoveUp" xml:space="preserve">
     <value>[!!! MôƲè Ûƥ !!!]</value>
   </data>
-  <data name="Must" xml:space="preserve">
-    <value>[!!! Múšţ !!!]</value>
-  </data>
   <data name="Mute" xml:space="preserve">
     <value>[!!! Múţè !!!]</value>
   </data>
@@ -1407,9 +1143,6 @@
   <data name="None" xml:space="preserve">
     <value>[!!! Nôñè !!!]</value>
   </data>
-  <data name="NoResultsFound" xml:space="preserve">
-    <value>[!!! Nô Rèšúℓţš Fôúñδ !!!]</value>
-  </data>
   <data name="Normal" xml:space="preserve">
     <value>[!!! Nôř₥áℓ !!!]</value>
   </data>
@@ -1439,9 +1172,6 @@
   </data>
   <data name="OnHost" xml:space="preserve">
     <value>[!!! Óñ Hôšţ !!!]</value>
-  </data>
-  <data name="OnlineMinutes" xml:space="preserve">
-    <value>[!!! Óñℓïñè Mïñúţèš !!!]</value>
   </data>
   <data name="OnlineRate" xml:space="preserve">
     <value>[!!! Óñℓïñè Ráţè !!!]</value>
@@ -1485,9 +1215,6 @@
   <data name="Overlays" xml:space="preserve">
     <value>[!!! ÓƲèřℓá¥š !!!]</value>
   </data>
-  <data name="OverlayToUse" xml:space="preserve">
-    <value>[!!! ÓƲèřℓá¥ Ţô Ûšè !!!]</value>
-  </data>
   <data name="OverlayWarning1" xml:space="preserve">
     <value>[!!! WÂRNÌNG: Âñï₥áţïôñš ₥á¥ ñôţ ωôřƙ çôřřèçţℓ¥. !!!]</value>
   </data>
@@ -1512,20 +1239,8 @@
   <data name="OvrStream" xml:space="preserve">
     <value>[!!! ÓƲřŠţřèá₥ !!!]</value>
   </data>
-  <data name="OvrStreamTitleName" xml:space="preserve">
-    <value>[!!! ÓƲřŠţřèá₥ Ţïţℓè Ná₥è !!!]</value>
-  </data>
   <data name="Partner" xml:space="preserve">
     <value>[!!! Þářţñèř !!!]</value>
-  </data>
-  <data name="PartneredStreamer" xml:space="preserve">
-    <value>[!!! Þářţñèřèδ Šţřèá₥èř !!!]</value>
-  </data>
-  <data name="PartnersOnly" xml:space="preserve">
-    <value>[!!! Ţĥïš ƒèáţúřè ïš çúřřèñţℓ¥ áƲáïℓáβℓè ƒôř Þářţñèřš ôñℓ¥. !!!]</value>
-  </data>
-  <data name="PatreonBenefitRequirement" xml:space="preserve">
-    <value>[!!! Þáţřèôñ ßèñèƒïţ Rè9úïřè₥èñţ !!!]</value>
   </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>[!!! Þáţřèôñ Ûšèř !!!]</value>
@@ -1548,12 +1263,6 @@
   <data name="Play" xml:space="preserve">
     <value>[!!! Þℓá¥ !!!]</value>
   </data>
-  <data name="PollResultCommand" xml:space="preserve">
-    <value>[!!! Þôℓℓ Rèšúℓţ Çô₥₥áñδ (Óƥţïôñáℓ) !!!]</value>
-  </data>
-  <data name="PollResultCommandType" xml:space="preserve">
-    <value>[!!! Þôℓℓ Rèšúℓţ Çô₥₥áñδ Ţ¥ƥè !!!]</value>
-  </data>
   <data name="PortName" xml:space="preserve">
     <value>[!!! Þôřţ Ná₥è !!!]</value>
   </data>
@@ -1568,12 +1277,6 @@
   </data>
   <data name="Press" xml:space="preserve">
     <value>[!!! Þřèšš !!!]</value>
-  </data>
-  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>[!!! ÞřèƲèñţ Š₥áℓℓèř Çôôℓδôωñš ƒřô₥ ÓƲèřωřïţïñĝ !!!]</value>
-  </data>
-  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>[!!! ÞřèƲèñţ Ûñƙñôωñ MïжÞℓá¥ Ûšèřš !!!]</value>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
     <value>[!!! Þřï₥ář¥ Çúřřèñç¥ !!!]</value>
@@ -1626,14 +1329,8 @@
   <data name="Quotes" xml:space="preserve">
     <value>[!!! Qúôţèš !!!]</value>
   </data>
-  <data name="RandomStreamer" xml:space="preserve">
-    <value>[!!! Ráñδô₥ Šţřèá₥èř !!!]</value>
-  </data>
   <data name="Rank" xml:space="preserve">
     <value>[!!! Ráñƙ !!!]</value>
-  </data>
-  <data name="RankMinimum" xml:space="preserve">
-    <value>[!!! Ráñƙ Mïñï₥ú₥ !!!]</value>
   </data>
   <data name="RankName" xml:space="preserve">
     <value>[!!! Ráñƙ Ná₥è !!!]</value>
@@ -1643,15 +1340,6 @@
   </data>
   <data name="Rate" xml:space="preserve">
     <value>[!!! Ráţè (0% - 150%) !!!]</value>
-  </data>
-  <data name="RateReview" xml:space="preserve">
-    <value>[!!! Ráţè/RèƲïèω !!!]</value>
-  </data>
-  <data name="RateSecs" xml:space="preserve">
-    <value>[!!! Ráţè (Šèçš) !!!]</value>
-  </data>
-  <data name="Rating" xml:space="preserve">
-    <value>[!!! Ráţïñĝ !!!]</value>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>[!!! Rèáδ Fřô₥ Fïℓè !!!]</value>
@@ -1737,12 +1425,6 @@
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>[!!! RèţřôáçţïƲèℓ¥ GïƲè Þôïñţš !!!]</value>
   </data>
-  <data name="Review" xml:space="preserve">
-    <value>[!!! RèƲïèω !!!]</value>
-  </data>
-  <data name="Reviews" xml:space="preserve">
-    <value>[!!! RèƲïèωš !!!]</value>
-  </data>
   <data name="RightButton" xml:space="preserve">
     <value>[!!! Rïĝĥţ ßúţţôñ !!!]</value>
   </data>
@@ -1770,14 +1452,8 @@
   <data name="RunOneRandomly" xml:space="preserve">
     <value>[!!! Rúñ Óñè Ráñδô₥ℓ¥ !!!]</value>
   </data>
-  <data name="SameAgeRating" xml:space="preserve">
-    <value>[!!! Šá₥è Âĝè Ráţïñĝ !!!]</value>
-  </data>
   <data name="SameGame" xml:space="preserve">
     <value>[!!! Šá₥è Gá₥è !!!]</value>
-  </data>
-  <data name="SameTeam" xml:space="preserve">
-    <value>[!!! Šá₥è Ţèá₥ !!!]</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>[!!! ŠáƲè !!!]</value>
@@ -1801,7 +1477,7 @@
     <value>[!!! Šçèñè Ná₥è (Çášè ŠèñšïţïƲè) !!!]</value>
   </data>
   <data name="SceneNameOptional" xml:space="preserve">
-    <value>[!!! Šçèñè Ná₥è (Óƥţïôñáℓ) !!!]</value>
+    <value>[!!! Šçèñè Ná₥è (Çášè ŠèñšïţïƲè) (Óƥţïôñáℓ) !!!]</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>[!!! Šèářçĥ !!!]</value>
@@ -1809,14 +1485,8 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>[!!! Šèářçĥ Çřïţèřïá !!!]</value>
   </data>
-  <data name="SearchTerms" xml:space="preserve">
-    <value>[!!! Šèářçĥ Ţèř₥š !!!]</value>
-  </data>
   <data name="Seconds" xml:space="preserve">
     <value>[!!! Šèçôñδš !!!]</value>
-  </data>
-  <data name="SecondsAllCaps" xml:space="preserve">
-    <value>[!!! ŠÉÇÓNÐŠ !!!]</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>[!!! Šèçôñδ Váℓúè !!!]</value>
@@ -1827,14 +1497,8 @@
   <data name="SelectFirstType" xml:space="preserve">
     <value>[!!! Šèℓèçţ Fïřšţ Ûšèř ôƒ Ţ¥ƥè ïñ Qúèúè !!!]</value>
   </data>
-  <data name="SelectGameHeader" xml:space="preserve">
-    <value>[!!! Šèℓèçţ ţĥè Gá₥è Ţ¥ƥè ¥ôú ωôúℓδ ℓïƙè ţô çřèáţè !!!]</value>
-  </data>
   <data name="SelectRandom" xml:space="preserve">
     <value>[!!! Šèℓèçţ Ráñδô₥ Ûšèř ïñ Qúèúè !!!]</value>
-  </data>
-  <data name="SelectTypeOfCommand" xml:space="preserve">
-    <value>[!!! Šèℓèçţ ţĥè ţ¥ƥè ôƒ çô₥₥áñδ ¥ôú ωôúℓδ ℓïƙè ţô βúïℓδ: !!!]</value>
   </data>
   <data name="SellPrice" xml:space="preserve">
     <value>[!!! Šèℓℓ Þřïçè !!!]</value>
@@ -1875,9 +1539,6 @@
   <data name="Set" xml:space="preserve">
     <value>[!!! Šèţ !!!]</value>
   </data>
-  <data name="SetAudience" xml:space="preserve">
-    <value>[!!! Šèţ Âúδïèñçè !!!]</value>
-  </data>
   <data name="SetGame" xml:space="preserve">
     <value>[!!! Šèţ Gá₥è !!!]</value>
   </data>
@@ -1893,9 +1554,6 @@
   <data name="SetUserTitle" xml:space="preserve">
     <value>[!!! Šèţ Ûšèř Ţïţℓè !!!]</value>
   </data>
-  <data name="ShareCode" xml:space="preserve">
-    <value>[!!! Šĥářè Çôδè !!!]</value>
-  </data>
   <data name="Shift" xml:space="preserve">
     <value>[!!! Šĥïƒţ !!!]</value>
   </data>
@@ -1908,9 +1566,6 @@
   <data name="ShopCurrency" xml:space="preserve">
     <value>[!!! Šĥôƥ Çúřřèñç¥ !!!]</value>
   </data>
-  <data name="ShowEventAlerts" xml:space="preserve">
-    <value>[!!! Šĥôω ÉƲèñţ Âℓèřţš !!!]</value>
-  </data>
   <data name="ShowInfoInChat" xml:space="preserve">
     <value>[!!! Šĥôω Ìñƒô Ìñ Çĥáţ !!!]</value>
   </data>
@@ -1920,9 +1575,6 @@
   <data name="ShowMessageTimestamp" xml:space="preserve">
     <value>[!!! Šĥôω Mèššáĝè Ţï₥èšţá₥ƥ !!!]</value>
   </data>
-  <data name="ShowMixrElixrEmotes" xml:space="preserve">
-    <value>[!!! Šĥôω MïжřÉℓïжř É₥ôţèš (Rè9úïřèš Rèšţářţ) !!!]</value>
-  </data>
   <data name="ShowOnChatListContextMenu" xml:space="preserve">
     <value>[!!! Šĥôω Óñ Çĥáţ Ļïšţ Çôñţèжţ Mèñú !!!]</value>
   </data>
@@ -1931,15 +1583,6 @@
   </data>
   <data name="ShowWindow" xml:space="preserve">
     <value>[!!! Šĥôω Wïñδôω !!!]</value>
-  </data>
-  <data name="SingleAction" xml:space="preserve">
-    <value>[!!! Šïñĝℓè Âçţïôñ !!!]</value>
-  </data>
-  <data name="SkillsUsed" xml:space="preserve">
-    <value>[!!! Šƙïℓℓš Ûšèδ !!!]</value>
-  </data>
-  <data name="SmallStreamer" xml:space="preserve">
-    <value>[!!! Š₥áℓℓ Šţřèá₥èř (&lt;10) !!!]</value>
   </data>
   <data name="SongRequest" xml:space="preserve">
     <value>[!!! Šôñĝ Rè9úèšţ !!!]</value>
@@ -2028,9 +1671,6 @@
   <data name="StreamsWatched" xml:space="preserve">
     <value>[!!! Šţřèá₥š Wáţçĥèδ !!!]</value>
   </data>
-  <data name="StreamTitle" xml:space="preserve">
-    <value>[!!! Šţřèá₥ Ţïţℓè !!!]</value>
-  </data>
   <data name="StrikeCommands" xml:space="preserve">
     <value>[!!! Šţřïƙè Çô₥₥áñδš !!!]</value>
   </data>
@@ -2073,9 +1713,6 @@
   <data name="TaggedInChat" xml:space="preserve">
     <value>[!!! Ţáĝĝèδ Ìñ Çĥáţ !!!]</value>
   </data>
-  <data name="Tags" xml:space="preserve">
-    <value>[!!! Ţáĝš !!!]</value>
-  </data>
   <data name="TargetUser" xml:space="preserve">
     <value>[!!! Ţářĝèţ Ûšèř !!!]</value>
   </data>
@@ -2088,17 +1725,8 @@
   <data name="Team" xml:space="preserve">
     <value>[!!! Ţèá₥ !!!]</value>
   </data>
-  <data name="TeamName" xml:space="preserve">
-    <value>[!!! Ţèá₥ Ná₥è !!!]</value>
-  </data>
-  <data name="Teen" xml:space="preserve">
-    <value>[!!! Ţèèñ !!!]</value>
-  </data>
   <data name="TestCommand" xml:space="preserve">
     <value>[!!! Ţèšţ Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="TestStreamWarning" xml:space="preserve">
-    <value>[!!! ßèçáúšè ţèšţ šţřèá₥ šèţţïñĝš ářè èñáβℓèδ, ¥ôúř βôţ áççôúñţ ωïℓℓ ñôţ βè áβℓè ţô çôññèçţ çôřřèçţℓ¥. Ýôú ωïℓℓ ñèèδ ţô δïšáβℓè Ţèšţ Šţřèá₥š ïñ ôřδèř ţô úšè ¥ôúř βôţ áççôúñţ ƒôř ţĥïñĝš šúçĥ á çĥáţ ₥èššáĝèš &amp; ωĥïšƥèřš. Âřè ¥ôú šúřè ¥ôú šţïℓℓ ωïšĥ ţô çôññèçţ ïţ? !!!]</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>[!!! Ţèжţ !!!]</value>
@@ -2111,9 +1739,6 @@
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>[!!! Ţèжţ Ţô Šƥèèçĥ !!!]</value>
-  </data>
-  <data name="TextToTranslate" xml:space="preserve">
-    <value>[!!! Ţèжţ Ţô Ţřáñšℓáţè !!!]</value>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
     <value>[!!! Ţĥè₥èš &amp; Çôℓôřš !!!]</value>
@@ -2163,9 +1788,6 @@
   <data name="TotalTimeMins" xml:space="preserve">
     <value>[!!! Ţôţáℓ Ţï₥è (Mïñš) !!!]</value>
   </data>
-  <data name="TotalUsers" xml:space="preserve">
-    <value>[!!! Ţôţáℓ Ûšèřš !!!]</value>
-  </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
     <value>[!!! Ţřáçƙ Wĥïšƥèřèř Nú₥βèřš !!!]</value>
   </data>
@@ -2180,9 +1802,6 @@
   </data>
   <data name="TranslationBy" xml:space="preserve">
     <value>[!!!  !!!]</value>
-  </data>
-  <data name="TriggerHint" xml:space="preserve">
-    <value>[!!! Ţřïĝĝèř(š) ïñ Çĥáţ (Nô "!" ñèèδèδ) !!!]</value>
   </data>
   <data name="TweetImageURL" xml:space="preserve">
     <value>[!!! Ţωèèţ Ì₥áĝè ÛRĻ (Óƥţïôñáℓ) !!!]</value>
@@ -2202,17 +1821,8 @@
   <data name="Type" xml:space="preserve">
     <value>[!!! Ţ¥ƥè !!!]</value>
   </data>
-  <data name="TypeToAdd" xml:space="preserve">
-    <value>[!!! Ţ¥ƥè Ţô Âδδ !!!]</value>
-  </data>
   <data name="Unassigned" xml:space="preserve">
     <value>[!!! Ûñáššïĝñèδ !!!]</value>
-  </data>
-  <data name="UnbanAllUsers" xml:space="preserve">
-    <value>[!!! Ûñβáñ Âℓℓ Ûšèřš !!!]</value>
-  </data>
-  <data name="UnbanAllUsersHeader" xml:space="preserve">
-    <value>[!!! Ûñ-βáñ áℓℓ úšèřš ƒřô₥ ¥ôúř çĥáññèℓ !!!]</value>
   </data>
   <data name="Ungrouped" xml:space="preserve">
     <value>[!!! Ûñĝřôúƥèδ !!!]</value>
@@ -2229,14 +1839,8 @@
   <data name="Update" xml:space="preserve">
     <value>[!!! Ûƥδáţè !!!]</value>
   </data>
-  <data name="UpdateChannel" xml:space="preserve">
-    <value>[!!! Ûƥδáţè Çĥáññèℓ !!!]</value>
-  </data>
   <data name="UpdateCommand" xml:space="preserve">
     <value>[!!! Ûƥδáţè Çô₥₥áñδ !!!]</value>
-  </data>
-  <data name="UpdatedValue" xml:space="preserve">
-    <value>[!!! Ûƥδáţèδ Váℓúè !!!]</value>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>[!!! Ûƥδáţè ÞřèƲïèω Þřôĝřá₥ !!!]</value>
@@ -2246,9 +1850,6 @@
   </data>
   <data name="UploadFilePath" xml:space="preserve">
     <value>[!!! Ûƥℓôáδ Fïℓè Þáţĥ (Óƥţïôñáℓ) !!!]</value>
-  </data>
-  <data name="UploadTo" xml:space="preserve">
-    <value>[!!! Ûƥℓôáδ Ţô !!!]</value>
   </data>
   <data name="Uptime" xml:space="preserve">
     <value>[!!! Ûƥţï₥è !!!]</value>
@@ -2313,9 +1914,6 @@
   <data name="UserTitles" xml:space="preserve">
     <value>[!!! Ûšèř Ţïţℓèš !!!]</value>
   </data>
-  <data name="UserToMove" xml:space="preserve">
-    <value>[!!! Ûšèř Ţô MôƲè (Óƥţïôñáℓ) !!!]</value>
-  </data>
   <data name="Value1" xml:space="preserve">
     <value>[!!! Váℓúè 1 (Óƥţïôñáℓ) !!!]</value>
   </data>
@@ -2333,9 +1931,6 @@
   </data>
   <data name="Version" xml:space="preserve">
     <value>[!!! Vèřšïôñ !!!]</value>
-  </data>
-  <data name="VersionID" xml:space="preserve">
-    <value>[!!! Vèřšïôñ ÌÐ !!!]</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>[!!! Vïδèô !!!]</value>
@@ -2397,29 +1992,17 @@
   <data name="WebRequestURL" xml:space="preserve">
     <value>[!!! Wèβ Rè9úèšţ ÛRĻ !!!]</value>
   </data>
-  <data name="WebShow" xml:space="preserve">
-    <value>[!!! Wèβ Šĥôω !!!]</value>
-  </data>
   <data name="Weekly" xml:space="preserve">
     <value>[!!! Wèèƙℓ¥ !!!]</value>
   </data>
-  <data name="WhatIsTrigger" xml:space="preserve">
-    <value>[!!! Wĥáţ ţèжţ ïñ çĥáţ ωïℓℓ ţřïĝĝèř ţĥïš çô₥₥áñδ (ÉX: "!ƒôℓℓôω")? !!!]</value>
-  </data>
   <data name="Whisper" xml:space="preserve">
     <value>[!!! Wĥïšƥèř !!!]</value>
-  </data>
-  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
-    <value>[!!! Wĥïšƥèř Âℓℓ Âℓèřţš ţô Šţřèá₥èř Âççôúñţ !!!]</value>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>[!!! Wĥïšƥèř Ûšèř (Óƥţïôñáℓ) !!!]</value>
   </data>
   <data name="White" xml:space="preserve">
     <value>[!!! Wĥïţè !!!]</value>
-  </data>
-  <data name="WhoCanRun" xml:space="preserve">
-    <value>[!!! Wĥô šĥôúℓδ βè áℓℓôωèδ ţô řúñ ţĥïš çô₥₥áñδ? !!!]</value>
   </data>
   <data name="Widget" xml:space="preserve">
     <value>[!!! Wïδĝèţ !!!]</value>
@@ -2429,9 +2012,6 @@
   </data>
   <data name="Winner" xml:space="preserve">
     <value>[!!! Wïññèř !!!]</value>
-  </data>
-  <data name="WinnerAllCaps" xml:space="preserve">
-    <value>[!!! WÌNNÉR !!!]</value>
   </data>
   <data name="WinnerSelected" xml:space="preserve">
     <value>[!!! Wïññèř Šèℓèçţèδ !!!]</value>
@@ -2496,9 +2076,6 @@
   <data name="ExtraLifeDonation" xml:space="preserve">
     <value>[!!! Éжţřá Ļïƒè Ðôñáţïôñ !!!]</value>
   </data>
-  <data name="GawkBoxDonation" xml:space="preserve">
-    <value>[!!! Gáωƙßôж Ðôñáţïôñ !!!]</value>
-  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>[!!! JúšţGïƲïñĝ Ðôñáţïôñ !!!]</value>
   </data>
@@ -2538,17 +2115,11 @@
   <data name="Ban" xml:space="preserve">
     <value>[!!! ßáñ !!!]</value>
   </data>
-  <data name="GlobalTimeout" xml:space="preserve">
-    <value>[!!! Gℓôβáℓ Ţï₥èôúţ !!!]</value>
-  </data>
   <data name="Purge" xml:space="preserve">
     <value>[!!! Þúřĝè !!!]</value>
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>[!!! Ţï₥èôúţ !!!]</value>
-  </data>
-  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
-    <value>[!!! Ţĥïš ƒèáţúřè ïš çúřřèñţℓ¥ áƲáïℓáβℓè ƒôř Þářţñèřš &amp; Vèřïƒïèδ Çĥáññèℓš ôñℓ¥. !!!]</value>
   </data>
   <data name="Imported" xml:space="preserve">
     <value>[!!! Ì₥ƥôřţèδ !!!]</value>
@@ -2562,14 +2133,8 @@
   <data name="CustomizeStreamPass" xml:space="preserve">
     <value>[!!! Çúšţô₥ïƺè Šţřèá₥ Þášš !!!]</value>
   </data>
-  <data name="ActivityRate" xml:space="preserve">
-    <value>[!!! ÂçţïƲïţ¥ Ráţè: !!!]</value>
-  </data>
   <data name="DonationBonus" xml:space="preserve">
     <value>[!!! Ðôñáţïôñ ßôñúš !!!]</value>
-  </data>
-  <data name="EmberBonus" xml:space="preserve">
-    <value>[!!! É₥βèř ßôñúš !!!]</value>
   </data>
   <data name="FollowBonus" xml:space="preserve">
     <value>[!!! Fôℓℓôω ßôñúš !!!]</value>
@@ -2625,9 +2190,6 @@
   <data name="StreamPass" xml:space="preserve">
     <value>[!!! Šţřèá₥ Þášš !!!]</value>
   </data>
-  <data name="TotalLevels" xml:space="preserve">
-    <value>[!!! Ţôţáℓ ĻèƲèℓš !!!]</value>
-  </data>
   <data name="Dutch" xml:space="preserve">
     <value>[!!! Ðúţçĥ !!!]</value>
   </data>
@@ -2651,9 +2213,6 @@
   </data>
   <data name="ConfirmDeleteCommand" xml:space="preserve">
     <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δèℓèţè ţĥïš çô₥₥áñδ? !!!]</value>
-  </data>
-  <data name="ConfirmDeleteCustomLevelUpCommand" xml:space="preserve">
-    <value>[!!! Âřè ¥ôú šúřè ¥ôú ωáñţ ţô δèℓèţè ţĥïš çúšţô₥ ℓèƲèℓ úƥ çô₥₥áñδ? !!!]</value>
   </data>
   <data name="MaxLevel" xml:space="preserve">
     <value>[!!! Máж ĻèƲèℓ !!!]</value>
@@ -2811,9 +2370,6 @@
   <data name="LessThanOrEqualTo" xml:space="preserve">
     <value>[!!! &lt;= !!!]</value>
   </data>
-  <data name="NotEqualTo" xml:space="preserve">
-    <value>[!!! &lt;&gt; !!!]</value>
-  </data>
   <data name="NoMoreRedemptionStoreProducts" xml:space="preserve">
     <value>[!!! Ţĥèřè ářè ñô ₥ôřè ôƒ ţĥïš ƥřôδúçţ !!!]</value>
   </data>
@@ -2843,9 +2399,6 @@
   </data>
   <data name="TwitchChannelPoints" xml:space="preserve">
     <value>[!!! Ţωïţçĥ Çĥáññèℓ Þôïñţš !!!]</value>
-  </data>
-  <data name="AddRewardCommand" xml:space="preserve">
-    <value>[!!! Âδδ Rèωářδ Çô₥₥áñδ !!!]</value>
   </data>
   <data name="ChannelPoints" xml:space="preserve">
     <value>[!!! Çĥáññèℓ Þôïñţš !!!]</value>
@@ -2909,9 +2462,6 @@
   </data>
   <data name="ClipPlayback" xml:space="preserve">
     <value>[!!! Çℓïƥ Þℓá¥βáçƙ !!!]</value>
-  </data>
-  <data name="SubTier" xml:space="preserve">
-    <value>[!!! Šúβ Ţïèř !!!]</value>
   </data>
   <data name="1" xml:space="preserve">
     <value>[!!! 1 !!!]</value>
@@ -3119,9 +2669,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="FileActionMissingLineToRead" xml:space="preserve">
     <value>[!!! Fïℓè Âçţïôñ: Mïššïñĝ ℓïñè ţô řèáδ !!!]</value>
   </data>
-  <data name="FileActionMissingTextToSave" xml:space="preserve">
-    <value>[!!! Fïℓè Âçţïôñ: Mïššïñĝ ţèжţ ţô šáƲè !!!]</value>
-  </data>
   <data name="IFTTTActionMissingEventName" xml:space="preserve">
     <value>[!!! ÌFŢŢŢ Âçţïôñ: Mïššïñĝ èƲèñţ ñá₥è !!!]</value>
   </data>
@@ -3203,12 +2750,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TextToSpeechActionMissingVoice" xml:space="preserve">
     <value>[!!! Ţèжţ ţô Šƥèèçĥ Âçţïôñ: Mïššïñĝ Ʋôïçè !!!]</value>
   </data>
-  <data name="TranslationActionMissingLanguage" xml:space="preserve">
-    <value>[!!! Ţřáñšℓáţïôñ Âçţïôñ: Mïššïñĝ ℓáñĝúáĝè !!!]</value>
-  </data>
-  <data name="TranslationActionMissingText" xml:space="preserve">
-    <value>[!!! Ţřáñšℓáţïôñ Âçţïôñ: Mïššïñĝ ţèжţ !!!]</value>
-  </data>
   <data name="TwitterActionInvalidTweet" xml:space="preserve">
     <value>[!!! Ţωïţţèř Âçţïôñ: Ţωèèţ çáñ ñôţ çôñţáïñ áñ¥ "@" ţáĝš !!!]</value>
   </data>
@@ -3281,17 +2822,8 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="StreamingSoftwareActionMissingWebBrowserSourceFilePath" xml:space="preserve">
     <value>[!!! Šţřèá₥ïñĝ Šôƒţωářè Âçţïôñ: Mïššïñĝ ωèβ βřôωšèř šôúřçè ƒïℓè ƥáţĥ !!!]</value>
   </data>
-  <data name="SuccessTriggerType" xml:space="preserve">
-    <value>[!!! Šúççèšš Ţřïĝĝèř Ţ¥ƥè !!!]</value>
-  </data>
   <data name="ConditionalActionClauseMissingValue" xml:space="preserve">
     <value>[!!! Çôñδïţïôñáℓ Âçţïôñ: Çℓáúšè ₥ïššïñĝ Ʋáℓúè !!!]</value>
-  </data>
-  <data name="ConditionalActionMissingSuccessTrigger" xml:space="preserve">
-    <value>[!!! Çôñδïţïôñáℓ Âçţïôñ: Mïššïñĝ šúççèšš ţřïĝĝèř !!!]</value>
-  </data>
-  <data name="ConditionalActionSuccessTriggerActionHasErrors" xml:space="preserve">
-    <value>[!!! Çôñδïţïôñáℓ Âçţïôñ: Šúççèšš ţřïĝĝèř áçţïôñ ĥáš èřřôřš !!!]</value>
   </data>
   <data name="ShowHideWidget" xml:space="preserve">
     <value>[!!! Šĥôω/Hïδè Wïδĝèţ !!!]</value>
@@ -3370,9 +2902,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="GameCommandCouldNotFindUser" xml:space="preserve">
     <value>[!!! Â Ʋáℓïδ úšèř çôúℓδ ñôţ βè ƒôúñδ !!!]</value>
-  </data>
-  <data name="GameCommandInvalidBetAmount" xml:space="preserve">
-    <value>[!!! Â Ʋáℓïδ βèţ á₥ôúñţ ₥úšţ βè šƥèçïƒïèδ !!!]</value>
   </data>
   <data name="GameCommandTargetUserInvalidAmount" xml:space="preserve">
     <value>[!!! Ţĥè úšèř δôèš ñôţ ĥáƲè {0} {1} !!!]</value>
@@ -3454,17 +2983,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandBidDescription" xml:space="preserve">
     <value>[!!! Ţĥè ßïδ ĝá₥è áℓℓôωš á úšèř ţô šţářţ á βïδδïñĝ çô₥ƥèţïţïôñ á₥ôñĝšţ áℓℓ úšèřš ţô ωïñ á ƥřïƺè ôř šƥèçïáℓ ƥřïƲïℓèĝè. Â úšèř ₥úšţ βïδ áţ ℓèášţ 1 çúřřèñç¥ á₥ôúñţ ĥïĝĥèř ţĥáñ ţĥè ĥïĝĥèšţ βïδ ţô βèçô₥è ţĥè ℓèáδïñĝ βïδδèř. Wĥèñ á úšèř ïš ôúţβïδ, ţĥè¥ řèçèïƲè ţĥèïř βèţ çúřřèñç¥ βáçƙ áñδ ţĥè ĥïĝĥèšţ βïδδèř ωĥèñ ţï₥è řúñš ôúţ ωïñš. Âδδïţïôñáℓℓ¥, ¥ôú çáñ šƥèçïƒ¥ ωĥáţ úšèř řôℓèš çáñ šţářţ ţĥïš ĝá₥è ţô èñšúřè ïţ ïšñ'ţ áβúšèδ, šúçĥ áš Môδèřáţôřš ôř ĥïĝĥèř ôñℓ¥. !!!]</value>
   </data>
-  <data name="GameCommandBidExample" xml:space="preserve">
-    <value>[!!! ÉX: !βïδ 100 !!!]</value>
-  </data>
   <data name="CoinPusher" xml:space="preserve">
     <value>[!!! Çôïñ Þúšĥèř !!!]</value>
   </data>
   <data name="GameCommandCoinPusherDescription" xml:space="preserve">
     <value>[!!! Ţĥè Çôïñ Þúšĥèř ĝá₥è áℓℓôωš á úšèř ţô δèƥôšïţ á šƥèçïƒïç á₥ôúñţ ôƒ çúřřèñç¥ ïñţô á ₥áçĥïñè ωïţĥ ţĥè çĥáñçè ƒôř á ℓářĝè ƥá¥ôúţ. Â ₥ïñï₥ú₥ á₥ôúñţ ôƒ çúřřèñç¥ ₥úšţ βè ïñšèřţèδ ïñţô ţĥè ₥áçĥïñè ţô áℓℓôω ƒôř á ƥá¥ôúţ áñδ á ₥ïñï₥ú₥ &amp; ₥áжï₥ú₥ ƥá¥ôúţ ƥèřçèñţáĝè çáñ βè šƥèçïƒïèδ ωĥèñ á ƥá¥ôúţ ôççúřš. !!!]</value>
-  </data>
-  <data name="GameCommandCoinPusherExample" xml:space="preserve">
-    <value>[!!! ÉX: !ƥúšĥèř 100 !!!]</value>
   </data>
   <data name="Duel" xml:space="preserve">
     <value>[!!! Ðúèℓ !!!]</value>
@@ -3472,17 +2995,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandDuelDescription" xml:space="preserve">
     <value>[!!! Ţĥè Ðúèℓ ĝá₥è çĥáℓℓèñĝèš ţĥè šƥèçïƒïèδ úšèř ţô á ωïññèř-ţáƙèš-áℓℓ ƒôř ţĥè βèţ á₥ôúñţ. Ìƒ šúççèššƒúℓ, ţĥè úšèř ţáƙèš ţĥè βèţ á₥ôúñţ ƒřô₥ ţĥè šƥèçïƒïèδ úšèř. Ìƒ ƒáïℓèδ, ţĥè šƥèçïƒïèδ úšèř ţáƙèš ţĥè βèţ á₥ôúñţ ƒřô₥ ţĥè úšèř. !!!]</value>
   </data>
-  <data name="GameCommandDuelExample" xml:space="preserve">
-    <value>[!!! ÉX: !δúèℓ &lt;ÛŠÉRNÂMÉ&gt; 100 !!!]</value>
-  </data>
   <data name="Hangman" xml:space="preserve">
     <value>[!!! Háñĝ₥áñ !!!]</value>
   </data>
   <data name="GameCommandHangmanDescription" xml:space="preserve">
     <value>[!!! Ţĥè Háñĝ₥áñ ĝá₥è áℓℓôωš úšèřš ţô ĝúèšš ţĥè ℓèţţèř çô₥βïñáţïôñ ôƒ á řáñδô₥ ωôřδ ţô ωïñ áñ áççú₥úℓáţèδ ƥôţ ôƒ çúřřèñç¥. ÉƲèř¥ ƒáïℓèδ ĝúèšš ƥúţš ţĥè řè9úïřèδ çúřřèñç¥ á₥ôúñţ ïñţô ţĥè ƥôţ áñδ áδδš á ƒáïℓúřè, ωĥïℓè á çôřřèçţ ĝúèšš áδδš ţĥè ℓèţţèř. Ţĥè ƥèřšôñ ţô ĝúèšš ţĥè ℓášţ ₥ïššïñĝ ℓèţţèř ĝèţš ţĥè ωĥôℓè ƥôţ. Ûšèřš ĥáƲè ţĥè áβïℓïţ¥ ţô šèè ţĥè šţáţúš ôƒ ţĥè ĝá₥è ţô šèè ĥôω ₥úçĥ ţĥè ƥôţ ïš áñδ ωĥáţ ĥáš βèèñ ĝúèššèδ áℓřèáδ¥. !!!]</value>
-  </data>
-  <data name="GameCommandHangmanExample" xml:space="preserve">
-    <value>[!!! ÉX: !ĥáñĝ₥áñ &lt;ĻÉŢŢÉR&gt; !!!]</value>
   </data>
   <data name="Heist" xml:space="preserve">
     <value>[!!! Hèïšţ !!!]</value>
@@ -3490,17 +3007,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandHeistDescription" xml:space="preserve">
     <value>[!!! Ţĥè Hèïšţ ĝá₥è áℓℓôωš á úšèř ţô šţářţ á ĝřôúƥ áçţïƲïţ¥ ƒôř úšèřš ţô ïñδïƲïδúáℓℓ¥ βèţ ωĥèñ ţĥè¥ ƥářţïçïƥáţè. Éáçĥ úšèř ĥáš ţĥèïř ôωñ ïñδïƲïδúáℓ çĥáñçè ţô šúççèèδ áñδ ωïñ βáçƙ ₥ôřè ôř ƒáïℓ áñδ ℓôšè ţĥèïř βèţ !!!]</value>
   </data>
-  <data name="GameCommandHeistExample" xml:space="preserve">
-    <value>[!!! ÉX: !ĥèïšţ 100 !!!]</value>
-  </data>
   <data name="Hitman" xml:space="preserve">
     <value>[!!! Hïţ₥áñ !!!]</value>
   </data>
   <data name="GameCommandHitmanDescription" xml:space="preserve">
     <value>[!!! Ţĥè Hïţ₥áñ ĝá₥è áℓℓôωš á úšèř ţô šţářţ á ωïññèř-ţáƙèš-áℓℓ βèţ á₥ôñĝšţ áℓℓ èñţèřèδ úšèřš. Âƒţèř ţĥè ïñïţïáℓ ţï₥è ℓï₥ïţ, á ĥïţ₥áñ ωïţĥ á šƥèçïƒïç ñá₥è ωïℓℓ áƥƥèář ïñ çĥáţ. Ìƒ á úšèř ţ¥ƥèš ţĥè ĥïţ₥áñ'š ñá₥è ïñ çĥáţ ωïţĥïñ ţĥè ţï₥è ℓï₥ïţ, ţĥè¥ ωïñ ţĥè èñţïřè ƥôţ. Óţĥèřωïšè, èƲèř¥ôñè ℓôšèš ţĥèïř ₥ôñè¥. !!!]</value>
-  </data>
-  <data name="GameCommandHitmanExample" xml:space="preserve">
-    <value>[!!! ÉX: !ĥïţ₥áñ 100 !!!]</value>
   </data>
   <data name="HotPotato" xml:space="preserve">
     <value>[!!! Hôţ Þôţáţô !!!]</value>
@@ -3508,18 +3019,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandHotPotatoDescription" xml:space="preserve">
     <value>[!!! Ţĥè Hôţ Þôţáţô ĝá₥è ĝïƲèš á ţïçƙïñĝ ƥôţáţô βô₥β ţô á ƥℓá¥èř, ωĥô ₥úšţ ţĥèñ ƥášš ïţ ôƒƒ ţô šô₥èôñè èℓšè βèƒôřè ïţ èжƥℓôδèš. Ţĥè úšèř ωĥô ƥáššèδ ţĥè ƥôţáţô βô₥β ℓášţ ïš δúββèδ ţĥè ωïññèř ($username) áñδ ţĥè úšèř ωĥô ĥáδ ţĥè ƥôţáţô βô₥β ωĥèñ ïţ èжƥℓôδèδ ïš δúββèδ ţĥè ℓôšèř ($targetusername). ß¥ δèƒáúℓţ, ţĥè ƥáššïñĝ ôƒ ţĥè ƥôţáţô βô₥β ïš δôñè řáñδô₥ℓ¥ ţô á ñèω úšèř, βúţ ¥ôú çáñ ôƥţïôñáℓℓ¥ áℓℓôω ţĥè ƥáššèř ţô šƥèçïƒ¥ ωĥô ïţ ĝèţš ţôššèδ ţô. Ýôú ₥á¥ áℓšô šèţ ωĥèţĥèř ţĥè ţï₥è ℓï₥ïţ ôñ ţĥè ĥôţ ƥôţáţô řèšèţš ωïţĥ èáçĥ ţôšš. !!!]</value>
   </data>
-  <data name="GameCommandHotPotatoExample" xml:space="preserve">
-    <value>[!!! ÉX: !ƥôţáţô
-ÉX: !ƥôţáţô &lt;ŢÂRGÉŢ ÛŠÉR&gt; !!!]</value>
-  </data>
   <data name="LockBox" xml:space="preserve">
     <value>[!!! Ļôçƙ ßôж !!!]</value>
   </data>
   <data name="GameCommandLockBoxDescription" xml:space="preserve">
     <value>[!!! Ţĥè Ļôçƙ ßôж ĝá₥è áℓℓôωš ¥ôú ţô ĝúèšš ţĥè çô₥βïñáţïôñ ôƒ á ℓôçƙèδ βôж úšïñĝ ţĥè ñú₥βèřš 0 - 9 ţĥáţ çôñţáïñš á ℓářĝè á₥ôúñţ ôƒ çúřřèñç¥. ÉƲèř¥ ƒáïℓèδ ĝúèšš ƥúţš ţĥè řè9úïřèδ çúřřèñç¥ á₥ôúñţ ïñţô ţĥè βôж áñδ ĝïƲèš á ĥïñţ ţô ţĥè çô₥βïñáţïôñ, ωĥïℓè á çôřřèçţ ĝúèšš ĝèţš áℓℓ ţĥè çúřřèñç¥ ïñšïδè. Ûšèřš ĥáƲè ţĥè áβïℓïţ¥ ţô šèè ţĥè šţáţúš ôƒ ţĥè ℓôçƙ βôж ţô šèè ĥôω ₥úçĥ ïš ïñ ïţ áñδ ïñšƥèçţ ţĥè ℓôçƙ βôж ƒôř á ĥïñţ áš ţô ţĥè çô₥βïñáţïôñ. !!!]</value>
-  </data>
-  <data name="GameCommandLockBoxExample" xml:space="preserve">
-    <value>[!!! ÉX: !ℓôçƙβôж 109 !!!]</value>
   </data>
   <data name="GameCommandRoleProbabilityNotEqualTo100" xml:space="preserve">
     <value>[!!! Ţĥè ƥřôβáβïℓïţ¥ ƒôř ţĥè řôℓè {0} δôèš ñôţ áδδ úƥ ţô 100 áçřôšš áℓℓ ôúţçô₥èš !!!]</value>
@@ -3530,18 +3034,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandRouletteDescription" xml:space="preserve">
     <value>[!!! Ţĥè Rôúℓèţţè ĝá₥è áℓℓôωš á úšèř ţô šţářţ á ĝřôúƥ βèţţïñĝ ĝá₥è á₥ôñĝšţ áℓℓ úšèřš ţô βèţ ôñ á šƥèçïƒïç ñú₥βèř ôř ñá₥è. Ìƒ ţĥè ĝá₥è ïš βášèδ ôñ á ñú₥βèř řáñĝè, ţĥèñ á úšèř çáñ šèℓèçţ áñ¥ ñú₥βèř ïñ ţĥáţ řáñĝè. Ìƒ ţĥè ĝá₥è ïš βášèδ ôñ á šèřïèš ôƒ ñá₥èš, á úšèř çáñ šèℓèçţ áñ¥ ôñè ôƒ ţĥè ñá₥èš. Âℓℓ úšèřš ωĥô šèℓèçţ ţĥè ωïññïñĝ βèţ ţ¥ƥè ĝèţ ţĥè ƥá¥ôúţ ƒôř ţĥèïř βèţ, èƲèř¥ôñè èℓšè ℓôššèš ţĥèïř βèţ. !!!]</value>
   </data>
-  <data name="GameCommandRouletteExample" xml:space="preserve">
-    <value>[!!! ÉX: !řôúℓèţţè &lt;NÛMßÉR&gt; 100 !!!]</value>
-  </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>[!!! Rúššïáñ Rôúℓèţţè !!!]</value>
   </data>
   <data name="GameCommandRussianRouletteDescription" xml:space="preserve">
     <value>[!!! Ţĥè Rúššïáñ Rôúℓèţţè ĝá₥è áℓℓôωš á úšèř ţô šţářţ á ωïññèř-ţáƙèš-áℓℓ βèţ á₥ôñĝšţ áℓℓ èñţèřèδ úšèřš. ß¥ δèƒáúℓţ, ţĥè úšèř ţĥáţ šţářţš ţĥè ĝá₥è šƥèçïƒïèš ĥôω ₥úçĥ ţĥè βèţ ïš áñδ áℓℓ šúβšè9úèñţ úšèřš ₥úšţ βèţ ţĥáţ á₥ôúñţ ţô Jôïñ, ωïţĥ áℓℓ ωïññèřš ôƒ ţĥè ĝá₥è šƥℓïţţïñĝ ţĥè ţôţáℓ ƥá¥ôúţ è9úáℓℓ¥. !!!]</value>
-  </data>
-  <data name="GameCommandRussianRouletteExample" xml:space="preserve">
-    <value>[!!! ÉX: !řř 100
-ÉX: !řř !!!]</value>
   </data>
   <data name="SlotMachine" xml:space="preserve">
     <value>[!!! Šℓôţ Máçĥïñè !!!]</value>
@@ -3549,17 +3046,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandSlotMachineDescription" xml:space="preserve">
     <value>[!!! Ţĥè Šℓôţ Máçĥïñè ĝá₥è ƥïçƙš á řáñδô₥ šèţ ôƒ 3 š¥₥βôℓš ƒřô₥ á ƥřè-δèƒïñèδ ℓïšţ áñδ šèℓèçţš áñ¥ ôúţçô₥è ţĥáţ ₥áţçĥèš ţĥôšè š¥₥βôℓš. ßèšïδèš šèℓèçţïñĝ á ƥá¥ôúţ ƒôř èáçĥ ôúţçô₥è, ¥ôú çáñ áℓšô řúñ á çúšţô₥ïƺèδ çô₥₥áñδ ƒôř èáçĥ ôúţçô₥è. !!!]</value>
   </data>
-  <data name="GameCommandSlotMachineExample" xml:space="preserve">
-    <value>[!!! ÉX: !šℓôţš 100 !!!]</value>
-  </data>
   <data name="Spin" xml:space="preserve">
     <value>[!!! Šƥïñ !!!]</value>
   </data>
   <data name="GameCommandSpinDescription" xml:space="preserve">
     <value>[!!! Ţĥè Šƥïñ ĝá₥è ƥïçƙš á řáñδô₥ ñú₥βèř áñδ šèℓèçţš áñ ôúţçô₥è βášèδ ôñ ţĥáţ ñú₥βèř. ßèšïδèš šèℓèçţïñĝ á ƥá¥ôúţ ƒôř èáçĥ ôúţçô₥è, ¥ôú çáñ áℓšô řúñ á çúšţô₥ïƺèδ çô₥₥áñδ ƒôř èáçĥ ôúţçô₥è. !!!]</value>
-  </data>
-  <data name="GameCommandSpinExample" xml:space="preserve">
-    <value>[!!! ÉX: !šƥïñ 100 !!!]</value>
   </data>
   <data name="GameCommandSpinLoseExample" xml:space="preserve">
     <value>[!!! Šôřř¥ @$username, ¥ôú ℓôšţ ţĥè šƥïñ! !!!]</value>
@@ -3573,10 +3064,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="GameCommandStealDescription" xml:space="preserve">
     <value>[!!! Ţĥè Šţèáℓ ĝá₥è áℓℓôωš ţĥè úšèř ţô áţţè₥ƥţ ţô šţèáℓ çúřřèñç¥ ƒřô₥ áñôţĥèř úšèř. Ìƒ šúççèššƒúℓ, ţĥè úšèř šţèáℓš ţĥè βèţ á₥ôúñţ ƒřô₥ ţĥè ôţĥèř úšèř. Ìƒ ƒáïℓèδ, ţĥè¥ ℓôšè ţĥè βèţ á₥ôúñţ. !!!]</value>
   </data>
-  <data name="GameCommandStealExample" xml:space="preserve">
-    <value>[!!! ÉX: !šţèáℓ 100
-ÉX: !šţèáℓ &lt;ÛŠÉRNÂMÉ&gt; 100 !!!]</value>
-  </data>
   <data name="TreasureDefense" xml:space="preserve">
     <value>[!!! Ţřèášúřè Ðèƒèñšè !!!]</value>
   </data>
@@ -3585,19 +3072,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
 
 Âƒţèř ţĥè ţï₥è ℓï₥ïţ ïš úƥ, á úšèř ƒřô₥ ţĥè ƥářţïçïƥáñţš ïš šèℓèçţèδ ţô βè Kïñĝ. Âℓℓ ôţĥèř úšèřš ářè èïţĥèř ţĥèñ šèℓèçţèδ ţô βè Kñïĝĥţš ôř ŢĥïèƲèš. Ìţ ïš ţĥè Jôβ ôƒ ţĥè Kïñĝ ţô ƥïçƙ ôñè ƥářţïçïƥáñţ ïñ ĥôƥèš ţĥáţ ţĥè¥ ářè á Kñïĝĥţ ţô δèƒèñδ ţĥè ţřèášúřè ţĥè¥ ƒôúñδ. Ìƒ ţĥè Kïñĝ šèℓèçţš á Kñïĝĥţ, ţĥèñ ţĥè Kïñĝ &amp; Kñïĝĥţš šĥářè ţĥè ωïññïñĝš. Ìƒ ţĥè Kïñĝ šèℓèçţš á Ţĥïèƒ, ţĥèñ ţĥè ŢĥïèƲèš šĥářè ţĥè ωïññïñĝš. !!!]</value>
   </data>
-  <data name="GameCommandTreasureDefenseExample" xml:space="preserve">
-    <value>[!!! ÉX: !ţřèášúřè &lt;ÂMÓÛNŢ&gt;
-ÉX: !ţřèášúřè
-ÉX: !ţřèášúřè &lt;ŠÉĻÉÇŢÉÐ ÛŠÉR&gt; !!!]</value>
-  </data>
   <data name="Trivia" xml:space="preserve">
     <value>[!!! ŢřïƲïá !!!]</value>
   </data>
   <data name="GameCommandTriviaDescription" xml:space="preserve">
     <value>[!!! Ţĥè ŢřïƲïá ĝá₥è ƥïçƙš á řáñδô₥ 9úèšţïôñ ƒřô₥ á ƥřè-δèţèř₥ïñèδ ℓïšţ áñδ ášƙš áℓℓ úšèřš ţô šèℓèçţ ţĥè çôřřèçţ áñšωèř ƒřô₥ á ℓïšţ ôƒ ƥôššïβℓè ôñèš. Âℓℓ úšèřš ţĥáţ šèℓèçţèδ ţĥè çôřřèçţ áñšωèř ářè áωářδèδ á ƥá¥ôúţ. !!!]</value>
-  </data>
-  <data name="GameCommandTriviaExample" xml:space="preserve">
-    <value>[!!! ÉX: !ţřïƲïá !!!]</value>
   </data>
   <data name="Volcano" xml:space="preserve">
     <value>[!!! Vôℓçáñô !!!]</value>
@@ -3607,17 +3086,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
 
 Óñçè ţĥè Ʋôℓçáñô řèáçĥèš šţáĝè 3, èáçĥ šúβšè9úèñţ δèƥôšïţ ĥáš á çĥáñçè ţô ţřïĝĝèř áñ èřúƥţïôñ. Wĥèñ áñ èřúƥţïôñ ôççúřš, ţĥè úšèř ωĥô ţřïĝĝèřèδ ïţ ĝèţš á šƥèçïáℓïƺèδ ƥá¥ôúţ ƒôř ţĥè₥. Âƒţèř ţĥè èřúƥţïôñ, áℓℓ úšèřš ĥáƲè á çĥáñçè ţô çôℓℓèçţ èřúƥţèδ çúřřèñç¥ δúřïñĝ ţĥè çôℓℓèçţïôñ ţï₥è ℓï₥ïţ. Âƒţèř ţĥè çôℓℓèçţïôñ ïš δôñè, ţĥè Ʋôℓçáñô çôñţèñţš řèšèţš βáçƙ ţô 0. !!!]</value>
   </data>
-  <data name="GameCommandVolcanoExample" xml:space="preserve">
-    <value>[!!! ÉX: !Ʋôℓçáñô 100 !!!]</value>
-  </data>
   <data name="WordScramble" xml:space="preserve">
     <value>[!!! Wôřδ Šçřá₥βℓè !!!]</value>
   </data>
   <data name="GameCommandWordScrambleDescription" xml:space="preserve">
     <value>[!!! Ţĥè Wôřδ Šçřá₥βℓè ĝá₥è áℓℓôωš á úšèř ţô šţářţ á ωïññèř-ţáƙèš-áℓℓ βèţ á₥ôñĝšţ áℓℓ èñţèřèδ úšèřš. Âƒţèř ţĥè ïñïţïáℓ ţï₥è ℓï₥ïţ, á šçřá₥βℓèδ ωôřδ ωïℓℓ áƥƥèář ïñ çĥáţ. Ìƒ á úšèř ţ¥ƥèš ţĥè úñšçřá₥βℓèδ ωôřδ ïñ çĥáţ ωïţĥïñ ţĥè ţï₥è ℓï₥ïţ, ţĥè¥ ωïñ ţĥè èñţïřè ƥôţ. Óţĥèřωïšè, èƲèř¥ôñè ℓôšèš ţĥèïř ₥ôñè¥. !!!]</value>
-  </data>
-  <data name="GameCommandWordScrambleExample" xml:space="preserve">
-    <value>[!!! ÉX: !šçřá₥βℓè 100 !!!]</value>
   </data>
   <data name="Outcomes" xml:space="preserve">
     <value>[!!! Óúţçô₥èš !!!]</value>
@@ -3652,17 +3125,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="MinimumOnly" xml:space="preserve">
     <value>[!!! Mïñï₥ú₥ Óñℓ¥ !!!]</value>
   </data>
-  <data name="NoCost" xml:space="preserve">
-    <value>[!!! Nô Çôšţ !!!]</value>
-  </data>
   <data name="RequiredAmount" xml:space="preserve">
     <value>[!!! Rè9úïřèδ Â₥ôúñţ !!!]</value>
   </data>
   <data name="GameCurrency" xml:space="preserve">
     <value>[!!! Gá₥è Çúřřèñç¥ !!!]</value>
-  </data>
-  <data name="GameCommandAtLeast1Currency" xml:space="preserve">
-    <value>[!!! Âţ ℓèášţ 1 çúřřèñç¥ ₥úšţ βè çřèáţèδ βèƒôřè Gá₥èš çáñ βè úšèδ !!!]</value>
   </data>
   <data name="NewGame" xml:space="preserve">
     <value>[!!! Nèω Gá₥è !!!]</value>
@@ -3939,9 +3406,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="GameCommandRouletteStartedExample" xml:space="preserve">
     <value>[!!! @$username ĥáš šţářţèδ á ĝá₥è ôƒ řôúℓèţţè! Ţ¥ƥè !řôúℓèţţè &lt;ßÉŢ ŢÝÞÉ&gt; ïñ çĥáţ ţô ƥℓá¥! Váℓïδ ßèţ Ţ¥ƥèš: $gamevalidbettypes !!!]</value>
-  </data>
-  <data name="GameCommandRouletteUserSuccessExample" xml:space="preserve">
-    <value>[!!! @$username ωôñ $gamepayout {0}! !!!]</value>
   </data>
   <data name="GameCommandRussianRouletteGameCompleteExample" xml:space="preserve">
     <value>[!!! Ţĥè δúšţ šèţţℓèš áƒţèř á ĝřúèℓïñĝ ₥áţçĥ-úƥ áñδ...Ìţ'š $gamewinners! Ţôţáℓ Â₥ôúñţ Þèř Wïññèř: $gamepayout {0}! !!!]</value>
@@ -4504,9 +3968,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="RankSystemDoesNotExist" xml:space="preserve">
     <value>[!!! Ráñƙ Š¥šţè₥ δôèš ñôţ èжïšţ !!!]</value>
-  </data>
-  <data name="TargetUserDoesNotHaveAmount" xml:space="preserve">
-    <value>[!!! Ţářĝèţ úšèř δôèš ñôţ ĥáƲè ţĥè çôřřèçţ á₥ôúñţ !!!]</value>
   </data>
   <data name="GameCommandBidPrimaryCurrencyMustBeMinimumOnly" xml:space="preserve">
     <value>[!!! Þřï₥ář¥ çúřřèñç¥ ₥úšţ βè šèţ ţô Mïñï₥ú₥ Óñℓ¥ !!!]</value>
@@ -5906,5 +5367,11 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   </data>
   <data name="Unfollow" xml:space="preserve">
     <value>[!!! Ûñƒôℓℓôω !!!]</value>
+  </data>
+  <data name="FollowEventModeration" xml:space="preserve">
+    <value>[!!! Fôℓℓôω ÉƲèñţ Môδèřáţïôñ !!!]</value>
+  </data>
+  <data name="FollowEventModerationMaxQueue" xml:space="preserve">
+    <value>[!!! Máж Qúèúè !!!]</value>
   </data>
 </root>

@@ -115,10 +115,13 @@ namespace MixItUp.Base.Model.Commands.Games
                             this.betsClosed = false;
                             GameOutcomeModel winningOutcome = this.BetOptions[answer - 1];
 
+                            List<CommandParametersModel> winners = new List<CommandParametersModel>(this.runUserSelections.Where(kvp => kvp.Value == answer).Select(kvp => this.runUsers[kvp.Key]));
+
+                            this.SetGameWinners(this.runParameters, winners);
                             this.runParameters.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
                             await this.RunSubCommand(this.GameCompleteCommand, this.runParameters);
 
-                            foreach (CommandParametersModel winner in this.runUserSelections.Where(kvp => kvp.Value == answer).Select(kvp => this.runUsers[kvp.Key]))
+                            foreach (CommandParametersModel winner in winners)
                             {
                                 winner.SpecialIdentifiers[BetGameCommandModel.GameBetWinningOptionSpecialIdentifier] = winningOutcome.Name;
                                 await this.RunOutcome(winner, winningOutcome);

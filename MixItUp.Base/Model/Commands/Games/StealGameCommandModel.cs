@@ -65,6 +65,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     {
                         this.PerformPrimarySetPayout(parameters.User, betAmount * 2);
                         this.PerformPrimarySetPayout(parameters.TargetUser, -betAmount);
+                        this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
                         await this.RunSubCommand(this.SuccessfulOutcome.Command, parameters);
                     }
                     else

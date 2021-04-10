@@ -17,51 +17,51 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void StartedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).StartedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserJoinCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).UserJoinCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void NotEnoughPlayersCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).NotEnoughPlayersCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void HitmanApproachingCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).HitmanApproachingCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void HitmanAppearsCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).HitmanAppearsCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserSuccessCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).UserSuccessCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserFailureCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HitmanGameCommandEditorWindowViewModel)this.DataContext).UserFailureCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

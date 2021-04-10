@@ -191,6 +191,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
+                    this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();

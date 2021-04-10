@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Actions
         DoesNotContain,
         Between,
         Replaced,
-        NotReplaced
+        NotReplaced,
     }
 
     public enum ConditionalOperatorTypeEnum

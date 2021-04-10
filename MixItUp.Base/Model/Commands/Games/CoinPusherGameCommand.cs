@@ -95,6 +95,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
+                this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
                 await this.RunSubCommand(this.SuccessCommand, parameters);
             }
             else

@@ -118,6 +118,7 @@ namespace MixItUp.Base.Model.Commands.Games
                             await DelayNoThrow(1000 * RandomHelper.GenerateRandomNumber(this.LowerTimeLimit, this.UpperTimeLimit), token);
 
                             this.gameActive = false;
+                            this.SetGameWinners(this.lastTossParameters, new List<CommandParametersModel>() { this.lastTossParameters });
                             await this.RunSubCommand(this.PotatoExplodeCommand, this.lastTossParameters);
 
                             await this.PerformCooldown(this.startParameters);
@@ -164,6 +165,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 if (this.gameActive && !token.IsCancellationRequested)
                 {
                     this.gameActive = false;
+                    this.SetGameWinners(this.lastTossParameters, new List<CommandParametersModel>() { this.lastTossParameters });
                     await this.RunSubCommand(this.PotatoExplodeCommand, this.lastTossParameters);
                     await this.PerformCooldown(this.lastTossParameters);
                     this.ClearData();

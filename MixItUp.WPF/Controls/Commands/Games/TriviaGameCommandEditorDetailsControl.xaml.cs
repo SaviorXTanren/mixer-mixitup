@@ -17,37 +17,37 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void StartedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((TriviaGameCommandEditorWindowViewModel)this.DataContext).StartedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserJoinCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((TriviaGameCommandEditorWindowViewModel)this.DataContext).UserJoinCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void CorrectAnswerCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((TriviaGameCommandEditorWindowViewModel)this.DataContext).CorrectAnswerCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserSuccessCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((TriviaGameCommandEditorWindowViewModel)this.DataContext).UserSuccessCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserFailureCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((TriviaGameCommandEditorWindowViewModel)this.DataContext).UserFailureCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void DeleteQuestionButton_Click(object sender, System.Windows.RoutedEventArgs e)

@@ -203,6 +203,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                     winner.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleWordSpecialIdentifier] = this.runWordScrambled;
                     winner.SpecialIdentifiers[WordScrambleGameCommandModel.GameWordScrambleAnswerSpecialIdentifier] = this.runWord;
+                    this.SetGameWinners(winner, new List<CommandParametersModel>() { winner });
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();
