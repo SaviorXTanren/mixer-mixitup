@@ -5062,7 +5062,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The guess must a valid combination of the digits 0 - 9.
+        ///   Looks up a localized string similar to The guess must be a valid combination of the digits 0 - 9.
         /// </summary>
         public static string GameCommandLockBoxNotNumber {
             get {

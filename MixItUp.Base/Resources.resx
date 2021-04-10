@@ -2925,7 +2925,7 @@ For example, if this option is enabled and amount is set to 5, then any time 5 O
     <value>low</value>
   </data>
   <data name="GameCommandLockBoxNotNumber" xml:space="preserve">
-    <value>The guess must a valid combination of the digits 0 - 9</value>
+    <value>The guess must be a valid combination of the digits 0 - 9</value>
   </data>
   <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
     <value>You've already collected your share</value>
