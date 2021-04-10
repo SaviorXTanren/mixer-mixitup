@@ -156,7 +156,7 @@ namespace MixItUp.Base
 
         public static async Task<Result> ConnectUser(SettingsV3Model settings)
         {
-            Result userResult = null;
+            Result userResult = new Result(success: false);
             ChannelSession.Settings = settings;
 
             // Twitch connection
@@ -173,6 +173,7 @@ namespace MixItUp.Base
             }
             else
             {
+                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 userResult = await ChannelSession.ConnectTwitchUser();
             }
 
