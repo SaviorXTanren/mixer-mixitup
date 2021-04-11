@@ -18,15 +18,19 @@ namespace MixItUp.Base.ViewModel.Commands
         public const string MixItUpCommandFileExtension = ".miucommand";
         public const string MixItUpOldCommandFileExtension = ".mixitupc";
 
-        public static async Task<CommandModelBase> ImportCommandFromFile()
+        public static string OpenCommandFileBrowser()
         {
-            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
-            if (!string.IsNullOrEmpty(fileName))
+            return ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
+        }
+
+        public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
             {
-                if (Path.GetExtension(fileName).Equals(MixItUpOldCommandFileExtension))
+                if (Path.GetExtension(filePath).Equals(MixItUpOldCommandFileExtension))
                 {
 #pragma warning disable CS0612 // Type or member is obsolete
-                    MixItUp.Base.Commands.CommandBase command = await FileSerializerHelper.DeserializeFromFile<MixItUp.Base.Commands.CommandBase>(fileName);
+                    MixItUp.Base.Commands.CommandBase command = await FileSerializerHelper.DeserializeFromFile<MixItUp.Base.Commands.CommandBase>(filePath);
                     ActionGroupCommandModel actionGroup = new ActionGroupCommandModel(command.Name, false);
                     foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
                     {
@@ -37,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
                 else
                 {
-                    return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
+                    return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filePath);
                 }
             }
             return null;
@@ -163,7 +167,7 @@ namespace MixItUp.Base.ViewModel.Commands
             {
                 try
                 {
-                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile();
+                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser());
                     if (command != null)
                     {
                         // TODO Check if the imported command type matches the currently edited command. If so, import additional information.

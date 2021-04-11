@@ -141,6 +141,9 @@ namespace MixItUp.WPF
             WindowsServicesManager servicesManager = new WindowsServicesManager();
             servicesManager.Initialize();
 
+            ActivationProtocolHandler.Initialize();
+            RegistryHelpers.RegisterURIActivationProtocol();
+
             FileLoggerHandler.Initialize(servicesManager.FileService);
 
             DispatcherHelper.RegisterDispatcher(new WindowsDispatcher(this.Dispatcher));
@@ -168,6 +171,13 @@ namespace MixItUp.WPF
             this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
 
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ActivationProtocolHandler.Close();
+
+            base.OnExit(e);
         }
 
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { this.HandleCrash(e.Exception); }

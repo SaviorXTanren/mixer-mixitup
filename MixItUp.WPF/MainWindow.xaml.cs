@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
+using MixItUp.WPF.Windows.Commands;
 using StreamingClient.Base.Util;
 using System;
 using System.Reflection;
@@ -147,6 +148,8 @@ namespace MixItUp.WPF
             }
 
             this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
+
+            ActivationProtocolHandler.OnStoreCommandActivation += ActivationProtocolHandler_OnStoreCommandActivation;
         }
 
         private async Task StartShutdownProcess()
@@ -232,6 +235,15 @@ namespace MixItUp.WPF
             {
                 this.MainMenu.HideMenuItem(this.streamlootsCardsMainMenuItem);
             }
+        }
+
+        private void ActivationProtocolHandler_OnStoreCommandActivation(object sender, Guid e)
+        {
+            DispatcherHelper.Dispatcher.Invoke(() =>
+            {
+                //CommandEditorWindow window = new CommandEditorWindow(Base.Model.Commands.CommandTypeEnum.Chat);
+                //window.ForceShow();
+            });
         }
     }
 }

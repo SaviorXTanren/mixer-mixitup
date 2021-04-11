@@ -48,6 +48,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 foreach (CommandInstanceViewModel commandInstance in this.GetSelectedCommandInstances())
                 {
                     ChannelSession.Services.Command.Cancel(commandInstance.Model);
+                    commandInstance.IsSelected = false;
                 }
                 this.ResetSelectedState();
             });
@@ -57,6 +58,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 foreach (CommandInstanceViewModel commandInstance in this.GetSelectedCommandInstances())
                 {
                     await ChannelSession.Services.Command.Replay(commandInstance.Model);
+                    commandInstance.IsSelected = false;
                 }
                 this.ResetSelectedState();
             });

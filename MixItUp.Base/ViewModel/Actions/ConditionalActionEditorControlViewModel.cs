@@ -187,7 +187,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
             this.ImportActionsCommand = this.CreateCommand(async () =>
             {
-                await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile());
+                await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser()));
             });
 
             foreach (ActionModelBase subAction in subActions)
