@@ -50,7 +50,7 @@ namespace MixItUp.Base.Services
 
         Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath);
 
-        Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
+        Task<bool> PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
     }
 
     public class SettingsService : ISettingsService
@@ -333,7 +333,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings)
+        public async Task<bool> PerformAutomaticBackupIfApplicable(SettingsV3Model settings)
         {
             if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
             {
@@ -353,27 +353,28 @@ namespace MixItUp.Base.Services
                         backupPath = settings.SettingsBackupLocation;
                     }
 
-                    if (!Directory.Exists(backupPath))
+                    try
                     {
-                        try
+                        if (!Directory.Exists(backupPath))
                         {
                             Directory.CreateDirectory(backupPath);
                         }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
-                            Logger.Log(ex);
-                            return;
-                        }
+
+                        string filePath = Path.Combine(backupPath, settings.Name + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
+
+                        await this.SavePackagedBackup(settings, filePath);
+
+                        settings.SettingsLastBackup = DateTimeOffset.Now;
                     }
-
-                    string filePath = Path.Combine(backupPath, settings.Name + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
-
-                    await this.SavePackagedBackup(settings, filePath);
-
-                    settings.SettingsLastBackup = DateTimeOffset.Now;
+                    catch (Exception ex)
+                    {
+                        Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
+                        Logger.Log(ex);
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         private async Task<SettingsV3Model> LoadSettings(string filePath)

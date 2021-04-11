@@ -607,7 +607,10 @@ namespace MixItUp.Base
 
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
-                        await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
+                        if (!await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings))
+                        {
+                            await DialogHelper.ShowMessage(Resources.AutomaticBackupFailedToCreate);
+                        }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(SessionBackgroundTask, sessionBackgroundCancellationTokenSource.Token, 60000);

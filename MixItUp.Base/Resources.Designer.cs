@@ -745,6 +745,16 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to create automatic backup. Please ensure you have set the
+        ///folder path correctly and that the folder path is accessible to Mix It Up..
+        /// </summary>
+        public static string AutomaticBackupFailedToCreate {
+            get {
+                return ResourceManager.GetString("AutomaticBackupFailedToCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatic Backups Folder.
         /// </summary>
         public static string AutomaticBackupsFolder {
