@@ -11,18 +11,7 @@ namespace MixItUp.Base.ViewModel.Commands
         public CommandInstanceModel Model { get { return this.model; } }
         private CommandInstanceModel model;
 
-        public string CommandName
-        {
-            get
-            {
-                CommandModelBase command = this.model.Command;
-                if (command != null)
-                {
-                    return command.Name;
-                }
-                return MixItUp.Base.Resources.Unknown;
-            }
-        }
+        public string CommandName { get { return this.model.ToString(); } }
 
         public CommandTypeEnum CommandType
         {

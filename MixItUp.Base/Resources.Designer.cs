@@ -277,6 +277,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action List.
+        /// </summary>
+        public static string ActionList {
+            get {
+                return ResourceManager.GetString("ActionList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Actions.
         /// </summary>
         public static string Actions {

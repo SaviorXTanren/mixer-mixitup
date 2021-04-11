@@ -170,11 +170,15 @@ namespace MixItUp.Base.Model.Commands
             CommandModelBase command = this.Command;
             if (command != null)
             {
-                return command.ToString();
+                return command.Name;
+            }
+            else if (this.Actions.Count > 0)
+            {
+                return MixItUp.Base.Resources.ActionList;
             }
             else
             {
-                return "Action List";
+                return MixItUp.Base.Resources.Unknown;
             }
         }
     }

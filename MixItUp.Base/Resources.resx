@@ -5464,6 +5464,9 @@ This can be done by clicking on Create Channel Point Reward on the Channel Point
     <value>Failed to create automatic backup. Please ensure you have set the
 folder path correctly and that the folder path is accessible to Mix It Up.</value>
   </data>
+  <data name="ActionList" xml:space="preserve">
+    <value>Action List</value>
+  </data>
   <data name="CancelSelected" xml:space="preserve">
     <value>Cancel Selected</value>
   </data>

@@ -46,9 +46,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="150" />
-                <DataGridTextColumn />
-                <DataGridTemplateColumn Header="{x:Static resx:Resources.State}" IsReadOnly="True" Width="100">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="130" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.State}" IsReadOnly="True" Width="110">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" ToolTip="{Binding ErrorMessage}">
