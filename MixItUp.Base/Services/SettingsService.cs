@@ -217,28 +217,34 @@ namespace MixItUp.Base.Services
 
         public async Task Save(SettingsV3Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Settings save operation started");
-
-            await semaphore.WaitAndRelease(async () =>
+            if (settings != null)
             {
-                settings.CopyLatestValues();
-                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
-                await settings.SaveDatabaseData();
-            });
+                Logger.Log(LogLevel.Debug, "Settings save operation started");
 
-            Logger.Log(LogLevel.Debug, "Settings save operation finished");
+                await semaphore.WaitAndRelease(async () =>
+                {
+                    settings.CopyLatestValues();
+                    await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
+                    await settings.SaveDatabaseData();
+                });
+
+                Logger.Log(LogLevel.Debug, "Settings save operation finished");
+            }
         }
 
         public async Task SaveLocalBackup(SettingsV3Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
-
-            await semaphore.WaitAndRelease(async () =>
+            if (settings != null)
             {
-                await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
-            });
+                Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
 
-            Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
+                await semaphore.WaitAndRelease(async () =>
+                {
+                    await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
+                });
+
+                Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
+            }
         }
 
         public async Task SavePackagedBackup(SettingsV3Model settings, string filePath)
