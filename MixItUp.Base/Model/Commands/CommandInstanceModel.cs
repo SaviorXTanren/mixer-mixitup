@@ -52,7 +52,18 @@ namespace MixItUp.Base.Model.Commands
         public string ErrorMessage { get; set; }
 
         [JsonIgnore]
-        public CommandModelBase Command { get { return ChannelSession.Settings.GetCommand(this.CommandID); } }
+        public CommandModelBase Command
+        {
+            get
+            {
+                if (this.command != null)
+                {
+                    return this.command;
+                }
+                return ChannelSession.Settings.GetCommand(this.CommandID);
+            }
+        }
+        private CommandModelBase command;
 
         [JsonIgnore]
         public CommandTypeEnum QueueCommandType
@@ -89,7 +100,18 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandInstanceModel(CommandModelBase command) : this(command, new CommandParametersModel()) { }
 
-        public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters) : this(command.ID, parameters) { }
+        public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters)
+        {
+            if (command is PreMadeChatCommandModelBase)
+            {
+                this.command = command;
+            }
+            else
+            {
+                this.CommandID = command.ID;
+            }
+            this.Parameters = parameters;
+        }
 
         public CommandInstanceModel(Guid commandID, CommandParametersModel parameters)
         {
@@ -129,7 +151,11 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandInstanceModel Duplicate()
         {
-            if (this.CommandID != Guid.Empty)
+            if (this.command != null)
+            {
+                return new CommandInstanceModel(command, this.Parameters);
+            }
+            else if (this.CommandID != Guid.Empty)
             {
                 return new CommandInstanceModel(this.CommandID, this.Parameters);
             }
