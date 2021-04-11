@@ -10,8 +10,6 @@ namespace MixItUp.WPF.Util
         {
             using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + ActivationProtocolHandler.URIProtocolActivationHeader))
             {
-                // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
-                // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
                 string applicationLocation = typeof(App).Assembly.Location;
                 string applicationFolderLocation = Path.GetDirectoryName(applicationLocation);
 
