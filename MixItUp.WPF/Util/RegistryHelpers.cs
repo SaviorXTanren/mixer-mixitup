@@ -1,5 +1,7 @@
 ﻿using Microsoft.Win32;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.IO;
 
 namespace MixItUp.WPF.Util
@@ -8,24 +10,28 @@ namespace MixItUp.WPF.Util
     {
         public static void RegisterURIActivationProtocol()
         {
-            using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + ActivationProtocolHandler.URIProtocolActivationHeader))
+            try
             {
-                string applicationLocation = typeof(App).Assembly.Location;
-                string applicationFolderLocation = Path.GetDirectoryName(applicationLocation);
-
-                key.SetValue("", "URL:Mix It Up");
-                key.SetValue("URL Protocol", "");
-
-                using (var defaultIcon = key.CreateSubKey("DefaultIcon"))
+                using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + ActivationProtocolHandler.URIProtocolActivationHeader))
                 {
-                    defaultIcon.SetValue("", Path.Combine(applicationFolderLocation, "Logo.ico"));
-                }
+                    string applicationLocation = typeof(App).Assembly.Location;
+                    string applicationFolderLocation = Path.GetDirectoryName(applicationLocation);
 
-                using (var commandKey = key.CreateSubKey(@"shell\open\command"))
-                {
-                    commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
+                    key.SetValue("", "URL:Mix It Up");
+                    key.SetValue("URL Protocol", "");
+
+                    using (var defaultIcon = key.CreateSubKey("DefaultIcon"))
+                    {
+                        defaultIcon.SetValue("", Path.Combine(applicationFolderLocation, "Logo.ico"));
+                    }
+
+                    using (var commandKey = key.CreateSubKey(@"shell\open\command"))
+                    {
+                        commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

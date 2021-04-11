@@ -11,6 +11,7 @@ namespace MixItUp.Base.Util
 {
     /// <summary>
     /// https://css-tricks.com/hyperlinking-beyond-the-web/
+    /// https://www.meziantou.net/registering-an-application-to-a-uri-scheme-using-net.htm
     /// https://blog.magnusmontin.net/2019/05/10/handle-protocol-activation-and-redirection-in-packaged-apps/
     /// </summary>
     public static class ActivationProtocolHandler
