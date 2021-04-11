@@ -165,7 +165,10 @@ namespace MixItUp.Base.Services
                     await this.RunDirectlyInternal(commandInstance, p);
                 }
 
-                commandInstance.State = CommandInstanceStateEnum.Completed;
+                if (commandInstance.State == CommandInstanceStateEnum.Running)
+                {
+                    commandInstance.State = CommandInstanceStateEnum.Completed;
+                }
             }
             catch (Exception ex)
             {
@@ -183,7 +186,7 @@ namespace MixItUp.Base.Services
 
         public async Task Replay(CommandInstanceModel commandInstance)
         {
-            await this.Queue(commandInstance);
+            await this.Queue(commandInstance.Duplicate());
         }
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)

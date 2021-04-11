@@ -1223,6 +1223,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Selected.
+        /// </summary>
+        public static string CancelSelected {
+            get {
+                return ResourceManager.GetString("CancelSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Case Sensitive.
         /// </summary>
         public static string CaseSensitive {
@@ -10796,6 +10805,15 @@ namespace MixItUp.Base {
         public static string Replay {
             get {
                 return ResourceManager.GetString("Replay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replay Selected.
+        /// </summary>
+        public static string ReplaySelected {
+            get {
+                return ResourceManager.GetString("ReplaySelected", resourceCulture);
             }
         }
         

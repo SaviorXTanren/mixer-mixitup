@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ namespace MixItUp.Base.ViewModel.Commands
 {
     public class CommandInstanceViewModel : UIViewModelBase
     {
+        public CommandInstanceModel Model { get { return this.model; } }
         private CommandInstanceModel model;
 
         public string CommandName
@@ -51,6 +51,17 @@ namespace MixItUp.Base.ViewModel.Commands
         public string ErrorMessage { get { return this.model.ErrorMessage; } }
 
         public bool HasErrorMessage { get { return !string.IsNullOrEmpty(this.ErrorMessage); } }
+
+        public bool IsSelected
+        {
+            get { return this.isSelected; }
+            set
+            {
+                this.isSelected = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool isSelected;
 
         public ICommand CancelCommand { get; set; }
 

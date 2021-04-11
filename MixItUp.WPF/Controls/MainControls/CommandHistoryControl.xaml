@@ -28,7 +28,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            
+        </Grid>
 
         <DataGrid x:Name="CommandHistoryGridView" Grid.Row="2" ItemsSource="{Binding CommandInstances}" EnableRowVirtualization="True" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Visible">
             <DataGrid.Columns>
@@ -41,11 +47,15 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="{x:Static resx:Resources.Username}" Binding="{Binding Username}" IsReadOnly="True" Width="150" />
-                <DataGridTextColumn Header="{x:Static resx:Resources.State}" Binding="{Binding State, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" Width="100" />
-                <DataGridTemplateColumn Width="24">
+                <DataGridTextColumn />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.State}" IsReadOnly="True" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="{Binding ErrorMessage}" Kind="MessageText" Height="24" Width="24" Margin="-20,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" ToolTip="{Binding ErrorMessage}">
+                                <TextBlock Text="{Binding State, Converter={StaticResource LocalizationConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+
+                                <MaterialDesign:PackIcon Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}" Kind="MessageText" Height="24" Width="24" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -65,7 +75,29 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox x:Name="SelectAllCheckBox" Checked="SelectAllCheckBox_Checked" Unchecked="SelectAllCheckBox_Unchecked" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,0" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,1,0" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Command="{Binding CancelSelectedCommand}" Content="{x:Static resx:Resources.CancelSelected}" />
+
+            <Button Grid.Column="2" Command="{Binding ReplaySelectedCommand}" Content="{x:Static resx:Resources.ReplaySelected}" />
+        </Grid>
     </Grid>
 </local:MainControlBase>
