@@ -809,6 +809,7 @@ namespace MixItUp.Base.Model.Commands
 
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
+                ChannelSession.Settings.SetCommand(command);
             }
             else
             {
