@@ -15,10 +15,6 @@ namespace MixItUp.Base.Services
         void TrackService(string type);
         void TrackChannelMetrics(string type, long viewerCount, long chatterCount, string game, long viewCount, long followCount);
 
-        void TrackRemoteAuthentication(Guid clientID);
-        void TrackRemoteSendProfiles(Guid clientID);
-        void TrackRemoteSendBoard(Guid clientID, Guid profileID, Guid boardID);
-
         void SetUserID(string userID);
     }
 }

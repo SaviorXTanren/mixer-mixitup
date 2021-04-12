@@ -32,6 +32,8 @@ namespace MixItUp.WPF.Services
             this.AudioService = new WindowsAudioService();
             this.GiveawayService = new GiveawayService();
             this.SerialService = new SerialService();
+            this.WebhookService = new WebhookService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub");
+            //this.WebhookService = new WebhookService("https://localhost:44309/api/", "https://localhost:44309/webhookhub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
             this.StoreService = new StoreService();

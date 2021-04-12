@@ -395,6 +395,12 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!cancellationToken.IsCancellationRequested)
             {
+                if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+                {
+                    // We are using the new webhooks
+                    return;
+                }
+
                 if (streamStartCheckTime != DateTimeOffset.MaxValue)
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();

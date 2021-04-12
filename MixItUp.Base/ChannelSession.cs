@@ -531,10 +531,8 @@ namespace MixItUp.Base
 
                     try
                     {
-                        //if (ChannelSession.Settings.RemoteHostConnection != null)
-                        //{
-                        //    await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                        //}
+                        // Fire and forget for now, when this becomes a required thing, we may want block
+                        var _ = ChannelSession.Services.WebhookService.InitializeConnection();
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {

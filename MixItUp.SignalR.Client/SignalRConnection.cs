@@ -18,12 +18,7 @@ namespace MixItUp.SignalR.Client
         public SignalRConnection(string address)
         {
             this.Address = address;
-            this.connection = new HubConnectionBuilder().AddJsonProtocol(options => {
-                options.PayloadSerializerSettings = new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All, SerializationBinder = new CrossPlatformSerializationBinder()
-                };
-            }).WithUrl(this.Address).Build();
+            this.connection = new HubConnectionBuilder().AddJsonProtocol().WithUrl(this.Address).Build();
             this.connection.Closed += Connection_Closed;
         }
 
@@ -36,8 +31,19 @@ namespace MixItUp.SignalR.Client
 
         public async Task Connect()
         {
-            await this.connection.StartAsync();
-            this.Connected?.Invoke(this, new EventArgs());
+            while (true)
+            {
+                try
+                {
+                    await this.connection.StartAsync();
+                    this.Connected?.Invoke(this, new EventArgs());
+                    return;
+                }
+                catch { }
+
+                // Retry in 5 seconds
+                await Task.Delay(5000);
+            }
         }
 
         public bool IsConnected() { return this.connection.State == HubConnectionState.Connected; }

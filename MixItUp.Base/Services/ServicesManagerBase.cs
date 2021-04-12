@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services
         public IImageService Image { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
+        public WebhookService WebhookService { get; protected set; }
         public StoreService StoreService { get; protected set; }
 
         public IOverlayService Overlay { get; protected set; }
