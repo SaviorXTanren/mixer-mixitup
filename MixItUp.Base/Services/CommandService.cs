@@ -55,6 +55,56 @@ namespace MixItUp.Base.Services
 
         public async Task Queue(CommandInstanceModel commandInstance)
         {
+            CommandModelBase command = commandInstance.Command;
+            if (command != null)
+            {
+                if (!command.IsEnabled || !command.HasWork)
+                {
+                    return;
+                }
+
+                Result validationResult = await command.CustomValidation(commandInstance.Parameters);
+                if (validationResult.Success)
+                {
+                    validationResult = await command.ValidateRequirements(commandInstance.Parameters);
+                    if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
+                    {
+                        command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
+                    }
+                }
+                else
+                {
+                    if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
+                    {
+                        if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
+                        {
+                            await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
+                        }
+                    }
+                }
+
+                if (validationResult.Success)
+                {
+                    if (command.Requirements != null)
+                    {
+                        await command.PerformRequirements(commandInstance.Parameters);
+                        commandInstance.RunnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(validationResult.Message))
+                    {
+                        commandInstance.ErrorMessage = validationResult.Message;
+                        commandInstance.State = CommandInstanceStateEnum.Failed;
+                    }
+                    else
+                    {
+                        commandInstance.State = CommandInstanceStateEnum.Completed;
+                    }
+                }
+            }
+
             lock (CommandInstances)
             {
                 this.commandInstances.Insert(0, commandInstance);
@@ -64,24 +114,27 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            CommandTypeEnum type = commandInstance.QueueCommandType;
-            if (commandInstance.DontQueue)
+            if (commandInstance.State == CommandInstanceStateEnum.Pending)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
-            else
-            {
-                await this.commandTypeLock.WaitAndRelease(() =>
+                CommandTypeEnum type = commandInstance.QueueCommandType;
+                if (commandInstance.DontQueue)
                 {
-                    commandTypeInstances[type].Add(commandInstance);
-                    if (commandTypeTasks[type] == null)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+                else
+                {
+                    await this.commandTypeLock.WaitAndRelease(() =>
                     {
-                        commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
-                    }
-                    return Task.FromResult(0);
-                });
+                        commandTypeInstances[type].Add(commandInstance);
+                        if (commandTypeTasks[type] == null)
+                        {
+                            commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                        }
+                        return Task.FromResult(0);
+                    });
+                }
             }
 
             this.OnCommandInstanceAdded(this, commandInstance);
@@ -103,56 +156,11 @@ namespace MixItUp.Base.Services
                 CommandModelBase command = commandInstance.Command;
                 if (command != null)
                 {
-                    if (!command.IsEnabled || !command.HasWork)
-                    {
-                        return;
-                    }
-
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
 
                     command.TrackTelemetry();
 
-                    Result validationResult = await command.CustomValidation(commandInstance.Parameters);
-                    if (validationResult.Success)
-                    {
-                        validationResult = await command.ValidateRequirements(commandInstance.Parameters);
-                        if (!validationResult.Success && ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.PerCommand)
-                        {
-                            command.CommandErrorCooldown = RequirementModelBase.UpdateErrorCooldown();
-                        }
-                    }
-                    else
-                    {
-                        if (ChannelSession.Settings.RequirementErrorsCooldownType != RequirementErrorCooldownTypeEnum.None)
-                        {
-                            if (!string.IsNullOrEmpty(validationResult.Message) && validationResult.DisplayMessage)
-                            {
-                                await ChannelSession.Services.Chat.SendMessage(validationResult.Message);
-                            }
-                        }
-                    }
-
-                    if (validationResult.Success)
-                    {
-                        if (command.Requirements != null)
-                        {
-                            await command.PerformRequirements(commandInstance.Parameters);
-                            runnerParameters = new List<CommandParametersModel>(command.GetPerformingUsers(commandInstance.Parameters));
-                        }
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(validationResult.Message))
-                        {
-                            commandInstance.ErrorMessage = validationResult.Message;
-                            commandInstance.State = CommandInstanceStateEnum.Failed;
-                        }
-                        else
-                        {
-                            commandInstance.State = CommandInstanceStateEnum.Completed;
-                        }
-                        return;
-                    }
+                    runnerParameters = commandInstance.RunnerParameters;
                 }
 
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
@@ -209,7 +217,7 @@ namespace MixItUp.Base.Services
                     return Task.FromResult(commandInstance);
                 });
 
-                if (instance != null)
+                if (instance != null && instance.State == CommandInstanceStateEnum.Pending)
                 {
                     await this.RunDirectly(instance);
                 }

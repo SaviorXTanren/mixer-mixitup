@@ -49,6 +49,9 @@ namespace MixItUp.Base.Model.Commands
         public CommandParametersModel Parameters { get; set; }
 
         [DataMember]
+        public List<CommandParametersModel> RunnerParameters { get; set; } = new List<CommandParametersModel>();
+
+        [DataMember]
         public DateTimeOffset DateTime { get; set; } = DateTimeOffset.Now;
 
         [DataMember]
