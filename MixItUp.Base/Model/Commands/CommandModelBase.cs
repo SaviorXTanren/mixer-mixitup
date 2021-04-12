@@ -26,6 +26,9 @@ namespace MixItUp.Base.Model.Commands
 
         // Specialty Command Types
         UserOnlyChat = 1000,
+
+        [Obsolete]
+        All = 99999999,
     }
 
     [DataContract]

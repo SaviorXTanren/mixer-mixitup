@@ -4136,6 +4136,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Filter {
+            get {
+                return ResourceManager.GetString("Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter By Name.
         /// </summary>
         public static string FilterByName {
@@ -13032,6 +13041,15 @@ namespace MixItUp.Base {
         public static string StreamlootsAlertsOverlayURL {
             get {
                 return ResourceManager.GetString("StreamlootsAlertsOverlayURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streamloots Card.
+        /// </summary>
+        public static string StreamlootsCard {
+            get {
+                return ResourceManager.GetString("StreamlootsCard", resourceCulture);
             }
         }
         

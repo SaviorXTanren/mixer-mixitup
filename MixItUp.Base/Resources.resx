@@ -5473,4 +5473,10 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="ReplaySelected" xml:space="preserve">
     <value>Replay Selected</value>
   </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="StreamlootsCard" xml:space="preserve">
+    <value>Streamloots Card</value>
+  </data>
 </root>

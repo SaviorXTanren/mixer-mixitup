@@ -13,7 +13,10 @@ namespace MixItUp.Base.Model.Commands
         Running,
         Completed,
         Failed,
-        Canceled
+        Canceled,
+
+        [Obsolete]
+        All = 99999999,
     }
 
     [DataContract]

@@ -32,8 +32,32 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding SelectedCommandTypeFilter}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CommandStates}" SelectedItem="{Binding SelectedCommandStateFilter}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.State}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBox Grid.Column="4" x:Name="UsernameFilterTextBox" TextChanged="UsernameFilterTextBox_TextChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Username}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
         </Grid>
 
         <DataGrid x:Name="CommandHistoryGridView" Grid.Row="2" ItemsSource="{Binding CommandInstances}" EnableRowVirtualization="True" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Visible">

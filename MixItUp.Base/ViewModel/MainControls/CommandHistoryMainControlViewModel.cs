@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,73 @@ namespace MixItUp.Base.ViewModel.MainControls
     public class CommandHistoryMainControlViewModel : WindowControlViewModelBase
     {
         public event EventHandler UncheckSelectAll = delegate { };
+
+        public IEnumerable<CommandTypeEnum> CommandTypes
+        {
+            get
+            {
+                List<CommandTypeEnum> types = new List<CommandTypeEnum>(EnumHelper.GetEnumList<CommandTypeEnum>());
+                types.Remove(CommandTypeEnum.PreMade);
+                types.Remove(CommandTypeEnum.UserOnlyChat);
+#pragma warning disable CS0612 // Type or member is obsolete
+                types.Insert(0, CommandTypeEnum.All);
+#pragma warning restore CS0612 // Type or member is obsolete
+                return types;
+            }
+        }
+
+        public CommandTypeEnum SelectedCommandTypeFilter
+        {
+            get { return this.selectedCommandType; }
+            set
+            {
+                this.selectedCommandType = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshList();
+            }
+        }
+#pragma warning disable CS0612 // Type or member is obsolete
+        private CommandTypeEnum selectedCommandType = CommandTypeEnum.All;
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        public IEnumerable<CommandInstanceStateEnum> CommandStates
+        {
+            get
+            {
+                List<CommandInstanceStateEnum> states = new List<CommandInstanceStateEnum>(EnumHelper.GetEnumList<CommandInstanceStateEnum>());
+#pragma warning disable CS0612 // Type or member is obsolete
+                states.Insert(0, CommandInstanceStateEnum.All);
+#pragma warning restore CS0612 // Type or member is obsolete
+                return states;
+            }
+        }
+
+        public CommandInstanceStateEnum SelectedCommandStateFilter
+        {
+            get { return this.selectedCommandStateFilter; }
+            set
+            {
+                this.selectedCommandStateFilter = value;
+                this.NotifyPropertyChanged();
+
+                this.RefreshList();
+            }
+        }
+#pragma warning disable CS0612 // Type or member is obsolete
+        private CommandInstanceStateEnum selectedCommandStateFilter = CommandInstanceStateEnum.All;
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        public string UsernameFilter
+        {
+            get { return this.usernameFilter; }
+            set
+            {
+                this.usernameFilter = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string usernameFilter;
 
         public ThreadSafeObservableCollection<CommandInstanceViewModel> CommandInstances { get; set; } = new ThreadSafeObservableCollection<CommandInstanceViewModel>();
 
@@ -31,7 +99,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         private bool selectAll;
 
         public ICommand CancelSelectedCommand { get; set; }
-
         public ICommand ReplaySelectedCommand { get; set; }
 
         private bool filterApplied = false;
@@ -39,10 +106,6 @@ namespace MixItUp.Base.ViewModel.MainControls
         public CommandHistoryMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            ChannelSession.Services.Command.OnCommandInstanceAdded += Command_OnCommandInstanceAdded;
-
-            this.RefreshList();
-
             this.CancelSelectedCommand = this.CreateCommand(() =>
             {
                 foreach (CommandInstanceViewModel commandInstance in this.GetSelectedCommandInstances())
@@ -62,6 +125,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 this.ResetSelectedState();
             });
+
+            ChannelSession.Services.Command.OnCommandInstanceAdded += Command_OnCommandInstanceAdded;
+
+            this.RefreshList();
         }
 
         public void SetSelectedStateForAll(bool state)
@@ -72,15 +139,35 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        private void RefreshList()
+        public void RefreshList()
         {
             IEnumerable<CommandInstanceModel> commandInstances = ChannelSession.Services.Command.CommandInstances;
 
-            if (this.filterApplied)
-            {
+            this.filterApplied = false;
 
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.SelectedCommandTypeFilter != CommandTypeEnum.All)
+#pragma warning restore CS0612 // Type or member is obsolete
+            {
+                this.filterApplied = true;
+                commandInstances = commandInstances.Where(c => c.QueueCommandType == this.SelectedCommandTypeFilter);
             }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.SelectedCommandStateFilter != CommandInstanceStateEnum.All)
+#pragma warning restore CS0612 // Type or member is obsolete
+            {
+                this.filterApplied = true;
+                commandInstances = commandInstances.Where(c => c.State == this.SelectedCommandStateFilter);
+            }
+
+            if (!string.IsNullOrEmpty(this.UsernameFilter))
+            {
+                this.filterApplied = true;
+                commandInstances = commandInstances.Where(c => (c.Parameters?.User?.Username ?? string.Empty).Contains(this.UsernameFilter, StringComparison.OrdinalIgnoreCase));
+            }
+
+            this.CommandInstances.Clear();
             foreach (CommandInstanceModel commandInstance in commandInstances)
             {
                 this.CommandInstances.Add(new CommandInstanceViewModel(commandInstance));
