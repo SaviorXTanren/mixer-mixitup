@@ -531,8 +531,7 @@ namespace MixItUp.Base
 
                     try
                     {
-                        // Fire and forget for now, when this becomes a required thing, we may want block
-                        var _ = ChannelSession.Services.WebhookService.InitializeConnection();
+                        await ChannelSession.Services.WebhookService.InitializeConnection();
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {

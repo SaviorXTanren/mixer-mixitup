@@ -3983,9 +3983,6 @@ Esta configuración cambiará todos los requisitos de rol para ser explícitos y
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Cantidad de tiempo de reutilización de errores de requisitos</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>Cuando se produce un error en un comando debido a una comprobación de requisitos, se enviará un mensaje de error al chat que indica cuál fue el error. Esta opción le permite establecer cuánto tiempo antes del mismo tipo de error de requisito se puede mostrar de nuevo. Por ejemplo, si esto se establece en 10 segundos, después de un mensaje de error de tiempo de reutilización que mostró, no se mostrará otro para el mismo comando hasta después de 10 segundos. Tenga en cuenta que esto solo se aplica a los requisitos del mismo tipo, por lo que los tiempos de reutilización y los requisitos de rol realizan un seguimiento de los tiempos separados.</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>Esperar hasta que se complete</value>
   </data>

@@ -107,6 +107,10 @@ namespace MixItUp.Base.Services
         TwitchChannelBitsCheered = 270,
         TwitchChannelPointsRedeemed = 271,
 
+        TwitchChannelHypeTrainBegin = 280,
+        TwitchChannelHypeTrainProgress = 281,
+        TwitchChannelHypeTrainEnd = 282,
+
         // 300
 
         // External Services = 1000

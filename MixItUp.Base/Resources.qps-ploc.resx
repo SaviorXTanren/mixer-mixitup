@@ -2925,7 +2925,7 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
     <value>[!!! ℓôω !!!]</value>
   </data>
   <data name="GameCommandLockBoxNotNumber" xml:space="preserve">
-    <value>[!!! Ţĥè ĝúèšš ₥úšţ á Ʋáℓïδ çô₥βïñáţïôñ ôƒ ţĥè δïĝïţš 0 - 9 !!!]</value>
+    <value>[!!! Ţĥè ĝúèšš ₥úšţ βè á Ʋáℓïδ çô₥βïñáţïôñ ôƒ ţĥè δïĝïţš 0 - 9 !!!]</value>
   </data>
   <data name="GameCommandVolcanoAlreadyCollected" xml:space="preserve">
     <value>[!!! Ýôú'Ʋè áℓřèáδ¥ çôℓℓèçţèδ ¥ôúř šĥářè !!!]</value>
@@ -3983,9 +3983,6 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>[!!! Rè9úïřè₥èñţ Éřřôřš Çôôℓδôωñ Â₥ôúñţ !!!]</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>[!!! Wĥèñ á çô₥₥áñδ ƒáïℓš δúè ţô á řè9úïřè₥èñţ çĥèçƙ, áñ èřřôř ₥èššáĝè ωïℓℓ βè šèñţ ţô çĥáţ ïñδïçáţïñĝ ωĥáţ ţĥè ƒáïℓúřè ωáš. Ţĥïš ôƥţïôñ áℓℓôωš ¥ôú ţô šèţ ĥôω ℓôñĝ βèƒôřè ţĥè šá₥è ţ¥ƥè ôƒ řè9úïřè₥èñţ èřřôř çáñ βè šĥôωñ áĝáïñ. Fôř èжá₥ƥℓè, ïƒ ţĥïš ïš šèţ ţô 10 šèçôñδš, ţĥèñ áƒţèř á çôôℓδôωñ èřřôř ₥èššáĝè ïţ šĥôωñ, áñôţĥèř ωôñ'ţ βè šĥôωñ ƒôř ţĥè šá₥è çô₥₥áñδ úñţïℓ áƒţèř 10 šèçôñδš. Nôţè ţĥáţ ţĥïš ôñℓ¥ áƥƥℓïèš ţô řè9úïřè₥èñţš ôƒ ţĥè šá₥è ţ¥ƥè, šô çôôℓδôωñš &amp; řôℓè řè9úïřè₥èñţš ƙèèƥ ţřáçƙ ôƒ šèƥářáţè ţï₥èš. !!!]</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>[!!! Wáïţ Ûñţïℓ Çô₥ƥℓèţè !!!]</value>
   </data>
@@ -4160,7 +4157,7 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
     <value>[!!! Ţωïţçĥ Çĥáññèℓ ßïţš Çĥèèřèδ !!!]</value>
   </data>
   <data name="TwitchChannelFollowed" xml:space="preserve">
-    <value>[!!! Ţωïţçĥ Çĥáññèℓ Fôℓℓôωèδ !!!]</value>
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Fôℓℓôωèδ (1 Mïñúţè Ðèℓá¥) !!!]</value>
   </data>
   <data name="TwitchChannelHosted" xml:space="preserve">
     <value>[!!! Ţωïţçĥ Çĥáññèℓ Hôšţèδ !!!]</value>
@@ -4174,11 +4171,20 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="TwitchChannelRaided" xml:space="preserve">
     <value>[!!! Ţωïţçĥ Çĥáññèℓ Ráïδèδ !!!]</value>
   </data>
+  <data name="TwitchChannelHypeTrainBegin" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ H¥ƥè Ţřáïñ Šţářţèδ !!!]</value>
+  </data>
+  <data name="TwitchChannelHypeTrainProgress" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ H¥ƥè Ţřáïñ Þřôĝřèšš !!!]</value>
+  </data>
+  <data name="TwitchChannelHypeTrainEnd" xml:space="preserve">
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ H¥ƥè Ţřáïñ Éñδèδ !!!]</value>
+  </data>
   <data name="TwitchChannelResubscribed" xml:space="preserve">
     <value>[!!! Ţωïţçĥ Çĥáññèℓ Rèšúβšçřïβèδ !!!]</value>
   </data>
   <data name="TwitchChannelStreamStart" xml:space="preserve">
-    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţářţ !!!]</value>
+    <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţářţ (1 Mïñúţè Ðèℓá¥) !!!]</value>
   </data>
   <data name="TwitchChannelStreamStop" xml:space="preserve">
     <value>[!!! Ţωïţçĥ Çĥáññèℓ Šţřèá₥ Šţôƥ !!!]</value>
@@ -5368,10 +5374,118 @@ Fôř èжá₥ƥℓè, ïƒ ţĥïš ôƥţïôñ ïš èñáβℓèδ áñδ �
   <data name="Unfollow" xml:space="preserve">
     <value>[!!! Ûñƒôℓℓôω !!!]</value>
   </data>
+  <data name="UpdateChannelPointReward" xml:space="preserve">
+    <value>[!!! Ûƥδáţè Çĥáññèℓ Þôïñţ Rèωářδ !!!]</value>
+  </data>
+  <data name="ChannelPointRewardMissing" xml:space="preserve">
+    <value>[!!! Mïššïñĝ Çĥáññèℓ Þôïñţ Rèωářδ !!!]</value>
+  </data>
+  <data name="ChannelPointsRewardGlobalCooldown" xml:space="preserve">
+    <value>[!!! Gℓôβáℓ Çôôℓδôωñ (Mïñš) !!!]</value>
+  </data>
+  <data name="ChannelPointsRewardMaxPerStream" xml:space="preserve">
+    <value>[!!! Máж Þèř Šţřèá₥ !!!]</value>
+  </data>
+  <data name="ChannelPointsRewardMaxPerUser" xml:space="preserve">
+    <value>[!!! Máж Þèř Ûšèř !!!]</value>
+  </data>
+  <data name="ChannelPointRewardUpdateCooldownAndLimits" xml:space="preserve">
+    <value>[!!! Ûƥδáţè Çôôℓδôωñ &amp; Ļï₥ïţš !!!]</value>
+  </data>
+  <data name="CreateChannelPointReward" xml:space="preserve">
+    <value>[!!! Çřèáţè Çĥáññèℓ Þôïñţ Rèωářδ !!!]</value>
+  </data>
+  <data name="ChannelPointRewardName" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţ Rèωářδ Ná₥è !!!]</value>
+  </data>
+  <data name="CreateChannelPointRewardFailure" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţ Rèωářδ ωáš ñôţ áβℓè ţô βè çřèáţèδ, ƥℓèášè ţř¥ áĝáïñ ℓáţèř. Ìƒ ţĥïš ƥřôβℓè₥ ƥèřšïšţš, ƥℓèášè Ʋïšïţ ţĥè Mïж Ìţ Ûƥ Šúƥƥôřţ Ðïšçôřδ ƒôř áššïšţáñçè. !!!]</value>
+  </data>
+  <data name="CreateChannelPointRewardSuccess" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţ Rèωářδ šúççèššƒúℓℓ¥ çřèáţèδ! Ýôú çáñ ñôω δ¥ñá₥ïçáℓℓ¥ úƥδáţè ţĥïš Çĥáññèℓ Þôïñţ Rèωářδ úšïñĝ ţĥè Ţωïţçĥ áçţïôñ ïñšïδè ôƒ á çô₥₥áñδ. Þℓèášè úšè ţĥè ℓïñƙ ôñ ţĥè ₥áïñ Çĥáññèℓ Þôïñţš ƥáĝè ţô Ʋïšïţ ţĥè èδïţôř ôñ Ţωïţçĥ ţô çúšţô₥ïƺè ¥ôúř řèωářδ. !!!]</value>
+  </data>
+  <data name="TwitchActionChannelPointRewardCouldNotBeUpdated" xml:space="preserve">
+    <value>[!!! ÉRRÓR: Çôúℓδ ñôţ úƥδáţè Çĥáññèℓ Þôïñţ Rèωářδ, ƥℓèášè ţř¥ áĝáïñ ℓáţèř. Ìƒ ţĥïš řèωářδ ωáš ñôţ çřèáţèδ ţĥřôúĝĥ ţĥè Mïж Ìţ Ûƥ ÛÌ, ¥ôú ωïℓℓ ñèèδ ţô δèℓèţè ïţ áñδ řè-áδδ ïţ ôñ ţĥè Çĥáññèℓ Þôïñţš ƥáĝè áš ţĥè¥ ₥úšţ βè çřèáţèδ ţĥřôúĝĥ Mïж Ìţ Ûƥ ţô áℓℓôω ţĥè áƥƥ ţô βè áβℓè ţô úƥδáţè ţĥè₥. !!!]</value>
+  </data>
+  <data name="TwitchActionChannelPointRewardMustBeCreatedInMixItUp" xml:space="preserve">
+    <value>[!!! Çĥáññèℓ Þôïñţ Rèωářδš ₥úšţ βè çřèáţèδ ţĥřôúĝĥ Mïж Ìţ Ûƥ ţô áℓℓôω ţĥè áƥƥ ţô βè áβℓè ţô úƥδáţè ţĥè₥.
+Ţĥïš çáñ βè δôñè β¥ çℓïçƙïñĝ ôñ Çřèáţè Çĥáññèℓ Þôïñţ Rèωářδ ôñ ţĥè Çĥáññèℓ Þôïñţš ƥáĝè ïñ Mïж Ìţ Ûƥ. !!!]</value>
+  </data>
   <data name="FollowEventModeration" xml:space="preserve">
     <value>[!!! Fôℓℓôω ÉƲèñţ Môδèřáţïôñ !!!]</value>
   </data>
   <data name="FollowEventModerationMaxQueue" xml:space="preserve">
     <value>[!!! Máж Qúèúè !!!]</value>
+  </data>
+  <data name="RequirementCurrentAmount" xml:space="preserve">
+    <value>[!!! (Çúřřèñţ: {0}) !!!]</value>
+  </data>
+  <data name="ModerationFollowEventCommandCanceledMessage" xml:space="preserve">
+    <value>[!!! Fôℓℓôω ÉƲèñţ Máж Qúèúè Rèáçĥèδ !!!]</value>
+  </data>
+  <data name="PerCommand" xml:space="preserve">
+    <value>[!!! Þèř Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="PerRequirement" xml:space="preserve">
+    <value>[!!! Þèř Rè9úïřè₥èñţ !!!]</value>
+  </data>
+  <data name="Singular" xml:space="preserve">
+    <value>[!!! Šïñĝúℓář !!!]</value>
+  </data>
+  <data name="RequirementErrorsCooldownType" xml:space="preserve">
+    <value>[!!! Rè9úïřè₥èñţ Éřřôřš Çôôℓδôωñ Ţ¥ƥè !!!]</value>
+  </data>
+  <data name="RequirementErrorsCooldownTypeTooltip" xml:space="preserve">
+    <value>[!!! - Ðèƒáúℓţ: Éáçĥ řè9úïřè₥èñţ ƒôř èáçĥ çô₥₥áñδ ţřáçƙš ïţ'š ôωñ èřřôř ₥èššáĝè çôôℓδôωñ
+- Þèř Çô₥₥áñδ: Éáçĥ çô₥₥áñδ ţřáçƙš ïţ'š ôωñ èřřôř ₥èššáĝè çôôℓδôωñ ƒôř áℓℓ ôƒ ïţ'š řè9úïřè₥èñţš
+- Þèř Rè9úïřè₥èñţ: Éáçĥ řè9úïřè₥èñţ ţ¥ƥè ţřáçƙš ïţ'š ôωñ èřřôř ₥èššáĝè çôôℓδôωñ áçřôšš áℓℓ çô₥₥áñδš
+- Šïñĝúℓář: Óñè úñïƲèřšáℓ èřřôř ₥èššáĝè çôôℓδôωñ ţĥáţ áƥƥℓïèš ţô áℓℓ çô₥₥áñδš &amp; řè9úïřè₥èñţš
+- Nôñè: Nô řè9úïřè₥èñţ èřřôř ₥èššáĝèš ωïℓℓ βè šĥôωñ !!!]</value>
+  </data>
+  <data name="CommandHistory" xml:space="preserve">
+    <value>[!!! Çô₥₥áñδ Hïšţôř¥ !!!]</value>
+  </data>
+  <data name="Replay" xml:space="preserve">
+    <value>[!!! Rèƥℓá¥ !!!]</value>
+  </data>
+  <data name="StreamlootsCardNameMissing" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓôôţš Çářδ Ná₥è ₥ïššïñĝ !!!]</value>
+  </data>
+  <data name="StreamlootsCards" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓôôţš Çářδš !!!]</value>
+  </data>
+  <data name="StreamlootsManageCollection" xml:space="preserve">
+    <value>[!!! Máñáĝè Çôℓℓèçţïôñ !!!]</value>
+  </data>
+  <data name="StreamlootsCardName" xml:space="preserve">
+    <value>[!!! Çářδ Ná₥è !!!]</value>
+  </data>
+  <data name="ShowStreamloots" xml:space="preserve">
+    <value>[!!! Šĥôω Šţřèá₥ℓôôţš !!!]</value>
+  </data>
+  <data name="AutomaticBackupsFolder" xml:space="preserve">
+    <value>[!!! Âúţô₥áţïç ßáçƙúƥš Fôℓδèř !!!]</value>
+  </data>
+  <data name="MixItUpInstallFolder" xml:space="preserve">
+    <value>[!!! Mïж Ìţ Ûƥ Ìñšţáℓℓ Fôℓδèř !!!]</value>
+  </data>
+  <data name="AutomaticBackupFailedToCreate" xml:space="preserve">
+    <value>[!!! Fáïℓèδ ţô çřèáţè áúţô₥áţïç βáçƙúƥ. Þℓèášè èñšúřè ¥ôú ĥáƲè šèţ ţĥè
+ƒôℓδèř ƥáţĥ çôřřèçţℓ¥ áñδ ţĥáţ ţĥè ƒôℓδèř ƥáţĥ ïš áççèššïβℓè ţô Mïж Ìţ Ûƥ. !!!]</value>
+  </data>
+  <data name="ActionList" xml:space="preserve">
+    <value>[!!! Âçţïôñ Ļïšţ !!!]</value>
+  </data>
+  <data name="CancelSelected" xml:space="preserve">
+    <value>[!!! Çáñçèℓ Šèℓèçţèδ !!!]</value>
+  </data>
+  <data name="ReplaySelected" xml:space="preserve">
+    <value>[!!! Rèƥℓá¥ Šèℓèçţèδ !!!]</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>[!!! Fïℓţèř !!!]</value>
+  </data>
+  <data name="StreamlootsCard" xml:space="preserve">
+    <value>[!!! Šţřèá₥ℓôôţš Çářδ !!!]</value>
   </data>
 </root>

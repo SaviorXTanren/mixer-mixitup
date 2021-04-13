@@ -28,6 +28,7 @@ namespace MixItUp.SignalR.Client
         public void Listen<T1>(string methodName, Action<T1> handler) { this.connection.On<T1>(methodName, handler); }
         public void Listen<T1, T2>(string methodName, Action<T1, T2> handler) { this.connection.On<T1, T2>(methodName, handler); }
         public void Listen<T1, T2, T3>(string methodName, Action<T1, T2, T3> handler) { this.connection.On<T1, T2, T3>(methodName, handler); }
+        public void Listen<T1, T2, T3, T4>(string methodName, Action<T1, T2, T3, T4> handler) { this.connection.On<T1, T2, T3, T4>(methodName, handler); }
 
         public async Task Connect()
         {

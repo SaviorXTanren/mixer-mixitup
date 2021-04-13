@@ -3983,9 +3983,6 @@ Ce paramètre modifiera toutes les exigences de rôle pour être explicite et ex
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Montant de refroidissement des erreurs d’exigence</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>Lorsqu’une commande échoue en raison d’une vérification des besoins, un message d’erreur sera envoyé pour discuter indiquant ce qu’était l’échec. Cette option vous permet de définir combien de temps avant que le même type d’erreur d’exigence puisse être affiché à nouveau. Par exemple, si cela est défini à 10 secondes, puis après un message d’erreur de temps de recharge qu’il a montré, un autre ne sera pas affiché pour la même commande avant 10 secondes. Notez que cela ne s’applique qu’aux exigences du même type, de sorte que les temps de recharge et de rôle gardent une trace des temps distincts.</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>Attendre jusqu’à ce que complet</value>
   </data>
