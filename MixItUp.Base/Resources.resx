@@ -5374,4 +5374,7 @@ enabled. You can think of it as similar to toggling the "Unlock Command" option,
   <data name="FollowEventModerationMaxQueue" xml:space="preserve">
     <value>Max Queue</value>
   </data>
+  <data name="StreamElementsSocketFailed" xml:space="preserve">
+    <value>Failed to connect to socket</value>
+  </data>
 </root>

@@ -109,8 +109,6 @@ namespace MixItUp.Base.Services.External
     public interface IStreamElementsService : IOAuthExternalService
     {
         Task<StreamElementsChannel> GetCurrentChannel();
-
-        Task<IEnumerable<StreamElementsDonation>> GetDonations();
     }
 
     public class StreamElementsService : OAuthExternalServiceBase, IStreamElementsService
@@ -121,13 +119,24 @@ namespace MixItUp.Base.Services.External
         private const string AuthorizationUrl = "https://api.streamelements.com/oauth2/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&state={1}&scope=tips:read";
         private const string TokenUrl = "https://api.streamelements.com/oauth2/token";
 
+        public bool WebSocketConnected { get; private set; }
+
+        public event EventHandler OnWebSocketConnectedOccurred = delegate { };
+        public event EventHandler OnWebSocketDisconnectedOccurred = delegate { };
+
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private Dictionary<string, StreamElementsDonation> donationsReceived = new Dictionary<string, StreamElementsDonation>();
 
         private StreamElementsChannel channel;
 
-        public StreamElementsService() : base(StreamElementsService.BaseAddress) { }
+        private ISocketIOConnection socket;
+
+        public StreamElementsService(ISocketIOConnection socket)
+            : base(StreamElementsService.BaseAddress)
+        {
+            this.socket = socket;
+        }
 
         public override string Name { get { return "StreamElements"; } }
 
@@ -163,11 +172,13 @@ namespace MixItUp.Base.Services.External
             return new Result(false);
         }
 
-        public override Task Disconnect()
+        public override async Task Disconnect()
         {
+            await this.socket.Disconnect();
+            this.WebSocketConnected = false;
+
             this.cancellationTokenSource.Cancel();
             this.token = null;
-            return Task.FromResult(0);
         }
 
         public async Task<StreamElementsChannel> GetCurrentChannel()
@@ -175,18 +186,16 @@ namespace MixItUp.Base.Services.External
             return await this.GetAsync<StreamElementsChannel>("channels/me");
         }
 
-        public async Task<IEnumerable<StreamElementsDonation>> GetDonations()
+        public void WebSocketConnectedOccurred()
         {
-            JObject jobj = await this.GetJObjectAsync(string.Format("tips/{0}?limit=25&sort=-createdAt", this.channel._id));
-            if (jobj != null && jobj.ContainsKey("docs"))
-            {
-                JArray jarray = (JArray)jobj["docs"];
-                if (jarray != null && jarray.Count > 0)
-                {
-                    return jarray.ToTypedArray<StreamElementsDonation>();
-                }
-            }
-            return new List<StreamElementsDonation>();
+            ChannelSession.ReconnectionOccurred("StreamElements");
+            this.OnWebSocketConnectedOccurred(this, new EventArgs());
+        }
+
+        public void WebSocketDisconnectedOccurred()
+        {
+            ChannelSession.DisconnectionOccurred("StreamElements");
+            this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
         }
 
         protected override async Task RefreshOAuthToken()
@@ -211,17 +220,61 @@ namespace MixItUp.Base.Services.External
             this.channel = await this.GetCurrentChannel();
             if (this.channel != null)
             {
-                foreach (StreamElementsDonation seDonation in await this.GetDonations())
+                await this.socket.Connect($"https://realtime.streamelements.com");
+
+                this.socket.Listen("connect", (data) =>
                 {
-                    donationsReceived[seDonation._id] = seDonation;
+                    JObject packet = new JObject();
+                    packet["method"] = "oauth2";
+                    packet["token"] = this.token.accessToken;
+                    this.socket.Send("authenticate", packet);
+                });
+
+                this.socket.Listen("disconnect", (data) =>
+                {
+                    this.WebSocketDisconnectedOccurred();
+                });
+
+                this.socket.Listen("authenticated", (data) =>
+                {
+                    if (this.channel._id.Equals(data?.ToString()))
+                    {
+                        this.WebSocketConnected = true;
+                    }
+                });
+
+                this.socket.Listen("event:test", async (data) =>
+                {
+                    if (data != null)
+                    {
+                        JObject eventJObj = JObject.Parse(data.ToString());
+                    }
+                });
+
+                this.socket.Listen("event", async (data) =>
+                {
+                    if (data != null)
+                    {
+                        JObject eventJObj = JObject.Parse(data.ToString());
+
+                        //StreamlabsDonation slDonation = message.ToObject<StreamlabsDonation>();
+                        //await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
+                    }
+                });
+
+                for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
+                {
+                    await Task.Delay(1000);
                 }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                AsyncRunner.RunAsyncBackground(this.BackgroundDonationCheck, this.cancellationTokenSource.Token, 60000);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.TrackServiceTelemetry("Streamlabs");
 
-                this.TrackServiceTelemetry("StreamElements");
-                return new Result();
+                if (this.WebSocketConnected)
+                {
+                    this.WebSocketConnectedOccurred();
+                    return new Result();
+                }
+                return new Result(Resources.StreamElementsSocketFailed);
             }
             return new Result(Resources.StreamElementsUserDataFailed);
         }
@@ -239,19 +292,6 @@ namespace MixItUp.Base.Services.External
         protected override void DisposeInternal()
         {
             this.cancellationTokenSource.Dispose();
-        }
-
-        private async Task BackgroundDonationCheck(CancellationToken token)
-        {
-            foreach (StreamElementsDonation seDonation in await this.GetDonations())
-            {
-                if (!donationsReceived.ContainsKey(seDonation._id))
-                {
-                    donationsReceived[seDonation._id] = seDonation;
-                    UserDonationModel donation = seDonation.ToGenericDonation();
-                    await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, donation);
-                }
-            }
         }
     }
 }

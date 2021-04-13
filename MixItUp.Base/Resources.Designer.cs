@@ -12527,6 +12527,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to socket.
+        /// </summary>
+        public static string StreamElementsSocketFailed {
+            get {
+                return ResourceManager.GetString("StreamElementsSocketFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to get user information.
         /// </summary>
         public static string StreamElementsUserDataFailed {
