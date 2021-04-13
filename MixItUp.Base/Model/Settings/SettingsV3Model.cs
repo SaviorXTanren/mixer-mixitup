@@ -25,7 +25,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 1;
+        public const int LatestVersion = 2;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -165,6 +165,9 @@ namespace MixItUp.Base.Model.Settings
         public bool IgnoreBotAccountCommands { get; set; }
         [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
+        [DataMember]
+        [Obsolete]
+        public bool UnlockAllCommands { get; set; }
         [DataMember]
         public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
 

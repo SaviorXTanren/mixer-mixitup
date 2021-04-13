@@ -605,11 +605,30 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                // Perform upgrade of settings
+                await SettingsV3Upgrader.Version2Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
+        }
+
+        public static async Task Version2Upgrade(int version, string filePath)
+        {
+            if (version < 2)
+            {
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (settings.UnlockAllCommands)
+#pragma warning restore CS0612 // Type or member is obsolete
+                {
+                    settings.CommandServiceLockType = CommandServiceLockTypeEnum.None;
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)
