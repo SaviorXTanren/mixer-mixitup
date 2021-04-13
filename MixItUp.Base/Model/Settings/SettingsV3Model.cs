@@ -166,7 +166,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
         [DataMember]
-        public bool UnlockAllCommands { get; set; }
+        public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
 
         [DataMember]
         public RequirementErrorCooldownTypeEnum RequirementErrorsCooldownType { get; set; } = RequirementErrorCooldownTypeEnum.Default;

@@ -11,6 +11,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public enum CommandServiceLockTypeEnum
+    {
+        PerCommandType,
+        PerActionType,
+        VisualAudioActions,
+        Singular,
+        None
+    }
+
     public class CommandService
     {
         private const int MaxCommandInstancesTracked = 200;
@@ -20,16 +29,23 @@ namespace MixItUp.Base.Services
         public IEnumerable<CommandInstanceModel> CommandInstances { get { return this.commandInstances.ToList(); } }
         private List<CommandInstanceModel> commandInstances = new List<CommandInstanceModel>();
 
-        private SemaphoreSlim commandTypeLock = new SemaphoreSlim(1);
-        private Dictionary<CommandTypeEnum, Task> commandTypeTasks = new Dictionary<CommandTypeEnum, Task>();
-        private Dictionary<CommandTypeEnum, List<CommandInstanceModel>> commandTypeInstances = new Dictionary<CommandTypeEnum, List<CommandInstanceModel>>();
+        private SemaphoreSlim commandQueueLock = new SemaphoreSlim(1);
+
+        private Dictionary<CommandTypeEnum, Task> perCommandTypeTasks = new Dictionary<CommandTypeEnum, Task>();
+        private Dictionary<CommandTypeEnum, List<CommandInstanceModel>> perCommandTypeInstances = new Dictionary<CommandTypeEnum, List<CommandInstanceModel>>();
+
+        private HashSet<ActionTypeEnum> perActionTypeInUse = new HashSet<ActionTypeEnum>();
+        private List<CommandInstanceModel> perActionTypeInstances = new List<CommandInstanceModel>();
+
+        private Task singularTask = null;
+        private List<CommandInstanceModel> singularInstances = new List<CommandInstanceModel>();
 
         public CommandService()
         {
             foreach (CommandTypeEnum type in EnumHelper.GetEnumList<CommandTypeEnum>())
             {
-                commandTypeTasks[type] = null;
-                commandTypeInstances[type] = new List<CommandInstanceModel>();
+                perCommandTypeTasks[type] = null;
+                perCommandTypeInstances[type] = new List<CommandInstanceModel>();
             }
         }
 
@@ -125,12 +141,31 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    await this.commandTypeLock.WaitAndRelease(() =>
+                    await this.commandQueueLock.WaitAndRelease(() =>
                     {
-                        commandTypeInstances[type].Add(commandInstance);
-                        if (commandTypeTasks[type] == null)
+                        if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
                         {
-                            commandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                            perCommandTypeInstances[type].Add(commandInstance);
+                            if (perCommandTypeTasks[type] == null)
+                            {
+                                perCommandTypeTasks[type] = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                            }
+                        }
+                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
+                        {
+
+                        }
+                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
+                        {
+
+                        }
+                        else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                        {
+                            singularInstances.Add(commandInstance);
+                            if (singularTask == null)
+                            {
+                                singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                            }
                         }
                         return Task.FromResult(0);
                     });
@@ -202,17 +237,35 @@ namespace MixItUp.Base.Services
             CommandInstanceModel instance;
             do
             {
-                instance = await this.commandTypeLock.WaitAndRelease(() =>
+                instance = await this.commandQueueLock.WaitAndRelease(() =>
                 {
                     CommandInstanceModel commandInstance = null;
-                    if (commandTypeInstances.ContainsKey(type) && commandTypeInstances[type].Count > 0)
+                    if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerCommandType)
                     {
-                        commandInstance = commandTypeInstances[type].FirstOrDefault();
-                        commandTypeInstances[type].Remove(commandInstance);
+                        if (perCommandTypeInstances.ContainsKey(type) && perCommandTypeInstances[type].Count > 0)
+                        {
+                            commandInstance = perCommandTypeInstances[type].RemoveFirst();
+                        }
+                        else
+                        {
+                            perCommandTypeTasks[type] = null;
+                        }
                     }
-                    else
+                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
                     {
-                        commandTypeTasks[type] = null;
+
+                    }
+                    else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions ||
+                        ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
+                    {
+                        if (singularInstances.Count > 0)
+                        {
+                            commandInstance = singularInstances.RemoveFirst();
+                        }
+                        else
+                        {
+                            singularTask = null;
+                        }
                     }
                     return Task.FromResult(commandInstance);
                 });

@@ -98,7 +98,7 @@ namespace MixItUp.Base.Model.Commands
                 CommandModelBase command = this.Command;
                 if (command != null)
                 {
-                    return command.IsUnlocked || ChannelSession.Settings.UnlockAllCommands;
+                    return command.IsUnlocked || ChannelSession.Settings.CommandServiceLockType == Services.CommandServiceLockTypeEnum.None;
                 }
                 return true;
             }

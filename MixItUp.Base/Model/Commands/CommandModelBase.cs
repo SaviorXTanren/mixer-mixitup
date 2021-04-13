@@ -146,7 +146,7 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandGroupSettingsModel CommandGroupSettings { get { return (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(this.GroupName)) ? ChannelSession.Settings.CommandGroups[this.GroupName] : null; } }
 
-        public bool IsUnlocked { get { return this.Unlocked || ChannelSession.Settings.UnlockAllCommands; } }
+        public bool IsUnlocked { get { return this.Unlocked; } }
 
         public bool HasWork { get { return this.Actions.Count > 0 || this.HasCustomRun; } }
 
@@ -155,6 +155,48 @@ namespace MixItUp.Base.Model.Commands
         public virtual Dictionary<string, string> GetTestSpecialIdentifiers() { return CommandModelBase.GetGeneralTestSpecialIdentifiers(); }
 
         public virtual void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type); }
+
+        public virtual HashSet<ActionTypeEnum> GetActionTypesInCommand(HashSet<Guid> commandIDs = null)
+        {
+            HashSet<ActionTypeEnum> actionTypes = new HashSet<ActionTypeEnum>();
+
+            if (commandIDs == null)
+            {
+                commandIDs = new HashSet<Guid>();
+            }
+
+            if (commandIDs.Contains(this.ID))
+            {
+                return actionTypes;
+            }
+            commandIDs.Add(this.ID);
+
+            foreach (ActionModelBase action in this.Actions)
+            {
+                if (action.Type == ActionTypeEnum.Command)
+                {
+                    CommandActionModel commandAction = (CommandActionModel)action;
+                    CommandModelBase subCommand = ChannelSession.Settings.GetCommand(commandAction.CommandID);
+                    if (subCommand != null)
+                    {
+                        foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
+                        {
+                            actionTypes.Add(subActionType);
+                        }
+                    }
+                }
+                else if (action.Type == ActionTypeEnum.Overlay)
+                {
+                    OverlayActionModel overlayAction = (OverlayActionModel)action;
+                    if (overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.Video || overlayAction.OverlayItem.ItemType == Overlay.OverlayItemModelTypeEnum.YouTube)
+                    {
+                        actionTypes.Add(ActionTypeEnum.Sound);
+                    }
+                }
+                actionTypes.Add(action.Type);
+            }
+            return actionTypes;
+        }
 
         public virtual Task<Result> CustomValidation(CommandParametersModel parameters) { return Task.FromResult(new Result()); }
 

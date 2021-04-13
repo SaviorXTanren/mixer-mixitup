@@ -226,7 +226,7 @@ namespace MixItUp.Base.Commands
                             return;
                         }
 
-                        if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
+                        if (!this.Unlocked)
                         {
                             await this.AsyncSemaphore.WaitAsync();
                             waitOccurred = true;

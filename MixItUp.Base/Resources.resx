@@ -5479,4 +5479,26 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="StreamlootsCard" xml:space="preserve">
     <value>Streamloots Card</value>
   </data>
+  <data name="PerActionType" xml:space="preserve">
+    <value>Per Action Type</value>
+  </data>
+  <data name="PerCommandType" xml:space="preserve">
+    <value>Per Command Type</value>
+  </data>
+  <data name="CommandLockSystem" xml:space="preserve">
+    <value>Command Lock System</value>
+  </data>
+  <data name="CommandLockSystemTooltip" xml:space="preserve">
+    <value>- Per Command Type: Each command type (Chat, Event, Timer, etc) has a lock that prevents
+other commands of the same time from running at the same time.
+- Per Action Type: Each action type (Chat, Sound, Conditional, etc) has a lock that prevents other
+commands also containing those actions from running at the same time.
+- Visual/Audio Actions: Commands containing visual/audio-based actions (Sound, Overlay, etc)
+share 1 lock while other commands will run as soon as they are triggered.
+- Singular: All commands share the same lock only allowing one command to run at a time.
+- None: All commands are unlocked and will run as soon as they are triggered.</value>
+  </data>
+  <data name="VisualAudioActions" xml:space="preserve">
+    <value>Visual/Audio Actions</value>
+  </data>
 </root>

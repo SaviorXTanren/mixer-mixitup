@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Requirements;
+﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -173,6 +174,32 @@ namespace MixItUp.Base.Model.Commands.Games
         public override bool HasCustomRun { get { return true; } }
 
         public virtual IEnumerable<CommandModelBase> GetInnerCommands() { return new List<CommandModelBase>(); }
+
+        public override HashSet<ActionTypeEnum> GetActionTypesInCommand(HashSet<Guid> commandIDs = null)
+        {
+            HashSet<ActionTypeEnum> actionTypes = new HashSet<ActionTypeEnum>() { ActionTypeEnum.Chat };
+
+            if (commandIDs == null)
+            {
+                commandIDs = new HashSet<Guid>();
+            }
+
+            if (commandIDs.Contains(this.ID))
+            {
+                return actionTypes;
+            }
+            commandIDs.Add(this.ID);
+
+            foreach (CommandModelBase subCommand in this.GetInnerCommands())
+            {
+                foreach (ActionTypeEnum subActionType in subCommand.GetActionTypesInCommand(commandIDs))
+                {
+                    actionTypes.Add(subActionType);
+                }
+            }
+
+            return actionTypes;
+        }
 
         protected async Task PerformCooldown(CommandParametersModel parameters) { await this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel).Perform(parameters); }
 

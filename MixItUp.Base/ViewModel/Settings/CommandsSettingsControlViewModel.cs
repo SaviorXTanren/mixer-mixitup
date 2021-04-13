@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
@@ -14,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Settings
         public GenericToggleSettingsOptionControlViewModel AllowCommandWhispering { get; set; }
         public GenericToggleSettingsOptionControlViewModel IgnoreBotAccount { get; set; }
         public GenericToggleSettingsOptionControlViewModel DeleteChatCommandsWhenRun { get; set; }
-        public GenericToggleSettingsOptionControlViewModel UnlockAllCommandTypes { get; set; }
+        public GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum> CommandLockSystem { get; set; }
 
         public GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum> RequirementErrorsCooldownType { get; set; }
         public GenericNumberSettingsOptionControlViewModel RequirementErrorsCooldownAmount { get; set; }
@@ -32,8 +33,8 @@ namespace MixItUp.Base.ViewModel.Settings
                 ChannelSession.Settings.IgnoreBotAccountCommands, (value) => { ChannelSession.Settings.IgnoreBotAccountCommands = value; });
             this.DeleteChatCommandsWhenRun = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.DeleteChatCommandsWhenRun,
                 ChannelSession.Settings.DeleteChatCommandsWhenRun, (value) => { ChannelSession.Settings.DeleteChatCommandsWhenRun = value; });
-            this.UnlockAllCommandTypes = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.UnlockAllCommandTypes,
-                ChannelSession.Settings.UnlockAllCommands, (value) => { ChannelSession.Settings.UnlockAllCommands = value; }, MixItUp.Base.Resources.UnlockAllCommandTypesTooltip);
+            this.CommandLockSystem = new GenericComboBoxSettingsOptionControlViewModel<CommandServiceLockTypeEnum>(MixItUp.Base.Resources.CommandLockSystem, EnumHelper.GetEnumList<CommandServiceLockTypeEnum>(),
+                ChannelSession.Settings.CommandServiceLockType, (value) => { ChannelSession.Settings.CommandServiceLockType = value; }, MixItUp.Base.Resources.CommandLockSystemTooltip);
 
             this.RequirementErrorsCooldownType = new GenericComboBoxSettingsOptionControlViewModel<RequirementErrorCooldownTypeEnum>(MixItUp.Base.Resources.RequirementErrorsCooldownType, EnumHelper.GetEnumList<RequirementErrorCooldownTypeEnum>(),
                 ChannelSession.Settings.RequirementErrorsCooldownType, (value) => { ChannelSession.Settings.RequirementErrorsCooldownType = value; }, MixItUp.Base.Resources.RequirementErrorsCooldownTypeTooltip);
