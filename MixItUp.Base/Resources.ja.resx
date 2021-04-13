@@ -3983,9 +3983,6 @@
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>要件エラー クールダウン金額</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>要件チェックによりコマンドが失敗すると、そのエラーが何であったかを知らせるエラー メッセージがチャットに送信されます。このオプションを使用すると、同じタイプの要求エラーを再表示できる期間を設定できます。たとえば、これが 10 秒に設定されている場合、表示されたクールダウン エラー メッセージの後、同じコマンドに対して 10 秒後まで別のメッセージが表示されません。これは同じタイプの要件にのみ適用されるため、クールダウンとロール要件は別々の時間を追跡します。</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>完了するまで待つ</value>
   </data>

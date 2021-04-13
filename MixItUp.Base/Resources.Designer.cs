@@ -14357,7 +14357,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch Channel Followed.
+        ///   Looks up a localized string similar to Twitch Channel Followed (1 Minute Delay).
         /// </summary>
         public static string TwitchChannelFollowed {
             get {
@@ -14371,6 +14371,33 @@ namespace MixItUp.Base {
         public static string TwitchChannelHosted {
             get {
                 return ResourceManager.GetString("TwitchChannelHosted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Train Started.
+        /// </summary>
+        public static string TwitchChannelHypeTrainBegin {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeTrainBegin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Train Ended.
+        /// </summary>
+        public static string TwitchChannelHypeTrainEnd {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeTrainEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Twitch Channel Hype Train Progress.
+        /// </summary>
+        public static string TwitchChannelHypeTrainProgress {
+            get {
+                return ResourceManager.GetString("TwitchChannelHypeTrainProgress", resourceCulture);
             }
         }
         
@@ -14420,7 +14447,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Twitch Channel Stream Start.
+        ///   Looks up a localized string similar to Twitch Channel Stream Start (1 Minute Delay).
         /// </summary>
         public static string TwitchChannelStreamStart {
             get {

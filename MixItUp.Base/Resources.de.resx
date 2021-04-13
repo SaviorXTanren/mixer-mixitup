@@ -3983,9 +3983,6 @@ Diese Einstellung ändert alle Rollenanforderungen, um explizit zu sein, und erf
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Anforderungsfehler Abklingbetrag</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>Wenn ein Befehl aufgrund einer Anforderungsprüfung fehlschlägt, wird eine Fehlermeldung an den Chat gesendet, die an den Fehler hinweist. Mit dieser Option können Sie festlegen, wie lange der gleiche Anforderungsfehler erneut angezeigt werden kann. Wenn dies z. B. auf 10 Sekunden festgelegt ist, wird nach einer Abklingfehlermeldung erst nach 10 Sekunden ein anderer Befehl für denselben Befehl angezeigt. Beachten Sie, dass dies nur für Anforderungen des gleichen Typs gilt, so dass Abklingzeiten &amp; Rollenanforderungen separate Zeiten nachverfolgen.</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>Warten bis zum Abschluss</value>
   </data>

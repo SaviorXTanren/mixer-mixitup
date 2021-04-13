@@ -105,11 +105,23 @@ namespace MixItUp.Base.ViewModel.MainControls
             List<EventCommandItemViewModel> commands = new List<EventCommandItemViewModel>();
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
-            //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+            {
+                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            }
+
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
             //commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelRaided));
+
+            if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+            {
+                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
+                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+            }
+
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));

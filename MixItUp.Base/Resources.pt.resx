@@ -3983,9 +3983,6 @@ Essa configuração mudará todos os requisitos de função para ser explícito 
   <data name="RequirementErrorsCooldownAmount" xml:space="preserve">
     <value>Valor de recarga de erros de exigência</value>
   </data>
-  <data name="RequirementErrorsCooldownAmountTooltip" xml:space="preserve">
-    <value>Quando um comando falha devido a uma verificação de requisitos, uma mensagem de erro será enviada para o chat indicando qual foi a falha. Esta opção permite definir quanto tempo antes que o mesmo tipo de erro de exigência possa ser mostrado novamente. Por exemplo, se isso for definido para 10 segundos, depois de uma mensagem de erro de recarga mostrada, outro não será mostrado para o mesmo comando até depois de 10 segundos. Observe que isso só se aplica a requisitos do mesmo tipo, de modo que os cooldowns &amp; requisitos de função acompanham os tempos separados.</value>
-  </data>
   <data name="WaitUntilComplete" xml:space="preserve">
     <value>Aguarde até completar</value>
   </data>

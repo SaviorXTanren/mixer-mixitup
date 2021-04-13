@@ -9,6 +9,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -44,6 +45,26 @@ namespace MixItUp.Base.Services
             this.signalRConnection.Listen("TwitchStreamStartedEvent", () =>
             {
                 var _ = this.TwitchStreamStartedEvent();
+            });
+
+            this.signalRConnection.Listen("TwitchStreamStoppedEvent", () =>
+            {
+                var _ = this.TwitchStreamStoppedEvent();
+            });
+
+            this.signalRConnection.Listen("TwitchChannelHypeTrainBegin", (int totalPoints, int levelPoints, int levelGoal) =>
+            {
+                var _ = this.TwitchChannelHypeTrainBegin(totalPoints, levelPoints, levelGoal);
+            });
+
+            this.signalRConnection.Listen("TwitchChannelHypeTrainProgress", (int level, int totalPoints, int levelPoints, int levelGoal) =>
+            {
+                var _ = this.TwitchChannelHypeTrainProgress(level, totalPoints, levelPoints, levelGoal);
+            });
+
+            this.signalRConnection.Listen("TwitchChannelHypeTrainEnd", (int level, int totalPoints) =>
+            {
+                var _ = this.TwitchChannelHypeTrainEnd(level, totalPoints);
             });
 
             this.signalRConnection.Listen("AuthenticationCompleteEvent", (bool approved) =>
@@ -142,6 +163,57 @@ namespace MixItUp.Base.Services
         private async Task TwitchStreamStartedEvent()
         {
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
+            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            {
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
+        }
+
+        private async Task TwitchStreamStoppedEvent()
+        {
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, ChannelSession.GetCurrentUser());
+            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            {
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
+        }
+
+        private async Task TwitchChannelHypeTrainBegin(int totalPoints, int levelPoints, int levelGoal)
+        {
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainBegin, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            {
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
+        }
+
+        private async Task TwitchChannelHypeTrainProgress(int level, int totalPoints, int levelPoints, int levelGoal)
+        {
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelpoints"] = levelPoints.ToString();
+            eventCommandSpecialIdentifiers["hypetrainlevelgoal"] = levelGoal.ToString();
+
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainProgress, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
+            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+            {
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
+        }
+
+        private async Task TwitchChannelHypeTrainEnd(int level, int totalPoints)
+        {
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["hypetraintotallevel"] = level.ToString();
+            eventCommandSpecialIdentifiers["hypetraintotalpoints"] = totalPoints.ToString();
+
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHypeTrainEnd, ChannelSession.GetCurrentUser(), eventCommandSpecialIdentifiers);
             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
             {
                 await ChannelSession.Services.Events.PerformEvent(trigger);
