@@ -210,6 +210,7 @@ namespace MixItUp.Base.Model.Commands
                 actionTypes.Add(action.Type);
             }
 
+            actionTypes.Remove(ActionTypeEnum.Command);
             actionTypes.Remove(ActionTypeEnum.Wait);
 
             return actionTypes;
