@@ -65,6 +65,11 @@ namespace MixItUp.Base.Model.Commands
         }
 
         public override bool HasCustomRun { get { return true; } }
+
+        public override HashSet<ActionTypeEnum> GetActionTypesInCommand(HashSet<Guid> commandIDs = null)
+        {
+            return new HashSet<ActionTypeEnum>() { ActionTypeEnum.Chat };
+        }
     }
 
     public class MixItUpPreMadeChatCommandModel : PreMadeChatCommandModelBase

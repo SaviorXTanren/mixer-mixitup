@@ -35,6 +35,7 @@ namespace MixItUp.Base.Services
         private Dictionary<CommandTypeEnum, List<CommandInstanceModel>> perCommandTypeInstances = new Dictionary<CommandTypeEnum, List<CommandInstanceModel>>();
 
         private HashSet<ActionTypeEnum> perActionTypeInUse = new HashSet<ActionTypeEnum>();
+        private List<Task> perActionTypeTasks = new List<Task>();
         private List<CommandInstanceModel> perActionTypeInstances = new List<CommandInstanceModel>();
 
         private Task singularTask = null;
@@ -153,11 +154,30 @@ namespace MixItUp.Base.Services
                         }
                         else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
                         {
-
+                            this.perActionTypeInstances.Add(commandInstance);
+                            if (this.CanCommandBeRunBasedOnActions(commandInstance))
+                            {
+                                this.perActionTypeTasks.Add(AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type)));
+                            }
                         }
                         else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions)
                         {
-
+                            HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
+                            if (actionTypes.Contains(ActionTypeEnum.Overlay) || actionTypes.Contains(ActionTypeEnum.OvrStream) || actionTypes.Contains(ActionTypeEnum.Sound) ||
+                                actionTypes.Contains(ActionTypeEnum.StreamingSoftware) || actionTypes.Contains(ActionTypeEnum.TextToSpeech))
+                            {
+                                singularInstances.Add(commandInstance);
+                                if (singularTask == null)
+                                {
+                                    singularTask = AsyncRunner.RunAsync(() => this.BackgroundCommandTypeRunner(type));
+                                }
+                            }
+                            else
+                            {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                AsyncRunner.RunAsync(() => this.RunDirectly(commandInstance));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            }
                         }
                         else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
                         {
@@ -234,7 +254,7 @@ namespace MixItUp.Base.Services
 
         private async Task BackgroundCommandTypeRunner(CommandTypeEnum type)
         {
-            CommandInstanceModel instance;
+            CommandInstanceModel instance = null;
             do
             {
                 instance = await this.commandQueueLock.WaitAndRelease(() =>
@@ -253,7 +273,23 @@ namespace MixItUp.Base.Services
                     }
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.PerActionType)
                     {
+                        if (instance != null)
+                        {
+                            foreach (ActionTypeEnum actionType in instance.GetActionTypes())
+                            {
+                                this.perActionTypeInUse.Remove(actionType);
+                            }
+                        }
 
+                        commandInstance = this.perActionTypeInstances.FirstOrDefault(c => this.CanCommandBeRunBasedOnActions(c));
+                        if (commandInstance != null)
+                        {
+                            this.perActionTypeInstances.Remove(commandInstance);
+                            foreach (ActionTypeEnum actionType in commandInstance.GetActionTypes())
+                            {
+                                this.perActionTypeInUse.Add(actionType);
+                            }
+                        }
                     }
                     else if (ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.VisualAudioActions ||
                         ChannelSession.Settings.CommandServiceLockType == CommandServiceLockTypeEnum.Singular)
@@ -327,6 +363,19 @@ namespace MixItUp.Base.Services
             {
                 await command.PostRun(parameters);
             }
+        }
+
+        private bool CanCommandBeRunBasedOnActions(CommandInstanceModel commandInstance)
+        {
+            HashSet<ActionTypeEnum> actionTypes = commandInstance.GetActionTypes();
+            foreach (ActionTypeEnum actionType in actionTypes)
+            {
+                if (this.perActionTypeInUse.Contains(actionType))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

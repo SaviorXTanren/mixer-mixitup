@@ -155,6 +155,24 @@ namespace MixItUp.Base.Model.Commands
             return actions;
         }
 
+        public HashSet<ActionTypeEnum> GetActionTypes()
+        {
+            CommandModelBase command = this.Command;
+            if (command != null)
+            {
+                return command.GetActionTypesInCommand();
+            }
+            else
+            {
+                HashSet<ActionTypeEnum> actionTypes = new HashSet<ActionTypeEnum>();
+                foreach (ActionModelBase action in this.Actions)
+                {
+                    actionTypes.Add(action.Type);
+                }
+                return actionTypes;
+            }
+        }
+
         public CommandInstanceModel Duplicate()
         {
             if (this.command != null)

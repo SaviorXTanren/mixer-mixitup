@@ -193,8 +193,25 @@ namespace MixItUp.Base.Model.Commands
                         actionTypes.Add(ActionTypeEnum.Sound);
                     }
                 }
+                else if (action.Type == ActionTypeEnum.TextToSpeech)
+                {
+                    actionTypes.Add(ActionTypeEnum.Sound);
+                }
+                else if (action.Type == ActionTypeEnum.OvrStream)
+                {
+                    actionTypes.Add(ActionTypeEnum.Sound);
+                    actionTypes.Add(ActionTypeEnum.Overlay);
+                }
+                else if (action.Type == ActionTypeEnum.StreamingSoftware)
+                {
+                    actionTypes.Add(ActionTypeEnum.Sound);
+                    actionTypes.Add(ActionTypeEnum.Overlay);
+                }
                 actionTypes.Add(action.Type);
             }
+
+            actionTypes.Remove(ActionTypeEnum.Wait);
+
             return actionTypes;
         }
 
