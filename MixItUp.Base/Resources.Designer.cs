@@ -2211,6 +2211,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Counters.
+        /// </summary>
+        public static string Counters {
+            get {
+                return ResourceManager.GetString("Counters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Counters Folder.
         /// </summary>
         public static string CountersFolder {

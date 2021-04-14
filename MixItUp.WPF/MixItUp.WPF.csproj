@@ -842,6 +842,9 @@
     <Compile Include="Controls\Settings\CommandsSettingsControl.xaml.cs">
       <DependentUpon>CommandsSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\CountersSettingsControl.xaml.cs">
+      <DependentUpon>CountersSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -1595,6 +1598,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\CommandsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\CountersSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5507,4 +5507,7 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="VisualAudioActions" xml:space="preserve">
     <value>Visual/Audio Actions</value>
   </data>
+  <data name="Counters" xml:space="preserve">
+    <value>Counters</value>
+  </data>
 </root>
