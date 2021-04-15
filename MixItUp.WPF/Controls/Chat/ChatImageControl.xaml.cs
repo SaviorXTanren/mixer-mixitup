@@ -138,8 +138,6 @@ namespace MixItUp.WPF.Controls.Chat
             return ChatImageControl.bitmapImages[url];
         }
 
-        private bool IsGifImage(string url) { return url.Contains(".gif"); }
-
         private void ProcessGifImage(string url)
         {
             this.GifImage.SetSize(ChannelSession.Settings.ChatFontSize * 2);
