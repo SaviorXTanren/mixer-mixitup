@@ -16,7 +16,7 @@ namespace MixItUp.Base.Services
 
         public async Task AddTestCommand()
         {
-            StoreCommandUploadModel command = new StoreCommandUploadModel()
+            StoreCommandUploadModel upload = new StoreCommandUploadModel()
             {
                 ID = Guid.NewGuid(),
                 Name = "Test Command " + RandomHelper.GenerateRandomNumber(100),
@@ -29,22 +29,18 @@ namespace MixItUp.Base.Services
 
             if (RandomHelper.GenerateRandomNumber(100) > 50)
             {
-                command.Tags.Add("Sound");
+                upload.Tags.Add("Sound");
             }
             else
             {
-                command.Tags.Add("Video");
+                upload.Tags.Add("Video");
             }
 
-            ChatCommandModel c = new ChatCommandModel("Test", new HashSet<string>() { "test" });
-            c.Actions.Add(new ChatActionModel("Hello World!"));
-            command.Commands.Add(c);
+            ChatCommandModel command = new ChatCommandModel("Test", new HashSet<string>() { "test" });
+            command.Actions.Add(new ChatActionModel("Hello World!"));
+            upload.Command = command;
 
-            ActionGroupCommandModel a = new ActionGroupCommandModel("Test", runOneRandomly: false);
-            a.Actions.Add(new ChatActionModel("Hello World!"));
-            command.Commands.Add(a);
-
-            await this.AddCommand(command);
+            await this.AddCommand(upload);
         }
 
         public async Task AddCommand(StoreCommandUploadModel command)

@@ -64,18 +64,18 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public string Data
         {
-            get { return JSONSerializerHelper.SerializeToString(this.Commands); }
+            get { return JSONSerializerHelper.SerializeToString(this.Command); }
             set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.Commands.AddRange(JSONSerializerHelper.DeserializeFromString<List<CommandModelBase>>(value));
+                    this.Command = JSONSerializerHelper.DeserializeFromString<CommandModelBase>(value);
                 }
             }
         }
 
         [JsonIgnore]
-        public List<CommandModelBase> Commands { get; set; } = new List<CommandModelBase>();
+        public CommandModelBase Command { get; set; }
     }
 
     [DataContract]
