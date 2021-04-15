@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -187,7 +188,15 @@ namespace MixItUp.Base.ViewModel.Actions
 
             this.ImportActionsCommand = this.CreateCommand(async () =>
             {
-                await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser()));
+                try
+                {
+                    await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser()));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
+                }
             });
 
             foreach (ActionModelBase subAction in subActions)
