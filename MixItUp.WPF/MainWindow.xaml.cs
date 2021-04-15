@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
@@ -150,6 +151,7 @@ namespace MixItUp.WPF
             this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
 
             ActivationProtocolHandler.OnStoreCommandActivation += ActivationProtocolHandler_OnStoreCommandActivation;
+            ActivationProtocolHandler.OnCommandFileActivation += ActivationProtocolHandler_OnCommandFileActivation;
         }
 
         private async Task StartShutdownProcess()
@@ -243,6 +245,15 @@ namespace MixItUp.WPF
             {
                 //CommandEditorWindow window = new CommandEditorWindow(Base.Model.Commands.CommandTypeEnum.Chat);
                 //window.ForceShow();
+            });
+        }
+
+        private void ActivationProtocolHandler_OnCommandFileActivation(object sender, CommandModelBase command)
+        {
+            DispatcherHelper.Dispatcher.Invoke(() =>
+            {
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
+                window.ForceShow();
             });
         }
     }

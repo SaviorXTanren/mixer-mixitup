@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Commands;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.ViewModel.Commands;
 using StreamingClient.Base.Util;
 using System;
 using System.IO;
@@ -18,10 +19,13 @@ namespace MixItUp.Base.Util
     {
         public const string PipeName = "mixitup";
 
+        public const string FileAssociationProgramID = "MixItUp.MIUCommand.1";
+
         public const string URIProtocolActivationHeader = "mixitup";
         public const string URIProtocolActivationStoreCommand = URIProtocolActivationHeader + "://store/command/";
 
         public static event EventHandler<Guid> OnStoreCommandActivation = delegate { };
+        public static event EventHandler<CommandModelBase> OnCommandFileActivation = delegate { };
 
         private static Task activationHandlerTask;
         private static CancellationTokenSource activationHandlerTaskCancellationTokenSource = new CancellationTokenSource();
@@ -53,7 +57,11 @@ namespace MixItUp.Base.Util
                                 }
                                 else if (response.EndsWith(CommandEditorWindowViewModelBase.MixItUpCommandFileExtension))
                                 {
-                                    //handle file activation
+                                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile(response);
+                                    if (command != null)
+                                    {
+                                        ActivationProtocolHandler.OnCommandFileActivation(null, command);
+                                    }
                                 }
                             }
                             catch (IOException ex)
