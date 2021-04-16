@@ -156,8 +156,6 @@ namespace MixItUp.Base.Services.External
             {
                 string socketToken = jobj["socket_token"].ToString();
 
-                await this.socket.Connect($"https://sockets.streamlabs.com", $"token={socketToken}");
-
                 this.socket.Listen("event", async (data) =>
                 {
                     if (data != null)
@@ -180,6 +178,9 @@ namespace MixItUp.Base.Services.External
                         }
                     }
                 });
+
+                await this.socket.Connect($"https://sockets.streamlabs.com?token={socketToken}");
+
                 this.TrackServiceTelemetry("Streamlabs");
                 return new Result();
             }

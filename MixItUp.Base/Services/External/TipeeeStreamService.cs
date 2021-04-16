@@ -42,9 +42,6 @@ namespace MixItUp.Base.Services.External
     [DataContract]
     public class TipeeeStreamUser
     {
-        [JsonProperty("avatar")]
-        public string Avatar { get; set; }
-
         [JsonProperty("username")]
         public string Username { get; set; }
 
@@ -369,18 +366,6 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectSocket()
         {
-            await this.socket.Connect(this.socketAddress, "access_token=" + this.apiKey);
-
-            this.socket.Listen("connect", (data) =>
-            {
-                JObject joinRoomJObj = new JObject();
-                joinRoomJObj["room"] = this.apiKey;
-                joinRoomJObj["username"] = this.user.Username;
-                this.socket.Send("join-room", joinRoomJObj);
-
-                this.WebSocketConnected = true;
-            });
-
             this.socket.Listen("new-event", (data) =>
             {
                 if (data != null)
@@ -418,6 +403,15 @@ namespace MixItUp.Base.Services.External
                 this.WebSocketDisconnectedOccurred();
                 await this.ConnectSocket();
             });
+
+            await this.socket.Connect(this.socketAddress + "?access_token=" + this.apiKey);
+
+            JObject joinRoomJObj = new JObject();
+            joinRoomJObj["room"] = this.apiKey;
+            joinRoomJObj["username"] = this.user.Username;
+            this.socket.Send("join-room", joinRoomJObj);
+
+            this.WebSocketConnected = true;
 
             for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
             {

@@ -237,13 +237,6 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectSocket()
         {
-            await this.socket.Connect("https://nodeapi.treatstream.com/", "token=" + this.socketToken);
-
-            this.socket.Listen("connect", (data) =>
-            {
-                this.WebSocketConnected = true;
-            });
-
             this.socket.Listen("realTimeTreat", (data) =>
             {
                 if (data != null)
@@ -281,6 +274,9 @@ namespace MixItUp.Base.Services.External
                 this.WebSocketDisconnectedOccurred();
                 await this.ConnectSocket();
             });
+
+            await this.socket.Connect("wss://nodeapi.treatstream.com/?token=" + this.socketToken);
+            this.WebSocketConnected = true;
 
             for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
             {

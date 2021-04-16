@@ -220,16 +220,6 @@ namespace MixItUp.Base.Services.External
             this.channel = await this.GetCurrentChannel();
             if (this.channel != null)
             {
-                await this.socket.Connect($"https://realtime.streamelements.com");
-
-                this.socket.Listen("connect", (data) =>
-                {
-                    JObject packet = new JObject();
-                    packet["method"] = "oauth2";
-                    packet["token"] = this.token.accessToken;
-                    this.socket.Send("authenticate", packet);
-                });
-
                 this.socket.Listen("disconnect", (data) =>
                 {
                     this.WebSocketDisconnectedOccurred();
@@ -237,9 +227,14 @@ namespace MixItUp.Base.Services.External
 
                 this.socket.Listen("authenticated", (data) =>
                 {
-                    if (this.channel._id.Equals(data?.ToString()))
+                    if (data != null)
                     {
-                        this.WebSocketConnected = true;
+                        JObject eventJObj = JObject.Parse(data.ToString());
+                        var channelId = eventJObj["channelId"]?.Value<string>();
+                        if (this.channel._id.Equals(channelId))
+                        {
+                            this.WebSocketConnected = true;
+                        }
                     }
                 });
 
@@ -261,6 +256,13 @@ namespace MixItUp.Base.Services.External
                         //await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, slDonation.ToGenericDonation());
                     }
                 });
+
+                await this.socket.Connect($"wss://realtime.streamelements.com");
+
+                JObject packet = new JObject();
+                packet["method"] = "oauth2";
+                packet["token"] = this.token.accessToken;
+                this.socket.Send("authenticate", packet);
 
                 for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
                 {

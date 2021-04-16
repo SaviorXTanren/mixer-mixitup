@@ -7,8 +7,6 @@ namespace MixItUp.Base.Services
     {
         Task Connect(string connectionURL);
 
-        Task Connect(string connectionURL, string query);
-
         Task Disconnect();
 
         void Listen(string eventString, Action<object> processEvent);
