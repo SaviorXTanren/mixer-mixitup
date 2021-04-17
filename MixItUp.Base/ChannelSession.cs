@@ -180,7 +180,7 @@ namespace MixItUp.Base
                 userResult = await ChannelSession.ConnectTwitchUser();
             }
 
-            if (userResult.Success)
+            if (userResult.Success && ChannelSession.TwitchUserConnection != null)
             {
                 ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
 
