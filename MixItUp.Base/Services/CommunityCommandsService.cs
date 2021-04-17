@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public class StoreService
+    public class CommunityCommandsService
     {
         public const string UserAuthHeader = "MIUAuth";
 
@@ -48,7 +48,7 @@ namespace MixItUp.Base.Services
             using (AdvancedHttpClient client = new AdvancedHttpClient())
             {
                 client.DefaultRequestHeaders.Add(UserAuthHeader, ChannelSession.Services.Secrets.Encrypt(ChannelSession.Settings.ID.ToString()));
-                HttpResponseMessage response = await client.PostAsync("https://localhost:44309/api/store/command", AdvancedHttpClient.CreateContentFromObject(command));
+                HttpResponseMessage response = await client.PostAsync("https://localhost:44309/api/community/commands", AdvancedHttpClient.CreateContentFromObject(command));
             }
         }
     }
