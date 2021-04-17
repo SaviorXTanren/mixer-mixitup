@@ -9,6 +9,8 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsSocketIOConnection : ISocketIOConnection
     {
+        public event EventHandler OnDisconnected = delegate { };
+
         protected SocketIoClient socket = new SocketIoClient();
 
         private string connectionURL;
@@ -19,6 +21,8 @@ namespace MixItUp.WPF.Services
         {
             this.connectionURL = connectionURL;
             await this.socket.ConnectAsync(new Uri(this.connectionURL));
+
+            this.socket.Disconnected += Socket_Disconnected;
         }
 
         public Task Disconnect()
@@ -75,5 +79,7 @@ namespace MixItUp.WPF.Services
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
+
+        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e) { this.OnDisconnected(this, new EventArgs()); }
     }
 }

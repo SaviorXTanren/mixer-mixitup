@@ -1,9 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -64,7 +62,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 {
                     return Resources.Streamloots;
                 }
-                else if (this.EventType == EventTypeEnum.StreamElementsDonation)
+                else if (this.EventType == EventTypeEnum.StreamElementsDonation || this.EventType == EventTypeEnum.StreamElementsMerchPurchase)
                 {
                     return Resources.StreamElements;
                 }
@@ -141,6 +139,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             commands.Add(this.GetEventCommand(EventTypeEnum.StreamlabsDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsDonation));
+            commands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsMerchPurchase));
             commands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
             commands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));

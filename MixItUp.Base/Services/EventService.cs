@@ -127,6 +127,7 @@ namespace MixItUp.Base.Services
         StreamlootsPackPurchased = 1091,
         StreamlootsPackGifted = 1092,
         StreamElementsDonation = 1100,
+        StreamElementsMerchPurchase = 1101,
     }
 
     public class EventTrigger
@@ -196,7 +197,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
@@ -204,6 +205,10 @@ namespace MixItUp.Base.Services
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 
+            if (arguments != null)
+            {
+                trigger.Arguments = arguments;
+            }
             trigger.SpecialIdentifiers = donation.GetSpecialIdentifiers();
             if (additionalSpecialIdentifiers != null)
             {

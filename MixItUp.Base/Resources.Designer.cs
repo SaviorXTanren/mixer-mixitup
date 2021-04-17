@@ -12805,6 +12805,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to StreamElements Merch Purchase.
+        /// </summary>
+        public static string StreamElementsMerchPurchase {
+            get {
+                return ResourceManager.GetString("StreamElementsMerchPurchase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to connect to socket.
         /// </summary>
         public static string StreamElementsSocketFailed {
