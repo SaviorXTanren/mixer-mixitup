@@ -5510,4 +5510,7 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="Counters" xml:space="preserve">
     <value>Counters</value>
   </data>
+  <data name="StreamElementsSocketFailed" xml:space="preserve">
+    <value>Failed to connect to socket</value>
+  </data>
 </root>
