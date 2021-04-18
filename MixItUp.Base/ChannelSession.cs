@@ -157,65 +157,98 @@ namespace MixItUp.Base
         public static async Task<Result> ConnectUser(SettingsV3Model settings)
         {
             Result userResult = new Result(success: false);
-            ChannelSession.Settings = settings;
-
-            // Twitch connection
-            if (!ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+            try
             {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
-            }
+                ChannelSession.Settings = settings;
 
-            Result<TwitchPlatformService> twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
-            if (twitchResult.Success)
-            {
-                ChannelSession.TwitchUserConnection = twitchResult.Value;
-                userResult = twitchResult;
-            }
-            else
-            {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
-                userResult = await ChannelSession.ConnectTwitchUser();
-            }
-
-            if (userResult.Success)
-            {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
-
-                ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
-                if (ChannelSession.TwitchUserNewAPI == null)
+                // Twitch connection
+                if (!ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                 {
-                    return new Result(Resources.TwitchFailedNewAPIUserData);
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "Assigning of initial Settings failed");
+                throw ex;
+            }
 
-                ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
-                if (ChannelSession.TwitchUserV5 == null)
+            Result<TwitchPlatformService> twitchResult = new Result<TwitchPlatformService>(success: false, null);
+            try
+            {
+                twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                if (twitchResult.Success)
                 {
-                    return new Result(Resources.TwitchFailedV5APIUserData);
+                    ChannelSession.TwitchUserConnection = twitchResult.Value;
+                    userResult = twitchResult;
                 }
-
-                if (ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
+                else
                 {
-                    twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
-                    if (twitchResult.Success)
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+                    userResult = await ChannelSession.ConnectTwitchUser();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "OAuth connection failed");
+                throw ex;
+            }
+
+            try
+            {
+                if (userResult != null && userResult.Success)
+                {
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
+
+                    ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
+                    if (ChannelSession.TwitchUserNewAPI == null)
                     {
-                        ChannelSession.TwitchBotConnection = twitchResult.Value;
-                        ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
-                        if (ChannelSession.TwitchBotNewAPI == null)
+                        return new Result(Resources.TwitchFailedNewAPIUserData);
+                    }
+
+                    ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
+                    if (ChannelSession.TwitchUserV5 == null)
+                    {
+                        return new Result(Resources.TwitchFailedV5APIUserData);
+                    }
+
+                    try
+                    {
+                        if (ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                         {
-                            return new Result(Resources.TwitchFailedBotData);
+                            twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                            if (twitchResult.Success)
+                            {
+                                ChannelSession.TwitchBotConnection = twitchResult.Value;
+                                ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
+                                if (ChannelSession.TwitchBotNewAPI == null)
+                                {
+                                    return new Result(Resources.TwitchFailedBotData);
+                                }
+                            }
+                            else
+                            {
+                                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
+                                return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                            }
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
-                        return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                        Logger.Log(LogLevel.Error, "Getting bot details failed");
+                        throw ex;
                     }
                 }
+                else
+                {
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                    return userResult;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
-                return userResult;
+                Logger.Log(LogLevel.Error, "Getting user details failed");
+                throw ex;
             }
 
             return userResult;
