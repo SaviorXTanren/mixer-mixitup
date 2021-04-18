@@ -173,7 +173,7 @@ namespace MixItUp.Base
                 throw ex;
             }
 
-            Result<TwitchPlatformService> twitchResult = new Result<TwitchPlatformService>(success: false, null);
+            Result<TwitchPlatformService> twitchResult = new Result<TwitchPlatformService>(success: false, (TwitchPlatformService)null);
             try
             {
                 twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
