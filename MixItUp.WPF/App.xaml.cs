@@ -145,6 +145,7 @@ namespace MixItUp.WPF
 
             RegistryHelpers.RegisterFileAssociation();
             RegistryHelpers.RegisterURIActivationProtocol();
+            RegistryHelpers.RegisterUninstaller();
 
             FileLoggerHandler.Initialize(servicesManager.FileService);
 

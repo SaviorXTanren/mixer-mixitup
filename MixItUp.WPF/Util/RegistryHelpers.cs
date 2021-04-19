@@ -3,13 +3,18 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using StreamingClient.Base.Util;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 
 namespace MixItUp.WPF.Util
 {
     public static class RegistryHelpers
     {
         private const string SoftwareClassesRegistryPathPrefx = "SOFTWARE\\Classes\\";
+        private const string UninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+        private static readonly Guid UninstallGuid = new Guid("9BED7BA2-4237-4826-B4C3-F3BB97F01151");
 
         private const long SHCNE_ASSOCCHANGED = 0x08000000L;
         private const uint SHCNF_IDLIST = 0x0000;
@@ -82,6 +87,65 @@ namespace MixItUp.WPF.Util
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public static void RegisterUninstaller()
+        {
+            string guidText = UninstallGuid.ToString("B");
+
+            if (KeyExists($@"{UninstallKey}\{guidText}"))
+            {
+                // Registry already exists, do nothing
+                return;
+            }
+
+            RegistryKey key = null;
+            try
+            {
+                using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(UninstallKey, true))
+                {
+                    if (parent == null)
+                    {
+                        Logger.Log($"Unable to find registry key: {UninstallKey}");
+                        return;
+                    }
+
+                    key = parent.OpenSubKey(guidText, true) ?? parent.CreateSubKey(guidText);
+
+                    if (key == null)
+                    {
+                        Logger.Log("Unable to create uninstall link.");
+                        return;
+                    }
+
+                    Assembly asm = Assembly.GetEntryAssembly();
+                    string exe = asm.Location;
+                    string uninstallerPath = Path.Combine(Path.GetDirectoryName(exe), "MixItUp.Uninstaller.exe");
+                    Version v = asm.GetName().Version;
+
+                    key.SetValue("DisplayName", "Mix It Up");
+                    key.SetValue("ApplicationVersion", v.ToString());
+                    key.SetValue("Publisher", "Mix It Up");
+                    key.SetValue("DisplayIcon", exe);
+                    key.SetValue("DisplayVersion", v.ToString(4));
+                    key.SetValue("URLInfoAbout", "https://mixitupapp.com");
+                    key.SetValue("Contact", "support@mixitupapp.com");
+                    key.SetValue("InstallDate", DateTime.Now.ToString("yyyyMMdd"));
+                    key.SetValue("UninstallString", uninstallerPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"An error occurred writing uninstall information to the registry.");
+                Logger.Log(ex);
+            }
+            finally
+            {
+                if (key != null)
+                {
+                    key.Close();
+                }
+            }
         }
 
         public static bool KeyExists(string path) { return Registry.CurrentUser.OpenSubKey(path) != null; }
