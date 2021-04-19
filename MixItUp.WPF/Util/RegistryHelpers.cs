@@ -12,6 +12,8 @@ namespace MixItUp.WPF.Util
 {
     public static class RegistryHelpers
     {
+        private static readonly string DefaultInstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
+
         private const string SoftwareClassesRegistryPathPrefx = "SOFTWARE\\Classes\\";
         private const string UninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
         private static readonly Guid UninstallGuid = new Guid("9BED7BA2-4237-4826-B4C3-F3BB97F01151");
@@ -92,7 +94,6 @@ namespace MixItUp.WPF.Util
         public static void RegisterUninstaller()
         {
             string guidText = UninstallGuid.ToString("B");
-
             if (KeyExists($@"{UninstallKey}\{guidText}"))
             {
                 // Registry already exists, do nothing
@@ -102,6 +103,18 @@ namespace MixItUp.WPF.Util
             RegistryKey key = null;
             try
             {
+                Assembly asm = Assembly.GetEntryAssembly();
+                string exe = asm.Location;
+                string installDir = Path.GetDirectoryName(exe);
+
+                if (!string.Equals(DefaultInstallDirectory, installDir, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Don't register uninstaller if we detect this is NOT running in the user's "local app data" folder
+                    return;
+                }
+
+                string uninstallerPath = Path.Combine(installDir, "MixItUp.Uninstaller.exe");
+
                 using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(UninstallKey, true))
                 {
                     if (parent == null)
@@ -118,9 +131,6 @@ namespace MixItUp.WPF.Util
                         return;
                     }
 
-                    Assembly asm = Assembly.GetEntryAssembly();
-                    string exe = asm.Location;
-                    string uninstallerPath = Path.Combine(Path.GetDirectoryName(exe), "MixItUp.Uninstaller.exe");
                     Version v = asm.GetName().Version;
 
                     key.SetValue("DisplayName", "Mix It Up");
