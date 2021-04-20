@@ -93,13 +93,6 @@ namespace MixItUp.WPF.Util
 
         public static void RegisterUninstaller()
         {
-            string guidText = UninstallGuid.ToString("B");
-            if (KeyExists($@"{UninstallKey}\{guidText}"))
-            {
-                // Registry already exists, do nothing
-                return;
-            }
-
             RegistryKey key = null;
             try
             {
@@ -113,8 +106,7 @@ namespace MixItUp.WPF.Util
                     return;
                 }
 
-                string uninstallerPath = Path.Combine(installDir, "MixItUp.Uninstaller.exe");
-
+                string guidText = UninstallGuid.ToString("B");
                 using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(UninstallKey, true))
                 {
                     if (parent == null)
@@ -132,6 +124,7 @@ namespace MixItUp.WPF.Util
                     }
 
                     Version v = asm.GetName().Version;
+                    string uninstallerPath = Path.Combine(installDir, "MixItUp.Uninstaller.exe");
 
                     key.SetValue("DisplayName", "Mix It Up");
                     key.SetValue("ApplicationVersion", v.ToString());
