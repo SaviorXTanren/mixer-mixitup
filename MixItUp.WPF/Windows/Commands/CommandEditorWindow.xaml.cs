@@ -196,7 +196,7 @@ namespace MixItUp.WPF.Windows.Commands
             this.Focus();         // important
         }
 
-        private void CommandEditorWindow_DragEnter(object sender, DragEventArgs e)
+        private void CommandEditorWindow_PreviewDragEnter(object sender, DragEventArgs e)
         {
             object obj = e.Data.GetData("FileNameW");
             if (obj != null)
@@ -245,7 +245,7 @@ namespace MixItUp.WPF.Windows.Commands
             }
         }
 
-        private void CommandEditorWindow_DragLeave(object sender, DragEventArgs e)
+        private void CommandEditorWindow_PreviewDragLeave(object sender, DragEventArgs e)
         {
             object obj = e.Data.GetData("FileNameW");
             if (obj != null)

@@ -19,9 +19,10 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                            
         AllowDrop="True"
-        DragEnter="CommandEditorWindow_DragEnter"
+
+        PreviewDragEnter="CommandEditorWindow_PreviewDragEnter"
         Drop="CommandEditorWindow_Drop"
-        DragLeave="CommandEditorWindow_DragLeave"
+        PreviewDragLeave="CommandEditorWindow_PreviewDragLeave"
 
         Icon="./../../Logo.ico"
         Title="Command Editor" Height="600" Width="800">
