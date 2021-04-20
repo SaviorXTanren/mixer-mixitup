@@ -215,13 +215,17 @@ namespace MixItUp.Uninstaller
             {
                 try
                 {
+                    string dirName = new DirectoryInfo(dirPath).Name;
+
+                    // NOTE: Disabling the rename for now, this means settings will persist between uninstall and reinstall
+                    // If a user wants to clear their settings, they can do that from inside Mix It Up (or by manually deleting the settings folder).
+
                     // If the Settings dir is found rename to some new date
                     // This will ensure that a reinstall won't use it, but it won't get deleted either
-                    string dirName = new DirectoryInfo(dirPath).Name;
-                    if (string.Equals(dirName, "Settings", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Directory.Move(dirPath, Path.Combine(installDir, $"Settings -{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}"));
-                    }
+                    //if (string.Equals(dirName, "Settings", StringComparison.OrdinalIgnoreCase))
+                    //{
+                    //    Directory.Move(dirPath, Path.Combine(installDir, $"Settings -{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}"));
+                    //}
 
                     // Don't ever delete a folder that starts with "Settings"
                     if (dirName.StartsWith("Settings", StringComparison.OrdinalIgnoreCase))
