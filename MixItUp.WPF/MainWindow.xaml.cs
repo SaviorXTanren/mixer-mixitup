@@ -4,6 +4,8 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.MainControls;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Commands;
@@ -248,13 +250,43 @@ namespace MixItUp.WPF
             });
         }
 
-        private void ActivationProtocolHandler_OnCommandFileActivation(object sender, CommandModelBase command)
+        private async void ActivationProtocolHandler_OnCommandFileActivation(object sender, CommandModelBase command)
         {
-            DispatcherHelper.Dispatcher.Invoke(() =>
+            await DispatcherHelper.Dispatcher.InvokeAsync(async () =>
             {
-                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
-                window.ForceShow();
+                CommandImporterDialogControl dialog = new CommandImporterDialogControl();
+                if (bool.Equals(await DialogHelper.ShowCustom(dialog), true))
+                {
+                    await Task.Delay(500);
+
+                    if (dialog.ViewModel.IsNewCommandSelected)
+                    {
+                        if (dialog.ViewModel.SelectedNewCommandType == command.Type)
+                        {
+                            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
+                            window.CommandSaved += Window_CommandSaved;
+                            window.ForceShow();
+                        }
+                        else
+                        {
+                            CommandEditorWindow window = new CommandEditorWindow(dialog.ViewModel.SelectedNewCommandType, command.Name, command.Actions);
+                            window.CommandSaved += Window_CommandSaved;
+                            window.ForceShow();
+                        }
+                    }
+                    else if (dialog.ViewModel.IsExistingCommandSelected)
+                    {
+                        CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(dialog.ViewModel.SelectedExistingCommand, command.Actions);
+                        window.CommandSaved += Window_CommandSaved;
+                        window.ForceShow();
+                    }
+                }
             });
+        }
+
+        private void Window_CommandSaved(object sender, CommandModelBase command)
+        {
+            GroupedCommandsMainControlViewModelBase.CommandAddedEdited(command);
         }
     }
 }

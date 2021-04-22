@@ -50,7 +50,11 @@ namespace MixItUp.Base.ViewModel.MainControls
             }
         }
 
-        public TimerMainControlViewModel(MainWindowViewModel windowViewModel) : base(windowViewModel) { }
+        public TimerMainControlViewModel(MainWindowViewModel windowViewModel)
+            : base(windowViewModel)
+        {
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited += GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited;
+        }
 
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
@@ -62,6 +66,14 @@ namespace MixItUp.Base.ViewModel.MainControls
             if (ChannelSession.Settings.TimerCommandsMinimumMessages <= 0 && ChannelSession.Settings.TimerCommandsInterval <= 0)
             {
                 this.TimeIntervalString = "1";
+            }
+        }
+
+        private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)
+        {
+            if (command.Type == CommandTypeEnum.Timer)
+            {
+                this.AddCommand(command);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.Commands;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,17 +6,10 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public class ActionGroupMainControlViewModel : GroupedCommandsMainControlViewModelBase
     {
-        public static event EventHandler<ActionGroupCommandModel> OnActionGroupAddedEdited = delegate { };
-
-        public static void ActionGroupAddedEdited(ActionGroupCommandModel command)
-        {
-            ActionGroupMainControlViewModel.OnActionGroupAddedEdited(null, command);
-        }
-
         public ActionGroupMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            ActionGroupMainControlViewModel.OnActionGroupAddedEdited += ActionGroupMainControlViewModel_OnActionGroupAddedEdited;
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited += GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited;
         }
 
         protected override IEnumerable<CommandModelBase> GetCommands()
@@ -25,9 +17,12 @@ namespace MixItUp.Base.ViewModel.MainControls
             return ChannelSession.ActionGroupCommands.ToList();
         }
 
-        private void ActionGroupMainControlViewModel_OnActionGroupAddedEdited(object sender, ActionGroupCommandModel command)
+        private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)
         {
-            this.AddCommand(command);
+            if (command.Type == CommandTypeEnum.ActionGroup)
+            {
+                this.AddCommand(command);
+            }
         }
     }
 }

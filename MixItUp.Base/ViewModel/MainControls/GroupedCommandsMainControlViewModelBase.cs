@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,13 @@ namespace MixItUp.Base.ViewModel.MainControls
 {
     public abstract class GroupedCommandsMainControlViewModelBase : WindowControlViewModelBase
     {
+        public static event EventHandler<CommandModelBase> OnCommandAddedEdited = delegate { };
+
+        public static void CommandAddedEdited(CommandModelBase command)
+        {
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited(null, command);
+        }
+
         public ThreadSafeObservableCollection<CommandModelBase> DefaultGroup { get { return this.CommandGroups.FirstOrDefault()?.Commands; } }
 
         public ThreadSafeObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ThreadSafeObservableCollection<CommandGroupControlViewModel>();

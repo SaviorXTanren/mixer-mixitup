@@ -33,6 +33,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ChatCommandsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited += GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited;
+
             this.SwitchToPreMadeCommands = this.CreateCommand(() =>
             {
                 this.CustomCommandsSelected = false;
@@ -85,6 +87,14 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.PreMadeChatCommands.ClearAndAddRange(commands);
 
             base.FilterCommands();
+        }
+
+        private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)
+        {
+            if (command.Type == CommandTypeEnum.Chat)
+            {
+                this.AddCommand(command);
+            }
         }
     }
 }

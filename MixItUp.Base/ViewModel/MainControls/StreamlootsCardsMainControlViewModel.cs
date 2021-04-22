@@ -13,6 +13,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         public StreamlootsCardsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited += GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited;
+
             this.StreamlootsManageCollectionCommand = this.CreateCommand((parameters) =>
             {
                 if (ChannelSession.TwitchUserConnection != null)
@@ -25,6 +27,14 @@ namespace MixItUp.Base.ViewModel.MainControls
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
             return ChannelSession.StreamlootsCardCommands.ToList();
+        }
+
+        private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)
+        {
+            if (command.Type == CommandTypeEnum.StreamlootsCard)
+            {
+                this.AddCommand(command);
+            }
         }
     }
 }

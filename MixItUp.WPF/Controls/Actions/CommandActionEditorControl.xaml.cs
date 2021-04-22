@@ -50,11 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
                     viewModel.SelectedCommandType = command.Type;
                     viewModel.SelectedCommand = command;
                 }
-
-                if (command is ActionGroupCommandModel)
-                {
-                    ActionGroupMainControlViewModel.ActionGroupAddedEdited((ActionGroupCommandModel)command);
-                }
+                GroupedCommandsMainControlViewModelBase.CommandAddedEdited(command);
             }
         }
     }

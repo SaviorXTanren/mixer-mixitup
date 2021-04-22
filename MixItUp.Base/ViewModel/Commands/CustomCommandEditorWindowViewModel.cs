@@ -9,12 +9,6 @@ namespace MixItUp.Base.ViewModel.Commands
     {
         public CustomCommandEditorWindowViewModel(CustomCommandModel existingCommand) : base(existingCommand) { }
 
-        public CustomCommandEditorWindowViewModel(string name)
-            : this()
-        {
-            this.Name = name;
-        }
-
         public CustomCommandEditorWindowViewModel() : base(CommandTypeEnum.Custom) { }
 
         public override bool CheckActionCount { get { return false; } }
