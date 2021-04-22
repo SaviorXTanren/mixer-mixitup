@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.ViewModel.Overlay;
 using MixItUp.WPF.Controls.Commands;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Commands;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -20,6 +22,13 @@ namespace MixItUp.WPF.Controls.Overlay
             : this()
         {
             this.ViewModel = viewModel;
+        }
+
+        protected override async Task OnLoaded()
+        {
+            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
+
+            await base.OnLoaded();
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
