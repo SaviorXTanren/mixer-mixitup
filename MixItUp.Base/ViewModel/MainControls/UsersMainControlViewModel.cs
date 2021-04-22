@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public UsersMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.ExportDataCommand = this.CreateCommand(async (parameter) =>
+            this.ExportDataCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
@@ -137,9 +137,10 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public async Task DeleteUser(UserDataModel user)
         {
-            if (await DialogHelper.ShowConfirmation("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
+            if (await DialogHelper.ShowConfirmation(Resources.DeleteUserDataPrompt))
             {
                 ChannelSession.Settings.UserData.Remove(user.ID);
+                await ChannelSession.Services.User.RemoveUserByID(user.ID);
             }
             this.RefreshUsers();
         }

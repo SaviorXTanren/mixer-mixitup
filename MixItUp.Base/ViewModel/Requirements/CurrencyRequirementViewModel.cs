@@ -18,10 +18,9 @@ namespace MixItUp.Base.ViewModel.Requirements
 
         public CurrencyListRequirementViewModel()
         {
-            this.AddItemCommand = this.CreateCommand((parameter) =>
+            this.AddItemCommand = this.CreateCommand(() =>
             {
                 this.Items.Add(new CurrencyRequirementViewModel(this));
-                return Task.FromResult(0);
             });
         }
 
@@ -102,10 +101,9 @@ namespace MixItUp.Base.ViewModel.Requirements
             this.viewModel = viewModel;
             this.SelectedRequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.Delete(this);
-                return Task.FromResult(0);
             });
         }
 

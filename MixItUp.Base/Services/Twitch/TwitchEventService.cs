@@ -72,6 +72,36 @@ namespace MixItUp.Base.Services.Twitch
         }
     }
 
+    public class TwitchGiftedSubEventModel
+    {
+        public UserViewModel Gifter { get; set; }
+
+        public UserViewModel Receiver { get; set; }
+
+        public bool IsAnonymous { get; set; }
+
+        public int MonthsGifted { get; set; }
+
+        public int PlanTierNumber { get; set; }
+
+        public string PlanTier { get; set; }
+
+        public string PlanName { get; set; }
+
+        public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
+
+        public TwitchGiftedSubEventModel(UserViewModel gifter, UserViewModel receiver, PubSubSubscriptionsGiftEventModel packet)
+        {
+            this.Gifter = gifter;
+            this.Receiver = receiver;
+            this.IsAnonymous = packet.IsAnonymousGiftedSubscription;
+            this.MonthsGifted = packet.IsMultiMonth ? packet.multi_month_duration : 1;
+            this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
+            this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+            this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
+        }
+    }
+
     public class TwitchMassGiftedSubEventModel
     {
         private const string AnonymousGiftedUserNoticeLogin = "ananonymousgifter";
@@ -87,6 +117,8 @@ namespace MixItUp.Base.Services.Twitch
         public int PlanTierNumber { get; set; }
 
         public bool IsAnonymous { get; set; }
+
+        public List<TwitchGiftedSubEventModel> Subs { get; set; } = new List<TwitchGiftedSubEventModel>();
 
         public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
 
@@ -126,35 +158,7 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : StreamingPlatformServiceBase, ITwitchEventService
     {
-        private class TwitchGiftedSubEventModel
-        {
-            public UserViewModel Gifter { get; set; }
-
-            public UserViewModel Receiver { get; set; }
-            
-            public bool IsAnonymous { get; set; }
-
-            public int MonthsGifted { get; set; }
-
-            public int PlanTierNumber { get; set; }
-
-            public string PlanTier { get; set; }
-
-            public string PlanName { get; set; }
-
-            public DateTimeOffset Processed { get; set; } = DateTimeOffset.Now;
-
-            public TwitchGiftedSubEventModel(UserViewModel gifter, UserViewModel receiver, PubSubSubscriptionsGiftEventModel packet)
-            {
-                this.Gifter = gifter;
-                this.Receiver = receiver;
-                this.IsAnonymous = packet.IsAnonymousGiftedSubscription;
-                this.MonthsGifted = packet.IsMultiMonth ? packet.multi_month_duration : 1;
-                this.PlanTierNumber = TwitchEventService.GetSubTierNumberFromText(packet.sub_plan);
-                this.PlanTier = TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-                this.PlanName = !string.IsNullOrEmpty(packet.sub_plan_name) ? packet.sub_plan_name : TwitchEventService.GetSubTierNameFromText(packet.sub_plan);
-            }
-        }
+        public const string PrimeSubPlan = "Prime";
 
         public const int BackgroundGiftedSubProcessorTime = 3000;
 
@@ -169,15 +173,18 @@ namespace MixItUp.Base.Services.Twitch
 
         public static string GetSubTierNameFromText(string subPlan)
         {
+            if (string.Equals(subPlan, PrimeSubPlan, StringComparison.OrdinalIgnoreCase))
+            {
+                return PrimeSubPlan;
+            }
+
             int subTier = TwitchEventService.GetSubTierNumberFromText(subPlan);
             if (subTier > 0)
             {
                 return $"{MixItUp.Base.Resources.Tier} {subTier}";
             }
-            else
-            {
-                return subPlan;
-            }
+
+            return subPlan;
         }
 
         private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
@@ -268,7 +275,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }));
             }
-            return new Result("Twitch connection has not been established");
+            return new Result(Resources.TwitchConnectionFailed);
         }
 
         public async Task Disconnect()
@@ -363,7 +370,6 @@ namespace MixItUp.Base.Services.Twitch
             else
             {
                 await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, subEvent.User, string.Format("{0} Subscribed at {1}", subEvent.User.DisplayName, subEvent.PlanTier), ChannelSession.Settings.AlertSubColor));
-
             }
         }
 
@@ -389,6 +395,12 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (!cancellationToken.IsCancellationRequested)
             {
+                if (ChannelSession.Services.WebhookService.IsConnected && ChannelSession.Services.WebhookService.IsAllowed)
+                {
+                    // We are using the new webhooks
+                    return;
+                }
+
                 if (streamStartCheckTime != DateTimeOffset.MaxValue)
                 {
                     DateTimeOffset startTime = await UptimePreMadeChatCommandModel.GetStartTime();
@@ -692,6 +704,9 @@ namespace MixItUp.Base.Services.Twitch
                     {
                         TwitchGiftedSubEventModel giftedSub = giftedSubs[gifterID][0];
                         giftedSubs[gifterID].Remove(giftedSub);
+
+                        massGiftedSub.Subs.Add(giftedSub);
+
                         await ProcessGiftedSub(giftedSub, fireEventCommand: false);
                     }
                 }
@@ -755,6 +770,12 @@ namespace MixItUp.Base.Services.Twitch
             trigger.SpecialIdentifiers["subsgiftedlifetimeamount"] = massGiftedSubEvent.LifetimeGifted.ToString();
             trigger.SpecialIdentifiers["usersubplan"] = massGiftedSubEvent.PlanTier;
             trigger.SpecialIdentifiers["isanonymous"] = massGiftedSubEvent.IsAnonymous.ToString();
+
+            foreach (TwitchGiftedSubEventModel sub in massGiftedSubEvent.Subs)
+            {
+                trigger.Arguments.Add(sub.Receiver.Username);
+            }
+
             await ChannelSession.Services.Events.PerformEvent(trigger);
 
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, massGiftedSubEvent.Gifter, string.Format("{0} Gifted {1} {2} Subs", massGiftedSubEvent.Gifter.DisplayName, massGiftedSubEvent.TotalGifted, massGiftedSubEvent.PlanTier), ChannelSession.Settings.AlertMassGiftedSubColor));
@@ -771,25 +792,31 @@ namespace MixItUp.Base.Services.Twitch
             }
 
             List<string> arguments = null;
-            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-            specialIdentifiers["rewardname"] = redemption.reward.title;
-            specialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
+            Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+            eventCommandSpecialIdentifiers["rewardname"] = redemption.reward.title;
+            eventCommandSpecialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
             if (!string.IsNullOrEmpty(redemption.user_input))
             {
-                specialIdentifiers["message"] = redemption.user_input;
+                eventCommandSpecialIdentifiers["message"] = redemption.user_input;
                 arguments = new List<string>(redemption.user_input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
             }
 
             if (string.IsNullOrEmpty(await ChannelSession.Services.Moderation.ShouldTextBeModerated(user, redemption.user_input)))
             {
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, specialIdentifiers);
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user, eventCommandSpecialIdentifiers);
                 trigger.Arguments = arguments;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
+                TwitchChannelPointsCommandModel command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.ChannelPointRewardID.ToString(), redemption.reward.id, StringComparison.CurrentCultureIgnoreCase));
+                if (command == null)
+                {
+                    command = ChannelSession.TwitchChannelPointsCommands.FirstOrDefault(c => string.Equals(c.Name, redemption.reward.title, StringComparison.CurrentCultureIgnoreCase));
+                }
+
                 if (command != null)
                 {
-                    await command.Perform(new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: specialIdentifiers));
+                    Dictionary<string, string> channelPointSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: StreamingPlatformTypeEnum.Twitch, arguments: arguments, specialIdentifiers: channelPointSpecialIdentifiers));
                 }
             }
             await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, string.Format("{0} Redeemed {1}", user.DisplayName, redemption.reward.title), ChannelSession.Settings.AlertChannelPointsColor));

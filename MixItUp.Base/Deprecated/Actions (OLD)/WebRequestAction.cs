@@ -15,9 +15,7 @@ namespace MixItUp.Base.Actions
         None,
         Chat,
         Command,
-        [Name("Special Identifier")]
         SpecialIdentifier,
-        [Name("JSON to Special Identifers")]
         JSONToSpecialIdentifiers
     }
 

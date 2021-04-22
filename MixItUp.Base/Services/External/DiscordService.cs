@@ -847,14 +847,14 @@ namespace MixItUp.Base.Services.External
                                 this.TrackServiceTelemetry("Discord");
                                 return new Result();
                             }
-                            return new Result("Could not connect Bot Application to web socket");
+                            return new Result(Resources.DiscordBotWebSocketFailed);
                         }
-                        return new Result("Could not get Bot Application Gateway data");
+                        return new Result(Resources.DiscoardBotGatewayFailed);
                     }
                 }
-                return new Result("Could not get Server data");
+                return new Result(Resources.DiscordServerDataFailed);
             }
-            return new Result("Could not get User data");
+            return new Result(Resources.DiscordUserDataFailed);
         }
 
         protected override void DisposeInternal()

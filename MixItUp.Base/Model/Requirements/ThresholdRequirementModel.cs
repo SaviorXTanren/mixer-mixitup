@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class ThresholdRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public int Amount { get; set; }
 
@@ -47,6 +49,8 @@ namespace MixItUp.Base.Model.Requirements
             this.RunForEachUser = false;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return ThresholdRequirementModel.requirementErrorCooldown; } set { ThresholdRequirementModel.requirementErrorCooldown = value; } }
 
         public bool IsEnabled { get { return this.Amount > 0; } }
 

@@ -39,7 +39,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <TextBox Text="{Binding MinimumAmountRequiredToShowString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Minimum Amount" Visibility="{Binding ShowMinimumAmountRequiredToShow, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+            <TextBox Text="{Binding MinimumAmountRequiredToShowString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumAmount}" Visibility="{Binding ShowMinimumAmountRequiredToShow, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -55,17 +55,23 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalToShow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scroll Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScrollWidthPixels}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextSize}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextFont}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
-            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="8" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
         </Grid>
-        
-        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="70" VerticalAlignment="Top" HorizontalAlignment="Center" />
+
+        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.HTMLStyle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="70" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

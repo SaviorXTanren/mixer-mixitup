@@ -123,7 +123,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (this.TimerFinishedCommand != null)
                     {
-                        await this.TimerFinishedCommand.Perform();
+                        await ChannelSession.Services.Command.Queue(this.TimerFinishedCommand);
                     }
                     await this.Disable();
                 }

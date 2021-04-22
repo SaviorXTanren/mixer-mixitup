@@ -35,10 +35,9 @@ namespace MixItUp.Base.ViewModel.Settings
             this.viewModel = viewModel;
             this.Title = title;
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.DeleteTitle(this);
-                return Task.FromResult(0);
             });
         }
     }
@@ -119,7 +118,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.ExplicitUserRoleRequirements = new GenericToggleSettingsOptionControlViewModel(MixItUp.Base.Resources.ExplicitUserRoleRequirements,
                 ChannelSession.Settings.ExplicitUserRoleRequirements, (value) => { ChannelSession.Settings.ExplicitUserRoleRequirements = value; }, MixItUp.Base.Resources.ExplicitUserRoleRequirementsTooltip);
 
-            this.ClearMixerUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearMixerUserDataHeader, MixItUp.Base.Resources.ClearMixerUserData, this.CreateCommand(async (parameter) =>
+            this.ClearMixerUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearMixerUserDataHeader, MixItUp.Base.Resources.ClearMixerUserData, this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllMixerUserDataWarning))
                 {
@@ -129,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 }
             }));
 
-            this.ClearUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearUserData, this.CreateCommand(async (parameter) =>
+            this.ClearUserData = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.ClearAllUserDataHeader, MixItUp.Base.Resources.ClearUserData, this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearAllUserDataWarning))
                 {
@@ -141,23 +140,23 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.RefreshTitleList();
 
-            this.AddCommand = this.CreateCommand(async (parameter) =>
+            this.AddCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.TitleName))
                 {
-                    await DialogHelper.ShowMessage("A name for the title must be specified");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorNoTitle);
                     return;
                 }
 
                 if (this.CanSelectMinimumMonths && this.MinimumMonths < 0)
                 {
-                    await DialogHelper.ShowMessage("A valid amount of months for the title must be specified");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorInvalidMonths);
                     return;
                 }
 
                 if (this.Titles.Any(t => t.Name.Equals(this.TitleName)))
                 {
-                    await DialogHelper.ShowMessage("A title with the same name already exists");
+                    await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateTitle);
                     return;
                 }
 
@@ -168,13 +167,13 @@ namespace MixItUp.Base.ViewModel.Settings
                     {
                         if (existingTitle.Months == this.MinimumMonths)
                         {
-                            await DialogHelper.ShowMessage("A title with the same role & months already exists");
+                            await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateRoleMonths);
                             return;
                         }
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("A title with the same role already exists");
+                        await DialogHelper.ShowMessage(Resources.CreateTitleErrorDuplicateRole);
                         return;
                     }
                 }

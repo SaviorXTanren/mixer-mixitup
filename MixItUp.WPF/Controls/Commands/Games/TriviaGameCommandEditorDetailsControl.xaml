@@ -23,6 +23,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandStartSettings}">
@@ -88,7 +90,7 @@
 
                     <TextBlock Grid.Column="0" Text="{x:Static resx:Resources.GameCommandTriviaCustomQuestions}" Foreground="{StaticResource WhiteColor}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16" />
 
-                    <Button Grid.Column="2" Content="{x:Static resx:Resources.GameCommandTriviaAddQuestion}" Command="{Binding AddQuestionCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center" />
+                    <Button Grid.Column="2" Content="{x:Static resx:Resources.GameCommandTriviaAddQuestion}" Command="{Binding AddQuestionCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" MinWidth="130" HorizontalAlignment="Center" />
                 </Grid>
             </GroupBox.Header>
 

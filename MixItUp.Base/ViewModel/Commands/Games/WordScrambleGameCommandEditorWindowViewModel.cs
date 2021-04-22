@@ -183,6 +183,7 @@ namespace MixItUp.Base.ViewModel.Games
             gCommand.MinimumParticipants = this.MinimumParticipants;
             gCommand.TimeLimit = this.TimeLimit;
             gCommand.WordScrambleTimeLimit = this.WordScrambleTimeLimit;
+            gCommand.CustomWordsFilePath = this.CustomWordsFilePath;
             gCommand.StartedCommand = this.StartedCommand;
             gCommand.UserJoinCommand = this.UserJoinCommand;
             gCommand.NotEnoughPlayersCommand = this.NotEnoughPlayersCommand;
@@ -215,14 +216,13 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseCustomWordsFilePathCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
         }
     }

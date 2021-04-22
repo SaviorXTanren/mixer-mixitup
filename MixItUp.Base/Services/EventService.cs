@@ -19,179 +19,115 @@ namespace MixItUp.Base.Services
 
         // Platform-agnostic = 1
 
-        //[Name("Channel Stream Start")]
         //ChannelStreamStart = 1,
-        //[Name("Channel Stream Stop")]
         //ChannelStreamStop = 2,
-        //[Name("Channel Hosted")]
         //ChannelHosted = 3,
 
-        //[Name("Channel Followed")]
         //ChannelFollowed = 10,
-        //[Name("Channel Unfollowed")]
         //ChannelUnfollowed = 11,
 
-        //[Name("Channel Subscribed")]
         //ChannelSubscribed = 20,
-        //[Name("Channel Resubscribed")]
         //ChannelResubscribed = 21,
-        //[Name("Channel Subscription Gifted")]
         //ChannelSubscriptionGifted = 22,
 
-        [Name("Chat New User Joined")]
         ChatUserFirstJoin = 50,
-        [Name("Chat User Purged")]
         ChatUserPurge = 51,
-        [Name("Chat User Banned")]
         ChatUserBan = 52,
-        [Name("Chat Message Received")]
         ChatMessageReceived = 53,
-        [Name("Chat User Joined")]
         ChatUserJoined = 54,
-        [Name("Chat User Left")]
         ChatUserLeft = 55,
-        [Name("Chat Message Deleted")]
         ChatMessageDeleted = 56,
-        [Name("Chat User Timeout")]
         ChatUserTimeout = 57,
-        [Name("Chat Whisper Received")]
         ChatWhisperReceived = 58,
 
         // Mixer = 100
 
         [Obsolete]
-        [Name("Mixer Channel Stream Start")]
         MixerChannelStreamStart = 100,
         [Obsolete]
-        [Name("Mixer Channel Stream Stop")]
         MixerChannelStreamStop = 101,
         [Obsolete]
-        [Name("Mixer Channel Hosted")]
         MixerChannelHosted = 102,
 
         [Obsolete]
-        [Name("Mixer Channel Followed")]
         MixerChannelFollowed = 110,
         [Obsolete]
-        [Name("Mixer Channel Unfollowed")]
         MixerChannelUnfollowed = 111,
 
         [Obsolete]
-        [Name("Mixer Channel Subscribed")]
         MixerChannelSubscribed = 120,
         [Obsolete]
-        [Name("Mixer Channel Resubscribed")]
         MixerChannelResubscribed = 121,
         [Obsolete]
-        [Name("Mixer Channel Subscription Gifted")]
         MixerChannelSubscriptionGifted = 122,
 
-        //[Name("Mixer Chat New User Joined")]
         //MixerChatUserFirstJoin = 150,
-        //[Name("Mixer Chat User Purged")]
         //MixerChatUserPurge = 151,
-        //[Name("Mixer Chat User Banned")]
         //MixerChatUserBan = 152,
-        //[Name("Mixer Chat Message Received")]
         //MixerChatMessageReceived = 153,
-        //[Name("Mixer Chat User Joined")]
         //MixerChatUserJoined = 154,
-        //[Name("Mixer Chat User Left")]
         //MixerChatUserLeft = 155,
-        //[Name("Mixer Chat Message Deleted")]
         //MixerChatMessageDeleted = 156,
-        //[Name("Mixer Chat User Timeout")]
         //MixerChatUserTimeout = 156,
 
         [Obsolete]
-        [Name("Mixer Channel Sparks Spent")]
         MixerChannelSparksUsed = 170,
         [Obsolete]
-        [Name("Mixer Channel Embers Spent")]
         MixerChannelEmbersUsed = 171,
         [Obsolete]
-        [Name("Mixer Channel Skill Used")]
         MixerChannelSkillUsed = 172,
         [Obsolete]
-        [Name("Mixer Channel Milestone Reached")]
         MixerChannelMilestoneReached = 173,
         [Obsolete]
-        [Name("Mixer Channel Fan Progression Level-Up")]
         MixerChannelFanProgressionLevelUp = 174,
 
         // Twitch = 200
 
-        [Name("Twitch Channel Stream Start (1 Minute Delay)")]
         TwitchChannelStreamStart = 200,
-        [Name("Twitch Channel Stream Stop")]
         TwitchChannelStreamStop = 201,
-        [Name("Twitch Channel Hosted")]
         TwitchChannelHosted = 202,
-        [Name("Twitch Channel Raided")]
         TwitchChannelRaided = 203,
 
-        [Name("Twitch Channel Followed (1 Minute Delay)")]
         TwitchChannelFollowed = 210,
-        [Name("Twitch Channel Unfollowed")]
         TwitchChannelUnfollowed = 211,
 
-        [Name("Twitch Channel Subscribed")]
         TwitchChannelSubscribed = 220,
-        [Name("Twitch Channel Resubscribed")]
         TwitchChannelResubscribed = 221,
-        [Name("Twitch Channel Subscription Gifted")]
         TwitchChannelSubscriptionGifted = 222,
-        [Name("Twitch Channel Mass Subscriptions Gifted")]
         TwitchChannelMassSubscriptionsGifted = 223,
 
-        //[Name("Twitch Chat New User Joined")]
         //TwitchChatUserFirstJoin = 250,
-        //[Name("Twitch Chat User Purged")]
         //TwitchChatUserPurge = 251,
-        //[Name("Twitch Chat User Banned")]
         //TwitchChatUserBan = 252,
-        //[Name("Twitch Chat Message Received")]
         //TwitchChatMessageReceived = 253,
-        //[Name("Twitch Chat User Joined")]
         //TwitchChatUserJoined = 254,
-        //[Name("Twitch Chat User Left")]
         //TwitchChatUserLeft = 255,
-        //[Name("Twitch Chat Message Deleted")]
         //TwitchChatMessageDeleted = 256,
 
-        [Name("Twitch Channel Bits Cheered")]
         TwitchChannelBitsCheered = 270,
-        [Name("Twitch Channel Points Redeemed")]
         TwitchChannelPointsRedeemed = 271,
+
+        TwitchChannelHypeTrainBegin = 280,
+        TwitchChannelHypeTrainProgress = 281,
+        TwitchChannelHypeTrainEnd = 282,
 
         // 300
 
         // External Services = 1000
 
-        [Name("Streamlabs Donation")]
         StreamlabsDonation = 1000,
-        [Name("Tiltify Donation (1 Minute Delay)")]
         TiltifyDonation = 1020,
-        [Name("Extra Life Donation (1 Minute Delay)")]
         ExtraLifeDonation = 1030,
-        [Name("TipeeeStream Donation")]
         TipeeeStreamDonation = 1040,
-        [Name("TreatStream Donation")]
         TreatStreamDonation = 1050,
-        [Name("Patreon Subscribed (1 Minute Delay)")]
         PatreonSubscribed = 1060,
-        [Name("StreamJar Donation (1 Minute Delay)")]
         StreamJarDonation = 1070,
-        [Name("JustGiving Donation (1 Minute Delay)")]
         JustGivingDonation = 1080,
-        [Name("Streamloots Card Redeemed")]
         StreamlootsCardRedeemed = 1090,
-        [Name("Streamloots Pack Purchased")]
         StreamlootsPackPurchased = 1091,
-        [Name("Streamloots Pack Gifted")]
         StreamlootsPackGifted = 1092,
-        [Name("StreamElements Donation (1 Minute Delay)")]
         StreamElementsDonation = 1100,
+        StreamElementsMerchPurchase = 1101,
     }
 
     public class EventTrigger
@@ -261,7 +197,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, List<string> arguments = null, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
@@ -269,6 +205,10 @@ namespace MixItUp.Base.Services
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 
+            if (arguments != null)
+            {
+                trigger.Arguments = arguments;
+            }
             trigger.SpecialIdentifiers = donation.GetSpecialIdentifiers();
             if (additionalSpecialIdentifiers != null)
             {
@@ -353,7 +293,7 @@ namespace MixItUp.Base.Services
                 {
                     Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
 
-                    await command.Perform(new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: trigger.Platform, arguments: trigger.Arguments, specialIdentifiers: trigger.SpecialIdentifiers) { TargetUser = trigger.TargetUser });
                 }
             }
         }

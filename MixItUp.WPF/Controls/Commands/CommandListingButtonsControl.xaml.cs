@@ -136,7 +136,11 @@ namespace MixItUp.WPF.Controls.Commands
             CommandModelBase command = this.GetCommandFromCommandButtons();
             if (command != null)
             {
-                await command.TestPerform();
+                await ChannelSession.Services.Command.RunDirectly(new CommandInstanceModel(command, CommandParametersModel.GetTestParameters(command.GetTestSpecialIdentifiers())));
+                if (command.Requirements.Cooldown != null)
+                {
+                    command.Requirements.Cooldown.Reset();
+                }
             }
         }
 

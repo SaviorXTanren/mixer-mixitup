@@ -33,16 +33,14 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ChatCommandsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.SwitchToPreMadeCommands = this.CreateCommand((parameter) =>
+            this.SwitchToPreMadeCommands = this.CreateCommand(() =>
             {
                 this.CustomCommandsSelected = false;
-                return Task.FromResult(0);
             });
 
-            this.SwitchToCustomCommands = this.CreateCommand((parameter) =>
+            this.SwitchToCustomCommands = this.CreateCommand(() =>
             {
                 this.CustomCommandsSelected = true;
-                return Task.FromResult(0);
             });
         }
 

@@ -50,7 +50,7 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.LoadSoundDevices();
             this.FilePath = action.FilePath;
-            this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : SoundActionModel.DefaultAudioDevice;
+            this.SelectedAudioDevice = (action.OutputDevice != null) ? action.OutputDevice : ChannelSession.Services.AudioService.DefaultAudioDevice;
             this.Volume = action.VolumeScale;
         }
 
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Actions
             : base()
         {
             this.LoadSoundDevices();
-            this.SelectedAudioDevice = SoundActionModel.DefaultAudioDevice;
+            this.SelectedAudioDevice = ChannelSession.Services.AudioService.DefaultAudioDevice;
         }
 
         public override Task<Result> Validate()
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task<ActionModelBase> GetActionInternal()
         {
-            if (!string.Equals(this.SelectedAudioDevice, SoundActionModel.DefaultAudioDevice))
+            if (!string.Equals(this.SelectedAudioDevice, ChannelSession.Services.AudioService.DefaultAudioDevice))
             {
                 return Task.FromResult<ActionModelBase>(new SoundActionModel(this.FilePath, this.Volume, this.SelectedAudioDevice));
             }
@@ -84,9 +84,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         private void LoadSoundDevices()
         {
-            this.AudioDevices.Add(SoundActionModel.DefaultAudioDevice);
-            this.AudioDevices.Add(SoundActionModel.MixItUpOverlay);
-            this.AudioDevices.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
+            this.AudioDevices.AddRange(ChannelSession.Services.AudioService.GetSelectableAudioDevices());
         }
     }
 }

@@ -152,7 +152,7 @@ namespace MixItUp.Base.Services.External
             {
                 return await this.InitializeInternal();
             }
-            return new Result("Extra Life team ID / participant ID was not set");
+            return new Result(Resources.ExtraLifeTeamNotSet);
         }
 
         public override Task<Result> Connect(OAuthTokenModel token)
@@ -255,7 +255,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("ExtraLife");
                 return new Result();
             }
-            return new Result("Could not get Team/Participant data");
+            return new Result(Resources.ExtraLifeTeamDataFailed);
         }
 
         protected override void DisposeInternal()

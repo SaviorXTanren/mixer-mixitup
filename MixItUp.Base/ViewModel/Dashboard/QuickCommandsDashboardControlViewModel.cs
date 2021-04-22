@@ -89,11 +89,11 @@ namespace MixItUp.Base.ViewModel.Dashboard
             this.commandFour = this.GetCommand(3);
             this.commandFive = this.GetCommand(4);
 
-            this.CommandOneCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandOne); });
-            this.CommandTwoCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandTwo); });
-            this.CommandThreeCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandThree); });
-            this.CommandFourCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFour); });
-            this.CommandFiveCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFive); });
+            this.CommandOneCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandOne); });
+            this.CommandTwoCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandTwo); });
+            this.CommandThreeCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandThree); });
+            this.CommandFourCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandFour); });
+            this.CommandFiveCommand = this.CreateCommand(async () => { await this.RunCommand(this.CommandFive); });
 
             this.NotifyPropertiesChanged();
         }
@@ -132,13 +132,7 @@ namespace MixItUp.Base.ViewModel.Dashboard
 
         private string GetCommandName(CommandModelBase command) { return (command != null) ? command.Name : MixItUp.Base.Resources.Unassigned; }
 
-        private async Task RunCommand(CommandModelBase command)
-        {
-            if (command != null)
-            {
-                await command.Perform();
-            }
-        }
+        private async Task RunCommand(CommandModelBase command) { await ChannelSession.Services.Command.Queue(command); }
 
         private void NotifyPropertiesChanged()
         {

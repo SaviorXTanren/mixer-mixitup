@@ -17,23 +17,23 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void StartedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HotPotatoGameCommandEditorWindowViewModel)this.DataContext).StartedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void TossPotatoCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HotPotatoGameCommandEditorWindowViewModel)this.DataContext).TossPotatoCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void PotatoExplodeCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((HotPotatoGameCommandEditorWindowViewModel)this.DataContext).PotatoExplodeCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

@@ -50,7 +50,7 @@ namespace MixItUp.Base.Services
 
         Task<Result<SettingsV3Model>> RestorePackagedBackup(string filePath);
 
-        Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
+        Task<bool> PerformAutomaticBackupIfApplicable(SettingsV3Model settings);
     }
 
     public class SettingsService : ISettingsService
@@ -72,9 +72,9 @@ namespace MixItUp.Base.Services
                 {
                     if (!v2SettingsUpgradeNeeded)
                     {
-                        if (!await DialogHelper.ShowConfirmation("We've detected an older version of your settings that needs to be upgraded to a newer format. Depending on the size, this could take some time to perform & is required to use Mix It Up." +
+                        if (!await DialogHelper.ShowConfirmation(Resources.UpgradePrompt1 +
                             Environment.NewLine + Environment.NewLine +
-                            "If you are ready to do this, please press Yes. Otherwise press No and close to the application to perform later"))
+                            Resources.UpgradePrompt2))
                         {
                             return new List<SettingsV3Model>();
                         }
@@ -179,11 +179,11 @@ namespace MixItUp.Base.Services
 
             if (backupSettingsLoaded)
             {
-                await DialogHelper.ShowMessage("One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.");
+                await DialogHelper.ShowMessage(Resources.BackupSettingsLoadedError);
             }
             if (settingsLoadFailure)
             {
-                await DialogHelper.ShowMessage("One or more settings files were unable to be loaded. Please visit the Mix It Up discord for assistance on this issue.");
+                await DialogHelper.ShowMessage(Resources.SettingsLoadFailure);
             }
 
             return allSettings;
@@ -217,28 +217,34 @@ namespace MixItUp.Base.Services
 
         public async Task Save(SettingsV3Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Settings save operation started");
-
-            await semaphore.WaitAndRelease(async () =>
+            if (settings != null)
             {
-                settings.CopyLatestValues();
-                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
-                await settings.SaveDatabaseData();
-            });
+                Logger.Log(LogLevel.Debug, "Settings save operation started");
 
-            Logger.Log(LogLevel.Debug, "Settings save operation finished");
+                await semaphore.WaitAndRelease(async () =>
+                {
+                    settings.CopyLatestValues();
+                    await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
+                    await settings.SaveDatabaseData();
+                });
+
+                Logger.Log(LogLevel.Debug, "Settings save operation finished");
+            }
         }
 
         public async Task SaveLocalBackup(SettingsV3Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
-
-            await semaphore.WaitAndRelease(async () =>
+            if (settings != null)
             {
-                await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
-            });
+                Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
 
-            Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
+                await semaphore.WaitAndRelease(async () =>
+                {
+                    await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
+                });
+
+                Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
+            }
         }
 
         public async Task SavePackagedBackup(SettingsV3Model settings, string filePath)
@@ -333,7 +339,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task PerformAutomaticBackupIfApplicable(SettingsV3Model settings)
+        public async Task<bool> PerformAutomaticBackupIfApplicable(SettingsV3Model settings)
         {
             if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
             {
@@ -353,27 +359,28 @@ namespace MixItUp.Base.Services
                         backupPath = settings.SettingsBackupLocation;
                     }
 
-                    if (!Directory.Exists(backupPath))
+                    try
                     {
-                        try
+                        if (!Directory.Exists(backupPath))
                         {
                             Directory.CreateDirectory(backupPath);
                         }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
-                            Logger.Log(ex);
-                            return;
-                        }
+
+                        string filePath = Path.Combine(backupPath, settings.Name + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
+
+                        await this.SavePackagedBackup(settings, filePath);
+
+                        settings.SettingsLastBackup = DateTimeOffset.Now;
                     }
-
-                    string filePath = Path.Combine(backupPath, settings.Name + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV3Model.SettingsBackupFileExtension);
-
-                    await this.SavePackagedBackup(settings, filePath);
-
-                    settings.SettingsLastBackup = DateTimeOffset.Now;
+                    catch (Exception ex)
+                    {
+                        Logger.Log(LogLevel.Error, "Failed to create automatic backup directory");
+                        Logger.Log(ex);
+                        return false;
+                    }
                 }
             }
+            return true;
         }
 
         private async Task<SettingsV3Model> LoadSettings(string filePath)
@@ -598,11 +605,30 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV3Model.LatestVersion)
             {
-                // Perform upgrade of settings
+                await SettingsV3Upgrader.Version2Upgrade(currentVersion, filePath);
             }
             SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
             settings.Version = SettingsV3Model.LatestVersion;
             return settings;
+        }
+
+        public static async Task Version2Upgrade(int version, string filePath)
+        {
+            if (version < 2)
+            {
+                SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+
+                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (settings.UnlockAllCommands)
+#pragma warning restore CS0612 // Type or member is obsolete
+                {
+                    settings.CommandServiceLockType = CommandServiceLockTypeEnum.None;
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)

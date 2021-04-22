@@ -68,6 +68,8 @@ namespace MixItUp.Base
 
         public static List<TwitchChannelPointsCommandModel> TwitchChannelPointsCommands { get; set; } = new List<TwitchChannelPointsCommandModel>();
 
+        public static List<StreamlootsCardCommandModel> StreamlootsCardCommands { get; set; } = new List<StreamlootsCardCommandModel>();
+
         public static IEnumerable<CommandModelBase> AllEnabledChatAccessibleCommands
         {
             get
@@ -92,6 +94,7 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.TimerCommands);
                 commands.AddRange(ChannelSession.ActionGroupCommands);
                 commands.AddRange(ChannelSession.TwitchChannelPointsCommands);
+                commands.AddRange(ChannelSession.StreamlootsCardCommands);
                 return commands;
             }
         }
@@ -122,13 +125,13 @@ namespace MixItUp.Base
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
-                    return new Result("Failed to get New API Twitch user data");
+                    return new Result(Resources.TwitchFailedNewAPIUserData);
                 }
 
                 ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
                 if (ChannelSession.TwitchUserV5 == null)
                 {
-                    return new Result("Failed to get V5 API Twitch user data");
+                    return new Result(Resources.TwitchFailedV5APIUserData);
                 }
             }
             return result;
@@ -143,7 +146,7 @@ namespace MixItUp.Base
                 ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchBotNewAPI == null)
                 {
-                    return new Result("Failed to get Twitch bot data");
+                    return new Result(Resources.TwitchFailedBotData);
                 }
 
                 if (ChannelSession.Services.Chat.TwitchChatService != null && ChannelSession.Services.Chat.TwitchChatService.IsUserConnected)
@@ -156,65 +159,99 @@ namespace MixItUp.Base
 
         public static async Task<Result> ConnectUser(SettingsV3Model settings)
         {
-            Result userResult = null;
-            ChannelSession.Settings = settings;
-
-            // Twitch connection
-            if (!ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+            Result userResult = new Result(success: false);
+            try
             {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
-            }
+                ChannelSession.Settings = settings;
 
-            Result<TwitchPlatformService> twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
-            if (twitchResult.Success)
-            {
-                ChannelSession.TwitchUserConnection = twitchResult.Value;
-                userResult = twitchResult;
-            }
-            else
-            {
-                userResult = await ChannelSession.ConnectTwitchUser();
-            }
-
-            if (userResult.Success)
-            {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
-
-                ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
-                if (ChannelSession.TwitchUserNewAPI == null)
+                // Twitch connection
+                if (!ChannelSession.Settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
                 {
-                    return new Result("Failed to get Twitch user data");
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "Assigning of initial Settings failed");
+                throw ex;
+            }
 
-                ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
-                if (ChannelSession.TwitchUserV5 == null)
+            Result<TwitchPlatformService> twitchResult = new Result<TwitchPlatformService>(success: false, (TwitchPlatformService)null);
+            try
+            {
+                twitchResult = twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken);
+                if (twitchResult.Success)
                 {
-                    return new Result("Failed to get V5 API Twitch user data");
+                    ChannelSession.TwitchUserConnection = twitchResult.Value;
+                    userResult = twitchResult;
                 }
-
-                if (ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
+                else
                 {
-                    twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
-                    if (twitchResult.Success)
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+                    userResult = await ChannelSession.ConnectTwitchUser();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "OAuth connection failed");
+                throw ex;
+            }
+
+            try
+            {
+                if (userResult != null && userResult.Success)
+                {
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].IsEnabled = true;
+
+                    ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
+                    if (ChannelSession.TwitchUserNewAPI == null)
                     {
-                        ChannelSession.TwitchBotConnection = twitchResult.Value;
-                        ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
-                        if (ChannelSession.TwitchBotNewAPI == null)
+                        return new Result(Resources.TwitchFailedNewAPIUserData);
+                    }
+
+                    ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
+                    if (ChannelSession.TwitchUserV5 == null)
+                    {
+                        return new Result(Resources.TwitchFailedV5APIUserData);
+                    }
+
+                    try
+                    {
+                        if (ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken != null)
                         {
-                            return new Result("Failed to get Twitch bot data");
+                            twitchResult = await TwitchPlatformService.Connect(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken);
+                            if (twitchResult.Success)
+                            {
+                                ChannelSession.TwitchBotConnection = twitchResult.Value;
+                                ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
+                                if (ChannelSession.TwitchBotNewAPI == null)
+                                {
+                                    return new Result(Resources.TwitchFailedBotData);
+                                }
+                            }
+                            else
+                            {
+                                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
+                                return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                            }
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = null;
-                        return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                        Logger.Log(LogLevel.Error, "Getting bot details failed");
+                        throw ex;
                     }
                 }
+                else
+                {
+                    ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
+                    return userResult;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = null;
-                return userResult;
+                Logger.Log(LogLevel.Error, "Getting user details failed");
+                throw ex;
             }
 
             return userResult;
@@ -341,7 +378,7 @@ namespace MixItUp.Base
 
                             if (currentSettings.Any(s => !string.IsNullOrEmpty(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID) && string.Equals(s.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].ChannelID, twitchChannelNew.id)))
                             {
-                                GlobalEvents.ShowMessageBox($"There already exists settings for the account {twitchChannelNew.login}. Please sign in with a different account or re-launch Mix It Up to select those settings from the drop-down.");
+                                GlobalEvents.ShowMessageBox(string.Format(Resources.TwitchAccountExists, twitchChannelNew.login));
                                 return false;
                             }
 
@@ -352,7 +389,7 @@ namespace MixItUp.Base
                         if (!string.IsNullOrEmpty(ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID) && !string.Equals(ChannelSession.TwitchUserNewAPI.id, ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID))
                         {
                             Logger.Log(LogLevel.Error, $"Signed in account does not match settings account: {ChannelSession.TwitchUserNewAPI.login} - {ChannelSession.TwitchUserNewAPI.id} - {ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserID}");
-                            GlobalEvents.ShowMessageBox("The account you are logged in as on Twitch does not match the account for this settings. Please log in as the correct account on Twitch.");
+                            GlobalEvents.ShowMessageBox(Resources.TwitchAccountMismatch);
                             ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.accessToken = string.Empty;
                             ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.refreshToken = string.Empty;
                             ChannelSession.Settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken.expiresIn = 0;
@@ -372,8 +409,8 @@ namespace MixItUp.Base
                     {
                         Logger.Log(ex);
                         Logger.Log(LogLevel.Error, "Initialize Settings - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to initialize settings. If this continues, please visit the Mix It Up Discord for assistance." +
-                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        await DialogHelper.ShowMessage(Resources.FailedToInitializeSettings +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
                         return false;
                     }
 
@@ -394,7 +431,7 @@ namespace MixItUp.Base
                         if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
                         {
                             string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                            GlobalEvents.ShowMessageBox("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
+                            GlobalEvents.ShowMessageBox(Resources.TwitchFailed + Environment.NewLine + Environment.NewLine + errors);
                             return false;
                         }
 
@@ -405,15 +442,15 @@ namespace MixItUp.Base
                     {
                         Logger.Log(ex);
                         Logger.Log(LogLevel.Error, "Twitch Services - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to connect to Twitch services. If this continues, please visit the Mix It Up Discord for assistance." +
-                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        await DialogHelper.ShowMessage(Resources.FailedToConnectToTwitch +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
                         return false;
                     }
 
                     Result result = await ChannelSession.InitializeBotInternal();
                     if (!result.Success)
                     {
-                        await DialogHelper.ShowMessage("Failed to initialize Bot account");
+                        await DialogHelper.ShowMessage(Resources.FailedToInitializeBotAccount);
                         return false;
                     }
 
@@ -520,17 +557,14 @@ namespace MixItUp.Base
                     {
                         Logger.Log(ex);
                         Logger.Log(LogLevel.Error, "External Services - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to initialize external services. If this continues, please visit the Mix It Up Discord for assistance." +
-                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        await DialogHelper.ShowMessage(Resources.FailedToInitializeExternalServices +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
                         return false;
                     }
 
                     try
                     {
-                        //if (ChannelSession.Settings.RemoteHostConnection != null)
-                        //{
-                        //    await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                        //}
+                        await ChannelSession.Services.WebhookService.InitializeConnection();
 
                         foreach (CurrencyModel currency in ChannelSession.Settings.Currency.Values)
                         {
@@ -575,8 +609,8 @@ namespace MixItUp.Base
                     {
                         Logger.Log(ex);
                         Logger.Log(LogLevel.Error, "Streamer Services - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to initialize streamer-based services. If this continues, please visit the Mix It Up Discord for assistance." +
-                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        await DialogHelper.ShowMessage(Resources.FailedToInitializeStreamerBasedServices +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
                         return false;
                     }
 
@@ -603,7 +637,10 @@ namespace MixItUp.Base
 
                         await ChannelSession.SaveSettings();
                         await ChannelSession.Services.Settings.SaveLocalBackup(ChannelSession.Settings);
-                        await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
+                        if (!await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings))
+                        {
+                            await DialogHelper.ShowMessage(Resources.AutomaticBackupFailedToCreate);
+                        }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         AsyncRunner.RunAsyncBackground(SessionBackgroundTask, sessionBackgroundCancellationTokenSource.Token, 60000);
@@ -613,8 +650,8 @@ namespace MixItUp.Base
                     {
                         Logger.Log(ex);
                         Logger.Log(LogLevel.Error, "Finalize Initialization - " + JSONSerializerHelper.SerializeToString(ex));
-                        await DialogHelper.ShowMessage("Failed to finalize initialization. If this continues, please visit the Mix It Up Discord for assistance." +
-                            Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                        await DialogHelper.ShowMessage(Resources.FailedToFinalizeInitialization +
+                            Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
                         return false;
                     }
 
@@ -625,8 +662,8 @@ namespace MixItUp.Base
             {
                 Logger.Log(ex);
                 Logger.Log(LogLevel.Error, "Channel Information - " + JSONSerializerHelper.SerializeToString(ex));
-                await DialogHelper.ShowMessage("Failed to get channel information. If this continues, please visit the Mix It Up Discord for assistance." +
-                    Environment.NewLine + Environment.NewLine + "Error Details: " + ex.Message);
+                await DialogHelper.ShowMessage(Resources.FailedToGetChannelInformation +
+                    Environment.NewLine + Environment.NewLine + Resources.ErrorDetailsHeader + " " + ex.Message);
             }
             return false;
         }
@@ -690,11 +727,7 @@ namespace MixItUp.Base
             if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
             {
                 HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
-                CommandModelBase command = ChannelSession.Settings.GetCommand(hotKeyConfiguration.CommandID);
-                if (command != null)
-                {
-                    await command.Perform();
-                }
+                await ChannelSession.Services.Command.Queue(hotKeyConfiguration.CommandID);
             }
         }
     }

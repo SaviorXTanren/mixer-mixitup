@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.ViewModel.Accounts;
-using MixItUp.Base.ViewModel;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {

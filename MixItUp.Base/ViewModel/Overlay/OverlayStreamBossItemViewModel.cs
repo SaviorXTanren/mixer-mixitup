@@ -145,7 +145,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.textColor; }
             set
             {
-                this.textColor = value;
+                this.textColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -156,7 +156,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.borderColor; }
             set
             {
-                this.borderColor = value;
+                this.borderColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -167,7 +167,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.progressColor; }
             set
             {
-                this.progressColor = value;
+                this.progressColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -178,7 +178,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.backgroundColor; }
             set
             {
-                this.backgroundColor = value;
+                this.backgroundColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }

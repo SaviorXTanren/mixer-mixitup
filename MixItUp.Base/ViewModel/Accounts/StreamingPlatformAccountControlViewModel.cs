@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Accounts
         }
         private StreamingPlatformTypeEnum platform;
 
-        public string PlatformName { get { return EnumHelper.GetEnumName(this.Platform); } }
+        public string PlatformName { get { return EnumLocalizationHelper.GetLocalizedName(this.Platform); } }
 
         public string PlatformImage
         {
@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 }
             }
 
-            this.UserAccountCommand = this.CreateCommand(async (parameter) =>
+            this.UserAccountCommand = this.CreateCommand(async () =>
             {
                 if (this.IsUserAccountConnected)
                 {
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Accounts
                 this.NotifyAllProperties();
             });
 
-            this.BotAccountCommand = this.CreateCommand(async (parameter) =>
+            this.BotAccountCommand = this.CreateCommand(async () =>
             {
                 if (this.IsBotAccountConnected)
                 {

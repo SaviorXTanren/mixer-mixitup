@@ -6,8 +6,8 @@ using MixItUp.Base.ViewModel.Requirements;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -16,13 +16,33 @@ namespace MixItUp.Base.ViewModel.Commands
     public abstract class CommandEditorWindowViewModelBase : ActionEditorListControlViewModel
     {
         public const string MixItUpCommandFileExtension = ".miucommand";
+        public const string MixItUpOldCommandFileExtension = ".mixitupc";
 
-        public static async Task<CommandModelBase> ImportCommandFromFile()
+        public static string OpenCommandFileBrowser()
         {
-            string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0}|All files (*.*)|*.*", MixItUpCommandFileExtension));
-            if (!string.IsNullOrEmpty(fileName))
+            return ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Command (*{0})|*{0};*{1}|All files (*.*)|*.*", MixItUpCommandFileExtension, MixItUpOldCommandFileExtension));
+        }
+
+        public static async Task<CommandModelBase> ImportCommandFromFile(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
             {
-                return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(fileName);
+                if (Path.GetExtension(filePath).Equals(MixItUpOldCommandFileExtension))
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    MixItUp.Base.Commands.CommandBase command = await FileSerializerHelper.DeserializeFromFile<MixItUp.Base.Commands.CommandBase>(filePath);
+                    ActionGroupCommandModel actionGroup = new ActionGroupCommandModel(command.Name, false);
+                    foreach (MixItUp.Base.Actions.ActionBase action in command.Actions)
+                    {
+                        actionGroup.Actions.AddRange(ActionModelBase.UpgradeAction(action));
+                    }
+                    return actionGroup;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+                else
+                {
+                    return await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filePath);
+                }
             }
             return null;
         }
@@ -103,7 +123,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             this.Type = type;
 
-            this.SaveCommand = this.CreateCommand(async (parameter) =>
+            this.SaveCommand = this.CreateCommand(async () =>
             {
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
@@ -118,19 +138,19 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
 
-            this.TestCommand = this.CreateCommand(async (parameter) =>
+            this.TestCommand = this.CreateCommand(async () =>
             {
                 if (!await this.CheckForResultErrors(await this.ValidateActions()))
                 {
                     IEnumerable<ActionModelBase> actions = await this.GetActions();
                     if (actions != null)
                     {
-                        await CommandModelBase.RunActions(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers()));
+                        await ChannelSession.Services.Command.Queue(new CommandInstanceModel(actions, CommandParametersModel.GetTestParameters(this.GetTestSpecialIdentifiers())));
                     }
                 }
             });
 
-            this.ExportCommand = this.CreateCommand(async (parameter) =>
+            this.ExportCommand = this.CreateCommand(async () =>
             {
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
@@ -143,11 +163,11 @@ namespace MixItUp.Base.ViewModel.Commands
                 }
             });
 
-            this.ImportCommand = this.CreateCommand(async (parameter) =>
+            this.ImportCommand = this.CreateCommand(async () =>
             {
                 try
                 {
-                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile();
+                    CommandModelBase command = await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser());
                     if (command != null)
                     {
                         // TODO Check if the imported command type matches the currently edited command. If so, import additional information.
@@ -257,7 +277,7 @@ namespace MixItUp.Base.ViewModel.Commands
         }
 
         protected virtual Task UpdateCommandGroup() { return Task.FromResult(0); }
-        protected virtual void SelectedCommandGroupChanged() {  }
+        protected virtual void SelectedCommandGroupChanged() { }
 
         protected CommandGroupSettingsModel GetCommandGroup()
         {

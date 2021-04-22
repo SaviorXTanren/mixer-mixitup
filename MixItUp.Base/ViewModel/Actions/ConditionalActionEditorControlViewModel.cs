@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,10 +22,9 @@ namespace MixItUp.Base.ViewModel.Actions
         {
             this.viewModel = viewModel;
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.viewModel.Clauses.Remove(this);
-                return Task.FromResult(0);
             });
         }
 
@@ -181,15 +181,22 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            this.AddClauseCommand = this.CreateCommand((parameter) =>
+            this.AddClauseCommand = this.CreateCommand(() =>
             {
                 this.Clauses.Add(new ConditionalClauseViewModel(this));
-                return Task.FromResult(0);
             });
 
-            this.ImportActionsCommand = this.CreateCommand(async (parameter) =>
+            this.ImportActionsCommand = this.CreateCommand(async () =>
             {
-                await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile());
+                try
+                {
+                    await this.ImportActionsFromCommand(await CommandEditorWindowViewModelBase.ImportCommandFromFile(CommandEditorWindowViewModelBase.OpenCommandFileBrowser()));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
+                }
             });
 
             foreach (ActionModelBase subAction in subActions)

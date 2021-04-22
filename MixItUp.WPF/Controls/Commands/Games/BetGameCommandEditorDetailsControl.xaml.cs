@@ -17,37 +17,37 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void StartedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((BetGameCommandEditorWindowViewModel)this.DataContext).StartedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void UserJoinCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((BetGameCommandEditorWindowViewModel)this.DataContext).UserJoinCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void NotEnoughPlayersCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((BetGameCommandEditorWindowViewModel)this.DataContext).NotEnoughPlayersCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void BetsClosedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((BetGameCommandEditorWindowViewModel)this.DataContext).BetsClosedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void GameCompleteCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((BetGameCommandEditorWindowViewModel)this.DataContext).GameCompleteCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

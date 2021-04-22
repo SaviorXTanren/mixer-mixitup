@@ -135,9 +135,16 @@ namespace MixItUp.Base.Model.Actions
 
                     CommandParametersModel copyParameters = parameters.Duplicate();
                     copyParameters.Arguments = newArguments;
-                    copyParameters.WaitForCommandToFinish = this.WaitForCommandToFinish;
-                    copyParameters.DontLockCommand = true;
-                    await command.Perform(copyParameters);
+
+                    CommandInstanceModel commandInstance = new CommandInstanceModel(command, copyParameters);
+                    if (this.WaitForCommandToFinish)
+                    {
+                        await ChannelSession.Services.Command.RunDirectly(commandInstance);
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.Command.Queue(commandInstance);
+                    }
                 }
             }
             else if (this.ActionType == CommandActionTypeEnum.DisableCommand || this.ActionType == CommandActionTypeEnum.EnableCommand)

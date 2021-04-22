@@ -19,7 +19,6 @@ namespace MixItUp.Base.Commands
     {
         Chat = 0,
         [Obsolete]
-        [Name("MixPlay")]
         Interactive = 1,
         Event = 2,
         Timer = 3,
@@ -227,7 +226,7 @@ namespace MixItUp.Base.Commands
                             return;
                         }
 
-                        if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
+                        if (!this.Unlocked)
                         {
                             await this.AsyncSemaphore.WaitAsync();
                             waitOccurred = true;

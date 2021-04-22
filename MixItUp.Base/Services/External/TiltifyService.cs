@@ -356,7 +356,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("Tiltify");
                 return new Result();
             }
-            return new Result("Failed to get User data");
+            return new Result(Resources.TiltifyUserDataFailed);
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

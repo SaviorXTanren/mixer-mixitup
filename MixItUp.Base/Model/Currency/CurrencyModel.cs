@@ -80,6 +80,8 @@ namespace MixItUp.Base.Model.Currency
         }
 
         public int Compare(RankModel x, RankModel y) { return x.CompareTo(y); }
+
+        public override string ToString() { return this.Name; }
     }
 
     [DataContract]
@@ -287,11 +289,11 @@ namespace MixItUp.Base.Model.Currency
 
             if (newRank.Amount > prevRank.Amount && this.RankChangedCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankChangedCommand.Perform(new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankChangedCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
             }
             else if (newRank.Amount < prevRank.Amount && this.RankDownCommand != null)
             {
-                AsyncRunner.RunAsyncBackground((cancellationToken) => this.RankDownCommand.Perform(new CommandParametersModel(userViewModel)), new CancellationToken());
+                AsyncRunner.RunAsyncBackground((cancellationToken) => ChannelSession.Services.Command.Queue(this.RankDownCommand, new CommandParametersModel(userViewModel)), new CancellationToken());
             }
         }
 

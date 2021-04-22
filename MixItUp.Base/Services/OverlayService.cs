@@ -77,7 +77,7 @@ namespace MixItUp.Base.Services
                     if (!await this.AddOverlay(kvp.Key, kvp.Value))
                     {
                         await this.Disconnect();
-                        return new Result("Failed to add " + kvp.Key + " overlay");
+                        return new Result(string.Format(Resources.OverlayAddFailed, kvp.Key));
                     }
                 }
 

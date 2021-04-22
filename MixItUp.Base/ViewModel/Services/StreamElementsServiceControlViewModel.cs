@@ -9,9 +9,9 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public StreamElementsServiceControlViewModel()
-            : base("StreamElements")
+            : base(Resources.StreamElements)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 Result result = await ChannelSession.Services.StreamElements.Connect();
                 if (result.Success)
@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.StreamElements.Disconnect();
 

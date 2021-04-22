@@ -8,7 +8,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -40,6 +39,7 @@ namespace MixItUp.WPF
             { LanguageOptions.Japanese, "ja-JP" },
             { LanguageOptions.French, "fr-FR" },
             { LanguageOptions.Portuguese, "pt-BR" },
+            { LanguageOptions.Russian, "ru-RU" },
 
             { LanguageOptions.Pseudo, "qps-ploc" },
         };
@@ -141,6 +141,12 @@ namespace MixItUp.WPF
             WindowsServicesManager servicesManager = new WindowsServicesManager();
             servicesManager.Initialize();
 
+            ActivationProtocolHandler.Initialize();
+
+            RegistryHelpers.RegisterFileAssociation();
+            RegistryHelpers.RegisterURIActivationProtocol();
+            RegistryHelpers.RegisterUninstaller();
+
             FileLoggerHandler.Initialize(servicesManager.FileService);
 
             DispatcherHelper.RegisterDispatcher(new WindowsDispatcher(this.Dispatcher));
@@ -168,6 +174,13 @@ namespace MixItUp.WPF
             this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
 
             base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ActivationProtocolHandler.Close();
+
+            base.OnExit(e);
         }
 
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { this.HandleCrash(e.Exception); }

@@ -501,7 +501,7 @@ namespace MixItUp.Base.Model.Overlay
                     UserViewModel user = this.GetUser(kvp.Key);
                     if (user != null)
                     {
-                        results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                        results[user] = kvp.Value.ToCurrencyString();
                     }
                 }
                 catch (Exception ex)

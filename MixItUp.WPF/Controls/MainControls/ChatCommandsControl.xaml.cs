@@ -49,9 +49,9 @@ namespace MixItUp.WPF.Controls.MainControls
             ChatCommandModel command = ((CommandListingButtonsControl)sender).GetCommandFromCommandButtons<ChatCommandModel>();
             if (command != null)
             {
-                CommandEditorWindow window = new CommandEditorWindow(command);
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
                 window.CommandSaved += Window_CommandSaved;
-                window.Show();
+                window.ForceShow();
             }
         }
 

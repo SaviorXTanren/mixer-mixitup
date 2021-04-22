@@ -159,6 +159,7 @@ namespace MixItUp.Base.ViewModel.Games
             HangmanGameCommandModel gCommand = (HangmanGameCommandModel)command;
             gCommand.MaxFailures = this.MaxFailures;
             gCommand.InitialAmount = this.InitialAmount;
+            gCommand.CustomWordsFilePath = this.CustomWordsFilePath;
             gCommand.SuccessfulGuessCommand = this.SuccessfulGuessCommand;
             gCommand.FailedGuessCommand = this.FailedGuessCommand;
             gCommand.GameWonCommand = this.GameWonCommand;
@@ -190,14 +191,13 @@ namespace MixItUp.Base.ViewModel.Games
 
         private void SetUICommands()
         {
-            this.BrowseCustomWordsFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseCustomWordsFilePathCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.TextFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.CustomWordsFilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
         }
     }

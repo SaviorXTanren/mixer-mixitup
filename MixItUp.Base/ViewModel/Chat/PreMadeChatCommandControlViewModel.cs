@@ -66,11 +66,11 @@ namespace MixItUp.Base.ViewModel.Chat
                 ChannelSession.Settings.PreMadeChatCommandSettings.Add(this.setting);
             }
 
-            this.TestCommand = this.CreateCommand((System.Func<object, System.Threading.Tasks.Task>)(async (parameter) =>
+            this.TestCommand = this.CreateCommand(async () =>
             {
                 UserViewModel currentUser = ChannelSession.GetCurrentUser();
-                await command.Perform(new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
-            }));
+                await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(currentUser, arguments: new List<string>() { "@" + currentUser.Username }));
+            });
         }
 
         private void UpdateSetting()

@@ -11,11 +11,8 @@ namespace MixItUp.Base.Actions
     [Obsolete]
     public enum StreamlabsActionTypeEnum
     {
-        [Name("Spin the Wheel")]
         SpinWheel,
-        [Name("Empty the Jar")]
         EmptyJar,
-        [Name("Roll Credits")]
         RollCredits,
     }
 

@@ -2,6 +2,6 @@
 {
     public class StreamAvatarsServiceControlViewModel : ServiceControlViewModelBase
     {
-        public StreamAvatarsServiceControlViewModel() : base("Stream Avatars") { }
+        public StreamAvatarsServiceControlViewModel() : base(Resources.StreamAvatars) { }
     }
 }

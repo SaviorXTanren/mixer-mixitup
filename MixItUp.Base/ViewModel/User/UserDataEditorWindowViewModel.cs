@@ -142,7 +142,7 @@ namespace MixItUp.Base.ViewModel.User
             this.Metrics1.Add(new UserMetricViewModel(MixItUp.Base.Resources.CommandsRun, this.User.Data.TotalCommandsRun.ToString()));
 
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.TaggedInChat, this.User.Data.TotalTimesTagged.ToString()));
-            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, string.Format("{0:C}", Math.Round(this.User.Data.TotalAmountDonated, 2))));
+            this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.AmountDonated, this.User.Data.TotalAmountDonated.ToCurrencyString()));
             this.Metrics2.Add(new UserMetricViewModel(MixItUp.Base.Resources.BitsCheered, this.User.Data.TotalBitsCheered.ToString()));
         }
 

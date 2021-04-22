@@ -48,7 +48,7 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset DateTime { get; set; }
 
         [JsonIgnore]
-        public string AmountText { get { return string.Format("{0:C}", Math.Round(this.Amount, 2)); } }
+        public string AmountText { get { return this.Amount.ToCurrencyString(); } }
 
         [JsonIgnore]
         public UserViewModel User

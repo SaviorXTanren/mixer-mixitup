@@ -45,14 +45,13 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayImageItemViewModel()
         {
-            this.BrowseFilePathCommand = this.CreateCommand((parameter) =>
+            this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.FilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
         }
 

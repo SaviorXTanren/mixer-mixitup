@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -12,29 +13,35 @@
 
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="450" />
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <TextBlock TextWrapping="Wrap">The Developer API allows advanced interaction with Mix It Up from other applications running on your computer using a series of REST API services. For more information about this, please see the <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API" RequestNavigate="Hyperlink_RequestNavigate">Developer API</Hyperlink> Wiki page.</TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DeveloperAPIInfo}"/>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.DeveloperAPI}"/>
+                </Hyperlink>
+            </TextBlock>
 
             <StackPanel Orientation="Horizontal">
-                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">Open To Local Network (Must run as Administrator):</TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" Text="{x:Static resx:Resources.DeveloperAPIAdvanced}"/>
                 <ToggleButton Margin="10,10,0,0" IsEnabled="{Binding IsNotConnected}" IsChecked="{Binding EnableDeveloperAPIAdvancedMode}" HorizontalAlignment="Center"/>
             </StackPanel>
-            
-            <TextBlock TextWrapping="Wrap">WARNING: This will make the developer APIs listen on all addresses and may open Mix It Up to callers from outside your network. Only use this option if you know what you are doing!</TextBlock>
+
+            <TextBlock TextWrapping="Wrap" Text="{x:Static resx:Resources.DeveloperAPIWarning}"/>
         </StackPanel>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="110">Disconnect</Button>
+                <Button Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" MinWidth="110" Content="{x:Static resx:Resources.Disconnect}"/>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="110">Connect</Button>
+                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" MinWidth="110" Content="{x:Static resx:Resources.Connect}"/>
             </Grid>
         </Grid>
     </Grid>

@@ -41,7 +41,7 @@
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="linqtotwitter" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.23" />
+    <PackageReference Include="StreamingClientLibrary.Twitch" Version="1.0.0.26" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 
@@ -123,6 +123,14 @@
     </EmbeddedResource>
 
     <EmbeddedResource Update="Resources.pt-BR.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.ru.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.ru-RU.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
 

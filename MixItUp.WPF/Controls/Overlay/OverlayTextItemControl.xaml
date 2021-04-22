@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <Util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:OverlayItemControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -23,9 +27,9 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding Text}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Text}" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Text}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Size}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -39,11 +43,23 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="Font Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontColor}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox x:Name="TextFontComboBox" Text="{Binding Font}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+            <ComboBox x:Name="TextFontComboBox" Text="{Binding Font}" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FontName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding ColorNames}" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="Shadow (Optional)" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding ColorNames}" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Shadow}" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
                 <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">

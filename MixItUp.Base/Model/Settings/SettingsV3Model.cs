@@ -3,11 +3,9 @@ using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Commands.Games;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
@@ -27,7 +25,7 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV3Model
     {
-        public const int LatestVersion = 1;
+        public const int LatestVersion = 2;
 
         public const string SettingsDirectoryName = "Settings";
         public const string DefaultAutomaticBackupSettingsDirectoryName = "AutomaticBackups";
@@ -100,8 +98,6 @@ namespace MixItUp.Base.Model.Settings
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; } = StreamingSoftwareTypeEnum.OBSStudio;
         [DataMember]
         public string DefaultAudioOutput { get; set; }
-        [DataMember]
-        public bool SaveChatEventLogs { get; set; }
 
         #endregion General
 
@@ -111,6 +107,9 @@ namespace MixItUp.Base.Model.Settings
         public int MaxMessagesInChat { get; set; } = 100;
         [DataMember]
         public int MaxUsersShownInChat { get; set; } = 100;
+
+        [DataMember]
+        public bool SaveChatEventLogs { get; set; }
 
         [DataMember]
         public int ChatFontSize { get; set; } = 13;
@@ -167,8 +166,13 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool DeleteChatCommandsWhenRun { get; set; }
         [DataMember]
+        [Obsolete]
         public bool UnlockAllCommands { get; set; }
+        [DataMember]
+        public CommandServiceLockTypeEnum CommandServiceLockType { get; set; } = CommandServiceLockTypeEnum.PerCommandType;
 
+        [DataMember]
+        public RequirementErrorCooldownTypeEnum RequirementErrorsCooldownType { get; set; } = RequirementErrorCooldownTypeEnum.Default;
         [DataMember]
         public int RequirementErrorsCooldownAmount { get; set; } = 10;
         [DataMember]
@@ -214,6 +218,8 @@ namespace MixItUp.Base.Model.Settings
         public string AlertChannelPointsColor { get; set; }
         [DataMember]
         public string AlertModerationColor { get; set; }
+        [DataMember]
+        public string AlertStreamlootsColor { get; set; }
 
         #endregion Alerts
 
@@ -359,6 +365,11 @@ namespace MixItUp.Base.Model.Settings
         public UserRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = UserRoleEnum.Mod;
 
         [DataMember]
+        public bool ModerationFollowEvent { get; set; }
+        [DataMember]
+        public int ModerationFollowEventMaxInQueue { get; set; } = 10;
+
+        [DataMember]
         public bool ModerationResetStrikesOnLaunch { get; set; }
 
         [DataMember]
@@ -385,20 +396,6 @@ namespace MixItUp.Base.Model.Settings
         public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         #endregion Overlay
-
-        #region Remote
-
-        [DataMember]
-        public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
-        [DataMember]
-        public List<RemoteConnectionModel> RemoteClientConnections { get; set; } = new List<RemoteConnectionModel>();
-
-        [DataMember]
-        public List<RemoteProfileModel> RemoteProfiles { get; set; } = new List<RemoteProfileModel>();
-        [DataMember]
-        public Dictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; set; } = new Dictionary<Guid, RemoteProfileBoardsModel>();
-
-        #endregion Remote
 
         #region Services
 
@@ -576,6 +573,15 @@ namespace MixItUp.Base.Model.Settings
                         this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
+#pragma warning disable CS0612 // Type or member is obsolete
+                else if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+                {
+                    if (!string.IsNullOrEmpty(userData.MixerUsername))
+                    {
+                        this.UsernameLookups[StreamingPlatformTypeEnum.Mixer][userData.MixerUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
             });
             this.UserData.ClearTracking();
 
@@ -617,6 +623,10 @@ namespace MixItUp.Base.Model.Settings
                 {
                     command = JSONSerializerHelper.DeserializeFromString<TwitchChannelPointsCommandModel>(commandData);
                 }
+                else if (type == CommandTypeEnum.StreamlootsCard)
+                {
+                    command = JSONSerializerHelper.DeserializeFromString<StreamlootsCardCommandModel>(commandData);
+                }
                 else if (type == CommandTypeEnum.Custom)
                 {
                     command = JSONSerializerHelper.DeserializeFromString<CustomCommandModel>(commandData);
@@ -639,6 +649,8 @@ namespace MixItUp.Base.Model.Settings
             ChannelSession.ActionGroupCommands.Clear();
             ChannelSession.GameCommands.Clear();
             ChannelSession.TwitchChannelPointsCommands.Clear();
+            ChannelSession.StreamlootsCardCommands.Clear();
+
             foreach (CommandModelBase command in this.Commands.Values.ToList())
             {
                 if (command is ChatCommandModel)
@@ -651,6 +663,7 @@ namespace MixItUp.Base.Model.Settings
                 else if (command is TimerCommandModel) { ChannelSession.TimerCommands.Add((TimerCommandModel)command); }
                 else if (command is ActionGroupCommandModel) { ChannelSession.ActionGroupCommands.Add((ActionGroupCommandModel)command); }
                 else if (command is TwitchChannelPointsCommandModel) { ChannelSession.TwitchChannelPointsCommands.Add((TwitchChannelPointsCommandModel)command); }
+                else if (command is StreamlootsCardCommandModel) { ChannelSession.StreamlootsCardCommands.Add((StreamlootsCardCommandModel)command); }
             }
 
             foreach (CounterModel counter in this.Counters.Values.ToList())
@@ -887,7 +900,7 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            foreach (StreamingPlatformTypeEnum platform in EnumHelper.GetEnumList<StreamingPlatformTypeEnum>())
+            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
                 if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
                 {

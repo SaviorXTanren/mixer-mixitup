@@ -54,9 +54,9 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand LogOutCommand { get; set; }
 
         public DiscordServiceControlViewModel()
-            : base("Discord")
+            : base(Resources.Discord)
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.DiscordCustomClientID = null;
                 ChannelSession.Settings.DiscordCustomClientSecret = null;
@@ -66,19 +66,19 @@ namespace MixItUp.Base.ViewModel.Services
                 {
                     if (string.IsNullOrEmpty(this.CustomClientID))
                     {
-                        await DialogHelper.ShowMessage("Please enter a valid Custom Client ID");
+                        await DialogHelper.ShowMessage(Resources.DiscordInvalidClientId);
                         return;
                     }
 
                     if (string.IsNullOrEmpty(this.CustomClientSecret))
                     {
-                        await DialogHelper.ShowMessage("Please enter a valid Custom Client Secret");
+                        await DialogHelper.ShowMessage(Resources.DiscordInvalidSecret);
                         return;
                     }
 
                     if (string.IsNullOrEmpty(this.CustomBotToken))
                     {
-                        await DialogHelper.ShowMessage("Please enter a valid Custom Bot Token");
+                        await DialogHelper.ShowMessage(Resources.DiscordInvalidBotToken);
                         return;
                     }
 
@@ -98,7 +98,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Discord.Disconnect();
 

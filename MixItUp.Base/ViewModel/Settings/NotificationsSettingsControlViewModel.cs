@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Settings
             this.volume = initialVolume;
             this.volumeSetter = volumeSetter;
 
-            this.PlayCommand = this.CreateCommand(async (parameter) =>
+            this.PlayCommand = this.CreateCommand(async () =>
             {
                 string sound = this.valueGetter();
                 if (!string.IsNullOrEmpty(sound))
@@ -121,20 +121,16 @@ namespace MixItUp.Base.ViewModel.Settings
 
         public NotificationsSettingsControlViewModel()
         {
-            string defaultAudioOption = SoundActionModel.DefaultAudioDevice;
+            string defaultAudioOption = ChannelSession.Services.AudioService.DefaultAudioDevice;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationsAudioOutput))
             {
                 defaultAudioOption = ChannelSession.Settings.NotificationsAudioOutput;
             }
 
-            List<string> audioOptions = new List<string>();
-            audioOptions.Add(SoundActionModel.DefaultAudioDevice);
-            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
-
             this.NotificationsAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.NotificationsAudioOutput,
-                audioOptions, defaultAudioOption, (value) =>
+                ChannelSession.Services.AudioService.GetSelectableAudioDevices(), defaultAudioOption, (value) =>
                 {
-                    if (value.Equals(SoundActionModel.DefaultAudioDevice))
+                    if (value.Equals(ChannelSession.Services.AudioService.DefaultAudioDevice))
                     {
                         ChannelSession.Settings.NotificationsAudioOutput = null;
                     }

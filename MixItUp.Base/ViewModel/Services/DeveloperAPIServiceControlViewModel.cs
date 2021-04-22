@@ -20,9 +20,9 @@ namespace MixItUp.Base.ViewModel.Services
         }
 
         public DeveloperAPIServiceControlViewModel()
-            : base("Developer API")
+            : base(Resources.DeveloperAPI)
         {
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.EnableDeveloperAPI = false;
                 Result result = await ChannelSession.Services.DeveloperAPI.Connect();
@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.DeveloperAPI.Disconnect();
                 ChannelSession.Settings.EnableDeveloperAPI = false;

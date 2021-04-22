@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.Services;
+﻿using H.Socket.IO;
+using MixItUp.Base.Services;
 using Newtonsoft.Json.Linq;
-using Quobject.SocketIoClientDotNet.Client;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
@@ -9,24 +9,20 @@ namespace MixItUp.WPF.Services
 {
     public class WindowsSocketIOConnection : ISocketIOConnection
     {
-        protected Socket socket;
+        public event EventHandler OnDisconnected = delegate { };
+
+        protected SocketIoClient socket = new SocketIoClient();
 
         private string connectionURL;
-        private string query;
 
         public WindowsSocketIOConnection() { }
 
-        public Task Connect(string connectionURL)
+        public async Task Connect(string connectionURL)
         {
             this.connectionURL = connectionURL;
-            this.socket = !string.IsNullOrEmpty(this.query) ? IO.Socket(this.connectionURL, new IO.Options() { QueryString = this.query }) : IO.Socket(this.connectionURL);
-            return Task.FromResult(0);
-        }
+            await this.socket.ConnectAsync(new Uri(this.connectionURL));
 
-        public async Task Connect(string connectionURL, string query)
-        {
-            this.query = query;
-            await this.Connect(connectionURL);
+            this.socket.Disconnected += Socket_Disconnected;
         }
 
         public Task Disconnect()
@@ -35,12 +31,11 @@ namespace MixItUp.WPF.Services
             {
                 if (this.socket != null)
                 {
-                    this.socket.Close();
+                    this.socket.DisconnectAsync();
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            this.socket = null;
             return Task.FromResult(0);
         }
 
@@ -48,18 +43,15 @@ namespace MixItUp.WPF.Services
         {
             try
             {
-                if (!this.socket.HasListeners(eventString))
+                this.socket.Off(eventString);
+                this.socket.On(eventString, (eventData) =>
                 {
-                    this.socket.Off(eventString);
-                    this.socket.On(eventString, (eventData) =>
+                    try
                     {
-                        try
-                        {
-                            processEvent(eventData);
-                        }
-                        catch (Exception ex) { Logger.Log(ex); }
-                    });
-                }
+                        processEvent(eventData);
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                });
             }
             catch (Exception ex)
             {
@@ -87,5 +79,7 @@ namespace MixItUp.WPF.Services
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
+
+        private void Socket_Disconnected(object sender, H.WebSockets.Args.WebSocketCloseEventArgs e) { this.OnDisconnected(this, new EventArgs()); }
     }
 }

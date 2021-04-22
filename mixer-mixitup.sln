@@ -131,6 +131,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apex Legends Drop Map", "Ap
 		MixPlay\apex-legends-drop-map\src\scripts.js = MixPlay\apex-legends-drop-map\src\scripts.js
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.Uninstaller", "MixItUp.Uninstaller\MixItUp.Uninstaller.csproj", "{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -315,6 +317,30 @@ Global
 		{D2A5558C-73E9-4266-9959-1B0B61B4D3CD}.Release|iPhone.Build.0 = Release|Any CPU
 		{D2A5558C-73E9-4266-9959-1B0B61B4D3CD}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{D2A5558C-73E9-4266-9959-1B0B61B4D3CD}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|Any CPU.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Ad-Hoc|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.AppStore|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|iPhone.Build.0 = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -335,6 +361,7 @@ Global
 		{111A5C53-2D7A-4B8E-824C-305DE10F413C} = {3C89ACB2-D917-48C0-84FD-974FC6E17A89}
 		{69AFA086-8E70-4080-973A-D9B061E6C1F3} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{12EE8D5F-5612-4F9D-AFA6-776B03E64E4F} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
+		{36C2DC8E-A581-4299-BDAB-C6824A8F09AC} = {3C89ACB2-D917-48C0-84FD-974FC6E17A89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56FA5777-5A3B-4E2B-B0A5-8EA45A5251F6}

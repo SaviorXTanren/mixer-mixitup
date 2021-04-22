@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
+using MixItUp.WPF.Windows.Commands;
 using StreamingClient.Base.Util;
 using System;
 using System.Reflection;
@@ -24,6 +27,8 @@ namespace MixItUp.WPF
         private bool shutdownComplete = false;
 
         private MainWindowViewModel viewModel;
+
+        private MainMenuItem streamlootsCardsMainMenuItem;
 
         public MainWindow()
             : base(new MainWindowViewModel())
@@ -121,6 +126,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Users, new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CurrencyRankInventory, new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ChannelPoints, new TwitchChannelPointsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel-Points");
+            this.streamlootsCardsMainMenuItem = await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamlootsCards, new StreamlootsCardsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Streamloots-Cards");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.StreamPass, new StreamPassControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Stream-Pass");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.RedemptionStore, new RedemptionStoreControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Redemption-Store");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.OverlayWidgets, new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
@@ -130,12 +136,22 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Quotes, new QuoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Quotes");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Statistics, new StatisticsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Statistics");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
+            await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.CommandHistory, new CommandHistoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Changelog, new ChangelogControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
 
+            ChannelSession.Services.Streamloots.OnStreamlootsConnectionChanged += StreamlootsService_OnStreamlootsConnectionChanged;
+            if (!ChannelSession.Services.Streamloots.IsConnected)
+            {
+                this.MainMenu.HideMenuItem(this.streamlootsCardsMainMenuItem);
+            }
+
             this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
+
+            ActivationProtocolHandler.OnStoreCommandActivation += ActivationProtocolHandler_OnStoreCommandActivation;
+            ActivationProtocolHandler.OnCommandFileActivation += ActivationProtocolHandler_OnCommandFileActivation;
         }
 
         private async Task StartShutdownProcess()
@@ -210,5 +226,35 @@ namespace MixItUp.WPF
         }
 
         private void GlobalEvents_OnRestartRequested(object sender, EventArgs e) { this.Restart(); }
+
+        private void StreamlootsService_OnStreamlootsConnectionChanged(object sender, EventArgs e)
+        {
+            if (ChannelSession.Services.Streamloots.IsConnected)
+            {
+                this.MainMenu.ShowMenuItem(this.streamlootsCardsMainMenuItem);
+            }
+            else
+            {
+                this.MainMenu.HideMenuItem(this.streamlootsCardsMainMenuItem);
+            }
+        }
+
+        private void ActivationProtocolHandler_OnStoreCommandActivation(object sender, Guid e)
+        {
+            DispatcherHelper.Dispatcher.Invoke(() =>
+            {
+                //CommandEditorWindow window = new CommandEditorWindow(Base.Model.Commands.CommandTypeEnum.Chat);
+                //window.ForceShow();
+            });
+        }
+
+        private void ActivationProtocolHandler_OnCommandFileActivation(object sender, CommandModelBase command)
+        {
+            DispatcherHelper.Dispatcher.Invoke(() =>
+            {
+                CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(command);
+                window.ForceShow();
+            });
+        }
     }
 }

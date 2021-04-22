@@ -41,7 +41,17 @@ namespace MixItUp.Base.Services.Twitch
         public string name { get; set; }
         public JObject urls { get; set; }
 
-        public string url { get { return (this.urls != null && this.urls.ContainsKey("2")) ? "https:" + this.urls["2"].ToString() : string.Empty; } }
+        public string url
+        {
+            get
+            {
+                if (this.urls != null && this.urls.Count > 0)
+                {
+                    return "https:" + (this.urls.ContainsKey("2") ? this.urls["2"].ToString() : this.urls[this.urls.GetKeys().First()].ToString());
+                }
+                return string.Empty;
+            }
+        }
     }
 
     public interface ITwitchChatService
@@ -200,7 +210,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }));
             }
-            return new Result("Twitch connection has not been established");
+            return new Result(Resources.TwitchConnectionFailed);
         }
 
         public async Task DisconnectUser()
@@ -281,7 +291,7 @@ namespace MixItUp.Base.Services.Twitch
                     }
                 }));
             }
-            return new Result("Twitch connection has not been established");
+            return new Result(Resources.TwitchConnectionFailed);
         }
 
         public async Task DisconnectBot()

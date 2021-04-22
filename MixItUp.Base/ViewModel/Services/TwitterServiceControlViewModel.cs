@@ -36,9 +36,9 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand AuthorizePinCommand { get; set; }
 
         public TwitterServiceControlViewModel()
-            : base("Twitter")
+            : base(Resources.Twitter)
         {
-            this.LogInCommand = this.CreateCommand((parameter) =>
+            this.LogInCommand = this.CreateCommand(() =>
             {
                 this.AuthorizationInProgress = true;
                 Task.Run(async () =>
@@ -59,10 +59,9 @@ namespace MixItUp.Base.ViewModel.Services
                         this.AuthorizationPin = string.Empty;
                     });
                 });
-                return Task.FromResult(0);
             });
 
-            this.LogOutCommand = this.CreateCommand(async (parameter) =>
+            this.LogOutCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.Twitter.Disconnect();
 
@@ -71,13 +70,12 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.AuthorizePinCommand = this.CreateCommand((parameter) =>
+            this.AuthorizePinCommand = this.CreateCommand(() =>
             {
                 if (!string.IsNullOrEmpty(this.AuthorizationPin))
                 {
                     ChannelSession.Services.Twitter.SetAuthPin(this.AuthorizationPin);
                 }
-                return Task.FromResult(0);
             });
 
             this.IsConnected = ChannelSession.Services.Twitter.IsConnected;

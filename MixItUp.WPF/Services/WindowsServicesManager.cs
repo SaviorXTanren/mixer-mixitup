@@ -19,6 +19,7 @@ namespace MixItUp.WPF.Services
             this.Events = new EventService();
             this.Alerts = new AlertsService();
 
+            this.Command = new CommandService();
             this.Settings = new SettingsService();
             this.Statistics = new StatisticsService();
             this.Database = new WindowsDatabaseService();
@@ -31,12 +32,14 @@ namespace MixItUp.WPF.Services
             this.AudioService = new WindowsAudioService();
             this.GiveawayService = new GiveawayService();
             this.SerialService = new SerialService();
-            this.RemoteService = new LocalStreamerRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
+            this.WebhookService = new WebhookService(MixItUp.Base.Services.MixItUpService.MixItUpAPIEndpoint, "https://mixitupapi.azurewebsites.net/webhookhub");
+            //this.WebhookService = new WebhookService("https://localhost:44309/api/", "https://localhost:44309/webhookhub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
             this.Telemetry = new WindowsTelemetryService();
+            this.CommunityCommandsService = new CommunityCommandsService();
 
             this.Streamlabs = new StreamlabsService(new WindowsSocketIOConnection());
-            this.StreamElements = new StreamElementsService();
+            this.StreamElements = new StreamElementsService(new WindowsSocketIOConnection());
             this.StreamJar = new StreamJarService();
             this.TipeeeStream = new TipeeeStreamService(new WindowsSocketIOConnection());
             this.TreatStream = new TreatStreamService(new WindowsSocketIOConnection());

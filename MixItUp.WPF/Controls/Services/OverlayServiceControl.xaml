@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -25,17 +26,25 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">Add a web browser source in your streaming software with the following URL: <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo1}"/>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap">To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,0">
+                <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">
+                    http://localhost:8111/overlay/
+                </Hyperlink>
+            </TextBlock>
 
-            <TextBlock Grid.Row="4" TextWrapping="Wrap">Multi-overlay support can be found under Settings -> Overlay</TextBlock>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo2}"/>
 
-            <Grid Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Grid.Row="6" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo3}"/>
+
+            <Grid Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -43,13 +52,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center">Disconnect</Button>
+                    <Button Grid.Column="0" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.Disconnect}"/>
 
-                    <Button Grid.Column="2" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center">Test Connection</Button>
+                    <Button Grid.Column="2" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.TestConnection}"/>
                 </Grid>
 
                 <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
-                    <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center">Connect</Button>
+                    <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Content="{x:Static resx:Resources.Connect}"/>
                 </Grid>
             </Grid>
         </Grid>
@@ -63,12 +72,11 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">If you have OBS Studio, XSplit, or Streamlabs OBS connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay when Mix It Up starts. Simply type the name of the source below:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo4}"/>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap">Simply type the name of the web browser source in your streaming software below:</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayInfo5}"/>
 
-            <TextBox Grid.Row="4" Text="{Binding StreamingSoftwareSourceName}" MaterialDesign:HintAssist.Hint="Streaming Software Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
+            <TextBox Grid.Row="4" Text="{Binding StreamingSoftwareSourceName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingSoftwareSourceName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ServiceControlBase>

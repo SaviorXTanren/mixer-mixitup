@@ -806,15 +806,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Data.ModerationStrikes++;
             if (this.Data.ModerationStrikes == 1)
             {
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike1CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike1CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes == 2)
             {
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike2CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike2CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
             else if (this.Data.ModerationStrikes >= 3)
             {
-                await ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike3CommandID).Perform(new CommandParametersModel(this, extraSpecialIdentifiers));
+                await ChannelSession.Services.Command.Queue(ChannelSession.Settings.ModerationStrike3CommandID, new CommandParametersModel(this, extraSpecialIdentifiers));
             }
         }
 

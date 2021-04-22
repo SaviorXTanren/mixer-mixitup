@@ -37,7 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         Weekly,
         Monthly,
         Yearly,
-        [Name("All Time")]
         AllTime,
         Daily,
     }
@@ -371,7 +370,7 @@ namespace MixItUp.Base.Model.Overlay
                         UserViewModel current = updatedList.First().GetUser();
                         if (previous != null && current != null && !previous.ID.Equals(current.ID))
                         {
-                            await this.LeaderChangedCommand.Perform(new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
+                            await ChannelSession.Services.Command.Queue(this.LeaderChangedCommand, new CommandParametersModel(current, new string[] { previous.Username }) { TargetUser = previous });
                         }
                     }
                 }

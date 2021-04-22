@@ -472,23 +472,23 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.AutomaticResetRate = CurrencyResetRateEnum.Never;
 
-            this.AddRankCommand = this.CreateCommand(async (parameter) =>
+            this.AddRankCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.NewRankName))
                 {
-                    await DialogHelper.ShowMessage("A rank name must be specified");
+                    await DialogHelper.ShowMessage(Resources.RankRequired);
                     return;
                 }
 
                 if (this.NewRankAmount < 0)
                 {
-                    await DialogHelper.ShowMessage("A minimum amount must be specified");
+                    await DialogHelper.ShowMessage(Resources.MinimumAmountRequired);
                     return;
                 }
 
                 if (this.Ranks.Any(r => r.Name.Equals(this.NewRankName) || r.Amount == this.NewRankAmount))
                 {
-                    await DialogHelper.ShowMessage("Every rank must have a unique name and minimum amount");
+                    await DialogHelper.ShowMessage(Resources.UniqueRankNameAndMinimumAmountRequired);
                     return;
                 }
 
@@ -503,9 +503,9 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.NewRankAmount = 0;
             });
 
-            this.ManualResetCommand = this.CreateCommand(async (parameter) =>
+            this.ManualResetCommand = this.CreateCommand(async () =>
             {
-                if (await DialogHelper.ShowConfirmation(string.Format("Do you want to reset all {0} points?", this.CurrencyRankIdentifierString)))
+                if (await DialogHelper.ShowConfirmation(string.Format(Resources.ResetCurrencyRankPointsPrompt, this.CurrencyRankIdentifierString)))
                 {
                     if (this.Currency != null)
                     {
@@ -514,17 +514,17 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.RetroactivelyGivePointsCommand = this.CreateCommand(async (parameter) =>
+            this.RetroactivelyGivePointsCommand = this.CreateCommand(async () =>
             {
-                if (await DialogHelper.ShowConfirmation(string.Format("This option will reset all {0} points for this {0} & assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option." +
-                    Environment.NewLine + Environment.NewLine + "EX: If the Online Rate is \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
-                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
+                if (await DialogHelper.ShowConfirmation(string.Format(Resources.RetroactivelyGivePointsPrompt1 +
+                    Environment.NewLine + Environment.NewLine + Resources.RetroactivelyGivePointsPrompt2 +
+                    Environment.NewLine + Environment.NewLine + Resources.RetroactivelyGivePointsPrompt3, this.CurrencyRankIdentifierString)))
                 {
                     if (this.Currency != null && this.Currency.AcquireInterval > 0)
                     {
                         if (this.Currency.SpecialTracking != CurrencySpecialTrackingEnum.None)
                         {
-                            await DialogHelper.ShowMessage("The rate type for this currency does not support retroactively giving points.");
+                            await DialogHelper.ShowMessage(Resources.RetroactiveUnsupported);
                             return;
                         }
 
@@ -547,11 +547,11 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.ImportFromFileCommand = this.CreateCommand(async (parameter) =>
+            this.ImportFromFileCommand = this.CreateCommand(async () =>
             {
                 this.userImportData.Clear();
-                if (await DialogHelper.ShowConfirmation(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
-                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
+                if (await DialogHelper.ShowConfirmation(string.Format(Resources.ImportPointsPrompt1 +
+                    Environment.NewLine + Environment.NewLine + Resources.ImportPointsPrompt2, this.CurrencyRankIdentifierString)))
                 {
                     try
                     {
@@ -657,7 +657,7 @@ namespace MixItUp.Base.ViewModel.Currency
                         Logger.Log(ex);
                     }
 
-                    await DialogHelper.ShowMessage("We were unable to import the data. Please ensure your file is in one of the following formats:" +
+                    await DialogHelper.ShowMessage(Resources.CurrencyImportFailed +
                         Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
                         Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
                         Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
@@ -666,7 +666,7 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.ExportToFileCommand = this.CreateCommand(async (parameter) =>
+            this.ExportToFileCommand = this.CreateCommand(async () =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
@@ -680,10 +680,9 @@ namespace MixItUp.Base.ViewModel.Currency
                 }
             });
 
-            this.HelpCommand = this.CreateCommand((parameter) =>
+            this.HelpCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                return Task.FromResult(0);
             });
         }
 
@@ -691,106 +690,106 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             if (string.IsNullOrEmpty(this.Name))
             {
-                await DialogHelper.ShowMessage(string.Format("A {0} name must be specified", this.CurrencyRankIdentifierString));
+                await DialogHelper.ShowMessage(string.Format(Resources.CurrencyRankNameRequired, this.CurrencyRankIdentifierString));
                 return false;
             }
 
             if (this.Name.Any(c => char.IsDigit(c)))
             {
-                await DialogHelper.ShowMessage("The name can not contain any number digits in it");
+                await DialogHelper.ShowMessage(Resources.CurrencyRankNameNoDigits);
                 return false;
             }
 
             CurrencyModel dupeCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeCurrency != null && (this.Currency == null || !this.Currency.ID.Equals(dupeCurrency.ID)))
             {
-                await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
+                await DialogHelper.ShowMessage(Resources.CurrencyRankNameDuplicate);
                 return false;
             }
 
             InventoryModel dupeInventory = ChannelSession.Settings.Inventory.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeInventory != null)
             {
-                await DialogHelper.ShowMessage("There already exists an inventory with this name");
+                await DialogHelper.ShowMessage(Resources.InventoryNameDuplicate);
                 return false;
             }
 
             string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name);
             if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression"))
             {
-                await DialogHelper.ShowMessage("The following names are reserved and can not be used: time, hours, mins, sparks, embers, fanprogression");
+                await DialogHelper.ShowMessage(Resources.CurrencyRankInventoryNameProtected + " time, hours, mins, sparks, embers, fanprogression");
                 return false;
             }
 
             if (string.IsNullOrEmpty(siName))
             {
-                await DialogHelper.ShowMessage("The name must have at least 1 letter in it");
+                await DialogHelper.ShowMessage(Resources.CurrencyRankInventoryNameNotEmpty);
                 return false;
             }
 
             if (this.MaxAmount < 0)
             {
-                await DialogHelper.ShowMessage("The max amount must be greater than 0 or can be left as 0 for no max amount");
+                await DialogHelper.ShowMessage(Resources.MaxAmountMustBeZeroOrMore);
                 return false;
             }
 
             if (this.OnlineRateAmount < 0 || this.OnlineRateInterval < 0)
             {
-                await DialogHelper.ShowMessage("The online amount & minutes must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.OnlineRateMustBeZeroOrMore);
                 return false;
             }
 
             if (this.OnlineRateAmount > 0 && this.OnlineRateInterval == 0)
             {
-                await DialogHelper.ShowMessage("The online minutes can not be 0 if the online amount is greater than 0");
+                await DialogHelper.ShowMessage(Resources.OnlineRateVsInterval1);
                 return false;
             }
 
             if (this.OfflineRateAmount < 0 || this.OfflineRateInterval < 0)
             {
-                await DialogHelper.ShowMessage("The offline amount & minutes must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.OnlineRateVsInterval2);
                 return false;
             }
 
             if (this.OfflineRateAmount > 0 && this.OfflineRateInterval == 0)
             {
-                await DialogHelper.ShowMessage("The offline minutes can not be 0 if the offline amount is greater than 0");
+                await DialogHelper.ShowMessage(Resources.OfflineRateVsInterval);
                 return false;
             }
 
             if (this.RegularBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Regular bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.RegularBonusZeroOrMore);
                 return false;
             }
 
             if (this.SubscriberBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Subscriber bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.SubscriberBonusZeroOrMore);
                 return false;
             }
 
             if (this.ModeratorBonus < 0)
             {
-                await DialogHelper.ShowMessage("The Moderator bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.ModeratorBonusZeroOrMore);
                 return false;
             }
 
             if (this.OnFollowBonus < 0)
             {
-                await DialogHelper.ShowMessage("The On Follow bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.OnFollowBonusZeroOrMore);
                 return false;
             }
 
             if (this.OnHostBonus < 0)
             {
-                await DialogHelper.ShowMessage("The On Host bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.OnHostBonusZeroOrMore);
                 return false;
             }
 
             if (this.OnSubscribeBonus < 0)
             {
-                await DialogHelper.ShowMessage("The On Subscribe bonus must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.OnSubscribeBonusZeroOrMore);
                 return false;
             }
 
@@ -798,14 +797,14 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 if (this.Ranks.Count() < 1)
                 {
-                    await DialogHelper.ShowMessage("At least one rank must be created");
+                    await DialogHelper.ShowMessage(Resources.OneRankRequired);
                     return false;
                 }
             }
 
             if (this.MinimumActiveRate < 0)
             {
-                await DialogHelper.ShowMessage("The Minimum Activity Rate must be 0 or greater");
+                await DialogHelper.ShowMessage(Resources.MinimumActivityRateZeroOrMore);
                 return false;
             }
 

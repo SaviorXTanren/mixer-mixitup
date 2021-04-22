@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.MainControls
     {
         public bool IsEnabled { get { return ChannelSession.Services.GameQueueService.IsEnabled; } }
 
-        public string EnableDisableButtonText { get { return (this.IsEnabled) ? "Disable" : "Enable"; } }
+        public string EnableDisableButtonText { get { return (this.IsEnabled) ? MixItUp.Base.Resources.Disable : MixItUp.Base.Resources.Enable; } }
 
         public bool SubPriority
         {
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.GameQueueUserJoinedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserJoinedCommandID);
             this.GameQueueUserSelectedCommand = ChannelSession.Settings.GetCommand(ChannelSession.Settings.GameQueueUserSelectedCommandID);
 
-            this.EnableDisableCommand = this.CreateCommand(async (x) =>
+            this.EnableDisableCommand = this.CreateCommand(async () =>
             {
                 if (this.IsEnabled)
                 {
@@ -111,9 +111,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanges();
             });
 
-            this.ClearQueueCommand = this.CreateCommand(async (x) =>
+            this.ClearQueueCommand = this.CreateCommand(async () =>
             {
-                if (await DialogHelper.ShowConfirmation("Are you sure you want to clear the Game Queue queue?"))
+                if (await DialogHelper.ShowConfirmation(Resources.ClearGameQueuePrompt))
                 {
                     await ChannelSession.Services.GameQueueService.Clear();
                     this.NotifyPropertyChanges();

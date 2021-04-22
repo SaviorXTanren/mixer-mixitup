@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
-            this.ClearChatCommand = this.CreateCommand(async (parameter) =>
+            this.ClearChatCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearChatConfirmation))
                 {
@@ -64,7 +64,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.EnableDisableChatCommand = this.CreateCommand(async (parameter) =>
+            this.EnableDisableChatCommand = this.CreateCommand(async () =>
             {
                 if (!ChannelSession.Services.Chat.DisableChat && !await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DisableChatConfirmation))
                 {

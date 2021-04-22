@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Actions;
+using MixItUp.Base.ViewModel.MainControls;
 using MixItUp.WPF.Windows.Commands;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -19,7 +20,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             CommandEditorWindow window = new CommandEditorWindow(CommandTypeEnum.ActionGroup);
             window.CommandSaved += Window_CommandSaved;
-            window.Show();
+            window.ForceShow();
         }
 
         private async void EditCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -33,8 +34,8 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-                    CommandEditorWindow window = new CommandEditorWindow(viewModel.SelectedCommand);
-                    window.Show();
+                    CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(viewModel.SelectedCommand);
+                    window.ForceShow();
                 }
             }
         }
@@ -48,6 +49,11 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     viewModel.SelectedCommandType = command.Type;
                     viewModel.SelectedCommand = command;
+                }
+
+                if (command is ActionGroupCommandModel)
+                {
+                    ActionGroupMainControlViewModel.ActionGroupAddedEdited((ActionGroupCommandModel)command);
                 }
             }
         }

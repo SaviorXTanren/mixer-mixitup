@@ -20,6 +20,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class CurrencyRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public Guid CurrencyID { get; set; }
 
@@ -64,6 +66,8 @@ namespace MixItUp.Base.Model.Requirements
 #pragma warning restore CS0612 // Type or member is obsolete
 
         protected CurrencyRequirementModel() { }
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return CurrencyRequirementModel.requirementErrorCooldown; } set { CurrencyRequirementModel.requirementErrorCooldown = value; } }
 
         [JsonIgnore]
         public CurrencyModel Currency
@@ -163,15 +167,12 @@ namespace MixItUp.Base.Model.Requirements
             }
             else
             {
-                int amount = 0;
+                int amount = this.MinAmount;
                 if (parameters.Arguments.Count() > 0)
                 {
-                    if (this.ArgumentIndex > 0)
+                    if (this.ArgumentIndex > 0 && parameters.Arguments.Count() > this.ArgumentIndex)
                     {
-                        if (!int.TryParse(parameters.Arguments.ElementAt(this.ArgumentIndex), out amount))
-                        {
-                            amount = this.MinAmount;
-                        }
+                        int.TryParse(parameters.Arguments.ElementAt(this.ArgumentIndex), out amount);
                     }
                     else
                     {
@@ -179,10 +180,7 @@ namespace MixItUp.Base.Model.Requirements
                         {
                             if (parameters.Arguments.Count() > 1)
                             {
-                                if (!int.TryParse(parameters.Arguments.ElementAt(1), out amount))
-                                {
-                                    amount = this.MinAmount;
-                                }
+                                int.TryParse(parameters.Arguments.ElementAt(1), out amount);
                             }
                         }
                     }
@@ -195,7 +193,8 @@ namespace MixItUp.Base.Model.Requirements
         {
             if (!user.Data.IsCurrencyRankExempt && !this.Currency.HasAmount(user.Data, amount))
             {
-                return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name));
+                int currentAmount = this.Currency.GetAmount(user.Data);
+                return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, amount, this.Currency.Name) + " " + string.Format(MixItUp.Base.Resources.RequirementCurrentAmount, currentAmount));
             }
             return new Result();
         }

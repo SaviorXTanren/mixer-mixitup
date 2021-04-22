@@ -117,20 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="1PerEmber" xml:space="preserve">
-    <value>1 pro Ember</value>
-    <comment>Manual</comment>
-  </data>
   <data name="1PerHour" xml:space="preserve">
     <value>1 pro Stunde</value>
     <comment>Manual</comment>
   </data>
   <data name="1PerMinute" xml:space="preserve">
     <value>1 pro Minute</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="1PerSpark" xml:space="preserve">
-    <value>1 pro Spark</value>
     <comment>Manual</comment>
   </data>
   <data name="About" xml:space="preserve">
@@ -205,22 +197,6 @@
     <value>Währung/Rang hinzufügen</value>
     <comment>Manual</comment>
   </data>
-  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
-    <value>Dieser Benutzer ist bereits in dieser Gruppe vorhanden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
-    <value>Es konnte kein Streamer mit diesem Namen gefunden werden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>Du hast dieses Team bereits als Favorit bezeichnet.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
-    <value>Es konnte kein Team mit diesem Namen gefunden werden.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AddInventory" xml:space="preserve">
     <value>Inventar hinzufügen</value>
     <comment>Manual</comment>
@@ -253,24 +229,8 @@
     <value>Zu allen Benutzern hinzufügen</value>
     <comment>Manual</comment>
   </data>
-  <data name="Adult" xml:space="preserve">
-    <value>18+</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Advanced" xml:space="preserve">
     <value>Erweiterte Einstellung</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AdvancedCommand" xml:space="preserve">
-    <value>Erweiterter Befehl</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AgeRating" xml:space="preserve">
-    <value>Alterseinstufung</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
-    <value>Erlaube Befehle nur in deinem Kanal während eines Co-Streams</value>
     <comment>Manual</comment>
   </data>
   <data name="AllowCommandsToBeWhispered" xml:space="preserve">
@@ -317,28 +277,8 @@
     <value>Zugelassene Geräte</value>
     <comment>Manual</comment>
   </data>
-  <data name="Audience" xml:space="preserve">
-    <value>Publikum</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHoster" xml:space="preserve">
-    <value>Auto-Hoster</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterDescription" xml:space="preserve">
-    <value>Der Mix It Up Auto-Hoster ist eine eigenständige Anwendung, die das Hosting anderer Kanäle übernimmt, wenn Du nicht streamst. Der Auto-Hoster kann ohne Mix It Up ausgeführt werden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutoHosterLaunchHeader" xml:space="preserve">
-    <value>Der Auto-Hoster kann durch die folgende Taste gestartet werden</value>
-    <comment>Manual</comment>
-  </data>
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
     <value>Auto-Einloggen in aktuellen Account</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="AutomatedSettingsBackup" xml:space="preserve">
-    <value>Automatische Sicherung der Einstellungen</value>
     <comment>Manual</comment>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
@@ -357,26 +297,6 @@
     <value>Einstellungen sichern</value>
     <comment>Manual</comment>
   </data>
-  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
-    <value>Deine Einstellungen in eine Zip-Datei sichern</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="BasicChatCommand" xml:space="preserve">
-    <value>Einfacher Chat-Befehl</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="BasicSoundCommand" xml:space="preserve">
-    <value>Einfacher Sound-Befehl</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="BasicTimerDescription" xml:space="preserve">
-    <value>Wie sollen wir diesen Hinweis-Befehl nennen?</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="BasicTimerNameHint" xml:space="preserve">
-    <value>Name (Bsp: "Folge mir")</value>
-    <comment>Manual</comment>
-  </data>
   <data name="BaudRate" xml:space="preserve">
     <value>Baudrate</value>
     <comment>Manual</comment>
@@ -393,7 +313,7 @@
     <value>Blau</value>
     <comment>Manual</comment>
   </data>
-  <data name="Blue Grey" xml:space="preserve">
+  <data name="BlueGrey" xml:space="preserve">
     <value>Blaugrau</value>
     <comment>Manual</comment>
   </data>
@@ -433,18 +353,6 @@
     <value>Kanaleditor</value>
     <comment>Manual</comment>
   </data>
-  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>Es muss eine gültige Alterseinstufung gewählt werden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChannelErrorInvalidGame" xml:space="preserve">
-    <value>Es muss ein gültiger &amp; vorhandener Spielname ausgewählt werden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>Es muss ein Streamtitel angegeben werden.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>Kanalinformationen</value>
     <comment>Manual</comment>
@@ -467,10 +375,6 @@
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Chatnachrichten gesendet</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ChatMixPlayParticipation" xml:space="preserve">
-    <value>Chat / MixPlay-Teilnahme</value>
     <comment>Manual</comment>
   </data>
   <data name="ChatTaggedSound" xml:space="preserve">
@@ -553,10 +457,6 @@
     <value>Enthält</value>
     <comment>Manual</comment>
   </data>
-  <data name="ConvertToAdvanced" xml:space="preserve">
-    <value>In Erweitert konventieren</value>
-    <comment>Manual</comment>
-  </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Zähler (Erstellen &amp; Aktualisieren)</value>
     <comment>Manual</comment>
@@ -571,10 +471,6 @@
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Gesamte Anzahl der gesubten Monate</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="CurrenciesRanksInventories" xml:space="preserve">
-    <value>Währungen/Ränge/Inventare</value>
     <comment>Manual</comment>
   </data>
   <data name="CurrencyRank" xml:space="preserve">
@@ -605,20 +501,12 @@
     <value>Benutzerdefinierter Willkommensbefehl</value>
     <comment>Manual</comment>
   </data>
-  <data name="CustomizeCommand" xml:space="preserve">
-    <value>Befehl anpassen</value>
-    <comment>Manual</comment>
-  </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Währung/Rang anpassen</value>
     <comment>Manual</comment>
   </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>Inventar anpassen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="CustomMixPlayProjects" xml:space="preserve">
-    <value>Benutzerdefinierte MixPlay-Projekte</value>
     <comment>Manual</comment>
   </data>
   <data name="CustomTitle" xml:space="preserve">
@@ -645,11 +533,11 @@
     <value>Datum/Uhrzeit</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Orange" xml:space="preserve">
+  <data name="DeepOrange" xml:space="preserve">
     <value>Dunkelorange</value>
     <comment>Manual</comment>
   </data>
-  <data name="Deep Purple" xml:space="preserve">
+  <data name="DeepPurple" xml:space="preserve">
     <value>Dunkellila</value>
     <comment>Manual</comment>
   </data>
@@ -665,10 +553,6 @@
     <value>Standard-Maximalbetrag</value>
     <comment>Manual</comment>
   </data>
-  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
-    <value>Zu verbindendes Standard-MixPlay-Spiel</value>
-    <comment>Manual</comment>
-  </data>
   <data name="DefaultOutput" xml:space="preserve">
     <value>Standardausgabe</value>
     <comment>Manual</comment>
@@ -681,16 +565,8 @@
     <value>Löschen</value>
     <comment>Manual</comment>
   </data>
-  <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
-    <value>Lösche alle Chat-Befehle, wenn sie ausgeführt werden</value>
-    <comment>Manual</comment>
-  </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>Befehl löschen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
-    <value>Möchtest Du diese Gruppe wirklich entfernen?</value>
     <comment>Manual</comment>
   </data>
   <data name="DisableAllTimers" xml:space="preserve">
@@ -713,24 +589,12 @@
     <value>Deaktiviert</value>
     <comment>Manual</comment>
   </data>
+  <data name="Discord" xml:space="preserve">
+    <value>Discord</value>
+    <comment>Manual</comment>
+  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; enthält</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DownloadAndInstall" xml:space="preserve">
-    <value>Herunterladen &amp; Installieren</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
-    <value>ffmpeg herunterladen &amp; installieren</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="DownloadFrom" xml:space="preserve">
-    <value>Herunterladen von</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Drop" xml:space="preserve">
-    <value>DROP</value>
     <comment>Manual</comment>
   </data>
   <data name="DTR" xml:space="preserve">
@@ -749,22 +613,6 @@
     <value>Befehl anpassen</value>
     <comment>Manual</comment>
   </data>
-  <data name="Embers" xml:space="preserve">
-    <value>Embers</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmberSkillsOnly" xml:space="preserve">
-    <value>Nur Ember Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmbersSpent" xml:space="preserve">
-    <value>Embers ausgegeben</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EmotesSkillsOnly" xml:space="preserve">
-    <value>Nur Emotes &amp; Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Enable" xml:space="preserve">
     <value>Aktivieren</value>
     <comment>Manual</comment>
@@ -773,16 +621,8 @@
     <value>Chat aktivieren</value>
     <comment>Manual</comment>
   </data>
-  <data name="EnableDiagnostics" xml:space="preserve">
-    <value>Diagnose aktivieren</value>
-    <comment>Manual</comment>
-  </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>Befehl aktivieren/deaktivieren</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
-    <value>Aktivieren/Deaktivieren der Diagnoseprotokollierung zum auffinden von Problemen</value>
     <comment>Manual</comment>
   </data>
   <data name="EndCredits" xml:space="preserve">
@@ -795,14 +635,6 @@
   </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>=</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
-    <value>Sie müssen ein {0} sein, um die Antwort auszuwählen.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
-    <value>Sie müssen ein {0} sein, um dieses Spiel zu starten.</value>
     <comment>Manual</comment>
   </data>
   <data name="Event" xml:space="preserve">
@@ -845,24 +677,8 @@
     <value>Externes Programm</value>
     <comment>Manual</comment>
   </data>
-  <data name="Family" xml:space="preserve">
-    <value>Familienfreundlich</value>
-    <comment>Manual</comment>
-  </data>
   <data name="FanProgression" xml:space="preserve">
     <value>Fan-Fortschritt</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FavoritedUsersTeams" xml:space="preserve">
-    <value>Bevorzugte Streamer/Teams</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FavoriteStreamers" xml:space="preserve">
-    <value>Bevorzugte Streamer</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FeatureMixItUpStreamer" xml:space="preserve">
-    <value>Nimm mich als Mix It Up Streamer auf</value>
     <comment>Manual</comment>
   </data>
   <data name="FileReadAndWrite" xml:space="preserve">
@@ -883,14 +699,6 @@
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>Raidkanal finden</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>Es muss ein Suchkriterium für die Suche nach einem Kanal zum Raiden ausgewählt werden</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>Es ist nicht möglich, einen Kanal zu finden, der dein Suchkriterium erfüllt, bitte versuche ein anderes Suchkriterium aus.</value>
     <comment>Manual</comment>
   </data>
   <data name="FirstValue" xml:space="preserve">
@@ -977,10 +785,6 @@
     <value>Hilfe</value>
     <comment>Manual</comment>
   </data>
-  <data name="HelpfulLinks" xml:space="preserve">
-    <value>Hilfreiche Links</value>
-    <comment>Manual</comment>
-  </data>
   <data name="HideChatUserList" xml:space="preserve">
     <value>Chat-Benutzerliste ausblenden</value>
     <comment>Manual</comment>
@@ -991,10 +795,6 @@
   </data>
   <data name="HideViewerAndChatterNumbers" xml:space="preserve">
     <value>Zuschauer- und Chatter-Anzahl ausblenden</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="HostChannel" xml:space="preserve">
-    <value>Kanal hosten</value>
     <comment>Manual</comment>
   </data>
   <data name="Hours" xml:space="preserve">
@@ -1085,20 +885,12 @@
     <value>Groß</value>
     <comment>Manual</comment>
   </data>
-  <data name="LargeStreamer" xml:space="preserve">
-    <value>Große Streamer (&gt;25)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="LastQuote" xml:space="preserve">
     <value>Letztes Zitat</value>
     <comment>Manual</comment>
   </data>
   <data name="LatestRelease" xml:space="preserve">
     <value>Neuestes Release</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="LaunchAutoHoster" xml:space="preserve">
-    <value>Auto-Hoster starten</value>
     <comment>Manual</comment>
   </data>
   <data name="Leaderboard" xml:space="preserve">
@@ -1125,11 +917,11 @@
     <value>Hell</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Blue" xml:space="preserve">
+  <data name="LightBlue" xml:space="preserve">
     <value>Hellblau</value>
     <comment>Manual</comment>
   </data>
-  <data name="Light Green" xml:space="preserve">
+  <data name="LightGreen" xml:space="preserve">
     <value>Hellgrün</value>
     <comment>Manual</comment>
   </data>
@@ -1149,16 +941,8 @@
     <value>Einloggen</value>
     <comment>Manual</comment>
   </data>
-  <data name="LoginErrorNoChannelName" xml:space="preserve">
-    <value>Ein Kanalname wird benötigt.</value>
-    <comment>Manual</comment>
-  </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
     <value>Du musst ein Streamer-Konto auswählen, um dich anzumelden.</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="LoginErrorNotModerator" xml:space="preserve">
-    <value>Du bist kein Moderator auf diesem Kanal.</value>
     <comment>Manual</comment>
   </data>
   <data name="ManualReset" xml:space="preserve">
@@ -1175,10 +959,6 @@
   </data>
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
     <value>Max Zeichensetzung / Symbole / Emotes</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MediumStreamer" xml:space="preserve">
-    <value>Mittlerer Streamer (10-25)</value>
     <comment>Manual</comment>
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
@@ -1203,30 +983,6 @@
   </data>
   <data name="Minutes" xml:space="preserve">
     <value>Minuten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerAge" xml:space="preserve">
-    <value>Mixer-Alter</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerClips" xml:space="preserve">
-    <value>Mixer Clips</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerData" xml:space="preserve">
-    <value>Mixer-Daten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerLabs" xml:space="preserve">
-    <value>Mixer Labs</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerStatus" xml:space="preserve">
-    <value>Mixer-Status</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="MixerSupport" xml:space="preserve">
-    <value>Mixer-Unterstützung</value>
     <comment>Manual</comment>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
@@ -1261,8 +1017,8 @@
     <value>Name</value>
     <comment>Manual</comment>
   </data>
-  <data name="NameOfProfile" xml:space="preserve">
-    <value>Profilname</value>
+  <data name="NameOfProfileHeader" xml:space="preserve">
+    <value>Profilname:</value>
     <comment>Manual</comment>
   </data>
   <data name="Never" xml:space="preserve">
@@ -1321,10 +1077,6 @@
     <value>Beim Hosten</value>
     <comment>Manual</comment>
   </data>
-  <data name="OnlineMinutes" xml:space="preserve">
-    <value>Online-Minuten</value>
-    <comment>Manual</comment>
-  </data>
   <data name="OnlyShowAlertsInDashboard" xml:space="preserve">
     <value>Alerts nur im Dashboard anzeigen</value>
     <comment>Manual</comment>
@@ -1377,10 +1129,6 @@
     <value>OvrStream</value>
     <comment>Manual</comment>
   </data>
-  <data name="PartneredStreamer" xml:space="preserve">
-    <value>Gepartnerte Streamer</value>
-    <comment>Manual</comment>
-  </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>Patreon Benutzer</value>
     <comment>Manual</comment>
@@ -1403,14 +1151,6 @@
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
-    <value>Verhindere dass, kleinere Abklingzeiten überschrieben werden</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
-    <value>Verhindere unbekannte MixPlay-Benutzer</value>
     <comment>Manual</comment>
   </data>
   <data name="PrimaryCurrency" xml:space="preserve">
@@ -1441,10 +1181,6 @@
     <value>Zitate</value>
     <comment>Manual</comment>
   </data>
-  <data name="RandomStreamer" xml:space="preserve">
-    <value>Zufälliger Streamer</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Red" xml:space="preserve">
     <value>Rot</value>
     <comment>Manual</comment>
@@ -1473,10 +1209,6 @@
     <value>Erforderliche Stunden</value>
     <comment>Manual</comment>
   </data>
-  <data name="ReRunWizardHeader" xml:space="preserve">
-    <value>Führe den Assistenten für neue Benutzer erneut aus, um deine Daten erneut zu importieren</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
     <comment>Manual</comment>
@@ -1499,10 +1231,6 @@
   </data>
   <data name="RestoreSettings" xml:space="preserve">
     <value>Einstellungen wiederherstellen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
-    <value>Deine Einstellungen in eine Zip-Datei wiederherstellen</value>
     <comment>Manual</comment>
   </data>
   <data name="Resubs" xml:space="preserve">
@@ -1533,16 +1261,8 @@
     <value>RTS</value>
     <comment>Manual</comment>
   </data>
-  <data name="SameAgeRating" xml:space="preserve">
-    <value>Gleiche Alterseinstufung</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SameGame" xml:space="preserve">
     <value>Gleiches Spiel</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SameTeam" xml:space="preserve">
-    <value>Gleiches Team</value>
     <comment>Manual</comment>
   </data>
   <data name="Save" xml:space="preserve">
@@ -1581,10 +1301,6 @@
     <value>Zweiter Wert</value>
     <comment>Manual</comment>
   </data>
-  <data name="SelectTypeOfCommand" xml:space="preserve">
-    <value>Wähle die Art des Befehls aus, den Du erstellen möchtest:</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SellPrice" xml:space="preserve">
     <value>Verkaufspreis</value>
     <comment>Manual</comment>
@@ -1621,10 +1337,6 @@
     <value>Dienste</value>
     <comment>Manual</comment>
   </data>
-  <data name="SetAudience" xml:space="preserve">
-    <value>Zielgruppe einstellen</value>
-    <comment>Manual</comment>
-  </data>
   <data name="SetGame" xml:space="preserve">
     <value>Spielname einstellen</value>
     <comment>Manual</comment>
@@ -1657,10 +1369,6 @@
     <value>Shop-Währung</value>
     <comment>Manual</comment>
   </data>
-  <data name="ShowEventAlerts" xml:space="preserve">
-    <value>Zeige Event-Alerts</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ShowLatestChatMessagesAtTopInsteadOfBottom" xml:space="preserve">
     <value>Zeige die neuesten Chat-Nachrichten oben anstatt unten</value>
     <comment>Manual</comment>
@@ -1669,48 +1377,16 @@
     <value>Chat-Zeitstempel anzeigen</value>
     <comment>Manual</comment>
   </data>
-  <data name="ShowMixPlayAlerts" xml:space="preserve">
-    <value>Zeige MixPlay-Alerts</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="ShowMixrElixrEmotes" xml:space="preserve">
-    <value>MixrElixr-Emotes anzeigen (Neustart erforderlich)</value>
-    <comment>Manual</comment>
-  </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
     <value>Zeige Benutzer beitreten/verlassen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SingleAction" xml:space="preserve">
-    <value>Einzelne Aktion</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SkillsOnly" xml:space="preserve">
-    <value>Nur Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SkillsUsed" xml:space="preserve">
-    <value>Verwendete Fähigkeiten</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SmallStreamer" xml:space="preserve">
-    <value>Kleiner Streamer (&lt;10)</value>
     <comment>Manual</comment>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Quelle</value>
     <comment>Manual</comment>
   </data>
-  <data name="SparkExempt" xml:space="preserve">
-    <value>Spark Ausnahme</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Sparks" xml:space="preserve">
     <value>Sparks</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="SparksSpent" xml:space="preserve">
-    <value>Spark ausgegeben</value>
     <comment>Manual</comment>
   </data>
   <data name="SpecialIdentifier" xml:space="preserve">
@@ -1781,10 +1457,6 @@
     <value>Streams angesehen</value>
     <comment>Manual</comment>
   </data>
-  <data name="StreamTitle" xml:space="preserve">
-    <value>Stream-Titel</value>
-    <comment>Manual</comment>
-  </data>
   <data name="StrikeCommands" xml:space="preserve">
     <value>Verwarnbefehle</value>
     <comment>Manual</comment>
@@ -1841,10 +1513,6 @@
     <value>Im Chat getaggt</value>
     <comment>Manual</comment>
   </data>
-  <data name="Tags" xml:space="preserve">
-    <value>Tags</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Teal" xml:space="preserve">
     <value>Blaugrün</value>
     <comment>Manual</comment>
@@ -1853,24 +1521,12 @@
     <value>Team</value>
     <comment>Manual</comment>
   </data>
-  <data name="TeamName" xml:space="preserve">
-    <value>Team-Name</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="Teen" xml:space="preserve">
-    <value>Jugendlich</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TestCommand" xml:space="preserve">
     <value>Befehl testen</value>
     <comment>Manual</comment>
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>Text zu Sprache</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="TextToTranslate" xml:space="preserve">
-    <value>Text To Translate</value>
     <comment>Manual</comment>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
@@ -1925,10 +1581,6 @@
     <value>Gesamtzeit (Minuten)</value>
     <comment>Manual</comment>
   </data>
-  <data name="TotalUsers" xml:space="preserve">
-    <value>Totale Zuschauer</value>
-    <comment>Manual</comment>
-  </data>
   <data name="TrackWhispererNumbers" xml:space="preserve">
     <value>Whisperer-Nummern verfolgen</value>
     <comment>Manual</comment>
@@ -1957,28 +1609,12 @@
     <value>Typ</value>
     <comment>Manual</comment>
   </data>
-  <data name="TypeToAdd" xml:space="preserve">
-    <value>Typ</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UnbanAllUsers" xml:space="preserve">
-    <value>Alle Benutzer entbannen</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UnbanAllUsersHeader" xml:space="preserve">
-    <value>Entbanne alle Benutzer von deinem Kanal</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Ungrouped" xml:space="preserve">
     <value>Nicht gruppiert</value>
     <comment>Manual</comment>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unbekannt</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UnlockAllCommandsHeader" xml:space="preserve">
-    <value>Alle Befehlstypen entsperren</value>
     <comment>Manual</comment>
   </data>
   <data name="UnlockCommand" xml:space="preserve">
@@ -1989,20 +1625,12 @@
     <value>Aktualisieren</value>
     <comment>Manual</comment>
   </data>
-  <data name="UpdateChannel" xml:space="preserve">
-    <value>Kanal aktualisieren</value>
-    <comment>Manual</comment>
-  </data>
   <data name="UpdateCommand" xml:space="preserve">
     <value>Befehl aktualisieren</value>
     <comment>Manual</comment>
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Als Preview-Programm aktualisieren</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="UploadTo" xml:space="preserve">
-    <value>Hochladen auf</value>
     <comment>Manual</comment>
   </data>
   <data name="Uptime" xml:space="preserve">
@@ -2101,20 +1729,12 @@
     <value>Webanfrage</value>
     <comment>Manual</comment>
   </data>
-  <data name="WebShow" xml:space="preserve">
-    <value>WebShow</value>
-    <comment>Manual</comment>
-  </data>
   <data name="Weekly" xml:space="preserve">
     <value>Wöchentlich</value>
     <comment>Manual</comment>
   </data>
   <data name="Whisper" xml:space="preserve">
     <value>Flüstern</value>
-    <comment>Manual</comment>
-  </data>
-  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
-    <value>Flüstere alle Alerts zum Streamer Account</value>
     <comment>Manual</comment>
   </data>
   <data name="WhisperUserOptional" xml:space="preserve">
@@ -2194,50 +1814,8 @@
   <data name="ExtraLifeDonation" xml:space="preserve">
     <value>Extra Life Spende</value>
   </data>
-  <data name="GawkBoxDonation" xml:space="preserve">
-    <value>GawkBox Spende</value>
-  </data>
   <data name="JustGivingDonation" xml:space="preserve">
     <value>JustGiving Spende</value>
-  </data>
-  <data name="MixerChannelEmbersUsed" xml:space="preserve">
-    <value>Mixer Channel Glut verbraucht</value>
-  </data>
-  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
-    <value>Mixer Channel Fan Progression Level-Up</value>
-  </data>
-  <data name="MixerChannelFollowed" xml:space="preserve">
-    <value>Mixer Channel gefolgt</value>
-  </data>
-  <data name="MixerChannelHosted" xml:space="preserve">
-    <value>Mixer Channel gehostet</value>
-  </data>
-  <data name="MixerChannelMilestoneReached" xml:space="preserve">
-    <value>Meilenstein des Mischerkanals erreicht</value>
-  </data>
-  <data name="MixerChannelResubscribed" xml:space="preserve">
-    <value>Mixer Channel neu abonniert</value>
-  </data>
-  <data name="MixerChannelSkillUsed" xml:space="preserve">
-    <value>Mixer Channel Skill Used</value>
-  </data>
-  <data name="MixerChannelSparksUsed" xml:space="preserve">
-    <value>Mischerkanal Funken verbraucht</value>
-  </data>
-  <data name="MixerChannelStreamStart" xml:space="preserve">
-    <value>Mixer Channel Stream Start</value>
-  </data>
-  <data name="MixerChannelStreamStop" xml:space="preserve">
-    <value>Mixer Channel Stream Stop</value>
-  </data>
-  <data name="MixerChannelSubscribed" xml:space="preserve">
-    <value>Mixer Channel abonniert</value>
-  </data>
-  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
-    <value>Mixer Channel Abonnement begabt</value>
-  </data>
-  <data name="MixerChannelUnfollowed" xml:space="preserve">
-    <value>Mischerkanal nicht befolgt</value>
   </data>
   <data name="PatreonSubscribed" xml:space="preserve">
     <value>Patreon abonniert</value>
@@ -2275,17 +1853,11 @@
   <data name="Ban" xml:space="preserve">
     <value>Ban</value>
   </data>
-  <data name="GlobalTimeout" xml:space="preserve">
-    <value>Global Timeout</value>
-  </data>
   <data name="Purge" xml:space="preserve">
     <value>Purge</value>
   </data>
   <data name="Timeout" xml:space="preserve">
     <value>Timeout</value>
-  </data>
-  <data name="PartnersAndVerifiedOnly" xml:space="preserve">
-    <value>This feature is currently available for Partners &amp; Verified Channels only.</value>
   </data>
   <data name="ImportFromFile" xml:space="preserve">
     <value>Aus Datei importieren</value>
@@ -2295,5 +1867,73 @@
   </data>
   <data name="ResetDate" xml:space="preserve">
     <value>Datum zurücksetzen</value>
+  </data>
+  <data name="ExtraLife" xml:space="preserve">
+    <value>Extra Life</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitch" xml:space="preserve">
+    <value>Twitch</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="JustGiving" xml:space="preserve">
+    <value>JustGiving</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="OBSStudio" xml:space="preserve">
+    <value>OBS Studio</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Patreon" xml:space="preserve">
+    <value>Patreon</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamAvatars" xml:space="preserve">
+    <value>Stream Avatars</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamDeck" xml:space="preserve">
+    <value>Stream Deck</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamElements" xml:space="preserve">
+    <value>StreamElements</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamJar" xml:space="preserve">
+    <value>StreamJar</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="StreamlabsOBS" xml:space="preserve">
+    <value>Streamlabs OBS</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>Streamlabs</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Streamloots" xml:space="preserve">
+    <value>Streamloots</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Tiltify" xml:space="preserve">
+    <value>Tiltify</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TipeeeStream" xml:space="preserve">
+    <value>TipeeeStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="TreatStream" xml:space="preserve">
+    <value>TreatStream</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+    <comment>Manual</comment>
+  </data>
+  <data name="XSplit" xml:space="preserve">
+    <value>XSplit</value>
+    <comment>Manual</comment>
   </data>
 </root>

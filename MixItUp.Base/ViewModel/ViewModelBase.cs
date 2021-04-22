@@ -10,19 +10,59 @@ namespace MixItUp.Base.ViewModels
     {
         public event EventHandler CanExecuteChanged;
 
-        private Func<object, bool> canExecute;
-        private Func<object, Task> execute;
+        private Func<bool> canExecute;
+
+        private Action execute;
+        private Func<Task> asyncExecute;
+
+        private Action<object> parameterExecute;
+        private Func<object, Task> asyncParameterExecute;
 
         private UIViewModelBase viewModel;
 
-        public UIViewModelCommand(Func<object, Task> execute, UIViewModelBase viewModel)
+        public UIViewModelCommand(Action execute, UIViewModelBase viewModel)
         {
             this.execute = execute;
             this.viewModel = viewModel;
         }
 
-        public UIViewModelCommand(Func<object, bool> canExecute, Func<object, Task> execute, UIViewModelBase viewModel)
+        public UIViewModelCommand(Func<bool> canExecute, Action execute, UIViewModelBase viewModel)
             : this(execute, viewModel)
+        {
+            this.canExecute = canExecute;
+        }
+
+        public UIViewModelCommand(Func<Task> asyncExecute, UIViewModelBase viewModel)
+        {
+            this.asyncExecute = asyncExecute;
+            this.viewModel = viewModel;
+        }
+
+        public UIViewModelCommand(Func<bool> canExecute, Func<Task> asyncExecute, UIViewModelBase viewModel)
+            : this(asyncExecute, viewModel)
+        {
+            this.canExecute = canExecute;
+        }
+        public UIViewModelCommand(Action<object> parameterExecute, UIViewModelBase viewModel)
+        {
+            this.parameterExecute = parameterExecute;
+            this.viewModel = viewModel;
+        }
+
+        public UIViewModelCommand(Func<bool> canExecute, Action<object> parameterExecute, UIViewModelBase viewModel)
+            : this(parameterExecute, viewModel)
+        {
+            this.canExecute = canExecute;
+        }
+
+        public UIViewModelCommand(Func<object, Task> asyncParameterExecute, UIViewModelBase viewModel)
+        {
+            this.asyncParameterExecute = asyncParameterExecute;
+            this.viewModel = viewModel;
+        }
+
+        public UIViewModelCommand(Func<bool> canExecute, Func<object, Task> asyncParameterExecute, UIViewModelBase viewModel)
+            : this(asyncParameterExecute, viewModel)
         {
             this.canExecute = canExecute;
         }
@@ -44,7 +84,7 @@ namespace MixItUp.Base.ViewModels
             {
                 if (this.canExecute != null)
                 {
-                    return this.canExecute(parameter);
+                    return this.canExecute();
                 }
                 return true;
             }
@@ -61,7 +101,22 @@ namespace MixItUp.Base.ViewModels
             {
                 this.viewModel.StartLoadingOperation();
                 this.IsRunning = true;
-                await this.execute(parameter);
+                if (this.execute != null)
+                {
+                    this.execute();
+                }
+                else if (this.asyncExecute != null)
+                {
+                    await this.asyncExecute();
+                }
+                else if (this.parameterExecute != null)
+                {
+                    this.parameterExecute(parameter);
+                }
+                else if (this.asyncParameterExecute != null)
+                {
+                    await this.asyncParameterExecute(parameter);
+                }
             }
             catch (Exception ex)
             {
@@ -145,9 +200,21 @@ namespace MixItUp.Base.ViewModels
             return result;
         }
 
+        protected ICommand CreateCommand(Action execute) { return new UIViewModelCommand(execute, this); }
+
+        protected ICommand CreateCommand(Func<bool> canExecute, Action execute) { return new UIViewModelCommand(canExecute, execute, this); }
+
+        protected ICommand CreateCommand(Func<Task> execute) { return new UIViewModelCommand(execute, this); }
+
+        protected ICommand CreateCommand(Func<bool> canExecute, Func<Task> execute) { return new UIViewModelCommand(canExecute, execute, this); }
+
+        protected ICommand CreateCommand(Action<object> execute) { return new UIViewModelCommand(execute, this); }
+
+        protected ICommand CreateCommand(Func<bool> canExecute, Action<object> execute) { return new UIViewModelCommand(canExecute, execute, this); }
+
         protected ICommand CreateCommand(Func<object, Task> execute) { return new UIViewModelCommand(execute, this); }
 
-        protected ICommand CreateCommand(Func<object, bool> canExecute, Func<object, Task> execute) { return new UIViewModelCommand(canExecute, execute, this); }
+        protected ICommand CreateCommand(Func<bool> canExecute, Func<object, Task> execute) { return new UIViewModelCommand(canExecute, execute, this); }
 
         protected int GetPositiveIntFromString(string value)
         {

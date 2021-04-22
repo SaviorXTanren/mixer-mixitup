@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:DragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <ItemsControl ItemsSource="{Binding Actions}" Grid.Row="5" DragDrop:DragDrop.IsDragSource="True" DragDrop:DragDrop.IsDropTarget="True">
+    <ItemsControl ItemsSource="{Binding Actions}" Grid.Row="5" DragDrop:DragDrop.IsDragSource="True" DragDrop:DragDrop.IsDropTarget="True" DragDrop:DragDrop.DropHandler="{Binding Source={x:Static Util:ActionListDropHandler.Instance}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <ActionControls:ActionEditorContainerControl />

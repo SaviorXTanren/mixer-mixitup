@@ -140,6 +140,7 @@ namespace MixItUp.Base.Services.External
 
         public override Task Disconnect()
         {
+            this.token = null;
             return Task.FromResult(0);
         }
 
@@ -220,7 +221,7 @@ namespace MixItUp.Base.Services.External
                         return new Result();
                     }
                 }
-                return new Result("The tweet you specified could not be sent because you have already sent a tweet in the last 5 minutes");
+                return new Result(Resources.TwitterRateLimited);
             }
             catch (Exception ex)
             {
@@ -267,7 +268,7 @@ namespace MixItUp.Base.Services.External
                 this.TrackServiceTelemetry("Twitter");
                 return new Result();
             }
-            return new Result("Failed to get authorization");
+            return new Result(Resources.TwitterAuthFailed);
         }
 
         protected override Task RefreshOAuthToken()

@@ -22,7 +22,7 @@ namespace MixItUp.Base.Model.Actions
         SubtractFromAllChatUsers,
 
         ResetForAllUsers,
-        ResetForUser
+        ResetForUser,
     }
 
     [DataContract]

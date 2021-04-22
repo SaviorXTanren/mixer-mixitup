@@ -42,6 +42,7 @@ namespace MixItUp.Base.Model.Commands.Games
     public class TriviaGameCommandModel : GameCommandModelBase
     {
         public const string GameTriviaQuestionSpecialIdentifier = "gamequestion";
+        public const string GameTriviaSpecificAnswerHeaderSpecialIdentifier = "gameanswer";
         public const string GameTriviaAnswersSpecialIdentifier = "gameanswers";
         public const string GameTriviaCorrectAnswerSpecialIdentifier = "gamecorrectanswer";
 
@@ -146,7 +147,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             this.runParameters = parameters;
 
@@ -207,12 +208,16 @@ namespace MixItUp.Base.Model.Commands.Games
             }
 
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaQuestionSpecialIdentifier] = this.question.Question;
+            foreach (var kvp in this.numbersToAnswers)
+            {
+                this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaSpecificAnswerHeaderSpecialIdentifier + kvp.Key] = kvp.Value;
+            }
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaAnswersSpecialIdentifier] = string.Join(", ", this.numbersToAnswers.OrderBy(a => a.Key).Select(a => $"{a.Key}) {a.Value}"));
             this.runParameters.SpecialIdentifiers[TriviaGameCommandModel.GameTriviaCorrectAnswerSpecialIdentifier] = this.question.CorrectAnswer;
 
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
-            await this.StartedCommand.Perform(this.runParameters);
+            await this.RunSubCommand(this.StartedCommand, this.runParameters);
 
             await Task.Delay(this.TimeLimit * 1000);
 
@@ -227,18 +232,18 @@ namespace MixItUp.Base.Model.Commands.Games
                     winners.Add(participant);
                     this.PerformPrimarySetPayout(participant.User, this.WinAmount);
                     participant.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
-                    await this.UserSuccessCommand.Perform(participant);
+                    await this.RunSubCommand(this.UserSuccessCommand, participant);
                 }
                 else
                 {
-                    await this.UserFailureCommand.Perform(participant);
+                    await this.RunSubCommand(this.UserFailureCommand, participant);
                 }
             }
 
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersCountSpecialIdentifier] = winners.Count.ToString();
-            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameWinnersSpecialIdentifier] = string.Join(", ", winners.Select(u => "@" + u.User.Username));
+            this.SetGameWinners(this.runParameters, winners);
             this.runParameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.WinAmount.ToString();
-            await this.CorrectAnswerCommand.Perform(this.runParameters);
+            this.runParameters.SpecialIdentifiers[GameCommandModelBase.GameAllPayoutSpecialIdentifier] = (this.WinAmount * winners.Count).ToString();
+            await this.RunSubCommand(this.CorrectAnswerCommand, this.runParameters);
 
             await this.PerformCooldown(this.runParameters);
             this.ClearData();
@@ -253,7 +258,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     CommandParametersModel parameters = new CommandParametersModel(message.User, message.Platform, message.ToArguments());
                     this.runUsers[message.User] = parameters;
                     this.runUserSelections[message.User] = choice;
-                    await this.UserJoinCommand.Perform(parameters);
+                    await this.RunSubCommand(this.UserJoinCommand, parameters);
                 }
             }
             catch (Exception ex)

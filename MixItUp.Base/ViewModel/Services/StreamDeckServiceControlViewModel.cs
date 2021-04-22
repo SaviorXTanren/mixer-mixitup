@@ -2,6 +2,6 @@
 {
     public class StreamDeckServiceControlViewModel : ServiceControlViewModelBase
     {
-        public StreamDeckServiceControlViewModel() : base("Stream Deck") { }
+        public StreamDeckServiceControlViewModel() : base(Resources.StreamDeck) { }
     }
 }

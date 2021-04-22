@@ -162,7 +162,7 @@ namespace MixItUp.Base.Model.Currency
                             CommandModelBase command = ChannelSession.Settings.GetCommand(ChannelSession.Settings.RedemptionStoreManualRedeemNeededCommandID);
                             if (command != null)
                             {
-                                await command.Perform(u);
+                                await ChannelSession.Services.Command.Queue(command, u);
                             }
 
                             GlobalEvents.RedemptionStorePurchasesUpdated();
@@ -295,7 +295,7 @@ namespace MixItUp.Base.Model.Currency
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                     specialIdentifiers[RedemptionStoreProductModel.ProductNameSpecialIdentifier] = product.Name;
 
-                    await command.Perform(new CommandParametersModel(user, specialIdentifiers: specialIdentifiers));
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, specialIdentifiers: specialIdentifiers));
                 }
 
                 if (this.State == RedemptionStorePurchaseRedemptionState.ManualRedeemNeeded)

@@ -17,9 +17,9 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void FailedCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((StealGameCommandEditorWindowViewModel)this.DataContext).FailedCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

@@ -18,12 +18,7 @@ namespace MixItUp.SignalR.Client
         public SignalRConnection(string address)
         {
             this.Address = address;
-            this.connection = new HubConnectionBuilder().AddJsonProtocol(options => {
-                options.PayloadSerializerSettings = new Newtonsoft.Json.JsonSerializerSettings()
-                {
-                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All, SerializationBinder = new CrossPlatformSerializationBinder()
-                };
-            }).WithUrl(this.Address).Build();
+            this.connection = new HubConnectionBuilder().AddJsonProtocol().WithUrl(this.Address).Build();
             this.connection.Closed += Connection_Closed;
         }
 
@@ -33,11 +28,23 @@ namespace MixItUp.SignalR.Client
         public void Listen<T1>(string methodName, Action<T1> handler) { this.connection.On<T1>(methodName, handler); }
         public void Listen<T1, T2>(string methodName, Action<T1, T2> handler) { this.connection.On<T1, T2>(methodName, handler); }
         public void Listen<T1, T2, T3>(string methodName, Action<T1, T2, T3> handler) { this.connection.On<T1, T2, T3>(methodName, handler); }
+        public void Listen<T1, T2, T3, T4>(string methodName, Action<T1, T2, T3, T4> handler) { this.connection.On<T1, T2, T3, T4>(methodName, handler); }
 
         public async Task Connect()
         {
-            await this.connection.StartAsync();
-            this.Connected?.Invoke(this, new EventArgs());
+            while (true)
+            {
+                try
+                {
+                    await this.connection.StartAsync();
+                    this.Connected?.Invoke(this, new EventArgs());
+                    return;
+                }
+                catch { }
+
+                // Retry in 5 seconds
+                await Task.Delay(5000);
+            }
         }
 
         public bool IsConnected() { return this.connection.State == HubConnectionState.Connected; }

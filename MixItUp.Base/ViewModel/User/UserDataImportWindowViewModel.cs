@@ -99,17 +99,16 @@ namespace MixItUp.Base.ViewModel.User
                 this.columnDictionary[column.Name] = column;
             }
 
-            this.UserDataFileBrowseCommand = this.CreateCommand((parameter) =>
+            this.UserDataFileBrowseCommand = this.CreateCommand(() =>
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.UserDataFilePath = filePath;
                 }
-                return Task.FromResult(0);
             });
 
-            this.ImportButtonCommand = this.CreateCommand(async (parameter) =>
+            this.ImportButtonCommand = this.CreateCommand(async () =>
             {
                 try
                 {
@@ -118,13 +117,13 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (string.IsNullOrEmpty(this.UserDataFilePath) || !File.Exists(this.UserDataFilePath))
                     {
-                        await DialogHelper.ShowMessage("A valid data file must be specified");
+                        await DialogHelper.ShowMessage(Resources.InvalidDataFile);
                         return;
                     }
 
                     if (!this.Columns[0].ColumnNumber.HasValue && !this.Columns[1].ColumnNumber.HasValue)
                     {
-                        await DialogHelper.ShowMessage("Your data file must include at least either" + Environment.NewLine + "the Mixer ID or Username columns.");
+                        await DialogHelper.ShowMessage(Resources.DataFileRequiredColumns);
                         return;
                     }
 
@@ -133,7 +132,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         if (column.ColumnNumber.HasValue && column.ColumnNumber <= 0)
                         {
-                            await DialogHelper.ShowMessage("A number 0 or greater must be specified for" + Environment.NewLine + "each column that you want to include.");
+                            await DialogHelper.ShowMessage(Resources.DataFileInvalidColumn);
                             return;
                         }
                         importingColumns.Add(column);
@@ -165,7 +164,7 @@ namespace MixItUp.Base.ViewModel.User
                         }
                         else
                         {
-                            await DialogHelper.ShowMessage("We were unable to read data from the file. Please make sure it is not already opened in another program.");
+                            await DialogHelper.ShowMessage(Resources.DataFileImportFailed);
                         }
                     }
                     else if (extension.Equals(".xls") || extension.Equals(".xlsx"))
@@ -325,17 +324,17 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (failedImports > 0)
                     {
-                        await DialogHelper.ShowMessage($"{usersImported} users were imported successfully, but {failedImports} users were not able to be imported. This could be due to invalid data or failure to find their information on the platform. Please contact support for further help with this if needed");
+                        await DialogHelper.ShowMessage(string.Format(Resources.ImportWithFailures, usersImported, failedImports));
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage($"{usersImported} users were imported successfully");
+                        await DialogHelper.ShowMessage(string.Format(Resources.ImportSuccess, usersImported));
                     }
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
-                    await DialogHelper.ShowMessage("We were unable to read data from the file. Please make sure it is not already opened in another program. If this continues, please reach out to support.");
+                    await DialogHelper.ShowMessage(Resources.ImportFailed);
                 }
                 this.ImportButtonText = MixItUp.Base.Resources.ImportData;
             });

@@ -135,37 +135,34 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         public OverlayItemPositionViewModel(OverlayItemPositionModel position)
         {
-            this.SimplePositionCommand = this.CreateCommand((parameter) =>
+            this.SimplePositionCommand = this.CreateCommand(() =>
             {
                 this.Horizontal = 50;
                 this.Vertical = 50;
                 this.PositionType = OverlayItemPositionType.Percentage;
-                return Task.FromResult(0);
             });
-            this.PercentagePositionCommand = this.CreateCommand((parameter) =>
+            this.PercentagePositionCommand = this.CreateCommand(() =>
             {
                 this.Horizontal = 0;
                 this.Vertical = 0;
                 this.PositionType = OverlayItemPositionType.Percentage;
-                return Task.FromResult(0);
             });
-            this.PixelPositionCommand = this.CreateCommand((parameter) =>
+            this.PixelPositionCommand = this.CreateCommand(() =>
             {
                 this.Horizontal = 0;
                 this.Vertical = 0;
                 this.PositionType = OverlayItemPositionType.Pixel;
-                return Task.FromResult(0);
             });
 
-            this.TopLeftSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(25, 25); return Task.FromResult(0); });
-            this.TopMiddleSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(50, 25); return Task.FromResult(0); });
-            this.TopRightSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(75, 25); return Task.FromResult(0); });
-            this.MiddleLeftSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(25, 50); return Task.FromResult(0); });
-            this.MiddleMiddleSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(50, 50); return Task.FromResult(0); });
-            this.MiddleRightSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(75, 50); return Task.FromResult(0); });
-            this.BottomLeftSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(25, 75); return Task.FromResult(0); });
-            this.BottomMiddleSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(50, 75); return Task.FromResult(0); });
-            this.BottomRightSimplePositionCommand = this.CreateCommand((parameter) => { this.SetSimplePosition(75, 75); return Task.FromResult(0); });
+            this.TopLeftSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(25, 25); });
+            this.TopMiddleSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(50, 25); });
+            this.TopRightSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(75, 25); });
+            this.MiddleLeftSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(25, 50); });
+            this.MiddleMiddleSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(50, 50); });
+            this.MiddleRightSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(75, 50); });
+            this.BottomLeftSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(25, 75); });
+            this.BottomMiddleSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(50, 75); });
+            this.BottomRightSimplePositionCommand = this.CreateCommand(() => { this.SetSimplePosition(75, 75); });
 
             this.SetPosition(position);
         }

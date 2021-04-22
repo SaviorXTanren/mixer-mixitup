@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace MixItUp.Base.Model.Requirements
     [DataContract]
     public class RoleRequirementModel : RequirementModelBase
     {
+        private static DateTimeOffset requirementErrorCooldown = DateTimeOffset.MinValue;
+
         [DataMember]
         public UserRoleEnum Role { get; set; }
 
@@ -36,6 +39,8 @@ namespace MixItUp.Base.Model.Requirements
             this.SubscriberTier = subscriberTier;
             this.PatreonBenefitID = patreonBenefitID;
         }
+
+        protected override DateTimeOffset RequirementErrorCooldown { get { return RoleRequirementModel.requirementErrorCooldown; } set { RoleRequirementModel.requirementErrorCooldown = value; } }
 
         public override Task<Result> Validate(CommandParametersModel parameters)
         {

@@ -41,8 +41,8 @@ namespace MixItUp.WPF.Controls.Settings
             settings.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
             settings.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
             settings.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
+            settings.Add(new SettingsOption(MixItUp.Base.Resources.Counters, new CountersSettingsControl()));
             settings.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));
-            settings.Add(new SettingsOption(MixItUp.Base.Resources.Remote, new RemoteSettingsControl()));
             settings.Add(new SettingsOption(MixItUp.Base.Resources.SerialDevices, new SerialDevicesSettingsControl()));
             settings.Add(new SettingsOption(MixItUp.Base.Resources.Advanced, new AdvancedSettingsControl()));
 

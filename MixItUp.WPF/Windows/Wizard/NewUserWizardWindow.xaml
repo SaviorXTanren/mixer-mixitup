@@ -156,9 +156,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" Text="{Binding ScorpBotDirectory}" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding ScorpBotDirectory}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ScorpBotInstallationDirectory}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding ScorpBotDirectoryBrowseCommand}">Browse</Button>
+                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding ScorpBotDirectoryBrowseCommand}" Content="{x:Static resx:Resources.Browse}"/>
                     </Grid>
                 </Grid>
 
@@ -198,7 +198,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" Text="{Binding StreamlabsChatbotDirectory}" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding StreamlabsChatbotDirectory}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamlabsChatBotDataFile}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Button Grid.Column="2" Grid.Row="0" Command="{Binding StreamlabsChatbotDirectoryBrowseCommand}">Browse</Button>
                     </Grid>
@@ -288,7 +288,7 @@
 
                                 <Button x:Name="SettingsBackupLocationButton" Grid.Row="0" Content="Set Location" Command="{Binding SetBackupLocationCommand}" />
 
-                                <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Backup Rate" ItemsSource="{Binding SettingsBackupOptions}" SelectedItem="{Binding SelectedSettingsBackupOption}" IsEnabled="{Binding IsBackupLocationSet, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                                <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackupRate}" ItemsSource="{Binding SettingsBackupOptions}" SelectedItem="{Binding SelectedSettingsBackupOption}" IsEnabled="{Binding IsBackupLocationSet, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                             </Grid>
                         </Grid>
 

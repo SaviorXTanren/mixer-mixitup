@@ -19,5 +19,9 @@ namespace MixItUp.Base.Services
             }
             return null;
         }
+
+        public virtual string Encrypt(string data) { return data; }
+
+        public virtual string Decrypt(string data) { return data; }
     }
 }

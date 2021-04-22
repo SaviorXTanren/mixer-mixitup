@@ -39,9 +39,15 @@ namespace MixItUp.Base.ViewModel.Actions
             {
                 this.enabled = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged(nameof(Disabled));
             }
         }
         private bool enabled;
+
+        public bool Disabled
+        {
+            get { return !this.enabled; }
+        }
 
         public bool IsMinimized
         {
@@ -77,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override Task OnLoadedInternal()
         {
-            this.PlayCommand = this.CreateCommand(async (parameter) =>
+            this.PlayCommand = this.CreateCommand(async () =>
             {
                 ActionModelBase action = await this.ValidateAndGetAction();
                 if (action != null)
@@ -86,33 +92,29 @@ namespace MixItUp.Base.ViewModel.Actions
                 }
             });
 
-            this.MoveUpCommand = this.CreateCommand((parameter) =>
+            this.MoveUpCommand = this.CreateCommand(() =>
             {
                 this.actionEditorListControlViewModel.MoveActionUp(this);
-                return Task.FromResult(0);
             });
 
-            this.MoveDownCommand = this.CreateCommand((parameter) =>
+            this.MoveDownCommand = this.CreateCommand(() =>
             {
                 this.actionEditorListControlViewModel.MoveActionDown(this);
-                return Task.FromResult(0);
             });
 
-            this.CopyCommand = this.CreateCommand(async (parameter) =>
+            this.CopyCommand = this.CreateCommand(async () =>
             {
                 await this.actionEditorListControlViewModel.DuplicateAction(this);
             });
 
-            this.HelpCommand = this.CreateCommand((parameter) =>
+            this.HelpCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + this.HelpLinkIdentifier);
-                return Task.FromResult(0);
             });
 
-            this.DeleteCommand = this.CreateCommand((parameter) =>
+            this.DeleteCommand = this.CreateCommand(() =>
             {
                 this.actionEditorListControlViewModel.DeleteAction(this);
-                return Task.FromResult(0);
             });
 
             return Task.FromResult(0);

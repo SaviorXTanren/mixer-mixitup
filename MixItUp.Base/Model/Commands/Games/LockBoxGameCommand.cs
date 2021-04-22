@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -82,7 +83,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             this.SetPrimaryCurrencyRequirementArgumentIndex(argumentIndex: 1);
 
@@ -94,9 +95,9 @@ namespace MixItUp.Base.Model.Commands.Games
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 this.AddSpecialIdentifiersToParameters(parameters);
-                await this.StatusCommand.Perform(parameters);
+                await this.RunSubCommand(this.StatusCommand, parameters);
 
-                return false;
+                return new Result(success: false);
             }
             else if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.InspectionArgument, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -109,21 +110,22 @@ namespace MixItUp.Base.Model.Commands.Games
                     int index = this.GenerateRandomNumber(currentCombinationString.Length);
                     this.AddSpecialIdentifiersToParameters(parameters);
                     parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanInspectionSpecialIdentifier] = currentCombinationString.ElementAt(index).ToString();
-                    await this.InspectionCommand.Perform(parameters);
+                    await this.RunSubCommand(this.InspectionCommand, parameters);
+
+                    ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
+
+                    return new Result(success: false);
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GetPrimaryCurrencyRequirement().Currency.Name));
+                    return new Result(string.Format(MixItUp.Base.Resources.CurrencyRequirementDoNotHaveAmount, this.InspectionCost, this.GetPrimaryCurrencyRequirement().Currency.Name));
                 }
-                return false;
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+
+            return new Result();
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && parameters.Arguments[0].Length == this.CombinationLength)
             {
@@ -134,19 +136,23 @@ namespace MixItUp.Base.Model.Commands.Games
                     if (guess == this.CurrentCombination)
                     {
                         parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = this.TotalAmount.ToString();
+                        this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
 
                         this.PerformPrimarySetPayout(parameters.User, this.TotalAmount);
                         this.ClearData();
 
-                        await this.SuccessfulCommand.Perform(parameters);
+                        await this.RunSubCommand(this.SuccessfulCommand, parameters);
                     }
                     else
                     {
                         parameters.SpecialIdentifiers[LockBoxGameCommandModel.GameHitmanHintSpecialIdentifier] =
                             (guess < this.CurrentCombination) ? MixItUp.Base.Resources.GameCommandLockBoxLow : MixItUp.Base.Resources.GameCommandLockBoxHigh;
-                        await this.FailureCommand.Perform(parameters);
+                        await this.RunSubCommand(this.FailureCommand, parameters);
                     }
                     await this.PerformCooldown(parameters);
+
+                    ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
+
                     return;
                 }
                 else

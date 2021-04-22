@@ -119,15 +119,24 @@ namespace MixItUp.WPF.Controls.Chat
                 BitmapImage bitmap = new BitmapImage();
                 using (WebClient client = new WebClient())
                 {
-                    var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(url); });
+                    var bytes = await Task.Run<byte[]>(async () =>
+                    {
+                        try
+                        {
+                            return await client.DownloadDataTaskAsync(url);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log("Failed to download image: " + url);
+                            throw ex;
+                        }
+                    });
                     bitmap = WindowsImageService.Load(bytes);
                 }
                 ChatImageControl.bitmapImages[url] = bitmap;
             }
             return ChatImageControl.bitmapImages[url];
         }
-
-        private bool IsGifImage(string url) { return url.Contains(".gif"); }
 
         private void ProcessGifImage(string url)
         {

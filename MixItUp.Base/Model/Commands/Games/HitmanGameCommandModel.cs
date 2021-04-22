@@ -105,7 +105,7 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             if (this.runParameters == null)
             {
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Model.Commands.Games
                 this.runParameters = parameters;
                 this.runUsers[parameters.User] = parameters;
 
-                this.GetPrimaryCurrencyRequirement().SetTemporaryAmount(this.runBetAmount);
+                this.GetPrimaryCurrencyRequirement()?.SetTemporaryAmount(this.runBetAmount);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 AsyncRunner.RunAsyncBackground(async (cancellationToken) =>
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.runUsers.Count < this.MinimumParticipants)
                     {
-                        await this.NotEnoughPlayersCommand.Perform(this.runParameters);
+                        await this.RunSubCommand(this.NotEnoughPlayersCommand, this.runParameters);
                         foreach (var kvp in this.runUsers.ToList())
                         {
                             await this.Requirements.Refund(kvp.Value);
@@ -134,13 +134,13 @@ namespace MixItUp.Base.Model.Commands.Games
                         return;
                     }
 
-                    await this.HitmanApproachingCommand.Perform(this.runParameters);
+                    await this.RunSubCommand(this.HitmanApproachingCommand, this.runParameters);
 
                     await DelayNoThrow(5000, cancellationToken);
 
                     GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
 
-                    await this.HitmanAppearsCommand.Perform(this.runParameters);
+                    await this.RunSubCommand(this.HitmanAppearsCommand, this.runParameters);
 
                     for (int i = 0; i < this.HitmanTimeLimit && this.gameActive; i++)
                     {
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     if (this.gameActive && !string.IsNullOrEmpty(this.runHitmanName))
                     {
-                        this.UserFailureCommand.Perform(this.runParameters);
+                        await this.RunSubCommand(this.UserFailureCommand, this.runParameters);
                         await this.PerformCooldown(this.runParameters);
                     }
                     this.gameActive = false;
@@ -160,14 +160,14 @@ namespace MixItUp.Base.Model.Commands.Games
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 this.gameActive = true;
-                await this.StartedCommand.Perform(this.runParameters);
-                await this.UserJoinCommand.Perform(this.runParameters);
+                await this.RunSubCommand(this.StartedCommand, this.runParameters);
+                await this.RunSubCommand(this.UserJoinCommand, this.runParameters);
                 return;
             }
             else if (string.IsNullOrEmpty(this.runHitmanName) && !this.runUsers.ContainsKey(parameters.User))
             {
                 this.runUsers[parameters.User] = parameters;
-                await this.UserJoinCommand.Perform(parameters);
+                await this.RunSubCommand(this.UserJoinCommand, parameters);
                 return;
             }
             else
@@ -191,10 +191,11 @@ namespace MixItUp.Base.Model.Commands.Games
 
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GamePayoutSpecialIdentifier] = payout.ToString();
                     winner.SpecialIdentifiers[HitmanGameCommandModel.GameHitmanNameSpecialIdentifier] = this.runHitmanName;
+                    this.SetGameWinners(this.runParameters, new List<CommandParametersModel>() { this.runParameters });
 
                     await this.PerformCooldown(this.runParameters);
                     this.ClearData();
-                    await this.UserSuccessCommand.Perform(winner);
+                    await this.RunSubCommand(this.UserSuccessCommand, winner);
                 }
             }
             catch (Exception ex)
@@ -210,7 +211,7 @@ namespace MixItUp.Base.Model.Commands.Games
             this.runBetAmount = 0;
             this.runHitmanName = null;
             this.runUsers.Clear();
-            this.GetPrimaryCurrencyRequirement().ResetTemporaryAmount();
+            this.GetPrimaryCurrencyRequirement()?.ResetTemporaryAmount();
         }
     }
 }

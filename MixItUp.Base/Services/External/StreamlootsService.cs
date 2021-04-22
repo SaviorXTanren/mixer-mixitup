@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -103,6 +105,7 @@ namespace MixItUp.Base.Services.External
 
     public interface IStreamlootsService : IOAuthExternalService
     {
+        event EventHandler OnStreamlootsConnectionChanged;
     }
 
     public class StreamlootsService : OAuthExternalServiceBase, IStreamlootsService
@@ -111,6 +114,8 @@ namespace MixItUp.Base.Services.External
         private Stream responseStream;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        public event EventHandler OnStreamlootsConnectionChanged = delegate { };
 
         public StreamlootsService() : base("") { }
 
@@ -135,6 +140,9 @@ namespace MixItUp.Base.Services.External
                 this.responseStream.Close();
                 this.responseStream = null;
             }
+
+            this.OnStreamlootsConnectionChanged(this, new EventArgs());
+
             return Task.FromResult(0);
         }
 
@@ -143,7 +151,11 @@ namespace MixItUp.Base.Services.External
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
             this.TrackServiceTelemetry("Streamloots");
+
+            this.OnStreamlootsConnectionChanged(this, new EventArgs());
+
             return Task.FromResult(new Result());
         }
 
@@ -264,6 +276,15 @@ namespace MixItUp.Base.Services.External
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
                 GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
+
+                if (giftee != null)
+                {
+                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Gifted {1} Pack(s) to {2}", user.DisplayName, purchase.data.Quantity, giftee.Username), ChannelSession.Settings.AlertStreamlootsColor));
+                }
+                else
+                {
+                    await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Purchases {1} Pack(s)", user.DisplayName, purchase.data.Quantity), ChannelSession.Settings.AlertStreamlootsColor));
+                }
             }
         }
 
@@ -275,21 +296,39 @@ namespace MixItUp.Base.Services.External
             {
                 UserViewModel user = this.GetUser(card.data.Username);
 
-                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
-                trigger.SpecialIdentifiers["streamlootscardname"] = card.data.cardName;
-                trigger.SpecialIdentifiers["streamlootscardimage"] = card.imageUrl;
-                trigger.SpecialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
-                trigger.SpecialIdentifiers["streamlootscardvideo"] = card.videoUrl;
-                trigger.SpecialIdentifiers["streamlootscardsound"] = card.soundUrl;
+                Dictionary<string, string> eventCommandSpecialIdentifiers = new Dictionary<string, string>();
+                eventCommandSpecialIdentifiers["streamlootscardname"] = card.data.cardName;
+                eventCommandSpecialIdentifiers["streamlootscardimage"] = card.imageUrl;
+                eventCommandSpecialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
+                eventCommandSpecialIdentifiers["streamlootscardvideo"] = card.videoUrl;
+                eventCommandSpecialIdentifiers["streamlootscardsound"] = card.soundUrl;
 
                 string message = card.data.Message;
                 if (string.IsNullOrEmpty(message))
                 {
                     message = card.data.LongMessage;
                 }
-                trigger.SpecialIdentifiers["streamlootsmessage"] = message;
+                eventCommandSpecialIdentifiers["streamlootsmessage"] = message;
 
+                List<string> arguments = new List<string>();
+                if (!string.IsNullOrEmpty(message))
+                {
+                    arguments = new List<string>(message.Split(' '));
+                }
+
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
+                trigger.Arguments = arguments;
+                trigger.SpecialIdentifiers = eventCommandSpecialIdentifiers;
                 await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                StreamlootsCardCommandModel command = ChannelSession.StreamlootsCardCommands.FirstOrDefault(c => string.Equals(c.Name, card.data.cardName, StringComparison.CurrentCultureIgnoreCase));
+                if (command != null)
+                {
+                    Dictionary<string, string> cardsCommandSpecialIdentifiers = new Dictionary<string, string>(eventCommandSpecialIdentifiers);
+                    await ChannelSession.Services.Command.Queue(command, new CommandParametersModel(user, platform: user.Platform, arguments: arguments, specialIdentifiers: cardsCommandSpecialIdentifiers));
+                }
+
+                await ChannelSession.Services.Alerts.AddAlert(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Redeemed {1} Card", user.DisplayName, card.data.cardName), ChannelSession.Settings.AlertStreamlootsColor));
             }
         }
 

@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services
         public IEventService Events { get; protected set; }
         public IAlertsService Alerts { get; protected set; }
 
+        public CommandService Command { get; protected set; }
         public ISettingsService Settings { get; protected set; }
         public SecretsService Secrets { get; protected set; }
         public StatisticsService Statistics { get; protected set; }
@@ -27,7 +28,8 @@ namespace MixItUp.Base.Services
         public IImageService Image { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
-        public LocalRemoteServiceBase RemoteService { get; protected set; }
+        public WebhookService WebhookService { get; protected set; }
+        public CommunityCommandsService CommunityCommandsService { get; protected set; }
 
         public IOverlayService Overlay { get; protected set; }
         public IStreamingSoftwareService OBSStudio { get; protected set; }

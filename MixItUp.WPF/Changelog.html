@@ -3,72 +3,120 @@
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     </head>
     <body>
+        <p style="font-size: large; color: red"><b><u>WARNING: The 0.5.9.0 update is a very large update that will upgrade your settings to a newer format and will take some time. Due to this, we encourage users to NOT take this update prior to streaming and instead during your free time. If you encounter any issues, please visit our discord server for support: http://mixitupapp.com/discord</u></b></p>
+
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5010:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.7:</h2>
         <ul>
-            <li>Deprecating Translation action due to low usage &amp; breaking change with the translation API service used</li>
-            <li>Updating Web Request action to support local file reading</li>
-            <li>Fixing bug with certain game commands where bet amount was not being properly read from the arguments</li>
-            <li>Fixing bug where random user selecting for game commands was not excluding users who were currency/rank exempt</li>
+            <li>Fixing crashing bug related to processing certain FrankerFaceZ emote images</li>
+            <li>Allowing text entry &amp; Special Identifier processing for item name in Currency/Rank/Inventory action</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5008-5009:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.6:</h2>
         <ul>
-            <li>Allowing for save-based File Actions to have an empty set of text to save</li>
-            <li>Adding new VIP Exclusive role to Usage Requirements that will only allow VIPs and not Subs, as opposed to the current VIP role which allows VIPs &amp; Subs. Moderators and higher will still be able to run the command</li>
+            <li>If you are already editing a command and attempt to open a 2nd window of the same command, it will now not open the 2nd window and instead focus the 1st window to prevent users from accidently saving an old or inaccurate version of the same command</li>
+            <li>Fixing bug with Coin Pusher &amp; Volcano game types not properly saving out their total amounts between sessions</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5007:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.5:</h2>
         <ul>
-            <li>Fixing bug with Append To File option for File Action not added newline before text</li>
-            <li>Possible bug fix for crash occuring for some users after logging in to app</li>
+            <li>Fixing crashing bug related to missing localization text for some languages</li>
+            <li>Adding Follower Event Moderation setting that allow for setting a maximum amount that can queue up before they are ignored</li>
+            <li>Adding initial 5 second cooldown on error messages for Cooldown Requirement to reduce spam of multiple users attempting to trigger a command at the same time</li>
+            <li>When running a command with a Currency Requirement of Minimum Only or Maximum &amp; Minimum, the amount used will default to the Minimum Amount if the user does not specify an amount or we are unable to detect the amount</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5006:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.4:</h2>
         <ul>
-            <li>Fixing bug with BetterTTV emotes not being properly loaded when app launched</li>
-            <li>Possible bug fix for crash occuring for some users after logging in to app</li>
+            <li>Updated localizations for Russian, Portuguese, Japanese, Spanish, German, French, &amp; Dutch</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5005:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.3:</h2>
         <ul>
-            <li>Adding $userdisplayname Special Identifier</li>
+            <li>Adding initial support for Russian language</li>
+            <li>Adding the ability to import old command format files temporarily. Please ensure if you are the creator of a command that is using the old format that you export your command in the newer format sometime soon, as this functionality will be removed.</li>
+            <li>Adding Special Identifier processing for Discord image file path</li>
+            <li>Fixing bug with Prime sub plan not being properly detected for subscription events</li>
+            <li>Adding $gameanswerX Special Identifiers to Trivia game command</li>
+            <li>Fixing bug with Trivia game command not showing Started sub-command in editor UI</li>
+            <li>Adding direct link button on Channel Points page that links directly to editor on Twitch</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5004:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.2:</h2>
         <ul>
-            <li>Fixing crashing bug related to chat command processing</li>
+            <li>Re-adding Save Chat Event Logs settings option to Settings -> Chat UI</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5003:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.1:</h2>
         <ul>
-            <li>Command lists such as Chat, Timers, &amp; Action Groups will now show a simplified version of the list instead if there is only 1 Command Group for all of the commands</li>
-            <li>Adding support Twitch Channel Point commands groups</li>
-            <li>Adding default names &amp; chat triggers for newly created Games</li>
-            <li>Adding Alert settings option for Donations</li>
-            <li>Various quality of life &amp; bug fixes</li>
+            <li>Updating Command Action to enable command locks if Wait Until Complete option is NOT selected</li>
+            <li>Fixing bug with certain Game Special Identifiers not processing correctly</li>
+            <li>Fixing bug with certain Game values not re-saving properly when editing an existing game</li>
+            <li>Fixing bug with Translation action still appearing in list of selectable actions to add to a command</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.8.5001-5002:</h2>
+        <h2 style="color: #2e6c80;">v0.5.9.0:</h2>
         <ul>
             <li>Command Updates:</li>
             <ul>
                 <li>Updating command editor to include detailed error messages for command settings, requirements, and actions</li>
-                <li>Currency, Rank, &amp; Inventory requirements now support the ability to have multiple per command</li>
-                <li>Adding Run For Each User option to Threshold requirement to have command trigger for each user that participated in the Threshold requirement</li>
                 <li>Twitch Channel Points command editor now has drop-down in Name field that lists the names of all the custom Channel Point Rewards the user has created on Twitch</li>
+                <li>Command lists such as Chat, Timers, &amp; Action Groups will now show a simplified version of the list instead if there is only 1 Command Group for all of the commands</li>
+                <li>Adding support for Twitch Channel Point commands groups</li>
+            </ul>
+            <li>Usage Requirement Updates</li>
+            <ul>
                 <li>Each requirement's error messages now have a cooldown to how often they are shown in chat to help minimize on spam. The default value is 10 seconds and can be configured by going to Settings -> Commands</li>
-                <li>Adding the ability to enable/disable individual actions within a command</li>
+                <li>Currency, Rank, &amp; Inventory requirements now support the ability to have multiple per command</li>
+                <li>Adding new VIP Exclusive role to Usage Requirements that will only allow VIPs and not Subs, as opposed to the current VIP role which allows VIPs &amp; Subs. Moderators and higher will still be able to run the command</li>
+                <li>Adding Run For Each User option to Threshold requirement to have command trigger for each user that participated in the Threshold requirement</li>
                 <li>Adding settings option to include the name of the user that attempted to run the command when sending error messages</li>
-                <li>Adding Rank Down Command to Rank Systems</li>
-                <li>Adding 10 second cooldown in for "!shop list" command for Inventories</li>
+            </ul>
+            <li>Action Updates:</li>
+            <ul>
+                <li>Adding the ability to enable/disable individual actions within a command</li>
+                <li>Conditional actions have been changed to allow for multiple actions to be run when they are triggered</li>
+                <li>Deprecating Translation action due to low usage &amp; breaking change with the translation API service used</li>
+                <li>Streaming Platform -&gt; Twitch Action:</li>
+                <ul>
+                    <li>The Streaming Platform action has been changed to the Twitch action</li>
+                    <li>The VIP User and Un-VIP User options have been moved from the Moderation action to the Twitch action</li>
+                    <li>The Clips action has been moved into the Twitch action</li>
+                    <li>Adding the ability to set a Stream Marker via the Twitch action</li>
+                </ul>
+                <li>Command Action:</li>
+                <ul>
+                    <li>When a command action is used, by default it will now wait for the selected sub-command to finish before continuing on in the parent command</li>
+                    <li>Existing command actions will NOT have the above setting enabled and will function as they used to, meaning they will NOT wait for the sub-command to finish</li>
+                    <li>Adding option to Command Action to determine whether sub-command should wait to finish before proceeding on to next action</li>
+                    <li>Adding buttons to Command Action to auto-create a new Action Group and edit the select command</li>
+                </ul>
+                <li>Streaming Software Action:</li>
+                <ul>
+                    <li>The Streaming Software action's source-based options can now handle folders and sub-items inside folders for OBS Studio. This may require re-installing the OBS web socket if you are running an older version.</li>
+                    <li>Adding Source Filter Visibility option to Streaming Software action for OBS Studio</li>
+                </ul>
+                <li>Web Request Action:</li>
+                <ul>
+                    <li>The Web Request action now stores its result into a Special Identifier called $webrequestresult and its output options have been removed and instead replaced with their respective actions.</li>
+                    <li>Adding the ability to process Special Identifiers for JSON Keys in Web Request Action</li>
+                    <li>Updating Web Request action to support local file reading</li>
+                </ul>
+                <li>File Action:</li>
+                <ul>
+                    <li>Adding "Insert To File At Specific Line" option to File Action</li>
+                    <li>Allowing for save-based File Actions to have an empty set of text to save</li>
+                </ul>
+                <li>Currency actions now process Math equations in the Amount field</li>
+                <li>External Program actions now have the ability to store their output into a Special Identifier called $externalprogramresult</li>
+                <li>Adding length() function to Special Identifier action</li>
             </ul>
             <li>Game Updates:</li>
             <ul>
@@ -77,38 +125,21 @@
                 <li>The Beach Ball game type functionality has been merged into the Hot Potato game type</li>
                 <li>The Vending Machine game type functionality has been merged into the Spin game type</li>
             </ul>
-            <li>Action Updates:</li>
-            <ul>
-                <li>Conditional actions have been changed to allow for multiple actions to be run when they are triggered</li>
-                <li>When a command action is used, by default it will wait for the selected sub-command to finish before continuing on in the parent command. An option is now available to determine whether sub-command should wait to finish before proceeding on to next action</li>
-                <li>Adding option to Command Action to determine whether sub-command should wait to finish before proceeding on to next action</li>
-                <li>Adding buttons to Command Action to auto-create a new Action Group and edit the select command</li>
-                <li>The Streaming Platform action has been changed to the Twitch action</li>
-                <li>The Clips action has been moved into the Twitch action</li>
-                <li>The VIP User and Un-VIP User options have been moved from the Moderation action to the Twitch action</li>
-                <li>The Streaming Software action's source-based options can now handle folders and sub-items inside folders for OBS Studio. This may require re-installing the OBS web socket if you are running an older version.</li>
-                <li>Adding Source Filter Visibility option to Streaming Software action for OBS Studio</li>
-                <li>Currency actions now process Math equations in the Amount field</li>
-                <li>The Translation action now stores its result into a Special Identifier called $translationresult and its output options have been removed and instead replaced with their respective actions.</li>
-                <li>The Web Request action now stores its result into a Special Identifier called $webrequestresult and its output options have been removed and instead replaced with their respective actions.</li>
-                <li>External Program actions now have the ability to store their output into a Special Identifier called $externalprogramresult</li>
-                <li>Adding "Insert To File At Specific Line" option to File Action</li>
-                <li>Adding the ability to set a Stream Marker via the Twitch action</li>
-                <li>Adding the ability to process Special Identifiers for JSON Keys in Web Request Action</li>
-                <li>Adding length() function to Special Identifier action</li>
-            </ul>
             <li>Special Identifier Updates:</li>
             <ul>
                 <li>Adding $streamcurrentscene Special Identifier for name of the current scene in OBS Studio &amp; Streamlabs OBS</li>
                 <li>Adding $gamequeuetotal for the total number of users in the Game Queue</li>
-                <li>Adding $translationresult Special Identifier for the result of a Translation action</li>
                 <li>Adding $webrequestresult Special Identifier for the result of a Web Request action</li>
                 <li>Adding $externalprogramresult Special Identifier for the result of a External Program action when option is toggled</li>
                 <li>Adding $userisvip Special Identifier</li>
                 <li>Adding $gamewinnerscount Special Identifier</li>
                 <li>Adding $commandname Special Identifier for the current running command</li>
+                <li>Adding $userdisplayname Special Identifier</li>
             </ul>
             <li>Removing Clip Playback Overlay Widget due to changes with Twitch's clip playback system</li>
+            <li>Adding Alert settings option for Donations</li>
+            <li>Adding Rank Down Command to Rank Systems</li>
+            <li>Fixing bug with BetterTTV emotes not being properly loaded when app launched</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 

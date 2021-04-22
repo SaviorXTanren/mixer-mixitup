@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Services
@@ -11,9 +10,9 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand TestConnectionCommand { get; set; }
 
         public XSplitServiceControlViewModel()
-            : base("XSplit")
+            : base(Resources.XSplit)
         {
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.EnableXSplitConnection = false;
 
@@ -30,22 +29,22 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.XSplit.Disconnect();
                 ChannelSession.Settings.EnableXSplitConnection = false;
                 this.IsConnected = false;
             });
 
-            this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
+            this.TestConnectionCommand = this.CreateCommand(async () =>
             {
                 if (await ChannelSession.Services.XSplit.TestConnection())
                 {
-                    await DialogHelper.ShowMessage("XSplit connection test successful!");
+                    await DialogHelper.ShowMessage(Resources.XSplitConnectionSuccess);
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.");
+                    await DialogHelper.ShowMessage(Resources.XSplitConnectionFailed);
                 }
             });
 

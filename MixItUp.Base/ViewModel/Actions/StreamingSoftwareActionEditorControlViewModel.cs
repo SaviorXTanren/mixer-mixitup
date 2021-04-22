@@ -324,7 +324,7 @@ namespace MixItUp.Base.ViewModel.Actions
 
         protected override async Task OnLoadedInternal()
         {
-            this.SourceGetCurrentDimensionsCommand = this.CreateCommand(async (parameter) =>
+            this.SourceGetCurrentDimensionsCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.SourceName))
                 {

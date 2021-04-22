@@ -3,6 +3,7 @@ using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Actions
@@ -10,6 +11,8 @@ namespace MixItUp.Base.ViewModel.Actions
     public class CounterActionEditorControlViewModel : ActionEditorControlViewModelBase
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.Counter; } }
+
+        public ThreadSafeObservableCollection<string> Counters { get; set; } = new ThreadSafeObservableCollection<string>();
 
         public bool SaveToFile
         {
@@ -101,6 +104,15 @@ namespace MixItUp.Base.ViewModel.Actions
             }
 
             return Task.FromResult(new Result());
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            foreach (var kvp in ChannelSession.Settings.Counters.ToList())
+            {
+                this.Counters.Add(kvp.Key);
+            }
+            await base.OnLoadedInternal();
         }
 
         protected override Task<ActionModelBase> GetActionInternal()

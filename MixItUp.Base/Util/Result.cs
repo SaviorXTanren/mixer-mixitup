@@ -10,6 +10,8 @@ namespace MixItUp.Base.Util
         public string Message { get; set; }
         public Exception Exception { get; set; }
 
+        public bool DisplayMessage { get; set; } = true;
+
         public Result() : this(true) { }
 
         public Result(bool success)

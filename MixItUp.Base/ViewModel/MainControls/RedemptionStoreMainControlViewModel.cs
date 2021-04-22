@@ -60,13 +60,13 @@ namespace MixItUp.Base.ViewModel.MainControls
             this.viewModel = viewModel;
             this.Purchase = purchase;
 
-            this.ManualRedeemCommand = this.CreateCommand(async (parameter) =>
+            this.ManualRedeemCommand = this.CreateCommand(async () =>
             {
                 await this.Purchase.Redeem();
                 this.viewModel.Refresh();
             });
 
-            this.RefundCommand = this.CreateCommand(async (parameter) =>
+            this.RefundCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmRefundRedemptionStorePurchase))
                 {
@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
             });
 
-            this.DeleteCommand = this.CreateCommand(async (parameter) =>
+            this.DeleteCommand = this.CreateCommand(async () =>
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ConfirmDeleteRedemptionStorePurchase))
                 {

@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Util
 {
@@ -25,7 +26,7 @@ namespace MixItUp.WPF.Util
 
             if (!string.IsNullOrEmpty(key))
             {
-                return MixItUp.Base.Resources.ResourceManager.GetString(key) ?? key;
+                return MixItUp.Base.Resources.ResourceManager.GetSafeString(key);
             }
 
             return string.Empty;

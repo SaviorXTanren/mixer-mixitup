@@ -57,6 +57,9 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ChatInteractiveParticipationComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipation;
             this.ChatParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
 
+            this.FollowEventModerationToggleButton.IsChecked = ChannelSession.Settings.ModerationFollowEvent;
+            this.FollowEventModerationMaxQueueTextBox.Text = ChannelSession.Settings.ModerationFollowEventMaxInQueue.ToString();
+
             this.ResetStrikesOnLaunchToggleButton.IsChecked = ChannelSession.Settings.ModerationResetStrikesOnLaunch;
             this.Strike1Command.DataContext = ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike1CommandID);
             this.Strike2Command.DataContext = ChannelSession.Settings.GetCommand(ChannelSession.Settings.ModerationStrike2CommandID);
@@ -93,6 +96,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     ChannelSession.Settings.ModerationChatInteractiveParticipation = (ModerationChatInteractiveParticipationEnum)this.ChatInteractiveParticipationComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (UserRoleEnum)this.ChatParticipationExemptComboBox.SelectedItem;
+
+                    if (ChannelSession.Settings.ModerationFollowEvent != this.FollowEventModerationToggleButton.IsChecked.GetValueOrDefault())
+                    {
+                        EventCommandModel.FollowEventsInQueue = 0;
+                    }
+                    ChannelSession.Settings.ModerationFollowEvent = this.FollowEventModerationToggleButton.IsChecked.GetValueOrDefault();
+                    int.TryParse(this.FollowEventModerationMaxQueueTextBox.Text, out int followEventModerationMaxQueue);
+                    ChannelSession.Settings.ModerationFollowEventMaxInQueue = Math.Max(followEventModerationMaxQueue, 0);
 
                     ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
@@ -147,35 +158,35 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Strike1Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) =>
             {
                 this.Strike1Command.DataContext = null;
                 this.Strike1Command.DataContext = command;
             };
-            window.Show();
+            window.ForceShow();
         }
 
         private void Strike2Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) =>
             {
                 this.Strike2Command.DataContext = null;
                 this.Strike2Command.DataContext = command;
             };
-            window.Show();
+            window.ForceShow();
         }
 
         private void Strike3Command_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) =>
             {
                 this.Strike3Command.DataContext = null;
                 this.Strike3Command.DataContext = command;
             };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
@@ -30,7 +31,7 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.DisplayName)))
                             {
                                 await ChannelSession.Services.Chat.BanUser(user);
                             }
@@ -45,13 +46,13 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.TwitchUserConnection.UnfollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
                             break;
                         case UserDialogResult.PromoteToMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.DisplayName)))
                             {
                                 await ChannelSession.Services.Chat.ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.DisplayName)))
+                            if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.DisplayName)))
                             {
                                 await ChannelSession.Services.Chat.UnmodUser(user);
                             }
@@ -60,11 +61,15 @@ namespace MixItUp.WPF.Controls.Chat
                             ProcessHelper.LaunchLink(user.ChannelLink);
                             break;
                         case UserDialogResult.EditUser:
-                            UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.GetUserData(user.ID));
-                            await Task.Delay(100);
-                            window.Show();
-                            await Task.Delay(100);
-                            window.Focus();
+                            UserDataModel userData = ChannelSession.Settings.GetUserData(user.ID);
+                            if (userData != null)
+                            {
+                                UserDataEditorWindow window = new UserDataEditorWindow(userData);
+                                await Task.Delay(100);
+                                window.Show();
+                                await Task.Delay(100);
+                                window.Focus();
+                            }
                             break;
                         case UserDialogResult.Close:
                         default:

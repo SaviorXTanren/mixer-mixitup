@@ -245,29 +245,29 @@ namespace MixItUp.Base.ViewModel.Currency
             tradeCommand.Actions.Add(new ChatActionModel("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
             this.TradeCommand = tradeCommand;
 
-            this.SaveItemCommand = this.CreateCommand(async (parameter) =>
+            this.SaveItemCommand = this.CreateCommand(async () =>
             {
                 if (string.IsNullOrEmpty(this.ItemName))
                 {
-                    await DialogHelper.ShowMessage("You must specify a name for the item");
+                    await DialogHelper.ShowMessage(Resources.ItemNameRequired);
                     return;
                 }
 
                 if (this.ItemMaxAmount < 0)
                 {
-                    await DialogHelper.ShowMessage("The item max amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage(Resources.ItemMaxAmountZeroOrMore);
                     return;
                 }
 
                 if (this.ItemBuyAmount < 0)
                 {
-                    await DialogHelper.ShowMessage("The item buy amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage(Resources.ItemBuyAmountZeroOrMore);
                     return;
                 }
 
                 if (this.ItemSellAmount < 0)
                 {
-                    await DialogHelper.ShowMessage("The item sell amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage(Resources.ItemSellAmountZeroOrMore);
                     return;
                 }
 
@@ -276,7 +276,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     InventoryItemModel existingItem = this.Items.FirstOrDefault(i => i.Name.Equals(this.ItemName, StringComparison.CurrentCultureIgnoreCase));
                     if (existingItem != null)
                     {
-                        await DialogHelper.ShowMessage("An item with the same name already exists");
+                        await DialogHelper.ShowMessage(Resources.DuplicateItemName);
                         return;
                     }
 
@@ -296,21 +296,20 @@ namespace MixItUp.Base.ViewModel.Currency
                 this.SelectedItem = null;
             });
 
-            this.ManualResetCommand = this.CreateCommand(async (parameter) =>
+            this.ManualResetCommand = this.CreateCommand(async () =>
             {
                 if (this.Inventory != null)
                 {
-                    if (await DialogHelper.ShowConfirmation("Do you want to reset all item amounts?"))
+                    if (await DialogHelper.ShowConfirmation(Resources.ResetAllItemPrompt))
                     {
                         await this.Inventory.Reset();
                     }
                 }
             });
 
-            this.HelpCommand = this.CreateCommand((parameter) =>
+            this.HelpCommand = this.CreateCommand(() =>
             {
                 ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency,-Rank,-&-Inventory");
-                return Task.FromResult(0);
             });
         }
 
@@ -318,33 +317,33 @@ namespace MixItUp.Base.ViewModel.Currency
         {
             if (string.IsNullOrEmpty(this.Name))
             {
-                await DialogHelper.ShowMessage("An inventory name must be specified");
+                await DialogHelper.ShowMessage(Resources.InventoryNameRequired);
                 return false;
             }
 
             InventoryModel dupeInventory = ChannelSession.Settings.Inventory.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeInventory != null && (this.inventory == null || !this.inventory.ID.Equals(dupeInventory.ID)))
             {
-                await DialogHelper.ShowMessage("There already exists an inventory with this name");
+                await DialogHelper.ShowMessage(Resources.InventoryNameDuplicate);
                 return false;
             }
 
             CurrencyModel dupeCurrency = ChannelSession.Settings.Currency.Values.FirstOrDefault(c => c.Name.Equals(this.Name));
             if (dupeCurrency != null)
             {
-                await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
+                await DialogHelper.ShowMessage(Resources.CurrencyRankNameDuplicate);
                 return false;
             }
 
             if (this.DefaultItemMaxAmount <= 0)
             {
-                await DialogHelper.ShowMessage("The default max amount must be greater than 0");
+                await DialogHelper.ShowMessage(Resources.DefaultMaxGreaterThanZero);
                 return false;
             }
 
             if (this.Items.Count() == 0)
             {
-                await DialogHelper.ShowMessage("At least 1 item must be added");
+                await DialogHelper.ShowMessage(Resources.OneItemRequired);
                 return false;
             }
 
@@ -352,13 +351,13 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 if (string.IsNullOrEmpty(this.ShopCommandText))
                 {
-                    await DialogHelper.ShowMessage("A command name must be specified for the shop");
+                    await DialogHelper.ShowMessage(Resources.CommandNameRequiredForShop);
                     return false;
                 }
 
                 if (this.SelectedShopCurrency == null)
                 {
-                    await DialogHelper.ShowMessage("A currency must be specified for the shop");
+                    await DialogHelper.ShowMessage(Resources.ShopCurrencyRequired);
                     return false;
                 }
             }
@@ -367,7 +366,7 @@ namespace MixItUp.Base.ViewModel.Currency
             {
                 if (string.IsNullOrEmpty(this.TradeCommandText))
                 {
-                    await DialogHelper.ShowMessage("A command name must be specified for trading");
+                    await DialogHelper.ShowMessage(Resources.TradingCommandRequired);
                     return false;
                 }
             }

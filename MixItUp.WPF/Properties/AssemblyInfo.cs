@@ -5,12 +5,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MixItUp.WPF")]
+[assembly: AssemblyTitle("Mix It Up")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Matthew Olivo")]
-[assembly: AssemblyProduct("MixItUp.WPF")]
-[assembly: AssemblyCopyright("Copyright © 2020 Matthew Olivo")]
+[assembly: AssemblyProduct("Mix It Up")]
+[assembly: AssemblyCopyright("Copyright © 2021 Matthew Olivo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -48,4 +48,4 @@ using System.Windows;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.5.8.5010")]
+[assembly: AssemblyVersion("0.5.9.7001")]

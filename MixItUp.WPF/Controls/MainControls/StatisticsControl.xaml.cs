@@ -94,6 +94,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         //            if (!result)
         //            {
+        //                // NOTE: If this gets uncommented, move to resources file!
         //                await DialogHelper.ShowMessage("We were unable to build the spreadsheet for your statistics. Please ensure you have Microsoft Excel installed, otherwise we can not properly export your statistics data.");
         //            }
         //        }

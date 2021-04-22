@@ -2,15 +2,13 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Dashboard;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -381,20 +379,6 @@ namespace MixItUp.Base.Model.Settings
         public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         #endregion Overlay
-
-        #region Remote
-
-        [DataMember]
-        public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
-        [DataMember]
-        public List<RemoteConnectionModel> RemoteClientConnections { get; set; } = new List<RemoteConnectionModel>();
-
-        [DataMember]
-        public List<RemoteProfileModel> RemoteProfiles { get; set; } = new List<RemoteProfileModel>();
-        [DataMember]
-        public Dictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; set; } = new Dictionary<Guid, RemoteProfileBoardsModel>();
-
-        #endregion Remote
 
         #region Services
 

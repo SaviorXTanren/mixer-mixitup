@@ -236,7 +236,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.GoalReached = true;
                     if (this.ProgressGoalReachedCommand != null)
                     {
-                        await this.ProgressGoalReachedCommand.Perform();
+                        await ChannelSession.Services.Command.Queue(this.ProgressGoalReachedCommand);
                     }
                 }
             }

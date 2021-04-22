@@ -305,7 +305,7 @@ namespace MixItUp.Base.Model.Overlay
 
                     if (this.StreamBossChangedCommand != null)
                     {
-                        await this.StreamBossChangedCommand.Perform();
+                        await ChannelSession.Services.Command.Queue(this.StreamBossChangedCommand);
                     }
                 }
 

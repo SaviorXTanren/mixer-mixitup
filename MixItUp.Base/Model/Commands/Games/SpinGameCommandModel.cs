@@ -35,9 +35,9 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override IEnumerable<CommandModelBase> GetInnerCommands() { return this.Outcomes.Select(o => o.Command); }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
-            await this.PerformOutcome(parameters, this.SelectRandomOutcome(parameters.User, this.Outcomes));
+            await this.RunOutcome(parameters, this.SelectRandomOutcome(parameters.User, this.Outcomes));
             await this.PerformCooldown(parameters);
         }
     }

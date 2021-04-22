@@ -48,20 +48,16 @@ namespace MixItUp.Base.ViewModel.Settings
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS },
                 ChannelSession.Settings.DefaultStreamingSoftware, (value) => { ChannelSession.Settings.DefaultStreamingSoftware = value; });
 
-            string defaultAudioOption = SoundActionModel.DefaultAudioDevice;
+            string defaultAudioOption = ChannelSession.Services.AudioService.DefaultAudioDevice;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
             {
                 defaultAudioOption = ChannelSession.Settings.DefaultAudioOutput;
             }
 
-            List<string> audioOptions = new List<string>();
-            audioOptions.Add(SoundActionModel.DefaultAudioDevice);
-            audioOptions.AddRange(ChannelSession.Services.AudioService.GetOutputDevices());
-
             this.DefaultAudioOutput = new GenericComboBoxSettingsOptionControlViewModel<string>(MixItUp.Base.Resources.DefaultAudioOutput,
-                audioOptions, defaultAudioOption, (value) =>
+                ChannelSession.Services.AudioService.GetSelectableAudioDevices(), defaultAudioOption, (value) =>
                 {
-                    if (value.Equals(SoundActionModel.DefaultAudioDevice))
+                    if (value.Equals(ChannelSession.Services.AudioService.DefaultAudioDevice))
                     {
                         ChannelSession.Settings.DefaultAudioOutput = null;
                     }

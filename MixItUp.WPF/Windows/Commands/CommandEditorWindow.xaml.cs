@@ -1,9 +1,16 @@
-﻿using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Commands;
 using MixItUp.WPF.Controls.Commands;
+using StreamingClient.Base.Util;
 using System;
+using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Windows.Commands
 {
@@ -12,15 +19,32 @@ namespace MixItUp.WPF.Windows.Commands
     /// </summary>
     public partial class CommandEditorWindow : LoadingWindowBase
     {
+        private Guid commandId = Guid.Empty;
+
         public CommandEditorDetailsControlBase editorDetailsControl { get; private set; }
 
         public CommandEditorWindowViewModelBase viewModel { get; private set; }
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
-        public CommandEditorWindow(CommandModelBase existingCommand)
+        private static Dictionary<Guid, CommandEditorWindow> OpenWindows = new Dictionary<Guid, CommandEditorWindow>();
+        public static CommandEditorWindow GetCommandEditorWindow(CommandModelBase existingCommand)
+        {
+            if (OpenWindows.TryGetValue(existingCommand.ID, out var window))
+            {
+                return window;
+            }
+
+            window = new CommandEditorWindow(existingCommand);
+            OpenWindows.Add(existingCommand.ID, window);
+            return window;
+        }
+
+        private CommandEditorWindow(CommandModelBase existingCommand)
             : this()
         {
+            commandId = existingCommand.ID;
+
             switch (existingCommand.Type)
             {
                 case CommandTypeEnum.Chat:
@@ -42,6 +66,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.ActionGroup:
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
                     this.viewModel = new ActionGroupCommandEditorWindowViewModel((ActionGroupCommandModel)existingCommand);
+                    break;
+                case CommandTypeEnum.StreamlootsCard:
+                    this.editorDetailsControl = new StreamlootsCardCommandEditorDetailsControl();
+                    this.viewModel = new StreamlootsCardCommandEditorWindowViewModel((StreamlootsCardCommandModel)existingCommand);
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
@@ -78,6 +106,10 @@ namespace MixItUp.WPF.Windows.Commands
                 case CommandTypeEnum.ActionGroup:
                     this.editorDetailsControl = new ActionGroupCommandEditorDetailsControl();
                     this.viewModel = new ActionGroupCommandEditorWindowViewModel();
+                    break;
+                case CommandTypeEnum.StreamlootsCard:
+                    this.editorDetailsControl = new StreamlootsCardCommandEditorDetailsControl();
+                    this.viewModel = new StreamlootsCardCommandEditorWindowViewModel();
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
@@ -134,10 +166,94 @@ namespace MixItUp.WPF.Windows.Commands
             await base.OnLoaded();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            OpenWindows.Remove(this.commandId);
+            base.OnClosed(e);
+        }
+
         private void ViewModel_CommandSaved(object sender, CommandModelBase command)
         {
             this.CommandSaved(this, command);
             this.Close();
+        }
+
+        public void ForceShow()
+        {
+            if (!this.IsVisible)
+            {
+                this.Show();
+            }
+
+            if (this.WindowState == System.Windows.WindowState.Minimized)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+            }
+
+            this.Activate();
+            this.Topmost = true;  // important
+            this.Topmost = false; // important
+            this.Focus();         // important
+        }
+
+        private void CommandEditorWindow_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                e.Handled = true;
+                this.ActionsGrid.Visibility = Visibility.Hidden;
+                this.ImportCommandVisualGrid.Visibility = Visibility.Visible;
+            }
+        }
+
+        private async void CommandEditorWindow_Drop(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                bool success = false;
+                try
+                {
+                    e.Handled = true;
+                    this.ActionsGrid.Visibility = Visibility.Visible;
+                    this.ImportCommandVisualGrid.Visibility = Visibility.Hidden;
+
+                    string filename = ((string[])obj)[0];
+                    if (!string.IsNullOrEmpty(filename))
+                    {
+                        CommandModelBase command = await FileSerializerHelper.DeserializeFromFile<CommandModelBase>(filename);
+                        if (command != null)
+                        {
+                            foreach (ActionModelBase action in command.Actions)
+                            {
+                                await this.viewModel.AddAction(action);
+                            }
+                            success = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+
+                if (!success)
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.FailedToImportCommand);
+                }
+            }
+        }
+
+        private void CommandEditorWindow_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            object obj = e.Data.GetData("FileNameW");
+            if (obj != null)
+            {
+                e.Handled = true;
+                this.ActionsGrid.Visibility = Visibility.Visible;
+                this.ImportCommandVisualGrid.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

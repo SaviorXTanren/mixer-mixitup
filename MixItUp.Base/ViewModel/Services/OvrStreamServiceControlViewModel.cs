@@ -22,11 +22,11 @@ namespace MixItUp.Base.ViewModel.Services
         public ICommand DisconnectCommand { get; set; }
 
         public OvrStreamServiceControlViewModel()
-            : base("OvrStream")
+            : base(Resources.OvrStream)
         {
             this.OvrStreamAddress = OvrStreamServiceControlViewModel.DefaultOvrStreamConnection;
 
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
 
@@ -41,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 await ChannelSession.Services.OvrStream.Disconnect();
                 this.IsConnected = false;

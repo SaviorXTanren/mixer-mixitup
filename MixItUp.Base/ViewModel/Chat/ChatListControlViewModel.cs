@@ -92,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Chat
         public ChatListControlViewModel(UIViewModelBase windowViewModel)
             : base(windowViewModel)
         {
-            this.SendMessageCommand = this.CreateCommand(async (parameter) =>
+            this.SendMessageCommand = this.CreateCommand(async () =>
             {
                 if (!string.IsNullOrEmpty(this.SendMessageText))
                 {
@@ -172,11 +172,10 @@ namespace MixItUp.Base.ViewModel.Chat
                 }
             });
 
-            this.ScrollingLockCommand = this.CreateCommand((parameter) =>
+            this.ScrollingLockCommand = this.CreateCommand(() =>
             {
                 this.IsScrollingLocked = !this.IsScrollingLocked;
                 this.ScrollingLockChanged(this, new EventArgs());
-                return Task.FromResult(0);
             });
 
             GlobalEvents.OnChatVisualSettingsChanged += GlobalEvents_OnChatVisualSettingsChanged;

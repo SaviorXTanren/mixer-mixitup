@@ -207,6 +207,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Grid.Column="0">
@@ -227,26 +229,31 @@
                             </Grid>
                         </GroupBox.Header>
 
-                        <Grid HorizontalAlignment="Center" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
-                            <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                                <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+                            </Grid>
+
+                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRuleAndStrikes}" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-
                         </Grid>
                     </GroupBox>
 
@@ -255,14 +262,14 @@
                             <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.ChatParticipation}"/>
                         </GroupBox.Header>
 
-                        <Grid HorizontalAlignment="Center" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="ChatInteractiveParticipationComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumRequirement}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatInteractiveParticipationComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumRequirement}" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
@@ -270,13 +277,40 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                            <ComboBox x:Name="ChatParticipationExemptComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ExemptFromRule}" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="4">
+                        <GroupBox.Header>
+                            <TextBlock Foreground="{StaticResource WhiteColor}" Text="{x:Static resx:Resources.FollowEventModeration}"/>
+                        </GroupBox.Header>
+
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="15" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" />
+                                <ToggleButton x:Name="FollowEventModerationToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+                            </Grid>
+
+                            <TextBox x:Name="FollowEventModerationMaxQueueTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FollowEventModerationMaxQueue}" LostFocus="TextBoxes_LostFocus" />
                         </Grid>
                     </GroupBox>
                 </Grid>

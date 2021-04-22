@@ -15,10 +15,11 @@
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding AllowCommandWhispering}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IgnoreBotAccount}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding DeleteChatCommandsWhenRun}" />
-            <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding UnlockAllCommandTypes}" />
+            <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding CommandLockSystem}" />
 
             <Separator Margin="10" />
 
+            <GenericSettingsControls:GenericComboBoxSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownType}" />
             <GenericSettingsControls:GenericNumberSettingsOptionControl DataContext="{Binding RequirementErrorsCooldownAmount}" />
             <GenericSettingsControls:GenericToggleSettingsOptionControl DataContext="{Binding IncludeUsernameWithRequirementErrors}" />
 

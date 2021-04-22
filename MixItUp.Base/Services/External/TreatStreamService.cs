@@ -230,20 +230,13 @@ namespace MixItUp.Base.Services.External
                     this.TrackServiceTelemetry("TreatStream");
                     return new Result();
                 }
-                return new Result("Failed to connect to Socket");
+                return new Result(Resources.TreatStreamSocketFailed);
             }
-            return new Result("Failed to get Socket token");
+            return new Result(Resources.TreatStreamSocketTokenFailed);
         }
 
         private async Task<bool> ConnectSocket()
         {
-            await this.socket.Connect("https://nodeapi.treatstream.com/", "token=" + this.socketToken);
-
-            this.socket.Listen("connect", (data) =>
-            {
-                this.WebSocketConnected = true;
-            });
-
             this.socket.Listen("realTimeTreat", (data) =>
             {
                 if (data != null)
@@ -281,6 +274,9 @@ namespace MixItUp.Base.Services.External
                 this.WebSocketDisconnectedOccurred();
                 await this.ConnectSocket();
             });
+
+            await this.socket.Connect("wss://nodeapi.treatstream.com/?token=" + this.socketToken);
+            this.WebSocketConnected = true;
 
             for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
             {

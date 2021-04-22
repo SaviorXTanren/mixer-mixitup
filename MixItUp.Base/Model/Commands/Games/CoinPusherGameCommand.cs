@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -70,21 +71,18 @@ namespace MixItUp.Base.Model.Commands.Games
             return commands;
         }
 
-        protected override async Task<bool> ValidateRequirements(CommandParametersModel parameters)
+        public override async Task<Result> CustomValidation(CommandParametersModel parameters)
         {
             if (parameters.Arguments.Count == 1 && string.Equals(parameters.Arguments[0], this.StatusArgument, StringComparison.CurrentCultureIgnoreCase))
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
-                await this.StatusCommand.Perform(parameters);
-                return false;
+                await this.RunSubCommand(this.StatusCommand, parameters);
+                return new Result(success: false);
             }
-            else
-            {
-                return await base.ValidateRequirements(parameters);
-            }
+            return new Result();
         }
 
-        protected override async Task PerformInternal(CommandParametersModel parameters)
+        public override async Task CustomRun(CommandParametersModel parameters)
         {
             int betAmount = this.GetPrimaryBetAmount(parameters);
             this.TotalAmount += betAmount;
@@ -97,14 +95,17 @@ namespace MixItUp.Base.Model.Commands.Games
 
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
                 parameters.SpecialIdentifiers[GameCommandModelBase.GamePayoutSpecialIdentifier] = payout.ToString();
-                await this.SuccessCommand.Perform(parameters);
+                this.SetGameWinners(parameters, new List<CommandParametersModel>() { parameters });
+                await this.RunSubCommand(this.SuccessCommand, parameters);
             }
             else
             {
                 parameters.SpecialIdentifiers[GameCommandModelBase.GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
-                await this.FailureCommand.Perform(parameters);
+                await this.RunSubCommand(this.FailureCommand, parameters);
             }
             await this.PerformCooldown(parameters);
+
+            ChannelSession.Settings.Commands.ManualValueChanged(this.ID);
         }
     }
 }

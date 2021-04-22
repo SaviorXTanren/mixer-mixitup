@@ -1,0 +1,95 @@
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.CountersSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="0" BorderThickness="1" Width="525">
+                <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center" ItemsSource="{Binding Counters}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+                                <TextBox Grid.Column="2" Text="{Binding Amount}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <Grid Grid.Column="4" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Grid.Row="0" Text="{Binding Source={x:Static resx:Resources.SaveToFile}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" HorizontalAlignment="Center" />
+                                    <ToggleButton Grid.Row="2" IsChecked="{Binding SaveToFile}" HorizontalAlignment="Center" />
+                                </Grid>
+
+                                <Grid Grid.Column="6" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="{Binding Source={x:Static resx:Resources.ResetOnLoad}, StringFormat={x:Static resx:Resources.ColumnHeaderFormat}}" HorizontalAlignment="Center" />
+                                    <ToggleButton Grid.Row="2" IsChecked="{Binding ResetOnLoad}" HorizontalAlignment="Center" />
+                                </Grid>
+
+                                <Button Grid.Column="8" Margin="10,0,0,0" Width="40" Command="{Binding DeleteCommand}" ToolTip="{x:Static resx:Resources.Delete}">
+                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
+
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding NewCounterName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CounterNameWithTips}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="350" />
+
+                <Button Grid.Column="2" Command="{Binding AddNewCounterCommand}" Content="{x:Static resx:Resources.Add}" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</local:SettingsControlBase>

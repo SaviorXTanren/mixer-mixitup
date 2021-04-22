@@ -53,7 +53,7 @@
         </DataGrid>
 
         <Grid Grid.Row="2">
-            <Button Grid.Column="2" x:Name="AddStreamPassButton" Click="AddStreamPassButton_Click" Content="{x:Static resx:Resources.AddStreamPass}" Width="150" />
+            <Button Grid.Column="2" x:Name="AddStreamPassButton" Click="AddStreamPassButton_Click" Content="{x:Static resx:Resources.AddStreamPass}" Width="200" />
         </Grid>
     </Grid>
 </local:MainControlBase>

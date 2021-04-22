@@ -42,6 +42,13 @@ namespace MixItUp.Base.Util
             return l.Values;
         }
 
+        public static T RemoveFirst<T>(this IList<T> list)
+        {
+            T result = list.FirstOrDefault();
+            list.Remove(result);
+            return result;
+        }
+
         public static T Random<T>(this IEnumerable<T> list)
         {
             if (list.Count() > 0)

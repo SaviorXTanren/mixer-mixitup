@@ -26,11 +26,11 @@ namespace MixItUp.Base.ViewModel.Services
         public Func<string> Password { get; set; }
 
         public OBSStudioServiceControlViewModel()
-            : base("OBS Studio")
+            : base(Resources.OBSStudio)
         {
             this.IPAddress = OBSStudioServiceControlViewModel.DefaultOBSStudioConnection;
 
-            this.ConnectCommand = this.CreateCommand(async (parameter) =>
+            this.ConnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OBSStudioServerIP = this.IPAddress;
                 ChannelSession.Settings.OBSStudioServerPassword = this.Password();
@@ -47,7 +47,7 @@ namespace MixItUp.Base.ViewModel.Services
                 }
             });
 
-            this.DisconnectCommand = this.CreateCommand(async (parameter) =>
+            this.DisconnectCommand = this.CreateCommand(async () =>
             {
                 ChannelSession.Settings.OBSStudioServerIP = null;
                 ChannelSession.Settings.OBSStudioServerPassword = null;
@@ -56,15 +56,15 @@ namespace MixItUp.Base.ViewModel.Services
                 this.IsConnected = false;
             });
 
-            this.TestConnectionCommand = this.CreateCommand(async (parameter) =>
+            this.TestConnectionCommand = this.CreateCommand(async () =>
             {
                 if (await ChannelSession.Services.OBSStudio.TestConnection())
                 {
-                    await DialogHelper.ShowMessage("OBS Studio connection test successful!");
+                    await DialogHelper.ShowMessage(Resources.OBSStudioSuccess);
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("OBS Studio connection test failed, Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio.");
+                    await DialogHelper.ShowMessage(Resources.OBSStudioFailed);
                 }
             });
 

@@ -1,10 +1,13 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Twitch.Base.Models.NewAPI.Ads;
+using Twitch.Base.Models.NewAPI.ChannelPoints;
 using Twitch.Base.Models.NewAPI.Clips;
 using Twitch.Base.Models.NewAPI.Streams;
 
@@ -19,6 +22,7 @@ namespace MixItUp.Base.Model.Actions
         RunAd,
         Clip,
         StreamMarker,
+        UpdateChannelPointReward,
     }
 
     [DataContract]
@@ -29,7 +33,7 @@ namespace MixItUp.Base.Model.Actions
 
         public const int StreamMarkerMaxDescriptionLength = 140;
 
-        private const string StartinCommercialBreakMessage = "Starting commercial break. Keep in mind you are still live and not all viewers will receive a commercial.";
+        private const string StartinCommercialBreakMessage = "Starting commercial break.";
 
         public static readonly IEnumerable<int> SupportedAdLengths = new List<int>() { 30, 60, 90, 120, 150, 180 };
 
@@ -63,6 +67,19 @@ namespace MixItUp.Base.Model.Actions
             return actionModel;
         }
 
+        public static TwitchActionModel CreateUpdateChannelPointReward(Guid id, bool state, int cost, bool updateCooldownsAndLimits, int maxPerStream, int maxPerUser, int globalCooldown)
+        {
+            TwitchActionModel action = new TwitchActionModel(TwitchActionType.UpdateChannelPointReward);
+            action.ChannelPointRewardID = id;
+            action.ChannelPointRewardState = state;
+            action.ChannelPointRewardCost = cost;
+            action.ChannelPointRewardUpdateCooldownsAndLimits = updateCooldownsAndLimits;
+            action.ChannelPointRewardMaxPerStream = maxPerStream;
+            action.ChannelPointRewardMaxPerUser = maxPerUser;
+            action.ChannelPointRewardGlobalCooldown = globalCooldown;
+            return action;
+        }
+
         [DataMember]
         public TwitchActionType ActionType { get; set; }
         [DataMember]
@@ -79,6 +96,21 @@ namespace MixItUp.Base.Model.Actions
 
         [DataMember]
         public string StreamMarkerDescription { get; set; }
+
+        [DataMember]
+        public Guid ChannelPointRewardID { get; set; }
+        [DataMember]
+        public bool ChannelPointRewardState { get; set; }
+        [DataMember]
+        public int ChannelPointRewardCost { get; set; }
+        [DataMember]
+        public bool ChannelPointRewardUpdateCooldownsAndLimits { get; set; }
+        [DataMember]
+        public int ChannelPointRewardMaxPerStream { get; set; }
+        [DataMember]
+        public int ChannelPointRewardMaxPerUser { get; set; }
+        [DataMember]
+        public int ChannelPointRewardGlobalCooldown { get; set; }
 
         private TwitchActionModel(TwitchActionType type)
             : base(ActionTypeEnum.Twitch)
@@ -152,7 +184,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
                 }
-                else if (!string.IsNullOrEmpty(response.message) && !string.Equals(response.message, StartinCommercialBreakMessage, System.StringComparison.InvariantCultureIgnoreCase))
+                else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
                 {
                     await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
                 }
@@ -227,6 +259,72 @@ namespace MixItUp.Base.Model.Actions
                     return;
                 }
                 await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
+            }
+            else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
+            {
+                JObject jobj = new JObject()
+                {
+                    { "is_enabled", this.ChannelPointRewardState },
+                };
+
+                if (this.ChannelPointRewardCost > 0) { jobj["cost"] = this.ChannelPointRewardCost; }
+
+                if (this.ChannelPointRewardUpdateCooldownsAndLimits)
+                {
+                    if (this.ChannelPointRewardMaxPerStream > 0)
+                    {
+                        jobj["max_per_stream_setting"] = new JObject()
+                        {
+                            { "is_enabled", true },
+                            { "max_per_stream", this.ChannelPointRewardMaxPerStream }
+                        };
+                    }
+                    else
+                    {
+                        jobj["max_per_stream_setting"] = new JObject()
+                        {
+                            { "is_enabled", false },
+                        };
+                    }
+
+                    if (this.ChannelPointRewardMaxPerUser > 0)
+                    {
+                        jobj["max_per_user_per_stream_setting"] = new JObject()
+                        {
+                            { "is_enabled", true },
+                            { "max_per_user_per_stream", this.ChannelPointRewardMaxPerUser }
+                        };
+                    }
+                    else
+                    {
+                        jobj["max_per_user_per_stream_setting"] = new JObject()
+                        {
+                            { "is_enabled", false },
+                        };
+                    }
+
+                    if (this.ChannelPointRewardGlobalCooldown > 0)
+                    {
+                        jobj["global_cooldown_setting"] = new JObject()
+                        {
+                            { "is_enabled", true },
+                            { "global_cooldown_seconds", this.ChannelPointRewardGlobalCooldown * 60 }
+                        };
+                    }
+                    else
+                    {
+                        jobj["global_cooldown_setting"] = new JObject()
+                        {
+                            { "is_enabled", false },
+                        };
+                    }
+                }
+
+                CustomChannelPointRewardModel reward = await ChannelSession.TwitchUserConnection.UpdateCustomChannelPointReward(ChannelSession.TwitchUserNewAPI, this.ChannelPointRewardID, jobj);
+                if (reward == null)
+                {
+                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.TwitchActionChannelPointRewardCouldNotBeUpdated);
+                }
             }
         }
     }

@@ -17,30 +17,30 @@ namespace MixItUp.WPF.Controls.Commands.Games
 
         private void SuccessCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((LockBoxGameCommandEditorWindowViewModel)this.DataContext).SuccessfulCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void FailureCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((LockBoxGameCommandEditorWindowViewModel)this.DataContext).FailureCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void StatusCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((LockBoxGameCommandEditorWindowViewModel)this.DataContext).StatusCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
 
         private void InspectionCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            CommandEditorWindow window = new CommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
+            CommandEditorWindow window = CommandEditorWindow.GetCommandEditorWindow(FrameworkElementHelpers.GetDataContext<CustomCommandModel>(sender));
             window.CommandSaved += (object s, CommandModelBase command) => { ((LockBoxGameCommandEditorWindowViewModel)this.DataContext).InspectionCommand = (CustomCommandModel)command; };
-            window.Show();
+            window.ForceShow();
         }
     }
 }

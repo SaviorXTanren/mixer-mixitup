@@ -5,9 +5,9 @@ namespace MixItUp.Base.Services
 {
     public interface ISocketIOConnection
     {
-        Task Connect(string connectionURL);
+        event EventHandler OnDisconnected;
 
-        Task Connect(string connectionURL, string query);
+        Task Connect(string connectionURL);
 
         Task Disconnect();
 

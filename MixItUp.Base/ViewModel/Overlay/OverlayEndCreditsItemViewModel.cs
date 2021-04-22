@@ -56,14 +56,13 @@ namespace MixItUp.Base.ViewModel.Overlay
         private OverlayEndCreditsSectionItemViewModel(OverlayEndCreditsItemViewModel container)
         {
             this.container = container;
-            this.DeleteItemCommand = this.CreateCommand((parameter) =>
+            this.DeleteItemCommand = this.CreateCommand(() =>
             {
                 this.container.DeleteItem(this);
-                return Task.FromResult(0);
             });
         }
 
-        public string SectionTypeName { get { return EnumHelper.GetEnumName(this.SectionType); } }
+        public string SectionTypeName { get { return EnumLocalizationHelper.GetLocalizedName(this.SectionType); } }
 
         public OverlayEndCreditsSectionModel GetItem()
         {
@@ -107,7 +106,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.backgroundColor; }
             set
             {
-                this.backgroundColor = value;
+                this.backgroundColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -129,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.sectionTextColor; }
             set
             {
-                this.sectionTextColor = value;
+                this.sectionTextColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -162,7 +161,7 @@ namespace MixItUp.Base.ViewModel.Overlay
             get { return this.itemTextColor; }
             set
             {
-                this.itemTextColor = value;
+                this.itemTextColor = MixItUp.Base.Resources.ResourceManager.GetSafeString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -186,21 +185,20 @@ namespace MixItUp.Base.ViewModel.Overlay
         public OverlayEndCreditsItemViewModel()
         {
             this.speed = OverlayEndCreditsSpeedEnum.Medium;
-            this.BackgroundColor = "Black";
+            this.BackgroundColor = Resources.Black;
             this.SectionTextFont = "Arial";
-            this.SectionTextColor = "White";
+            this.SectionTextColor = Resources.White;
             this.sectionTextSize = 48;
             this.ItemTextFont = "Arial";
-            this.ItemTextColor = "White";
+            this.ItemTextColor = Resources.White;
             this.itemTextSize = 24;
 
             this.HTML = OverlayEndCreditsItemModel.TitleHTMLTemplate;
 
-            this.AddItemCommand = this.CreateCommand((parameter) =>
+            this.AddItemCommand = this.CreateCommand(() =>
             {
                 this.SectionItems.Add(new OverlayEndCreditsSectionItemViewModel(this, this.itemType));
                 this.ItemType = OverlayEndCreditsSectionTypeEnum.Chatters; // The first
-                return Task.FromResult(0);
             });
         }
 
