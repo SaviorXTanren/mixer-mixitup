@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
                 commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainProgress));
-                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainBegin));
+                commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHypeTrainEnd));
             }
 
             commands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
