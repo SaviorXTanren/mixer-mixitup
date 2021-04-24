@@ -98,6 +98,12 @@ namespace MixItUp.Base.ViewModel.Actions
                 return Task.FromResult(new Result(MixItUp.Base.Resources.CounterActionMissingName));
             }
 
+            this.CounterName = this.CounterName.Replace("$", "");
+            if (!SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.CounterName))
+            {
+                return Task.FromResult(new Result(MixItUp.Base.Resources.CounterActionInvalidName));
+            }
+
             if (this.CanSetAmount && string.IsNullOrEmpty(this.Amount))
             {
                 return Task.FromResult(new Result(MixItUp.Base.Resources.CounterActionMissingAmount));

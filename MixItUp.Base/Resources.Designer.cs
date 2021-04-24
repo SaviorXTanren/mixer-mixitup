@@ -2175,6 +2175,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Counter Action: Counter name can only contain alpha-numeric characters.
+        /// </summary>
+        public static string CounterActionInvalidName {
+            get {
+                return ResourceManager.GetString("CounterActionInvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Counter Action: Missing amount.
         /// </summary>
         public static string CounterActionMissingAmount {
@@ -8693,6 +8702,15 @@ namespace MixItUp.Base {
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name can only contain alpha-numeric characters.
+        /// </summary>
+        public static string NameInvalidAlphaNumericOnly {
+            get {
+                return ResourceManager.GetString("NameInvalidAlphaNumericOnly", resourceCulture);
             }
         }
         
