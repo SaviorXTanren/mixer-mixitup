@@ -617,8 +617,12 @@ namespace MixItUp.Base.Services
             if (version < 2)
             {
                 SettingsV3Model settings = await FileSerializerHelper.DeserializeFromFile<SettingsV3Model>(filePath, ignoreErrors: true);
+                await settings.Initialize();
 
-                settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch] = new StreamingPlatformAuthenticationSettingsModel(StreamingPlatformTypeEnum.Twitch);
+                if (settings.StreamingPlatformAuthentications.ContainsKey(StreamingPlatformTypeEnum.Twitch))
+                {
+                    settings.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = null;
+                }
 
 #pragma warning disable CS0612 // Type or member is obsolete
                 if (settings.UnlockAllCommands)
