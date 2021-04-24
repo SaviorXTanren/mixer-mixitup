@@ -71,6 +71,7 @@ namespace MixItUp.Base.Model.Commands
                 case EventTypeEnum.StreamJarDonation:
                 case EventTypeEnum.JustGivingDonation:
                 case EventTypeEnum.StreamElementsDonation:
+                case EventTypeEnum.StreamElementsMerchPurchase:
                     UserDonationModel donation = new UserDonationModel()
                     {
                         Amount = 12.34,
@@ -98,6 +99,12 @@ namespace MixItUp.Base.Model.Commands
                     if (eventType == EventTypeEnum.TreatStreamDonation)
                     {
                         specialIdentifiers["donationtype"] = "Pizza";
+                    }
+
+                    if (eventType == EventTypeEnum.StreamElementsMerchPurchase)
+                    {
+                        specialIdentifiers["allitems"] = "Shirt x2, Mug x3, Hat x4";
+                        specialIdentifiers["totalitems"] = "9";
                     }
                     break;
                 case EventTypeEnum.PatreonSubscribed:
