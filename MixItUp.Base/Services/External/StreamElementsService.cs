@@ -139,6 +139,8 @@ namespace MixItUp.Base.Services.External
         private const string TipEvent = "tip-latest";
         private const string MerchEvent = "merch-latest";
 
+        private const string MerchTotalItemsSpecialIdentifier = "totalitems";
+
         public bool WebSocketConnected { get; private set; }
 
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
@@ -280,7 +282,9 @@ namespace MixItUp.Base.Services.External
                                     if (tipEvent.items.Count > 0)
                                     {
                                         List<string> arguments = new List<string>(tipEvent.items.Select(i => $"{i.name} x{i.quantity.GetValueOrDefault()}"));
-                                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsMerchPurchase, tipEvent.ToGenericDonation(), arguments: arguments);
+                                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                        specialIdentifiers[StreamElementsService.MerchTotalItemsSpecialIdentifier] = tipEvent.items.Sum(i => i.quantity.GetValueOrDefault()).ToString();
+                                        await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsMerchPurchase, tipEvent.ToGenericDonation(), arguments: arguments, additionalSpecialIdentifiers: specialIdentifiers);
                                     }
                                 }
                             }

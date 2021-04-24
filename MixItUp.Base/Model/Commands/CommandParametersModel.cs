@@ -31,7 +31,8 @@ namespace MixItUp.Base.Model.Commands
 
         public static CommandParametersModel GetTestParameters(Dictionary<string, string> specialIdentifiers)
         {
-            return new CommandParametersModel(ChannelSession.GetCurrentUser(), StreamingPlatformTypeEnum.All, new List<string>() { "@" + ChannelSession.GetCurrentUser().Username }, specialIdentifiers) { TargetUser = ChannelSession.GetCurrentUser() };
+            UserViewModel currentUser = ChannelSession.GetCurrentUser();
+            return new CommandParametersModel(currentUser, StreamingPlatformTypeEnum.All, new List<string>() { "@" + currentUser.Username }, specialIdentifiers) { TargetUser = currentUser };
         }
 
         [DataMember]

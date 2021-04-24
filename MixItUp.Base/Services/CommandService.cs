@@ -206,7 +206,10 @@ namespace MixItUp.Base.Services
 
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
-                List<CommandParametersModel> runnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
+                if (commandInstance.RunnerParameters.Count == 0)
+                {
+                    commandInstance.RunnerParameters = new List<CommandParametersModel>() { commandInstance.Parameters };
+                }
 
                 CommandModelBase command = commandInstance.Command;
                 if (command != null)
@@ -214,15 +217,13 @@ namespace MixItUp.Base.Services
                     commandInstance.Parameters.SpecialIdentifiers[CommandModelBase.CommandNameSpecialIdentifier] = command.Name;
 
                     command.TrackTelemetry();
-
-                    runnerParameters = commandInstance.RunnerParameters;
                 }
 
                 Logger.Log(LogLevel.Debug, $"Starting command performing: {this}");
 
                 commandInstance.State = CommandInstanceStateEnum.Running;
 
-                foreach (CommandParametersModel p in runnerParameters)
+                foreach (CommandParametersModel p in commandInstance.RunnerParameters)
                 {
                     p.User.Data.TotalCommandsRun++;
                     await this.RunDirectlyInternal(commandInstance, p);
