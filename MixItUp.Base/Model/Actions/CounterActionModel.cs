@@ -47,12 +47,11 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            string counterName = await this.ReplaceStringWithSpecialModifiers(this.CounterName, parameters);
-            if (ChannelSession.Settings.Counters.ContainsKey(counterName))
+            if (ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
                 if (this.ActionType == CounterActionTypeEnum.Reset)
                 {
-                    await ChannelSession.Settings.Counters[counterName].ResetAmount();
+                    await ChannelSession.Settings.Counters[this.CounterName].ResetAmount();
                 }
                 else
                 {
@@ -61,11 +60,11 @@ namespace MixItUp.Base.Model.Actions
                     {
                         if (this.ActionType == CounterActionTypeEnum.Update)
                         {
-                            await ChannelSession.Settings.Counters[counterName].UpdateAmount(amount);
+                            await ChannelSession.Settings.Counters[this.CounterName].UpdateAmount(amount);
                         }
                         else if (this.ActionType == CounterActionTypeEnum.Set)
                         {
-                            await ChannelSession.Settings.Counters[counterName].SetAmount(amount);
+                            await ChannelSession.Settings.Counters[this.CounterName].SetAmount(amount);
                         }
                     }
                 }

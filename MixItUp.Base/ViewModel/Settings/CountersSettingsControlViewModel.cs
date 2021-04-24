@@ -96,6 +96,13 @@ namespace MixItUp.Base.ViewModel.Settings
                     return;
                 }
 
+                this.NewCounterName = this.NewCounterName.Replace("$", "");
+                if (!SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.NewCounterName))
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.NameInvalidAlphaNumericOnly);
+                    return;
+                }
+
                 ChannelSession.Settings.Counters[this.NewCounterName] = new CounterModel(this.NewCounterName);
                 this.NewCounterName = string.Empty;
 

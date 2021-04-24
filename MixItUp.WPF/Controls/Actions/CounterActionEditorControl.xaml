@@ -57,7 +57,7 @@
                 <ColumnDefinition Width="200" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Counters}" Text="{Binding CounterName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CounterNameWithTips}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Counters}" Text="{Binding CounterName}" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CounterNameWithTips}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
             <ComboBox Grid.Column="2" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemTemplate>
