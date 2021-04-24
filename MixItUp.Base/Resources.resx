@@ -5516,4 +5516,7 @@ folder path correctly and that the folder path is accessible to Mix It Up.</valu
   <data name="StreamElementsMerchPurchase" xml:space="preserve">
     <value>StreamElements Merch Purchase</value>
   </data>
+  <data name="AddToExistingCommand" xml:space="preserve">
+    <value>Add To Existing Command</value>
+  </data>
 </root>

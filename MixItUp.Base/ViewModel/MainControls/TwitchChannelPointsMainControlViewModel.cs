@@ -16,6 +16,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         public TwitchChannelPointsMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
         {
+            GroupedCommandsMainControlViewModelBase.OnCommandAddedEdited += GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited;
+
             this.CreateChannelPointRewardCommand = this.CreateCommand(async () =>
             {
                 string name = await DialogHelper.ShowTextEntry(MixItUp.Base.Resources.ChannelPointRewardName);
@@ -53,6 +55,14 @@ namespace MixItUp.Base.ViewModel.MainControls
         protected override IEnumerable<CommandModelBase> GetCommands()
         {
             return ChannelSession.TwitchChannelPointsCommands.ToList();
+        }
+
+        private void GroupedCommandsMainControlViewModelBase_OnCommandAddedEdited(object sender, CommandModelBase command)
+        {
+            if (command.Type == CommandTypeEnum.TwitchChannelPoints)
+            {
+                this.AddCommand(command);
+            }
         }
     }
 }

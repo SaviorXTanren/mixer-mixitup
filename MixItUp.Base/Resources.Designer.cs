@@ -457,6 +457,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add To Existing Command.
+        /// </summary>
+        public static string AddToExistingCommand {
+            get {
+                return ResourceManager.GetString("AddToExistingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to specific user.
         /// </summary>
         public static string AddToSpecificUser {

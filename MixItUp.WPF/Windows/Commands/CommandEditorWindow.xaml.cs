@@ -19,7 +19,18 @@ namespace MixItUp.WPF.Windows.Commands
     /// </summary>
     public partial class CommandEditorWindow : LoadingWindowBase
     {
-        private Guid commandId = Guid.Empty;
+        private static Dictionary<Guid, CommandEditorWindow> OpenWindows = new Dictionary<Guid, CommandEditorWindow>();
+        public static CommandEditorWindow GetCommandEditorWindow(CommandModelBase existingCommand, IEnumerable<ActionModelBase> actions = null)
+        {
+            if (OpenWindows.TryGetValue(existingCommand.ID, out var window))
+            {
+                return window;
+            }
+
+            window = new CommandEditorWindow(existingCommand, actions);
+            OpenWindows.Add(existingCommand.ID, window);
+            return window;
+        }
 
         public CommandEditorDetailsControlBase editorDetailsControl { get; private set; }
 
@@ -27,20 +38,11 @@ namespace MixItUp.WPF.Windows.Commands
 
         public event EventHandler<CommandModelBase> CommandSaved = delegate { };
 
-        private static Dictionary<Guid, CommandEditorWindow> OpenWindows = new Dictionary<Guid, CommandEditorWindow>();
-        public static CommandEditorWindow GetCommandEditorWindow(CommandModelBase existingCommand)
-        {
-            if (OpenWindows.TryGetValue(existingCommand.ID, out var window))
-            {
-                return window;
-            }
+        private Guid commandId = Guid.Empty;
 
-            window = new CommandEditorWindow(existingCommand);
-            OpenWindows.Add(existingCommand.ID, window);
-            return window;
-        }
+        private IEnumerable<ActionModelBase> importedActions = null;
 
-        private CommandEditorWindow(CommandModelBase existingCommand)
+        private CommandEditorWindow(CommandModelBase existingCommand, IEnumerable<ActionModelBase> actions = null)
             : this()
         {
             commandId = existingCommand.ID;
@@ -80,13 +82,16 @@ namespace MixItUp.WPF.Windows.Commands
                     this.viewModel = new UserOnlyChatCommandEditorWindowViewModel((UserOnlyChatCommandModel)existingCommand);
                     break;
             }
+
+            this.importedActions = actions;
+
             this.DataContext = this.ViewModel = this.viewModel;
 
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.ViewModel.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
         }
 
-        public CommandEditorWindow(CommandTypeEnum commandType, string name = null)
+        public CommandEditorWindow(CommandTypeEnum commandType, string name = null, IEnumerable<ActionModelBase> actions = null)
             : this()
         {
             switch (commandType)
@@ -113,9 +118,16 @@ namespace MixItUp.WPF.Windows.Commands
                     break;
                 case CommandTypeEnum.Custom:
                     this.editorDetailsControl = new CustomCommandEditorDetailsControl();
-                    this.viewModel = (!string.IsNullOrEmpty(name)) ? new CustomCommandEditorWindowViewModel(name) : new CustomCommandEditorWindowViewModel();
+                    this.viewModel = new CustomCommandEditorWindowViewModel();
                     break;
             }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.viewModel.Name = name;
+            }
+            this.importedActions = actions;
+
             this.DataContext = this.ViewModel = this.viewModel;
 
             this.ViewModel.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
@@ -160,6 +172,14 @@ namespace MixItUp.WPF.Windows.Commands
         {
             this.viewModel.CommandSaved += ViewModel_CommandSaved;
             await this.viewModel.OnLoaded();
+
+            if (this.importedActions != null)
+            {
+                foreach (ActionModelBase action in this.importedActions)
+                {
+                    await this.viewModel.AddAction(action);
+                }
+            }
 
             this.DetailsContentControl.Content = this.editorDetailsControl;
 
