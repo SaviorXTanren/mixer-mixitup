@@ -143,6 +143,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             IEnumerable<CommandInstanceModel> commandInstances = ChannelSession.Services.Command.CommandInstances;
 
+            commandInstances = commandInstances.Where(c => c.ShowInUI);
+
             this.filterApplied = false;
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -176,7 +178,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void Command_OnCommandInstanceAdded(object sender, CommandInstanceModel commandInstance)
         {
-            if (!this.filterApplied)
+            if (!this.filterApplied && commandInstance.ShowInUI)
             {
                 this.CommandInstances.Insert(0, new CommandInstanceViewModel(commandInstance));
             }

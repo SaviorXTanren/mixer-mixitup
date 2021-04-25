@@ -41,6 +41,8 @@ namespace MixItUp.Base.ViewModel.Commands
 
         public bool HasErrorMessage { get { return !string.IsNullOrEmpty(this.ErrorMessage); } }
 
+        public bool ShowInUI { get { return this.model.ShowInUI; } }
+
         public bool IsSelected
         {
             get { return this.isSelected; }

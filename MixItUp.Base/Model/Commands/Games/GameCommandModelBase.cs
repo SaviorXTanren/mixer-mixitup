@@ -328,7 +328,10 @@ namespace MixItUp.Base.Model.Commands.Games
 
         protected async Task RunSubCommand(CommandModelBase command, CommandParametersModel parameters)
         {
-            await ChannelSession.Services.Command.Queue(command, parameters);
+            await ChannelSession.Services.Command.Queue(new CommandInstanceModel(command, parameters)
+            {
+                ShowInUI = false
+            });
         }
 
         protected void PerformPrimarySetPayout(UserViewModel user, int payout)

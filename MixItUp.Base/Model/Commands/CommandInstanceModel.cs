@@ -57,6 +57,9 @@ namespace MixItUp.Base.Model.Commands
         [DataMember]
         public string ErrorMessage { get; set; }
 
+        [DataMember]
+        public bool ShowInUI { get; set; } = true;
+
         [JsonIgnore]
         public CommandModelBase Command
         {

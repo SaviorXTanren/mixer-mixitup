@@ -82,7 +82,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Time}" Binding="{Binding DateTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True" Width="80" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Time}" Binding="{Binding DateTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True" Width="90" />
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
