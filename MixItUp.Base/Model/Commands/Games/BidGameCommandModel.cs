@@ -123,6 +123,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
+
             int betAmount = this.GetPrimaryBetAmount(parameters);
             if (betAmount > this.lastBidAmount)
             {

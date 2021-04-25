@@ -115,6 +115,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
+
             await this.SetSelectedUser(this.PlayerSelectionType, parameters);
             if (parameters.TargetUser != null)
             {

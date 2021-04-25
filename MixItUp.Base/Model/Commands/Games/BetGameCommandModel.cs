@@ -198,6 +198,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
+
             int.TryParse(parameters.Arguments[0], out int choice);
             this.runUsers[parameters.User] = parameters;
             this.runUserSelections[parameters.User] = choice;
