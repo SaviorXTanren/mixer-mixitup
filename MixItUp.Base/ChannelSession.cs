@@ -193,8 +193,7 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, "OAuth connection failed");
-                throw ex;
+                Logger.Log(ex);
             }
 
             try
