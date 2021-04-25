@@ -108,13 +108,13 @@ namespace MixItUp.Base.Model.Commands
 
         public CommandInstanceModel(CommandModelBase command, CommandParametersModel parameters)
         {
-            if (command is PreMadeChatCommandModelBase)
+            if (ChannelSession.Settings.Commands.ContainsKey(command.ID))
             {
-                this.command = command;
+                this.CommandID = command.ID;
             }
             else
             {
-                this.CommandID = command.ID;
+                this.command = command;
             }
             this.Parameters = parameters;
         }
