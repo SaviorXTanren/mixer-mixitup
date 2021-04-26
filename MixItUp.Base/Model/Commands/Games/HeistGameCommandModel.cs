@@ -105,6 +105,7 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
             if (this.runParameters == null)
             {
                 this.runParameters = parameters;

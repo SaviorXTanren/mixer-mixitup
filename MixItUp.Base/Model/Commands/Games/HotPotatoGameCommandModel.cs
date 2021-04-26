@@ -89,6 +89,8 @@ namespace MixItUp.Base.Model.Commands.Games
 
         public override async Task CustomRun(CommandParametersModel parameters)
         {
+            await this.RefundCooldown(parameters);
+
             var lastTargetUser = this.lastTossParameters?.TargetUser;
             if (this.gameActive && lastTargetUser != parameters.User)
             {

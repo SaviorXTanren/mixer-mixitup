@@ -201,6 +201,8 @@ namespace MixItUp.Base.Model.Commands.Games
             return actionTypes;
         }
 
+        protected async Task RefundCooldown(CommandParametersModel parameters) { await this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel).Refund(parameters); }
+
         protected async Task PerformCooldown(CommandParametersModel parameters) { await this.Requirements.Requirements.FirstOrDefault(r => r is CooldownRequirementModel).Perform(parameters); }
 
         protected async Task SetSelectedUser(GamePlayerSelectionType selectionType, CommandParametersModel parameters)

@@ -25,8 +25,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandStartSettings}" HorizontalAlignment="Center">
@@ -54,10 +52,6 @@
             <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.UserJoined}">
                 <CommandsControls:CommandListingButtonsControl x:Name="UserJoinCommand" DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="UserJoinCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
-
-            <GroupBox Grid.Column="6" Header="{x:Static resx:Resources.GameCommandNotEnoughPlayers}">
-                <CommandsControls:CommandListingButtonsControl x:Name="NotEnoughPlayersCommand" DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="NotEnoughPlayersCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
-            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -69,21 +63,27 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandHitmanHitmanApproaching}">
+            <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.GameCommandNotEnoughPlayers}">
+                <CommandsControls:CommandListingButtonsControl x:Name="NotEnoughPlayersCommand" DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="NotEnoughPlayersCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandHitmanHitmanApproaching}">
                 <CommandsControls:CommandListingButtonsControl x:Name="HitmanApproachingCommand" DataContext="{Binding HitmanApproachingCommand}" HorizontalAlignment="Center" EditClicked="HitmanApproachingCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.GameCommandHitmanHitmanAppears}">
+            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandHitmanHitmanAppears}">
                 <CommandsControls:CommandListingButtonsControl x:Name="HitmanAppearsCommand" DataContext="{Binding HitmanAppearsCommand}" HorizontalAlignment="Center" EditClicked="HitmanAppearsCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.GameCommandUserWin}">
+            <GroupBox Grid.Column="6" Header="{x:Static resx:Resources.GameCommandUserWin}">
                 <CommandsControls:CommandListingButtonsControl x:Name="UserSuccessCommand" DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="UserSuccessCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="6" Header="{x:Static resx:Resources.GameCommandUserLose}">
+            <GroupBox Grid.Column="8" Header="{x:Static resx:Resources.GameCommandUserLose}">
                 <CommandsControls:CommandListingButtonsControl x:Name="UserFailureCommand" DataContext="{Binding UserFailureCommand}" HorizontalAlignment="Center" EditClicked="UserFailureCommand_EditClicked" HideDeleteButton="True" HideEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
