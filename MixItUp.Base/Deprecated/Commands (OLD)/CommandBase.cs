@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Model;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -300,20 +301,20 @@ namespace MixItUp.Base.Commands
                 token.ThrowIfCancellationRequested();
 
                 ActionBase action = actionsToRun[i];
-                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                if (action is OverlayAction && ServiceManager.Get<OverlayService>().IsConnected)
                 {
-                    ChannelSession.Services.Overlay.StartBatching();
+                    ServiceManager.Get<OverlayService>().StartBatching();
                 }
 
                 Logger.Log(LogLevel.Debug, $"Running action for command: {this.Name} - {action.Type}");
 
                 await action.Perform(user, this.platform, arguments, extraSpecialIdentifiers);
 
-                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                if (action is OverlayAction && ServiceManager.Get<OverlayService>().IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
-                        await ChannelSession.Services.Overlay.EndBatching();
+                        await ServiceManager.Get<OverlayService>().EndBatching();
                     }
                 }
             }

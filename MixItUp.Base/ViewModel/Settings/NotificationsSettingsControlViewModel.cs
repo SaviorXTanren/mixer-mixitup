@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Settings.Generic;
 using MixItUp.Base.ViewModels;
@@ -35,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 }
                 else if (this.Sound.Equals(CustomSoundName))
                 {
-                    string selectedSound = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.MusicFileFilter());
+                    string selectedSound = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().MusicFileFilter());
                     if (!string.IsNullOrEmpty(selectedSound))
                     {
                         this.valueSetter(selectedSound);
@@ -107,7 +108,7 @@ namespace MixItUp.Base.ViewModel.Settings
                 string sound = this.valueGetter();
                 if (!string.IsNullOrEmpty(sound))
                 {
-                    await ChannelSession.Services.AudioService.Play(sound, this.Volume, ChannelSession.Settings.NotificationsAudioOutput);
+                    await ServiceManager.Get<IAudioService>().Play(sound, this.Volume, ChannelSession.Settings.NotificationsAudioOutput);
                 }
             });
         }

@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -198,7 +200,7 @@ namespace MixItUp.Base.Model.Currency
 
                         if (command != null)
                         {
-                            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+                            UserViewModel userViewModel = ServiceManager.Get<UserService>().GetUserByID(user.ID);
                             if (userViewModel == null)
                             {
                                 userViewModel = new UserViewModel(user);
@@ -222,11 +224,12 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            // TODO
             DateTime date = DateTimeOffset.Now.Date;
-            if (ChannelSession.TwitchStreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
+            if (ServiceManager.Get<TwitchSessionService>().StreamIsLive && this.StartDate.Date <= date && date <= this.EndDate && this.ViewingRateMinutes > 0)
             {
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+                foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
                 {
                     if (!user.Data.IsCurrencyRankExempt && user.HasPermissionsTo(this.Permission) && (this.MinimumActiveRate == 0 || user.LastActivity > minActiveTime))
                     {

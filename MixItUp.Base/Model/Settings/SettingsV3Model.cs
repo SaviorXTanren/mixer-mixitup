@@ -7,6 +7,9 @@ using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Glimesh;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Dashboard;
 using Newtonsoft.Json;
@@ -518,9 +521,9 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
-        private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
+        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> PlatformUserIDLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
         [JsonIgnore]
-        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> UsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
+        private Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>> PlatformUsernameLookups { get; set; } = new Dictionary<StreamingPlatformTypeEnum, Dictionary<string, Guid>>();
 
         #endregion Database Data
 
@@ -551,30 +554,60 @@ namespace MixItUp.Base.Model.Settings
 
         public async Task Initialize()
         {
-            if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
+            if (!ServiceManager.Get<IFileService>().FileExists(this.DatabaseFilePath))
             {
-                await ChannelSession.Services.FileService.CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
+                await ServiceManager.Get<IFileService>().CopyFile(SettingsV3Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
             }
 
             foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
             {
-                this.UsernameLookups[platform] = new Dictionary<string, Guid>();
+                this.PlatformUserIDLookups[platform] = new Dictionary<string, Guid>();
+                this.PlatformUsernameLookups[platform] = new Dictionary<string, Guid>();
             }
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>(data["Data"].ToString());
                 this.UserData[userData.ID] = userData;
+
                 if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
                 {
-                    this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchID] = userData.ID;
                     if (!string.IsNullOrEmpty(userData.TwitchUsername))
                     {
-                        this.UsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Twitch][userData.TwitchUsername.ToLowerInvariant()] = userData.ID;
                     }
                 }
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.YouTube))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.YouTubeUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.YouTube][userData.YouTubeUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Glimesh))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.GlimeshUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Glimesh][userData.GlimeshUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Trovo))
+                {
+                    this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoID] = userData.ID;
+                    if (!string.IsNullOrEmpty(userData.TrovoUsername))
+                    {
+                        this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Trovo][userData.TrovoUsername.ToLowerInvariant()] = userData.ID;
+                    }
+                }
+
 #pragma warning disable CS0612 // Type or member is obsolete
-                else if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+                if (userData.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
                 {
                     if (!string.IsNullOrEmpty(userData.MixerUsername))
                     {
@@ -585,14 +618,14 @@ namespace MixItUp.Base.Model.Settings
             });
             this.UserData.ClearTracking();
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
             {
                 DateTimeOffset.TryParse((string)data["DateTime"], out DateTimeOffset dateTime);
                 this.Quotes.Add(new UserQuoteModel(Convert.ToInt32(data["ID"]), data["Quote"].ToString(), dateTime, data["GameName"].ToString()));
             });
             this.Quotes.ClearTracking();
 
-            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
+            await ServiceManager.Get<IDatabaseService>().Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
             {
                 CommandModelBase command = null;
                 CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
@@ -707,7 +740,7 @@ namespace MixItUp.Base.Model.Settings
         public void ClearMixerUserData()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
-            foreach (Guid id in this.UsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
+            foreach (Guid id in this.PlatformUsernameLookups[StreamingPlatformTypeEnum.Mixer].Values.ToList())
             {
                 this.UserData.Remove(id);
             }
@@ -725,7 +758,7 @@ namespace MixItUp.Base.Model.Settings
         public async Task ClearAllUserData()
         {
             this.UserData.Clear();
-            await ChannelSession.Services.Database.Write(this.DatabaseFilePath, "DELETE FROM Users");
+            await ServiceManager.Get<IDatabaseService>().Write(this.DatabaseFilePath, "DELETE FROM Users");
         }
 
         public void CopyLatestValues()
@@ -734,86 +767,82 @@ namespace MixItUp.Base.Model.Settings
 
             this.Version = SettingsV3Model.LatestVersion;
 
-            if (ChannelSession.TwitchUserConnection != null)
+            foreach (IStreamingPlatformSessionService sessionService in ServiceManager.GetAll<IStreamingPlatformSessionService>())
             {
-                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].UserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.TwitchBotConnection != null)
-            {
-                this.StreamingPlatformAuthentications[StreamingPlatformTypeEnum.Twitch].BotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+                sessionService.SaveSettings(this);
             }
 
-            if (ChannelSession.Services.Streamlabs.IsConnected)
+            if (ServiceManager.Get<StreamlabsService>().IsConnected)
             {
-                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+                this.StreamlabsOAuthToken = ServiceManager.Get<StreamlabsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.StreamElements.IsConnected)
+            if (ServiceManager.Get<StreamElementsService>().IsConnected)
             {
-                this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
+                this.StreamElementsOAuthToken = ServiceManager.Get<StreamElementsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.StreamJar.IsConnected)
+            if (ServiceManager.Get<StreamJarService>().IsConnected)
             {
-                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+                this.StreamJarOAuthToken = ServiceManager.Get<StreamJarService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.TipeeeStream.IsConnected)
+            if (ServiceManager.Get<TipeeeStreamService>().IsConnected)
             {
-                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+                this.TipeeeStreamOAuthToken = ServiceManager.Get<TipeeeStreamService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.TreatStream.IsConnected)
+            if (ServiceManager.Get<TreatStreamService>().IsConnected)
             {
-                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+                this.TreatStreamOAuthToken = ServiceManager.Get<TreatStreamService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Streamloots.IsConnected)
+            if (ServiceManager.Get<StreamlootsService>().IsConnected)
             {
-                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+                this.StreamlootsOAuthToken = ServiceManager.Get<StreamlootsService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Tiltify.IsConnected)
+            if (ServiceManager.Get<TiltifyService>().IsConnected)
             {
-                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
+                this.TiltifyOAuthToken = ServiceManager.Get<TiltifyService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Patreon.IsConnected)
+            if (ServiceManager.Get<PatreonService>().IsConnected)
             {
-                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+                this.PatreonOAuthToken = ServiceManager.Get<PatreonService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.IFTTT.IsConnected)
+            if (ServiceManager.Get<IFTTTService>().IsConnected)
             {
-                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
+                this.IFTTTOAuthToken = ServiceManager.Get<IFTTTService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.JustGiving.IsConnected)
+            if (ServiceManager.Get<JustGivingService>().IsConnected)
             {
-                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
+                this.JustGivingOAuthToken = ServiceManager.Get<JustGivingService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Discord.IsConnected)
+            if (ServiceManager.Get<DiscordService>().IsConnected)
             {
-                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+                this.DiscordOAuthToken = ServiceManager.Get<DiscordService>().GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.Twitter.IsConnected)
+            if (ServiceManager.Get<TwitterService>().IsConnected)
             {
-                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+                this.TwitterOAuthToken = ServiceManager.Get<TwitterService>().GetOAuthTokenCopy();
             }
         }
 
         public async Task SaveDatabaseData()
         {
             IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
-                IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
-                        { "TwitchID", u.TwitchID }, { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", null }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
+            IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, TwitchID, YouTubeID, FacebookID, TrovoID, GlimeshID, Data) VALUES(@ID, @TwitchID, @YouTubeID, @FacebookID, @TrovoID, @GlimeshID, @Data)",
+                changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() },
+                    { "TwitchID", u.TwitchID }, { "YouTubeID", null }, { "FacebookID", null }, { "TrovoID", null }, { "GlimeshID", u.GlimeshID }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
             List<Guid> removedCommands = new List<Guid>();
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
                 this.Commands.GetRemovedValues().Select(id => new Dictionary<string, object>() { { "@ID", id.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                 this.Commands.GetAddedChangedValues().Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
                 this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() } }));
 
-            await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
+            await ServiceManager.Get<IDatabaseService>().BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Quote, GameName, DateTime) VALUES(@ID, @Quote, @GameName, @DateTime)",
                 this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID.ToString() }, { "@Quote", q.Quote }, { "@GameName", q.GameName }, { "@DateTime", q.DateTime.ToString() } }));
         }
 
@@ -829,13 +858,13 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public UserDataModel GetUserDataByTwitchID(string twitchID)
+        public UserDataModel GetUserDataByPlatformID(StreamingPlatformTypeEnum platform, string platformID)
         {
             lock (this.UserData)
             {
-                if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
+                if (!string.IsNullOrEmpty(platformID) && this.PlatformUserIDLookups[platform].ContainsKey(platformID))
                 {
-                    Guid id = this.TwitchUserIDLookups[twitchID];
+                    Guid id = this.PlatformUserIDLookups[platform][platformID];
                     if (this.UserData.ContainsKey(id))
                     {
                         return this.UserData[id];
@@ -864,9 +893,9 @@ namespace MixItUp.Base.Model.Settings
                 {
                     lock (this.UserData)
                     {
-                        if (this.UsernameLookups.ContainsKey(platform) && this.UsernameLookups[platform].ContainsKey(username.ToLowerInvariant()))
+                        if (this.PlatformUsernameLookups[platform].ContainsKey(username.ToLowerInvariant()))
                         {
-                            Guid id = this.UsernameLookups[platform][username.ToLowerInvariant()];
+                            Guid id = this.PlatformUsernameLookups[platform][username.ToLowerInvariant()];
                             if (this.UserData.ContainsKey(id))
                             {
                                 return this.UserData[id];
@@ -881,10 +910,10 @@ namespace MixItUp.Base.Model.Settings
         public void AddUserData(UserDataModel user)
         {
             this.UserData[user.ID] = user;
-            if (!string.IsNullOrEmpty(user.TwitchID))
-            {
-                this.TwitchUserIDLookups[user.TwitchID] = user.ID;
-            }
+            if (!string.IsNullOrEmpty(user.TwitchID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Twitch][user.TwitchID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.YouTubeID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.YouTube][user.YouTubeID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.GlimeshID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Glimesh][user.GlimeshID] = user.ID; }
+            if (!string.IsNullOrEmpty(user.TrovoID)) { this.PlatformUserIDLookups[StreamingPlatformTypeEnum.Trovo][user.TrovoID] = user.ID; }
             this.UserData.ManualValueChanged(user.ID);
         }
 
@@ -900,14 +929,6 @@ namespace MixItUp.Base.Model.Settings
 
         private void InitializeMissingData()
         {
-            foreach (StreamingPlatformTypeEnum platform in StreamingPlatforms.Platforms)
-            {
-                if (!this.StreamingPlatformAuthentications.ContainsKey(platform))
-                {
-                    this.StreamingPlatformAuthentications[platform] = new StreamingPlatformAuthenticationSettingsModel(platform);
-                }
-            }
-
             if (this.DashboardItems.Count < 4)
             {
                 this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };

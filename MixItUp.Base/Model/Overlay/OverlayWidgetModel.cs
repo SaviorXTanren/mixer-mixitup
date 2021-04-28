@@ -87,7 +87,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task ShowItem(CommandParametersModel parameters)
         {
-            IOverlayEndpointService overlay = this.GetOverlay();
+            OverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
                 await overlay.ShowItem(this.Item, parameters);
@@ -98,7 +98,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task UpdateItem(CommandParametersModel parameters)
         {
-            IOverlayEndpointService overlay = this.GetOverlay();
+            OverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
                 await overlay.UpdateItem(this.Item, parameters);
@@ -107,17 +107,17 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task HideItem()
         {
-            IOverlayEndpointService overlay = this.GetOverlay();
+            OverlayEndpointService overlay = this.GetOverlay();
             if (overlay != null)
             {
                 await overlay.HideItem(this.Item);
             }
         }
 
-        private IOverlayEndpointService GetOverlay()
+        private OverlayEndpointService GetOverlay()
         {
-            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.Overlay.DefaultOverlayName : this.OverlayName;
-            return ChannelSession.Services.Overlay.GetOverlay(overlayName);
+            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
+            return ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
         }
 
         private async void Item_OnChangeState(object sender, bool state)

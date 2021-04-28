@@ -149,23 +149,7 @@ namespace MixItUp.Base.Services.External
         public string Fees { get; set; }
     }
 
-    public interface ITipeeeStreamService : IOAuthExternalService
-    {
-        bool WebSocketConnected { get; }
-
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler OnWebSocketDisconnectedOccurred;
-
-        event EventHandler<TipeeeStreamEvent> OnDonationOccurred;
-
-        Task<TipeeeStreamUser> GetUser();
-        Task<string> GetAPIKey();
-        Task<string> GetSocketAddress();
-
-        Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents();
-    }
-
-    public class TipeeeStreamService : OAuthExternalServiceBase, ITipeeeStreamService
+    public class TipeeeStreamService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://api.tipeeestream.com/";
 
@@ -209,7 +193,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TipeeeStreamService.ClientID;
-                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TipeeeStreamSecret");
+                    payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TipeeeStreamSecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
@@ -309,7 +293,7 @@ namespace MixItUp.Base.Services.External
             {
                 JObject payload = new JObject();
                 payload["client_id"] = TipeeeStreamService.ClientID;
-                payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TipeeeStreamSecret");
+                payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TipeeeStreamSecret");
                 payload["refresh_token"] = this.token.refreshToken;
 
                 this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);

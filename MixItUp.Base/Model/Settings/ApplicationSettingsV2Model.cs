@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -15,7 +16,7 @@ namespace MixItUp.Base.Model.Settings
         public static async Task<ApplicationSettingsV2Model> Load()
         {
             ApplicationSettingsV2Model settings = new ApplicationSettingsV2Model();
-            if (ChannelSession.Services.FileService.FileExists(ApplicationSettingsFileName))
+            if (ServiceManager.Get<IFileService>().FileExists(ApplicationSettingsFileName))
             {
                 try
                 {

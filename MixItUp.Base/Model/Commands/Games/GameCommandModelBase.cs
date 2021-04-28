@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -229,7 +230,7 @@ namespace MixItUp.Base.Model.Commands.Games
             if (currencyRequirement != null && betAmount > 0)
             {
                 string currencyName = currencyRequirement.Currency?.Name;
-                List<UserViewModel> users = new List<UserViewModel>(ChannelSession.Services.User.GetAllWorkableUsers(parameters.Platform).Shuffle());
+                List<UserViewModel> users = new List<UserViewModel>(ServiceManager.Get<UserService>().GetAllWorkableUsers(parameters.Platform).Shuffle());
                 users.Remove(parameters.User);
                 foreach (UserViewModel user in users)
                 {
@@ -242,7 +243,7 @@ namespace MixItUp.Base.Model.Commands.Games
             }
             else
             {
-                return ChannelSession.Services.User.GetRandomUser(parameters, excludeCurrencyRankExempt: true);
+                return ServiceManager.Get<UserService>().GetRandomUser(parameters, excludeCurrencyRankExempt: true);
             }
         }
 
@@ -253,7 +254,7 @@ namespace MixItUp.Base.Model.Commands.Games
             parameters.SpecialIdentifiers[GameCommandModelBase.GameBetSpecialIdentifier] = this.GetPrimaryBetAmount(parameters).ToString();
         }
 
-        public override void TrackTelemetry() { ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.GetType().ToString()); }
+        public override void TrackTelemetry() { ServiceManager.Get<ITelemetryService>().TrackCommand(this.Type, this.GetType().ToString()); }
 
         protected CurrencyRequirementModel GetPrimaryCurrencyRequirement() { return this.Requirements.Currency.FirstOrDefault(); }
 
@@ -284,7 +285,7 @@ namespace MixItUp.Base.Model.Commands.Games
                     return true;
                 }
 
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.GameCommandTargetUserInvalidAmount, betAmount, currencyName), parameters.Platform);
                 return false;
             }
             return true;
@@ -366,9 +367,9 @@ namespace MixItUp.Base.Model.Commands.Games
         protected async Task<string> GetRandomWord(string customWordsFilePath)
         {
             HashSet<string> wordsToUse = GameCommandModelBase.DefaultWords;
-            if (!string.IsNullOrEmpty(customWordsFilePath) && ChannelSession.Services.FileService.FileExists(customWordsFilePath))
+            if (!string.IsNullOrEmpty(customWordsFilePath) && ServiceManager.Get<IFileService>().FileExists(customWordsFilePath))
             {
-                string fileData = await ChannelSession.Services.FileService.ReadFile(customWordsFilePath);
+                string fileData = await ServiceManager.Get<IFileService>().ReadFile(customWordsFilePath);
                 if (!string.IsNullOrEmpty(fileData))
                 {
                     wordsToUse = new HashSet<string>();

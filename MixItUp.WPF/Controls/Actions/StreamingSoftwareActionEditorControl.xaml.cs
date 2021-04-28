@@ -1,4 +1,4 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Actions;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.DataContext is StreamingSoftwareActionEditorControlViewModel)
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceTextFilePath);
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceTextFilePath);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     ((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceTextFilePath = filePath;
@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.DataContext is StreamingSoftwareActionEditorControlViewModel)
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceWebPageFilePath);
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceWebPageFilePath);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     ((StreamingSoftwareActionEditorControlViewModel)this.DataContext).SourceWebPageFilePath = filePath;

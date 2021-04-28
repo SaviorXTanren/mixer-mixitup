@@ -1,4 +1,7 @@
-﻿using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -56,7 +59,7 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (!string.IsNullOrEmpty(this.AddQuoteText))
                 {
-                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, ChannelSession.TwitchChannelV5?.game));
+                    ChannelSession.Settings.Quotes.Add(new UserQuoteModel(UserQuoteViewModel.GetNextQuoteNumber(), this.AddQuoteText, DateTimeOffset.Now, await GamePreMadeChatCommandModel.GetCurrentGame()));
                     this.Refresh();
 
                     this.AddQuoteText = string.Empty;
@@ -65,7 +68,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.ExportQuotesCommand = this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("Quotes.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog("Quotes.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     List<List<string>> contents = new List<List<string>>();

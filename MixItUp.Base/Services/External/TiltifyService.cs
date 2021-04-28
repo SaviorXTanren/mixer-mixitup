@@ -188,20 +188,7 @@ namespace MixItUp.Base.Services.External
         public JObject Errors { get; set; }
     }
 
-    public interface ITiltifyService : IOAuthExternalService
-    {
-        Task<TiltifyUser> GetUser();
-
-        Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
-
-        Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user);
-
-        Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team);
-
-        Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign);
-    }
-
-    public class TiltifyService : OAuthExternalServiceBase, ITiltifyService
+    public class TiltifyService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://tiltify.com/api/v3/";
 
@@ -231,7 +218,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
-                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TiltifySecret");
+                    payload["client_secret"] = ServiceManager.Get<SecretsService>().GetSecret("TiltifySecret");
                     payload["code"] = authorizationCode;
                     payload["redirect_uri"] = OAuthExternalServiceBase.HTTPS_OAUTH_REDIRECT_URL;
 
@@ -371,9 +358,9 @@ namespace MixItUp.Base.Services.External
                 if (campaign == null)
                 {
                     List<TiltifyCampaign> teamCampaigns = new List<TiltifyCampaign>();
-                    foreach (TiltifyTeam team in await ChannelSession.Services.Tiltify.GetUserTeams(user))
+                    foreach (TiltifyTeam team in await ServiceManager.Get<TiltifyService>().GetUserTeams(user))
                     {
-                        teamCampaigns.AddRange(await ChannelSession.Services.Tiltify.GetTeamCampaigns(team));
+                        teamCampaigns.AddRange(await ServiceManager.Get<TiltifyService>().GetTeamCampaigns(team));
                     }
                     campaign = teamCampaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
                 }

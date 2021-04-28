@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -158,7 +159,7 @@ namespace MixItUp.Base.ViewModel.Commands
         {
             ChannelSession.ChatCommands.Remove((ChatCommandModel)this.existingCommand);
             ChannelSession.ChatCommands.Add((ChatCommandModel)command);
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             return Task.FromResult(0);
         }
 

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -44,19 +45,6 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
             return false;
-        }
-
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            if (ChannelSession.Services.Chat != null)
-            {
-                string role = EnumLocalizationHelper.GetLocalizedName(this.MixerRole);
-                if (this.MixerRole == UserRoleEnum.Subscriber && this.SubscriberTier > 0)
-                {
-                    role += " - " + RoleRequirementViewModel.SubTierNames[this.SubscriberTier - 1];
-                }
-                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
-            }
         }
     }
 }

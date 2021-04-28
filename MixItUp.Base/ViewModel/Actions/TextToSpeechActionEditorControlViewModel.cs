@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Actions
     {
         public override ActionTypeEnum Type { get { return ActionTypeEnum.TextToSpeech; } }
 
-        public bool OverlayNotEnabled { get { return !ChannelSession.Services.Overlay.IsConnected; } }
+        public bool OverlayNotEnabled { get { return !ServiceManager.Get<OverlayService>().IsConnected; } }
 
         public IEnumerable<string> Voices { get { return TextToSpeechActionModel.AvailableVoices; } }
 

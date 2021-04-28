@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
@@ -161,8 +162,8 @@ namespace MixItUp.Base.ViewModel.Overlay
 
         private void Initialize()
         {
-            this.OverlayEndpoints.AddRange(ChannelSession.Services.Overlay.GetOverlayNames());
-            this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
+            this.OverlayEndpoints.AddRange(ServiceManager.Get<OverlayService>().GetOverlayNames());
+            this.SelectedOverlayEndpoint = ServiceManager.Get<OverlayService>().DefaultOverlayName;
         }
     }
 }

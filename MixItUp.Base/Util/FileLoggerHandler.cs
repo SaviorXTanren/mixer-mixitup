@@ -14,12 +14,9 @@ namespace MixItUp.Base.Util
         private const string LogsDirectoryName = "Logs";
         private const string LogFileNameFormat = "MixItUpLog-{0}.txt";
 
-        private static IFileService fileService;
-
-        public static void Initialize(IFileService fileService)
+        public static void Initialize()
         {
-            FileLoggerHandler.fileService = fileService;
-            FileLoggerHandler.fileService.CreateDirectory(LogsDirectoryName);
+            ServiceManager.Get<IFileService>().CreateDirectory(LogsDirectoryName);
             FileLoggerHandler.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             Logger.LogOccurred += Logger_LogOccurred;
@@ -29,7 +26,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                await FileLoggerHandler.fileService.AppendFile(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                await ServiceManager.Get<IFileService>().AppendFile(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
                     DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
             }
             catch (Exception) { }

@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using System.Reflection;
-using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -27,7 +25,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1} {2} {3}", FileLoggerHandler.CurrentLogFilePath, (int)StreamingPlatformTypeEnum.Twitch, ChannelSession.TwitchUserNewAPI?.id, ChannelSession.TwitchUserNewAPI?.login));
+            ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", $"{FileLoggerHandler.CurrentLogFilePath} {ChannelSession.Settings?.Name ?? "NONE"}");
         }
 
         private void TwitterButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); }

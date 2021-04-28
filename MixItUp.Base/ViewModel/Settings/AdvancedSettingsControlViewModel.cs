@@ -26,19 +26,19 @@ namespace MixItUp.Base.ViewModel.Settings
         {
             this.BackupSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.BackupYourCurrentSettings, MixItUp.Base.Resources.BackupSettings, this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV3Model.SettingsBackupFileExtension);
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV3Model.SettingsBackupFileExtension);
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    await ChannelSession.Services.Settings.SavePackagedBackup(ChannelSession.Settings, filePath);
+                    await ServiceManager.Get<SettingsService>().SavePackagedBackup(ChannelSession.Settings, filePath);
                 }
             }));
 
             this.RestoreSettings = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.RestoreASettingsBackup, MixItUp.Base.Resources.RestoreSettings, this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|All files (*.*)|*.*", SettingsV3Model.SettingsBackupFileExtension));
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    Result<SettingsV3Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
+                    Result<SettingsV3Model> result = await ServiceManager.Get<SettingsService>().RestorePackagedBackup(filePath);
                     if (result.Success)
                     {
                         ChannelSession.AppSettings.BackupSettingsFilePath = filePath;
@@ -57,7 +57,7 @@ namespace MixItUp.Base.ViewModel.Settings
 
             this.AutomaticBackupLocation = new GenericButtonSettingsOptionControlViewModel(MixItUp.Base.Resources.AutomatedSettingsBackupLocation, MixItUp.Base.Resources.SetLocation, this.CreateCommand(() =>
             {
-                string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+                string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
                 {
                     ChannelSession.Settings.SettingsBackupLocation = folderPath;

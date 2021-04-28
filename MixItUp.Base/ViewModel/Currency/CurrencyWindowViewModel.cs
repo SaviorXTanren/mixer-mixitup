@@ -1,8 +1,11 @@
-﻿using MixItUp.Base.Model.Actions;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.Requirements;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -555,10 +558,10 @@ namespace MixItUp.Base.ViewModel.Currency
                 {
                     try
                     {
-                        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                        string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog();
                         if (!string.IsNullOrEmpty(filePath))
                         {
-                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
+                            string fileContents = await ServiceManager.Get<IFileService>().ReadFile(filePath);
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
@@ -603,14 +606,15 @@ namespace MixItUp.Base.ViewModel.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByTwitchID(id.ToString());
+                                            MixItUp.Base.Model.User.UserDataModel userData = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, id.ToString());
                                             if (userData != null)
                                             {
                                                 user = new UserViewModel(userData);
                                             }
                                             else
                                             {
-                                                UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(id.ToString());
+                                                // TODO
+                                                UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(id.ToString());
                                                 if (twitchUser != null)
                                                 {
                                                     user = new UserViewModel(twitchUser);
@@ -619,7 +623,8 @@ namespace MixItUp.Base.ViewModel.Currency
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
+                                            // TODO
+                                            UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(username);
                                             if (twitchUser != null)
                                             {
                                                 user = new UserViewModel(twitchUser);
@@ -668,7 +673,7 @@ namespace MixItUp.Base.ViewModel.Currency
 
             this.ExportToFileCommand = this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Currency.Name + " Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Currency.Name + " Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
@@ -676,7 +681,7 @@ namespace MixItUp.Base.ViewModel.Currency
                     {
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.TwitchID, userData.Username, this.Currency.GetAmount(userData)));
                     }
-                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+                    await ServiceManager.Get<IFileService>().SaveFile(filePath, fileContents.ToString());
                 }
             });
 

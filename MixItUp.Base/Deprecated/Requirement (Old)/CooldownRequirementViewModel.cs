@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -73,93 +74,6 @@ namespace MixItUp.Base.ViewModel.Requirement
                 {
                     return this.Amount;
                 }
-            }
-        }
-
-        public bool DoesMeetRequirement(UserViewModel user)
-        {
-            if (this.Type == CooldownTypeEnum.Individual && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
-            {
-                return false;
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
-            {
-                return false;
-            }
-            else if (this.IsGroup)
-            {
-                if (CooldownRequirementViewModel.groupCooldowns.ContainsKey(this.GroupName) &&
-                    CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            TimeSpan timeLeft = new TimeSpan();
-            if (this.Type == CooldownTypeEnum.Individual)
-            {
-                timeLeft = this.globalCooldown.AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
-                timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
-            }
-            else if (this.IsGroup && CooldownRequirementViewModel.groupCooldowns.ContainsKey(this.GroupName))
-            {
-                timeLeft = CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
-            }
-            await ChannelSession.Services.Chat.SendMessage(string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
-        }
-
-        public void UpdateCooldown(UserViewModel user)
-        {
-            if (this.Type == CooldownTypeEnum.Individual)
-            {
-                this.globalCooldown = DateTimeOffset.Now;
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
-            }
-            else if (this.IsGroup)
-            {
-                CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
-            }
-        }
-
-        public void ResetCooldown(UserViewModel user)
-        {
-            if (this.Type == CooldownTypeEnum.Individual)
-            {
-                this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
-            }
-            else if (this.IsGroup)
-            {
-                CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
-            }
-        }
-
-        public void ResetCooldown()
-        {
-            if (this.Type == CooldownTypeEnum.Individual)
-            {
-                this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
-            }
-            else if (this.Type == CooldownTypeEnum.PerPerson)
-            {
-                this.individualCooldowns.Clear();
-            }
-            else if (this.IsGroup)
-            {
-                CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
         }
     }

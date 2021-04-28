@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -34,35 +36,9 @@ namespace MixItUp.Base.Actions
             this.ShowClipInfoInChat = showClipInfoInChat;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.IncludeDelay);
-            if (clipCreation != null)
-            {
-                for (int i = 0; i < 12; i++)
-                {
-                    await Task.Delay(5000);
-
-                    ClipModel clip = await ChannelSession.TwitchUserConnection.GetClip(clipCreation);
-                    if (clip != null && !string.IsNullOrEmpty(clip.url))
-                    {
-                        await this.ProcessClip(clip);
-                        return;
-                    }
-                }
-            }
-            await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
-        }
-
-        private async Task ProcessClip(ClipModel clip)
-        {
-            if (this.ShowClipInfoInChat)
-            {
-                await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clip.url);
-            }
-            this.extraSpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
-
-            GlobalEvents.TwitchClipCreated(clip);
+            return Task.FromResult(0);
         }
     }
 }

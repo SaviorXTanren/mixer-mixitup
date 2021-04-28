@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Commands.Games;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Dialogs;
@@ -57,7 +58,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.GameCommands.Remove(command);
                     ChannelSession.Settings.RemoveCommand(command);
-                    ChannelSession.Services.Chat.RebuildCommandTriggers();
+                    ServiceManager.Get<ChatService>().RebuildCommandTriggers();
                     this.viewModel.Refresh();
                     await ChannelSession.SaveSettings();
                 }
@@ -66,7 +67,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
 
         private async void AddGameButton_Click(object sender, RoutedEventArgs e)

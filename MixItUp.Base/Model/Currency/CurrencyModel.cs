@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -281,7 +283,7 @@ namespace MixItUp.Base.Model.Currency
 
             RankModel newRank = this.GetRank(user);
 
-            UserViewModel userViewModel = ChannelSession.Services.User.GetUserByID(user.ID);
+            UserViewModel userViewModel = ServiceManager.Get<UserService>().GetUserByID(user.ID);
             if (userViewModel == null)
             {
                 userViewModel = new UserViewModel(user);
@@ -345,23 +347,24 @@ namespace MixItUp.Base.Model.Currency
 
         public void UpdateUserData()
         {
+            // TODO
             if (this.IsActive)
             {
                 if (this.SpecialTracking == CurrencySpecialTrackingEnum.None)
                 {
-                    int interval = ChannelSession.TwitchStreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    int interval = ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.TwitchStreamIsLive || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+                        bool bonusesCanBeApplied = (ServiceManager.Get<TwitchSessionService>().StreamIsLive || this.OfflineAcquireAmount > 0);
+                        foreach (UserViewModel user in ServiceManager.Get<UserService>().GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                int minutes = ChannelSession.TwitchStreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                int minutes = ServiceManager.Get<TwitchSessionService>().StreamIsLive ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    this.AddAmount(user.Data, ChannelSession.TwitchStreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    this.AddAmount(user.Data, ServiceManager.Get<TwitchSessionService>().StreamIsLive ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         int bonus = 0;

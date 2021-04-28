@@ -22,39 +22,45 @@ namespace MixItUp.WPF.Controls.Chat
                     switch (dialogResult)
                     {
                         case UserDialogResult.Purge:
-                            await ChannelSession.Services.Chat.PurgeUser(user);
+                            await ServiceManager.Get<ChatService>().PurgeUser(user);
                             break;
                         case UserDialogResult.Timeout1:
-                            await ChannelSession.Services.Chat.TimeoutUser(user, 60);
+                            await ServiceManager.Get<ChatService>().TimeoutUser(user, 60);
                             break;
                         case UserDialogResult.Timeout5:
-                            await ChannelSession.Services.Chat.TimeoutUser(user, 300);
+                            await ServiceManager.Get<ChatService>().TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
                             if (await DialogHelper.ShowConfirmation(string.Format(Resources.BanUserPrompt, user.DisplayName)))
                             {
-                                await ChannelSession.Services.Chat.BanUser(user);
+                                await ServiceManager.Get<ChatService>().BanUser(user);
                             }
                             break;
                         case UserDialogResult.Unban:
-                            await ChannelSession.Services.Chat.UnbanUser(user);
+                            await ServiceManager.Get<ChatService>().UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
-                            await ChannelSession.TwitchUserConnection.FollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                            {
+                                await ServiceManager.Get<TwitchSessionService>().UserConnection.FollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
+                            }
                             break;
                         case UserDialogResult.Unfollow:
-                            await ChannelSession.TwitchUserConnection.UnfollowUser(ChannelSession.TwitchUserNewAPI, user.GetTwitchNewAPIUserModel());
+                            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                            {
+                                await ServiceManager.Get<TwitchSessionService>().UserConnection.UnfollowUser(ServiceManager.Get<TwitchSessionService>().UserNewAPI, user.GetTwitchNewAPIUserModel());
+                            }
                             break;
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format(Resources.PromoteUserPrompt, user.DisplayName)))
                             {
-                                await ChannelSession.Services.Chat.ModUser(user);
+                                await ServiceManager.Get<ChatService>().ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
                             if (await DialogHelper.ShowConfirmation(string.Format(Resources.DemoteUserPrompt, user.DisplayName)))
                             {
-                                await ChannelSession.Services.Chat.UnmodUser(user);
+                                await ServiceManager.Get<ChatService>().UnmodUser(user);
                             }
                             break;
                         case UserDialogResult.ChannelPage:

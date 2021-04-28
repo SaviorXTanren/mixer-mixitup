@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.Services;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace MixItUp.Base.Util
             {
                 fileContents.AppendLine(string.Join(ColumnSeparator, line));
             }
-            await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+            await ServiceManager.Get<IFileService>().SaveFile(filePath, fileContents.ToString());
         }
     }
 }

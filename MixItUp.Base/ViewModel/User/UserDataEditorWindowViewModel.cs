@@ -1,14 +1,12 @@
-﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Commands;
+﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,8 +76,8 @@ namespace MixItUp.Base.ViewModel.User
         public bool HasEntranceCommand { get { return this.EntranceCommand != null; } }
         public bool DoesNotHaveEntranceCommand { get { return !this.HasEntranceCommand; } }
 
-        public bool IsPatreonConnected { get { return ChannelSession.Services.Patreon.IsConnected; } }
-        public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ChannelSession.Services.Patreon.CampaignMembers.ToList(); } }
+        public bool IsPatreonConnected { get { return ServiceManager.Get<PatreonService>().IsConnected; } }
+        public IEnumerable<PatreonCampaignMember> PatreonUsers { get { return ServiceManager.Get<PatreonService>().CampaignMembers.ToList(); } }
         public PatreonCampaignMember PatreonUser
         {
             get { return this.User.Data.PatreonUser; }
@@ -121,7 +119,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataEditorWindowViewModel(UserDataModel user)
         {
-            this.User = ChannelSession.Services.User.GetUserByID(user.ID);
+            this.User = ServiceManager.Get<UserService>().GetUserByID(user.ID);
             if (this.User == null)
             {
                 this.User = new UserViewModel(user);

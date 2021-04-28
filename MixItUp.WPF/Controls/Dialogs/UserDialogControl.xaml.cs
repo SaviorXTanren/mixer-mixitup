@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 using Twitch.Base.Models.NewAPI.Users;
@@ -46,11 +48,18 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.DataContext = this.user;
 
-                UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ChannelSession.TwitchUserNewAPI);
-                if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
                 {
-                    this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
-                    this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
+                    UserFollowModel follow = await ServiceManager.Get<TwitchSessionService>().UserConnection.CheckIfFollowsNewAPI(this.user.GetTwitchNewAPIUserModel(), ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                    if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
+                    {
+                        this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
+                        this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                }
+                else
+                {
+                    this.FollowButton.IsEnabled = false;
                 }
 
                 if (this.user.UserRoles.Contains(UserRoleEnum.Banned))

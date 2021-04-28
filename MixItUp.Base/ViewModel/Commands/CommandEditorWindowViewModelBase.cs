@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
 using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Actions;
 using MixItUp.Base.ViewModel.Requirements;
@@ -155,7 +156,7 @@ namespace MixItUp.Base.ViewModel.Commands
                 CommandModelBase command = await this.ValidateAndBuildCommand();
                 if (command != null)
                 {
-                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
+                    string fileName = ServiceManager.Get<IFileService>().ShowSaveFileDialog(this.Name + MixItUpCommandFileExtension);
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         await FileSerializerHelper.SerializeToFile(fileName, command);

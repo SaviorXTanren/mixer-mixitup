@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -42,7 +44,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (SettingsV3Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
+            foreach (SettingsV3Model setting in (await ServiceManager.Get<SettingsService>().GetAllSettings()).OrderBy(s => s.Name))
             {
                 this.streamerSettings.Add(setting);
             }
@@ -126,7 +128,7 @@ namespace MixItUp.WPF
 
         private async Task CheckForUpdates()
         {
-            this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+            this.currentUpdate = await ServiceManager.Get<MixItUpService>().GetLatestUpdate();
             if (this.currentUpdate != null && this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
             {
                 updateFound = true;
@@ -137,18 +139,16 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV3Model setting)
         {
-            Result result = await ChannelSession.ConnectUser(setting);
+            Result result = await ChannelSession.Connect(setting);
             if (result.Success)
             {
-                if (await ChannelSession.InitializeSession())
+                result = await ChannelSession.InitializeSession();
+                if (result.Success)
                 {
                     return true;
                 }
             }
-            else
-            {
-                await DialogHelper.ShowMessage(result.Message);
-            }
+            await DialogHelper.ShowMessage(result.Message);
             return false;
         }
 

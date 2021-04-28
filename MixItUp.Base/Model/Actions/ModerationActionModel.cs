@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -73,7 +74,7 @@ namespace MixItUp.Base.Model.Actions
         {
             if (this.ActionType == ModerationActionTypeEnum.ClearChat)
             {
-                await ChannelSession.Services.Chat.ClearMessages();
+                await ServiceManager.Get<ChatService>().ClearMessages();
             }
             else
             {
@@ -81,7 +82,7 @@ namespace MixItUp.Base.Model.Actions
                 if (!string.IsNullOrEmpty(this.TargetUsername))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, parameters);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
+                    targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, parameters.Platform);
                 }
                 else
                 {
@@ -92,23 +93,23 @@ namespace MixItUp.Base.Model.Actions
                 {
                     if (this.ActionType == ModerationActionTypeEnum.PurgeUser)
                     {
-                        await ChannelSession.Services.Chat.PurgeUser(targetUser);
+                        await ServiceManager.Get<ChatService>().PurgeUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.BanUser)
                     {
-                        await ChannelSession.Services.Chat.BanUser(targetUser);
+                        await ServiceManager.Get<ChatService>().BanUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.UnbanUser)
                     {
-                        await ChannelSession.Services.Chat.UnbanUser(targetUser);
+                        await ServiceManager.Get<ChatService>().UnbanUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.ModUser)
                     {
-                        await ChannelSession.Services.Chat.ModUser(targetUser);
+                        await ServiceManager.Get<ChatService>().ModUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.UnmodUser)
                     {
-                        await ChannelSession.Services.Chat.UnmodUser(targetUser);
+                        await ServiceManager.Get<ChatService>().UnmodUser(targetUser);
                     }
                     else if (this.ActionType == ModerationActionTypeEnum.AddModerationStrike)
                     {
@@ -130,7 +131,7 @@ namespace MixItUp.Base.Model.Actions
                             string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeoutAmount, parameters);
                             if (uint.TryParse(timeAmountString, out uint timeAmount))
                             {
-                                await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
+                                await ServiceManager.Get<ChatService>().TimeoutUser(targetUser, timeAmount);
                             }
                         }
                     }

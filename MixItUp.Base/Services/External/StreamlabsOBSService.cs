@@ -177,7 +177,7 @@ namespace MixItUp.Base.Services.External
                     this.Connected(this, new EventArgs());
                     ChannelSession.ReconnectionOccurred("Streamlabs OBS");
                     this.IsConnected = true;
-                    ChannelSession.Services.Telemetry.TrackService("Streamlabs OBS");
+                    ServiceManager.Get<ITelemetryService>().TrackService("Streamlabs OBS");
                     return new Result();
                 }
             }

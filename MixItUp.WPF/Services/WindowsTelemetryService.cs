@@ -36,13 +36,13 @@ namespace MixItUp.WPF.Services
 
         public Task<Result> Connect()
         {
-            string key = ChannelSession.Services.Secrets.GetSecret("ApplicationInsightsKey");
+            string key = ServiceManager.Get<SecretsService>().GetSecret("ApplicationInsightsKey");
             if (!string.IsNullOrEmpty(key))
             {
                 this.telemetryClient.InstrumentationKey = key;
             }
 
-            PlayFabSettings.staticSettings.TitleId = ChannelSession.Services.Secrets.GetSecret("PlayFabTitleID");
+            PlayFabSettings.staticSettings.TitleId = ServiceManager.Get<SecretsService>().GetSecret("PlayFabTitleID");
 
             this.IsConnected = true;
             return Task.FromResult(new Result());

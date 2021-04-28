@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Util;
@@ -74,13 +75,13 @@ namespace MixItUp.WPF.Windows.Users
             {
                 this.viewModel.RemoveUserOnlyChatCommand(FrameworkElementHelpers.GetDataContext<UserOnlyChatCommandModel>(sender));
                 await ChannelSession.SaveSettings();
-                ChannelSession.Services.Chat.RebuildCommandTriggers();
+                ServiceManager.Get<ChatService>().RebuildCommandTriggers();
             });
         }
 
         private void UserOnlyChatCommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Services.Chat.RebuildCommandTriggers();
+            ServiceManager.Get<ChatService>().RebuildCommandTriggers();
         }
 
         private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)

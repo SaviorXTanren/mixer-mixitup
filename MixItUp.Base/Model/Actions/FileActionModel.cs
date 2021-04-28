@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
-                textToRead = await ChannelSession.Services.FileService.ReadFile(filePath);
+                textToRead = await ServiceManager.Get<IFileService>().ReadFile(filePath);
             }
 
             if (this.ActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.ActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
@@ -153,7 +154,7 @@ namespace MixItUp.Base.Model.Actions
                 this.ActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.ActionType == FileActionTypeEnum.RemoveRandomLineFromFile ||
                 this.ActionType == FileActionTypeEnum.InsertInFileAtSpecificLine || this.ActionType == FileActionTypeEnum.InsertInFileAtRandomLine)
             {
-                await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
+                await ServiceManager.Get<IFileService>().SaveFile(filePath, textToWrite);
             }
 
             if (this.ActionType == FileActionTypeEnum.AppendToFile)
@@ -162,7 +163,7 @@ namespace MixItUp.Base.Model.Actions
                 {
                     textToWrite = Environment.NewLine + textToWrite;
                 }
-                await ChannelSession.Services.FileService.AppendFile(filePath, textToWrite);
+                await ServiceManager.Get<IFileService>().AppendFile(filePath, textToWrite);
             }
         }
 

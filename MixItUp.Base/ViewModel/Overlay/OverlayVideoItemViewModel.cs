@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -73,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Overlay
 
             this.BrowseFilePathCommand = this.CreateCommand(() =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.VideoFileFilter());
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog(ServiceManager.Get<IFileService>().VideoFileFilter());
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.FilePath = filePath;

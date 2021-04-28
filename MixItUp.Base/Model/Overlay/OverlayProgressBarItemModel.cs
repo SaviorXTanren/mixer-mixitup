@@ -2,6 +2,8 @@
 using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Model.User.Twitch;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -146,8 +148,11 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                this.CurrentAmount = ChannelSession.TwitchChannelV5.followers;
-
+                if (ServiceManager.Get<TwitchSessionService>().IsConnected)
+                {
+                    this.CurrentAmount = ServiceManager.Get<TwitchSessionService>().ChannelV5.followers;
+                }
+                // TODO
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)

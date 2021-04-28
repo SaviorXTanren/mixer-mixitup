@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -50,11 +51,11 @@ namespace MixItUp.Base.Model.Actions
                 {
                     whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, parameters);
                 }
-                await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
+                await ServiceManager.Get<ChatService>().Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage(message, this.SendAsStreamer);
+                await ServiceManager.Get<ChatService>().SendMessage(message, parameters.Platform, this.SendAsStreamer);
             }
         }
     }

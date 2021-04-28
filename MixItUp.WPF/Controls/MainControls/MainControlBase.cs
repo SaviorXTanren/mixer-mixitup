@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using System.ComponentModel;
@@ -53,9 +54,9 @@ namespace MixItUp.WPF.Controls.MainControls
             if ((bool)e.NewValue)
             {
                 string typeName = this.GetType().FullName;
-                if (!IgnoredPages.Contains(typeName) && ChannelSession.Services?.Telemetry != null)
+                if (!IgnoredPages.Contains(typeName) && ServiceManager.Get<ITelemetryService>() != null)
                 {
-                    ChannelSession.Services.Telemetry.TrackPageView(typeName);
+                    ServiceManager.Get<ITelemetryService>().TrackPageView(typeName);
                 }
             }
 

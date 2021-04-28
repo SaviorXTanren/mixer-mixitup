@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.Actions
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, parameters);
-            await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, this.OutputDevice);
+            await ServiceManager.Get<IAudioService>().Play(audioFilePath, this.VolumeScale, this.OutputDevice);
         }
     }
 }

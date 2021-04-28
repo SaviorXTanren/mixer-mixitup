@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModels;
@@ -106,7 +108,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.RaidChannelCommand = this.CreateCommand(async () =>
             {
-                await ChannelSession.Services.Chat.SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                await ServiceManager.Get<ChatService>().SendMessage("/raid @" + this.Name, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
             });
         }
 
@@ -198,10 +200,12 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.UpdateChannelInformationCommand = this.CreateCommand(async () =>
             {
+                // TODO
+
                 bool failedToFindGame = false;
                 if (this.currentGame != null && !string.IsNullOrEmpty(this.GameName) && this.GameName.Length > 3 && !string.Equals(this.currentGame.name, this.GameName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    IEnumerable<GameModel> games = await ChannelSession.TwitchUserConnection.GetNewAPIGamesByName(this.GameName);
+                    IEnumerable<GameModel> games = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByName(this.GameName);
                     if (games != null && games.Count() > 0)
                     {
                         this.currentGame = games.First();
@@ -212,10 +216,10 @@ namespace MixItUp.Base.ViewModel.MainControls
                     }
                 }
 
-                await ChannelSession.TwitchUserConnection.UpdateChannelInformation(ChannelSession.TwitchUserNewAPI, this.Title, this.currentGame?.id);
+                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.Title, this.currentGame?.id);
 
                 IEnumerable<TagModel> tags = this.CustomTags.Select(t => t.Tag);
-                await ChannelSession.TwitchUserConnection.UpdateStreamTagsForChannel(ChannelSession.TwitchUserNewAPI, tags);
+                await ServiceManager.Get<TwitchSessionService>().UserConnection.UpdateStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI, tags);
 
                 await this.RefreshChannelInformation();
 
@@ -227,24 +231,26 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.SearchFindChannelToRaidCommand = this.CreateCommand(async () =>
             {
+                // TODO
+
                 this.SearchFindChannelToRaidResults.Clear();
 
                 List<SearchFindChannelToRaidItemViewModel> results = new List<SearchFindChannelToRaidItemViewModel>();
 
                 if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.Featured)
                 {
-                    foreach (Twitch.Base.Models.V5.Streams.FeaturedStreamModel stream in await ChannelSession.TwitchUserConnection.GetV5FeaturedStreams(10))
+                    foreach (Twitch.Base.Models.V5.Streams.FeaturedStreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5FeaturedStreams(10))
                     {
                         results.Add(new SearchFindChannelToRaidItemViewModel(stream.stream));
                     }
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameGame && this.currentGame != null)
                 {
-                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ChannelSession.TwitchUserConnection.GetGameStreams(this.currentGame.id, 10);
+                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetGameStreams(this.currentGame.id, 10);
                     if (streams.Count() > 0)
                     {
                         Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                        foreach (GameModel game in await ChannelSession.TwitchUserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                        foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
                         {
                             games[game.id] = game;
                         }
@@ -257,11 +263,11 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.SameLanguage && this.ChannelInformation != null)
                 {
-                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ChannelSession.TwitchUserConnection.GetLanguageStreams(this.ChannelInformation.broadcaster_language, 10);
+                    IEnumerable<Twitch.Base.Models.NewAPI.Streams.StreamModel> streams = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetLanguageStreams(this.ChannelInformation.broadcaster_language, 10);
                     if (streams.Count() > 0)
                     {
                         Dictionary<string, GameModel> games = new Dictionary<string, GameModel>();
-                        foreach (GameModel game in await ChannelSession.TwitchUserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
+                        foreach (GameModel game in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIGamesByIDs(streams.Select(s => s.game_id)))
                         {
                             games[game.id] = game;
                         }
@@ -274,7 +280,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 }
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.FollowedChannels)
                 {
-                    foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ChannelSession.TwitchUserConnection.GetV5FollowedStreams(10))
+                    foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5FollowedStreams(10))
                     {
                         results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                     }
@@ -282,9 +288,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 else if (this.SelectedSearchFindChannelToRaidOption == SearchFindChannelToRaidTypeEnum.TeamMembers)
                 {
                     List<Twitch.Base.Models.V5.Users.UserModel> users = new List<Twitch.Base.Models.V5.Users.UserModel>();
-                    foreach (Twitch.Base.Models.V5.Teams.TeamModel team in await ChannelSession.TwitchUserConnection.GetChannelTeams(ChannelSession.TwitchChannelV5))
+                    foreach (Twitch.Base.Models.V5.Teams.TeamModel team in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelTeams(ServiceManager.Get<TwitchSessionService>().ChannelV5))
                     {
-                        Twitch.Base.Models.V5.Teams.TeamDetailsModel teamDetails = await ChannelSession.TwitchUserConnection.GetTeamDetails(team);
+                        Twitch.Base.Models.V5.Teams.TeamDetailsModel teamDetails = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetTeamDetails(team);
                         if (teamDetails != null && teamDetails.users != null)
                         {
                             foreach (Twitch.Base.Models.V5.Users.UserModel user in teamDetails.users)
@@ -296,7 +302,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
                     if (users.Count > 0)
                     {
-                        foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ChannelSession.TwitchUserConnection.GetV5ChannelStreams(users.Select(u => u.id), 10))
+                        foreach (Twitch.Base.Models.V5.Streams.StreamModel stream in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetV5ChannelStreams(users.Select(u => u.id), 10))
                         {
                             results.Add(new SearchFindChannelToRaidItemViewModel(stream));
                         }
@@ -319,16 +325,20 @@ namespace MixItUp.Base.ViewModel.MainControls
 
             this.PastGameNames.AddRange(ChannelSession.Settings.RecentStreamGames);
 
-            List<TagViewModel> tags = new List<TagViewModel>();
-            foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTags())
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!tag.is_auto)
+                List<TagViewModel> tags = new List<TagViewModel>();
+                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTags())
                 {
-                    tags.Add(new TagViewModel(this, tag));
+                    if (!tag.is_auto)
+                    {
+                        tags.Add(new TagViewModel(this, tag));
+                    }
                 }
-            }
 
             this.Tags.ClearAndAddRange(tags.OrderBy(t => t.Name));
+
+            }
 
             await base.OnLoadedInternal();
         }
@@ -342,56 +352,65 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private async Task RefreshChannelInformation()
         {
-            this.ChannelInformation = await ChannelSession.TwitchUserConnection.GetChannelInformation(ChannelSession.TwitchUserNewAPI);
-            if (this.ChannelInformation != null)
+            // TODO
+
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!string.IsNullOrEmpty(this.ChannelInformation.title))
+                this.ChannelInformation = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetChannelInformation(ServiceManager.Get<TwitchSessionService>().UserNewAPI);
+                if (this.ChannelInformation != null)
                 {
-                    this.Title = this.ChannelInformation.title;
-                    if (!ChannelSession.Settings.RecentStreamTitles.Contains(this.ChannelInformation.title))
+                    if (!string.IsNullOrEmpty(this.ChannelInformation.title))
                     {
-                        ChannelSession.Settings.RecentStreamTitles.Insert(0, this.ChannelInformation.title);
-                        while (ChannelSession.Settings.RecentStreamTitles.Count > 5)
+                        this.Title = this.ChannelInformation.title;
+                        if (!ChannelSession.Settings.RecentStreamTitles.Contains(this.ChannelInformation.title))
                         {
-                            ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            ChannelSession.Settings.RecentStreamTitles.Insert(0, this.ChannelInformation.title);
+                            while (ChannelSession.Settings.RecentStreamTitles.Count > 5)
+                            {
+                                ChannelSession.Settings.RecentStreamTitles.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            }
                         }
                     }
-                }
 
-                if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
-                {
-                    this.currentGame = new GameModel()
+                    if (!string.IsNullOrEmpty(this.ChannelInformation.game_id) && !string.IsNullOrEmpty(this.ChannelInformation.game_name))
                     {
-                        id = this.ChannelInformation.game_id,
-                        name = this.ChannelInformation.game_name
-                    };
-
-                    this.GameName = this.currentGame.name;
-
-                    if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
-                    {
-                        ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
-                        while (ChannelSession.Settings.RecentStreamGames.Count > 5)
+                        this.currentGame = new GameModel()
                         {
-                            ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            id = this.ChannelInformation.game_id,
+                            name = this.ChannelInformation.game_name
+                        };
+
+                        this.GameName = this.currentGame.name;
+
+                        if (!ChannelSession.Settings.RecentStreamGames.Contains(this.currentGame.name))
+                        {
+                            ChannelSession.Settings.RecentStreamGames.Insert(0, this.currentGame.name);
+                            while (ChannelSession.Settings.RecentStreamGames.Count > 5)
+                            {
+                                ChannelSession.Settings.RecentStreamGames.RemoveAt(ChannelSession.Settings.RecentStreamTitles.Count - 1);
+                            }
                         }
                     }
                 }
             }
 
-            List<TagViewModel> tags = new List<TagViewModel>();
-            foreach (TagModel tag in await ChannelSession.TwitchUserConnection.GetStreamTagsForChannel(ChannelSession.TwitchUserNewAPI))
+            // TODO
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                if (!tag.is_auto)
+                List<TagViewModel> tags = new List<TagViewModel>();
+                foreach (TagModel tag in await ServiceManager.Get<TwitchSessionService>().UserConnection.GetStreamTagsForChannel(ServiceManager.Get<TwitchSessionService>().UserNewAPI))
                 {
-                    TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
-                    if (tagViewModel != null)
+                    if (!tag.is_auto)
                     {
-                        tags.Add(tagViewModel);
+                        TagViewModel tagViewModel = this.Tags.FirstOrDefault(t => string.Equals(t.ID, tag.tag_id));
+                        if (tagViewModel != null)
+                        {
+                            tags.Add(tagViewModel);
+                        }
                     }
                 }
+                this.CustomTags.ClearAndAddRange(tags);
             }
-            this.CustomTags.ClearAndAddRange(tags);
 
             this.NotifyPropertyChanged("CanAddMoreTags");
         }

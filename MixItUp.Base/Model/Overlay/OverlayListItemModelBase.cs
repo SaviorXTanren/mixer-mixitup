@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -53,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.cachedUser == null && this.UserID != Guid.Empty)
             {
-                this.cachedUser = ChannelSession.Services.User.GetUserByID(this.UserID);
+                this.cachedUser = ServiceManager.Get<UserService>().GetUserByID(this.UserID);
                 if (this.cachedUser == null)
                 {
                     UserDataModel userData = ChannelSession.Settings.GetUserData(this.UserID);

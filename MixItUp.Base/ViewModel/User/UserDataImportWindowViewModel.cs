@@ -2,6 +2,8 @@
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -101,7 +103,7 @@ namespace MixItUp.Base.ViewModel.User
 
             this.UserDataFileBrowseCommand = this.CreateCommand(() =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
+                string filePath = ServiceManager.Get<IFileService>().ShowOpenFileDialog("Valid Data File Types|*.txt;*.csv;*.xls;*.xlsx");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     this.UserDataFilePath = filePath;
@@ -149,7 +151,7 @@ namespace MixItUp.Base.ViewModel.User
                     string extension = Path.GetExtension(this.UserDataFilePath);
                     if (extension.Equals(".txt") || extension.Equals(".csv"))
                     {
-                        string fileContents = await ChannelSession.Services.FileService.ReadFile(this.UserDataFilePath);
+                        string fileContents = await ServiceManager.Get<IFileService>().ReadFile(this.UserDataFilePath);
                         if (!string.IsNullOrEmpty(fileContents))
                         {
                             foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
@@ -218,14 +220,15 @@ namespace MixItUp.Base.ViewModel.User
                                 UserDataModel user = null;
                                 if (twitchID > 0)
                                 {
-                                    user = ChannelSession.Settings.GetUserDataByTwitchID(twitchID.ToString());
+                                    user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchID.ToString());
                                     if (user != null)
                                     {
                                         newUser = false;
                                     }
                                     else
                                     {
-                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(twitchID.ToString());
+                                        // TODO
+                                        Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByID(twitchID.ToString());
                                         if (twitchUser != null)
                                         {
                                             UserViewModel userViewModel = new UserViewModel(twitchUser);
@@ -235,10 +238,11 @@ namespace MixItUp.Base.ViewModel.User
                                 }
                                 else if (!string.IsNullOrEmpty(twitchUsername))
                                 {
-                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(twitchUsername);
+                                    // TODO
+                                    Twitch.Base.Models.NewAPI.Users.UserModel twitchUser = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetNewAPIUserByLogin(twitchUsername);
                                     if (twitchUser != null)
                                     {
-                                        user = ChannelSession.Settings.GetUserDataByTwitchID(twitchUser.id);
+                                        user = ChannelSession.Settings.GetUserDataByPlatformID(StreamingPlatformTypeEnum.Twitch, twitchUser.id);
                                         if (user != null)
                                         {
                                             newUser = false;

@@ -104,10 +104,10 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
+            ServiceManager.Get<IInputService>().Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
-                ChannelSession.Services.InputService.RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
+                ServiceManager.Get<IInputService>().RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.Name))
@@ -185,7 +185,7 @@ namespace MixItUp.WPF
                 this.ShuttingDownGrid.Visibility = Visibility.Visible;
                 this.MainMenu.Visibility = Visibility.Collapsed;
 
-                await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
+                await ServiceManager.Get<SettingsService>().Save(ChannelSession.Settings);
 
                 await ChannelSession.AppSettings.Save();
 

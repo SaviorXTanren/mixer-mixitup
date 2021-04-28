@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -44,7 +45,7 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             this.ExportDataCommand = this.CreateCommand(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
+                string filePath = ServiceManager.Get<IFileService>().ShowSaveFileDialog("User Data.txt");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     List<List<string>> contents = new List<List<string>>();

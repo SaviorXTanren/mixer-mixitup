@@ -10,36 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IGameQueueService
-    {
-        IEnumerable<UserViewModel> Queue { get; }
-
-        bool IsEnabled { get; }
-
-        Task Enable();
-        Task Disable();
-
-        Task Join(UserViewModel user);
-        Task JoinFront(UserViewModel user);
-
-        Task Leave(UserViewModel user);
-
-        Task MoveUp(UserViewModel user);
-        Task MoveDown(UserViewModel user);
-
-        Task SelectFirst();
-        Task SelectFirstType(RoleRequirementModel roleRequirement);
-        Task SelectRandom();
-
-        int GetUserPosition(UserViewModel user);
-        Task PrintUserPosition(UserViewModel user);
-
-        Task PrintStatus();
-
-        Task Clear();
-    }
-
-    public class GameQueueService : IGameQueueService
+    public class GameQueueService
     {
         private const string QueuePositionSpecialIdentifier = "queueposition";
 
@@ -171,15 +142,15 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format("You are #{0} in the queue to play", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are #{0} in the queue to play", position), user.Platform);
             }
             else
             {
-                await ChannelSession.Services.Chat.SendMessage("You are not currently in the queue to play");
+                await ServiceManager.Get<ChatService>().SendMessage("You are not currently in the queue to play", user.Platform);
             }
         }
 
-        public async Task PrintStatus()
+        public async Task PrintStatus(CommandParametersModel parameters)
         {
             StringBuilder message = new StringBuilder();
             message.Append(string.Format("There are currently {0} waiting to play.", this.queue.Count()));
@@ -198,7 +169,7 @@ namespace MixItUp.Base.Services
                 message.Append(".");
             }
 
-            await ChannelSession.Services.Chat.SendMessage(message.ToString());
+            await ServiceManager.Get<ChatService>().SendMessage(message.ToString(), parameters.Platform);
         }
 
         public Task Clear()
@@ -213,7 +184,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.SendMessage(string.Format("You are already #{0} in the queue", position));
+                await ServiceManager.Get<ChatService>().SendMessage(string.Format("You are already #{0} in the queue", position), user.Platform);
                 return false;
             }
             return true;

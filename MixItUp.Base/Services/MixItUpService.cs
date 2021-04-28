@@ -10,17 +10,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IMixItUpService
-    {
-        Task<MixItUpUpdateModel> GetLatestUpdate();
-        Task<MixItUpUpdateModel> GetLatestPublicUpdate();
-        Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
-        Task<MixItUpUpdateModel> GetLatestTestUpdate();
-
-        Task SendIssueReport(IssueReportModel report);
-    }
-
-    public class MixItUpService : IMixItUpService, IDisposable
+    public class MixItUpService : IDisposable
     {
         public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
         //public const string MixItUpAPIEndpoint = "http://localhost:33901/api/"; // Dev Endpoint
@@ -31,12 +21,12 @@ namespace MixItUp.Base.Services
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate()
         {
-            MixItUpUpdateModel update = await ChannelSession.Services.MixItUpService.GetLatestPublicUpdate();
+            MixItUpUpdateModel update = await ServiceManager.Get<MixItUpService>().GetLatestPublicUpdate();
             if (update != null)
             {
                 if (ChannelSession.AppSettings.PreviewProgram)
                 {
-                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
+                    MixItUpUpdateModel previewUpdate = await ServiceManager.Get<MixItUpService>().GetLatestPreviewUpdate();
                     if (previewUpdate != null && previewUpdate.SystemVersion >= update.SystemVersion)
                     {
                         update = previewUpdate;
@@ -48,7 +38,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.AppSettings.TestBuild)
                 {
-                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
+                    MixItUpUpdateModel testUpdate = await ServiceManager.Get<MixItUpService>().GetLatestTestUpdate();
                     if (testUpdate != null && testUpdate.SystemVersion >= update.SystemVersion)
                     {
                         update = testUpdate;

@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Actions
         }
         private string eventName;
 
-        public bool IFTTTNotEnabled { get { return !ChannelSession.Services.IFTTT.IsConnected; } }
+        public bool IFTTTNotEnabled { get { return !ServiceManager.Get<IFTTTService>().IsConnected; } }
 
         public string Value1
         {

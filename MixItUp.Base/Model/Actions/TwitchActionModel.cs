@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Commands;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -167,98 +169,101 @@ namespace MixItUp.Base.Model.Actions
 
         protected override async Task PerformInternal(CommandParametersModel parameters)
         {
-            if (this.ActionType == TwitchActionType.Host)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected)
             {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                await ChannelSession.Services.Chat.SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-            }
-            else if (this.ActionType == TwitchActionType.Raid)
-            {
-                string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                await ChannelSession.Services.Chat.SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
-            }
-            else if (this.ActionType == TwitchActionType.RunAd)
-            {
-                AdResponseModel response = await ChannelSession.TwitchUserConnection.RunAd(ChannelSession.TwitchUserNewAPI, this.AdLength);
-                if (response == null)
+                if (this.ActionType == TwitchActionType.Host)
                 {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: We were unable to run an ad, please try again later");
+                    string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    await ServiceManager.Get<ChatService>().SendMessage("/host @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
-                else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
+                else if (this.ActionType == TwitchActionType.Raid)
                 {
-                    await ChannelSession.Services.Chat.SendMessage("ERROR: " + response.message);
+                    string channelName = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                    await ServiceManager.Get<ChatService>().SendMessage("/raid @" + channelName, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                 }
-            }
-            else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
-            {
-                UserViewModel targetUser = null;
-                if (!string.IsNullOrEmpty(this.Username))
+                else if (this.ActionType == TwitchActionType.RunAd)
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
-                    targetUser = ChannelSession.Services.User.GetUserByUsername(username, parameters.Platform);
-                }
-                else
-                {
-                    targetUser = parameters.User;
-                }
-
-                if (targetUser != null)
-                {
-                    if (this.ActionType == TwitchActionType.VIPUser)
+                    AdResponseModel response = await ServiceManager.Get<TwitchSessionService>().UserConnection.RunAd(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.AdLength);
+                    if (response == null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: We were unable to run an ad, please try again later", StreamingPlatformTypeEnum.Twitch);
                     }
-                    else if (this.ActionType == TwitchActionType.UnVIPUser)
+                    else if (!string.IsNullOrEmpty(response.message) && !response.message.Contains(StartinCommercialBreakMessage, System.StringComparison.OrdinalIgnoreCase))
                     {
-                        await ChannelSession.Services.Chat.SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        await ServiceManager.Get<ChatService>().SendMessage("ERROR: " + response.message, StreamingPlatformTypeEnum.Twitch);
                     }
                 }
-            }
-            else if (this.ActionType == TwitchActionType.Clip)
-            {
-                ClipCreationModel clipCreation = await ChannelSession.TwitchUserConnection.CreateClip(ChannelSession.TwitchUserNewAPI, this.ClipIncludeDelay);
-                if (clipCreation != null)
+                else if (this.ActionType == TwitchActionType.VIPUser || this.ActionType == TwitchActionType.UnVIPUser)
                 {
-                    for (int i = 0; i < 12; i++)
+                    UserViewModel targetUser = null;
+                    if (!string.IsNullOrEmpty(this.Username))
                     {
-                        await Task.Delay(5000);
+                        string username = await this.ReplaceStringWithSpecialModifiers(this.Username, parameters);
+                        targetUser = ServiceManager.Get<UserService>().GetUserByUsername(username, StreamingPlatformTypeEnum.Twitch);
+                    }
+                    else
+                    {
+                        targetUser = parameters.User;
+                    }
 
-                        ClipModel clip = await ChannelSession.TwitchUserConnection.GetClip(clipCreation);
-                        if (clip != null && !string.IsNullOrEmpty(clip.url))
+                    if (targetUser != null)
+                    {
+                        if (this.ActionType == TwitchActionType.VIPUser)
                         {
-                            if (this.ShowInfoInChat)
-                            {
-                                await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url));
-                            }
-                            parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
-
-                            GlobalEvents.TwitchClipCreated(clip);
-                            return;
+                            await ServiceManager.Get<ChatService>().SendMessage("/vip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
+                        }
+                        else if (this.ActionType == TwitchActionType.UnVIPUser)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage("/unvip @" + targetUser.TwitchUsername, sendAsStreamer: true, platform: StreamingPlatformTypeEnum.Twitch);
                         }
                     }
                 }
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.ClipCreationFailed);
-            }
-            else if (this.ActionType == TwitchActionType.StreamMarker)
-            {
-                string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
-                if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
+                else if (this.ActionType == TwitchActionType.Clip)
                 {
-                    await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess);
-                    return;
-                }
-
-                CreatedStreamMarkerModel streamMarker = await ChannelSession.TwitchUserConnection.CreateStreamMarker(ChannelSession.TwitchUserNewAPI, description);
-                if (streamMarker != null)
-                {
-                    if (this.ShowInfoInChat)
+                    ClipCreationModel clipCreation = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateClip(ServiceManager.Get<TwitchSessionService>().UserNewAPI, this.ClipIncludeDelay);
+                    if (clipCreation != null)
                     {
-                        await ChannelSession.Services.Chat.SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL));
+                        for (int i = 0; i < 12; i++)
+                        {
+                            await Task.Delay(5000);
+
+                            ClipModel clip = await ServiceManager.Get<TwitchSessionService>().UserConnection.GetClip(clipCreation);
+                            if (clip != null && !string.IsNullOrEmpty(clip.url))
+                            {
+                                if (this.ShowInfoInChat)
+                                {
+                                    await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.ClipCreatedMessage, clip.url), parameters.Platform);
+                                }
+                                parameters.SpecialIdentifiers[ClipURLSpecialIdentifier] = clip.url;
+
+                                GlobalEvents.TwitchClipCreated(clip);
+                                return;
+                            }
+                        }
                     }
-                    parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
-                    return;
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.ClipCreationFailed, parameters.Platform);
                 }
-                await ChannelSession.Services.Chat.SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed);
+                else if (this.ActionType == TwitchActionType.StreamMarker)
+                {
+                    string description = await this.ReplaceStringWithSpecialModifiers(this.StreamMarkerDescription, parameters);
+                    if (!string.IsNullOrEmpty(description) && description.Length > TwitchActionModel.StreamMarkerMaxDescriptionLength)
+                    {
+                        await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerDescriptionMustBe140CharactersOrLess, parameters.Platform);
+                        return;
+                    }
+
+                    CreatedStreamMarkerModel streamMarker = await ServiceManager.Get<TwitchSessionService>().UserConnection.CreateStreamMarker(ServiceManager.Get<TwitchSessionService>().UserNewAPI, description);
+                    if (streamMarker != null)
+                    {
+                        if (this.ShowInfoInChat)
+                        {
+                            await ServiceManager.Get<ChatService>().SendMessage(string.Format(MixItUp.Base.Resources.StreamMarkerCreatedMessage, streamMarker.URL), parameters.Platform);
+                        }
+                        parameters.SpecialIdentifiers[StreamMarkerURLSpecialIdentifier] = streamMarker.URL;
+                        return;
+                    }
+                    await ServiceManager.Get<ChatService>().SendMessage(MixItUp.Base.Resources.StreamMarkerCreationFailed, parameters.Platform);
+                }
             }
             else if (this.ActionType == TwitchActionType.UpdateChannelPointReward)
             {

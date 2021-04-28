@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
+using MixItUp.Base.Services.Glimesh;
 
 namespace MixItUp.Base.ViewModel.MainControls
 {
@@ -17,7 +20,7 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         public bool ShowChatUserList { get { return !ChannelSession.Settings.HideChatUserList; } }
 
-        public long ViewersCount
+        public int ViewersCount
         {
             get { return this.viewersCount; }
             set
@@ -26,9 +29,9 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private long viewersCount;
+        private int viewersCount;
 
-        public long ChattersCount
+        public int ChattersCount
         {
             get { return this.chattersCount; }
             set
@@ -37,7 +40,7 @@ namespace MixItUp.Base.ViewModel.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private long chattersCount;
+        private int chattersCount;
 
         public string EnableDisableButtonText
         {
@@ -60,19 +63,19 @@ namespace MixItUp.Base.ViewModel.MainControls
             {
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearChatConfirmation))
                 {
-                    await ChannelSession.Services.Chat.ClearMessages();
+                    await ServiceManager.Get<ChatService>().ClearMessages();
                 }
             });
 
             this.EnableDisableChatCommand = this.CreateCommand(async () =>
             {
-                if (!ChannelSession.Services.Chat.DisableChat && !await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DisableChatConfirmation))
+                if (!ServiceManager.Get<ChatService>().DisableChat && !await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DisableChatConfirmation))
                 {
                     return;
                 }
 
-                ChannelSession.Services.Chat.DisableChat = !ChannelSession.Services.Chat.DisableChat;
-                if (ChannelSession.Services.Chat.DisableChat)
+                ServiceManager.Get<ChatService>().DisableChat = !ServiceManager.Get<ChatService>().DisableChat;
+                if (ServiceManager.Get<ChatService>().DisableChat)
                 {
                     this.EnableDisableButtonText = MixItUp.Base.Resources.EnableChat;
                 }
@@ -87,8 +90,8 @@ namespace MixItUp.Base.ViewModel.MainControls
         {
             await base.OnLoadedInternal();
 
-            ChannelSession.Services.Chat.DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
-            this.DisplayUsers = ChannelSession.Services.Chat.DisplayUsers;
+            ServiceManager.Get<ChatService>().DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
+            this.DisplayUsers = ServiceManager.Get<ChatService>().DisplayUsers;
 
             this.Messages.CollectionChanged += Messages_CollectionChanged;
 
@@ -110,16 +113,20 @@ namespace MixItUp.Base.ViewModel.MainControls
 
         private void RefreshNumbers()
         {
-            if (ChannelSession.TwitchStreamV5 != null)
+            if (ServiceManager.Get<TwitchSessionService>().IsConnected && ServiceManager.Get<TwitchSessionService>().StreamV5 != null)
             {
-                this.ViewersCount = ChannelSession.TwitchStreamV5.viewers;
+                this.ViewersCount = (int)ServiceManager.Get<TwitchSessionService>().StreamV5.viewers;
             }
-            this.ChattersCount = ChannelSession.Services.Chat.AllUsers.Count;
+            else if (ServiceManager.Get<GlimeshSessionService>().IsConnected && ServiceManager.Get<GlimeshSessionService>().Channel?.stream != null)
+            {
+                this.ViewersCount = ServiceManager.Get<GlimeshSessionService>().Channel?.stream?.countViewers ?? 0;
+            }
+            this.ChattersCount = ServiceManager.Get<ChatService>().AllUsers.Count;
         }
 
         private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)
         {
-            this.DisplayUsers = ChannelSession.Services.Chat.DisplayUsers;
+            this.DisplayUsers = ServiceManager.Get<ChatService>().DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
         }
     }

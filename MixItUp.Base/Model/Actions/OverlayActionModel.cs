@@ -68,8 +68,8 @@ namespace MixItUp.Base.Model.Actions
             }
             else
             {
-                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.Overlay.DefaultOverlayName : this.OverlayName;
-                IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
+                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ServiceManager.Get<OverlayService>().DefaultOverlayName : this.OverlayName;
+                OverlayEndpointService overlay = ServiceManager.Get<OverlayService>().GetOverlay(overlayName);
                 if (overlay != null)
                 {
                     await overlay.ShowItem(this.OverlayItem, parameters);

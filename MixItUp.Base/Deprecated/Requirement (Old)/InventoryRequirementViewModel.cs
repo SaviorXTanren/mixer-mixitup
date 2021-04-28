@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Currency;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
@@ -90,22 +91,6 @@ namespace MixItUp.Base.ViewModel.Requirement
 #pragma warning restore CS0612 // Type or member is obsolete
 
             return inventory.HasAmount(userData, this.ItemID, this.Amount);
-        }
-
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventory.ContainsKey(this.InventoryID))
-            {
-                InventoryModel inventory = this.GetInventory();
-                if (inventory != null && inventory.ItemExists(this.ItemID))
-                {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} {1} to do this", this.Amount, inventory.GetItem(this.ItemID).Name));
-                }
-                else
-                {
-                    await ChannelSession.Services.Chat.SendMessage(string.Format("You do not have the required {0} items to do this", this.Amount));
-                }
-            }
         }
 
         public override bool Equals(object obj)

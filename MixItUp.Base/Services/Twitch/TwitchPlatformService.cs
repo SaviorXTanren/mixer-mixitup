@@ -20,12 +20,7 @@ using V5API = Twitch.Base.Models.V5;
 
 namespace MixItUp.Base.Services.Twitch
 {
-    public interface ITwitchPlatformService
-    {
-
-    }
-
-    public class TwitchPlatformService : StreamingPlatformServiceBase, ITwitchPlatformService
+    public class TwitchPlatformService : StreamingPlatformServiceBase
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
@@ -105,7 +100,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             try
             {
-                TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchPlatformService.ClientID, ChannelSession.Services.Secrets.GetSecret("TwitchSecret"),
+                TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchPlatformService.ClientID, ServiceManager.Get<SecretsService>().GetSecret("TwitchSecret"),
                     scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
@@ -120,23 +115,30 @@ namespace MixItUp.Base.Services.Twitch
             return new Result<TwitchPlatformService>("Failed to connect to establish connection to Twitch");
         }
 
-        public static DateTimeOffset? GetTwitchDateTime(string dateTime)
+        public static DateTimeOffset GetTwitchDateTime(string dateTime)
         {
-            if (!string.IsNullOrEmpty(dateTime))
+            try
             {
-                if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(dateTime))
                 {
-                    if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
+                    if (dateTime.Contains("Z", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return startUTC.ToCorrectLocalTime();
+                        if (DateTimeOffset.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset startUTC))
+                        {
+                            return startUTC.ToCorrectLocalTime();
+                        }
+                    }
+                    else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
+                    {
+                        return new DateTimeOffset(start).ToCorrectLocalTime();
                     }
                 }
-                else if (DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
-                {
-                    return new DateTimeOffset(start).ToCorrectLocalTime();
-                }
             }
-            return null;
+            catch (Exception ex)
+            {
+                Logger.Log($"{dateTime} - {ex}");
+            }
+            return DateTimeOffset.MinValue;
         }
 
         public TwitchConnection Connection { get; private set; }

@@ -116,19 +116,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public interface IExtraLifeService : IOAuthExternalService
-    {
-        Task<ExtraLifeTeam> GetTeam();
-        Task<ExtraLifeTeam> GetTeam(int teamID);
-        Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants();
-        Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants(int teamID);
-        Task<ExtraLifeTeamParticipant> GetParticipant();
-
-        Task<IEnumerable<ExtraLifeDonation>> GetParticipantDonations();
-        Task<IEnumerable<ExtraLifeDonation>> GetTeamDonations();
-    }
-
-    public class ExtraLifeService : OAuthExternalServiceBase, IExtraLifeService, IDisposable
+    public class ExtraLifeService : OAuthExternalServiceBase, IDisposable
     {
         private const string BaseAddress = "https://www.extra-life.org/api/";
 

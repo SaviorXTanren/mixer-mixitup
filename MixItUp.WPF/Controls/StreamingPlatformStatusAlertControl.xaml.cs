@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
@@ -54,7 +55,7 @@ namespace MixItUp.WPF.Controls
                     {
                         List<Task<IEnumerable<StreamingPlatformStatusModel>>> incidentTasks = new List<Task<IEnumerable<StreamingPlatformStatusModel>>>();
 
-                        incidentTasks.Add(ChannelSession.Services.TwitchStatus.GetCurrentIncidents());
+                        incidentTasks.Add(ServiceManager.Get<TwitchStatusService>().GetCurrentIncidents());
 
                         await Task.WhenAll(incidentTasks);
 

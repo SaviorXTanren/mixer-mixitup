@@ -90,14 +90,7 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public interface IStreamJarService : IOAuthExternalService
-    {
-        Task<StreamJarChannel> GetChannel();
-
-        Task<IEnumerable<StreamJarDonation>> GetDonations();
-    }
-
-    public class StreamJarService : OAuthExternalServiceBase, IStreamJarService
+    public class StreamJarService : OAuthExternalServiceBase
     {
         private const string BaseAddress = "https://jar.streamjar.tv/v2/";
 

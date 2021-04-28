@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Model.Actions;
+using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,15 +13,15 @@ namespace MixItUp.Base.ViewModel.Services
         public void ChangeDefaultStreamingSoftware()
         {
             List<StreamingSoftwareTypeEnum> connected = new List<StreamingSoftwareTypeEnum>();
-            if (ChannelSession.Services.OBSStudio.IsConnected)
+            if (ServiceManager.Get<IOBSStudioService>().IsConnected)
             {
                 connected.Add(StreamingSoftwareTypeEnum.OBSStudio);
             }
-            else if (ChannelSession.Services.XSplit.IsConnected)
+            else if (ServiceManager.Get<XSplitService>().IsConnected)
             {
                 connected.Add(StreamingSoftwareTypeEnum.XSplit);
             }
-            else if (ChannelSession.Services.StreamlabsOBS.IsConnected)
+            else if (ServiceManager.Get<StreamlabsOBSService>().IsConnected)
             {
                 connected.Add(StreamingSoftwareTypeEnum.StreamlabsOBS);
             }

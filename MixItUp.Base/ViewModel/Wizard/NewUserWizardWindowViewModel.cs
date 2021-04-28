@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Accounts;
@@ -50,6 +51,12 @@ namespace MixItUp.Base.ViewModel.Wizard
         private bool streamerAccountsPageVisible;
 
         public StreamingPlatformAccountControlViewModel Twitch { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Twitch);
+
+        public StreamingPlatformAccountControlViewModel YouTube { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.YouTube);
+
+        public StreamingPlatformAccountControlViewModel Trovo { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Trovo);
+
+        public StreamingPlatformAccountControlViewModel Glimesh { get; set; } = new StreamingPlatformAccountControlViewModel(StreamingPlatformTypeEnum.Glimesh);
 
         #endregion Accounts Page
 
@@ -154,10 +161,16 @@ namespace MixItUp.Base.ViewModel.Wizard
 
             this.Twitch.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
             this.Twitch.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.YouTube.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.YouTube.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.Trovo.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.Trovo.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
+            this.Glimesh.StartLoadingOperationOccurred += (sender, eventArgs) => { this.StartLoadingOperation(); };
+            this.Glimesh.EndLoadingOperationOccurred += (sender, eventArgs) => { this.EndLoadingOperation(); };
 
             this.SetBackupLocationCommand = this.CreateCommand(() =>
             {
-                string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+                string folderPath = ServiceManager.Get<IFileService>().ShowOpenFolderDialog();
                 if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
                 {
                     this.SettingsBackupLocation = folderPath;
@@ -183,9 +196,9 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
                 else if (this.StreamerAccountsPageVisible)
                 {
-                    if (!this.Twitch.IsUserAccountConnected)
+                    if (!this.Twitch.IsUserAccountConnected && !this.YouTube.IsUserAccountConnected && !this.Trovo.IsUserAccountConnected && !this.Glimesh.IsUserAccountConnected)
                     {
-                        this.StatusMessage = "Twitch Streamer account must be signed in.";
+                        this.StatusMessage = "At least 1 Streamer account must be signed in.";
                         return;
                     }
 
@@ -199,9 +212,10 @@ namespace MixItUp.Base.ViewModel.Wizard
                 }
                 else if (this.FinalPageVisible)
                 {
-                    if (!await ChannelSession.InitializeSession())
+                    Result result = await ChannelSession.InitializeSession();
+                    if (!result.Success)
                     {
-                        await DialogHelper.ShowMessage(Resources.SessionInitializationFailed);
+                        await DialogHelper.ShowMessage(result.Message);
                         return;
                     }
 
@@ -237,6 +251,15 @@ namespace MixItUp.Base.ViewModel.Wizard
 
                 this.StatusMessage = string.Empty;
             });
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            if (ChannelSession.Settings == null)
+            {
+                await ChannelSession.Connect(new SettingsV3Model());
+            }
+            await base.OnLoadedInternal();
         }
     }
 }
