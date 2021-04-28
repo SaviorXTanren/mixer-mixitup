@@ -15,6 +15,7 @@ namespace MixItUp.Base.Model.Actions
         EnableCommand,
         DisableCommandGroup,
         EnableCommandGroup,
+        CancelAllCommands,
     }
 
     [DataContract]
@@ -37,9 +38,8 @@ namespace MixItUp.Base.Model.Actions
         public string CommandGroupName { get; set; }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, CommandModelBase command, string commandArguments, bool waitForCommandToFinish)
-            : base(ActionTypeEnum.Command)
+            : this(commandActionType)
         {
-            this.ActionType = commandActionType;
             if (command is PreMadeChatCommandModelBase)
             {
                 this.PreMadeType = command.GetType();
@@ -55,10 +55,15 @@ namespace MixItUp.Base.Model.Actions
         }
 
         public CommandActionModel(CommandActionTypeEnum commandActionType, string groupName)
+            : this(commandActionType)
+        {
+            this.CommandGroupName = groupName;
+        }
+
+        public CommandActionModel(CommandActionTypeEnum commandActionType)
             : base(ActionTypeEnum.Command)
         {
             this.ActionType = commandActionType;
-            this.CommandGroupName = groupName;
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -166,6 +171,13 @@ namespace MixItUp.Base.Model.Actions
                         ChannelSession.Settings.Commands.ManualValueChanged(cmd.ID);
                     }
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
+                }
+            }
+            else if (this.ActionType == CommandActionTypeEnum.CancelAllCommands)
+            {
+                foreach (CommandInstanceModel commandInstance in ChannelSession.Services.Command.CommandInstances.Where(c => c.State == CommandInstanceStateEnum.Pending || c.State == CommandInstanceStateEnum.Running))
+                {
+                    ChannelSession.Services.Command.Cancel(commandInstance);
                 }
             }
         }
